@@ -8,6 +8,7 @@
 namespace Drupal\editor\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
@@ -32,7 +33,7 @@ class EditorLinkDialog extends FormBase {
    * @param \Drupal\filter\Entity\FilterFormat $filter_format
    *   The filter format for which this dialog corresponds.
    */
-  public function buildForm(array $form, array &$form_state, FilterFormat $filter_format = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, FilterFormat $filter_format = NULL) {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
     $input = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
@@ -78,7 +79,7 @@ class EditorLinkDialog extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
     if (form_get_errors($form_state)) {

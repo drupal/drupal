@@ -10,6 +10,7 @@ namespace Drupal\user\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -75,7 +76,7 @@ class UserPermissionsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $role_names = array();
     $role_permissions = array();
     foreach ($this->getRoles() as $role_name => $role) {
@@ -184,7 +185,7 @@ class UserPermissionsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  function submitForm(array &$form, array &$form_state) {
+  function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state['values']['role_names'] as $role_name => $name) {
       user_role_change_permissions($role_name, $form_state['values'][$role_name]);
     }

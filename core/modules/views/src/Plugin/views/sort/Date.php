@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Basic sort handler for dates.
  *
@@ -25,7 +27,7 @@ class Date extends SortPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['granularity'] = array(

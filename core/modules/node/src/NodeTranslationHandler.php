@@ -9,6 +9,7 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the translation handler for nodes.
@@ -18,7 +19,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
   /**
    * {@inheritdoc}
    */
-  public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
 
     // Move the translation fieldset to a vertical tab.
@@ -73,7 +74,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
   /**
    * {@inheritdoc}
    */
-  public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, array &$form_state) {
+  public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     if (isset($form_state['values']['content_translation'])) {
       $form_controller = content_translation_form_controller($form_state);
       $translation = &$form_state['values']['content_translation'];

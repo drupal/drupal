@@ -8,6 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -25,7 +26,7 @@ class ShortcutForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $form['path'] = array(
@@ -50,7 +51,7 @@ class ShortcutForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildEntity(array $form, array &$form_state) {
+  public function buildEntity(array $form, FormStateInterface $form_state) {
     $entity = parent::buildEntity($form, $form_state);
 
     // Set the computed 'path' value so it can used in the preSave() method to
@@ -63,7 +64,7 @@ class ShortcutForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     if (!shortcut_valid_link($form_state['values']['path'])) {
       $this->setFormError('path', $form_state, $this->t('The shortcut must correspond to a valid path on the site.'));
     }
@@ -74,7 +75,7 @@ class ShortcutForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $entity->save();
 

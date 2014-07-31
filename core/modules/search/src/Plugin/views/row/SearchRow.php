@@ -7,6 +7,7 @@
 
 namespace Drupal\search\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
@@ -34,7 +35,7 @@ class SearchRow extends RowPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['score'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display score'),

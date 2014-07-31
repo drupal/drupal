@@ -17,6 +17,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Batch\Percentage;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -442,6 +443,9 @@ function _batch_finished() {
     }
 
     // Determine the target path to redirect to.
+    if (!isset($_batch['form_state'])) {
+      $_batch['form_state'] = new FormState();
+    }
     if (!isset($_batch['form_state']['redirect'])) {
       if (isset($_batch['redirect'])) {
         $_batch['form_state']['redirect'] = $_batch['redirect'];

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
@@ -33,7 +34,7 @@ class Analyze extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
 
     $form['#title'] = $this->t('View analysis');
@@ -57,7 +58,7 @@ class Analyze extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views_ui\ViewUI */
     $view = $form_state['view'];
     $form_state['redirect_route'] = $view->urlInfo('edit-form');

@@ -14,6 +14,7 @@ use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -92,15 +93,15 @@ class CommentAdminOverview extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $type
    *   The type of the overview form ('approval' or 'new').
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, array &$form_state, $type = 'new') {
+  public function buildForm(array $form, FormStateInterface $form_state, $type = 'new') {
 
     // Build an 'Update options' form.
     $form['options'] = array(
@@ -250,7 +251,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
     // We can't execute any 'Update options' if no comments were selected.
     if (count($form_state['values']['comments']) == 0) {
@@ -261,7 +262,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $operation = $form_state['values']['operation'];
     $cids = $form_state['values']['comments'];
 

@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\access;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Session\AccountInterface;
@@ -69,7 +70,7 @@ class Role extends AccessPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['role'] = array(
       '#type' => 'checkboxes',
@@ -80,13 +81,13 @@ class Role extends AccessPluginBase {
     );
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     if (!array_filter($form_state['values']['access_options']['role'])) {
       form_error($form['role'], $form_state, t('You must select at least one role if type is "by role"'));
     }
   }
 
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // I hate checkboxes.
     $form_state['values']['access_options']['role'] = array_filter($form_state['values']['access_options']['role']);
   }

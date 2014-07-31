@@ -7,6 +7,8 @@
 
 namespace Drupal\form_test\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 class FormTestTableSelectEmptyForm extends FormTestTableSelectFormBase {
 
   /**
@@ -19,14 +21,14 @@ class FormTestTableSelectEmptyForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     return $this->tableselectFormBuilder($form, $form_state, array('#options' => array()));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

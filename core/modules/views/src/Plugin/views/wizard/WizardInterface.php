@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Defines a common interface for Views Wizard plugins.
  *
@@ -22,34 +24,34 @@ interface WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
    *   Returns the changed wizard form.
    */
-  public function buildForm(array $form, array &$form_state);
+  public function buildForm(array $form, FormStateInterface $form_state);
 
   /**
    * Validate form and values.
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
    *   An empty array if the view is valid; an array of error strings if it is
    *   not.
    */
-  public function validateView(array $form, array &$form_state);
+  public function validateView(array $form, FormStateInterface $form_state);
 
   /**
    * Creates a view from values that have already been validated.
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return \Drupal\views\ViewStorageInterface
@@ -57,6 +59,6 @@ interface WizardInterface {
    *
    * @throws \Drupal\views\Plugin\views\wizard\WizardException
    */
-  public function createView(array $form, array &$form_state);
+  public function createView(array $form, FormStateInterface $form_state);
 
 }

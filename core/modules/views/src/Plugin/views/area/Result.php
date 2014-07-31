@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\style\DefaultSummary;
 
 /**
@@ -37,7 +38,7 @@ class Result extends AreaPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $item_list = array(
       '#theme' => 'item_list',

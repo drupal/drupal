@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\row\RowPluginBase;
@@ -74,7 +75,7 @@ class DataFieldRow extends RowPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['field_options'] = array(
@@ -111,7 +112,7 @@ class DataFieldRow extends RowPluginBase {
   /**
    * Form element validation handler for \Drupal\rest\Plugin\views\row\DataFieldRow::buildOptionsForm().
    */
-  public function validateAliasName($element, &$form_state) {
+  public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
       form_error($element, $form_state, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
     }
@@ -120,7 +121,7 @@ class DataFieldRow extends RowPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::validateOptionsForm().
    */
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Collect an array of aliases to validate.
     $aliases = static::extractFromOptionsArray('alias', $form_state['values']['row_options']['field_options']);
 

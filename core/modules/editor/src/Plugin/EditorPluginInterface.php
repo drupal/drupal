@@ -8,6 +8,7 @@
 namespace Drupal\editor\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -37,7 +38,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *
    * @param array $form
    *   An empty form array to be populated with a configuration form, if any.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The state of the entire filter administration form.
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
@@ -45,7 +46,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @return array
    *   A render array for the settings form.
    */
-  public function settingsForm(array $form, array &$form_state, Editor $editor);
+  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor);
 
   /**
    * Validates the settings form for an editor.
@@ -56,10 +57,10 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function settingsFormValidate(array $form, array &$form_state);
+  public function settingsFormValidate(array $form, FormStateInterface $form_state);
 
   /**
    * Modifies any values in the form state to prepare them for saving.
@@ -69,10 +70,10 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function settingsFormSubmit(array $form, array &$form_state);
+  public function settingsFormSubmit(array $form, FormStateInterface $form_state);
 
   /**
    * Returns JavaScript settings to be attached.

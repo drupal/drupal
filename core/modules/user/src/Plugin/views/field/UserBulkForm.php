@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\system\Plugin\views\field\BulkForm;
 use Drupal\user\UserInterface;
 
@@ -23,7 +24,7 @@ class UserBulkForm extends BulkForm {
    *
    * Provide a more useful title to improve the accessibility.
    */
-  public function viewsForm(&$form, &$form_state) {
+  public function viewsForm(&$form, FormStateInterface $form_state) {
     parent::viewsForm($form, $form_state);
 
     if (!empty($this->view->result)) {

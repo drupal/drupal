@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\access;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\Routing\Route;
@@ -60,7 +61,7 @@ class Permission extends AccessPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $perms = array();
     $module_info = system_get_info('module');

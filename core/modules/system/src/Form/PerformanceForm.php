@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -69,7 +70,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attached']['library'][] = 'system/drupal.system';
 
     $config = $this->config('system.performance');
@@ -155,7 +156,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_clear_css_cache();
     drupal_clear_js_cache();
     // This form allows page compression settings to be changed, which can
@@ -177,7 +178,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * Clears the caches.
    */
-  public function submitCacheClear(array &$form, array &$form_state) {
+  public function submitCacheClear(array &$form, FormStateInterface $form_state) {
     drupal_flush_all_caches();
     drupal_set_message(t('Caches cleared.'));
   }

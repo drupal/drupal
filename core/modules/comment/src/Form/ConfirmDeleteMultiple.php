@@ -10,6 +10,7 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -82,7 +83,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $edit = $form_state['input'];
 
     $form['comments'] = array(
@@ -116,7 +117,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['values']['confirm']) {
       $this->commentStorage->delete($this->comments);
       $count = count($form_state['values']['comments']);

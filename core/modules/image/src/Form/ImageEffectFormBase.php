@@ -8,6 +8,8 @@
 namespace Drupal\image\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -53,7 +55,7 @@ abstract class ImageEffectFormBase extends FormBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function buildForm(array $form, array &$form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
     $this->imageStyle = $image_style;
     try {
       $this->imageEffect = $this->prepareImageEffect($image_effect);
@@ -101,27 +103,32 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for validation.
-    $effect_data = array(
-      'values' => &$form_state['values']['data']
-    );
+    $effect_data = new FormState(array(
+      'values' => $form_state['values']['data'],
+    ));
     $this->imageEffect->validateConfigurationForm($form, $effect_data);
+    // Update the original form values.
+    $form_state['values']['data'] = $effect_data['values'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     form_state_values_clean($form_state);
 
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for submission.
-    $effect_data = array(
-      'values' => &$form_state['values']['data']
-    );
+    $effect_data = new FormState(array(
+      'values' => $form_state['values']['data'],
+    ));
     $this->imageEffect->submitConfigurationForm($form, $effect_data);
+    // Update the original form values.
+    $form_state['values']['data'] = $effect_data['values'];
+
     $this->imageEffect->setWeight($form_state['values']['weight']);
     if (!$this->imageEffect->getUuid()) {
       $this->imageStyle->addImageEffect($this->imageEffect->getConfiguration());

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewStorageInterface;
 
 /**
@@ -35,9 +36,9 @@ class Display extends ViewsFormBase {
    *   $form_state['type'].
    */
   public function getFormState(ViewStorageInterface $view, $display_id, $js) {
-    return array(
-      'section' => $this->type,
-    ) + parent::getFormState($view, $display_id, $js);
+    $form_state = parent::getFormState($view, $display_id, $js);
+    $form_state['section'] = $this->type;
+    return $form_state;
   }
 
   /**
@@ -58,7 +59,7 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
 
@@ -95,7 +96,7 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id'])->validateOptionsForm($form['options'], $form_state);
 
     if (form_get_errors($form_state)) {
@@ -106,7 +107,7 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id'])->submitOptionsForm($form['options'], $form_state);
 
     $form_state['view']->cacheSet();

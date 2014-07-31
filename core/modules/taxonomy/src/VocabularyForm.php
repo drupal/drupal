@@ -9,6 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -19,7 +20,7 @@ class VocabularyForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $vocabulary = $this->entity;
     if ($vocabulary->isNew()) {
       $form['#title'] = $this->t('Add vocabulary');
@@ -88,7 +89,7 @@ class VocabularyForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     // If we are displaying the delete confirmation skip the regular actions.
     if (empty($form_state['confirm_delete'])) {
       $actions = parent::actions($form, $form_state);
@@ -114,7 +115,7 @@ class VocabularyForm extends EntityForm {
   /**
    * Submit handler to update the bundle for the default language configuration.
    */
-  public function languageConfigurationSubmit(array &$form, array &$form_state) {
+  public function languageConfigurationSubmit(array &$form, FormStateInterface $form_state) {
     $vocabulary = $this->entity;
     // Delete the old language settings for the vocabulary, if the machine name
     // is changed.
@@ -130,7 +131,7 @@ class VocabularyForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $vocabulary = $this->entity;
 
     // Prevent leading and trailing spaces in vocabulary names.

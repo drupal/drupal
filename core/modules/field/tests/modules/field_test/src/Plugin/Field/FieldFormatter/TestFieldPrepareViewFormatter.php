@@ -9,6 +9,7 @@ namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'field_test_with_prepare_view' formatter.
@@ -37,7 +38,7 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_formatter_setting_additional'] = array(
       '#title' => t('Setting'),
       '#type' => 'textfield',

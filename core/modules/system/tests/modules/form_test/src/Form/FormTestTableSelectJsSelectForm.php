@@ -7,6 +7,8 @@
 
 namespace Drupal\form_test\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 class FormTestTableSelectJsSelectForm extends FormTestTableSelectFormBase {
 
   /**
@@ -19,7 +21,7 @@ class FormTestTableSelectJsSelectForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $test_action = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $test_action = NULL) {
     switch ($test_action) {
       case 'multiple-true-default':
         $options = array('#multiple' => TRUE);
@@ -44,7 +46,7 @@ class FormTestTableSelectJsSelectForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

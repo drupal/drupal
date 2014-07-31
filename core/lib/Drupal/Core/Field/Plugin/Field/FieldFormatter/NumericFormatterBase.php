@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Parent plugin for decimal and integer formatters.
@@ -18,7 +19,7 @@ abstract class NumericFormatterBase extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $options = array(
       ''  => t('- None -'),
       '.' => t('Decimal point'),

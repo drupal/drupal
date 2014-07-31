@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Menu\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
@@ -33,12 +34,12 @@ interface MenuLinkFormInterface extends PluginFormInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array
    *   The new plugin definition values taken from the form values.
    */
-  public function extractFormValues(array &$form, array &$form_state);
+  public function extractFormValues(array &$form, FormStateInterface $form_state);
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\text\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'text' field type.
@@ -78,7 +79,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     $element['max_length'] = array(
@@ -97,7 +98,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, array &$form_state) {
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
     $element = array();
 
     $element['text_processing'] = array(

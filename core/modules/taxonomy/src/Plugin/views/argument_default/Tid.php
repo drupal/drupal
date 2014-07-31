@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument_default;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -55,7 +56,7 @@ class Tid extends ArgumentDefaultPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['term_page'] = array(
       '#type' => 'checkbox',
       '#title' => t('Load default filter from term page'),
@@ -113,7 +114,7 @@ class Tid extends ArgumentDefaultPluginBase {
     );
   }
 
-  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) {
     // Filter unselected items so we don't unnecessarily store giant arrays.
     $options['vids'] = array_filter($options['vids']);
   }

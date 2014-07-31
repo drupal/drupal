@@ -8,6 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure the session language negotiation method for this site.
@@ -22,9 +23,9 @@ class NegotiationSessionForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('language.negotiation');
     $form['language_negotiation_session_param'] = array(
       '#title' => t('Request/session parameter'),
@@ -39,9 +40,9 @@ class NegotiationSessionForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.settings')
       ->set('session.parameter', $form_state['values']['language_negotiation_session_param'])
       ->save();

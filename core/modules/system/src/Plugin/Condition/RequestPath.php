@@ -9,6 +9,7 @@ namespace Drupal\system\Plugin\Condition;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -93,7 +94,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['pages'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Pages'),
@@ -110,7 +111,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['pages'] = $form_state['values']['pages'];
     parent::submitConfigurationForm($form, $form_state);
   }

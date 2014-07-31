@@ -1267,7 +1267,7 @@
  *     return 'example_form';
  *   }
  *
- *   public function buildForm(array $form, array &$form_state) {
+ *   public function buildForm(array $form, FormStateInterface $form_state) {
  *     // Create a $form API array.
  *     $form['phone_number'] = array(
  *       '#type' => 'tel',
@@ -1276,11 +1276,11 @@
  *     return $form;
  *   }
  *
- *   public function validateForm(array &$form, array &$form_state) {
+ *   public function validateForm(array &$form, FormStateInterface $form_state) {
  *     // Validate submitted form data.
  *   }
  *
- *   public function submitForm(array &$form, array &$form_state) {
+ *   public function submitForm(array &$form, FormStateInterface $form_state) {
  *     // Handle submitted form data.
  *   }
  * }
@@ -1305,7 +1305,7 @@
  * $extra = '612-123-4567';
  * $form = \Drupal::formBuilder()->getForm('Drupal\mymodule\Form\ExampleForm', $extra);
  * ...
- * public function buildForm(array $form, array &$form_state, $extra = NULL)
+ * public function buildForm(array $form, FormStateInterface $form_state, $extra = NULL)
  *   $form['phone_number'] = array(
  *     '#type' => 'tel',
  *     '#title' => $this->t('Your phone number'),

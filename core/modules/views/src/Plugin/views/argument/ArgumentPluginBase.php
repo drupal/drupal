@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -150,7 +151,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $argument_text = $this->view->display_handler->getArgumentText();
@@ -343,7 +344,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['options'])) {
       return;
     }
@@ -372,7 +373,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
   }
 
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['options'])) {
       return;
     }
@@ -473,7 +474,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting the default argument when the
    * default action is set to provide default argument.
    */
-  public function defaultArgumentForm(&$form, &$form_state) {
+  public function defaultArgumentForm(&$form, FormStateInterface $form_state) {
     $plugins = Views::pluginManager('argument_default')->getDefinitions();
     $options = array();
 
@@ -538,7 +539,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * Provide a form for selecting further summary options when the
    * default action is set to display one.
    */
-  public function defaultSummaryForm(&$form, &$form_state) {
+  public function defaultSummaryForm(&$form, FormStateInterface $form_state) {
     $style_plugins = Views::pluginManager('style')->getDefinitions();
     $summary_plugins = array();
     $format_options = array();

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
@@ -50,7 +51,7 @@ class ConfigHandlerGroup extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
@@ -95,7 +96,7 @@ class ConfigHandlerGroup extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $item = &$form_state['handler']->options;
     $type = $form_state['type'];
 

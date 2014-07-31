@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -60,7 +61,7 @@ class ImageToolkitForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $current_toolkit = $this->config('system.image')->get('toolkit');
 
     $form['image_toolkit'] = array(
@@ -95,7 +96,7 @@ class ImageToolkitForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.image')
       ->set('toolkit', $form_state['values']['image_toolkit'])
       ->save();

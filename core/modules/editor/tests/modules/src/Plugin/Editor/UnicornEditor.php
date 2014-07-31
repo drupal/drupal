@@ -7,6 +7,7 @@
 
 namespace Drupal\editor_test\Plugin\Editor;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\editor\Entity\Editor as EditorEntity;
 
@@ -33,7 +34,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
+  function settingsForm(array $form, FormStateInterface $form_state, EditorEntity $editor) {
     $form['foo'] = array(
       '#title' => t('Foo'),
       '#type' => 'textfield',

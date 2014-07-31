@@ -9,6 +9,7 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageEffectManager;
 use Drupal\Component\Utility\String;
@@ -52,7 +53,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Edit style %name', array('%name' => $this->entity->label()));
     $form['#tree'] = TRUE;
     $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
@@ -155,7 +156,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * Validate handler for image effect.
    */
-  public function effectValidate($form, &$form_state) {
+  public function effectValidate($form, FormStateInterface $form_state) {
     if (!$form_state['values']['new']) {
       $this->setFormError('new', $form_state, $this->t('Select an effect to add.'));
     }
@@ -164,7 +165,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * Submit handler for image effect.
    */
-  public function effectSave($form, &$form_state) {
+  public function effectSave($form, FormStateInterface $form_state) {
 
     // Update image effect weights.
     if (!empty($form_state['values']['effects'])) {
@@ -214,7 +215,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
 
     // Update image effect weights.
     if (!empty($form_state['values']['effects'])) {
@@ -228,7 +229,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function actions(array $form, array &$form_state) {
+  public function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Update style');
 
@@ -253,7 +254,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     foreach ($form_state['values'] as $key => $value) {
       // Do not copy effects here, see self::updateEffectWeights().
       if ($key != 'effects') {

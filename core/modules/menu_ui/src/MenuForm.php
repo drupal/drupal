@@ -10,6 +10,7 @@ namespace Drupal\menu_ui;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuLinkTreeElement;
@@ -94,7 +95,7 @@ class MenuForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $menu = $this->entity;
 
     if ($this->operation == 'edit') {
@@ -173,7 +174,7 @@ class MenuForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $menu = $this->entity;
     if (!$menu->isNew() || $menu->isLocked()) {
       $this->submitOverviewForm($form, $form_state);
@@ -208,12 +209,12 @@ class MenuForm extends EntityForm {
    * Forms integrating this section should call menu_overview_form_submit() from
    * their form submit handler.
    */
-  protected function buildOverviewForm(array &$form, array &$form_state) {
+  protected function buildOverviewForm(array &$form, FormStateInterface $form_state) {
     // Ensure that menu_overview_form_submit() knows the parents of this form
     // section.
     $form['#tree'] = TRUE;
     $form['#theme'] = 'menu_overview_form';
-    $form_state += array('menu_overview_form_parents' => array());
+    $form_state->setIfNotExists('menu_overview_form_parents', array());
 
     $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/css/menu.admin.css');
 
@@ -350,7 +351,7 @@ class MenuForm extends EntityForm {
    * This function takes great care in saving parent items first, then items
    * underneath them. Saving items in the incorrect order can break the tree.
    */
-  protected function submitOverviewForm(array $complete_form, array &$form_state) {
+  protected function submitOverviewForm(array $complete_form, FormStateInterface $form_state) {
     // Form API supports constructing and validating self-contained sections
     // within forms, but does not allow to handle the form section's submission
     // equally separated yet. Therefore, we use a $form_state key to point to

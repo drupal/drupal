@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_preprocess_HOOK() for page templates.
@@ -265,9 +266,9 @@ function seven_preprocess_maintenance_page(&$variables) {
  *
  * Changes vertical tabs to container and adds meta information.
  */
-function seven_form_node_form_alter(&$form, &$form_state) {
+function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->get('controller')->getEntity();
 
   $form['#theme'] = array('node_edit_form');
   $form['#attached']['css'][] = drupal_get_path('module', 'node') . '/css/node.module.css';

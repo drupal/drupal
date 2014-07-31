@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
@@ -214,7 +215,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $style_options = Views::fetchPluginNames('style', 'normal', array($this->base_table));
     $feed_row_options = Views::fetchPluginNames('row', 'feed', array($this->base_table));
     $path_prefix = url(NULL, array('absolute' => TRUE));
@@ -461,8 +462,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * the results of this function for any other purpose besides deciding how to
    * build the next version of the form.
    *
-   * @param $form_state
-   *   The  standard associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param $parents
    *   An array of parent keys that point to the part of the submitted form
    *   values that are expected to contain the element's value (in the case where
@@ -524,12 +525,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    * @param string $type
    *   The display ID (e.g. 'page' or 'block').
    */
-  protected function buildFormStyle(array &$form, array &$form_state, $type) {
+  protected function buildFormStyle(array &$form, FormStateInterface $form_state, $type) {
     $style_form = &$form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
     $style_plugin = Views::pluginManager('style')->createInstance($style);
@@ -578,7 +579,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * By default, this adds "of type" and "tagged with" filters (when they are
    * available).
    */
-  protected function buildFilters(&$form, &$form_state) {
+  protected function buildFilters(&$form, FormStateInterface $form_state) {
     module_load_include('inc', 'views_ui', 'admin');
 
     $bundles = entity_get_bundles($this->entityTypeId);
@@ -608,7 +609,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * By default, this adds a "sorted by [date]" filter (when it is available).
    */
-  protected function buildSorts(&$form, &$form_state) {
+  protected function buildSorts(&$form, FormStateInterface $form_state) {
     $sorts = array(
       'none' => t('Unsorted'),
     );
@@ -641,7 +642,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return \Drupal\views_ui\ViewUI
    *   The instantiated view UI object.
    */
-  protected function instantiateView($form, &$form_state) {
+  protected function instantiateView($form, FormStateInterface $form_state) {
     // Build the basic view properties and create the view.
     $values = array(
       'id' => $form_state['values']['id'],
@@ -822,7 +823,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
@@ -848,14 +849,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
    *   An array of filter arrays keyed by ID. A sort array contains the options
    *   accepted by a filter handler.
    */
-  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
+  protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
@@ -907,7 +908,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
@@ -933,7 +934,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
@@ -981,13 +982,13 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
    *   Returns an array of display options.
    */
-  protected function pageDisplayOptions(array $form, array &$form_state) {
+  protected function pageDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = array();
     $page = $form_state['values']['page'];
     $display_options['title'] = $page['title'];
@@ -1027,13 +1028,13 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
    *   Returns an array of display options.
    */
-  protected function blockDisplayOptions(array $form, array &$form_state) {
+  protected function blockDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = array();
     $block = $form_state['values']['block'];
     $display_options['title'] = $block['title'];
@@ -1049,7 +1050,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
    * @return array
@@ -1143,7 +1144,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    * @param bool $unset
    *   Should the view be removed from the list of validated views.
@@ -1151,7 +1152,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return \Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
-  protected function retrieveValidatedView(array $form, array &$form_state, $unset = TRUE) {
+  protected function retrieveValidatedView(array $form, FormStateInterface $form_state, $unset = TRUE) {
     // @todo Figure out why all this hashing is done. Wouldn't it be easier to
     //   store a single entry and that's it?
     $key = hash('sha256', serialize($form_state['values']));
@@ -1167,12 +1168,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    * @param \Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
-  protected function setValidatedView(array $form, array &$form_state, ViewUI $view) {
+  protected function setValidatedView(array $form, FormStateInterface $form_state, ViewUI $view) {
     $key = hash('sha256', serialize($form_state['values']));
     $this->validated_views[$key] = $view;
   }
@@ -1182,7 +1183,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * Instantiates the view from the form submission and validates its values.
    */
-  public function validateView(array $form, array &$form_state) {
+  public function validateView(array $form, FormStateInterface $form_state) {
     $view = $this->instantiateView($form, $form_state);
     $errors = $view->getExecutable()->validate();
 
@@ -1196,7 +1197,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * {@inheritDoc}
    */
-  public function createView(array $form, array &$form_state) {
+  public function createView(array $form, FormStateInterface $form_state) {
     $view = $this->retrieveValidatedView($form, $form_state);
     if (empty($view)) {
       throw new WizardException('Attempted to create a view with values that have not been validated.');

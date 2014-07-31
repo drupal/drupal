@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -50,7 +51,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
@@ -189,7 +190,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['handler']->validateOptionsForm($form['options'], $form_state);
 
     if (form_get_errors($form_state)) {
@@ -200,7 +201,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Run it through the handler's submit function.
     $form_state['handler']->submitOptionsForm($form['options'], $form_state);
     $item = $form_state['handler']->options;
@@ -261,7 +262,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * Submit handler for removing an item from a view
    */
-  public function remove(&$form, &$form_state) {
+  public function remove(&$form, FormStateInterface $form_state) {
     // Store the item back on the view
     list($was_defaulted, $is_defaulted) = $form_state['view']->getOverrideValues($form, $form_state);
     $executable = $form_state['view']->getExecutable();

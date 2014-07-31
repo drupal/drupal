@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Form controller for the Views duplicate form.
  */
@@ -22,7 +24,7 @@ class ViewDuplicateForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     parent::form($form, $form_state);
 
     $form['#title'] = $this->t('Duplicate of @label', array('@label' => $this->entity->label()));
@@ -52,7 +54,7 @@ class ViewDuplicateForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Duplicate'),
@@ -66,7 +68,7 @@ class ViewDuplicateForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $original = parent::submit($form, $form_state);
     $this->entity = $original->createDuplicate();
     $this->entity->set('id', $form_state['values']['id']);

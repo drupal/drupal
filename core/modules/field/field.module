@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /*
@@ -344,7 +345,7 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
  *
  * @see \Drupal\field\ConfigImporterFieldPurger
  */
-function field_form_config_admin_import_form_alter(&$form, &$form_state) {
+function field_form_config_admin_import_form_alter(&$form, FormStateInterface $form_state) {
   // Only display the message when there is a storage comparer available and the
   // form is not submitted.
   if (isset($form_state['storage_comparer']) && empty($form_state['input'])) {

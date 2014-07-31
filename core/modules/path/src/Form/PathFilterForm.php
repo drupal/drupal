@@ -8,6 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -25,7 +26,7 @@ class PathFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $keys = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $keys = NULL) {
     $form['#attributes'] = array('class' => array('search-form'));
     $form['basic'] = array(
       '#type' => 'details',
@@ -59,7 +60,7 @@ class PathFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = new Url('path.admin_overview_filter', array(
       'keys' => trim($form_state['values']['filter']),
     ));
@@ -68,7 +69,7 @@ class PathFilterForm extends FormBase {
   /**
    * Resets the filter selections.
    */
-  public function resetForm(array &$form, array &$form_state) {
+  public function resetForm(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = new Url('path.admin_overview');
   }
 

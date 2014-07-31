@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\Element;
@@ -435,7 +436,7 @@ class Field extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $field = $this->getFieldDefinition();
@@ -516,7 +517,7 @@ class Field extends FieldPluginBase {
   /**
    * Provide options for multiple value fields.
    */
-  function multiple_options_form(&$form, &$form_state) {
+  function multiple_options_form(&$form, FormStateInterface $form_state) {
     $field = $this->getFieldDefinition();
 
     $form['multiple_field_settings'] = array(
@@ -639,7 +640,7 @@ class Field extends FieldPluginBase {
   /**
    * Extend the groupby form with group columns.
    */
-  public function buildGroupByForm(&$form, &$form_state) {
+  public function buildGroupByForm(&$form, FormStateInterface $form_state) {
     parent::buildGroupByForm($form, $form_state);
     // With "field API" fields, the column target of the grouping function
     // and any additional grouping columns must be specified.
@@ -672,7 +673,7 @@ class Field extends FieldPluginBase {
     );
   }
 
-  public function submitGroupByForm(&$form, &$form_state) {
+  public function submitGroupByForm(&$form, FormStateInterface $form_state) {
     parent::submitGroupByForm($form, $form_state);
     $item = &$form_state['handler']->options;
 

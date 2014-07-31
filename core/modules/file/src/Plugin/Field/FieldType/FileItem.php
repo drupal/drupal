@@ -10,6 +10,7 @@ namespace Drupal\file\Plugin\Field\FieldType;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -106,7 +107,7 @@ class FileItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     $element['#attached']['library'][] = 'file/drupal.file';
@@ -148,7 +149,7 @@ class FileItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, array &$form_state) {
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
     $element = array();
     $settings = $this->getSettings();
 
@@ -208,7 +209,7 @@ class FileItem extends EntityReferenceItem {
    * This function is assigned as an #element_validate callback in
    * instanceSettingsForm().
    */
-  public static function validateDirectory($element, &$form_state) {
+  public static function validateDirectory($element, FormStateInterface $form_state) {
     // Strip slashes from the beginning and end of $element['file_directory'].
     $value = trim($element['#value'], '\\/');
     form_set_value($element, $value, $form_state);
@@ -224,7 +225,7 @@ class FileItem extends EntityReferenceItem {
    * Commas are allowed by the end-user, but ultimately the value will be stored
    * as a space-separated list for compatibility with file_validate_extensions().
    */
-  public static function validateExtensions($element, &$form_state) {
+  public static function validateExtensions($element, FormStateInterface $form_state) {
     if (!empty($element['#value'])) {
       $extensions = preg_replace('/([, ]+\.?)/', ' ', trim(strtolower($element['#value'])));
       $extensions = array_filter(explode(' ', $extensions));
@@ -247,7 +248,7 @@ class FileItem extends EntityReferenceItem {
    * This function is assigned as an #element_validate callback in
    * instanceSettingsForm().
    */
-  public static function validateMaxFilesize($element, &$form_state) {
+  public static function validateMaxFilesize($element, FormStateInterface $form_state) {
     if (!empty($element['#value']) && !is_numeric(Bytes::toInt($element['#value']))) {
       form_error($element, $form_state, t('The "!name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', array('!name' => t($element['title']))));
     }

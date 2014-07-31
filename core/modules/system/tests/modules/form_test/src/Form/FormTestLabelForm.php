@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A form for testing form labels and required marks.
@@ -24,7 +25,7 @@ class FormTestLabelForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['form_checkboxes_test'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Checkboxes test'),
@@ -114,7 +115,7 @@ class FormTestLabelForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

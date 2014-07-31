@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
@@ -33,7 +34,7 @@ class ManyToOneHelper {
     $options['reduce_duplicates'] = array('default' => FALSE, 'bool' => TRUE);
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['reduce_duplicates'] = array(
       '#type' => 'checkbox',
       '#title' => t('Reduce duplicates'),

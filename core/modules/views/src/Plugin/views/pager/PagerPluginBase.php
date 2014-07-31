@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -119,12 +120,12 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Provide the default form form for validating options
    */
-  public function validateOptionsForm(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Provide the default form form for submitting options
    */
-  public function submitOptionsForm(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Return a string to display as the clickable title for the
@@ -216,11 +217,11 @@ abstract class PagerPluginBase extends PluginBase {
       && $this->total_items > (intval($this->current_page) + 1) * $this->getItemsPerPage();
   }
 
-  public function exposedFormAlter(&$form, &$form_state) { }
+  public function exposedFormAlter(&$form, FormStateInterface $form_state) { }
 
-  public function exposedFormValidate(&$form, &$form_state) { }
+  public function exposedFormValidate(&$form, FormStateInterface $form_state) { }
 
-  public function exposedFormSubmit(&$form, &$form_state, &$exclude) { }
+  public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) { }
 
   public function usesExposed() {
     return FALSE;

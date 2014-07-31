@@ -47,13 +47,6 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   protected $configFactory;
 
   /**
-   * The form error handler.
-   *
-   * @var \Drupal\Core\Form\FormErrorInterface
-   */
-  protected $errorHandler;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -63,7 +56,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Validation is optional.
   }
 
@@ -174,34 +167,23 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   }
 
   /**
-   * Returns the form error handler.
-   *
-   * @return \Drupal\Core\Form\FormErrorInterface
-   *   The form error handler.
-   */
-  protected function errorHandler() {
-    if (!$this->errorHandler) {
-      $this->errorHandler = \Drupal::service('form_builder');
-    }
-    return $this->errorHandler;
-  }
-
-  /**
    * Files an error against a form element.
    *
    * @param string $name
    *   The name of the form element.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $message
    *   (optional) The error message to present to the user.
    *
-   * @see \Drupal\Core\Form\FormErrorInterface::setErrorByName()
+   * @deprecated Use \Drupal\Core\Form\FormStateInterface::setErrorByName().
+   *
+   * @todo Remove in https://www.drupal.org/node/2308821.
    *
    * @return $this
    */
-  protected function setFormError($name, array &$form_state, $message = '') {
-    $this->errorHandler()->setErrorByName($name, $form_state, $message);
+  protected function setFormError($name, FormStateInterface $form_state, $message = '') {
+    $form_state->setErrorByName($name, $message);
     return $this;
   }
 

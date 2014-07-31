@@ -10,6 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -59,7 +60,7 @@ class FileSystemForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('system.file');
     $form['file_public_path'] = array(
       '#type' => 'item',
@@ -119,7 +120,7 @@ class FileSystemForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('system.file')
       ->set('path.private', $form_state['values']['file_private_path'])
       ->set('path.temporary', $form_state['values']['file_temporary_path'])

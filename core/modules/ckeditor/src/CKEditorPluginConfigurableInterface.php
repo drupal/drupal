@@ -7,6 +7,7 @@
 
 namespace Drupal\ckeditor;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -36,7 +37,7 @@ interface CKEditorPluginConfigurableInterface extends CKEditorPluginInterface {
    *
    * @param array $form
    *   An empty form array to be populated with a configuration form, if any.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The state of the entire filter administration form.
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
@@ -44,6 +45,6 @@ interface CKEditorPluginConfigurableInterface extends CKEditorPluginInterface {
    * @return array|FALSE
    *   A render array for the settings form, or FALSE if there is none.
    */
-  public function settingsForm(array $form, array &$form_state, Editor $editor);
+  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor);
 
 }

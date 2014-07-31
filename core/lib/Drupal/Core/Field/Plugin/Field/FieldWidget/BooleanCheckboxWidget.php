@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'boolean_checkbox' widget.
@@ -36,7 +37,7 @@ class BooleanCheckboxWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['display_label'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use field label instead of the "On label" as label'),
@@ -61,7 +62,7 @@ class BooleanCheckboxWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['value'] = $element + array(
       '#type' => 'checkbox',
       '#default_value' => !empty($items[0]->value),

@@ -8,6 +8,7 @@
 namespace Drupal\search\Plugin;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a base implementation for a configurable Search plugin.
@@ -54,7 +55,7 @@ abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements 
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**

@@ -12,6 +12,8 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -73,7 +75,7 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $config_type = NULL, $config_name = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $config_type = NULL, $config_name = NULL) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $definition) {
       if ($definition->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         $this->definitions[$entity_type] = $definition;
@@ -121,10 +123,10 @@ class ConfigSingleExportForm extends FormBase {
       '#suffix' => '</div>',
     );
     if ($config_type && $config_name) {
-      $fake_form_state = array('values' => array(
+      $fake_form_state = new FormState(array('values' => array(
         'config_type' => $config_type,
         'config_name' => $config_name,
-      ));
+      )));
       $form['export'] = $this->updateExport($form, $fake_form_state);
     }
     return $form;
@@ -133,7 +135,7 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * Handles switching the configuration type selector.
    */
-  public function updateConfigurationType($form, &$form_state) {
+  public function updateConfigurationType($form, FormStateInterface $form_state) {
     $form['config_name']['#options'] = $this->findConfiguration($form_state['values']['config_type']);
     return $form['config_name'];
   }
@@ -141,7 +143,7 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * Handles switching the export textarea.
    */
-  public function updateExport($form, &$form_state) {
+  public function updateExport($form, FormStateInterface $form_state) {
     // Determine the full config name for the selected config entity.
     if ($form_state['values']['config_type'] !== 'system.simple') {
       $definition = $this->entityManager->getDefinition($form_state['values']['config_type']);
@@ -197,7 +199,7 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Nothing to submit.
   }
 

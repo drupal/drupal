@@ -10,6 +10,7 @@ namespace Drupal\update\Form;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,7 +67,7 @@ class UpdateReady extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
     if (!_update_manager_check_backends($form, 'update')) {
       return $form;
@@ -96,7 +97,7 @@ class UpdateReady extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Store maintenance_mode setting so we can restore it when done.
     $_SESSION['maintenance_mode'] = $this->state->get('system.maintenance_mode');
     if ($form_state['values']['maintenance_mode'] == TRUE) {

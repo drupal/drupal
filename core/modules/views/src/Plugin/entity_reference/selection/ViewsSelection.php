@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\entity_reference\selection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 use Drupal\views\Views;
 
@@ -203,7 +204,7 @@ class ViewsSelection implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
+  public function validateAutocompleteInput($input, &$element, FormStateInterface $form_state, $form, $strict = TRUE) {
     return NULL;
   }
 
@@ -215,7 +216,7 @@ class ViewsSelection implements SelectionInterface {
   /**
    * Element validate; Check View is valid.
    */
-  public function settingsFormValidate($element, &$form_state, $form) {
+  public function settingsFormValidate($element, FormStateInterface $form_state, $form) {
     // Split view name and display name from the 'view_and_display' value.
     if (!empty($element['view_and_display']['#value'])) {
       list($view, $display) = explode(':', $element['view_and_display']['#value']);

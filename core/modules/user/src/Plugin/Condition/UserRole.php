@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
@@ -27,7 +28,7 @@ class UserRole extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('When the user has the following roles'),
@@ -50,7 +51,7 @@ class UserRole extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['roles'] = array_filter($form_state['values']['roles']);
     parent::submitConfigurationForm($form, $form_state);
   }

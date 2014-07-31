@@ -8,6 +8,7 @@
 namespace Drupal\options\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
 
 /**
@@ -29,7 +30,7 @@ class SelectWidget extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element += array(

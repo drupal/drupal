@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * A Trait for Views broken handlers.
  */
@@ -55,7 +57,7 @@ trait BrokenHandlerTrait {
    *
    * @see \Drupal\views\Plugin\views\PluginBase::defineOptions().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $description_top = t('The handler for this item is broken or missing. The following details are available:');
 
     $items = array(

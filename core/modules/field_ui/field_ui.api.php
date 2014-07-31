@@ -21,7 +21,7 @@
  *   The entity view mode.
  * @param array $form
  *   The (entire) configuration form array.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The form state.
  *
  * @return array
@@ -54,7 +54,7 @@ function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\Forma
  *   The entity form mode.
  * @param array $form
  *   The (entire) configuration form array.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The form state.
  *
  * @return array

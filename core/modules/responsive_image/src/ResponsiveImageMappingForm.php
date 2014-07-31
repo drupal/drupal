@@ -9,6 +9,7 @@ namespace Drupal\responsive_image;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the responsive image edit/add forms.
@@ -20,15 +21,15 @@ class ResponsiveImageMappingForm extends EntityForm {
    *
    * @param array $form
    *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping
    *   The entity being edited.
    *
    * @return array
    *   The array containing the complete form.
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     if ($this->operation == 'duplicate') {
       $form['#title'] = $this->t('<em>Duplicate responsive image mapping</em> @label', array('@label' => $this->entity->label()));
       $this->entity = $this->entity->createDuplicate();
@@ -96,7 +97,7 @@ class ResponsiveImageMappingForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */
     $responsive_image_mapping = $this->entity;
 
@@ -119,7 +120,7 @@ class ResponsiveImageMappingForm extends EntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::save().
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */
     $responsive_image_mapping = $this->entity;
     $responsive_image_mapping->save();

@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Action;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -59,7 +60,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $roles = user_role_names(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     $form['rid'] = array(
@@ -75,7 +76,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['rid'] = $form_state['values']['rid'];
   }
 

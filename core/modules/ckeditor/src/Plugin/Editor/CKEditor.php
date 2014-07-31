@@ -10,6 +10,7 @@ namespace Drupal\ckeditor\Plugin\Editor;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\Element;
 use Drupal\editor\Plugin\EditorBase;
@@ -127,7 +128,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
+  public function settingsForm(array $form, FormStateInterface $form_state, EditorEntity $editor) {
     $settings = $editor->getSettings();
 
     $ckeditor_settings_toolbar = array(
@@ -234,7 +235,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit(array $form, array &$form_state) {
+  public function settingsFormSubmit(array $form, FormStateInterface $form_state) {
     // Modify the toolbar settings by reference. The values in
     // $form_state['values']['editor']['settings'] will be saved directly by
     // editor_form_filter_admin_format_submit().

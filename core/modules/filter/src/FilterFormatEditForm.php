@@ -7,6 +7,7 @@
 
 namespace Drupal\filter;
 
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -17,7 +18,7 @@ class FilterFormatEditForm extends FilterFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     if (!$this->entity->status()) {
       throw new NotFoundHttpException();
     }
@@ -31,7 +32,7 @@ class FilterFormatEditForm extends FilterFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
     drupal_set_message($this->t('The text format %format has been updated.', array('%format' => $this->entity->label())));
     return $this->entity;

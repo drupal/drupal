@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Form\FormState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -70,7 +71,7 @@ class FormAjaxController {
    * @throws Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
    */
   protected function getForm(Request $request) {
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
     $form_build_id = $request->request->get('form_build_id');
 
     // Get the form from the cache.

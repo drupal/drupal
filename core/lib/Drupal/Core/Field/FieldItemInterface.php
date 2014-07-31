@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
@@ -333,7 +334,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * @param array $form
    *   The form where the settings form is being included in.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    * @param bool $has_data
    *   TRUE if the field already has data, FALSE if not.
@@ -341,7 +342,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return
    *   The form definition for the field settings.
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data);
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data);
 
   /**
    * Returns a form for the instance-level settings.
@@ -351,12 +352,12 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * @param array $form
    *   The form where the settings form is being included in.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    *
    * @return array
    *   The form definition for the field instance settings.
    */
-  public function instanceSettingsForm(array $form, array &$form_state);
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state);
 
 }

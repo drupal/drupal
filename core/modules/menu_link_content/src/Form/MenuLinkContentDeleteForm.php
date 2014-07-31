@@ -9,6 +9,7 @@ namespace Drupal\menu_link_content\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,7 +66,7 @@ class MenuLinkContentDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $t_args = array('%title' => $this->entity->getTitle());
     $this->entity->delete();
     drupal_set_message($this->t('The menu link %title has been deleted.', $t_args));

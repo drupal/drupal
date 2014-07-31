@@ -9,6 +9,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,7 @@ class UserPasswordForm extends FormBase {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Username or email address'),
@@ -106,7 +107,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $name = trim($form_state['values']['name']);
     // Try to load by email.
     $users = $this->userStorage->loadByProperties(array('mail' => $name, 'status' => '1'));
@@ -126,7 +127,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $langcode = $this->languageManager->getCurrentLanguage()->id;
 
     $account = $form_state['values']['account'];

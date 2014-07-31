@@ -136,7 +136,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getFormId($form_arg, &$form_state) {
+  public function getFormId($form_arg, FormStateInterface &$form_state) {
     // If the $form_arg is the name of a class, instantiate it. Don't allow
     // arbitrary strings to be passed to the class resolver.
     if (is_string($form_arg) && class_exists($form_arg)) {
@@ -148,9 +148,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     // Add the $form_arg as the callback object and determine the form ID.
-    $form_state['build_info']['callback_object'] = $form_arg;
+    $form_state->addBuildInfo('callback_object', $form_arg);
     if ($form_arg instanceof BaseFormIdInterface) {
-      $form_state['build_info']['base_form_id'] = $form_arg->getBaseFormID();
+      $form_state->addBuildInfo('base_form_id', $form_arg->getBaseFormID());
     }
     return $form_arg->getFormId();
   }
@@ -159,12 +159,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * {@inheritdoc}
    */
   public function getForm($form_arg) {
-    $form_state = array();
+    $form_state = new FormState();
 
     $args = func_get_args();
     // Remove $form_arg from the arguments.
     unset($args[0]);
-    $form_state['build_info']['args'] = array_values($args);
+    $form_state->addBuildInfo('args', array_values($args));
 
     return $this->buildForm($form_arg, $form_state);
   }
@@ -172,16 +172,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function buildForm($form_id, array &$form_state) {
-    // Ensure some defaults; if already set they will not be overridden.
-    $form_state += $this->getFormStateDefaults();
-
+  public function buildForm($form_id, FormStateInterface &$form_state) {
     // Ensure the form ID is prepared.
     $form_id = $this->getFormId($form_id, $form_state);
 
     if (!isset($form_state['input'])) {
       $request = $this->requestStack->getCurrentRequest();
-      $form_state['input'] = $form_state['method'] == 'get' ? $request->query->all() : $request->request->all();
+      $form_state->set('input', $form_state['method'] == 'get' ? $request->query->all() : $request->request->all());
     }
 
     if (isset($_SESSION['batch_form_state'])) {
@@ -210,19 +207,19 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // keys need to be removed after retrieving and preparing the form, except
       // any that were already set prior to retrieving the form.
       if ($check_cache) {
-        $form_state_before_retrieval = $form_state;
+        $form_state_before_retrieval = clone $form_state;
       }
 
       $form = $this->retrieveForm($form_id, $form_state);
       $this->prepareForm($form_id, $form, $form_state);
 
-      // self::setCache() removes uncacheable $form_state keys defined in
-      // self::getUncacheableKeys() in order for multi-step forms to work
+      // self::setCache() removes uncacheable $form_state keys (see properties
+      // in \Drupal\Core\Form\FormState) in order for multi-step forms to work
       // properly. This means that form processing logic for single-step forms
       // using $form_state['cache'] may depend on data stored in those keys
-      // during self::retrieveForm()/self::prepareForm(), but form
-      // processing should not depend on whether the form is cached or not, so
-      // $form_state is adjusted to match what it would be after a
+      // during self::retrieveForm()/self::prepareForm(), but form processing
+      // should not depend on whether the form is cached or not, so $form_state
+      // is adjusted to match what it would be after a
       // self::setCache()/self::getCache() sequence. These exceptions are
       // allowed to survive here:
       // - always_process: Does not make sense in conjunction with form caching
@@ -231,9 +228,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // - temporary: Any assigned data is expected to survives within the same
       //   page request.
       if ($check_cache) {
-        $uncacheable_keys = array_flip(array_diff($this->getUncacheableKeys(), array('always_process', 'temporary')));
-        $form_state = array_diff_key($form_state, $uncacheable_keys);
-        $form_state += $form_state_before_retrieval;
+        $cache_form_state = $form_state->getCacheableArray(array('always_process', 'temporary'));
+        $form_state = $form_state_before_retrieval;
+        $form_state->setFormState($cache_form_state);
       }
     }
 
@@ -270,36 +267,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getFormStateDefaults() {
-    return array(
-      'rebuild' => FALSE,
-      'rebuild_info' => array(),
-      'redirect' => NULL,
-      // @todo 'args' is usually set, so no other default 'build_info' keys are
-      //   appended via += $this->getFormStateDefaults().
-      'build_info' => array(
-        'args' => array(),
-        'files' => array(),
-      ),
-      'temporary' => array(),
-      'validation_complete' => FALSE,
-      'submitted' => FALSE,
-      'executed' => FALSE,
-      'programmed' => FALSE,
-      'programmed_bypass_access_check' => TRUE,
-      'cache'=> FALSE,
-      'method' => 'post',
-      'groups' => array(),
-      'buttons' => array(),
-      'errors' => array(),
-      'limit_validation_errors' => NULL,
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function rebuildForm($form_id, &$form_state, $old_form = NULL) {
+  public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL) {
     $form = $this->retrieveForm($form_id, $form_state);
 
     // If only parts of the form will be returned to the browser (e.g., Ajax or
@@ -335,7 +303,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Clear out all group associations as these might be different when
     // re-rendering the form.
-    $form_state['groups'] = array();
+    $form_state->set('groups', array());
 
     // Return a fully built form that is ready for rendering.
     return $this->doBuildForm($form_id, $form, $form_state);
@@ -344,13 +312,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getCache($form_build_id, &$form_state) {
+  public function getCache($form_build_id, FormStateInterface &$form_state) {
     if ($form = $this->keyValueExpirableFactory->get('form')->get($form_build_id)) {
       $user = $this->currentUser();
       if ((isset($form['#cache_token']) && $this->csrfToken->validate($form['#cache_token'])) || (!isset($form['#cache_token']) && $user->isAnonymous())) {
         if ($stored_form_state = $this->keyValueExpirableFactory->get('form_state')->get($form_build_id)) {
           // Re-populate $form_state for subsequent rebuilds.
-          $form_state = $stored_form_state + $form_state;
+          $form_state->setFormState($stored_form_state);
 
           // If the original form is contained in include files, load the files.
           // @see form_load_include()
@@ -380,7 +348,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function setCache($form_build_id, $form, $form_state) {
+  public function setCache($form_build_id, $form, FormStateInterface $form_state) {
     // 6 hours cache life time for forms should be plenty.
     $expire = 21600;
 
@@ -393,77 +361,42 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     // Cache form state.
-
     // Store the known list of safe strings for form re-use.
     // @todo Ensure we are not storing an excessively large string list in:
     //   https://www.drupal.org/node/2295823
-    $form_state['build_info']['safe_strings'] = SafeMarkup::getAll();
+    $form_state->addBuildInfo('safe_strings', SafeMarkup::getAll());
 
-    if ($data = array_diff_key($form_state, array_flip($this->getUncacheableKeys()))) {
+    if ($data = $form_state->getCacheableArray()) {
       $this->keyValueExpirableFactory->get('form_state')->setWithExpire($form_build_id, $data, $expire);
     }
   }
 
   /**
-   * Returns an array of $form_state keys that shouldn't be cached.
-   */
-  protected function getUncacheableKeys() {
-    return array(
-      // Public properties defined by form constructors and form handlers.
-      'always_process',
-      'must_validate',
-      'rebuild',
-      'rebuild_info',
-      'redirect',
-      'redirect_route',
-      'no_redirect',
-      'temporary',
-      // Internal properties defined by form processing.
-      'buttons',
-      'triggering_element',
-      'complete_form',
-      'groups',
-      'input',
-      'method',
-      'submit_handlers',
-      'validation_complete',
-      'submitted',
-      'executed',
-      'validate_handlers',
-      'values',
-      'errors',
-      'limit_validation_errors',
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function submitForm($form_arg, &$form_state) {
+  public function submitForm($form_arg, FormStateInterface &$form_state) {
     if (!isset($form_state['build_info']['args'])) {
       $args = func_get_args();
       // Remove $form and $form_state from the arguments.
       unset($args[0], $args[1]);
-      $form_state['build_info']['args'] = array_values($args);
+      $form_state->addBuildInfo('args', array_values($args));
     }
-    // Merge in default values.
-    $form_state += $this->getFormStateDefaults();
 
     // Populate $form_state['input'] with the submitted values before retrieving
     // the form, to be consistent with what self::buildForm() does for
     // non-programmatic submissions (form builder functions may expect it to be
     // there).
-    $form_state['input'] = $form_state['values'];
+    $form_state->set('input', $form_state->get('values'));
 
-    $form_state['programmed'] = TRUE;
+    $form_state->set('programmed', TRUE);
 
     $form_id = $this->getFormId($form_arg, $form_state);
     $form = $this->retrieveForm($form_id, $form_state);
     // Programmed forms are always submitted.
-    $form_state['submitted'] = TRUE;
+    $form_state->set('submitted', TRUE);
 
     // Reset form validation.
-    $form_state['must_validate'] = TRUE;
+    $form_state->set('must_validate', TRUE);
     $this->clearErrors($form_state);
 
     $this->prepareForm($form_id, $form, $form_state);
@@ -473,9 +406,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function retrieveForm($form_id, &$form_state) {
+  public function retrieveForm($form_id, FormStateInterface &$form_state) {
     // Record the $form_id.
-    $form_state['build_info']['form_id'] = $form_id;
+    $form_state->addBuildInfo('form_id', $form_id);
 
     // We save two copies of the incoming arguments: one for modules to use
     // when mapping form ids to constructor functions, and another to pass to
@@ -513,20 +446,22 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function processForm($form_id, &$form, &$form_state) {
-    $form_state['values'] = array();
+  public function processForm($form_id, &$form, FormStateInterface &$form_state) {
+    $form_state->set('values', array());
 
     // With GET, these forms are always submitted if requested.
     if ($form_state['method'] == 'get' && !empty($form_state['always_process'])) {
-      if (!isset($form_state['input']['form_build_id'])) {
-        $form_state['input']['form_build_id'] = $form['#build_id'];
+      $input = $form_state->get('input');
+      if (!isset($input['form_build_id'])) {
+        $input['form_build_id'] = $form['#build_id'];
       }
-      if (!isset($form_state['input']['form_id'])) {
-        $form_state['input']['form_id'] = $form_id;
+      if (!isset($input['form_id'])) {
+        $input['form_id'] = $form_id;
       }
-      if (!isset($form_state['input']['form_token']) && isset($form['#token'])) {
-        $form_state['input']['form_token'] = $this->csrfToken->get($form['#token']);
+      if (!isset($input['form_token']) && isset($form['#token'])) {
+        $input['form_token'] = $this->csrfToken->get($form['#token']);
       }
+      $form_state->set('input', $input);
     }
 
     // self::doBuildForm() finishes building the form by calling element
@@ -550,7 +485,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // exactly one submit button in the form, and if so, automatically use it
       // as triggering_element.
       if ($form_state['programmed'] && !isset($form_state['triggering_element']) && count($form_state['buttons']) == 1) {
-        $form_state['triggering_element'] = reset($form_state['buttons']);
+        $form_state->set('triggering_element', reset($form_state['buttons']));
       }
       $this->formValidator->validateForm($form_id, $form, $form_state);
 
@@ -594,7 +529,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // Form building functions (e.g., self::handleInputElement()) may use
         // $form_state['rebuild'] to determine if they are running in the
         // context of a rebuild, so ensure it is set.
-        $form_state['rebuild'] = TRUE;
+        $form_state->setRebuild();
         $form = $this->rebuildForm($form_id, $form_state, $form);
       }
     }
@@ -614,14 +549,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function prepareForm($form_id, &$form, &$form_state) {
+  public function prepareForm($form_id, &$form, FormStateInterface &$form_state) {
     $user = $this->currentUser();
 
     $form['#type'] = 'form';
-    $form_state['programmed'] = isset($form_state['programmed']) ? $form_state['programmed'] : FALSE;
+    $form_state->set('programmed', isset($form_state['programmed']) ? $form_state['programmed'] : FALSE);
 
     // Fix the form method, if it is 'get' in $form_state, but not in $form.
-    if ($form_state['method'] == 'get' && !isset($form['#method'])) {
+    if ($form_state->get('method') == 'get' && !isset($form['#method'])) {
       $form['#method'] = 'get';
     }
 
@@ -718,56 +653,56 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function validateForm($form_id, &$form, &$form_state) {
+  public function validateForm($form_id, &$form, FormStateInterface &$form_state) {
     $this->formValidator->validateForm($form_id, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function redirectForm($form_state) {
+  public function redirectForm(FormStateInterface $form_state) {
     return $this->formSubmitter->redirectForm($form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function executeValidateHandlers(&$form, &$form_state) {
+  public function executeValidateHandlers(&$form, FormStateInterface &$form_state) {
     $this->formValidator->executeValidateHandlers($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function executeSubmitHandlers(&$form, &$form_state) {
+  public function executeSubmitHandlers(&$form, FormStateInterface &$form_state) {
     $this->formSubmitter->executeSubmitHandlers($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function doSubmitForm(&$form, &$form_state) {
+  public function doSubmitForm(&$form, FormStateInterface &$form_state) {
     throw new \LogicException('Use FormBuilderInterface::processForm() instead.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setErrorByName($name, array &$form_state, $message = '') {
+  public function setErrorByName($name, FormStateInterface &$form_state, $message = '') {
     $this->formValidator->setErrorByName($name, $form_state, $message);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function clearErrors(array &$form_state) {
+  public function clearErrors(FormStateInterface &$form_state) {
     $this->formValidator->clearErrors($form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getErrors(array $form_state) {
+  public function getErrors(FormStateInterface &$form_state) {
     return $this->formValidator->getErrors($form_state);
   }
 
@@ -781,21 +716,21 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getError($element, array &$form_state) {
+  public function getError($element, FormStateInterface &$form_state) {
     return $this->formValidator->getError($element, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setError(&$element, array &$form_state, $message = '') {
+  public function setError(&$element, FormStateInterface &$form_state, $message = '') {
     $this->formValidator->setError($element, $form_state, $message);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function doBuildForm($form_id, &$element, &$form_state) {
+  public function doBuildForm($form_id, &$element, FormStateInterface &$form_state) {
     // Initialize as unprocessed.
     $element['#processed'] = FALSE;
 
@@ -826,16 +761,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // Store a reference to the complete form in $form_state prior to building
       // the form. This allows advanced #process and #after_build callbacks to
       // perform changes elsewhere in the form.
-      $form_state['complete_form'] = &$element;
+      $form_state->setCompleteForm($element);
 
       // Set a flag if we have a correct form submission. This is always TRUE
       // for programmed forms coming from self::submitForm(), or if the form_id
       // coming from the POST data is set and matches the current form_id.
       if ($form_state['programmed'] || (!empty($form_state['input']) && (isset($form_state['input']['form_id']) && ($form_state['input']['form_id'] == $form_id)))) {
-        $form_state['process_input'] = TRUE;
+        $form_state->set('process_input', TRUE);
       }
       else {
-        $form_state['process_input'] = FALSE;
+        $form_state->set('process_input', FALSE);
       }
 
       // All form elements should have an #array_parents property.
@@ -931,7 +866,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // If there is a file element, we need to flip a flag so later the
     // form encoding can be set.
     if (isset($element['#type']) && $element['#type'] == 'file') {
-      $form_state['has_file_element'] = TRUE;
+      $form_state->set('has_file_element', TRUE);
     }
 
     // Final tasks for the form element after self::doBuildForm() has run for
@@ -949,26 +884,27 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // consistent as we can be across browsers, if no 'triggering_element' has
       // been identified yet, default it to the first button.
       if (!$form_state['programmed'] && !isset($form_state['triggering_element']) && !empty($form_state['buttons'])) {
-        $form_state['triggering_element'] = $form_state['buttons'][0];
+        $form_state->set('triggering_element', $form_state['buttons'][0]);
       }
 
+      $triggering_element = $form_state->get('triggering_element');
       // If the triggering element specifies "button-level" validation and
       // submit handlers to run instead of the default form-level ones, then add
       // those to the form state.
       foreach (array('validate', 'submit') as $type) {
-        if (isset($form_state['triggering_element']['#' . $type])) {
-          $form_state[$type . '_handlers'] = $form_state['triggering_element']['#' . $type];
+        if (isset($triggering_element['#' . $type])) {
+          $form_state->set($type . '_handlers', $triggering_element['#' . $type]);
         }
       }
 
       // If the triggering element executes submit handlers, then set the form
       // state key that's needed for those handlers to run.
-      if (!empty($form_state['triggering_element']['#executes_submit_callback'])) {
-        $form_state['submitted'] = TRUE;
+      if (!empty($triggering_element['#executes_submit_callback'])) {
+        $form_state->set('submitted', TRUE);
       }
 
       // Special processing if the triggering element is a button.
-      if (!empty($form_state['triggering_element']['#is_button'])) {
+      if (!empty($triggering_element['#is_button'])) {
         // Because there are several ways in which the triggering element could
         // have been determined (including from input variables set by
         // JavaScript or fallback behavior implemented for IE), and because
@@ -978,7 +914,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // $form_state['values'][BUTTON_NAME] being set. But it's common for
         // forms to have several buttons named 'op' and switch on
         // $form_state['values']['op'] during submit handler execution.
-        $form_state['values'][$form_state['triggering_element']['#name']] = $form_state['triggering_element']['#value'];
+        $form_state->addValue($triggering_element['#name'], $triggering_element['#value']);
       }
     }
     return $element;
@@ -987,7 +923,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Adds the #name and #value properties of an input element before rendering.
    */
-  protected function handleInputElement($form_id, &$element, &$form_state) {
+  protected function handleInputElement($form_id, &$element, FormStateInterface &$form_state) {
     if (!isset($element['#name'])) {
       $name = array_shift($element['#parents']);
       $element['#name'] = $name;
@@ -1101,7 +1037,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if ($process_input) {
       // Detect if the element triggered the submission via Ajax.
       if ($this->elementTriggeredScriptedSubmission($element, $form_state)) {
-        $form_state['triggering_element'] = $element;
+        $form_state->set('triggering_element', $element);
       }
 
       // If the form was submitted by the browser rather than via Ajax, then it
@@ -1113,16 +1049,18 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // form_state_values_clean() and for the self::doBuildForm() code that
         // handles a form submission containing no button information in
         // \Drupal::request()->request.
-        $form_state['buttons'][] = $element;
+        $buttons = $form_state->get('buttons');
+        $buttons[] = $element;
+        $form_state->set('buttons', $buttons);
         if ($this->buttonWasClicked($element, $form_state)) {
-          $form_state['triggering_element'] = $element;
+          $form_state->set('triggering_element', $element);
         }
       }
     }
 
     // Set the element's value in $form_state['values'], but only, if its key
     // does not exist yet (a #value_callback may have already populated it).
-    if (!NestedArray::keyExists($form_state['values'], $element['#parents'])) {
+    if (!NestedArray::keyExists($form_state->getValues(), $element['#parents'])) {
       $this->setValue($element, $element['#value'], $form_state);
     }
   }
@@ -1138,7 +1076,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * element value. An example where this is needed is if there are several
    * // buttons all named 'op', and only differing in their value.
    */
-  protected function elementTriggeredScriptedSubmission($element, &$form_state) {
+  protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
     if (!empty($form_state['input']['_triggering_element_name']) && $element['#name'] == $form_state['input']['_triggering_element_name']) {
       if (empty($form_state['input']['_triggering_element_value']) || $form_state['input']['_triggering_element_value'] == $element['#value']) {
         return TRUE;
@@ -1167,7 +1105,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * to know which button was clicked should get that information from
    * $form_state['triggering_element'].
    */
-  protected function buttonWasClicked($element, &$form_state) {
+  protected function buttonWasClicked($element, FormStateInterface &$form_state) {
     // First detect normal 'vanilla' button clicks. Traditionally, all standard
     // buttons on a form share the same name (usually 'op'), and the specific
     // return value is used to determine which was clicked. This ONLY works as
@@ -1190,8 +1128,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function setValue($element, $value, &$form_state) {
-    NestedArray::setValue($form_state['values'], $element['#parents'], $value, TRUE);
+  public function setValue($element, $value, FormStateInterface &$form_state) {
+    $values = $form_state->getValues();
+    NestedArray::setValue($values, $element['#parents'], $value, TRUE);
+    $form_state->set('values', $values);
   }
 
   /**

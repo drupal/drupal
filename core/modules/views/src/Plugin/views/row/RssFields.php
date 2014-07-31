@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Renders an RSS item based on fields.
  *
@@ -39,7 +41,7 @@ class RssFields extends RowPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $initial_labels = array('' => t('- None -'));

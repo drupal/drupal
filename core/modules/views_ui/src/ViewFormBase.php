@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -26,7 +27,7 @@ abstract class ViewFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function init(array &$form_state) {
+  public function init(FormStateInterface $form_state) {
     parent::init($form_state);
 
     if ($display_id = \Drupal::request()->attributes->get('display_id')) {
@@ -35,7 +36,7 @@ abstract class ViewFormBase extends EntityForm {
 
     // @todo Remove the need for this.
     form_load_include($form_state, 'inc', 'views_ui', 'admin');
-    $form_state['view'] = $this->entity;
+    $form_state->set('view', $this->entity);
   }
 
   /**

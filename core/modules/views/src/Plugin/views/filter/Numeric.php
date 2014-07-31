@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Simple filter to handle greater than/less than filters
@@ -139,7 +140,7 @@ class Numeric extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality
    */
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value']['#tree'] = TRUE;
 
     // We have to make some choices when creating this as an exposed

@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\views\argument_validator;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
@@ -51,7 +52,7 @@ class User extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $sanitized_id = ArgumentPluginBase::encodeValidatorId($this->definition['id']);
 
@@ -78,7 +79,7 @@ class User extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) {
     // filter trash out of the options so we don't store giant unnecessary arrays
     $options['roles'] = array_filter($options['roles']);
   }

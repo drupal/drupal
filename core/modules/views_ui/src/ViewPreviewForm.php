@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,7 +45,7 @@ class ViewPreviewForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
 
     $form['#prefix'] = '<div id="views-preview-wrapper" class="views-admin clearfix">';
@@ -100,7 +101,7 @@ class ViewPreviewForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
     return array(
       '#attributes' => array(
@@ -126,7 +127,7 @@ class ViewPreviewForm extends ViewFormBase {
   /**
    * Form submission handler for the Preview button.
    */
-  public function submitPreview($form, &$form_state) {
+  public function submitPreview($form, FormStateInterface $form_state) {
     // Rebuild the form with a pristine $view object.
     $view = $this->entity;
     // Attempt to load the view from temp store, otherwise create a new one.

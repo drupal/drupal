@@ -21,14 +21,14 @@ interface FormValidatorInterface extends FormErrorInterface {
    * @param $form
    *   An associative array containing the structure of the form.
    * @param $form_state
-   *   A keyed array containing the current state of the form. If the user
-   *   submitted the form by clicking a button with custom handler functions
-   *   defined, those handlers will be stored here.
+   *   The current state of the form. If the user submitted the form by clicking
+   *   a button with custom handler functions defined, those handlers will be
+   *   stored here.
    */
-  public function executeValidateHandlers(&$form, &$form_state);
+  public function executeValidateHandlers(&$form, FormStateInterface &$form_state);
 
   /**
-   * Validates user-submitted form data in the $form_state array.
+   * Validates user-submitted form data in the $form_state.
    *
    * @param $form_id
    *   A unique string identifying the form for validation, submission,
@@ -42,16 +42,16 @@ interface FormValidatorInterface extends FormErrorInterface {
    *   elements in $form_state['values'] to prevent form submit handlers from
    *   receiving unvalidated values.
    * @param $form_state
-   *   A keyed array containing the current state of the form. The current
-   *   user-submitted data is stored in $form_state['values'], though
-   *   form validation functions are passed an explicit copy of the
-   *   values for the sake of simplicity. Validation handlers can also use
-   *   $form_state to pass information on to submit handlers. For example:
+   *   The current state of the form. The current user-submitted data is stored
+   *   in $form_state['values'], though form validation functions are passed an
+   *   explicit copy of the values for the sake of simplicity. Validation
+   *   handlers can also use $form_state to pass information on to submit
+   *   handlers. For example:
    *     $form_state['data_for_submission'] = $data;
    *   This technique is useful when validation requires file parsing,
    *   web service requests, or other expensive requests that should
    *   not be repeated in the submission step.
    */
-  public function validateForm($form_id, &$form, &$form_state);
+  public function validateForm($form_id, &$form, FormStateInterface &$form_state);
 
 }

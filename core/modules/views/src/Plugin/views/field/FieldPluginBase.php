@@ -12,6 +12,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -479,7 +480,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Performs some cleanup tasks on the options array before saving it.
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $options = &$form_state['values']['options'];
     $types = array('element_type', 'element_label_type', 'element_wrapper_type');
     $classes = array_combine(array('element_class', 'element_label_class', 'element_wrapper_class'), $types);
@@ -506,7 +507,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Default options form that provides the label widget that all fields
    * should have.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $label = $this->label();

@@ -9,6 +9,7 @@ namespace Drupal\filter\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the interface for text processing filter plugins.
@@ -132,14 +133,14 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    *
    * @param array $form
    *   A minimally prepopulated form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The state of the (entire) configuration form.
    *
    * @return array
    *   The $form array with additional form elements for the settings of this
    *   filter. The submitted form values should match $this->settings.
    */
-  public function settingsForm(array $form, array &$form_state);
+  public function settingsForm(array $form, FormStateInterface $form_state);
 
   /**
    * Prepares the text for processing.

@@ -8,6 +8,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
 
@@ -26,7 +27,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $filter_values = $this->translateFilterValues();
     $langcode = $filter_values['langcode'];
 
@@ -158,7 +159,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $langcode = $form_state['values']['langcode'];
     foreach ($form_state['values']['strings'] as $lid => $translations) {
       foreach ($translations['translations'] as $key => $value) {
@@ -174,7 +175,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $langcode = $form_state['values']['langcode'];
     $updated = array();
 

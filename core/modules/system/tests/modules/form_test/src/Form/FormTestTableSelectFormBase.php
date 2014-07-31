@@ -19,8 +19,8 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param $element_properties
    *   An array of element properties for the tableselect element.
    *

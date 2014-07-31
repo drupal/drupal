@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Render\Element;
@@ -151,7 +152,7 @@ class ModulesListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $distribution = String::checkPlain(drupal_install_profile_distribution_name());
 
@@ -408,13 +409,13 @@ class ModulesListForm extends FormBase {
   /**
    * Helper function for building a list of modules to install.
    *
-   * @param array $form_state
-   *   The form state array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array
    *   An array of modules to install and their dependencies.
    */
-  protected function buildModuleList(array $form_state) {
+  protected function buildModuleList($form_state) {
     $packages = $form_state['values']['modules'];
 
     // Build a list of modules to install.
@@ -472,7 +473,7 @@ class ModulesListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Retrieve a list of modules to install and their dependencies.
     $modules = $this->buildModuleList($form_state);
 

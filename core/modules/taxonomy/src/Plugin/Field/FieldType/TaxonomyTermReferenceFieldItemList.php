@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\Field\FieldType;
 use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Represents a configurable taxonomy_term_reference entity field item list.
@@ -19,7 +20,7 @@ class TaxonomyTermReferenceFieldItemList extends EntityReferenceFieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state) {
+  public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state) {
     $default_value = parent::defaultValuesFormSubmit($element, $form, $form_state);
 
     // Convert numeric IDs to UUIDs to ensure config deployability.

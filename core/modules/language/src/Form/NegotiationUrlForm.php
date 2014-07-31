@@ -8,6 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
@@ -23,9 +24,9 @@ class NegotiationUrlForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     global $base_url;
     $config = $this->config('language.negotiation');
 
@@ -96,7 +97,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $languages = language_list();
 
     // Count repeated values for uniqueness check.
@@ -158,9 +159,9 @@ class NegotiationUrlForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save selected format (prefix or domain).
     $this->config('language.negotiation')
       ->set('url.source', $form_state['values']['language_negotiation_url_part'])

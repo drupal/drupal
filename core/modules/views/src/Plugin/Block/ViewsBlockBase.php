@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -105,7 +106,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     // Set the default label to '' so the views internal title is used.
@@ -163,7 +164,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['views_label_checkbox'])) {
       $this->configuration['views_label'] = $form_state['values']['views_label'];
     }

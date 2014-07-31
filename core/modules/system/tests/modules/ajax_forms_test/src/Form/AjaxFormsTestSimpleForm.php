@@ -9,6 +9,7 @@ namespace Drupal\ajax_forms_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\ajax_forms_test\Callbacks;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder: Builds a form that triggers a simple AJAX callback.
@@ -25,7 +26,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $object = new Callbacks();
 
     $form = array();
@@ -77,7 +78,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

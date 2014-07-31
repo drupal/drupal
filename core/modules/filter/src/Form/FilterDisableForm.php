@@ -8,6 +8,7 @@
 namespace Drupal\filter\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -46,7 +47,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->disable()->save();
     drupal_set_message($this->t('Disabled text format %format.', array('%format' => $this->entity->label())));
 

@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder for the admin display defaults page.
@@ -24,7 +25,7 @@ class BasicSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
     $config = $this->config('views.settings');
@@ -126,7 +127,7 @@ class BasicSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('views.settings')
       ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
       ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])

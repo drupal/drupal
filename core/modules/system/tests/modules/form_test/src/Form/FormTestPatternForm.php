@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a simple form using the FAPI #pattern proterty.
@@ -24,7 +25,7 @@ class FormTestPatternForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['textfield'] = array(
       '#type' => 'textfield',
       '#title' => 'One digit followed by lowercase letters',
@@ -59,7 +60,7 @@ class FormTestPatternForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

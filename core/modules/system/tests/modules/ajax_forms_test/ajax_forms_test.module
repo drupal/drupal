@@ -7,6 +7,7 @@
 
 use Drupal\Core\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Ajax form callback: Selects 'after'.
@@ -206,6 +207,6 @@ function ajax_forms_test_validation_number_form_callback($form, $form_state) {
 /**
  * AJAX form callback: Selects for the ajax_forms_test_lazy_load_form() form.
  */
-function ajax_forms_test_lazy_load_form_ajax($form, &$form_state) {
+function ajax_forms_test_lazy_load_form_ajax($form, FormStateInterface $form_state) {
   return array('#markup' => 'new content');
 }

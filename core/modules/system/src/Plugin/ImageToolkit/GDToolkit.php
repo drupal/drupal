@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 
 /**
@@ -76,7 +77,7 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit($form, &$form_state) {
+  public function settingsFormSubmit($form, FormStateInterface $form_state) {
     \Drupal::config('system.image.gd')
       ->set('jpeg_quality', $form_state['values']['gd']['image_jpeg_quality'])
       ->save();

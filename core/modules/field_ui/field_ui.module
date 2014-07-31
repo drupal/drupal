@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\EntityViewModeInterface;
@@ -198,7 +199,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
  *
  * @see field_ui_form_node_type_form_alter()
  */
-function field_ui_form_node_type_form_submit($form, &$form_state) {
+function field_ui_form_node_type_form_submit($form, FormStateInterface $form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('node', $form_state['values']['type'])) {
     $form_state['redirect_route'] = $route_info;
   }

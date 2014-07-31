@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Core\Form\FormState;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -71,7 +72,7 @@ class ProgrammaticTest extends WebTestBase {
    */
   private function submitForm($values, $valid_input) {
     // Programmatically submit the given values.
-    $form_state = array('values' => $values);
+    $form_state = new FormState(array('values' => $values));
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);
 
     // Check that the form returns an error when expected, and vice versa.
@@ -98,6 +99,7 @@ class ProgrammaticTest extends WebTestBase {
    * Test the programmed_bypass_access_check flag.
    */
   public function testProgrammaticAccessBypass() {
+    $form_state = new FormState();
     $form_state['values'] = array(
       'textfield' => 'dummy value',
       'field_restricted' => 'dummy value'

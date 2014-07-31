@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
 
@@ -49,7 +50,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
@@ -92,14 +93,14 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['handler']->validateExtraOptionsForm($form['options'], $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Run it through the handler's submit function.
     $form_state['handler']->submitExtraOptionsForm($form['options'], $form_state);
     $item = $form_state['handler']->options;

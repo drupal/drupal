@@ -12,6 +12,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -261,7 +262,7 @@ function update_form_system_modules_alter(&$form, $form_state) {
  *
  * @see update_form_system_modules_alter()
  */
-function update_storage_clear_submit($form, &$form_state) {
+function update_storage_clear_submit($form, FormStateInterface $form_state) {
   // Clear all update module data.
   update_storage_clear();
 }

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -58,15 +59,15 @@ class OverviewTerms extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
    *   The vocabulary to display the overview form for.
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, array &$form_state, VocabularyInterface $taxonomy_vocabulary = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, VocabularyInterface $taxonomy_vocabulary = NULL) {
     // @todo Remove global variables when http://drupal.org/node/2044435 is in.
     global $pager_page_array, $pager_total, $pager_total_items;
 
@@ -360,10 +361,10 @@ class OverviewTerms extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Sort term order based on weight.
     uasort($form_state['values']['terms'], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
 
@@ -448,7 +449,7 @@ class OverviewTerms extends FormBase {
   /**
    * Redirects to confirmation form for the reset action.
    */
-  public function submitReset(array &$form, array &$form_state) {
+  public function submitReset(array &$form, FormStateInterface $form_state) {
     /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
     $vocabulary = $form_state['taxonomy']['vocabulary'];
     $form_state['redirect_route'] = $vocabulary->urlInfo('reset');

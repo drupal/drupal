@@ -10,6 +10,7 @@ namespace Drupal\node;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for node type forms.
@@ -19,7 +20,7 @@ class NodeTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $type = $this->entity;
@@ -152,7 +153,7 @@ class NodeTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save content type');
     $actions['delete']['#value'] = t('Delete content type');
@@ -162,7 +163,7 @@ class NodeTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     $id = trim($form_state['values']['type']);
@@ -175,7 +176,7 @@ class NodeTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
     $type->type = trim($type->id());
     $type->name = trim($type->name);

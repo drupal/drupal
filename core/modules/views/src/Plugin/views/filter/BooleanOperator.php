@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -131,7 +132,7 @@ class BooleanOperator extends FilterPluginBase {
     return $options;
   }
 
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
       $this->getValueOptions();
@@ -162,7 +163,7 @@ class BooleanOperator extends FilterPluginBase {
     }
   }
 
-  protected function valueValidate($form, &$form_state) {
+  protected function valueValidate($form, FormStateInterface $form_state) {
     if (isset($form_state['values']['options']['value']) && $form_state['values']['options']['value'] == 'All' && !empty($form_state['values']['options']['expose']['required'])) {
       form_set_error('value', $form_state, t('You must select a value unless this is an non-required exposed filter.'));
     }

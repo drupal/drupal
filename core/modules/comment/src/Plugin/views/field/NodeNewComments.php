@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Database\Connection;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -82,7 +83,7 @@ class NodeNewComments extends Numeric {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_comment'] = array(
       '#title' => t('Link this field to new comments'),
       '#description' => t("Enable to override this field's links."),

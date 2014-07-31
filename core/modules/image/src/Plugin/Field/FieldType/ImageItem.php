@@ -8,6 +8,7 @@
 namespace Drupal\image\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
@@ -152,7 +153,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     // We need the field-level 'default_image' setting, and $this->getSettings()
@@ -182,7 +183,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, array &$form_state) {
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
     // Get base form from FileItem::instanceSettingsForm().
     $element = parent::instanceSettingsForm($form, $form_state);
 
@@ -313,7 +314,7 @@ class ImageItem extends FileItem {
   /**
    * Element validate function for resolution fields.
    */
-  public static function validateResolution($element, &$form_state) {
+  public static function validateResolution($element, FormStateInterface $form_state) {
     if (!empty($element['x']['#value']) || !empty($element['y']['#value'])) {
       foreach (array('x', 'y') as $dimension) {
         if (!$element[$dimension]['#value']) {
@@ -383,10 +384,10 @@ class ImageItem extends FileItem {
    *
    * @param array $element
    *   The form element to process.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public static function validateDefaultImageForm(array &$element, array &$form_state) {
+  public static function validateDefaultImageForm(array &$element, FormStateInterface $form_state) {
     // Consolidate the array value of this field to a single FID as #extended
     // for default image is not TRUE and this is a single value.
     if (isset($element['fids']['#value'][0])) {

@@ -10,6 +10,7 @@ namespace Drupal\aggregator\Form;
 use Drupal\aggregator\FeedStorageInterface;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\ClientInterface;
@@ -66,7 +67,7 @@ class OpmlFeedAdd extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
     $period = array_map(array(\Drupal::service('date'), 'formatInterval'), array_combine($intervals, $intervals));
 
@@ -101,7 +102,7 @@ class OpmlFeedAdd extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // If both fields are empty or filled, cancel.
     $file_upload = $this->getRequest()->files->get('files[upload]', NULL, TRUE);
     if (empty($form_state['values']['remote']) == empty($file_upload)) {
@@ -112,7 +113,7 @@ class OpmlFeedAdd extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $validators = array('file_validate_extensions' => array('opml xml'));
     if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
       $data = file_get_contents($file->getFileUri());

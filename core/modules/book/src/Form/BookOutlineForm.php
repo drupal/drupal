@@ -10,6 +10,7 @@ namespace Drupal\book\Form;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -64,7 +65,7 @@ class BookOutlineForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->entity->label();
 
     if (!isset($this->entity->book)) {
@@ -87,7 +88,7 @@ class BookOutlineForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->entity->book['original_bid'] ? $this->t('Update book outline') : $this->t('Add to book outline');
     $actions['delete']['#value'] = $this->t('Remove from book outline');
@@ -100,7 +101,7 @@ class BookOutlineForm extends ContentEntityForm {
    *
    * @see book_remove_button_submit()
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = array(
       'route_name' => 'node.view',
       'route_parameters' => array(
@@ -132,7 +133,7 @@ class BookOutlineForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function delete(array $form, array &$form_state) {
+  public function delete(array $form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = $this->entity->urlInfo('book-remove-form');
   }
 

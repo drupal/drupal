@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Form\ConfirmFormInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a generic base class for an entity-based confirmation form.
@@ -53,7 +54,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
     $form['#title'] = $this->getQuestion();
@@ -72,7 +73,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     // Do not attach fields to the confirm form.
     return $form;
   }
@@ -80,7 +81,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->getConfirmText();
     unset($actions['delete']);

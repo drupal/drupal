@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Basic textfield filter to handle string filtering commands
@@ -183,7 +184,7 @@ class String extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality
    */
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     // We have to make some choices when creating this as an exposed
     // filter form. For example, if the operator is locked and thus
     // not rendered, we can't render dependencies; instead we only

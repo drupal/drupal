@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\simpletest\WebTestBase;
@@ -102,7 +103,7 @@ class FormTest extends WebTestBase {
         foreach (array(TRUE, FALSE) as $required) {
           $form_id = $this->randomName();
           $form = array();
-          $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+          $form_state = new FormState();
           $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
@@ -482,7 +483,7 @@ class FormTest extends WebTestBase {
    */
   function testDisabledElements() {
     // Get the raw form in its original state.
-    $form_state = array();
+    $form_state = new FormState();
     $form = (new FormTestDisabledElementsForm())->buildForm(array(), $form_state);
 
     // Build a submission that tries to hijack the form by submitting input for

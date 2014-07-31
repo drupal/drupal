@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * A abstract handler which provides a collection of links.
  *
@@ -36,7 +38,7 @@ abstract class Links extends FieldPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     // Only show fields that precede this one.
     $field_options = $this->getPreviousFieldLabels();

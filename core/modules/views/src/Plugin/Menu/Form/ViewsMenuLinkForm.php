@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\Menu\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\Form\MenuLinkDefaultForm;
 
 /**
@@ -29,7 +30,7 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
     // Put the title field first.
     $form['title'] = array(
@@ -72,7 +73,7 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(array &$form, array &$form_state) {
+  public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $definition = parent::extractFormValues($form, $form_state);
     $definition['title'] = $form_state['values']['title'];
     $definition['description'] = $form_state['values']['description'];

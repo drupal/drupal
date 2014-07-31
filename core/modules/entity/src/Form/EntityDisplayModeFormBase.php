@@ -10,6 +10,7 @@ namespace Drupal\entity\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -64,7 +65,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function init(array &$form_state) {
+  protected function init(FormStateInterface $form_state) {
     parent::init($form_state);
     $this->entityType = $this->entityManager->getDefinition($this->entity->getEntityTypeId());
   }
@@ -72,7 +73,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),
@@ -102,13 +103,11 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    *   The entity ID.
    * @param array $element
    *   The form element.
-   * @param array $form_state
-   *   The form state.
    *
    * @return bool
    *   TRUE if the display mode exists, FALSE otherwise.
    */
-  public function exists($entity_id, array $element, array $form_state) {
+  public function exists($entity_id, array $element) {
     // Do not allow to add internal 'default' view mode.
     if ($entity_id == 'default') {
       return TRUE;
@@ -122,7 +121,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
     $this->entity->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();

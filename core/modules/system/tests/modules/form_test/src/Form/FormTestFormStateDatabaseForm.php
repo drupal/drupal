@@ -9,6 +9,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a form which gets the database connection stored in the form state.
@@ -25,7 +26,7 @@ class FormTestFormStateDatabaseForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
       '#title' => t('Text field'),
@@ -50,7 +51,7 @@ class FormTestFormStateDatabaseForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['cache'] = TRUE;
     $form_state['rebuild'] = TRUE;
 

@@ -8,6 +8,7 @@
 namespace Drupal\views\Form;
 
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 
 class ViewsFormMainForm implements FormInterface {
@@ -21,7 +22,7 @@ class ViewsFormMainForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, ViewExecutable $view = NULL, $output = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = NULL) {
     $form['#prefix'] = '<div class="views-form">';
     $form['#suffix'] = '</div>';
     $form['#theme'] = 'form';
@@ -106,7 +107,7 @@ class ViewsFormMainForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state['build_info']['args'][0];
 
     // Call the validation method on every field handler that has it.
@@ -129,7 +130,7 @@ class ViewsFormMainForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state['build_info']['args'][0];
 
     // Call the submit method on every field handler that has it.

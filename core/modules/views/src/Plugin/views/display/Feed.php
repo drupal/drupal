@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Response;
@@ -193,7 +194,7 @@ class Feed extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // It is very important to call the parent function here.
     parent::buildOptionsForm($form, $form_state);
 
@@ -239,7 +240,7 @@ class Feed extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::submitOptionsForm().
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'title':

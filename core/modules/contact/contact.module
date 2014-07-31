@@ -5,6 +5,7 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -162,7 +163,7 @@ function contact_mail($key, &$message, $params) {
  *
  * @see \Drupal\user\ProfileForm::form()
  */
-function contact_form_user_form_alter(&$form, &$form_state) {
+function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
   $form['contact'] = array(
     '#type' => 'details',
     '#title' => t('Contact settings'),
@@ -185,7 +186,7 @@ function contact_form_user_form_alter(&$form, &$form_state) {
 /**
  * Submit callback for the user profile form to save the contact page setting.
  */
-function contact_user_profile_form_submit($form, &$form_state) {
+function contact_user_profile_form_submit($form, FormStateInterface $form_state) {
   $account = $form_state['controller']->getEntity();
   if ($account->id() && isset($form_state['values']['contact'])) {
     \Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state['values']['contact']);
@@ -199,7 +200,7 @@ function contact_user_profile_form_submit($form, &$form_state) {
  *
  * @see user_admin_settings()
  */
-function contact_form_user_admin_settings_alter(&$form, &$form_state) {
+function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
   $form['contact'] = array(
     '#type' => 'details',
     '#title' => t('Contact settings'),
@@ -221,7 +222,7 @@ function contact_form_user_admin_settings_alter(&$form, &$form_state) {
  *
  * @see contact_form_user_admin_settings_alter()
  */
-function contact_form_user_admin_settings_submit($form, &$form_state) {
+function contact_form_user_admin_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::config('contact.settings')
     ->set('user_default_enabled', $form_state['values']['contact_default_status'])
     ->save();

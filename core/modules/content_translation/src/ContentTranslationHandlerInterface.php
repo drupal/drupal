@@ -8,6 +8,7 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Interface for providing content translation.
@@ -37,13 +38,13 @@ interface ContentTranslationHandlerInterface {
   /**
    * Retrieves the source language for the translation being created.
    *
-   * @param array $form_state
-   *   The form state array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return string
    *   The source language code.
    */
-  public function getSourceLangcode(array $form_state);
+  public function getSourceLangcode($form_state);
 
   /**
    * Marks translations as outdated.
@@ -61,11 +62,11 @@ interface ContentTranslationHandlerInterface {
    *
    * @param array $form
    *   The entity form to be altered to provide the translation workflow.
-   * @param array $form_state
-   *   The form state array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being created or edited.
    */
-  public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity);
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity);
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\wizard;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
@@ -86,12 +87,12 @@ class Node extends WizardPluginBase {
    *
    * @param array $form
    *   The full wizard form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    * @param string $type
    *   The display ID (e.g. 'page' or 'block').
    */
-  protected function buildFormStyle(array &$form, array &$form_state, $type) {
+  protected function buildFormStyle(array &$form, FormStateInterface $form_state, $type) {
     parent::buildFormStyle($form, $form_state, $type);
     $style_form =& $form['displays'][$type]['options']['style'];
     // Some style plugins don't support row plugins so stop here if that's the
@@ -156,7 +157,7 @@ class Node extends WizardPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayFiltersUser().
    */
-  protected function defaultDisplayFiltersUser(array $form, array &$form_state) {
+  protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = parent::defaultDisplayFiltersUser($form, $form_state);
 
     if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
@@ -183,7 +184,7 @@ class Node extends WizardPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected function pageDisplayOptions(array $form, array &$form_state) {
+  protected function pageDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = parent::pageDisplayOptions($form, $form_state);
     $row_plugin = isset($form_state['values']['page']['style']['row_plugin']) ? $form_state['values']['page']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['page']['style']['row_options']) ? $form_state['values']['page']['style']['row_options'] : array();
@@ -194,7 +195,7 @@ class Node extends WizardPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected function blockDisplayOptions(array $form, array &$form_state) {
+  protected function blockDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = parent::blockDisplayOptions($form, $form_state);
     $row_plugin = isset($form_state['values']['block']['style']['row_plugin']) ? $form_state['values']['block']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['block']['style']['row_options']) ? $form_state['values']['block']['style']['row_options'] : array();
@@ -233,7 +234,7 @@ class Node extends WizardPluginBase {
    *
    * Add some options for filter by taxonomy terms.
    */
-  protected function buildFilters(&$form, &$form_state) {
+  protected function buildFilters(&$form, FormStateInterface $form_state) {
     parent::buildFilters($form, $form_state);
 
     $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);

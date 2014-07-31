@@ -7,6 +7,7 @@
 namespace Drupal\file_test\Form;
 
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * File test form class.
@@ -23,7 +24,7 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['file_test_upload'] = array(
       '#type' => 'file',
       '#title' => t('Upload a file'),
@@ -72,12 +73,12 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.
     if (!empty($form_state['values']['file_subdir'])) {

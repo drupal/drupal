@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -56,7 +57,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function init(array &$form_state) {
+  protected function init(FormStateInterface $form_state) {
     $comment = $this->entity;
 
     // Make the comment inherit the current content language unless specifically
@@ -72,7 +73,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::form().
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
     $entity = $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId());
@@ -218,7 +219,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::actions().
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     /* @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
@@ -255,7 +256,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::validate().
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
     $entity = $this->entity;
 
@@ -289,7 +290,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides EntityForm::buildEntity().
    */
-  public function buildEntity(array $form, array &$form_state) {
+  public function buildEntity(array $form, FormStateInterface $form_state) {
     $comment = parent::buildEntity($form, $form_state);
     if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {
       $comment->setCreatedTime($form_state['values']['date']->getTimestamp());
@@ -304,7 +305,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::submit().
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = parent::submit($form, $form_state);
 
@@ -346,9 +347,9 @@ class CommentForm extends ContentEntityForm {
    * @param $form
    *   An associative array containing the structure of the form.
    * @param $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   *   The current state of the form.
    */
-  public function preview(array &$form, array &$form_state) {
+  public function preview(array &$form, FormStateInterface $form_state) {
     $comment = $this->entity;
     $form_state['comment_preview'] = comment_preview($comment, $form_state);
     $form_state['comment_preview']['#title'] = $this->t('Preview comment');
@@ -358,7 +359,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::save().
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();

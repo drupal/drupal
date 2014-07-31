@@ -8,6 +8,7 @@
 namespace Drupal\book\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure book settings for this site.
@@ -24,7 +25,7 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $types = node_type_get_names();
     $config = $this->config('book.settings');
     $form['book_allowed_types'] = array(
@@ -50,7 +51,7 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $child_type = $form_state['values']['book_child_type'];
     if (empty($form_state['values']['book_allowed_types'][$child_type])) {
       $this->setFormError('book_child_type', $form_state, $this->t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => $this->t('Add child page'))));
@@ -62,7 +63,7 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $allowed_types = array_filter($form_state['values']['book_allowed_types']);
     // We need to save the allowed types in an array ordered by machine_name so
     // that we can save them in the correct order if node type changes.

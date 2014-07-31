@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Core\Form\FormState;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\block\BlockInterface;
 
@@ -118,7 +119,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
         '#default_value' => 'My custom display message.',
       ),
     );
-    $form_state = array();
+    $form_state = new FormState();
     // Ensure there are no form elements that do not belong to the plugin.
     $actual_form = $display_block->buildConfigurationForm(array(), $form_state);
     // Remove the visibility sections, as that just tests condition plugins.

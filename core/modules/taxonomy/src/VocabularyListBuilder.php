@@ -9,6 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a class to build a listing of taxonomy vocabulary entities.
@@ -86,7 +87,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $form['vocabularies']['#attributes'] = array('id' => 'taxonomy');
     $form['actions']['submit']['#value'] = t('Save');
@@ -97,7 +98,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     drupal_set_message(t('The configuration options have been saved.'));

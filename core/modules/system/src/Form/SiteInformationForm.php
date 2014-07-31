@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -58,7 +59,7 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $site_config = $this->config('system.site');
     $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {
@@ -131,7 +132,7 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check for empty front page path.
     if (empty($form_state['values']['site_frontpage'])) {
       // Set to default "user".
@@ -167,7 +168,7 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
       ->set('name', $form_state['values']['site_name'])
       ->set('mail', $form_state['values']['site_mail'])

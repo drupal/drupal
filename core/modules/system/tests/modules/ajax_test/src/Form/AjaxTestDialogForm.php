@@ -13,6 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\OpenDialogCommand;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Dummy form for testing DialogController with _form routes.
@@ -29,7 +30,7 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // In order to use WebTestBase::drupalPostAjaxForm() to POST from a link, we need
     // to have a dummy field we can set in WebTestBase::drupalPostForm() else it won't
     // submit anything.
@@ -59,14 +60,14 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
 
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['redirect'] = 'ajax-test/dialog-contents';
   }
 
@@ -74,14 +75,14 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * AJAX callback handler for AjaxTestDialogForm.
    */
-  public function modal(&$form, &$form_state) {
+  public function modal(&$form, FormStateInterface $form_state) {
     return $this->dialog(TRUE);
   }
 
   /**
    * AJAX callback handler for AjaxTestDialogForm.
    */
-  public function nonModal(&$form, &$form_state) {
+  public function nonModal(&$form, FormStateInterface $form_state) {
     return $this->dialog(FALSE);
   }
 

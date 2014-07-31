@@ -10,6 +10,7 @@ namespace Drupal\Core\Field;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -58,7 +59,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function form(FieldItemListInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
+  public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
     $field_name = $this->fieldDefinition->getName();
     $parents = $form['#parents'];
 
@@ -140,7 +141,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * - AHAH-'add more' button
    * - table display and drag-n-drop value reordering
    */
-  protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $parents = $form['#parents'];
@@ -238,7 +239,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * This stores the final location of the field within the form structure so
    * that flagErrors() can assign validation errors to the right form element.
    */
-  public static function afterBuild(array $element, array &$form_state) {
+  public static function afterBuild(array $element, FormStateInterface $form_state) {
     $parents = $element['#field_parents'];
     $field_name = $element['#field_name'];
 
@@ -252,7 +253,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Submission handler for the "Add another item" button.
    */
-  public static function addMoreSubmit(array $form, array &$form_state) {
+  public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
     $button = $form_state['triggering_element'];
 
     // Go one level up in the form, to the widgets container.
@@ -274,7 +275,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * This returns the new page content to replace the page content made obsolete
    * by the form submission.
    */
-  public static function addMoreAjax(array $form, array $form_state) {
+  public static function addMoreAjax(array $form, FormStateInterface $form_state) {
     $button = $form_state['triggering_element'];
 
     // Go one level up in the form, to the widgets container.
@@ -296,7 +297,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Generates the form element for a single copy of the widget.
    */
-  protected function formSingleElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  protected function formSingleElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
 
     $element += array(
@@ -327,7 +328,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(FieldItemListInterface $items, array $form, array &$form_state) {
+  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
 
     // Extract the values from $form_state['values'].
@@ -372,7 +373,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, array &$form_state) {
+  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
 
     $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
@@ -441,15 +442,15 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public static function getWidgetState(array $parents, $field_name, array &$form_state) {
-    return NestedArray::getValue($form_state, static::getWidgetStateParents($parents, $field_name));
+  public static function getWidgetState(array $parents, $field_name, FormStateInterface $form_state) {
+    return NestedArray::getValue($form_state['storage'], static::getWidgetStateParents($parents, $field_name));
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function setWidgetState(array $parents, $field_name, array &$form_state, array $field_state) {
-    NestedArray::setValue($form_state, static::getWidgetStateParents($parents, $field_name), $field_state);
+  public static function setWidgetState(array $parents, $field_name, FormStateInterface $form_state, array $field_state) {
+    NestedArray::setValue($form_state['storage'], static::getWidgetStateParents($parents, $field_name), $field_state);
   }
 
   /**
@@ -473,7 +474,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     return array();
   }
 
@@ -487,14 +488,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, FormStateInterface $form_state) {
     return $element;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function massageFormValues(array $values, array $form, array &$form_state) {
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     return $values;
   }
 

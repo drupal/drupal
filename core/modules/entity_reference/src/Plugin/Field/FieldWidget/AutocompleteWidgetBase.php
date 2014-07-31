@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -21,7 +22,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['match_operator'] = array(
       '#type' => 'radios',
       '#title' => t('Autocomplete matching'),
@@ -70,7 +71,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
 
     // Prepare the autocomplete route parameters.
@@ -103,14 +104,14 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, FormStateInterface $form_state) {
     return $element['target_id'];
   }
 
   /**
    * Validates an element.
    */
-  public function elementValidate($element, &$form_state, $form) { }
+  public function elementValidate($element, FormStateInterface $form_state, $form) { }
 
   /**
    * Gets the entity labels.

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the translation handler for terms.
@@ -18,7 +19,7 @@ class TermTranslationHandler extends ContentTranslationHandler {
   /**
    * {@inheritdoc}
    */
-  public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
     $form['actions']['submit']['#submit'][] = array($this, 'entityFormSave');
   }
@@ -30,7 +31,7 @@ class TermTranslationHandler extends ContentTranslationHandler {
    *
    * @see \Drupal\Core\Entity\EntityForm::build().
    */
-  function entityFormSave(array $form, array &$form_state) {
+  function entityFormSave(array $form, FormStateInterface $form_state) {
     if ($this->getSourceLangcode($form_state)) {
       $entity = content_translation_form_controller($form_state)->getEntity();
       // We need a redirect here, otherwise we would get an access denied page,

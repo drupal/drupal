@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a simple form with a button triggering partial validation.
@@ -24,7 +25,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => 'Title',
@@ -87,7 +88,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function elementValidateLimitValidationErrors($element, &$form_state) {
+  public function elementValidateLimitValidationErrors($element, FormStateInterface $form_state) {
     if ($element['#value'] == 'invalid') {
       form_error($element, $form_state, t('@label element is invalid', array('@label' => $element['#title'])));
     }
@@ -96,13 +97,13 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function partialSubmitForm(array &$form, array &$form_state) {
+  public function partialSubmitForm(array &$form, FormStateInterface $form_state) {
     // The title has not been validated, thus its value - in case of the test case
     // an empty string - may not be set.
     if (!isset($form_state['values']['title']) && isset($form_state['values']['test'])) {

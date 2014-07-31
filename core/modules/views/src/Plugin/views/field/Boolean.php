@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Xss as UtilityXss;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -61,7 +62,7 @@ class Boolean extends FieldPluginBase {
     $this->formats = array_merge($default_formats, $output_formats, $custom_format);
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     foreach ($this->formats as $key => $item) {
       $options[$key] = implode('/', $item);
     }

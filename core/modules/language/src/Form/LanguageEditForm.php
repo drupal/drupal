@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Form\LanguageFormBase;
 
 /**
@@ -25,7 +26,7 @@ class LanguageEditForm extends LanguageFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $this->commonForm($form);
     return parent::form($form, $form_state);
   }
@@ -33,7 +34,7 @@ class LanguageEditForm extends LanguageFormBase {
   /**
    * {@inheritdoc}
    */
-  public function actions(array $form, array &$form_state) {
+  public function actions(array $form, FormStateInterface $form_state) {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save language'),
@@ -46,7 +47,7 @@ class LanguageEditForm extends LanguageFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Prepare a language object for saving.
     $languages = language_list();
     $langcode = $form_state['values']['langcode'];

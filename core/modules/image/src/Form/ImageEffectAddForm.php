@@ -8,6 +8,7 @@
 namespace Drupal\image\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\ImageEffectManager;
 use Drupal\image\ImageStyleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +47,7 @@ class ImageEffectAddForm extends ImageEffectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
     $form = parent::buildForm($form, $form_state, $image_style, $image_effect);
 
     $form['#title'] = $this->t('Add %label effect', array('%label' => $this->imageEffect->label()));

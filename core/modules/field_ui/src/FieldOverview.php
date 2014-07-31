@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -77,7 +78,7 @@ class FieldOverview extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
     parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
     // Gather bundle information.
@@ -281,7 +282,7 @@ class FieldOverview extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->validateAddNew($form, $form_state);
     $this->validateAddExisting($form, $form_state);
   }
@@ -291,12 +292,12 @@ class FieldOverview extends OverviewBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @see \Drupal\field_ui\FieldOverview::validateForm()
    */
-  protected function validateAddNew(array $form, array &$form_state) {
+  protected function validateAddNew(array $form, FormStateInterface $form_state) {
     $field = $form_state['values']['fields']['_add_new_field'];
 
     // Validate if any information was provided in the 'add new field' row.
@@ -331,12 +332,12 @@ class FieldOverview extends OverviewBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @see \Drupal\field_ui\FieldOverview::validate()
    */
-  protected function validateAddExisting(array $form, array &$form_state) {
+  protected function validateAddExisting(array $form, FormStateInterface $form_state) {
     // The form element might be absent if no existing fields can be added to
     // this bundle.
     if (isset($form_state['values']['fields']['_add_existing_field'])) {
@@ -361,7 +362,7 @@ class FieldOverview extends OverviewBase {
   /**
    * Overrides \Drupal\field_ui\OverviewBase::submitForm().
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $error = FALSE;
     $form_values = $form_state['values']['fields'];
     $destinations = array();

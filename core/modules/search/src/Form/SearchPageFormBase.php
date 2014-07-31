@@ -9,6 +9,7 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -79,7 +80,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $this->plugin = $this->entity->getPlugin();
     return parent::buildForm($form, $form_state);
   }
@@ -87,7 +88,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -143,7 +144,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     // Ensure each path is unique.
@@ -163,7 +164,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
 
     if ($this->plugin instanceof PluginFormInterface) {
@@ -175,7 +176,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
 
     $form_state['redirect_route']['route_name'] = 'search.settings';

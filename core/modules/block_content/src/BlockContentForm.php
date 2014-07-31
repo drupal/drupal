@@ -10,6 +10,7 @@ namespace Drupal\block_content;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -83,7 +84,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $block = $this->entity;
     $account = $this->currentUser();
 
@@ -174,7 +175,7 @@ class BlockContentForm extends ContentEntityForm {
    * form state's entity with the current step's values before proceeding to the
    * next step.
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     // Build the block object from the submitted values.
     $block = parent::submit($form, $form_state);
 
@@ -189,7 +190,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $block = $this->entity;
     $insert = $block->isNew();
     $block->save();
@@ -236,7 +237,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($this->entity->isNew()) {
       $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state['values']['info']));
       if (!empty($exists)) {

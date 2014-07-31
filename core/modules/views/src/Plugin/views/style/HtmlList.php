@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Style plugin to render each item in an ordered or unordered list.
  *
@@ -52,7 +54,7 @@ class HtmlList extends StylePluginBase {
   /**
    * Render the given style.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['type'] = array(
       '#type' => 'radios',

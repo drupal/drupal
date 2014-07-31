@@ -7,6 +7,7 @@
 
 namespace Drupal\entity\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,7 +25,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $this->targetEntityTypeId = $entity_type_id;
     $form = parent::buildForm($form, $form_state);
     // Change replace_pattern to avoid undesired dots.
@@ -37,7 +38,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     form_set_value($form['id'], $this->targetEntityTypeId . '.' . $form_state['values']['id'], $form_state);

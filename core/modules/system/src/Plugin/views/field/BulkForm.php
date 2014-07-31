@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\style\Table;
@@ -92,7 +93,7 @@ class BulkForm extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['action_title'] = array(
       '#type' => 'textfield',
       '#title' => t('Action title'),
@@ -122,7 +123,7 @@ class BulkForm extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
     $form_state['values']['options']['selected_actions'] = array_filter($form_state['values']['options']['selected_actions']);
@@ -157,10 +158,10 @@ class BulkForm extends FieldPluginBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function viewsForm(&$form, &$form_state) {
+  public function viewsForm(&$form, FormStateInterface $form_state) {
     // Add the tableselect javascript.
     $form['#attached']['library'][] = 'core/drupal.tableselect';
 
@@ -245,10 +246,10 @@ class BulkForm extends FieldPluginBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function viewsFormSubmit(&$form, &$form_state) {
+  public function viewsFormSubmit(&$form, FormStateInterface $form_state) {
     if ($form_state['step'] == 'views_form_views_form') {
       // Filter only selected checkboxes.
       $selected = array_filter($form_state['values'][$this->options['id']]);
@@ -289,7 +290,7 @@ class BulkForm extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function viewsFormValidate(&$form, &$form_state) {
+  public function viewsFormValidate(&$form, FormStateInterface $form_state) {
     $selected = array_filter($form_state['values'][$this->options['id']]);
     if (empty($selected)) {
       form_set_error('', $form_state, $this->emptySelectedMessage());

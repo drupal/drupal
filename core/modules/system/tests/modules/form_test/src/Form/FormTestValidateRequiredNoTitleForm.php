@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor to test the #required property without #title.
@@ -24,7 +25,7 @@ class FormTestValidateRequiredNoTitleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['textfield'] = array(
       '#type' => 'textfield',
       '#required' => TRUE,
@@ -37,7 +38,7 @@ class FormTestValidateRequiredNoTitleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message('The form_test_validate_required_form_no_title form was submitted successfully.');
   }
 

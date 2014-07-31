@@ -9,6 +9,9 @@ namespace Drupal\Core\Form;
 
 /**
  * Provides an interface for form error handling.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Form\FormStateInterface directly.
  */
 interface FormErrorInterface {
 
@@ -99,8 +102,8 @@ interface FormErrorInterface {
    *   element is array('foo', 'bar', 'baz') then you may set an error on 'foo'
    *   or 'foo][bar][baz'. Setting an error on 'foo' sets an error for every
    *   element where the #parents array starts with 'foo'.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $message
    *   (optional) The error message to present to the user.
    *
@@ -108,26 +111,26 @@ interface FormErrorInterface {
    *   Return value is for internal use only. To get a list of errors, use
    *   FormErrorInterface::getErrors() or FormErrorInterface::getError().
    */
-  public function setErrorByName($name, array &$form_state, $message = '');
+  public function setErrorByName($name, FormStateInterface &$form_state, $message = '');
 
   /**
    * Clears all errors against all form elements made by FormErrorInterface::setErrorByName().
    *
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function clearErrors(array &$form_state);
+  public function clearErrors(FormStateInterface &$form_state);
 
   /**
    * Returns an associative array of all errors.
    *
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array
    *   An array of all errors, keyed by the name of the form element.
    */
-  public function getErrors(array $form_state);
+  public function getErrors(FormStateInterface &$form_state);
 
   /**
    * Returns the error message filed against the given form element.
@@ -137,18 +140,18 @@ interface FormErrorInterface {
    *
    * @param array $element
    *   The form element to check for errors.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return string|null
    *   Either the error message for this element or NULL if there are no errors.
    */
-  public function getError($element, array &$form_state);
+  public function getError($element, FormStateInterface &$form_state);
 
   /**
    * Flags an element as having an error.
    */
-  public function setError(&$element, array &$form_state, $message = '');
+  public function setError(&$element, FormStateInterface &$form_state, $message = '');
 
   /**
    * Returns if there have been any errors during build.

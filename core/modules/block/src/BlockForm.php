@@ -9,6 +9,8 @@ namespace Drupal\block;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -52,7 +54,7 @@ class BlockForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
 
     // Store theme settings in $form_state for use below.
@@ -125,7 +127,7 @@ class BlockForm extends EntityForm {
   /**
    * Handles switching the available regions based on the selected theme.
    */
-  public function themeSwitch($form, &$form_state) {
+  public function themeSwitch($form, FormStateInterface $form_state) {
     $form['region']['#options'] = system_region_list($form_state['values']['theme'], REGIONS_VISIBLE);
     return $form['region'];
   }
@@ -133,7 +135,7 @@ class BlockForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save block');
     return $actions;
@@ -142,35 +144,38 @@ class BlockForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
-    $settings = array(
-      'values' => &$form_state['values']['settings']
-    );
+    $settings = new FormState(array(
+      'values' => $form_state['values']['settings']
+    ));
     // Call the plugin validate handler.
     $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
+    // Update the original form values.
+    $form_state['values']['settings'] = $settings['values'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
 
     $entity = $this->entity;
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for submission.
     // @todo Find a way to avoid this manipulation.
-    $settings = array(
-      'values' => &$form_state['values']['settings'],
-      'errors' => $form_state['errors'],
-    );
+    $settings = new FormState(array(
+      'values' => $form_state['values']['settings'],
+    ));
 
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);
+    // Update the original form values.
+    $form_state['values']['settings'] = $settings['values'];
 
     // Save the settings of the plugin.
     $entity->save();

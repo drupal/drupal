@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views_ui\ViewUI;
 
 /**
@@ -31,7 +32,7 @@ class ReorderDisplays extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views\ViewStorageInterface */
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
@@ -148,7 +149,7 @@ class ReorderDisplays extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views_ui\ViewUI */
     $view = $form_state['view'];
     $order = array();

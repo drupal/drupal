@@ -8,6 +8,8 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -34,7 +36,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#validate'][] = array($this, 'customValidateForm');
     $form['#submit'][] = array($this, 'customSubmitForm');
     $form['submit'] = array('#type' => 'submit', '#value' => 'Save');
@@ -44,28 +46,28 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function customValidateForm(array &$form, array &$form_state) {
+  public function customValidateForm(array &$form, FormStateInterface $form_state) {
     $form_state['test_handlers']['validate'][] = __FUNCTION__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['test_handlers']['validate'][] = __FUNCTION__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function customSubmitForm(array &$form, array &$form_state) {
+  public function customSubmitForm(array &$form, FormStateInterface $form_state) {
     $form_state['test_handlers']['submit'][] = __FUNCTION__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['test_handlers']['submit'][] = __FUNCTION__;
   }
 
@@ -73,7 +75,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
    * Tests that default handlers are added even if custom are specified.
    */
   function testDefaultAndCustomHandlers() {
-    $form_state['values'] = array();
+    $form_state = new FormState(array('values' => array()));
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 

@@ -8,6 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the shortcut set entity edit forms.
@@ -17,7 +18,7 @@ class ShortcutSetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $entity = $this->entity;
@@ -50,7 +51,7 @@ class ShortcutSetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
     $entity = $this->entity;
     // Check to prevent a duplicate title.
@@ -62,7 +63,7 @@ class ShortcutSetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $is_new = !$entity->getOriginalId();
     $entity->save();

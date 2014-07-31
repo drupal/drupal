@@ -10,6 +10,7 @@ namespace Drupal\editor\Form;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
@@ -34,7 +35,7 @@ class EditorImageDialog extends FormBase {
    * @param \Drupal\filter\Entity\FilterFormat $filter_format
    *   The filter format for which this dialog corresponds.
    */
-  public function buildForm(array $form, array &$form_state, FilterFormat $filter_format = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, FilterFormat $filter_format = NULL) {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
     if (!isset($form_state['image_element'])) {
@@ -184,7 +185,7 @@ class EditorImageDialog extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
     // Convert any uploaded files from the FID values to data-editor-file-uuid

@@ -10,6 +10,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -66,7 +67,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   /**
    * Implements \Drupal\ckeditor\Plugin\CKEditorPluginConfigurableInterface::settingsForm().
    */
-  public function settingsForm(array $form, array &$form_state, Editor $editor) {
+  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     // Defaults.
     $config = array('styles' => '');
     $settings = $editor->getSettings();
@@ -94,7 +95,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   /**
    * #element_validate handler for the "styles" element in settingsForm().
    */
-  public function validateStylesValue(array $element, array &$form_state) {
+  public function validateStylesValue(array $element, FormStateInterface $form_state) {
     if ($this->generateStylesSetSetting($element['#value']) === FALSE) {
       form_error($element, $form_state, t('The provided list of styles is syntactically incorrect.'));
     }

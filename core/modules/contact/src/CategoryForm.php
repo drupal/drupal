@@ -9,6 +9,7 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Base form for category edit forms.
@@ -18,7 +19,7 @@ class CategoryForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $category = $this->entity;
@@ -72,7 +73,7 @@ class CategoryForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     // Validate and each email recipient.
@@ -90,7 +91,7 @@ class CategoryForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $category = $this->entity;
     $status = $category->save();
     $contact_settings = $this->config('contact.settings');

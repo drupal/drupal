@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -53,7 +54,7 @@ class TermName extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['transform'] = array(

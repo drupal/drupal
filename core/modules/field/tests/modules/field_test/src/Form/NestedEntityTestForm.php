@@ -9,6 +9,7 @@ namespace Drupal\field_test\Form;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 
 /**
@@ -26,7 +27,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc]
    */
-  public function buildForm(array $form, array &$form_state, EntityInterface $entity_1 = NULL, EntityInterface $entity_2 = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_1 = NULL, EntityInterface $entity_2 = NULL) {
     // First entity.
     $form_state['entity_1'] = $entity_1;
     $form_state['form_display_1'] = EntityFormDisplay::collectRenderDisplay($entity_1, 'default');
@@ -57,7 +58,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc]
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity_1 = $form_state['entity_1'];
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display_1 */
     $form_display_1 = $form_state['form_display_1'];
@@ -74,7 +75,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc]
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityInterface $entity_1 */
     $entity_1 = $form_state['entity_1'];
     $entity_1->save();

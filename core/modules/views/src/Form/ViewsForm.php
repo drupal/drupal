@@ -13,6 +13,7 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -115,7 +116,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, ViewExecutable $view = NULL, $output = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = NULL) {
     $form_state['step'] = isset($form_state['step']) ? $form_state['step'] : 'views_form_views_form';
     $form_state['step_controller']['views_form_views_form'] = 'Drupal\views\Form\ViewsFormMainForm';
 
@@ -146,7 +147,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_object = $this->getFormObject($form_state);
     $form_object->validateForm($form, $form_state);
   }
@@ -154,7 +155,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_object = $this->getFormObject($form_state);
     $form_object->submitForm($form, $form_state);
   }
@@ -162,13 +163,13 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * Returns the object used to build the step form.
    *
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form_state of the current form.
    *
    * @return \Drupal\Core\Form\FormInterface
    *   The form object to use.
    */
-  protected function getFormObject(array $form_state) {
+  protected function getFormObject($form_state) {
     // If this is a class, instantiate it.
     $form_step_class = isset($form_state['step_controller'][$form_state['step']]) ? $form_state['step_controller'][$form_state['step']] : 'Drupal\views\Form\ViewsFormMainForm';
     return $this->classResolver->getInstanceFromDefinition($form_step_class);

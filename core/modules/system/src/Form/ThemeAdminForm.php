@@ -7,6 +7,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form to select the administration theme.
@@ -23,7 +24,7 @@ class ThemeAdminForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, array $theme_options = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, array $theme_options = NULL) {
     // Administration theme settings.
     $form['admin_theme'] = array(
       '#type' => 'details',
@@ -48,7 +49,7 @@ class ThemeAdminForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The configuration options have been saved.'));
     $this->config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
   }

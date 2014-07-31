@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -708,7 +709,7 @@ function taxonomy_term_title(Term $term) {
 /**
  * Form element validate handler for taxonomy term autocomplete element.
  */
-function taxonomy_autocomplete_validate($element, &$form_state) {
+function taxonomy_autocomplete_validate($element, FormStateInterface $form_state) {
   // Split the values into an array.
   // @see \Drupal\taxonomy\Plugin\Field\FieldWidget\TaxonomyAutocompleteWidget:massageFormValues()
   $typed_terms = array();

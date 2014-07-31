@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
@@ -51,7 +52,7 @@ class Rss extends RowPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['view_mode'] = array(
       '#type' => 'select',
       '#title' => t('Display type'),

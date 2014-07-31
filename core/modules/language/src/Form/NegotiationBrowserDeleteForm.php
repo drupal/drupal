@@ -8,6 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,7 +48,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $browser_langcode = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $browser_langcode = NULL) {
     $this->browserLangcode = $browser_langcode;
 
     $form = parent::buildForm($form, $form_state);
@@ -58,7 +59,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $mappings = language_get_browser_drupal_langcode_mappings();
 
     if (array_key_exists($this->browserLangcode, $mappings)) {

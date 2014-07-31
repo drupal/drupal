@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure RSS settings for this site.
@@ -24,7 +25,7 @@ class RssFeedsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $rss_config = $this->config('system.rss');
     $form['feed_description'] = array(
       '#type' => 'textarea',
@@ -58,7 +59,7 @@ class RssFeedsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.rss')
       ->set('channel.description', $form_state['values']['feed_description'])
       ->set('items.limit', $form_state['values']['feed_default_items'])

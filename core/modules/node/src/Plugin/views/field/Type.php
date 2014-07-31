@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Plugin\views\field\Node;
 use Drupal\views\ResultRow;
 
@@ -29,7 +30,7 @@ class Type extends Node {
   /**
    * Provide machine_name option for to node type display.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['machine_name'] = array(

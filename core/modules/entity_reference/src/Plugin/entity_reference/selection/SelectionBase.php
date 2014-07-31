@@ -12,6 +12,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
@@ -229,7 +230,7 @@ class SelectionBase implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
+  public function validateAutocompleteInput($input, &$element, FormStateInterface $form_state, $form, $strict = TRUE) {
     $bundled_entities = $this->getReferenceableEntities($input, '=', 6);
     $entities = array();
     foreach ($bundled_entities as $entities_list) {

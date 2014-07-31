@@ -8,6 +8,7 @@
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the profile selection form.
@@ -24,7 +25,7 @@ class SelectProfileForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $install_state = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $install_state = NULL) {
     $form['#title'] = $this->t('Select an installation profile');
 
     $profiles = array();
@@ -87,7 +88,7 @@ class SelectProfileForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
     $install_state['parameters']['profile'] = $form_state['values']['profile'];
   }

@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugin\views\exposed_form;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Form\ViewsExposedForm;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -51,7 +53,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['submit_button'] = array(
       '#type' => 'textfield',
@@ -127,14 +129,14 @@ abstract class ExposedFormPluginBase extends PluginBase {
    */
   public function renderExposedForm($block = FALSE) {
     // Deal with any exposed filters we may have, before building.
-    $form_state = array(
+    $form_state = new FormState(array(
       'view' => &$this->view,
       'display' => &$this->view->display_handler->display,
       'method' => 'get',
       'rerender' => TRUE,
       'no_redirect' => TRUE,
       'always_process' => TRUE,
-    );
+    ));
 
     // Some types of displays (eg. attachments) may wish to use the exposed
     // filters of their parent displays instead of showing an additional
@@ -199,7 +201,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
    * @param $form_state
    *   The form state. Passed by reference.
    */
-  public function exposedFormAlter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, FormStateInterface $form_state) {
     if (!empty($this->options['submit_button'])) {
       $form['actions']['submit']['#value'] = $this->options['submit_button'];
     }
@@ -274,7 +276,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  public function exposedFormValidate(&$form, &$form_state) {
+  public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (isset($form_state['pager_plugin'])) {
       $form_state['pager_plugin']->exposedFormValidate($form, $form_state);
     }
@@ -286,12 +288,12 @@ abstract class ExposedFormPluginBase extends PluginBase {
    * @param $form
    *   Nested array of form elements that comprise the form.
    * @param $form_state
-   *   A keyed array containing the current state of the form.
+   *   The current state of the form.
    * @param $exclude
    *   Nested array of keys to exclude of insert into
    *   $view->exposed_raw_input
    */
-  public function exposedFormSubmit(&$form, &$form_state, &$exclude) {
+  public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) {
     if (!empty($form_state['values']['op']) && $form_state['values']['op'] == $this->options['reset_button_label']) {
       $this->resetForm($form, $form_state);
     }
@@ -301,7 +303,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  public function resetForm(&$form, &$form_state) {
+  public function resetForm(&$form, FormStateInterface $form_state) {
     // _SESSION is not defined for users who are not logged in.
 
     // If filters are not overridden, store the 'remember' settings on the

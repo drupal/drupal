@@ -32,8 +32,8 @@ interface ViewsFormInterface extends FormInterface {
    *   If this is an AJAX form, it will be the string 'ajax'. Otherwise, it will
    *   be 'nojs'. This determines the response.
    *
-   * @return array
-   *   An associative array containing the current state of the form.
+   * @return \Drupal\Core\Form\FormStateInterface
+   *   The current state of the form.
    */
   public function getFormState(ViewStorageInterface $view, $display_id, $js);
 

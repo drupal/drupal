@@ -9,6 +9,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder for form_state_values_clean() test.
@@ -25,7 +26,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Build an example form containing multiple submit and button elements; not
     // only on the top-level.
     $form = array('#tree' => TRUE);
@@ -41,7 +42,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     form_state_values_clean($form_state);
     // This won't have a proper JSON header, but Drupal doesn't check for that
     // anyway so this is fine until it's replaced with a JsonResponse.

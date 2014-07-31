@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -60,7 +61,7 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field) 
 /**
  * (proxied) Implements hook_form_FORM_ID_alter().
  */
-function _content_translation_form_language_content_settings_form_alter(array &$form, array &$form_state) {
+function _content_translation_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
   // Inject into the content language settings the translation settings if the
   // user has the required permission.
   if (!\Drupal::currentUser()->hasPermission('administer content translation')) {
@@ -254,7 +255,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
  *
  * @see content_translation_admin_settings_form_submit()
  */
-function content_translation_form_language_content_settings_validate(array $form, array &$form_state) {
+function content_translation_form_language_content_settings_validate(array $form, FormStateInterface $form_state) {
   $settings = &$form_state['values']['settings'];
   foreach ($settings as $entity_type => $entity_settings) {
     foreach ($entity_settings as $bundle => $bundle_settings) {
@@ -284,7 +285,7 @@ function content_translation_form_language_content_settings_validate(array $form
  *
  * @see content_translation_admin_settings_form_validate()
  */
-function content_translation_form_language_content_settings_submit(array $form, array &$form_state) {
+function content_translation_form_language_content_settings_submit(array $form, FormStateInterface $form_state) {
   $entity_types = $form_state['values']['entity_types'];
   $settings = &$form_state['values']['settings'];
 

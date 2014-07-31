@@ -7,6 +7,7 @@
 namespace Drupal\language_elements_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A form containing a language select element.
@@ -23,7 +24,7 @@ class LanguageConfigurationElementTest extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['langcode'] = array(
       '#title' => t('Language select'),
       '#type' => 'language_select',
@@ -35,6 +36,6 @@ class LanguageConfigurationElementTest extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 }

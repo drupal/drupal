@@ -8,6 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\ShortcutSetStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,7 +75,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Find out how many users are directly assigned to this shortcut set, and
     // make a message.
     $number = $this->storage->countAssignedUsers($this->entity);
@@ -101,7 +102,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     $form_state['redirect_route'] = new Url('shortcut.set_admin');
     drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $this->entity->label())));

@@ -7,6 +7,7 @@
 
 namespace Drupal\book;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
@@ -203,8 +204,8 @@ interface BookManagerInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\node\NodeInterface $node
    *   The node whose form is being viewed.
    * @param \Drupal\Core\Session\AccountInterface $account
@@ -215,7 +216,7 @@ interface BookManagerInterface {
    * @return array
    *   The form structure, with the book elements added.
    */
-  public function addFormElements(array $form, array &$form_state, NodeInterface $node, AccountInterface $account, $collapsed = TRUE);
+  public function addFormElements(array $form, FormStateInterface $form_state, NodeInterface $node, AccountInterface $account, $collapsed = TRUE);
 
   /**
    * Deletes node's entry from book table.

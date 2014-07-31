@@ -8,6 +8,7 @@
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
 
 /**
@@ -57,7 +58,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *
    * @see system_image_toolkit_settings_submit()
    */
-  public function settingsFormSubmit($form, &$form_state);
+  public function settingsFormSubmit($form, FormStateInterface $form_state);
 
   /**
    * Sets the image object that this toolkit instance is tied to.

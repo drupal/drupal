@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
@@ -19,24 +20,24 @@ interface EntityFormInterface extends BaseFormIdInterface {
   /**
    * Returns the code identifying the active form language.
    *
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return string
    *   The form language code.
    */
-  public function getFormLangcode(array &$form_state);
+  public function getFormLangcode(FormStateInterface $form_state);
 
   /**
    * Checks whether the current form language matches the entity one.
    *
-   * @param array $form_state
-   *   A keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return boolean
    *   Returns TRUE if the entity form language matches the entity one.
    */
-  public function isDefaultFormLangcode(array $form_state);
+  public function isDefaultFormLangcode(FormStateInterface $form_state);
 
   /**
    * Sets the operation for this form.
@@ -61,8 +62,8 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * The form entity which has been used for populating form element defaults.
    *
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The current form entity.
@@ -96,23 +97,23 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * @param array $form
    *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   An updated copy of the form's entity object.
    */
-  public function buildEntity(array $form, array &$form_state);
+  public function buildEntity(array $form, FormStateInterface $form_state);
 
   /**
    * Validates the submitted form values of the entity form.
    *
    * @param array $form
    *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function validate(array $form, array &$form_state);
+  public function validate(array $form, FormStateInterface $form_state);
 
   /**
    * Updates the form's entity by processing this submission's values.
@@ -123,10 +124,10 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * @param array $form
    *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function submit(array $form, array &$form_state);
+  public function submit(array $form, FormStateInterface $form_state);
 
   /**
    * Sets the string translation service for this form.

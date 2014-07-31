@@ -9,6 +9,7 @@ namespace Drupal\telephone\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'telephone_default' widget.
@@ -35,7 +36,7 @@ class TelephoneDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['placeholder'] = array(
       '#type' => 'textfield',
       '#title' => t('Placeholder'),
@@ -65,7 +66,7 @@ class TelephoneDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['value'] = $element + array(
       '#type' => 'tel',
       '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,

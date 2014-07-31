@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a 'Main page content' block.
@@ -31,7 +32,7 @@ class SystemMainBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     // The main content block is never cacheable, because it may be dynamic.

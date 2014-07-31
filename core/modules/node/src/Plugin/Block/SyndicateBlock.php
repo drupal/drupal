@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -50,7 +51,7 @@ class SyndicateBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     // @see ::isCacheable()

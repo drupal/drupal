@@ -24,9 +24,9 @@ interface EntityFormBuilderInterface {
    *   _entity_form: node.book_outline
    *   @endcode
    *   where "book_outline" is the value of $operation.
-   * @param array $form_state
-   *   (optional) An associative array containing the current state of the form.
-   *   Use this to pass additional information to the form, such as the
+   * @param array $form_state_additions
+   *   (optional) An associative array used to build the current state of the
+   *   form. Use this to pass additional information to the form, such as the
    *   langcode. Defaults to an empty array.
    *
    * @code
@@ -37,6 +37,6 @@ interface EntityFormBuilderInterface {
    * @return array
    *   The processed form for the given entity and operation.
    */
-  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array());
+  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state_additions = array());
 
 }

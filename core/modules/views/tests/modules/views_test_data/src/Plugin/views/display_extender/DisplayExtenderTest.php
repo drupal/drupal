@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\display_extender;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase;
 
 /**
@@ -61,7 +62,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     switch ($form_state['section']) {
       case 'test_extender_test_option':
         $form['#title'] .= t('Test option');
@@ -77,7 +78,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\display\DisplayExtenderPluginBase::submitOptionsForm().
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'test_extender_test_option':

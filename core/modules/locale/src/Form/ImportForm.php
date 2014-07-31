@@ -9,6 +9,7 @@ namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -71,7 +72,7 @@ class ImportForm extends FormBase {
   /**
    * Form constructor for the translation import screen.
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = $this->languageManager->getLanguages();
 
     // Initialize a language list to the ones available, including English if we
@@ -157,7 +158,7 @@ class ImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://', 0);
 
     // Ensure we have the file uploaded.
@@ -169,7 +170,7 @@ class ImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Add language, if not yet supported.
     $language = $this->languageManager->getLanguage($form_state['values']['langcode']);
     if (empty($language)) {

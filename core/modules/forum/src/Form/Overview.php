@@ -8,6 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -60,7 +61,7 @@ class Overview extends OverviewTerms {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $forum_config = $this->config('forum.settings');
     $vid = $forum_config->get('vocabulary');
     $vocabulary = $this->entityManager->getStorage('taxonomy_vocabulary')->load($vid);

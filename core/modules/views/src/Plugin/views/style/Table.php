@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -196,7 +197,7 @@ class Table extends StylePluginBase {
   /**
    * Render the given style.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $handlers = $this->displayHandler->getHandlers('field');
     if (empty($handlers)) {
@@ -411,7 +412,7 @@ class Table extends StylePluginBase {
     return parent::evenEmpty() || !empty($this->options['empty_table']);
   }
 
-  public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
+  public function wizardSubmit(&$form, FormStateInterface $form_state, WizardInterface $wizard, &$display_options, $display_type) {
     // If any of the displays use the table style, make sure that the fields
     // always have a labels by unsetting the override.
     foreach ($display_options['default']['fields'] as &$field) {

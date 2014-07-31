@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -47,7 +48,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $this->getFormDisplay($form_state)->buildForm($this->entity, $form, $form_state);
     return $form;
@@ -56,7 +57,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $this->updateFormLangcode($form_state);
     $entity = $this->buildEntity($form, $form_state);
     $this->getFormDisplay($form_state)->validateFormValues($entity, $form, $form_state);
@@ -70,7 +71,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * Initialize the form state and the entity before the first form build.
    */
-  protected function init(array &$form_state) {
+  protected function init(FormStateInterface $form_state) {
     // Ensure we act on the translation object corresponding to the current form
     // language.
     $langcode = $this->getFormLangcode($form_state);
@@ -85,7 +86,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
-  public function getFormLangcode(array &$form_state) {
+  public function getFormLangcode(FormStateInterface $form_state) {
     if (empty($form_state['langcode'])) {
       // Imply a 'view' operation to ensure users edit entities in the same
       // language they are displayed. This allows to keep contextual editing
@@ -98,14 +99,14 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
-  public function isDefaultFormLangcode(array $form_state) {
+  public function isDefaultFormLangcode(FormStateInterface $form_state) {
     return $this->getFormLangcode($form_state) == $this->entity->getUntranslated()->language()->id;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     // First, extract values from widgets.
     $extracted = $this->getFormDisplay($form_state)->extractFormValues($entity, $form, $form_state);
 
@@ -122,14 +123,14 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
-  public function getFormDisplay(array $form_state) {
+  public function getFormDisplay(FormStateInterface $form_state) {
     return isset($form_state['form_display']) ? $form_state['form_display'] : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setFormDisplay(EntityFormDisplayInterface $form_display, array &$form_state) {
+  public function setFormDisplay(EntityFormDisplayInterface $form_display, FormStateInterface $form_state) {
     $form_state['form_display'] = $form_display;
     return $this;
   }

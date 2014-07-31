@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'entity reference label' formatter.
@@ -36,7 +37,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements['link'] = array(
       '#title' => t('Link label to the referenced entity'),
       '#type' => 'checkbox',

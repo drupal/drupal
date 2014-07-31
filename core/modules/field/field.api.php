@@ -105,7 +105,7 @@ function hook_field_widget_info_alter(array &$info) {
  * @param $element
  *   The field widget form element as constructed by hook_field_widget_form().
  * @param $form_state
- *   An associative array containing the current state of the form.
+ *   The current state of the form.
  * @param $context
  *   An associative array containing the following key-value pairs:
  *   - form: The form structure to which widgets are being attached. This may be
@@ -120,7 +120,7 @@ function hook_field_widget_info_alter(array &$info) {
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
  */
-function hook_field_widget_form_alter(&$element, &$form_state, $context) {
+function hook_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
   // Add a css class to widget form elements for all fields of type mytype.
   $field_definition = $context['items']->getFieldDefinition();
   if ($field_definition->getType() == 'mytype') {
@@ -139,7 +139,7 @@ function hook_field_widget_form_alter(&$element, &$form_state, $context) {
  * @param $element
  *   The field widget form element as constructed by hook_field_widget_form().
  * @param $form_state
- *   An associative array containing the current state of the form.
+ *   The current state of the form.
  * @param $context
  *   An associative array. See hook_field_widget_form_alter() for the structure
  *   and content of the array.
@@ -147,7 +147,7 @@ function hook_field_widget_form_alter(&$element, &$form_state, $context) {
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_form_alter()
  */
-function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $context) {
+function hook_field_widget_WIDGET_TYPE_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
   // Code here will only act on widgets of type WIDGET_TYPE.  For example,
   // hook_field_widget_mymodule_autocomplete_form_alter() will only act on
   // widgets of type 'mymodule_autocomplete'.

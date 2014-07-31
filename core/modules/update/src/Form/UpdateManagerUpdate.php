@@ -10,6 +10,7 @@ namespace Drupal\update\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,7 +66,7 @@ class UpdateManagerUpdate extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
 
     $last_markup = array(
@@ -285,7 +286,7 @@ class UpdateManagerUpdate extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['projects'])) {
       $enabled = array_filter($form_state['values']['projects']);
     }
@@ -300,7 +301,7 @@ class UpdateManagerUpdate extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
     $projects = array();
     foreach (array('projects', 'disabled_projects') as $type) {

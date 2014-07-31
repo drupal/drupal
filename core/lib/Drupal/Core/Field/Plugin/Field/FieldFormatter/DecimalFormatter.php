@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Plugin implementation of the 'number_decimal' formatter.
  *
@@ -40,7 +42,7 @@ class DecimalFormatter extends NumericFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
     $elements['decimal_separator'] = array(

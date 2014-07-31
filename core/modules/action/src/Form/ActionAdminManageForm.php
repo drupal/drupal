@@ -10,6 +10,7 @@ namespace Drupal\action\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Action\ActionManager;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,7 +54,7 @@ class ActionAdminManageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $actions = array();
     foreach ($this->manager->getDefinitions() as $id => $definition) {
       if (is_subclass_of($definition['class'], '\Drupal\Core\Plugin\PluginFormInterface')) {
@@ -87,7 +88,7 @@ class ActionAdminManageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['values']['action']) {
       $form_state['redirect_route'] = array(
         'route_name' => 'action.admin_add',

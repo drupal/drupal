@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Core\Form\FormState;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -207,7 +208,7 @@ class ElementsTableSelectTest extends WebTestBase {
    */
   private function formSubmitHelper($form, $edit) {
     $form_id = $this->randomName();
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
 
     $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
     // The form token CSRF protection should not interfere with this test, so we

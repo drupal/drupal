@@ -7,6 +7,7 @@
 
 namespace Drupal\history\Plugin\views\filter;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
@@ -31,7 +32,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     return FALSE;
   }
 
-  public function buildExposeForm(&$form, &$form_state) {
+  public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     // @todo There are better ways of excluding required and multiple (object flags)
     unset($form['expose']['required']);
@@ -39,7 +40,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     unset($form['expose']['remember']);
   }
 
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     // Only present a checkbox for the exposed filter itself. There's no way
     // to tell the difference between not checked and the default value, so
     // specifying the default value via the views UI is meaningless.

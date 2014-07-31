@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -34,7 +35,7 @@ class UserPermissionsRoleSpecificForm extends UserPermissionsForm {
    * @param string $role_id
    *   The user role ID used for this form.
    */
-  public function buildForm(array $form, array &$form_state, RoleInterface $user_role = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, RoleInterface $user_role = NULL) {
     $this->userRole = $user_role;
     return parent::buildForm($form, $form_state);
   }

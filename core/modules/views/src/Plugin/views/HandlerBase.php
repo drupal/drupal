@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -278,7 +279,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Build the options form.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
     // be moved into one because of the form_state['values'] hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
@@ -349,7 +350,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Provide a form for aggregation settings.
    */
-  public function buildGroupByForm(&$form, &$form_state) {
+  public function buildGroupByForm(&$form, FormStateInterface $form_state) {
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
     $id = $form_state['id'];
@@ -375,7 +376,7 @@ abstract class HandlerBase extends PluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitGroupByForm(&$form, &$form_state) {
+  public function submitGroupByForm(&$form, FormStateInterface $form_state) {
     $form_state['handler']->options['group_type'] = $form_state['values']['options']['group_type'];
   }
 
@@ -393,18 +394,18 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Provide a form for setting options.
    */
-  public function buildExtraOptionsForm(&$form, &$form_state) { }
+  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Validate the options form.
    */
-  public function validateExtraOptionsForm($form, &$form_state) { }
+  public function validateExtraOptionsForm($form, FormStateInterface $form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitExtraOptionsForm($form, &$form_state) { }
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state) { }
 
   /**
    * Determine if a handler can be exposed.
@@ -425,43 +426,43 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Render our chunk of the exposed handler form when selecting
    */
-  public function buildExposedForm(&$form, &$form_state) { }
+  public function buildExposedForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Validate the exposed handler form
    */
-  public function validateExposed(&$form, &$form_state) { }
+  public function validateExposed(&$form, FormStateInterface $form_state) { }
 
   /**
    * Submit the exposed handler form
    */
-  public function submitExposed(&$form, &$form_state) { }
+  public function submitExposed(&$form, FormStateInterface $form_state) { }
 
   /**
    * Form for exposed handler options.
    */
-  public function buildExposeForm(&$form, &$form_state) { }
+  public function buildExposeForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Validate the options form.
    */
-  public function validateExposeForm($form, &$form_state) { }
+  public function validateExposeForm($form, FormStateInterface $form_state) { }
 
   /**
    * Perform any necessary changes to the form exposes prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitExposeForm($form, &$form_state) { }
+  public function submitExposeForm($form, FormStateInterface $form_state) { }
 
   /**
    * Shortcut to display the expose/hide button.
    */
-  public function showExposeButton(&$form, &$form_state) { }
+  public function showExposeButton(&$form, FormStateInterface $form_state) { }
 
   /**
    * Shortcut to display the exposed options form.
    */
-  public function showExposeForm(&$form, &$form_state) {
+  public function showExposeForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -887,7 +888,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Displays the Expose form.
    */
-  public function displayExposedForm($form, &$form_state) {
+  public function displayExposedForm($form, FormStateInterface $form_state) {
     $item = &$this->options;
     // flip
     $item['exposed'] = empty($item['exposed']);
@@ -911,7 +912,7 @@ abstract class HandlerBase extends PluginBase {
    * A submit handler that is used for storing temporary items when using
    * multi-step changes, such as ajax requests.
    */
-  public function submitTemporaryForm($form, &$form_state) {
+  public function submitTemporaryForm($form, FormStateInterface $form_state) {
     // Run it through the handler's submit function.
     $this->submitOptionsForm($form['options'], $form_state);
     $item = $this->options;

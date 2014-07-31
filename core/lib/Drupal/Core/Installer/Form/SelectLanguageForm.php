@@ -10,6 +10,7 @@ namespace Drupal\Core\Installer\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,7 +29,7 @@ class SelectLanguageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $install_state = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $install_state = NULL) {
     if (count($install_state['translations']) > 1) {
       $files = $install_state['translations'];
     }
@@ -96,7 +97,7 @@ class SelectLanguageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $install_state = &$form_state['build_info']['args'][0];
     $install_state['parameters']['langcode'] = $form_state['values']['langcode'];
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 
@@ -32,7 +33,7 @@ class EditDetails extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $view = $form_state['view'];
 
     $form['#title'] = $this->t('Name and description');
@@ -73,7 +74,7 @@ class EditDetails extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state['view'];
     foreach ($form_state['values'] as $key => $value) {
       // Only save values onto the view if they're actual view properties

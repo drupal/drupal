@@ -10,6 +10,7 @@ namespace Drupal\comment\Plugin\Action;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Unpublishes a comment containing certain keywords.
@@ -49,7 +50,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['keywords'] = array(
       '#title' => t('Keywords'),
       '#type' => 'textarea',
@@ -62,7 +63,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['keywords'] = Tags::explode($form_state['values']['keywords']);
   }
 

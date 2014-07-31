@@ -9,6 +9,7 @@ namespace Drupal\telephone\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'telephone_link' formatter.
@@ -35,7 +36,7 @@ class TelephoneLinkFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title to replace basic numeric telephone number display.'),

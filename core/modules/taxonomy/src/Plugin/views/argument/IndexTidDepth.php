@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Component\Utility\String;
 
@@ -32,7 +33,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['depth'] = array(
       '#type' => 'weight',
       '#title' => t('Depth'),

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * The fixed argument default handler.
  *
@@ -26,7 +28,7 @@ class Fixed extends ArgumentDefaultPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['argument'] = array(
       '#type' => 'textfield',

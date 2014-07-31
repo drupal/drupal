@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * A query parameter argument default handler.
  *
@@ -34,7 +36,7 @@ class QueryParameter extends ArgumentDefaultPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['query_param'] = array(
       '#type' => 'textfield',

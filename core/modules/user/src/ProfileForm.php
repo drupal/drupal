@@ -9,6 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 
 /**
@@ -26,7 +27,7 @@ class ProfileForm extends AccountForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
 
     // The user account being edited.
@@ -45,7 +46,7 @@ class ProfileForm extends AccountForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
     $account->save();
     $form_state['values']['uid'] = $account->id();
@@ -56,7 +57,7 @@ class ProfileForm extends AccountForm {
   /**
    * Provides a submit handler for the 'Cancel account' button.
    */
-  public function editCancelSubmit($form, &$form_state) {
+  public function editCancelSubmit($form, FormStateInterface $form_state) {
     $destination = array();
     $query = $this->getRequest()->query;
     if ($query->has('destination')) {

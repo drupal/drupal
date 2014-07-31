@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Default style plugin to render an RSS feed.
@@ -74,7 +75,7 @@ class Rss extends StylePluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['description'] = array(

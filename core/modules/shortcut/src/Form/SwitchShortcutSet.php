@@ -10,6 +10,7 @@ namespace Drupal\shortcut\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetStorageInterface;
@@ -75,7 +76,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UserInterface $user = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UserInterface $user = NULL) {
     $account = $this->currentUser();
 
     $this->user = $user;
@@ -169,7 +170,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['values']['set'] == 'new') {
       // Check to prevent creating a shortcut set with an empty title.
       if (trim($form_state['values']['label']) == '') {
@@ -185,7 +186,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $this->currentUser();
 
     $account_is_user = $this->user->id() == $account->id();

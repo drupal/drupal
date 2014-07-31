@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor for testing form state persistence.
@@ -24,7 +25,7 @@ class FormTestStatePersistForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => 'title',
@@ -43,7 +44,7 @@ class FormTestStatePersistForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($form_state['value']);
     $form_state['rebuild'] = TRUE;
   }

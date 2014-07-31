@@ -10,6 +10,7 @@ namespace Drupal\Core\Installer\Form;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form to configure and rewrite settings.php.
@@ -26,7 +27,7 @@ class SiteSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $conf_path = './' . conf_path(FALSE);
     $settings_file = $conf_path . '/settings.php';
 
@@ -114,7 +115,7 @@ class SiteSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $driver = $form_state['values']['driver'];
     $database = $form_state['values'][$driver];
     $drivers = drupal_get_database_types();
@@ -134,7 +135,7 @@ class SiteSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
 
     // Update global settings array and save.

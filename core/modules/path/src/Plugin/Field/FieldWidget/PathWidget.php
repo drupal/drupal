@@ -9,6 +9,7 @@ namespace Drupal\path\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -28,7 +29,7 @@ class PathWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
     $path = array();
     if (!$entity->isNew()) {
@@ -79,10 +80,10 @@ class PathWidget extends WidgetBase {
    *
    * @param array $element
    *   The form element.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public static function validateFormElement(array &$element, array &$form_state) {
+  public static function validateFormElement(array &$element, FormStateInterface $form_state) {
     // Trim the submitted value.
     $alias = trim($element['alias']['#value']);
     if (!empty($alias)) {
@@ -100,7 +101,7 @@ class PathWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     return $element['alias'];
   }
 

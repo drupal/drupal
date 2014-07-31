@@ -7,6 +7,8 @@
 
 namespace Drupal\form_test\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 class FormTestTableSelectMultipleFalseForm extends FormTestTableSelectFormBase {
 
   /**
@@ -19,14 +21,14 @@ class FormTestTableSelectMultipleFalseForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     return $this->tableselectFormBuilder($form, $form_state, array('#multiple' => FALSE));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message(t('Submitted: @value', array('@value' => $form_state['values']['tableselect'])));
   }
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Provides a form for editing a date format.
  */
@@ -15,7 +17,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $now = t('Displayed as %date', array('%date' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id())));
@@ -28,7 +30,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save format');
     unset($actions['delete']);
@@ -38,7 +40,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
     drupal_set_message(t('Custom date format updated.'));
   }

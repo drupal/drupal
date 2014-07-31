@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutable;
@@ -241,7 +242,7 @@ class ViewUI implements ViewStorageInterface {
    * to apply to the default display or to the current display, and dispatches
    * control appropriately.
    */
-  public function standardSubmit($form, &$form_state) {
+  public function standardSubmit($form, FormStateInterface $form_state) {
     // Determine whether the values the user entered are intended to apply to
     // the current display or the default display.
 
@@ -296,7 +297,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Submit handler for cancel button
    */
-  public function standardCancel($form, &$form_state) {
+  public function standardCancel($form, FormStateInterface $form_state) {
     if (!empty($this->changed) && isset($this->form_cache)) {
       unset($this->form_cache);
       $this->cacheSet();
@@ -313,7 +314,7 @@ class ViewUI implements ViewStorageInterface {
    * TODO: Is the hidden op operator still here somewhere, or is that part of the
    * docblock outdated?
    */
-  public function getStandardButtons(&$form, &$form_state, $form_id, $name = NULL) {
+  public function getStandardButtons(&$form, FormStateInterface $form_state, $form_id, $name = NULL) {
     $form['actions'] = array(
       '#type' => 'actions',
     );
@@ -475,7 +476,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Submit handler for adding new item(s) to a view.
    */
-  public function submitItemAdd($form, &$form_state) {
+  public function submitItemAdd($form, FormStateInterface $form_state) {
     $type = $form_state['type'];
     $types = ViewExecutable::getHandlerTypes();
     $section = $types[$type]['plural'];

@@ -5,6 +5,7 @@
  * Add language handling functionality to Drupal.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -214,7 +215,7 @@ function language_configuration_element_default_options() {
 /**
  * Process handler for the language_configuration form element.
  */
-function language_configuration_element_process($element, &$form_state, &$form) {
+function language_configuration_element_process($element, FormStateInterface $form_state, &$form) {
   $options = isset($element['#options']) ? $element['#options'] : array();
   // Avoid validation failure since we are moving the '#options' key in the
   // nested 'language' select element.
@@ -265,7 +266,7 @@ function language_configuration_element_process($element, &$form_state, &$form) 
 /**
  * Submit handler for the forms that have a language_configuration element.
  */
-function language_configuration_element_submit(&$form, &$form_state) {
+function language_configuration_element_submit(&$form, FormStateInterface $form_state) {
   // Iterate through all the language_configuration elements and save their
   // values.
   if (isset($form_state['language'])) {
@@ -650,7 +651,7 @@ function language_set_browser_drupal_langcode_mappings($mappings) {
  *
  * @see language_system_regional_settings_form_submit()
  */
-function language_form_system_regional_settings_alter(&$form, &$form_state) {
+function language_form_system_regional_settings_alter(&$form, FormStateInterface $form_state) {
   $languages = \Drupal::languageManager()->getLanguages();
   $default = \Drupal::languageManager()->getDefaultLanguage();
   foreach ($languages as $key => $language) {
@@ -673,7 +674,7 @@ function language_form_system_regional_settings_alter(&$form, &$form_state) {
  *
  * @see language_form_system_regional_settings_alter()
  */
-function language_system_regional_settings_form_submit($form, &$form_state) {
+function language_system_regional_settings_form_submit($form, FormStateInterface $form_state) {
   $languages = \Drupal::languageManager()->getLanguages();
   $language = $languages[$form_state['values']['site_default_language']];
   $language->default = TRUE;

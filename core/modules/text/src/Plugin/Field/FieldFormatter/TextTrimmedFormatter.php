@@ -8,6 +8,7 @@ namespace Drupal\text\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
@@ -44,7 +45,7 @@ class TextTrimmedFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['trim_length'] = array(
       '#title' => t('Trim length'),
       '#type' => 'number',

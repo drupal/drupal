@@ -9,6 +9,7 @@ namespace Drupal\locale\Form;
 
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\locale\PoDatabaseReader;
@@ -56,7 +57,7 @@ class ExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = $this->languageManager->getLanguages();
     $language_options = array();
     foreach ($languages as $langcode => $language) {
@@ -127,7 +128,7 @@ class ExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // If template is required, language code is not given.
     if ($form_state['values']['langcode'] != LanguageInterface::LANGCODE_SYSTEM) {
       $language = $this->languageManager->getLanguage($form_state['values']['langcode']);

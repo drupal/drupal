@@ -8,6 +8,7 @@
 namespace Drupal\search_embedded_form\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for search_embedded_form form.
@@ -24,7 +25,7 @@ class SearchEmbeddedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
 
     $form['name'] = array(
@@ -48,7 +49,7 @@ class SearchEmbeddedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $state = \Drupal::state();
     $submit_count = (int) $state->get('search_embedded_form.submit_count');
     $state->set('search_embedded_form.submit_count', $submit_count + 1);

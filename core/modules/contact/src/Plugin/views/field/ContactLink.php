@@ -9,6 +9,7 @@ namespace Drupal\contact\Plugin\views\field;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Plugin\views\field\Link;
 use Drupal\views\ResultRow;
@@ -84,7 +85,7 @@ class ContactLink extends Link {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['text']['#title'] = t('Link label');
     $form['text']['#required'] = TRUE;

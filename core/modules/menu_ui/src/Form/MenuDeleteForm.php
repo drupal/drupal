@@ -10,6 +10,7 @@ namespace Drupal\menu_ui\Form;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -92,7 +93,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = new Url('menu_ui.overview_page');
 
     // Locked menus may not be deleted.

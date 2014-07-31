@@ -9,6 +9,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,7 +77,7 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Display login form:
     $form['name'] = array(
       '#type' => 'textfield',
@@ -114,7 +115,7 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $this->userStorage->load($form_state['uid']);
 
     // A destination was set, probably on an exception controller,
@@ -134,7 +135,7 @@ class UserLoginForm extends FormBase {
   /**
    * Sets an error if supplied username has been blocked.
    */
-  public function validateName(array &$form, array &$form_state) {
+  public function validateName(array &$form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
       // Blocked in user administration.
       $this->setFormError('name', $form_state, $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
@@ -146,7 +147,7 @@ class UserLoginForm extends FormBase {
    *
    * If successful, $form_state['uid'] is set to the matching user ID.
    */
-  public function validateAuthentication(array &$form, array &$form_state) {
+  public function validateAuthentication(array &$form, FormStateInterface $form_state) {
     $password = trim($form_state['values']['pass']);
     $flood_config = $this->config('user.flood');
     if (!empty($form_state['values']['name']) && !empty($password)) {
@@ -193,7 +194,7 @@ class UserLoginForm extends FormBase {
    *
    * This validation function should always be the last one.
    */
-  public function validateFinal(array &$form, array &$form_state) {
+  public function validateFinal(array &$form, FormStateInterface $form_state) {
     $flood_config = $this->config('user.flood');
     if (empty($form_state['uid'])) {
       // Always register an IP-based failed login event.

@@ -1539,15 +1539,15 @@ function hook_entity_display_build_alter(&$build, $context) {
  *   The entity that is about to be shown on the form.
  * @param $operation
  *   The current operation.
- * @param array $form_state
- *   An associative array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
  * @see hook_ENTITY_TYPE_prepare_form()
  *
  * @ingroup entity_crud
  */
-function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
+function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state['mymodule']['label_altered'] = TRUE;
@@ -1565,15 +1565,15 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
  *   The entity that is about to be shown on the form.
  * @param $operation
  *   The current operation.
- * @param array $form_state
- *   An associative array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
  * @see hook_entity_prepare_form()
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
+function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state['mymodule']['label_altered'] = TRUE;

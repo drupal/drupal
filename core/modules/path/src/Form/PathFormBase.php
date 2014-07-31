@@ -8,6 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\AliasStorageInterface;
@@ -74,7 +75,7 @@ abstract class PathFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $pid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $pid = NULL) {
     $this->path = $this->buildPath($pid);
     $form['source'] = array(
       '#type' => 'textfield',
@@ -135,7 +136,7 @@ abstract class PathFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $source = &$form_state['values']['source'];
     $source = $this->aliasManager->getPathByAlias($source);
     $alias = $form_state['values']['alias'];
@@ -154,7 +155,7 @@ abstract class PathFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove unnecessary values.
     form_state_values_clean($form_state);
 

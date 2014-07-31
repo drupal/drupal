@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\TypedData\ListInterface;
@@ -188,13 +189,13 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *
    * @param array $form
    *   The form where the settings form is being included in.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    *
    * @return array
    *   The form definition for the field instance default value.
    */
-  public function defaultValuesForm(array &$form, array &$form_state);
+  public function defaultValuesForm(array &$form, FormStateInterface $form_state);
 
   /**
    * Validates the submitted default value.
@@ -206,10 +207,10 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *   The default value form element.
    * @param array $form
    *   The form where the settings form is being included in.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    */
-  public function defaultValuesFormValidate(array $element, array &$form, array &$form_state);
+  public function defaultValuesFormValidate(array $element, array &$form, FormStateInterface $form_state);
 
   /**
    * Processes the submitted default value.
@@ -221,13 +222,13 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *   The default value form element.
    * @param array $form
    *   The form where the settings form is being included in.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    *
    * @return array
    *   The field instance default value.
    */
-  public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state);
+  public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state);
 
   /**
    * Processes the default value before being applied.

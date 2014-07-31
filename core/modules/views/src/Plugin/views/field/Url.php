@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -29,7 +30,7 @@ class Url extends FieldPluginBase {
   /**
    * Provide link to the page being visited.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['display_as_link'] = array(
       '#title' => t('Display as link'),
       '#type' => 'checkbox',

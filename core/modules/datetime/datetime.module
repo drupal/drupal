@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\datetime\DateHelper;
@@ -119,10 +120,10 @@ function datetime_theme() {
  *
  * @param array $element
  *   The form element whose value is being validated.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function datetime_datetime_widget_validate(&$element, &$form_state) {
+function datetime_datetime_widget_validate(&$element, FormStateInterface $form_state) {
   if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
@@ -157,10 +158,10 @@ function datetime_datetime_widget_validate(&$element, &$form_state) {
  *
  * @param array $element
  *   The form element whose value is being validated.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function datetime_datelist_widget_validate(&$element, &$form_state) {
+function datetime_datelist_widget_validate(&$element, FormStateInterface $form_state) {
   if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
@@ -352,13 +353,13 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *
  * @param array $element
  *   The form element whose value is being processed.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
  * @return array
  *   The form element whose value has been processed.
  */
-function datetime_datetime_form_process($element, &$form_state) {
+function datetime_datetime_form_process($element, FormStateInterface $form_state) {
   $format_settings = array();
   // The value callback has populated the #value array.
   $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
@@ -527,10 +528,10 @@ function form_type_datetime_value($element, $input = FALSE) {
  *
  * @param array $element
  *   The form element whose value is being validated.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function datetime_datetime_validate($element, &$form_state) {
+function datetime_datetime_validate($element, FormStateInterface $form_state) {
 
   $input_exists = FALSE;
   $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
@@ -675,10 +676,10 @@ function datetime_format_example($format) {
  *
  * @param array $element
  *   The form element whose value is being processed.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function datetime_datelist_form_process($element, &$form_state) {
+function datetime_datelist_form_process($element, FormStateInterface $form_state) {
 
   // Load translated date part labels from the appropriate calendar plugin.
   $date_helper = new DateHelper();
@@ -788,14 +789,12 @@ function datetime_datelist_form_process($element, &$form_state) {
  * @param array $element
  *   The element being processed.
  * @param array|false $input
- *
- * @param array $form_state
- *   (optional) The current state of the form.  Defaults to an empty array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @return array
- *
  */
-function form_type_datelist_value($element, $input = FALSE, &$form_state = array()) {
+function form_type_datelist_value($element, $input = FALSE, FormStateInterface $form_state) {
   $parts = $element['#date_part_order'];
   $increment = $element['#date_increment'];
 
@@ -871,10 +870,10 @@ function form_type_datelist_value($element, $input = FALSE, &$form_state = array
  *
  * @param array $element
  *   The element being processed.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function datetime_datelist_validate($element, &$form_state) {
+function datetime_datelist_validate($element, FormStateInterface $form_state) {
   $input_exists = FALSE;
   $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
   if ($input_exists) {
@@ -1001,7 +1000,7 @@ function datetime_range_years($string, $date = NULL) {
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node forms.
  */
-function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
+function datetime_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Alter the 'Authored on' date to use datetime.
   $form['created']['#type'] = 'datetime';
   $date_format = entity_load('date_format', 'html_date')->getPattern();
@@ -1013,7 +1012,7 @@ function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_node_prepare_form().
  */
-function datetime_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
+function datetime_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
   // Prepare the 'Authored on' date to use datetime.
   $node->date = DrupalDateTime::createFromTimestamp($node->getCreatedTime());
 }

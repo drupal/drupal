@@ -17,14 +17,14 @@ interface FormSubmitterInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return null|\Symfony\Component\HttpFoundation\Response
    *   If a response was set by a submit handler, or if the form needs to
    *   redirect, a Response object will be returned.
    */
-  public function doSubmitForm(&$form, &$form_state);
+  public function doSubmitForm(&$form, FormStateInterface &$form_state);
 
   /**
    * Executes custom submission handlers for a given form.
@@ -35,18 +35,18 @@ interface FormSubmitterInterface {
    * @param $form
    *   An associative array containing the structure of the form.
    * @param $form_state
-   *   A keyed array containing the current state of the form. If the user
-   *   submitted the form by clicking a button with custom handler functions
-   *   defined, those handlers will be stored here.
+   *   The current state of the form. If the user submitted the form by clicking
+   *   a button with custom handler functions defined, those handlers will be
+   *   stored here.
    */
-  public function executeSubmitHandlers(&$form, &$form_state);
+  public function executeSubmitHandlers(&$form, FormStateInterface &$form_state);
 
   /**
    * Redirects the user to a URL after a form has been processed.
    *
    * After a form is submitted and processed, normally the user should be
    * redirected to a new destination page. This function figures out what that
-   * destination should be, based on the $form_state array and the 'destination'
+   * destination should be, based on the $form_state and the 'destination'
    * query string in the request URL, and redirects the user there.
    *
    * Usually (for exceptions, see below) $form_state['redirect'] determines
@@ -58,11 +58,11 @@ interface FormSubmitterInterface {
    *
    * Here is an example of how to set up a form to redirect to the path 'node':
    * @code
-   * $form_state['redirect'] = 'node';
+   * $form_state->set('redirect', 'node');
    * @endcode
    * And here is an example of how to redirect to 'node/123?foo=bar#baz':
    * @code
-   * $form_state['redirect'] = array(
+   * $form_state->set('redirect', array(
    *   'node/123',
    *   array(
    *     'query' => array(
@@ -70,7 +70,7 @@ interface FormSubmitterInterface {
    *     ),
    *     'fragment' => 'baz',
    *   ),
-   * );
+   * ));
    * @endcode
    *
    * There are several exceptions to the "usual" behavior described above:
@@ -94,13 +94,13 @@ interface FormSubmitterInterface {
    *   $form_state['redirect'].
    *
    * @param $form_state
-   *   An associative array containing the current state of the form.
+   *   The current state of the form.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
    *
    * @see \Drupal\Core\Form\FormBuilderInterface::processForm()
    * @see \Drupal\Core\Form\FormBuilderInterface::buildForm()
    */
-  public function redirectForm($form_state);
+  public function redirectForm(FormStateInterface $form_state);
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Display;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a common interface for entity form displays.
@@ -93,10 +94,10 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   $form_state['values']. If not specified, $form['#parents'] is set to an
    *   empty array, which results in field values located at the top-level of
    *   $form_state['values'].
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function buildForm(ContentEntityInterface $entity, array &$form, array &$form_state);
+  public function buildForm(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
   /**
    * Validates submitted widget values and sets the corresponding form errors.
@@ -122,10 +123,10 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
    *   full form structure, or a sub-element of a larger form.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function validateFormValues(ContentEntityInterface $entity, array &$form, array &$form_state);
+  public function validateFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
   /**
    * Extracts field values from the submitted widget values into the entity.
@@ -138,7 +139,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
    *   full form structure, or a sub-element of a larger form.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return array
@@ -147,6 +148,6 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   any, do not correspond to widgets and should be extracted manually by
    *   the caller if needed.
    */
-  public function extractFormValues(ContentEntityInterface $entity, array &$form, array &$form_state);
+  public function extractFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
 }

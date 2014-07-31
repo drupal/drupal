@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TermForm;
 
 /**
@@ -31,7 +32,7 @@ class ForumForm extends TermForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $taxonomy_term = $this->entity;
     // Build the bulk of the form from the parent taxonomy term form.
     $form = parent::form($form, $form_state, $taxonomy_term);
@@ -61,7 +62,7 @@ class ForumForm extends TermForm {
   /**
    * {@inheritdoc}
    */
-  public function buildEntity(array $form, array &$form_state) {
+  public function buildEntity(array $form, FormStateInterface $form_state) {
     $term = parent::buildEntity($form, $form_state);
 
     // Assign parents from forum parent select field.
@@ -73,7 +74,7 @@ class ForumForm extends TermForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $term = $this->entity;
     $term_storage = $this->entityManager->getStorage('taxonomy_term');
     $status = $term_storage->save($term);
@@ -98,7 +99,7 @@ class ForumForm extends TermForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('forum-delete-form')) {

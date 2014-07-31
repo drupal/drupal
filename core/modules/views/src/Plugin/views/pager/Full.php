@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * The plugin to handle full pager.
  *
@@ -41,7 +43,7 @@ class Full extends SqlBase {
   /**
    * Overrides \Drupal\views\Plugin\views\SqlBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['quantity'] = array(

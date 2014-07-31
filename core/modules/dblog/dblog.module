@@ -11,6 +11,7 @@
  * @see watchdog()
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -112,6 +113,6 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
  *
  * @see dblog_form_system_logging_settings_alter()
  */
-function dblog_logging_settings_submit($form, &$form_state) {
+function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::config('dblog.settings')->set('row_limit', $form_state['values']['dblog_row_limit'])->save();
 }

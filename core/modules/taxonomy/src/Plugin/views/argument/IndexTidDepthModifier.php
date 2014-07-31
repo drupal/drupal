@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 
 /**
@@ -21,7 +22,7 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
  */
 class IndexTidDepthModifier extends ArgumentPluginBase {
 
-  public function buildOptionsForm(&$form, &$form_state) { }
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
 
   public function query($group_by = FALSE) { }
 

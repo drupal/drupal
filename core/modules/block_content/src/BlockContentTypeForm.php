@@ -9,6 +9,7 @@ namespace Drupal\block_content;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Base form for category edit forms.
@@ -16,9 +17,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class BlockContentTypeForm extends EntityForm {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityForm::form().
+   * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $block_type = $this->entity;
@@ -87,7 +88,7 @@ class BlockContentTypeForm extends EntityForm {
   /**
    * Overrides \Drupal\Core\Entity\EntityForm::save().
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $block_type = $this->entity;
     $status = $block_type->save();
 

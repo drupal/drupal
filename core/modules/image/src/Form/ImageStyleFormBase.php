@@ -9,6 +9,7 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -52,7 +53,7 @@ abstract class ImageStyleFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -75,7 +76,7 @@ abstract class ImageStyleFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
     $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
   }

@@ -9,6 +9,7 @@ namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -98,7 +99,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     if (!$this->tempStore->getMetadata($this->entity->id())) {
       $form['message']['#markup'] = $this->t('There is no lock on view %name to break.', array('%name' => $this->entity->id()));
       return $form;
@@ -109,7 +110,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->tempStore->delete($this->entity->id());
     $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
     drupal_set_message($this->t('The lock has been broken and you may now edit this view.'));

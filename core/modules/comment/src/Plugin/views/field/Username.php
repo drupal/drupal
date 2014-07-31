@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -39,7 +40,7 @@ class Username extends FieldPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_user'] = array(
       '#title' => t("Link this field to its user or an author's homepage"),
       '#type' => 'checkbox',

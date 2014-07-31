@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Select the menus to be used for the main and secondary links for this site.
@@ -22,9 +23,9 @@ class MenuSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('menu_ui.settings');
     $form['intro'] = array(
       '#type' => 'item',
@@ -58,9 +59,9 @@ class MenuSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('menu_ui.settings')
       ->set('main_links', $form_state['values']['menu_main_links_source'])
       ->set('secondary_links', $form_state['values']['menu_secondary_links_source'])

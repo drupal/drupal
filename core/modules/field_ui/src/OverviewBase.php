@@ -9,6 +9,7 @@ namespace Drupal\field_ui;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -74,7 +75,7 @@ abstract class OverviewBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
     $this->bundleEntityType = $entity_type->getBundleEntityType();
     if (!isset($form_state['bundle'])) {
@@ -89,9 +90,9 @@ abstract class OverviewBase extends FormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**

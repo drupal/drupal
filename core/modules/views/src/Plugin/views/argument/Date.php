@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,7 @@ class Date extends Formula {
   /**
    * Add an option to set the default value to the current date.
    */
-  public function defaultArgumentForm(&$form, &$form_state) {
+  public function defaultArgumentForm(&$form, FormStateInterface $form_state) {
     parent::defaultArgumentForm($form, $form_state);
     $form['default_argument_type']['#options'] += array('date' => $this->t('Current date'));
     $form['default_argument_type']['#options'] += array('node_created' => $this->t("Current node's creation time"));

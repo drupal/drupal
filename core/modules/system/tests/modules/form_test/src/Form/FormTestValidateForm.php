@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\form_test\Callbacks;
 
 /**
@@ -34,7 +35,7 @@ class FormTestValidateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $object = new Callbacks();
 
     $form['name'] = array(
@@ -58,7 +59,7 @@ class FormTestValidateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['values']['name'] == 'validate') {
       // Alter the form element.
       $form['name']['#value'] = '#value changed by #validate';
@@ -75,7 +76,7 @@ class FormTestValidateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

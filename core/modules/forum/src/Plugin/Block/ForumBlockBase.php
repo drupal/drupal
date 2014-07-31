@@ -8,6 +8,7 @@
 namespace Drupal\forum\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Cache\Cache;
 
@@ -61,9 +62,9 @@ abstract class ForumBlockBase extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm().
+   * {@inheritdoc}
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $range = range(2, 20);
     $form['block_count'] = array(
       '#type' => 'select',
@@ -75,9 +76,9 @@ abstract class ForumBlockBase extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSubmit().
+   * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['block_count'] = $form_state['values']['block_count'];
   }
 

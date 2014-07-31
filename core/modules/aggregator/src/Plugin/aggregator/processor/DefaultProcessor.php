@@ -15,6 +15,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -105,7 +106,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $processors = $this->configuration['processors'];
     $info = $this->getPluginDefinition();
     $counts = array(3, 5, 10, 15, 20, 25);
@@ -161,7 +162,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['items']['expire'] = $form_state['values']['aggregator_clear'];
     $this->configuration['items']['teaser_length'] = $form_state['values']['aggregator_teaser_length'];
     $this->configuration['source']['list_max'] = $form_state['values']['aggregator_summary_items'];

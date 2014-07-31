@@ -10,6 +10,7 @@ namespace Drupal\locale\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -67,7 +68,7 @@ class TranslationStatusForm extends FormBase {
    *
    * @ingroup forms
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = locale_translatable_language_list();
     $status = locale_translation_get_status();
     $options = array();
@@ -264,7 +265,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check if a language has been selected. 'tableselect' doesn't.
     if (!array_filter($form_state['values']['langcodes'])) {
       $this->setFormError('', $this->t('Select a language to update.'));
@@ -274,7 +275,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('locale', 'fetch.inc');
     $langcodes = array_filter($form_state['values']['langcodes']);
     $projects = array_filter($form_state['values']['projects_update']);

@@ -11,6 +11,7 @@ use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -61,7 +62,7 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
   /**
    * Implements \Drupal\ckeditor\Plugin\CKEditorPluginConfigurableInterface::settingsForm().
    */
-  function settingsForm(array $form, array &$form_state, Editor $editor) {
+  function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     // Defaults.
     $config = array('ultra_llama_mode' => FALSE);
     $settings = $editor->getSettings();

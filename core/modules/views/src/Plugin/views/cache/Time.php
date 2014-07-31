@@ -9,8 +9,8 @@ namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Simple caching of query results for Views displays.
@@ -76,7 +76,7 @@ class Time extends CachePluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $options = array(60, 300, 1800, 3600, 21600, 518400);
     $options = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options));
@@ -124,7 +124,7 @@ class Time extends CachePluginBase {
     );
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $custom_fields = array('output_lifespan', 'results_lifespan');
     foreach ($custom_fields as $field) {
       if ($form_state['values']['cache_options'][$field] == 'custom' && !is_numeric($form_state['values']['cache_options'][$field . '_custom'])) {

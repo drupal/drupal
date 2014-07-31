@@ -7,6 +7,8 @@
 
 namespace Drupal\forum\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Base form for container term edit forms.
  */
@@ -22,7 +24,7 @@ class ContainerForm extends ForumForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $taxonomy_term = $this->entity;
     // Build the bulk of the form from the parent forum form.
     $form = parent::form($form, $form_state, $taxonomy_term);
@@ -40,7 +42,7 @@ class ContainerForm extends ForumForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $is_new = $this->entity->isNew();
     $this->entity->forum_container = TRUE;
     $term = parent::save($form, $form_state);

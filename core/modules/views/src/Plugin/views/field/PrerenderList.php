@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Field handler to provide a list of items.
  *
@@ -40,7 +42,7 @@ class PrerenderList extends FieldPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('Display type'),

@@ -12,6 +12,7 @@ use Drupal\aggregator\FeedStorageInterface;
 use Drupal\aggregator\ItemStorageInterface;
 use Drupal\block\BlockBase;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,9 +115,9 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm().
+   * {@inheritdoc}
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $feeds = $this->feedStorage->loadMultiple();
     $options = array();
     foreach ($feeds as $feed) {
@@ -139,9 +140,9 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSubmit().
+   * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['block_count'] = $form_state['values']['block_count'];
     $this->configuration['feed'] = $form_state['values']['feed'];
   }

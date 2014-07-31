@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
@@ -200,7 +201,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add settings for the ui.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['disable_sql_rewrite'] = array(
@@ -240,7 +241,7 @@ class Sql extends QueryPluginBase {
   /**
    * Special submit handling.
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
     $value = explode(',', NestedArray::getValue($form_state['values'], $element['#parents']));
     $value = array_filter(array_map('trim', $value));

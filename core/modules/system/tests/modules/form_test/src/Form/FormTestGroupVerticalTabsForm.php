@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a simple form to test the #group property on #type 'vertical_tabs'.
@@ -24,7 +25,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['vertical_tabs'] = array(
       '#type' => 'vertical_tabs',
     );
@@ -52,7 +53,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

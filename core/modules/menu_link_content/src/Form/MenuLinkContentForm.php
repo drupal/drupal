@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\Form\MenuLinkFormInterface;
@@ -143,7 +144,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $this->setOperation('default');
     $this->init($form_state);
 
@@ -153,14 +154,14 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->doValidate($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Remove button and internal Form API values from submitted values.
     parent::submit($form, $form_state);
     $this->save($form, $form_state);
@@ -209,7 +210,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(array &$form, array &$form_state) {
+  public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
     $new_definition['expanded'] = !empty($form_state['values']['expanded']['value']) ? 1 : 0;
     $new_definition['hidden'] = empty($form_state['values']['enabled']) ? 1 : 0;
@@ -240,7 +241,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     // We always show the internal path here.
@@ -314,7 +315,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $element['submit']['#button_type'] = 'primary';
     $element['delete']['#access'] = $this->entity->access('delete');
@@ -325,7 +326,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $this->doValidate($form, $form_state);
 
     parent::validate($form, $form_state);
@@ -334,7 +335,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function buildEntity(array $form, array &$form_state) {
+  public function buildEntity(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
     $new_definition = $this->extractFormValues($form, $form_state);
@@ -355,7 +356,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     // The entity is rebuilt in parent::submit().
     $menu_link = $this->entity;
     $saved = $menu_link->save();
@@ -383,10 +384,10 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *
    * @param array $form
    *   A nested array form elements comprising the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  protected function doValidate(array $form, array &$form_state) {
+  protected function doValidate(array $form, FormStateInterface $form_state) {
     $extracted = $this->extractUrl($form_state['values']['url']);
 
     // If both URL and route_name are empty, the entered value is not valid.

@@ -60,7 +60,7 @@ class EntityFormBuilderTest extends UnitTestCase {
 
     $this->formBuilder->expects($this->once())
       ->method('buildForm')
-      ->with($form_controller, $this->isType('array'))
+      ->with($form_controller, $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'))
       ->will($this->returnValue('the form contents'));
 
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');

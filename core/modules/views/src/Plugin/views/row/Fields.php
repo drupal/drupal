@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * The basic 'fields' row plugin
  *
@@ -45,7 +47,7 @@ class Fields extends RowPluginBase {
   /**
    * Provide a form for setting options.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $options = $this->displayHandler->getFieldLabels();
 
@@ -99,7 +101,7 @@ class Fields extends RowPluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $form_state['values']['row_options']['inline'] = array_filter($form_state['values']['row_options']['inline']);
   }
 

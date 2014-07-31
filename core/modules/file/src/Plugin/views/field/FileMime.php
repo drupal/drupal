@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -24,7 +25,7 @@ class FileMime extends File {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['filemime_image'] = array(
       '#title' => t('Display an icon representing the file type, instead of the MIME text (such as "image/jpeg")'),
       '#type' => 'checkbox',

@@ -8,6 +8,7 @@
 namespace Drupal\Core\FileTransfer\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -25,7 +26,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // If possible, we want to post this form securely via HTTPS.
     $form['#https'] = TRUE;
 
@@ -138,7 +139,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Only validate the form if we have collected all of the user input and are
     // ready to proceed with updating or installing.
     if ($form_state['triggering_element']['#name'] != 'process_updates') {
@@ -168,7 +169,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     switch ($form_state['triggering_element']['#name']) {
       case 'process_updates':
 

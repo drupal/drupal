@@ -8,6 +8,7 @@
 namespace Drupal\Core\Menu\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
@@ -101,7 +102,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Edit menu link %title', array('%title' => $this->menuLink->getTitle()));
 
     $provider = $this->menuLink->getProvider();
@@ -155,7 +156,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(array &$form, array &$form_state) {
+  public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
     $new_definition['hidden'] = $form_state['values']['enabled'] ? 0 : 1;
     $new_definition['weight'] = (int) $form_state['values']['weight'];
@@ -173,13 +174,13 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $new_definition = $this->extractFormValues($form, $form_state);
 
     return $this->menuLinkManager->updateDefinition($this->menuLink->getPluginId(), $new_definition);

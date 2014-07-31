@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a form to test #type 'number' and 'range' validation.
@@ -24,7 +25,7 @@ class FormTestNumberForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $element = 'number') {
+  public function buildForm(array $form, FormStateInterface $form_state, $element = 'number') {
     $base = array(
       '#type' => $element,
     );
@@ -139,7 +140,7 @@ class FormTestNumberForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

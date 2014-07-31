@@ -8,6 +8,7 @@
 namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -25,7 +26,7 @@ class BatchTestSimpleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['batch'] = array(
       '#type' => 'select',
       '#title' => 'Choose batch',
@@ -48,7 +49,7 @@ class BatchTestSimpleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     batch_test_stack(NULL, TRUE);
 
     $function = '_batch_test_' . $form_state['values']['batch'];

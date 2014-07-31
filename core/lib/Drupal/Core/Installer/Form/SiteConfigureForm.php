@@ -9,6 +9,7 @@ namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\user\UserStorageInterface;
@@ -88,7 +89,7 @@ class SiteConfigureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Configure site');
 
     // Warn about settings.php permissions risk
@@ -227,7 +228,7 @@ class SiteConfigureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($error = user_validate_name($form_state['values']['account']['name'])) {
       $this->setFormError('account][name', $form_state, $error);
     }
@@ -236,7 +237,7 @@ class SiteConfigureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
       ->set('name', $form_state['values']['site_name'])
       ->set('mail', $form_state['values']['site_mail'])

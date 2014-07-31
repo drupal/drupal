@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -67,13 +68,11 @@ abstract class DateFormatFormBase extends EntityForm {
    *   The entity ID.
    * @param array $element
    *   The form element.
-   * @param array $form_state
-   *   The form state.
    *
    * @return bool
    *   TRUE if this format already exists, FALSE otherwise.
    */
-  public function exists($entity_id, array $element,  array $form_state) {
+  public function exists($entity_id, array $element) {
     return (bool) $this->dateFormatStorage
       ->getQuery()
       ->condition('id', $element['#field_prefix'] . $entity_id)
@@ -85,13 +84,13 @@ abstract class DateFormatFormBase extends EntityForm {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX Response to update the date-time value of the date format.
    */
-  public static function dateTimeLookup(array $form, array $form_state) {
+  public static function dateTimeLookup(array $form, FormStateInterface $form_state) {
     $format = '';
     if (!empty($form_state['values']['date_format_pattern'])) {
       $format = t('Displayed as %date_format', array('%date_format' => \Drupal::service('date')->format(REQUEST_TIME, 'custom', $form_state['values']['date_format_pattern'])));
@@ -107,7 +106,7 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => 'Name',
@@ -156,7 +155,7 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     // The machine name field should already check to see if the requested
@@ -174,7 +173,7 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $form_state['redirect_route']['route_name'] = 'system.date_format_list';
     $form_state['values']['pattern'] = trim($form_state['values']['date_format_pattern']);
 

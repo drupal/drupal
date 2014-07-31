@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\argument_validator;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -85,7 +86,7 @@ class Entity extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $entity_type_id = $this->definition['entity_type'];
@@ -149,7 +150,7 @@ class Entity extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) {
     // Filter out unused options so we don't store giant unnecessary arrays.
     $options['bundles'] = array_filter($options['bundles']);
   }

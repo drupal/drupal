@@ -9,6 +9,7 @@ namespace Drupal\block_content;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the translation handler for custom blocks.
@@ -18,7 +19,7 @@ class BlockContentTranslationHandler extends ContentTranslationHandler {
   /**
    * {@inheritdoc}
    */
-  public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
     // Move the translation fieldset to a vertical tab.
     if (isset($form['translation'])) {

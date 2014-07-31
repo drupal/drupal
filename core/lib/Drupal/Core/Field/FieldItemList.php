@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -301,7 +302,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesForm(array &$form, array &$form_state) {
+  public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
     if (empty($this->getFieldDefinition()->default_value_function)) {
       // Place the input in a separate place in the submitted values tree.
       $widget = $this->defaultValueWidget($form_state);
@@ -316,7 +317,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesFormValidate(array $element, array &$form, array &$form_state) {
+  public function defaultValuesFormValidate(array $element, array &$form, FormStateInterface $form_state) {
     // Extract the submitted value, and validate it.
     $widget = $this->defaultValueWidget($form_state);
     $widget->extractFormValues($this, $element, $form_state);
@@ -331,7 +332,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state) {
+  public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state) {
     // Extract the submitted value, and return it as an array.
     $widget = $this->defaultValueWidget($form_state);
     $widget->extractFormValues($this, $element, $form_state);
@@ -348,13 +349,13 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * Returns the widget object used in default value form.
    *
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    *
    * @return \Drupal\Core\Field\WidgetInterface
    *   A Widget object.
    */
-  protected function defaultValueWidget(array &$form_state) {
+  protected function defaultValueWidget(FormStateInterface $form_state) {
     if (!isset($form_state['default_value_widget'])) {
       $entity = $this->getEntity();
 

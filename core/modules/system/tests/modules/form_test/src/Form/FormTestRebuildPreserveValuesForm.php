@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder for testing preservation of values during a rebuild.
@@ -24,7 +25,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Start the form with two checkboxes, to test different defaults, and a
     // textfield, to test more than one element type.
     $form = array(
@@ -85,7 +86,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function addMoreSubmitForm(array &$form, array &$form_state) {
+  public function addMoreSubmitForm(array &$form, FormStateInterface $form_state) {
     // Rebuild, to test preservation of input values.
     $form_state['storage']['add_more'] = TRUE;
     $form_state['rebuild'] = TRUE;
@@ -94,7 +95,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Finish the workflow. Do not rebuild.
     drupal_set_message(t('Form values: %values', array('%values' => var_export($form_state['values'], TRUE))));
   }

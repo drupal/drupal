@@ -7,6 +7,7 @@ use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Install\TaskException;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
 use Drupal\Core\Installer\Exception\NoProfilesException;
@@ -157,7 +158,7 @@ function install_drupal($settings = array()) {
  * submission is for, and the values are used as the $form_state['values']
  * array that is passed on to the form submission via drupal_form_submit()).
  *
- * @see drupal_form_submit()
+ * @see \Drupal\Core\Form\FormBuilderInterface::submitForm()
  */
 function install_state_defaults() {
   $defaults = array(
@@ -804,12 +805,12 @@ function install_tasks_to_display($install_state) {
 function install_get_form($form_id, array &$install_state) {
   // Ensure the form will not redirect, since install_run_tasks() uses a custom
   // redirection logic.
-  $form_state = array(
+  $form_state = new FormState(array(
     'build_info' => array(
       'args' => array(&$install_state),
     ),
     'no_redirect' => TRUE,
-  );
+  ));
   $form_builder = \Drupal::formBuilder();
   if ($install_state['interactive']) {
     $form = $form_builder->buildForm($form_id, $form_state);

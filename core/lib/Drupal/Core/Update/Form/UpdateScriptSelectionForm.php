@@ -8,6 +8,7 @@
 namespace Drupal\Core\Update\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the list of available database module updates.
@@ -24,7 +25,7 @@ class UpdateScriptSelectionForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $count = 0;
     $incompatible_count = 0;
     $form['start'] = array(
@@ -127,7 +128,7 @@ class UpdateScriptSelectionForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

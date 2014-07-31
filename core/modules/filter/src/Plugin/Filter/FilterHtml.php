@@ -8,6 +8,7 @@
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
@@ -31,7 +32,7 @@ class FilterHtml extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $form['allowed_html'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Allowed HTML tags'),

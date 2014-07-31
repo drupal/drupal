@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * A common base class for sql based pager.
  */
@@ -42,7 +44,7 @@ abstract class SqlBase extends PagerPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $pager_text = $this->displayHandler->getPagerText();
     $form['items_per_page'] = array(
@@ -176,7 +178,7 @@ abstract class SqlBase extends PagerPluginBase {
     );
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Only accept integer values.
     $error = FALSE;
     $exposed_options = $form_state['values']['pager_options']['expose']['items_per_page_options'];
@@ -335,7 +337,7 @@ abstract class SqlBase extends PagerPluginBase {
     return !empty($this->options['expose']['offset']);
   }
 
-  public function exposedFormAlter(&$form, &$form_state) {
+  public function exposedFormAlter(&$form, FormStateInterface $form_state) {
     if ($this->itemsPerPageExposed()) {
       $options = explode(',', $this->options['expose']['items_per_page_options']);
       $sanitized_options = array();
@@ -366,7 +368,7 @@ abstract class SqlBase extends PagerPluginBase {
     }
   }
 
-  public function exposedFormValidate(&$form, &$form_state) {
+  public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['offset']) && trim($form_state['values']['offset'])) {
       if (!is_numeric($form_state['values']['offset']) || $form_state['values']['offset'] < 0) {
         form_set_error('offset', $form_state, t('Offset must be an number greather or equal than 0.'));

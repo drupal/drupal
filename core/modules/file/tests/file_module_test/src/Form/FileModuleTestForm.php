@@ -8,6 +8,7 @@
 namespace Drupal\file_module_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for file_module_test module.
@@ -26,8 +27,8 @@ class FileModuleTestForm extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param bool $tree
    *   (optional) If the form should use #tree. Defaults to TRUE.
    * @param bool $extended
@@ -37,7 +38,7 @@ class FileModuleTestForm extends FormBase {
    * @param array $default_fids
    *   (optional) Any default file IDs to use.
    */
-  public function buildForm(array $form, array &$form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
     $form['#tree'] = (bool) $tree;
 
     $form['nested']['file'] = array(
@@ -70,7 +71,7 @@ class FileModuleTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form['#tree']) {
       $uploads = $form_state['values']['nested']['file'];
     }

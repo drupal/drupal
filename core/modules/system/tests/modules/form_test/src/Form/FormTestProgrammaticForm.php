@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder to test programmatic form submissions.
@@ -24,7 +25,7 @@ class FormTestProgrammaticForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['textfield'] = array(
       '#title' => 'Textfield',
       '#type' => 'textfield',
@@ -87,7 +88,7 @@ class FormTestProgrammaticForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['textfield'])) {
       form_set_error('textfield', $form_state, t('Textfield is required.'));
     }
@@ -96,7 +97,7 @@ class FormTestProgrammaticForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['storage']['programmatic_form_submit'] = $form_state['values'];
   }
 

@@ -9,6 +9,7 @@
 namespace Drupal\block\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
@@ -140,7 +141,7 @@ class Block extends DisplayPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {
@@ -201,7 +202,7 @@ class Block extends DisplayPluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'block_description':
@@ -222,15 +223,15 @@ class Block extends DisplayPluginBase {
    *   The ViewsBlock plugin.
    * @param array $form
    *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array $form
    *   The renderable form array representing the entire configuration form.
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::blockForm()
    */
-  public function blockForm(ViewsBlock $block, array &$form, array &$form_state) {
+  public function blockForm(ViewsBlock $block, array &$form, FormStateInterface $form_state) {
     $allow_settings = array_filter($this->getOption('allow'));
 
     $block_configuration = $block->getConfiguration();
@@ -267,12 +268,12 @@ class Block extends DisplayPluginBase {
    *   The ViewsBlock plugin.
    * @param array $form
    *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::blockValidate()
    */
-  public function blockValidate(ViewsBlock $block, array $form, array &$form_state) {
+  public function blockValidate(ViewsBlock $block, array $form, FormStateInterface $form_state) {
   }
 
   /**
@@ -282,12 +283,12 @@ class Block extends DisplayPluginBase {
    *   The ViewsBlock plugin.
    * @param array $form
    *   The form definition array for the full block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * * @see \Drupal\views\Plugin\Block\ViewsBlock::blockSubmit()
    */
-  public function blockSubmit(ViewsBlock $block, $form, &$form_state) {
+  public function blockSubmit(ViewsBlock $block, $form, FormStateInterface $form_state) {
     if (isset($form_state['values']['override']['items_per_page'])) {
       $block->setConfigurationValue('items_per_page', $form_state['values']['override']['items_per_page']);
     }

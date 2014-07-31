@@ -9,6 +9,7 @@ namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a 'Powered by Drupal' block.
@@ -27,11 +28,10 @@ class SystemPoweredByBlock extends BlockBase {
     return array('#markup' => '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'https://drupal.org')) . '</span>');
   }
 
-
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     // The 'Powered by Drupal' block is permanently cacheable, because its

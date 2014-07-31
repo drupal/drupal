@@ -10,6 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\CronInterface;
 use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -82,7 +83,7 @@ class CronForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('system.cron');
 
     $form['description'] = array(
@@ -123,7 +124,7 @@ class CronForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.cron')
       ->set('threshold.autorun', $form_state['values']['cron_safe_threshold'])
       ->save();
@@ -134,7 +135,7 @@ class CronForm extends ConfigFormBase {
   /**
    * Runs cron and reloads the page.
    */
-  public function submitCron(array &$form, array &$form_state) {
+  public function submitCron(array &$form, FormStateInterface $form_state) {
     // Run cron manually from Cron form.
     if ($this->cron->run()) {
       drupal_set_message(t('Cron run successfully.'));

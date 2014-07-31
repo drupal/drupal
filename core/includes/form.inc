@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::getCache().
  */
-function form_get_cache($form_build_id, &$form_state) {
+function form_get_cache($form_build_id, FormStateInterface $form_state) {
   return \Drupal::formBuilder()->getCache($form_build_id, $form_state);
 }
 
@@ -73,7 +74,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *
  * @see module_load_include()
  */
-function form_load_include(&$form_state, $type, $module, $name = NULL) {
+function form_load_include(FormStateInterface $form_state, $type, $module, $name = NULL) {
   if (!isset($name)) {
     $name = $module;
   }
@@ -99,7 +100,7 @@ function form_load_include(&$form_state, $type, $module, $name = NULL) {
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::submitForm().
  */
-function drupal_form_submit($form_arg, &$form_state) {
+function drupal_form_submit($form_arg, FormStateInterface $form_state) {
   \Drupal::formBuilder()->submitForm($form_arg, $form_state);
 }
 
@@ -111,7 +112,7 @@ function drupal_form_submit($form_arg, &$form_state) {
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::retrieveForm().
  */
-function drupal_retrieve_form($form_id, &$form_state) {
+function drupal_retrieve_form($form_id, FormStateInterface $form_state) {
   return \Drupal::formBuilder()->retrieveForm($form_id, $form_state);
 
 }
@@ -123,7 +124,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::processForm().
  */
-function drupal_process_form($form_id, &$form, &$form_state) {
+function drupal_process_form($form_id, &$form, FormStateInterface $form_state) {
   \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
 }
 
@@ -149,7 +150,7 @@ function drupal_redirect_form($form_state) {
  * @see \Drupal\Core\Form\FormSubmitterInterface::executeSubmitHandlers()
  * @see \Drupal\Core\Form\FormValidatorInterface::executeValidateHandlers()
  */
-function form_execute_handlers($type, &$form, &$form_state) {
+function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
   if ($type == 'submit') {
     \Drupal::service('form_submitter')->executeSubmitHandlers($form, $form_state);
   }
@@ -166,7 +167,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *
  * @see \Drupal\Core\Form\FormErrorInterface::setErrorByName().
  */
-function form_set_error($name, array &$form_state, $message = '') {
+function form_set_error($name, FormStateInterface $form_state, $message = '') {
   \Drupal::formBuilder()->setErrorByName($name, $form_state, $message);
 }
 
@@ -178,7 +179,7 @@ function form_set_error($name, array &$form_state, $message = '') {
  *
  * @see \Drupal\Core\Form\FormErrorInterface::getErrors()
  */
-function form_get_errors(array &$form_state) {
+function form_get_errors(FormStateInterface $form_state) {
   return \Drupal::formBuilder()->getErrors($form_state);
 }
 
@@ -190,7 +191,7 @@ function form_get_errors(array &$form_state) {
  *
  * @see \Drupal\Core\Form\FormErrorInterface::getError().
  */
-function form_get_error($element, array &$form_state) {
+function form_get_error($element, FormStateInterface $form_state) {
   return \Drupal::formBuilder()->getError($element, $form_state);
 }
 
@@ -202,7 +203,7 @@ function form_get_error($element, array &$form_state) {
  *
  * @see \Drupal\Core\Form\FormErrorInterface::setError().
  */
-function form_error(&$element, array &$form_state, $message = '') {
+function form_error(&$element, FormStateInterface $form_state, $message = '') {
   \Drupal::formBuilder()->setError($element, $form_state, $message);
 }
 
@@ -214,7 +215,7 @@ function form_error(&$element, array &$form_state, $message = '') {
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::doBuildForm().
  */
-function form_builder($form_id, &$element, &$form_state) {
+function form_builder($form_id, &$element, FormStateInterface $form_state) {
   return \Drupal::formBuilder()->doBuildForm($form_id, $element, $form_state);
 }
 
@@ -233,10 +234,9 @@ function form_builder($form_id, &$element, &$form_state) {
  * - op
  *
  * @param $form_state
- *   A keyed array containing the current state of the form, including
- *   submitted form values; altered by reference.
+ *   The current state of the form, including submitted form values.
  */
-function form_state_values_clean(&$form_state) {
+function form_state_values_clean(FormStateInterface $form_state) {
   // Remove internal Form API values.
   unset($form_state['values']['form_id'], $form_state['values']['form_token'], $form_state['values']['form_build_id'], $form_state['values']['op']);
 
@@ -282,7 +282,7 @@ function form_state_values_clean(&$form_state) {
  *   The incoming input to populate the form element. If this is FALSE,
  *   the element's default value should be returned.
  * @param $form_state
- *   A keyed array containing the current state of the form.
+ *   The current state of the form.
  *
  * @return
  *   The data that will appear in the $form_state['values'] collection
@@ -619,7 +619,7 @@ function form_type_token_value($element, $input = FALSE) {
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::setValue().
  */
-function form_set_value($element, $value, &$form_state) {
+function form_set_value($element, $value, FormStateInterface $form_state) {
   \Drupal::formBuilder()->setValue($element, $value, $form_state);
 }
 
@@ -1255,12 +1255,12 @@ function form_process_checkboxes($element) {
  *   An associative array containing the properties and children of the
  *   form actions container.
  * @param $form_state
- *   The $form_state array for the form this element belongs to.
+ *   The current state of the form for the form this element belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_actions($element, &$form_state) {
+function form_process_actions($element, FormStateInterface $form_state) {
   $element['#attributes']['class'][] = 'form-actions';
   return $element;
 }
@@ -1318,14 +1318,14 @@ function form_pre_render_actions_dropbutton(array $element) {
  *   An associative array containing the properties and children of the
  *   generic input element.
  * @param $form_state
- *   The $form_state array for the form this element belongs to.
+ *   The current state of the form for the form this element belongs to.
  *
  * @return
  *   The processed element.
  *
  * @see form_validate_pattern()
  */
-function form_process_pattern($element, &$form_state) {
+function form_process_pattern($element, FormStateInterface $form_state) {
   if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
     $element['#attributes']['pattern'] = $element['#pattern'];
     $element['#element_validate'][] = 'form_validate_pattern';
@@ -1341,11 +1341,11 @@ function form_process_pattern($element, &$form_state) {
  *   An associative array containing the properties and children of the
  *   generic form element.
  * @param $form_state
- *   The $form_state array for the form this element belongs to.
+ *   The current state of the form for the form this element belongs to.
  *
  * @see form_process_pattern()
  */
-function form_validate_pattern($element, &$form_state) {
+function form_validate_pattern($element, FormStateInterface $form_state) {
   if ($element['#value'] !== '') {
     // The pattern must match the entire string and should have the same
     // behavior as the RegExp object in ECMA 262.
@@ -1368,12 +1368,12 @@ function form_validate_pattern($element, &$form_state) {
  *   An associative array containing the properties and children of the
  *   container.
  * @param $form_state
- *   The $form_state array for the form this element belongs to.
+ *   The current state of the form for the form this element belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_container($element, &$form_state) {
+function form_process_container($element, FormStateInterface $form_state) {
   // Generate the ID of the element if it's not explicitly given.
   if (!isset($element['#id'])) {
     $element['#id'] = drupal_html_id(implode('-', $element['#parents']) . '-wrapper');
@@ -1568,7 +1568,7 @@ function form_process_tableselect($element) {
  * @param array $element
  *   An associative array containing the properties and children of the
  *   table element.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
  * @return array
@@ -1577,7 +1577,7 @@ function form_process_tableselect($element) {
  * @see form_process_tableselect()
  * @see theme_tableselect()
  */
-function form_process_table($element, &$form_state) {
+function form_process_table($element, FormStateInterface $form_state) {
   if ($element['#tableselect']) {
     if ($element['#multiple']) {
       $value = is_array($element['#value']) ? $element['#value'] : array();
@@ -1694,10 +1694,10 @@ function form_process_table($element, &$form_state) {
  * @param array $element
  *   An associative array containing the properties and children of the
  *   table element.
- * @param array $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function form_validate_table($element, &$form_state) {
+function form_validate_table($element, FormStateInterface $form_state) {
   // Skip this validation if the button to submit the form does not require
   // selected table row data.
   if (empty($form_state['triggering_element']['#tableselect'])) {
@@ -1745,7 +1745,7 @@ function form_validate_table($element, &$form_state) {
  *   - #disabled: (optional) Should be set to TRUE in case an existing machine
  *     name must not be changed after initial creation.
  */
-function form_process_machine_name($element, &$form_state) {
+function form_process_machine_name($element, FormStateInterface $form_state) {
   // We need to pass the langcode to the client.
   $language = \Drupal::languageManager()->getCurrentLanguage();
 
@@ -1829,7 +1829,7 @@ function form_process_machine_name($element, &$form_state) {
  *
  * Note that #maxlength is validated by _form_validate() already.
  */
-function form_validate_machine_name(&$element, &$form_state) {
+function form_validate_machine_name(&$element, FormStateInterface $form_state) {
   // Verify that the machine name not only consists of replacement tokens.
   if (preg_match('@^' . $element['#machine_name']['replace'] . '+$@', $element['#value'])) {
     form_error($element, $form_state, t('The machine-readable name must contain unique characters.'));
@@ -1870,12 +1870,12 @@ function form_validate_machine_name(&$element, &$form_state) {
  *   element. Note that $element must be taken by reference here, so processed
  *   child elements are taken over into $form_state.
  * @param $form_state
- *   The $form_state array for the form this element belongs to.
+ *   The current state of the form for the form this element belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_group(&$element, &$form_state) {
+function form_process_group(&$element, FormStateInterface $form_state) {
   $parents = implode('][', $element['#parents']);
 
   // Each details element forms a new group. The #type 'vertical_tabs' basically
@@ -1994,12 +1994,12 @@ function form_pre_render_group($element) {
  *   An associative array containing the properties and children of the
  *   details element.
  * @param $form_state
- *   The $form_state array for the form this vertical tab widget belongs to.
+ *   The current state of the form for the form this vertical tab widget belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_vertical_tabs($element, &$form_state) {
+function form_process_vertical_tabs($element, FormStateInterface $form_state) {
   // Inject a new details as child, so that form_process_details() processes
   // this details element like any other details.
   $element['group'] = array(
@@ -2088,13 +2088,13 @@ function template_preprocess_vertical_tabs(&$variables) {
  *     autocomplete JavaScript library.
  *   - #autocomplete_route_parameters: The parameters to be used in conjunction
  *     with the route name.
- * @param array $form_state
- *   An associative array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @return array
  *   The form element.
  */
-function form_process_autocomplete($element, &$form_state) {
+function form_process_autocomplete($element, FormStateInterface $form_state) {
   $access = FALSE;
   if (!empty($element['#autocomplete_route_name'])) {
     $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
@@ -2254,7 +2254,7 @@ function form_pre_render_email($element) {
  *
  * Note that #maxlength and #required is validated by _form_validate() already.
  */
-function form_validate_email(&$element, &$form_state) {
+function form_validate_email(&$element, FormStateInterface $form_state) {
   $value = trim($element['#value']);
   form_set_value($element, $value, $form_state);
 
@@ -2325,7 +2325,7 @@ function form_pre_render_range($element) {
  *
  * Note that #required is validated by _form_validate() already.
  */
-function form_validate_number(&$element, &$form_state) {
+function form_validate_number(&$element, FormStateInterface $form_state) {
   $value = $element['#value'];
   if ($value === '') {
     return;
@@ -2433,7 +2433,7 @@ function form_pre_render_search($element) {
  *
  * Note that #maxlength and #required is validated by _form_validate() already.
  */
-function form_validate_url(&$element, &$form_state) {
+function form_validate_url(&$element, FormStateInterface $form_state) {
   $value = trim($element['#value']);
   form_set_value($element, $value, $form_state);
 
@@ -2445,7 +2445,7 @@ function form_validate_url(&$element, &$form_state) {
 /**
  * Form element validation handler for #type 'color'.
  */
-function form_validate_color(&$element, &$form_state) {
+function form_validate_color(&$element, FormStateInterface $form_state) {
   $value = trim($element['#value']);
 
   // Default to black if no value is given.

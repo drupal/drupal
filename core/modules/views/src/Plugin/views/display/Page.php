@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -148,7 +149,7 @@ class Page extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\callbackPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {
@@ -377,7 +378,7 @@ class Page extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\callbackPluginBase::validateOptionsForm().
    */
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
     if ($form_state['section'] == 'menu') {
@@ -403,7 +404,7 @@ class Page extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\callbackPluginBase::submitOptionsForm().
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {

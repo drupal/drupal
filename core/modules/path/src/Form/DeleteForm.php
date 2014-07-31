@@ -8,6 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -72,9 +73,9 @@ class DeleteForm extends ConfirmFormBase {
   }
 
   /**
-   * Overrides \Drupal\Core\Form\ConfirmFormBase::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $pid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $pid = NULL) {
     $this->pathAlias = $this->aliasStorage->load(array('pid' => $pid));
 
     $form = parent::buildForm($form, $form_state);
@@ -83,9 +84,9 @@ class DeleteForm extends ConfirmFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->aliasStorage->delete(array('pid' => $this->pathAlias['pid']));
 
     $form_state['redirect'] = 'admin/config/search/path';

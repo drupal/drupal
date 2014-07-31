@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_ui\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
@@ -92,7 +93,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, MenuLinkInterface $menu_link_plugin = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, MenuLinkInterface $menu_link_plugin = NULL) {
     $this->link = $menu_link_plugin;
 
     $form = parent::buildForm($form, $form_state);
@@ -102,7 +103,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->link = $this->menuLinkManager->resetLink($this->link->getPluginId());
     drupal_set_message($this->t('The menu link was reset to its default settings.'));
     $form_state['redirect_route'] = $this->getCancelUrl();

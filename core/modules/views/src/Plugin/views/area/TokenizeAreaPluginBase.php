@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\area;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Tokenized base class for area handlers.
  *
@@ -31,7 +33,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     // Add tokenization form elements.
@@ -41,7 +43,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
   /**
    * Adds tokenization form elements.
    */
-  public function tokenForm(&$form, &$form_state) {
+  public function tokenForm(&$form, FormStateInterface $form_state) {
     $form['tokenize'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use replacement tokens from the first row'),

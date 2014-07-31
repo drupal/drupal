@@ -10,6 +10,7 @@ namespace Drupal\system\Plugin\Block;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\block\BlockBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -105,7 +106,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     // Get the theme.
     $theme = $form_state['block_theme'];
 
@@ -173,7 +174,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['use_site_logo'] = $form_state['values']['block_branding']['use_site_logo'];
     $this->configuration['use_site_name'] = $form_state['values']['block_branding']['use_site_name'];
     $this->configuration['use_site_slogan'] = $form_state['values']['block_branding']['use_site_slogan'];

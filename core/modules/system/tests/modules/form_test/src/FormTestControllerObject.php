@@ -8,6 +8,7 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,7 +34,7 @@ class FormTestControllerObject extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $custom_attributes = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $custom_attributes = NULL) {
     $form['element'] = array('#markup' => 'The FormTestControllerObject::buildForm() method was used for this form.');
 
     $form['custom_attribute']['#markup'] = $custom_attributes;
@@ -55,14 +56,14 @@ class FormTestControllerObject extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The FormTestControllerObject::validateForm() method was used for this form.'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The FormTestControllerObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')
       ->set('bananas', $form_state['values']['bananas'])

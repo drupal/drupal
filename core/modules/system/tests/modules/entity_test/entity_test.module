@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 
@@ -242,7 +243,7 @@ function entity_test_permission() {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
+function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $langcode = $form_state['controller']->getFormLangcode($form_state);
   \Drupal::state()->set('entity_test.form_langcode', $langcode);
 }

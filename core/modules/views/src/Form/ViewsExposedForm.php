@@ -9,6 +9,7 @@ namespace Drupal\views\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ExposedFormCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -51,7 +52,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Don't show the form when batch operations are in progress.
     if ($batch = batch_get() && isset($batch['current_set'])) {
       return array(
@@ -131,7 +132,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     foreach (array('field', 'filter') as $type) {
       /** @var \Drupal\views\Plugin\views\HandlerBase[] $handlers */
       $handlers = &$form_state['view']->$type;
@@ -147,7 +148,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach (array('field', 'filter') as $type) {
       /** @var \Drupal\views\Plugin\views\HandlerBase[] $handlers */
       $handlers = &$form_state['view']->$type;

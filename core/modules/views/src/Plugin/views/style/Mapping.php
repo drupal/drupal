@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Allows fields to be mapped to specific use cases.
  *
@@ -70,7 +72,7 @@ abstract class Mapping extends StylePluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\style\StylePluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     // Get the mapping.

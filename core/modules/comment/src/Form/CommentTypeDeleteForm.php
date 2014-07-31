@@ -11,6 +11,7 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Psr\Log\LoggerInterface;
@@ -111,7 +112,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $comments = $this->queryFactory->get('comment')->condition('comment_type', $this->entity->id())->execute();
     $entity_type = $this->entity->getTargetEntityTypeId();
     $caption = '';
@@ -140,7 +141,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     $form_state['redirect_route']['route_name'] = 'comment.type_list';
     drupal_set_message($this->t('Comment type %label has been deleted.', array('%label' => $this->entity->label())));

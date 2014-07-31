@@ -5,6 +5,7 @@
  * Redirects logging messages to syslog.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -30,7 +31,7 @@ function syslog_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
+function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state) {
   $config = \Drupal::config('syslog.settings');
   $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
   $form['syslog_identity'] = array(
@@ -63,7 +64,7 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
  *
  * @see syslog_form_system_logging_settings_alter()
  */
-function syslog_logging_settings_submit($form, &$form_state) {
+function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::config('syslog.settings')
     ->set('identity', $form_state['values']['syslog_identity'])
     ->set('facility', $form_state['values']['syslog_facility'])

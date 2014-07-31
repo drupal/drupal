@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a class to build a draggable listing of configuration entities.
@@ -102,7 +103,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form[$this->entitiesKey] = array(
       '#type' => 'table',
       '#header' => $this->buildHeader(),
@@ -138,14 +139,14 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // No validation.
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state['values'][$this->entitiesKey] as $id => $value) {
       if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) != $value['weight']) {
         // Save entity only when its weight was changed.

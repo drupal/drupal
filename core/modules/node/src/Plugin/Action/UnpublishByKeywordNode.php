@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\Action;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Unpublishes a node containing certain keywords.
@@ -47,7 +48,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['keywords'] = array(
       '#title' => t('Keywords'),
       '#type' => 'textarea',
@@ -60,7 +61,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['keywords'] = Tags::explode($form_state['values']['keywords']);
   }
 

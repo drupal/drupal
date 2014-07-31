@@ -8,6 +8,7 @@
 namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
@@ -72,7 +73,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $allowed_values = $this->getSetting('allowed_values');
     $allowed_values_function = $this->getSetting('allowed_values_function');
 
@@ -117,11 +118,11 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
    *   An associative array containing the properties and children of the
    *   generic form element.
    * @param $form_state
-   *   The $form_state array for the form this element belongs to.
+   *   The current state of the form for the form this element belongs to.
    *
    * @see form_process_pattern()
    */
-  public static function validateAllowedValues($element, &$form_state) {
+  public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
 
     if (!is_array($values)) {

@@ -9,6 +9,7 @@ namespace Drupal\book\Plugin\Block;
 
 use Drupal\block\BlockBase;
 use Drupal\book\BookManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -82,9 +83,9 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm()
+   * {@inheritdoc}
    */
-  function blockForm($form, &$form_state) {
+  function blockForm($form, FormStateInterface $form_state) {
     $options = array(
       'all pages' => t('Show block on all pages'),
       'book pages' => t('Show block only on book pages'),
@@ -101,9 +102,9 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSubmit().
+   * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['block_mode'] = $form_state['values']['book_block_mode'];
   }
 

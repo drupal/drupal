@@ -8,6 +8,7 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a search form for site wide search.
@@ -37,7 +38,7 @@ class SearchPageForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $plugin = $this->entity->getPlugin();
     $form_state['search_page_id'] = $this->entity->id();
 
@@ -74,7 +75,7 @@ class SearchPageForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     // The submit button is added in the form directly.
     return array();
   }
@@ -82,7 +83,7 @@ class SearchPageForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Redirect to the search page with keywords in the GET parameters.
     // Plugins with additional search parameters will need to provide their
     // own form submit handler to replace this, so they can put their values

@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Plugin;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
@@ -146,7 +147,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     // Implementations should work with and return $form. Returning an empty
     // array here allows the text format administration form to identify whether
     // the filter plugin has any settings form elements.

@@ -9,6 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -25,9 +26,9 @@ class RegisterForm extends AccountForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::form().
+   * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $user = $this->currentUser();
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
@@ -71,7 +72,7 @@ class RegisterForm extends AccountForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::actions().
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $element['submit']['#value'] = $this->t('Create new account');
     return $element;
@@ -80,7 +81,7 @@ class RegisterForm extends AccountForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::submit().
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $admin = $form_state['values']['administer_users'];
 
     if (!\Drupal::config('user.settings')->get('verify_mail') || $admin) {
@@ -102,7 +103,7 @@ class RegisterForm extends AccountForm {
   /**
    * Overrides Drupal\Core\Entity\EntityForm::submit().
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
     $pass = $account->getPassword();
     $admin = $form_state['values']['administer_users'];

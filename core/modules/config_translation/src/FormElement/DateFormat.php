@@ -10,6 +10,7 @@ namespace Drupal\config_translation\FormElement;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\DataDefinitionInterface;
@@ -46,7 +47,7 @@ class DateFormat implements ElementInterface {
    *
    * @param array $form
    *   Form API array structure.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state information.
    *
    * @return AjaxResponse
@@ -54,7 +55,7 @@ class DateFormat implements ElementInterface {
    *   the given format cannot be identified or was empty, the response will
    *   be empty as well.
    */
-  public static function ajaxSample(array $form, array $form_state) {
+  public static function ajaxSample(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
     $format_value = NestedArray::getValue($form_state['values'], $form_state['triggering_element']['#array_parents']);

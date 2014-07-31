@@ -7,6 +7,8 @@
 
 namespace Drupal\locale\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Provides a filtered translation edit form.
  */
@@ -22,7 +24,7 @@ class TranslateFilterForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $filters = $this->translateFilters();
     $filter_values = $this->translateFilterValues();
 
@@ -82,7 +84,7 @@ class TranslateFilterForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $filters = $this->translateFilters();
     foreach ($filters as $name => $filter) {
       if (isset($form_state['values'][$name])) {
@@ -95,7 +97,7 @@ class TranslateFilterForm extends TranslateFormBase {
   /**
    * Provides a submit handler for the reset button.
    */
-  public function resetForm(array &$form, array &$form_state) {
+  public function resetForm(array &$form, FormStateInterface $form_state) {
     $_SESSION['locale_translate_filter'] = array();
     $form_state['redirect_route']['route_name'] = 'locale.translate_page';
   }

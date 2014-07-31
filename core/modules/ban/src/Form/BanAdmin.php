@@ -9,6 +9,7 @@ namespace Drupal\ban\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\ban\BanIpManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -54,7 +55,7 @@ class BanAdmin extends FormBase {
    *   \Drupal::formBuilder()->getForm() for use as the default value of the IP
    *   address form field.
    */
-  public function buildForm(array $form, array &$form_state, $default_ip = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, $default_ip = '') {
     $rows = array();
     $header = array($this->t('banned IP addresses'), $this->t('Operations'));
     $result = $this->ipManager->findAll();
@@ -103,7 +104,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state['values']['ip']);
     if ($this->ipManager->isBanned($ip)) {
       $this->setFormError('ip', $form_state, $this->t('This IP address is already banned.'));
@@ -119,7 +120,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state['values']['ip']);
     $this->ipManager->banIp($ip);
     drupal_set_message($this->t('The IP address %ip has been banned.', array('%ip' => $ip)));

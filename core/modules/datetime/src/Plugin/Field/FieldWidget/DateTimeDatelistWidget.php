@@ -8,6 +8,7 @@ namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 
 /**
@@ -37,7 +38,7 @@ class DateTimeDatelistWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $date_order = $this->getSetting('date_order');
     $time_type = $this->getSetting('time_type');
     $increment = $this->getSetting('increment');
@@ -122,7 +123,7 @@ class DateTimeDatelistWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  function settingsForm(array $form, array &$form_state) {
+  function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
     $element['date_order'] = array(

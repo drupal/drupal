@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Handle a random sort.
  *
@@ -25,7 +27,7 @@ class Random extends SortPluginBase {
     $this->query->addOrderBy('rand');
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['order']['#access'] = FALSE;
   }

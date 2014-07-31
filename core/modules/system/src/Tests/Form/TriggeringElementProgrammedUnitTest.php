@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -30,7 +32,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['one'] = array(
       '#type' => 'textfield',
       '#title' => 'One',
@@ -57,7 +59,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Verify that the only submit button was recognized as triggering_element.
     $this->assertEqual($form['actions']['submit']['#array_parents'], $form_state['triggering_element']['#array_parents']);
   }
@@ -65,7 +67,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**
@@ -73,6 +75,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
    */
   function testLimitValidationErrors() {
     // Programmatically submit the form.
+    $form_state = new FormState();
     $form_state['values'] = array();
     $form_state['values']['section'] = 'one';
     $form_builder = $this->container->get('form_builder');

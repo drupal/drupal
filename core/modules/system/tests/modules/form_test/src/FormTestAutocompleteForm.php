@@ -8,6 +8,7 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a test form using autocomplete textfields.
@@ -24,7 +25,7 @@ class FormTestAutocompleteForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['autocomplete_1'] = array(
       '#type' => 'textfield',
       '#title' => 'Autocomplete 1',
@@ -43,7 +44,7 @@ class FormTestAutocompleteForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

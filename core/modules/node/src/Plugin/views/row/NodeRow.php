@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\EntityRow;
 
 /**
@@ -38,7 +39,7 @@ class NodeRow extends EntityRow {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['links'] = array(

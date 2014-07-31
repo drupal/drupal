@@ -9,6 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the role entity edit forms.
@@ -18,7 +19,7 @@ class RoleForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
@@ -51,7 +52,7 @@ class RoleForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
 
     // Prevent leading and trailing spaces in role names.

@@ -8,6 +8,7 @@
 namespace Drupal\aggregator\Tests\Plugin {
 
 use Drupal\aggregator\Form\SettingsForm;
+use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -73,7 +74,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    */
   public function testSettingsForm() {
     // Emulate a form state of a sumbitted form.
-    $form_state = array('values' => array('dummy_length' => '', 'aggregator_allowed_html_tags' => ''));
+    $form_state = new FormState(array('values' => array('dummy_length' => '', 'aggregator_allowed_html_tags' => '')));
 
     $test_processor = $this->getMock(
       'Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor',

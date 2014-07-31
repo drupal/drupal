@@ -9,6 +9,7 @@ namespace Drupal\database_test\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for database_test module.
@@ -25,7 +26,7 @@ class DatabaseTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $header = array(
       'username' => array('data' => t('Username'), 'field' => 'u.name'),
       'status' => array('data' => t('Status'), 'field' => 'u.status'),
@@ -72,7 +73,7 @@ class DatabaseTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

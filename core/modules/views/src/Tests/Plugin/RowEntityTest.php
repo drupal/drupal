@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Core\Form\FormState;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 
@@ -59,7 +60,7 @@ class RowEntityTest extends ViewUnitTestBase {
 
     // Tests the available view mode options.
     $form = array();
-    $form_state = array();
+    $form_state = new FormState();
     $form_state['view'] = $view->storage;
     $view->rowPlugin->buildOptionsForm($form, $form_state);
 

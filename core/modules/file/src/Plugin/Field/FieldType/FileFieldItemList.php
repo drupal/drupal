@@ -8,6 +8,7 @@
 namespace Drupal\file\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\EntityReferenceFieldItemList;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Represents a configurable entity file field.
@@ -17,7 +18,7 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesForm(array &$form, array &$form_state) { }
+  public function defaultValuesForm(array &$form, FormStateInterface $form_state) { }
 
   /**
    * {@inheritdoc}

@@ -8,6 +8,7 @@
 namespace Drupal\user_form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -28,7 +29,7 @@ class TestCurrentPassword extends FormBase {
    * @param \Drupal\user\Entity\UserInterface $user
    *   The user account.
    */
-  public function buildForm(array $form, array &$form_state, UserInterface $user = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UserInterface $user = NULL) {
     $form_state['user'] = $user ;
     $form['user_form_test_field'] = array(
       '#type' => 'textfield',
@@ -60,7 +61,7 @@ class TestCurrentPassword extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The password has been validated and the form submitted successfully.'));
   }
 

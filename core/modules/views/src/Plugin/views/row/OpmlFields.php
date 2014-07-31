@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\row;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Renders an OPML item based on fields.
  *
@@ -46,7 +48,7 @@ class OpmlFields extends RowPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $initial_labels = array('' => $this->t('- None -'));

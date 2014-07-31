@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -133,7 +134,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *
    * Form constructor for the main block administration form.
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $placement = FALSE;
     if ($this->request->query->has('block-placement')) {
       $placement = $this->request->query->get('block-placement');
@@ -388,7 +389,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // No validation.
   }
 
@@ -397,7 +398,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *
    * Form submission handler for the main block administration form.
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $entities = entity_load_multiple('block', array_keys($form_state['values']['blocks']));
     foreach ($entities as $entity_id => $entity) {
       $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);

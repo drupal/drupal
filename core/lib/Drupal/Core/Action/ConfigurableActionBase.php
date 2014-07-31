@@ -9,6 +9,7 @@ namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
@@ -49,7 +50,7 @@ abstract class ConfigurableActionBase extends ActionBase implements Configurable
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**

@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormErrorInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -387,7 +388,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {
@@ -411,7 +412,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::validateOptionsForm().
    */
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
     if ($form_state['section'] == 'path') {
@@ -428,7 +429,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::submitOptionsForm().
    */
-  public function submitOptionsForm(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
     if ($form_state['section'] == 'path') {

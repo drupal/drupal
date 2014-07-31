@@ -9,6 +9,7 @@ namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 
 /**
@@ -38,7 +39,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $responsive_image_options = array();
     $responsive_image_mappings = entity_load_multiple('responsive_image_mapping');
     if ($responsive_image_mappings && !empty($responsive_image_mappings)) {

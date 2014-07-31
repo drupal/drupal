@@ -9,6 +9,7 @@ namespace Drupal\image\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 
 /**
@@ -37,7 +38,7 @@ class ImageWidget extends FileWidget {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
     $element['preview_image_style'] = array(
@@ -82,7 +83,7 @@ class ImageWidget extends FileWidget {
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
-  protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
@@ -109,7 +110,7 @@ class ImageWidget extends FileWidget {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $field_settings = $this->getFieldSettings();
@@ -144,7 +145,7 @@ class ImageWidget extends FileWidget {
    *
    * This method is assigned as a #process callback in formElement() method.
    */
-  public static function process($element, &$form_state, $form) {
+  public static function process($element, FormStateInterface $form_state, $form) {
     $item = $element['#value'];
     $item['fids'] = $element['fids']['#value'];
 
@@ -227,7 +228,7 @@ class ImageWidget extends FileWidget {
    * This is separated in a validate function instead of a #required flag to
    * avoid being validated on the process callback.
    */
-  public static function validateRequiredFields($element, &$form_state) {
+  public static function validateRequiredFields($element, FormStateInterface $form_state) {
     // Only do validation if the function is triggered from other places than
     // the image process form.
     if (!in_array('file_managed_file_submit', $form_state['triggering_element']['#submit'])) {

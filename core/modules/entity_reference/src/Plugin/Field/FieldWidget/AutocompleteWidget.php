@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'entity_reference autocomplete' widget.
@@ -57,7 +58,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function elementValidate($element, &$form_state, $form) {
+  public function elementValidate($element, FormStateInterface $form_state, $form) {
     $auto_create = $this->getSelectionHandlerSetting('auto_create');
 
     // If a value was entered into the autocomplete.

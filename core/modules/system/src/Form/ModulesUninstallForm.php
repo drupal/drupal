@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,7 +65,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
@@ -148,7 +149,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state['values']['uninstall'])) {
       drupal_set_message($this->t('No modules selected.'), 'error');
@@ -159,7 +160,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save all the values in an expirable key value store.
     $modules = $form_state['values']['uninstall'];
     $uninstall = array_keys(array_filter($modules));

@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Plugin\Type\Selection;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A null implementation of SelectionInterface.
@@ -49,7 +50,7 @@ class SelectionBroken implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) { }
+  public function validateAutocompleteInput($input, &$element, FormStateInterface $form_state, $form, $strict = TRUE) { }
 
   /**
    * {@inheritdoc}

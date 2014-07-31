@@ -8,6 +8,7 @@
 namespace Drupal\search_extra_type\Plugin\Search;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
 /**
@@ -89,7 +90,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     // Output form for defining rank factor weights.
     $form['extra_type_settings'] = array(
       '#type' => 'fieldset',
@@ -112,7 +113,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['boost'] = $form_state['values']['extra_type_settings']['boost'];
   }
 

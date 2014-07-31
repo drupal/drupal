@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\argument_default;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class User extends ArgumentDefaultPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['user'] = array(
       '#type' => 'checkbox',
       '#title' => t('Also look for a node and use the node author'),

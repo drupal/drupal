@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder to test button click detection.
@@ -24,7 +25,7 @@ class FormTestClickedButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $first = NULL, $second = NULL, $third = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $first = NULL, $second = NULL, $third = NULL) {
     // A single text field. In IE, when a form has only one non-button input field
     // and the ENTER key is pressed while that field has focus, the form is
     // submitted without any information identifying the button responsible for
@@ -83,7 +84,7 @@ class FormTestClickedButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (isset($form_state['triggering_element'])) {
       drupal_set_message(t('The clicked button is %name.', array('%name' => $form_state['triggering_element']['#name'])));
     }
@@ -95,7 +96,7 @@ class FormTestClickedButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message('Submit handler for form_test_clicked_button executed.');
   }
 

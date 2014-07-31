@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -152,7 +153,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $old_state = $this->configFactory->getOverrideState();
     $search_settings = $this->configFactory->setOverrideState(FALSE)->get('search.settings');
@@ -318,13 +319,13 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     $search_settings = $this->configFactory->get('search.settings');
@@ -348,7 +349,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    * Form submission handler for the reindex button on the search admin settings
    * form.
    */
-  public function searchAdminReindexSubmit(array &$form, array &$form_state) {
+  public function searchAdminReindexSubmit(array &$form, FormStateInterface $form_state) {
     // Send the user to the confirmation page.
     $form_state['redirect_route']['route_name'] = 'search.reindex_confirm';
   }
@@ -356,7 +357,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * Form validation handler for adding a new search page.
    */
-  public function validateAddSearchPage(array &$form, array &$form_state) {
+  public function validateAddSearchPage(array &$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['search_type'])) {
       $this->formBuilder()->setErrorByName('search_type', $form_state, $this->t('You must select the new search page type.'));
     }
@@ -365,7 +366,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * Form submission handler for adding a new search page.
    */
-  public function submitAddSearchPage(array &$form, array &$form_state) {
+  public function submitAddSearchPage(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route'] = array(
       'route_name' => 'search.add_type',
       'route_parameters' => array(

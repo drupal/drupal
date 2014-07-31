@@ -10,6 +10,8 @@ namespace Drupal\simpletest\Form;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -103,7 +105,7 @@ class SimpletestResultsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $test_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $test_id = NULL) {
     $this->buildStatusImageMap();
     // Make sure there are test results to display and a re-run is not being
     // performed.
@@ -249,7 +251,7 @@ class SimpletestResultsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $pass = $form_state['values']['filter_pass'] ? explode(',', $form_state['values']['filter_pass']) : array();
     $fail = $form_state['values']['filter_fail'] ? explode(',', $form_state['values']['filter_fail']) : array();
 
@@ -269,7 +271,7 @@ class SimpletestResultsForm extends FormBase {
     }
 
     $form_execute = array();
-    $form_state_execute = array('values' => array());
+    $form_state_execute = new FormState(array('values' => array()));
     foreach ($classes as $class) {
       $form_state_execute['values']['tests'][$class] = $class;
     }

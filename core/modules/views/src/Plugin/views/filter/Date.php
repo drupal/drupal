@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Filter to handle dates stored as a timestamp.
  *
@@ -28,7 +30,7 @@ class Date extends Numeric {
   /**
    * Add a type selector to the value form
    */
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     if (empty($form_state['exposed'])) {
       $form['value']['type'] = array(
         '#type' => 'radios',
@@ -43,7 +45,7 @@ class Date extends Numeric {
     parent::valueForm($form, $form_state);
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
     if (!empty($this->options['exposed']) && empty($form_state['values']['options']['expose']['required'])) {
@@ -54,7 +56,7 @@ class Date extends Numeric {
     $this->validateValidTime($form['value'], $form_state, $form_state['values']['options']['operator'], $form_state['values']['options']['value']);
   }
 
-  public function validateExposed(&$form, &$form_state) {
+  public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -79,7 +81,7 @@ class Date extends Numeric {
   /**
    * Validate that the time values convert to something usable.
    */
-  public function validateValidTime(&$form, array &$form_state, $operator, $value) {
+  public function validateValidTime(&$form, FormStateInterface $form_state, $operator, $value) {
     $operators = $this->operators();
 
     if ($operators[$operator]['values'] == 1) {
@@ -103,7 +105,7 @@ class Date extends Numeric {
   /**
    * Validate the build group options form.
    */
-  protected function buildGroupValidate($form, &$form_state) {
+  protected function buildGroupValidate($form, FormStateInterface $form_state) {
     // Special case to validate grouped date filters, this is because the
     // $group['value'] array contains the type of filter (date or offset)
     // and therefore the number of items the comparission has to be done

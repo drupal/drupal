@@ -7,6 +7,7 @@
 namespace Drupal\filter_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Shows a test form for testing the 'text_format' form element.
@@ -23,7 +24,7 @@ class FilterTestFormatForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // This ensures that the parent array key makes it into the HTML ID of the
     // form elements.
     $form['#tree'] = TRUE;
@@ -109,7 +110,7 @@ class FilterTestFormatForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

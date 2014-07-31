@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -44,7 +45,7 @@ function color_theme() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function color_form_system_theme_settings_alter(&$form, &$form_state) {
+function color_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
   if (isset($form_state['build_info']['args'][0]) && ($theme = $form_state['build_info']['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
     $form['color'] = array(
       '#type' => 'details',
@@ -166,7 +167,7 @@ function color_get_palette($theme, $default = FALSE) {
  * @see color_scheme_form_validate()
  * @see color_scheme_form_submit()
  */
-function color_scheme_form($complete_form, &$form_state, $theme) {
+function color_scheme_form($complete_form, FormStateInterface $form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
@@ -286,14 +287,14 @@ function template_preprocess_color_scheme_form(&$variables) {
  * @param string|bool $input
  *   The incoming input to populate the form element. If this is FALSE,
  *   the element's default value should be returned.
- * @param array $form_state
- *   A keyed array containing the current state of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @return string
  *   The data that will appear in the $form_state['values'] collection for this
  *   element. Return nothing to use the default.
  */
-function color_palette_color_value($element, $input = FALSE, $form_state = array()) {
+function color_palette_color_value($element, $input = FALSE, FormStateInterface $form_state) {
   // If we suspect a possible cross-site request forgery attack, only accept
   // hexadecimal CSS color strings from user input, to avoid problems when this
   // value is used in the JavaScript preview.
@@ -329,7 +330,7 @@ function color_valid_hexadecimal_string($color) {
  *
  * @see color_scheme_form_submit()
  */
-function color_scheme_form_validate($form, &$form_state) {
+function color_scheme_form_validate($form, FormStateInterface $form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
   foreach ($form_state['values']['palette'] as $key => $color) {
     if (!color_valid_hexadecimal_string($color)) {
@@ -343,7 +344,7 @@ function color_scheme_form_validate($form, &$form_state) {
  *
  * @see color_scheme_form_validate()
  */
-function color_scheme_form_submit($form, &$form_state) {
+function color_scheme_form_submit($form, FormStateInterface $form_state) {
 
   // Get theme coloring info.
   if (!isset($form_state['values']['info'])) {

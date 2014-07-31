@@ -8,6 +8,7 @@
 namespace Drupal\language\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -27,7 +28,7 @@ class Language extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     if (\Drupal::languageManager()->isMultilingual()) {
       // Fetch languages.
       $languages = language_list(LanguageInterface::STATE_ALL);
@@ -55,7 +56,7 @@ class Language extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['langcodes'] = array_filter($form_state['values']['langcodes']);
     parent::submitConfigurationForm($form, $form_state);
   }

@@ -9,6 +9,7 @@ namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'field_empty_setting' formatter.
@@ -36,7 +37,7 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['field_empty_setting'] = array(
       '#title' => t('Setting'),
       '#type' => 'textfield',

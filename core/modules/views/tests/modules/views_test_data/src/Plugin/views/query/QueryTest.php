@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\query;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\ViewExecutable;
@@ -39,7 +40,7 @@ class QueryTest extends QueryPluginBase {
   /**
    * Implements \Drupal\views\Plugin\views\query\QueryPluginBase::buildOptionsForm().
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_setting'] = array(

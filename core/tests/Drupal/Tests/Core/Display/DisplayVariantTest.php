@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Display;
 
+use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -142,6 +143,7 @@ class DisplayVariantTest extends UnitTestCase {
 
     $form = array();
     $label = $this->randomName();
+    $form_state = new FormState();
     $form_state['values']['label'] = $label;
     $display_variant->submitConfigurationForm($form, $form_state);
     $this->assertSame($label, $display_variant->label());

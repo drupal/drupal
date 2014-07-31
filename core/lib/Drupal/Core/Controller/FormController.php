@@ -9,6 +9,7 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -66,7 +67,7 @@ abstract class FormController {
 
     // Add the form and form_state to trick the getArguments method of the
     // controller resolver.
-    $form_state = array();
+    $form_state = new FormState();
     $request->attributes->set('form', array());
     $request->attributes->set('form_state', $form_state);
     $args = $this->controllerResolver->getArguments($request, array($form_object, 'buildForm'));

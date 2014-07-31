@@ -10,6 +10,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\node\NodeInterface;
 
@@ -48,7 +49,7 @@ function template_preprocess_node_add_list(&$variables) {
  *
  * @see node_form_build_preview()
  */
-function node_preview(NodeInterface $node, array &$form_state) {
+function node_preview(NodeInterface $node, FormStateInterface $form_state) {
   if ($node->access('create') || $node->access('update')) {
 
     $node->changed = REQUEST_TIME;

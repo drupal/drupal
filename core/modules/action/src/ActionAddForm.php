@@ -10,6 +10,7 @@ namespace Drupal\action;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -54,7 +55,7 @@ class ActionAddForm extends ActionFormBase {
    * @param string $action_id
    *   The hashed version of the action ID.
    */
-  public function buildForm(array $form, array &$form_state, $action_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $action_id = NULL) {
     // In \Drupal\action\Form\ActionAdminManageForm::buildForm() the action
     // are hashed. Here we have to decrypt it to find the desired action ID.
     foreach ($this->actionManager->getDefinitions() as $id => $definition) {

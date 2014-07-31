@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -265,7 +266,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Test generating widgets for all fields.
     $display = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
     $form = array();
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
     $this->assertEqual($form[$this->field_name]['widget']['#title'], $this->instance->getLabel(), "First field's form title is {$this->instance->getLabel()}");
@@ -287,7 +288,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       }
     }
     $form = array();
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
     $this->assertFalse(isset($form[$this->field_name]), 'The first field does not exist in the form');
@@ -310,7 +311,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Build the form for all fields.
     $display = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
     $form = array();
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
     $display->buildForm($entity_init, $form, $form_state);
 
     // Simulate incoming values.

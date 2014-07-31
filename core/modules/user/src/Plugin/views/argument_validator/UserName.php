@@ -7,6 +7,8 @@
 
 namespace Drupal\user\Plugin\views\argument_validator;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Validates whether a user name is valid.
  *
@@ -21,7 +23,7 @@ class UserName extends User {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $entity_type = $this->entityManager->getDefinition('user');

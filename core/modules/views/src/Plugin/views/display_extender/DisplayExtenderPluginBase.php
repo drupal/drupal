@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display_extender;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 
@@ -46,17 +47,17 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   /**
    * Provide a form to edit options for this plugin.
    */
-  public function buildOptionsForm(&$form, &$form_state) { }
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Validate the options form.
    */
-  public function validateOptionsForm(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Handle any special handling on the validate form.
    */
-  public function submitOptionsForm(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
 
   /**
    * Set up any variables on the view prior to execution.

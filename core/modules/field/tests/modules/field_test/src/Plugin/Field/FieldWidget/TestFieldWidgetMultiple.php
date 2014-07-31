@@ -9,6 +9,7 @@ namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -40,7 +41,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_widget_setting_multiple'] = array(
       '#type' => 'textfield',
       '#title' => t('Field test field widget setting'),
@@ -63,7 +64,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $values = array();
     foreach ($items as $item) {
       $values[] = $item->value;
@@ -79,14 +80,14 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     return $element;
   }
 
   /**
    * Element validation helper.
    */
-  public static function multipleValidate($element, &$form_state) {
+  public static function multipleValidate($element, FormStateInterface $form_state) {
     $values = array_map('trim', explode(',', $element['#value']));
     $items = array();
     foreach ($values as $value) {

@@ -8,6 +8,7 @@
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 
@@ -76,7 +77,7 @@ class TestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $form['test_field_storage_setting'] = array(
       '#type' => 'textfield',
       '#title' => t('Field test field storage setting'),
@@ -91,7 +92,7 @@ class TestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, array &$form_state) {
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
     $form['test_instance_setting'] = array(
       '#type' => 'textfield',
       '#title' => t('Field test field instance setting'),

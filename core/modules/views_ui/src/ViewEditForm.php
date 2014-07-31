@@ -14,6 +14,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\user\TempStoreFactory;
 use Drupal\views\Views;
@@ -76,7 +77,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
     $display_id = $this->displayID;
     // Do not allow the form to be cached, because $form_state['view'] can become
@@ -230,7 +231,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     unset($actions['delete']);
 
@@ -251,7 +252,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     $view = $this->entity;
@@ -268,7 +269,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
 
     $view = $this->entity;
@@ -338,10 +339,10 @@ class ViewEditForm extends ViewFormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function cancel(array $form, array &$form_state) {
+  public function cancel(array $form, FormStateInterface $form_state) {
     // Remove this view from cache so edits will be lost.
     $view = $this->entity;
     $this->tempStore->delete($view->id());
@@ -576,7 +577,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to add a restore a removed display to a view.
    */
-  public function submitDisplayUndoDelete($form, &$form_state) {
+  public function submitDisplayUndoDelete($form, FormStateInterface $form_state) {
     $view = $this->entity;
     // Create the new display
     $id = $form_state['display_id'];
@@ -597,7 +598,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to enable a disabled display.
    */
-  public function submitDisplayEnable($form, &$form_state) {
+  public function submitDisplayEnable($form, FormStateInterface $form_state) {
     $view = $this->entity;
     $id = $form_state['display_id'];
     // setOption doesn't work because this would might affect upper displays
@@ -616,7 +617,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to disable display.
    */
-  public function submitDisplayDisable($form, &$form_state) {
+  public function submitDisplayDisable($form, FormStateInterface $form_state) {
     $view = $this->entity;
     $id = $form_state['display_id'];
     $view->getExecutable()->displayHandlers->get($id)->setOption('enabled', FALSE);
@@ -634,7 +635,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to delete a display from a view.
    */
-  public function submitDisplayDelete($form, &$form_state) {
+  public function submitDisplayDelete($form, FormStateInterface $form_state) {
     $view = $this->entity;
     $display_id = $form_state['display_id'];
 
@@ -776,7 +777,7 @@ class ViewEditForm extends ViewFormBase {
    * contextual link). This handler can be added to buttons whose form submission
    * should not yet redirect to the destination.
    */
-  public function submitDelayDestination($form, &$form_state) {
+  public function submitDelayDestination($form, FormStateInterface $form_state) {
     $query = $this->requestStack->getCurrentRequest()->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
@@ -799,7 +800,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to duplicate a display for a view.
    */
-  public function submitDisplayDuplicate($form, &$form_state) {
+  public function submitDisplayDuplicate($form, FormStateInterface $form_state) {
     $view = $this->entity;
     $display_id = $this->displayID;
 
@@ -826,7 +827,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to add a display to a view.
    */
-  public function submitDisplayAdd($form, &$form_state) {
+  public function submitDisplayAdd($form, FormStateInterface $form_state) {
     $view = $this->entity;
     // Create the new display.
     $parents = $form_state['triggering_element']['#parents'];
@@ -848,7 +849,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Submit handler to Duplicate a display as another display type.
    */
-  public function submitDuplicateDisplayAsType($form, &$form_state) {
+  public function submitDuplicateDisplayAsType($form, FormStateInterface $form_state) {
     $view = $this->entity;
     $display_id = $this->displayID;
 

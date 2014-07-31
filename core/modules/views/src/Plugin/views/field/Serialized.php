@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -27,7 +28,7 @@ class Serialized extends FieldPluginBase {
   }
 
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
     $form['format'] = array(
@@ -53,7 +54,7 @@ class Serialized extends FieldPluginBase {
     );
   }
 
-  public function validateOptionsForm(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Require a key if the format is key.
     if ($form_state['values']['options']['format'] == 'key' && $form_state['values']['options']['key'] == '') {
       form_error($form['key'], $form_state, t('You have to enter a key if you want to display a key of the data.'));

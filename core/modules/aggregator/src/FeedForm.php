@@ -10,6 +10,7 @@ namespace Drupal\aggregator;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +22,7 @@ class FeedForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $feed = $this->entity;
 
     // @todo: convert to a language selection widget defined in the base field.
@@ -41,7 +42,7 @@ class FeedForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $feed = $this->buildEntity($form, $form_state);
     // Check for duplicate titles.
     $feed_storage = $this->entityManager->getStorage('aggregator_feed');
@@ -60,7 +61,7 @@ class FeedForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $feed = $this->entity;
     $insert = (bool) $feed->id();
     $feed->save();

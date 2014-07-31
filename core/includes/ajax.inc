@@ -5,6 +5,8 @@
  * Functions for use with Drupal's Ajax framework.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * @defgroup ajax Ajax framework
  * @{
@@ -64,7 +66,7 @@
  *   return \Drupal::formBuilder()->getForm('ajax_example_simplest');
  * }
  *
- * function ajax_example_simplest($form, &$form_state) {
+ * function ajax_example_simplest($form, FormStateInterface $form_state) {
  *   $form = array();
  *   $form['changethis'] = array(
  *     '#type' => 'select',
@@ -236,7 +238,7 @@
  *
  * @see ajax_pre_render_element()
  */
-function ajax_process_form($element, &$form_state) {
+function ajax_process_form($element, FormStateInterface $form_state) {
   $element = ajax_pre_render_element($element);
   if (!empty($element['#ajax_processed'])) {
     $form_state['cache'] = TRUE;

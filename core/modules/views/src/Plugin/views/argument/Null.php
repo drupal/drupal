@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Argument handler that ignores the argument.
  *
@@ -26,7 +28,7 @@ class Null extends ArgumentPluginBase {
    * Override buildOptionsForm() so that only the relevant options
    * are displayed to the user.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['must_not_be'] = array(
       '#type' => 'checkbox',

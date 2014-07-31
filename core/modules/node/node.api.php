@@ -420,11 +420,11 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
  * @param $form
  *   The form being used to edit the node.
  * @param $form_state
- *   The form state array.
+ *   The current state of the form.
  *
  * @ingroup entity_crud
  */
-function hook_node_validate(\Drupal\node\NodeInterface $node, $form, &$form_state) {
+function hook_node_validate(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', $form_state, t('An event may not end before it starts.'));
@@ -447,11 +447,11 @@ function hook_node_validate(\Drupal\node\NodeInterface $node, $form, &$form_stat
  * @param $form
  *   The form being used to edit the node.
  * @param $form_state
- *   The form state array.
+ *   The current state of the form.
  *
  * @ingroup entity_crud
  */
-function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state) {
+function hook_node_submit(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   // Decompose the selected menu parent option into 'menu_name' and 'parent', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {

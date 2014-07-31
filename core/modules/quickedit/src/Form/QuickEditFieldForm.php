@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\user\TempStoreFactory;
@@ -83,7 +84,7 @@ class QuickEditFieldForm extends FormBase {
    *
    * Builds a form for a single entity field.
    */
-  public function buildForm(array $form, array &$form_state, EntityInterface $entity = NULL, $field_name = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $field_name = NULL) {
     if (!isset($form_state['entity'])) {
       $this->init($form_state, $entity, $field_name);
     }
@@ -116,7 +117,7 @@ class QuickEditFieldForm extends FormBase {
   /**
    * Initialize the form state and the entity before the first form build.
    */
-  protected function init(array &$form_state, EntityInterface $entity, $field_name) {
+  protected function init(FormStateInterface $form_state, EntityInterface $entity, $field_name) {
     // @todo Rather than special-casing $node->revision, invoke prepareEdit()
     //   once http://drupal.org/node/1863258 lands.
     if ($entity->getEntityTypeId() == 'node') {
@@ -143,7 +144,7 @@ class QuickEditFieldForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity = $this->buildEntity($form, $form_state);
 
     $form_state['form_display']->validateFormValues($entity, $form, $form_state);
@@ -164,7 +165,7 @@ class QuickEditFieldForm extends FormBase {
    *
    * Saves the entity with updated values for the edited field.
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['entity'] = $this->buildEntity($form, $form_state);
 
     // Store entity in tempstore with its UUID as tempstore key.
@@ -177,7 +178,7 @@ class QuickEditFieldForm extends FormBase {
    * Calling code may then validate the returned entity, and if valid, transfer
    * it back to the form state and save it.
    */
-  protected function buildEntity(array $form, array &$form_state) {
+  protected function buildEntity(array $form, FormStateInterface $form_state) {
     /** @var $entity \Drupal\Core\Entity\EntityInterface */
     $entity = clone $form_state['entity'];
     $field_name = $form_state['field_name'];
@@ -203,10 +204,10 @@ class QuickEditFieldForm extends FormBase {
    *
    * @param array &$form
    *   A reference to an associative array containing the structure of the form.
-   * @param array &$form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  protected function simplify(array &$form, array &$form_state) {
+  protected function simplify(array &$form, FormStateInterface $form_state) {
     $field_name = $form_state['field_name'];
     $widget_element =& $form[$field_name]['widget'];
 

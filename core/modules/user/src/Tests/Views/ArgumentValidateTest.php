@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\Core\Form\FormState;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Views;
 
@@ -45,7 +46,8 @@ class ArgumentValidateTest extends UserTestBase {
     // Fail for a valid numeric, but for a user that doesn't exist
     $this->assertFalse($view->argument['null']->validateArgument(32));
 
-    $form = $form_state = array();
+    $form = array();
+    $form_state = new FormState();
     $view->argument['null']->buildOptionsForm($form, $form_state);
     $sanitized_id = ArgumentPluginBase::encodeValidatorId('entity:user');
     $this->assertTrue($form['validate']['options'][$sanitized_id]['roles']['#states']['visible'][':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]']['checked']);

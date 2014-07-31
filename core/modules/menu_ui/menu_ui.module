@@ -11,6 +11,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block\BlockPluginInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
@@ -245,7 +246,7 @@ function menu_ui_node_predelete(EntityInterface $node) {
 /**
  * Implements hook_node_prepare_form().
  */
-function menu_ui_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
+function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
   if (empty($form_state['menu_link_definition'])) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $node_type_config = \Drupal::config('menu.entity.node.' . $node->getType());

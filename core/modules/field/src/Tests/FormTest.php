@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormState;
 
 /**
  * Tests field form handling.
@@ -531,7 +532,7 @@ class FormTest extends FieldTestBase {
 
     $display = entity_get_form_display($entity_type, $entity_type, 'default');
     $form = array();
-    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
+    $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
     $this->assertFalse($form[$field_name_no_access]['#access'], 'Field #access is FALSE for the field without edit access.');

@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -70,7 +71,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message(t('Removed date format %format.', array('%format' => $this->entity->label())));
 

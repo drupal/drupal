@@ -8,6 +8,7 @@
 namespace Drupal\update;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure update settings for this site.
@@ -22,9 +23,9 @@ class UpdateSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
 
     $form['update_check_frequency'] = array(
@@ -70,7 +71,7 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['notify_emails'] = array();
     if (!empty($form_state['values']['update_notify_emails'])) {
       $valid = array();
@@ -101,9 +102,9 @@ class UpdateSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
      // See if the update_check_disabled setting is being changed, and if so,
     // invalidate all update status data.

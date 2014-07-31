@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Form {
 
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -221,8 +222,8 @@ abstract class FormTestBase extends UnitTestCase {
    *   The unique string identifying the form.
    * @param \Drupal\Core\Form\FormInterface $form_arg
    *   The form object.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param bool $programmed
    *   Whether $form_state['programmed'] should be set to TRUE or not. If it is
    *   not set to TRUE, you must provide additional data in $form_state for the
@@ -231,7 +232,7 @@ abstract class FormTestBase extends UnitTestCase {
    * @return array
    *   The built form.
    */
-  protected function simulateFormSubmission($form_id, FormInterface $form_arg, array &$form_state, $programmed = TRUE) {
+  protected function simulateFormSubmission($form_id, FormInterface $form_arg, FormStateInterface $form_state, $programmed = TRUE) {
     $form_state['build_info']['callback_object'] = $form_arg;
     $form_state['build_info']['args'] = array();
     $form_state['input']['op'] = 'Submit';

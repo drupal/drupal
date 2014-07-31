@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
 
 /**
@@ -59,7 +60,7 @@ class CropImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['anchor'] = array(
       '#type' => 'radios',

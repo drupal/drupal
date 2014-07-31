@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -116,7 +117,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
     parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
     if (empty($this->mode)) {
@@ -126,10 +127,6 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $field_definitions = $this->getFieldDefinitions();
     $extra_fields = $this->getExtraFields();
     $entity_display = $this->getEntityDisplay($this->mode);
-
-    $form_state += array(
-      'plugin_settings_edit' => NULL,
-    );
 
     $form += array(
       '#entity_type' => $this->entity_type,
@@ -257,13 +254,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The entity display.
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array
    *   A table row array.
    */
-  protected function buildFieldRow(FieldDefinitionInterface $field_definition, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
+  protected function buildFieldRow(FieldDefinitionInterface $field_definition, EntityDisplayInterface $entity_display, array $form, FormStateInterface $form_state) {
     $field_name = $field_definition->getName();
     $display_options = $entity_display->getComponent($field_name);
     $label = $field_definition->getLabel();
@@ -509,7 +506,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_values = $form_state['values'];
     $display = $this->getEntityDisplay($this->mode);
 
@@ -615,7 +612,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * Form submission handler for multistep buttons.
    */
-  public function multistepSubmit($form, &$form_state) {
+  public function multistepSubmit($form, FormStateInterface $form_state) {
     $trigger = $form_state['triggering_element'];
     $op = $trigger['#op'];
 
@@ -659,7 +656,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * Ajax handler for multistep buttons.
    */
-  public function multistepAjax($form, &$form_state) {
+  public function multistepAjax($form, FormStateInterface $form_state) {
     $trigger = $form_state['triggering_element'];
     $op = $trigger['#op'];
 
@@ -887,13 +884,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The field definition.
    * @param array $form
    *   The (entire) configuration form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return array
    *   The widget or formatter third party settings form.
    */
-  abstract protected function thirdPartySettingsForm(PluginSettingsInterface $plugin, FieldDefinitionInterface $field_definition, array $form, array &$form_state);
+  abstract protected function thirdPartySettingsForm(PluginSettingsInterface $plugin, FieldDefinitionInterface $field_definition, array $form, FormStateInterface $form_state);
 
   /**
    * Alters the widget or formatter settings summary.
