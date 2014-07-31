@@ -116,7 +116,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertFalse($this->moduleHandler()->moduleExists('color'), 'ModuleHandler::install() aborts if dependencies are missing.');
 
     // Fix the missing dependency.
-    // Forum module depends on Ban. Ban depends on XML-RPC module.
+    // Color module depends on Config. Config depends on Help module.
     \Drupal::state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
 
@@ -145,9 +145,9 @@ class ModuleHandlerTest extends KernelTestBase {
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: array();
     $this->assertEqual($uninstalled_modules, array('color', 'config', 'help'), 'Modules were uninstalled in the correct order.');
 
-    // Enable forum module again, which should enable both the ban module and
-    // XML-RPC module. But, this time do it with ban module declaring a
-    // dependency on a specific version of XML-RPC module in its info file. Make
+    // Enable Color module again, which should enable both the Config module and
+    // Help module. But, this time do it with Config module declaring a
+    // dependency on a specific version of Help module in its info file. Make
     // sure that Drupal\Core\Extension\ModuleHandler::install() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
@@ -163,12 +163,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     // Finally, verify that the modules were enabled in the correct order.
     $enable_order = \Drupal::state()->get('module_test.install_order') ?: array();
-    $help_position = array_search('help', $enable_order);
-    $config_position = array_search('config', $enable_order);
-    $color_position = array_search('color', $enable_order);
-    $xmlrpc_before_ban = $help_position !== FALSE && $config_position !== FALSE && $help_position < $config_position;
-    $ban_before_forum = $config_position !== FALSE && $color_position !== FALSE && $config_position < $color_position;
-    $this->assertTrue($xmlrpc_before_ban && $ban_before_forum, 'Modules were enabled in the correct order.');
+    $this->assertIdentical($enable_order, array('help', 'config', 'color'));
   }
 
   /**

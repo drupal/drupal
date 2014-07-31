@@ -144,19 +144,6 @@
  * providing default configuration or configuration import, as outlined in
  * @ref sec_rest above.
  *
- * @section sec_xmlrpc Using XML-RPC
- * In XML-RPC, a web site can set up one or more XML-RPC methods, which it
- * will usually service at a central XML-RPC URL. Drupal Core's XML-RPC module
- * provides both client and server XML-RPC functionality.
- *
- * On the server side, the XML-RPC module sets up URL path xmlrpc.php, which
- * responds to XML-RPC requests. Individual XML-RPC request methods are defined
- * by modules by implementing hook_xmlrpc(); Drupal Core does not define any
- * XML-RPC web service requests by default.
- *
- * On the client side, XML-RPC requests to other web sites that provide XML-RPC
- * web services can be performed in Drupal by using the xmlrpc() function.
- *
  * @section sec_integrate Integrating data from other sites into Drupal
  * If you want to integrate data from other web sites into Drupal, here are
  * some notes:
@@ -176,7 +163,6 @@
  *   - \Drupal\Component\Serialization\Json (JSON encoding and decoding).
  *   - PHP has functions and classes for parsing XML; see
  *     http://php.net/manual/refs.xml.php
- *   - As mentioned above, for XML-RPC requests, use function xmlrpc().
  * @}
  */
 

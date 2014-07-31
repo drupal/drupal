@@ -433,9 +433,6 @@ Views UI module
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 - Damian Lee 'damiankloip' http://drupal.org/user/1037976
 
-XML-RPC module
-- Frederic G. Marand 'fgm' http://drupal.org/user/27985
-
 
 Theme maintainers
 -----------------
