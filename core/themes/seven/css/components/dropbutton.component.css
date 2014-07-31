@@ -32,7 +32,10 @@
   box-shadow: none;
 }
 .dropbutton-multiple .dropbutton {
-  border-right: 0;
+  border-right: 0; /* LTR */
+}
+[dir="rtl"] .dropbutton-multiple .dropbutton {
+  border-left: 0;
 }
 
 /**
@@ -54,10 +57,15 @@
 .js .dropbutton-widget .dropbutton-action a,
 .js .dropbutton-widget .dropbutton-action input,
 .js .dropbutton-widget .dropbutton-action button {
-  border-radius: 20em 0 0 20em;
+  border-radius: 20em 0 0 20em; /* LTR */
   padding: 4px 1.5em;
   display: block;
   width: 100%;
+}
+[dir="rtl"].js .dropbutton-widget .dropbutton-action a,
+[dir="rtl"].js .dropbutton-widget .dropbutton-action input,
+[dir="rtl"].js .dropbutton-widget .dropbutton-action button {
+  border-radius: 0 20em 20em 0;
 }
 .js .dropbutton-widget .dropbutton-action a:focus,
 .js .dropbutton-widget .dropbutton-action input:focus,
@@ -70,11 +78,19 @@
 }
 .js .dropbutton-multiple.open .dropbutton-action:first-child a,
 .js .dropbutton-multiple.open .dropbutton-action:first-child .button {
-  border-radius: 0.9em 0 0 0;
+  border-radius: 0.9em 0 0 0; /* LTR */
+}
+[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:first-child a,
+[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:first-child .button {
+  border-radius: 0 0.9em 0 0;
 }
 .js .dropbutton-multiple.open .dropbutton-action:last-child a,
 .js .dropbutton-multiple.open .dropbutton-action:last-child .button {
-  border-radius: 0 0 0 0.9em;
+  border-radius: 0 0 0 0.9em; /* LTR */
+}
+[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:last-child a,
+[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:last-child .button {
+  border-radius: 0 0 0.9em 0;
 }
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-action a:hover,
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-action button:hover,
@@ -164,14 +180,24 @@
  * The dropdown trigger.
  */
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
-  border-left: 1px solid #a6a6a6;
+  border-left: 1px solid #a6a6a6; /* LTR */
   outline: none;
 }
+[dir="rtl"].js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
+  border-right: 1px solid #a6a6a6;
+  border-left: 0;
+}
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
-  border-radius: 0 20em 20em 0;
+  border-radius: 0 20em 20em 0; /* LTR */
+}
+[dir="rtl"].js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
+  border-radius: 20em 0 0 20em;
 }
 .dropbutton-multiple.open .dropbutton-widget .dropbutton-toggle button {
-  border-radius: 0 1em 1em 0;
+  border-radius: 0 1em 1em 0; /* LTR */
+}
+[dir="rtl"] .dropbutton-multiple.open .dropbutton-widget .dropbutton-toggle button {
+  border-radius: 1em 0 0 1em;
 }
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button:hover,
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button:focus {

@@ -39,9 +39,15 @@
   display: block;
   min-height: 2em;
   position: relative;
-  padding-right: 10em;
-  margin-right: 2em;
+  padding-right: 10em; /* LTR */
+  margin-right: 2em; /* LTR */
   max-width: 100%;
+}
+[dir="rtl"].js td .dropbutton-multiple {
+  padding-right: 0;
+  margin-right: 0;
+  padding-left: 10em;
+  margin-left: 2em;
 }
 .js td .dropbutton-multiple .dropbutton-action a,
 .js td .dropbutton-multiple .dropbutton-action input,
