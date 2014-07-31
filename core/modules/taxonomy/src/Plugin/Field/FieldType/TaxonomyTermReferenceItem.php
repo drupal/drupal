@@ -23,7 +23,7 @@ use Drupal\Core\TypedData\AllowedValuesInterface;
  *   description = @Translation("This field stores a reference to a taxonomy term."),
  *   default_widget = "options_select",
  *   default_formatter = "taxonomy_term_reference_link",
- *   list_class = "\Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceFieldItemList"
+ *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList"
  * )
  */
 class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedValuesInterface {
