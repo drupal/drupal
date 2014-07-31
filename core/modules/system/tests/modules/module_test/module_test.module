@@ -140,3 +140,23 @@ function module_test_modules_uninstalled($modules) {
   // can check that the modules were uninstalled in the correct sequence.
   \Drupal::state()->set('module_test.uninstall_order', $modules);
 }
+
+/**
+ * Implements hook_module_implements_alter()
+ *
+ * @see module_test_altered_test_hook()
+ * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+ */
+function module_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'altered_test_hook') {
+    // Add a hook implementation, that will be found in
+    // module_test.implementation.inc.
+    $implementations['module_test'] = 'implementations';
+  }
+  if ($hook === 'unimplemented_test_hook') {
+    // Add the non-existing function module_test_unimplemented_test_hook(). This
+    // should cause an exception to be thrown in
+    // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
+    $implementations['module_test'] = FALSE;
+  }
+}
