@@ -56,9 +56,6 @@ class UpdateController extends ControllerBase {
       $this->moduleHandler()->loadInclude('update', 'compare.inc');
       $build['#data'] = update_calculate_project_data($available);
     }
-    else {
-      $build['#data'] = _update_no_data();
-    }
     return $build;
   }
 

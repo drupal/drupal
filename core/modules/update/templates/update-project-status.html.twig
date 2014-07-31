@@ -1,0 +1,113 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the project status report.
+ *
+ * Available variables:
+ * - title: The project title.
+ * - url: The project url.
+ * - status: The project status.
+ *   - label: The project status label.
+ *   - attributes: HTML attributes for the project status.
+ *   - reason: The reason you should update the project.
+ *   - icon: The project status version indicator icon.
+ * - existing_version: The version of the installed project.
+ * - versions: The available versions of the project.
+ * - install_type: The type of project (e.g., dev).
+ * - datestamp: The date/time of a project version's release.
+ * - extras: HTML attributes and additional information about the project.
+ *   - attributes: HTML attributes for the extra item.
+ *   - label: The label for an extra item.
+ *   - data: The data about an extra item.
+ * - includes: The projects within the project.
+ * - disabled: The currently disabled projects in the project.
+ * - base_themes: The base themes supplied by the project.
+ * - sub_themes: The subthemes supplied by the project.
+ *
+ * @see template_preprocess_update_project_status()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="version-status">
+  {%- if status.label -%}
+    <span{{ status.attributes }}>{{ status.label }}</span>
+  {%- else -%}
+    {{ status.reason }}
+  {%- endif %}
+  <span class="icon">{{ status.icon }}</span>
+</div>
+
+<div class="project">
+  {%- if url -%}
+    <a href="{{ url }}">{{ title }}</a>
+  {%- else -%}
+    {{ title }}
+  {%- endif %}
+  {{ existing_version }}
+  {% if install_type == 'dev' and datestamp %}
+    <span class="version-date">({{ datestamp }})</span>
+  {% endif %}
+</div>
+
+{% if versions %}
+  <div class="versions">
+    {% for version in versions %}
+      {{ version }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="info">
+  {% if extras %}
+    <div class="extra">
+      {% for extra in extras %}
+        <div{{ extra.attributes }}>
+          {{ extra.label }}: {{ extra.data }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="includes">
+    {% set includes = includes|join(', ') %}
+    {% if disabled %}
+      {{ 'Includes:'|t }}
+      <ul>
+        <li class="first odd">
+          {% trans %}
+            Enabled: {{ includes|placeholder }}
+          {% endtrans %}
+        </li>
+        <li class="last even">
+          {% set disabled = disabled|join(', ') %}
+          {% trans %}
+            Disabled: {{ disabled|placeholder }}
+          {% endtrans %}
+        </li>
+      </ul>
+    {% else %}
+      {% trans %}
+        Includes: {{ includes|placeholder }}
+      {% endtrans %}
+    {% endif %}
+  </div>
+
+  {% if base_themes %}
+    {% set basethemes = base_themes|join(', ') %}
+    {# Using passthrough since placeholder is already applied in preprocess. #}
+    <div class="basethemes">
+      {% trans %}
+        Depends on: {{ basethemes|passthrough }}
+      {% endtrans %}
+    </div>
+  {% endif %}
+
+  {% if sub_themes %}
+    {% set subthemes = sub_themes|join(', ') %}
+    <div class="subthemes">
+      {% trans %}
+        Required by: {{ subthemes|placeholder }}
+      {% endtrans %}
+    </div>
+  {% endif %}
+</div>
