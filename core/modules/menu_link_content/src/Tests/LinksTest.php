@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Menu\LinksTest.
+ * Contains \Drupal\menu_link_content\Tests\LinksTest.
  */
 
-namespace Drupal\system\Tests\Menu;
+namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\locale\TranslationString;
@@ -15,9 +15,6 @@ use Drupal\simpletest\WebTestBase;
  * Tests handling of menu links hierarchies.
  *
  * @group Menu
- *
- * @todo Move this under menu_link_content module.
- *   https://www.drupal.org/node/2310353
  */
 class LinksTest extends WebTestBase {
 
