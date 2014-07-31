@@ -92,7 +92,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
     }
 
     $this->entityManager = $entity_manager;
-    $this->langaugeManager = $language_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -157,7 +157,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
     // We only need to get the title from the actual entity if it may be a
     // translation based on the current language context. This can only happen
     // if the site is configured to be multilingual.
-    if ($this->langaugeManager->isMultilingual()) {
+    if ($this->languageManager->isMultilingual()) {
       return $this->getEntity()->getTitle();
     }
     return $this->pluginDefinition['title'];
@@ -170,7 +170,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
     // We only need to get the description from the actual entity if it may be a
     // translation based on the current language context. This can only happen
     // if the site is configured to be multilingual.
-    if ($this->langaugeManager->isMultilingual()) {
+    if ($this->languageManager->isMultilingual()) {
       return $this->getEntity()->getDescription();
     }
     return $this->pluginDefinition['description'];

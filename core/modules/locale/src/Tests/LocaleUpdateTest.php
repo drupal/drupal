@@ -392,7 +392,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   }
 
   /**
-   * Tests automatic translation import when a custom langauge is added.
+   * Tests automatic translation import when a custom language is added.
    */
   public function testEnableCustomLanguage() {
     // Make the hidden test modules look like a normal custom module.

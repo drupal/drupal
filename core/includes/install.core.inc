@@ -1175,7 +1175,7 @@ function install_select_language(&$install_state) {
   // If a valid language code is set, continue with the next installation step.
   // When translations from the localization server are used, any language code
   // is accepted because the standard language list is kept in sync with the
-  // langauges available at http://localize.drupal.org.
+  // languages available at http://localize.drupal.org.
   // When files from the translation directory are used, we only accept
   // languages for which a file is available.
   if (!empty($install_state['parameters']['langcode'])) {

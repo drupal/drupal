@@ -500,7 +500,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($build['label']['#markup'], $values[$current_langcode]['name'], 'By default the entity is rendered in the current language.');
 
     $langcodes = array_combine($this->langcodes, $this->langcodes);
-    // We have no translation for the $langcode2 langauge, hence the expected
+    // We have no translation for the $langcode2 language, hence the expected
     // result is the topmost existing translation, that is $langcode.
     $langcodes[$langcode2] = $langcode;
     foreach ($langcodes as $desired => $expected) {
