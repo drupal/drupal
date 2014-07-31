@@ -410,48 +410,6 @@ function field_views_field_default_views_data(FieldStorageConfigInterface $field
           'entity_type' => $entity_type_id,
         );
       }
-
-      // Expose additional language column for translatable fields.
-      if ($field_storage->isTranslatable()) {
-        $title_language = t('@label (!name:language)', array('@label' => $label, '!name' => $field_name));
-        $title_short_language = t('@label:language', array('@label' => $label));
-
-        $data[$table_alias]['language'] = array(
-          'group' => $group,
-          'title' => $title_language,
-          'title short' => $title_short_language,
-          'help' => t('Language - Appears in: @bundles.', array('@bundles' => implode(', ', $bundles_names))),
-        );
-        $data[$table_alias]['language']['field'] = array(
-          'id' => 'language',
-        );
-        $data[$table_alias]['language']['argument'] = array(
-          'field' => 'language',
-          'table' => $table,
-          'id' => 'language',
-          'additional fields' => $additional_fields,
-          'empty field name' => t('- No value -'),
-          'field_name' => $field_name,
-          'entity_type' => $entity_type_id,
-        );
-        $data[$table_alias]['language']['filter'] = array(
-          'field' => 'language',
-          'table' => $table,
-          'id' => 'language',
-          'additional fields' => $additional_fields,
-          'field_name' => $field_name,
-          'entity_type' => $entity_type_id,
-          'allow empty' => TRUE,
-        );
-        $data[$table_alias]['language']['sort'] = array(
-          'field' => 'language',
-          'table' => $table,
-          'id' => 'standard',
-          'additional fields' => $additional_fields,
-          'field_name' => $field_name,
-          'entity_type' => $entity_type_id,
-        );
-      }
     }
   }
 
