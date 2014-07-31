@@ -34,7 +34,6 @@ services:
       - { name: encoder, format: xml }
   serializer.entity_resolver:
     class: Drupal\serialization\EntityResolver\ChainEntityResolver
-    arguments: [{  }]
   serializer.entity_resolver.uuid:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:

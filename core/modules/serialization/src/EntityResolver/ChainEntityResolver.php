@@ -12,14 +12,14 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * Resolver delegating the entity resolution to a chain of resolvers.
  */
-class ChainEntityResolver implements EntityResolverInterface {
+class ChainEntityResolver implements ChainEntityResolverInterface {
 
   /**
    * The concrete resolvers.
    *
    * @var \Drupal\serialization\EntityResolver\EntityResolverInterface[]
    */
-  protected $resolvers;
+  protected $resolvers = array();
 
   /**
    * Constructs a ChainEntityResolver object.
@@ -29,6 +29,13 @@ class ChainEntityResolver implements EntityResolverInterface {
    */
   public function __construct(array $resolvers = array()) {
     $this->resolvers = $resolvers;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addResolver(EntityResolverInterface $resolver) {
+    $this->resolvers[] = $resolver;
   }
 
   /**

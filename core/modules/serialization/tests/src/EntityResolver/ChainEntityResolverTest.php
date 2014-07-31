@@ -47,6 +47,9 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Test the resolve method with no matching resolvers.
+   *
+   * @covers ::__construct
+   * @covers ::resolve
    */
   public function testResolverWithNoneResolved() {
     $resolvers = array(
@@ -60,7 +63,24 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
+   * Test the resolve method with no matching resolvers, using addResolver.
+   *
+   * @covers ::addResolver
+   * @covers ::resolve
+   */
+  public function testResolverWithNoneResolvedUsingAddResolver() {
+    $resolver = new ChainEntityResolver();
+    $resolver->addResolver($this->createEntityResolverMock());
+    $resolver->addResolver($this->createEntityResolverMock());
+
+    $this->assertNull($resolver->resolve($this->testNormalizer, $this->testData, $this->testEntityType));
+  }
+
+  /**
    * Test the resolve method with a matching resolver first.
+   *
+   * @covers ::__construct
+   * @covers ::resolve
    */
   public function testResolverWithFirstResolved() {
     $resolvers = array(
@@ -75,6 +95,9 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Test the resolve method with a matching resolver last.
+   *
+   * @covers ::__construct
+   * @covers ::resolve
    */
   public function testResolverWithLastResolved() {
     $resolvers = array(
@@ -97,7 +120,7 @@ class ChainEntityResolverTest extends UnitTestCase {
    *   Whether or not the resolve method is expected to be called.
    *
    * @return \Drupal\serialization\EntityResolver\EntityResolverInterface|\PHPUnit_Framework_MockObject_MockObject
-   *   The mocked entity ressolver.
+   *   The mocked entity resolver.
    */
   protected function createEntityResolverMock($return = NULL, $called = TRUE) {
     $mock = $this->getMock('Drupal\serialization\EntityResolver\EntityResolverInterface');
