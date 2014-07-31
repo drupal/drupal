@@ -49,6 +49,7 @@ process:
           text:
             default: text_default
             trimmed: text_trimmed
+            plain: string
           number_integer:
             default: number_integer
             us_0: number_integer

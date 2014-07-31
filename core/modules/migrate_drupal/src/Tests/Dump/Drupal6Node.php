@@ -310,6 +310,12 @@ class Drupal6Node extends Drupal6DumpBase {
           'scale' => 2,
           'not null' => FALSE
         ),
+        'field_test_integer_selectlist_value' => array(
+          'description' => 'Test integer select field column.',
+          'type' => 'int',
+          'unsigned' => FALSE,
+          'not null' => FALSE
+        ),
       ),
       'primary key' => array('vid'),
     ));
@@ -319,11 +325,13 @@ class Drupal6Node extends Drupal6DumpBase {
         'nid',
         'vid',
         'field_test_three_value',
+        'field_test_integer_selectlist_value',
       ))
       ->values(array(
         'nid' => 1,
         'vid' => 1,
         'field_test_three_value' => '42.42',
+        'field_test_integer_selectlist_value' => '3412',
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);

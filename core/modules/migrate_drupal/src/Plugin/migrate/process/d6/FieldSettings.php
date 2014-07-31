@@ -48,6 +48,27 @@ class FieldSettings extends ProcessPluginBase {
     $title_label = isset($widget_settings['title']) ? $widget_settings['title'] : '';
     $max_length = isset($global_settings['max_length']) ? $global_settings['max_length'] : '';
     $max_length = empty($max_length) ? 255 : $max_length;
+    if (isset($global_settings['allowed_values'])) {
+      $list = explode("\n", $global_settings['allowed_values']);
+      $list = array_map('trim', $list);
+      $list = array_filter($list, 'strlen');
+      switch ($field_type) {
+        case 'list_text':
+        case 'list_integer':
+        case 'list_float':
+          foreach ($list as $value) {
+            $value = explode("|", $value);
+            $allowed_values[$value[0]] = isset($value[1]) ? $value[1] : $value[0];
+          }
+          break;
+
+        default:
+          $allowed_values = $list;
+      }
+    }
+    else {
+      $allowed_values = '';
+    }
 
     $settings = array(
       'text' => array(
@@ -60,6 +81,18 @@ class FieldSettings extends ProcessPluginBase {
         ),
       ),
       'datetime' => array('datetime_type' => 'datetime'),
+      'list_text' => array(
+        'allowed_values' => $allowed_values,
+      ),
+      'list_integer' => array(
+        'allowed_values' => $allowed_values,
+      ),
+      'list_float' => array(
+        'allowed_values' => $allowed_values,
+      ),
+      'boolean' => array(
+        'allowed_values' => $allowed_values,
+      ),
     );
 
     return isset($settings[$field_type]) ? $settings[$field_type] : array();

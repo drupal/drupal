@@ -626,6 +626,134 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       )),
       'description' => 'An example datetime field.',
     ))
+    ->values(array(
+      'field_name' => 'field_test_decimal_radio_buttons',
+      'type_name' => 'story',
+      'weight' => 13,
+      'label' => 'Decimal Radio Buttons Field',
+      'widget_type' => 'optionwidgets_buttons',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";s:0:"";}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 13,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_0',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example decimal field using radio buttons.',
+    ))
+    ->values(array(
+      'field_name' => 'field_test_float_single_checkbox',
+      'type_name' => 'story',
+      'weight' => 14,
+      'label' => 'Float Single Checkbox Field',
+      'widget_type' => 'optionwidgets_onoff',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";N;}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 14,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_0',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example float field using a single on/off checkbox.',
+    ))
+    ->values(array(
+      'field_name' => 'field_test_integer_selectlist',
+      'type_name' => 'story',
+      'weight' => 15,
+      'label' => 'Integer Select List Field',
+      'widget_type' => 'optionwidgets_select',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";s:0:"";}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 15,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_0',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example integer field using a select list.',
+    ))
+    ->values(array(
+      'field_name' => 'field_test_text_single_checkbox',
+      'type_name' => 'story',
+      'weight' => 16,
+      'label' => 'Text Single Checkbox Field',
+      'widget_type' => 'optionwidgets_onoff',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";N;}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 16,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'trimmed',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'default',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'trimmed',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example text field using a single on/off checkbox.',
+    ))
     ->execute();
 
     // Create the field table.
@@ -855,6 +983,58 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'db_storage' => 1,
       'db_columns' => 'a:0:{}',
       'active' => 0,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_decimal_radio_buttons',
+      'module' => 'number',
+      'type' => 'number_decimal',
+      'global_settings' => 'a:9:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:7:"1.2
+2.1";s:18:"allowed_values_php";s:0:"";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:7:"decimal";s:1:".";}',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => 'a:0:{}',
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_float_single_checkbox',
+      'module' => 'number',
+      'type' => 'number_float',
+      'global_settings' => 'a:6:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:11:"3.142
+1.234";s:18:"allowed_values_php";s:0:"";}',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => 'a:0:{}',
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_integer_selectlist',
+      'module' => 'number',
+      'type' => 'number_integer',
+      'global_settings' => 'a:6:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:19:"1234
+2341
+3412
+4123";s:18:"allowed_values_php";s:0:"";}',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => serialize(array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+          'sortable' => TRUE,
+        ),
+      )),
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_text_single_checkbox',
+      'module' => 'text',
+      'type' => 'text',
+      'global_settings' => 'a:4:{s:15:"text_processing";s:1:"0";s:10:"max_length";s:0:"";s:14:"allowed_values";s:13:"Hello
+Goodbye";s:18:"allowed_values_php";s:0:"";}',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => 'a:0:{}',
+      'active' => 1,
     ))
     ->execute();
 
