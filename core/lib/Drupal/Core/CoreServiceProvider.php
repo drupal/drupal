@@ -34,6 +34,8 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
  *
  * Modules wishing to register services to the container should use
  * modulename.services.yml in their respective directories.
+ *
+ * @ingroup container
  */
 class CoreServiceProvider implements ServiceProviderInterface  {
 

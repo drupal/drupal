@@ -405,6 +405,8 @@
  *   factory_service: cache_factory
  *   arguments: [nameofbin]
  * @endcode
+ * See the @link container Services topic @endlink for more on defining
+ * services.
  *
  * @section delete Deletion
  *
@@ -609,12 +611,182 @@
  * @{
  * Overview of the Dependency Injection Container and Services.
  *
- * @todo write this
+ * @section sec_overview Overview of container, injection, and services
+ * The Services and Dependency Injection Container concepts have been adopted by
+ * Drupal from the @link http://symfony.com/ Symfony framework. @endlink A
+ * "service" (such as accessing the database, sending email, or translating user
+ * interface text) is defined (given a name and an interface or at least a
+ * class that defines the methods that may be called), and a default class is
+ * defined to provide the service. These two steps must be done together, and
+ * can be done by Drupal Core or a module. Other modules can then define
+ * alternative classes to provide the same services, overriding the default
+ * classes. Classes and functions that need to use the service should always
+ * instantiate the class via the dependency injection container (also known
+ * simply as the "container"), rather than instantiating a particular service
+ * provider class directly, so that they get the correct class (default or
+ * overridden).
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * See https://drupal.org/node/2133171 for more detailed information on
+ * services and the dependency injection container.
  *
- * See https://drupal.org/node/2133171
+ * @section sec_discover Discovering existing services
+ * Drupal core defines many core services in the core.services.yml file (in the
+ * top-level core directory). Some Drupal Core modules and contributed modules
+ * also define services in modulename.services.yml files. API reference sites
+ * (such as https://api.drupal.org) generate lists of all existing services from
+ * these files, or you can look through the individual files manually.
+ *
+ * A typical service definition in a *.services.yml file looks like this:
+ * @code
+ * path.alias_manager:
+ *   class: Drupal\Core\Path\AliasManager
+ *   arguments: ['@path.crud', '@path.alias_whitelist', '@language_manager']
+ * @endcode
+ * Some services use other services as factories; a typical service definition
+ * is:
+ * @code
+ *   cache.entity:
+ *     class: Drupal\Core\Cache\CacheBackendInterface
+ *     tags:
+ *       - { name: cache.bin }
+ *     factory_method: get
+ *     factory_service: cache_factory
+ *     arguments: [entity]
+ * @endcode
+ *
+ * The first line of a service definition gives the unique machine name of the
+ * service. This is often prefixed by the module name if provided by a module;
+ * however, by convention some service names are prefixed by a group name
+ * instead, such as cache.* for cache bins and plugin.manager.* for plugin
+ * managers.
+ *
+ * The class line either gives the default class that provides the service, or
+ * if the service uses a factory class, the interface for the service. If the
+ * class depends on other services, the arguments line lists the machine
+ * names of the dependencies (preceded by '@'); objects for each of these
+ * services are instantiated from the container and passed to the class
+ * constructor when the service class is instantiated. Other arguments can also
+ * be passed in; see the section at https://drupal.org/node/2133171 for more
+ * detailed information.
+ *
+ * Services using factories can be defined as shown in the above example, if the
+ * factory is itself a service. The factory can also be a class; details of how
+ * to use service factories can be found in the section at
+ * https://drupal.org/node/2133171.
+ *
+ * @section sec_container Accessing a service through the container
+ * As noted above, if you need to use a service in your code, you should always
+ * instantiate the service class via a call to the container, using the machine
+ * name of the service, so that the default class can be overridden. There are
+ * several ways to make sure this happens:
+ * - For service-providing classes, see other sections of this documentation
+ *   describing how to pass services as arguments to the constructor.
+ * - Plugin classes, controllers, and similar classes have create() or
+ *   createInstance() methods that are used to create an instance of the class.
+ *   These methods come from different interfaces, and have different
+ *   arguments, but they all include an argument $container of type
+ *   \Symfony\Component\DependencyInjection\ContainerInterface.
+ *   If you are defining one of these classes, in the create() or
+ *   createInstance() method, call
+ *   @code $container->get('myservice.name') @endcode to instantiate a service.
+ *   The results of these calls are generally passed to the class constructor
+ *   and saved as member variables in the class.
+ * - For functions and class methods that do not have access to either of
+ *   the above methods of dependency injection, you can use service location to
+ *   access services, via a call to the global \Drupal class. This class has
+ *   special methods for accessing commonly-used services, or you can call a
+ *   generic method to access any service. Examples:
+ *   @code
+ *   // Retrieve the entity.manager service object (special method exists).
+ *   $manager = \Drupal->entityManager();
+ *   // Retrieve the service object for machine name 'foo.bar'.
+ *   $foobar = \Drupal->service('foo.bar');
+ *   @endcode
+ *
+ * As a note, you should always use dependency injection (via service arguments
+ * or create()/createInstance() methods) if possible to instantiate services,
+ * rather than service location (via the \Drupal class), because:
+ * - Dependency injection facilitates writing unit tests, since the container
+ *   argument can be mocked and the create() method can be bypassed by using
+ *   the class constructor. If you use the \Drupal class, unit tests are much
+ *   harder to write and your code has more dependencies.
+ * - Having the service interfaces on the class constructor and member variables
+ *   is useful for IDE auto-complete and self-documentation.
+ *
+ * @section sec_define Defining a service
+ * If your module needs to define a new service, here are the steps:
+ * - Choose a unique machine name for your service. Typically, this should
+ *   start with your module name. Example: mymodule.myservice.
+ * - Create a PHP interface to define what your service does.
+ * - Create a default class implementing your interface that provides your
+ *   service. If your class needs to use existing services (such as database
+ *   access), be sure to make these services arguments to your class
+ *   constructor, and save them in member variables. Also, if the needed
+ *   services are provided by other modules and not Drupal Core, you'll want
+ *   these modules to be dependencies of your module.
+ * - Add an entry to a modulename.services.yml file for the service. See
+ *   @ref sec_discover above, or existing *.services.yml files in Core, for the
+ *   syntax; it will start with your machine name, refer to your default class,
+ *   and list the services that need to be passed into your constructor.
+ *
+ * Services can also be defined dynamically, as in the
+ * \Drupal\Core\CoreServiceProvider class, but this is less common for modules.
+ *
+ * @section sec_tags Service tags
+ * Some services have tags, which are defined in the service definition. Tags
+ * are used to define a group of related services, or to specify some aspect of
+ * how the service behaves. Typically, if you tag a service, your service class
+ * must also implement a corresponding interface. Some common examples:
+ * - access_check: Indicates a route access checking service; see the
+ *   @link menu Menu and routing system topic @endlink for more information.
+ * - cache.bin: Indicates a cache bin service; see the
+ *   @link cache Cache topic @endlink for more information.
+ * - event_subscriber: Indicates an event subscriber service. Event subscribers
+ *   can be used for dynamic routing and route altering; see the
+ *   @link menu Menu and routing system topic @endlink for more information.
+ *   They can also be used for other purposes; see
+ *   http://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
+ *   for more information.
+ * - needs_destruction: Indicates that a destruct() method needs to be called
+ *   at the end of a request to finalize operations, if this service was
+ *   instantiated.
+ *
+ * Creating a tag for a service does not do anything on its own, but tags
+ * can be discovered or queried in a compiler pass when the container is built,
+ * and a corresponding action can be taken. See
+ * \Drupal\Core\CoreServiceProvider::register() for an example.
+ *
+ * @section sec_injection Overriding the default service class
+ * Modules can override the default classes used for services. Here are the
+ * steps:
+ * - Define a class in the top-level namespace for your module
+ *   (Drupal\my_module), whose name is the camel-case version of your module's
+ *   machine name followed by "ServiceProvider" (for example, if your module
+ *   machine name is my_module, the class must be named
+ *   MyModuleServiceProvider).
+ * - The class needs to implement
+ *   \Drupal\Core\DependencyInjection\ServiceModifierInterface, which is
+ *   typically done by extending
+ *   \Drupal\Core\DependencyInjection\ServiceProviderBase.
+ * - The class needs to contain one method: alter(). This method does the
+ *   actual work of telling Drupal to use your class instead of the default.
+ *   Here's an example:
+ *   @code
+ *   public function alter(ContainerBuilder $container) {
+ *     // Override the language_manager class with a new class.
+ *     $definition = $container->getDefinition('language_manager');
+ *     $definition->setClass('Drupal\my_module\MyLanguageManager');
+ *   }
+ *   @endcode
+ *   Note that $container here is an instance of
+ *   \Drupal\Core\DependencyInjection\ContainerBuilder.
+ *
+ * @see https://drupal.org/node/2133171
+ * @see core.services.yml
+ * @see \Drupal
+ * @see \Symfony\Component\DependencyInjection\ContainerInterface
+ * @see plugin_api
+ * @see menu
  * @}
  */
 

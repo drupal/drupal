@@ -4,6 +4,8 @@ namespace Drupal\Core\DependencyInjection;
 
 /**
  * Interface that service providers can implement to modify services.
+ *
+ * @ingroup container
  */
 interface ServiceModifierInterface {
 

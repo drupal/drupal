@@ -9,6 +9,8 @@ namespace Drupal\Core\DependencyInjection;
 
 /**
  * Base service provider implementation.
+ *
+ * @ingroup container
  */
 abstract class ServiceProviderBase implements ServiceProviderInterface, ServiceModifierInterface {
 

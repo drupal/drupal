@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  * Drupal's dependency injection container builder.
  *
  * @todo Submit upstream patches to Symfony to not require these overrides.
+ *
+ * @ingroup container
  */
 class ContainerBuilder extends SymfonyContainerBuilder {
 
