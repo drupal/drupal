@@ -23,6 +23,7 @@ use Drupal\Core\Url;
  * @see \Drupal\Core\Form\FormBuilderInterface
  * @see \Drupal\Core\Form\FormValidatorInterface
  * @see \Drupal\Core\Form\FormSubmitterInterface
+ * @ingroup form_api
  */
 interface FormStateInterface {
 
