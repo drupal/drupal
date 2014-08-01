@@ -1418,6 +1418,7 @@
  * namespace Drupal\mymodule\Form;
  *
  * use Drupal\Core\Form\FormBase;
+ * use Drupal\Core\Form\FormStateInterface;
  *
  * class ExampleForm extends FormBase {
  *   public function getFormId() {
@@ -1499,11 +1500,9 @@
  *
  * In the form builder, validation, submission, and other form methods,
  * $form_state is the primary influence on the processing of the form and is
- * passed by reference to most methods, so they can use it to communicate with
- * the form system and each other.
- *
- * See \Drupal\Core\Form\FormBuilder::buildForm() for documentation of
- * $form_state keys.
+ * passed to most methods, so they can use it to communicate with the form
+ * system and each other. $form_state is an object that implements
+ * \Drupal\Core\Form\FormStateInterface.
  */
 
 /**
