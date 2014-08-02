@@ -129,7 +129,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the block does not exist in the database.
-      $id = db_select('block_content', 'b')
+      $id = db_select('block_content_field_data', 'b')
         ->fields('b', array('id'))
         ->condition('info', 'fail_creation')
         ->execute()
@@ -138,7 +138,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     }
     else {
       // Check that the block exists in the database.
-      $id = db_select('block_content', 'b')
+      $id = db_select('block_content_field_data', 'b')
         ->fields('b', array('id'))
         ->condition('info', 'fail_creation')
         ->execute()

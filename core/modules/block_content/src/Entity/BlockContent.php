@@ -36,6 +36,7 @@ use Drupal\block_content\BlockContentInterface;
  *   admin_permission = "administer blocks",
  *   base_table = "block_content",
  *   revision_table = "block_content_revision",
+ *   data_table = "block_content_field_data",
  *   links = {
  *     "canonical" = "block_content.edit",
  *     "delete-form" = "block_content.delete",
@@ -156,12 +157,14 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
 
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The custom block language code.'));
+      ->setDescription(t('The custom block language code.'))
+      ->setRevisionable(TRUE);
 
     $fields['info'] = FieldDefinition::create('string')
       ->setLabel(t('Block description'))
       ->setDescription(t('A brief description of your block.'))
       ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setDisplayOptions('form', array(
         'type' => 'string',

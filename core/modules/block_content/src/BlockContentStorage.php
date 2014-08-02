@@ -22,10 +22,10 @@ class BlockContentStorage extends ContentEntityDatabaseStorage {
 
     // Marking the respective fields as NOT NULL makes the indexes more
     // performant.
-    $schema['block_content']['fields']['info']['not null'] = TRUE;
+    $schema['block_content_field_data']['fields']['info']['not null'] = TRUE;
 
-    $schema['block_content']['unique keys'] += array(
-      'block_content__info' => array('info'),
+    $schema['block_content_field_data']['unique keys'] += array(
+      'block_content__info' => array('info', 'langcode'),
     );
 
     return $schema;
