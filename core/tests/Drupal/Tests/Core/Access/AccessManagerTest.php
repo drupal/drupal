@@ -421,11 +421,13 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->paramConverter->expects($this->at(0))
       ->method('convert')
+      ->with(array(RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_2')))
       ->will($this->returnValue(array()));
 
     $this->paramConverter->expects($this->at(1))
       ->method('convert')
-      ->will($this->returnValue(array()));
+      ->with(array('value' => 'example', RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_4')))
+      ->will($this->returnValue(array('value' => 'example')));
 
     // Tests the access with routes with parameters without given request.
     $this->assertTrue($this->accessManager->checkNamedRoute('test_route_2', array(), $this->account));
@@ -459,6 +461,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->at(0))
       ->method('convert')
+      ->with(array('value' => 'example', RouteObjectInterface::ROUTE_OBJECT => $route))
       ->will($this->returnValue(array('value' => 'upcasted_value')));
 
     $this->argumentsResolver->expects($this->atLeastOnce())
@@ -512,7 +515,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
     $this->urlGenerator->expects($this->any())
       ->method('generate')
-      ->with('test_route_1', array('value' => 'example'))
+      ->with('test_route_1', array())
       ->will($this->returnValueMap($map));
 
     $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');

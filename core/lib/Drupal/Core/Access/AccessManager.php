@@ -12,6 +12,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -185,11 +186,16 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     try {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
-        // Create a request and copy the account from the current request.
-        $defaults = $parameters + $route->getDefaults();
-        $route_request = RequestHelper::duplicate($this->requestStack->getCurrentRequest(), $this->urlGenerator->generate($route_name, $defaults));
-        $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
-        $route_request->attributes->add($this->paramConverterManager->convert($defaults, $route_request));
+        // Create a cloned request with fresh attributes.
+        $route_request = RequestHelper::duplicate($this->requestStack->getCurrentRequest(), $this->urlGenerator->generate($route_name, $parameters));
+        $route_request->attributes->replace(array());
+
+        // Populate $route_request->attributes with both raw and converted
+        // parameters.
+        $parameters += $route->getDefaults();
+        $route_request->attributes->set('_raw_variables', new ParameterBag($parameters));
+        $parameters[RouteObjectInterface::ROUTE_OBJECT] = $route;
+        $route_request->attributes->add($this->paramConverterManager->convert($parameters, $route_request));
       }
       return $this->check($route, $route_request, $account);
     }

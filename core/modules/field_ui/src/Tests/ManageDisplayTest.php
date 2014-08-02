@@ -300,6 +300,17 @@ class ManageDisplayTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests the local tasks are displayed correctly for view modes.
+   */
+  public function testViewModeLocalTasks() {
+    $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
+    $this->drupalGet($manage_display);
+    $this->assertNoLink('Full content');
+    $this->drupalGet($manage_display . '/teaser');
+    $this->assertNoLink('Full content');
+  }
+
+  /**
    * Tests that field instances with no explicit display settings do not break.
    */
   function testNonInitializedFields() {
