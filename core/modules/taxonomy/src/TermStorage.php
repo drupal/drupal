@@ -7,10 +7,9 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * Defines a Controller class for taxonomy terms.
@@ -87,10 +86,11 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
    * {@inheritdoc}
    */
   public function loadParents($tid) {
-    $query = $this->database->select('taxonomy_term_data', 't');
+    $query = $this->database->select('taxonomy_term_field_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
     $query->addField('t', 'tid');
     $query->condition('h.tid', $tid);
+    $query->condition('t.default_langcode', 1);
     $query->addTag('term_access');
     $query->orderBy('t.weight');
     $query->orderBy('t.name');
@@ -101,13 +101,14 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
    * {@inheritdoc}
    */
   public function loadChildren($tid, $vid = NULL) {
-    $query = $this->database->select('taxonomy_term_data', 't');
+    $query = $this->database->select('taxonomy_term_field_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
     $query->addField('t', 'tid');
     $query->condition('h.parent', $tid);
     if ($vid) {
       $query->condition('t.vid', $vid);
     }
+    $query->condition('t.default_langcode', 1);
     $query->addTag('term_access');
     $query->orderBy('t.weight');
     $query->orderBy('t.name');
@@ -118,13 +119,14 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
    * {@inheritdoc}
    */
   public function loadTree($vid) {
-    $query = $this->database->select('taxonomy_term_data', 't');
+    $query = $this->database->select('taxonomy_term_field_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
     return $query
       ->addTag('term_access')
       ->fields('t')
       ->fields('h', array('parent'))
       ->condition('t.vid', $vid)
+      ->condition('t.default_langcode', 1)
       ->orderBy('t.weight')
       ->orderBy('t.name')
       ->execute();
@@ -146,7 +148,7 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
    * {@inheritdoc}
    */
   public function resetWeights($vid) {
-    $this->database->update('taxonomy_term_data')
+    $this->database->update('taxonomy_term_field_data')
       ->fields(array('weight' => 0))
       ->condition('vid', $vid)
       ->execute();
@@ -160,12 +162,12 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
 
     // Marking the respective fields as NOT NULL makes the indexes more
     // performant.
-    $schema['taxonomy_term_data']['fields']['weight']['not null'] = TRUE;
-    $schema['taxonomy_term_data']['fields']['name']['not null'] = TRUE;
+    $schema['taxonomy_term_field_data']['fields']['weight']['not null'] = TRUE;
+    $schema['taxonomy_term_field_data']['fields']['name']['not null'] = TRUE;
 
-    unset($schema['taxonomy_term_data']['indexes']['field__vid']);
-    unset($schema['taxonomy_term_data']['indexes']['field__description__format']);
-    $schema['taxonomy_term_data']['indexes'] += array(
+    unset($schema['taxonomy_term_field_data']['indexes']['taxonomy_term_field__vid__target_id']);
+    unset($schema['taxonomy_term_field_data']['indexes']['taxonomy_term_field__description__format']);
+    $schema['taxonomy_term_field_data']['indexes'] += array(
       'taxonomy_term__tree' => array('vid', 'weight', 'name'),
       'taxonomy_term__vid_name' => array('vid', 'name'),
       'taxonomy_term__name' => array('name'),
@@ -249,6 +251,41 @@ class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInt
     );
 
     return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNodeTerms($nids, $vocabs = array(), $langcode = NULL) {
+    $query = db_select('taxonomy_term_field_data', 'td');
+    $query->innerJoin('taxonomy_index', 'tn', 'td.tid = tn.tid');
+    $query->fields('td', array('tid'));
+    $query->addField('tn', 'nid', 'node_nid');
+    $query->orderby('td.weight');
+    $query->orderby('td.name');
+    $query->condition('tn.nid', $nids);
+    $query->addTag('term_access');
+    if (!empty($vocabs)) {
+      $query->condition('td.vid', $vocabs);
+    }
+    if (!empty($langcode)) {
+      $query->condition('td.langcode', $langcode);
+    }
+
+    $results = array();
+    foreach ($query->execute() as $term_record) {
+      $results[$term_record->node_nid][] = $term_record->tid;
+      $all_tids[] = $term_record->tid;
+    }
+
+    $all_terms = $this->loadMultiple($all_tids);
+    $terms = array();
+    foreach ($results as $nid => $tids) {
+      foreach ($tids as $tid) {
+        $terms[$nid][$tid] = $all_terms[$term_record->tid];
+      }
+    }
+    return $terms;
   }
 
 }

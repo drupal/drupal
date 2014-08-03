@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\taxonomy\Entity\Term;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 use Drupal\Component\Utility\String;
 
@@ -21,12 +22,9 @@ class IndexTid extends ManyToOne {
 
   public function titleQuery() {
     $titles = array();
-    $result = db_select('taxonomy_term_data', 'td')
-      ->fields('td', array('name'))
-      ->condition('td.tid', $this->value)
-      ->execute();
-    foreach ($result as $term_record) {
-      $titles[] = String::checkPlain($term_record->name);
+    $terms = Term::loadMultiple($this->value);
+    foreach ($terms as $term) {
+      $titles[] = String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
     }
     return $titles;
   }

@@ -456,9 +456,9 @@ function taxonomy_term_load_children($tid) {
  *   The number of levels of the tree to return. Leave NULL to return all levels.
  * @param $load_entities
  *   If TRUE, a full entity load will occur on the term objects. Otherwise they
- *   are partial objects queried directly from the {taxonomy_term_data} table to
- *   save execution time and memory consumption when listing large numbers of
- *   terms. Defaults to FALSE.
+ *   are partial objects queried directly from the {taxonomy_term_field_data}
+ *   table to save execution time and memory consumption when listing large
+ *   numbers of terms. Defaults to FALSE.
  *
  * @return
  *   An array of all term objects in the tree. Each term object is extended

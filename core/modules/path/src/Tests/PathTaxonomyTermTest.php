@@ -49,7 +49,7 @@ class PathTaxonomyTermTest extends PathTestBase {
       'path[0][alias]' => $this->randomName(),
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
-    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name[0][value]']))->fetchField();
+    $tid = db_query("SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1", array(':name' => $edit['name[0][value]']))->fetchField();
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[0][alias]']);

@@ -56,7 +56,7 @@ class NodeTermData extends RelationshipPluginBase  {
       '#type' => 'checkboxes',
       '#title' => t('Vocabularies'),
       '#options' => $options,
-      '#default_value' => $this->options['vocabularies'],
+      '#default_value' => $this->options['vids'],
       '#description' => t('Choose which vocabularies you wish to relate. Remember that every term found will create a new record, so this relationship is best used on just one vocabulary that has only one term per node.'),
     );
     parent::buildOptionsForm($form, $form_state);

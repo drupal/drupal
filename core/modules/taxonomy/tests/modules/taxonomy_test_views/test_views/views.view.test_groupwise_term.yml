@@ -16,7 +16,7 @@ display:
         name:
           field: name
           id: name
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           plugin_id: taxonomy
           provider: taxonomy
         nid:

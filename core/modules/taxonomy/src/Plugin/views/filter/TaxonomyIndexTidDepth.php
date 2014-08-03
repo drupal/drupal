@@ -52,7 +52,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       return;
     }
     elseif (count($this->value) == 1) {
-      // Somethis $this->value is an array with a single element so convert it.
+      // Sometimes $this->value is an array with a single element so convert it.
       if (is_array($this->value)) {
         $this->value = current($this->value);
       }

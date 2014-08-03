@@ -8,9 +8,11 @@
 namespace Drupal\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 
 /**
@@ -108,15 +110,12 @@ class TaxonomyIndexTid extends ManyToOne {
     if ($this->options['type'] == 'textfield') {
       $default = '';
       if ($this->value) {
-        $result = db_select('taxonomy_term_data', 'td')
-          ->fields('td')
-          ->condition('td.tid', $this->value)
-          ->execute();
-        foreach ($result as $term_record) {
+        $terms = Term::loadMultiple(($this->value));
+        foreach ($terms as $term) {
           if ($default) {
             $default .= ', ';
           }
-          $default .= $term_record->name;
+          $default .= String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
         }
       }
 
@@ -133,31 +132,30 @@ class TaxonomyIndexTid extends ManyToOne {
     }
     else {
       if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = taxonomy_get_tree($vocabulary->id());
+        $tree = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE);
         $options = array();
 
         if ($tree) {
-          foreach ($tree as $term_record) {
+          foreach ($tree as $term) {
             $choice = new \stdClass();
-            $choice->option = array($term_record->tid => str_repeat('-', $term_record->depth) . $term_record->name);
+            $choice->option = array($term->id() => str_repeat('-', $term->depth) . String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label()));
             $options[] = $choice;
           }
         }
       }
       else {
         $options = array();
-        $query = db_select('taxonomy_term_data', 'td');
-        $query->fields('td');
-        // @todo Sorting on vocabulary properties http://drupal.org/node/1821274
-        $query->orderby('td.weight');
-        $query->orderby('td.name');
-        $query->addTag('term_access');
+        $query = \Drupal::entityQuery('taxonomy_term')
+          // @todo Sorting on vocabulary properties http://drupal.org/node/1821274
+          ->sort('weight')
+          ->sort('name')
+          ->addTag('term_access');
         if ($this->options['limit']) {
-          $query->condition('td.vid', $vocabulary->id());
+          $query->condition('vid', $vocabulary->id());
         }
-        $result = $query->execute();
-        foreach ($result as $term_record) {
-          $options[$term_record->tid] = $term_record->name;
+        $terms = Term::loadMultiple($query->execute());
+        foreach ($terms as $term) {
+          $options[$term->id()] = String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
         }
       }
 
@@ -220,7 +218,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     $values = Tags::explode($form_state['values']['options']['value']);
-    $tids = $this->validate_term_strings($form['value'], $values);
+    $tids = $this->validate_term_strings($form['value'], $values, $form_state);
 
     if ($tids) {
       $form_state['values']['options']['value'] = $tids;
@@ -275,7 +273,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     $values = Tags::explode($form_state['values'][$identifier]);
 
-    $tids = $this->validate_term_strings($form[$identifier], $values);
+    $tids = $this->validate_term_strings($form[$identifier], $values, $form_state);
     if ($tids) {
       $this->validated_exposed_input = $tids;
     }
@@ -290,11 +288,13 @@ class TaxonomyIndexTid extends ManyToOne {
    *   The form which is used, either the views ui or the exposed filters.
    * @param $values
    *   The taxonomy names which will be converted to tids.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return array
    *   The taxonomy ids fo all validated terms.
    */
-  function validate_term_strings(&$form, $values) {
+  function validate_term_strings(&$form, $values, FormStateInterface $form_state) {
     if (empty($values)) {
       return array();
     }
@@ -311,15 +311,14 @@ class TaxonomyIndexTid extends ManyToOne {
       return FALSE;
     }
 
-    $query = db_select('taxonomy_term_data', 'td');
-    $query->fields('td');
-    $query->condition('td.name', $names);
-    $query->condition('td.vid', $this->options['vid']);
-    $query->addTag('term_access');
-    $result = $query->execute();
-    foreach ($result as $term_record) {
-      unset($missing[strtolower($term_record->name)]);
-      $tids[] = $term_record->tid;
+    $query = \Drupal::entityQuery('taxonomy_term')
+      ->condition('name', $names)
+      ->condition('vid', $this->options['vid'])
+      ->addTag('term_access');
+    $terms = Term::loadMultiple($query->execute());
+    foreach ($terms as $term) {
+      unset($missing[strtolower(\Drupal::entityManager()->getTranslationFromContext($term)->label())]);
+      $tids[] = $term->id();
     }
 
     if ($missing && !empty($this->options['error_message'])) {
@@ -354,12 +353,9 @@ class TaxonomyIndexTid extends ManyToOne {
 
     if ($this->value) {
       $this->value = array_filter($this->value);
-      $result = db_select('taxonomy_term_data', 'td')
-        ->fields('td')
-        ->condition('td.tid', $this->value)
-        ->execute();
-      foreach ($result as $term_record) {
-        $this->value_options[$term_record->tid] = $term_record->name;
+      $terms = Term::loadMultiple($this->value);
+      foreach ($terms as $term) {
+        $this->value_options[$term->id()] = String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
       }
     }
     return parent::adminSummary();

@@ -85,4 +85,20 @@ interface TermStorageInterface extends EntityStorageInterface {
    */
   public function resetWeights($vid);
 
+  /**
+   * Returns all terms used to tag some given nodes.
+   *
+   * @param array $nids
+   *   Node IDs to retrieve terms for.
+   * @param array $vocabs
+   *   (optional) A vocabularies array to restrict the term search. Defaults to
+   *   empty array.
+   * @param string $langcode
+   *   (optional) A language code to restrict the term search. Defaults to NULL.
+   *
+   * @return array
+   *   An array of nids and the term entities they were tagged with.
+   */
+  public function getNodeTerms($nids, $vocabs = array(), $langcode = NULL);
+
 }

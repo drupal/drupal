@@ -32,6 +32,14 @@ function taxonomy_views_data() {
     ),
   );
 
+  $data['taxonomy_term_field_data']['table']['group'] = t('Taxonomy term');
+  $data['taxonomy_term_field_data']['table']['entity type'] = 'taxonomy_term';
+  $data['taxonomy_term_field_data']['table']['join']['taxonomy_term_data'] = array(
+    'type' => 'INNER',
+    'left_field' => 'tid',
+    'field' => 'tid',
+  );
+
   $data['taxonomy_term_data']['tid'] = array(
     'title' => t('Term ID'),
     'help' => t('The tid of a taxonomy term.'),
@@ -73,7 +81,7 @@ function taxonomy_views_data() {
       'id' => 'groupwise_max',
       'relationship field' => 'tid',
       'outer field' => 'taxonomy_term_data.tid',
-      'argument table' => 'taxonomy_term_data',
+      'argument table' => 'taxonomy_term_field_data',
       'argument field' =>  'tid',
       'base'   => 'node',
       'field'  => 'nid',
@@ -81,7 +89,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['name'] = array(
+  $data['taxonomy_term_field_data']['name'] = array(
     'title' => t('Name'),
     'help' => t('The taxonomy term name.'),
     'field' => array(
@@ -102,7 +110,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['weight'] = array(
+  $data['taxonomy_term_field_data']['weight'] = array(
     'title' => t('Weight'),
     'help' => t('The term weight field'),
     'field' => array(
@@ -119,7 +127,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['description__value'] = array(
+  $data['taxonomy_term_field_data']['description__value'] = array(
     'title' => t('Term description'),
     'help' => t('The description associated with a taxonomy term.'),
     'field' => array(
@@ -140,7 +148,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['langcode'] = array(
+  $data['taxonomy_term_field_data']['langcode'] = array(
     'title' => t('Language'), // The item it appears as on the UI,
     'help' => t('Language of the term'),
     'field' => array(
@@ -166,7 +174,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed'] = array(
+  $data['taxonomy_term_field_data']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the term was last updated.'),
     'field' => array(
@@ -180,7 +188,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_fulldate'] = array(
+  $data['taxonomy_term_field_data']['changed_fulldate'] = array(
     'title' => t('Updated date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -189,7 +197,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_year_month'] = array(
+  $data['taxonomy_term_field_data']['changed_year_month'] = array(
     'title' => t('Updated year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -198,7 +206,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_year'] = array(
+  $data['taxonomy_term_field_data']['changed_year'] = array(
     'title' => t('Updated year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -207,7 +215,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_month'] = array(
+  $data['taxonomy_term_field_data']['changed_month'] = array(
     'title' => t('Updated month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -216,7 +224,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_day'] = array(
+  $data['taxonomy_term_field_data']['changed_day'] = array(
     'title' => t('Updated day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -225,7 +233,7 @@ function taxonomy_views_data() {
     ),
   );
 
-  $data['taxonomy_term_data']['changed_week'] = array(
+  $data['taxonomy_term_field_data']['changed_week'] = array(
     'title' => t('Updated week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -283,7 +291,7 @@ function taxonomy_views_data() {
     'help' => t('Display content if it has the selected taxonomy terms.'),
     'argument' => array(
       'id' => 'taxonomy_index_tid',
-      'name table' => 'taxonomy_term_data',
+      'name table' => 'taxonomy_term_field_data',
       'name field' => 'name',
       'empty field name' => t('Uncategorized'),
       'numeric' => TRUE,

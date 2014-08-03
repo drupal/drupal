@@ -18,11 +18,6 @@ use Drupal\Core\Language\LanguageInterface;
 class TermTranslationUITest extends ContentTranslationUITest {
 
   /**
-   * The name of the test taxonomy term.
-   */
-  protected $name;
-
-  /**
    * The vocabulary used for creating terms.
    *
    * @var \Drupal\taxonomy\Entity\Vocabulary
@@ -39,7 +34,6 @@ class TermTranslationUITest extends ContentTranslationUITest {
   function setUp() {
     $this->entityTypeId = 'taxonomy_term';
     $this->bundle = 'tags';
-    $this->name = $this->randomName();
     parent::setUp();
   }
 
@@ -71,8 +65,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
-    // Term name is not translatable hence we use a fixed value.
-    return array('name' => $this->name) + parent::getNewEntityValues($langcode);
+    return array('name' => $this->randomName()) + parent::getNewEntityValues($langcode);
   }
 
   /**

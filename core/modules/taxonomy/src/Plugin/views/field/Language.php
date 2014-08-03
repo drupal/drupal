@@ -21,7 +21,7 @@ class Language extends Taxonomy {
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
-    $language = language_load($value);
+    $language = \Drupal::languageManager()->getLanguage($value);
     $value = $language ? $language->name : '';
 
     return $this->renderLink($this->sanitizeValue($value), $values);

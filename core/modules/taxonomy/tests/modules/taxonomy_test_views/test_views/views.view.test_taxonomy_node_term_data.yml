@@ -48,7 +48,7 @@ display:
           id: term_node_tid
           label: 'Term #1'
           table: node
-          vocabularies:
+          vids:
             tags: false
           plugin_id: node_term_data
           provider: taxonomy
@@ -57,7 +57,7 @@ display:
           id: term_node_tid_1
           label: 'Term #2'
           table: node
-          vocabularies:
+          vids:
             tags: false
           plugin_id: node_term_data
           provider: taxonomy
@@ -66,7 +66,7 @@ display:
           field: nid
           id: nid
           order: DESC
-          table: nid
+          table: node
           plugin_id: standard
           provider: views
       style:

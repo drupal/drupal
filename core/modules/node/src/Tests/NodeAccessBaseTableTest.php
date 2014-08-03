@@ -90,8 +90,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         $this->nodesByUser[$this->webUser->id()][$node->id()] = $is_private;
       }
     }
-    $this->publicTid = db_query('SELECT tid FROM {taxonomy_term_data} WHERE name = :name', array(':name' => 'public'))->fetchField();
-    $this->privateTid = db_query('SELECT tid FROM {taxonomy_term_data} WHERE name = :name', array(':name' => 'private'))->fetchField();
+    $this->publicTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => 'public'))->fetchField();
+    $this->privateTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => 'private'))->fetchField();
     $this->assertTrue($this->publicTid, 'Public tid was found');
     $this->assertTrue($this->privateTid, 'Private tid was found');
     foreach ($simple_users as $this->webUser) {

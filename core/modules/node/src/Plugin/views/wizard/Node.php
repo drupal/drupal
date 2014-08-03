@@ -242,11 +242,12 @@ class Node extends WizardPluginBase {
     // Add the "tagged with" filter to the view.
 
     // We construct this filter using taxonomy_index.tid (which limits the
-    // filtering to a specific vocabulary) rather than taxonomy_term_data.name
-    // (which matches terms in any vocabulary). This is because it is a more
-    // commonly-used filter that works better with the autocomplete UI, and
-    // also to avoid confusion with other vocabularies on the site that may
-    // have terms with the same name but are not used for free tagging.
+    // filtering to a specific vocabulary) rather than
+    // taxonomy_term_field_data.name (which matches terms in any vocabulary).
+    // This is because it is a more commonly-used filter that works better with
+    // the autocomplete UI, and also to avoid confusion with other vocabularies
+    // on the site that may have terms with the same name but are not used for
+    // free tagging.
 
     // The downside is that if there *is* more than one vocabulary on the site
     // that is used for free tagging, the wizard will only be able to make the
