@@ -8,7 +8,6 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -680,8 +679,8 @@ class ViewUI implements ViewStorageInterface {
               }
             }
             $rows['query'][] = array(
-              SafeMarkup::set('<strong>' . t('Query') . '</strong>'),
-              SafeMarkup::set('<pre>' . String::checkPlain(strtr($query_string, $quoted)) . '</pre>'),
+              array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'Query' %}</strong>")),
+              array('data' => array('#type' => 'inline_template', '#template' => '<pre>{{ query }}</pre>', '#context' => array('query' => strtr($query_string, $quoted)))),
             );
             if (!empty($this->additionalQueries)) {
               $queries = '<strong>' . t('These queries were run during view rendering:') . '</strong>';
@@ -694,14 +693,14 @@ class ViewUI implements ViewStorageInterface {
               }
 
               $rows['query'][] = array(
-                SafeMarkup::set('<strong>' . t('Other queries') . '</strong>'),
+                array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'Other queries' %}</strong>")),
                 SafeMarkup::set('<pre>' . $queries . '</pre>'),
               );
             }
           }
           if ($show_info) {
             $rows['query'][] = array(
-              SafeMarkup::set('<strong>' . t('Title') . '</strong>'),
+              array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'Title' %}</strong>")),
               Xss::filterAdmin($this->executable->getTitle()),
             );
             if (isset($path)) {

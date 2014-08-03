@@ -8,7 +8,6 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
@@ -401,14 +400,10 @@ abstract class DisplayOverviewBase extends OverviewBase {
         $this->alterSettingsSummary($summary, $plugin, $field_definition);
 
         if (!empty($summary)) {
-          $summary_escaped = '';
-          $separator = '';
-          foreach ($summary as $summary_item) {
-            $summary_escaped .= $separator . SafeMarkup::escape($summary_item);
-            $separator = '<br />';
-          }
           $field_row['settings_summary'] = array(
-            '#markup' => SafeMarkup::set('<div class="field-plugin-summary">' . $summary_escaped . '</div>'),
+            '#type' => 'inline_template',
+            '#template' => '<div class="field-plugin-summary">{{ summary|safe_join("<br />") }}</div>',
+            '#context' => array('summary' => $summary),
             '#cell_attributes' => array('class' => array('field-plugin-summary-cell')),
           );
         }
