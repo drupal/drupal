@@ -59,11 +59,19 @@ class XssTest extends UnitTestCase {
    *   The expected result.
    * @param string $message
    *   The assertion message to display upon failure.
+   * @param array $allowed_tags
+   *   (optional) The allowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestFilterXssNormalized
    */
-  public function testFilterXssNormalized($value, $expected, $message) {
-    $this->assertNormalized(Xss::filter($value), $expected, $message);
+  public function testFilterXssNormalized($value, $expected, $message, array $allowed_tags = NULL) {
+    if ($allowed_tags === NULL) {
+      $value = Xss::filter($value);
+    }
+    else {
+      $value = Xss::filter($value, $allowed_tags);
+    }
+    $this->assertNormalized($value, $expected, $message);
   }
 
   /**
@@ -76,6 +84,8 @@ class XssTest extends UnitTestCase {
    *     - The value to filter.
    *     - The value to expect after filtering.
    *     - The assertion message.
+   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *       \Drupal\Component\Utility\Xss::filter().
    */
   public function providerTestFilterXssNormalized() {
     return array(
@@ -93,6 +103,13 @@ class XssTest extends UnitTestCase {
         "Who&amp;amp;#039; Online",
         "who&amp;#039; online",
         'HTML filter -- double encoded html entity number',
+      ),
+      // Custom elements with dashes in the tag name.
+      array(
+        "<test-element></test-element>",
+        "<test-element></test-element>",
+        'Custom element with dashes in tag name.',
+        array('test-element'),
       ),
     );
   }
