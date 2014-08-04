@@ -1,12 +1,12 @@
-entity.view_mode_edit:
+entity.view_mode.edit_form:
   title: 'Edit'
-  route_name: entity.view_mode_edit
-  base_route: entity.view_mode_edit
+  route_name: entity.view_mode.edit_form
+  base_route: entity.view_mode.edit_form
 
-entity.form_mode_edit:
+entity.form_mode.edit_form:
   title: 'Edit'
-  route_name: entity.form_mode_edit
-  base_route: entity.form_mode_edit
+  route_name: entity.form_mode.edit_form
+  base_route: entity.form_mode.edit_form
 
 entity.view_mode_list:
   title: List

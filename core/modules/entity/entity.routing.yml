@@ -30,7 +30,7 @@ entity.view_mode_add_type:
   requirements:
     _permission: 'administer display modes'
 
-entity.view_mode_edit:
+entity.view_mode.edit_form:
   path: '/admin/structure/display-modes/view/manage/{view_mode}'
   defaults:
     _entity_form: 'view_mode.edit'
@@ -38,7 +38,7 @@ entity.view_mode_edit:
   requirements:
     _entity_access: 'view_mode.update'
 
-entity.view_mode_delete:
+entity.view_mode.delete_form:
   path: '/admin/structure/display-modes/view/manage/{view_mode}/delete'
   defaults:
     _entity_form: 'view_mode.delete'
@@ -70,7 +70,7 @@ entity.form_mode_add_type:
   requirements:
     _permission: 'administer display modes'
 
-entity.form_mode_edit:
+entity.form_mode.edit_form:
   path: '/admin/structure/display-modes/form/manage/{form_mode}'
   defaults:
     _entity_form: 'form_mode.edit'
@@ -78,7 +78,7 @@ entity.form_mode_edit:
   requirements:
     _entity_access: 'form_mode.update'
 
-entity.form_mode_delete:
+entity.form_mode.delete_form:
   path: '/admin/structure/display-modes/form/manage/{form_mode}/delete'
   defaults:
     _entity_form: 'form_mode.delete'

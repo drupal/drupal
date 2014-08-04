@@ -46,8 +46,8 @@ use Drupal\entity\EntityViewModeInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "entity.view_mode_delete",
- *     "edit-form" = "entity.view_mode_edit"
+ *     "delete-form" = "entity.view_mode.delete_form",
+ *     "edit-form" = "entity.view_mode.edit_form"
  *   }
  * )
  */
