@@ -212,7 +212,7 @@ class SwitchShortcutSet extends FormBase {
         drupal_set_message($this->t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
       }
       $form_state['redirect_route'] = array(
-        'route_name' => 'shortcut.set_customize',
+        'route_name' => 'entity.shortcut_set.customize_form',
         'route_parameters' => array(
           'shortcut_set' => $set->id(),
         ),

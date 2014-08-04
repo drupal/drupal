@@ -88,7 +88,7 @@ class ShortcutForm extends ContentEntityForm {
     drupal_set_message($message);
 
     $form_state['redirect_route'] = array(
-      'route_name' => 'shortcut.set_customize',
+      'route_name' => 'entity.shortcut_set.customize_form',
       'route_parameters' => array('shortcut_set' => $entity->bundle()),
     );
   }

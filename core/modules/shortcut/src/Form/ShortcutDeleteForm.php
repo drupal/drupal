@@ -34,7 +34,7 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('shortcut.set_customize', array(
+    return new Url('entity.shortcut_set.customize_form', array(
       'shortcut_set' => $this->entity->bundle(),
     ));
   }

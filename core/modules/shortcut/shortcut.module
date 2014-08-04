@@ -35,7 +35,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
 
     case 'shortcut.set_admin':
     case 'shortcut.set_add':
-    case 'shortcut.set_edit':
+    case 'entity.shortcut_set.edit_form':
       $user = \Drupal::currentUser();
       if ($user->hasPermission('access shortcuts') && $user->hasPermission('switch shortcut sets')) {
         $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
@@ -381,7 +381,7 @@ function shortcut_preprocess_page(&$variables) {
     else {
       $query['id'] = $shortcut_id;
       $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Remove from shortcuts');
-      $route_name = 'shortcut.link_delete';
+      $route_name = 'entity.shortcut.delete_form';
       $route_parameters = array('shortcut' => $shortcut_id);
     }
 
@@ -419,7 +419,7 @@ function shortcut_toolbar() {
       $configure_link = array(
         '#type' => 'link',
         '#title' => t('Edit shortcuts'),
-        '#route_name' => 'shortcut.set_customize',
+        '#route_name' => 'entity.shortcut_set.customize_form',
         '#route_parameters' => array('shortcut_set' => $shortcut_set->id()),
         '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
       );

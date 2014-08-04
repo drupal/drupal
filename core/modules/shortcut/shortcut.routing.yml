@@ -1,4 +1,4 @@
-shortcut.set_delete:
+entity.shortcut_set.delete_form:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
   defaults:
     _entity_form: 'shortcut_set.delete'
@@ -22,7 +22,7 @@ shortcut.set_add:
   requirements:
     _entity_create_access: 'shortcut_set'
 
-shortcut.set_edit:
+entity.shortcut_set.edit_form:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
   defaults:
     _entity_form: 'shortcut_set.edit'
@@ -38,7 +38,7 @@ shortcut.link_add_inline:
     _entity_access: 'shortcut_set.update'
     _csrf_token: 'TRUE'
 
-shortcut.set_customize:
+entity.shortcut_set.customize_form:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize'
   defaults:
     _entity_form: 'shortcut_set.customize'
@@ -54,7 +54,7 @@ shortcut.link_add:
   requirements:
     _entity_create_access: 'shortcut:{shortcut_set}'
 
-shortcut.link_edit:
+entity.shortcut.canonical:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}'
   defaults:
     _entity_form: 'shortcut.default'
@@ -62,7 +62,7 @@ shortcut.link_edit:
   requirements:
     _entity_access: 'shortcut.update'
 
-shortcut.link_delete:
+entity.shortcut.delete_form:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}/delete'
   defaults:
     _entity_form: 'shortcut.delete'
