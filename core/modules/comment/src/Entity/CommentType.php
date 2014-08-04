@@ -34,9 +34,9 @@ use Drupal\comment\CommentTypeInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "comment.type_delete",
- *     "edit-form" = "comment.type_edit",
- *     "add-form" = "comment.type_add"
+ *     "delete-form" = "entity.comment_type.delete_form",
+ *     "edit-form" = "entity.comment_type.edit_form",
+ *     "add-form" = "entity.comment_type.add_form"
  *   }
  * )
  */

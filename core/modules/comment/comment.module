@@ -98,7 +98,7 @@ function comment_help($route_name, RouteMatchInterface $route_match) {
  */
 function comment_uri(CommentInterface $comment) {
   return new Url(
-    'comment.permalink',
+    'entity.comment.canonical',
     array(
       'comment' => $comment->id(),
     ),

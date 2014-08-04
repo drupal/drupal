@@ -16,7 +16,7 @@ comment.admin_approval:
   requirements:
     _permission: 'administer comments'
 
-comment.edit_page:
+entity.comment.edit_form:
   path: '/comment/{comment}/edit'
   defaults:
     _title: 'Edit'
@@ -34,7 +34,7 @@ comment.approve:
     _entity_access: 'comment.approve'
     _csrf_token: 'TRUE'
 
-comment.permalink:
+entity.comment.canonical:
   path: '/comment/{comment}'
   defaults:
     _title: 'Comment permalink'
@@ -42,7 +42,7 @@ comment.permalink:
   requirements:
     _entity_access: 'comment.view'
 
-comment.confirm_delete:
+entity.comment.delete_form:
   path: '/comment/{comment}/delete'
   defaults:
     _title: 'Delete'
@@ -84,7 +84,7 @@ comment.type_list:
   options:
     _admin_route: TRUE
 
-comment.type_delete:
+entity.comment_type.delete_form:
   path: '/admin/structure/comment/manage/{comment_type}/delete'
   defaults:
     _entity_form: 'comment_type.delete'
@@ -94,7 +94,7 @@ comment.type_delete:
   options:
     _admin_route: TRUE
 
-comment.type_add:
+entity.comment_type.add_form:
   path: '/admin/structure/comment/types/add'
   defaults:
     _entity_form: 'comment_type.add'
@@ -104,7 +104,7 @@ comment.type_add:
   options:
     _admin_route: TRUE
 
-comment.type_edit:
+entity.comment_type.edit_form:
   path: '/admin/structure/comment/manage/{comment_type}'
   defaults:
     _entity_form: 'comment_type.edit'

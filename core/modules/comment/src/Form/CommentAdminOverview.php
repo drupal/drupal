@@ -216,7 +216,7 @@ class CommentAdminOverview extends FormBase {
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'route_name' => 'comment.edit_page',
+        'route_name' => 'entity.comment.edit_form',
         'route_parameters' => array('comment' => $comment->id()),
         'options' => $comment_uri_options,
         'query' => $destination,
