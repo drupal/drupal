@@ -1,4 +1,4 @@
-contact.category_delete:
+entity.contact_category.delete_form:
   path: '/admin/structure/contact/manage/{contact_category}/delete'
   defaults:
     _entity_form: 'contact_category.delete'
@@ -22,7 +22,7 @@ contact.category_add:
   requirements:
     _permission: 'administer contact forms'
 
-contact.category_edit:
+entity.contact_category.edit_form:
   path: '/admin/structure/contact/manage/{contact_category}'
   defaults:
     _entity_form: 'contact_category.edit'

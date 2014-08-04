@@ -32,7 +32,7 @@ use Drupal\Core\Field\FieldDefinition;
  *   bundle_entity_type = "contact_category",
  *   fieldable = TRUE,
  *   links = {
- *     "admin-form" = "contact.category_edit"
+ *     "admin-form" = "entity.contact_category.edit_form"
  *   }
  * )
  */
