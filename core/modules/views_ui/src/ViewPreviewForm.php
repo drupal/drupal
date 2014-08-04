@@ -117,7 +117,7 @@ class ViewPreviewForm extends ViewFormBase {
           'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $this->displayID,
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
-          'progress' => array('type' => 'throbber'),
+          'progress' => array('type' => 'fullscreen'),
           'method' => 'replaceWith',
         ),
       ),

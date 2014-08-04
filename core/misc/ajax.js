@@ -467,6 +467,10 @@
       }
       $(this.element).after(this.progress.element);
     }
+    else if (this.progress.type === 'fullscreen') {
+      this.progress.element = $('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
+      $('body').after(this.progress.element);
+    }
   };
 
   /**

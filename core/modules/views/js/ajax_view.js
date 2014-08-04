@@ -56,7 +56,7 @@
       setClick: true,
       event: 'click',
       selector: selector,
-      progress: { type: 'throbber' }
+      progress: { type: 'fullscreen' }
     };
 
     this.settings = settings;

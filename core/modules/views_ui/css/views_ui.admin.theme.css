@@ -1087,27 +1087,6 @@ td.group-title {
 
 /* @end */
 
-/* @group AJAX */
-
-/* Hide the drupal system throbber image */
-.ajax-progress .throbber {
-  display: none;
-}
-
-.ajax-progress-throbber {
-  background-color: #232323;
-  background-image: url(../images/loading-small.gif);
-  background-position: center center;
-  background-repeat: no-repeat;
-  border-radius: 7px;
-  height: 24px;
-  opacity: 0.9;
-  padding: 4px;
-  width: 24px;
-}
-
-/* @end */
-
 /* @group Drupal
  *
  * Overrides to Drupal system CSS
