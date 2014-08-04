@@ -711,7 +711,7 @@ function locale_form_language_admin_add_form_alter(&$form, FormStateInterface $f
  *
  * Set a batch for a newly-added language.
  */
-function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
+function locale_form_language_admin_add_form_alter_submit($form, FormStateInterface $form_state) {
   if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
     if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
       $langcode = $form_state['values']['langcode'];
@@ -751,7 +751,7 @@ function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $
 /**
  * Form submission handler for language_admin_edit_form().
  */
-function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
+function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state) {
   \Drupal::config('locale.settings')->set('translate_english', intval($form_state['values']['locale_translate_english']))->save();
 }
 
@@ -770,7 +770,7 @@ function locale_translate_english() {
  *
  * Add interface translation directory setting to directories configuration.
  */
-function locale_form_system_file_system_settings_alter(&$form, $form_state) {
+function locale_form_system_file_system_settings_alter(&$form, FormStateInterface $form_state) {
   $form['translation_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Interface translations directory'),
@@ -794,7 +794,7 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  * changes. Without a translations directory local po files in the directory
  * should be ignored. The old translation status is no longer valid.
  */
-function locale_system_file_system_settings_submit(&$form, $form_state) {
+function locale_system_file_system_settings_submit(&$form, FormStateInterface $form_state) {
   if ($form['translation_path']['#default_value'] != $form_state['values']['translation_path']) {
     locale_translation_clear_status();
   }

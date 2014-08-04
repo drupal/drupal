@@ -94,7 +94,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   return $form;
  * }
  *
- * function ajax_example_simplest_callback($form, $form_state) {
+ * function ajax_example_simplest_callback($form, FormStateInterface $form_state) {
  *   // The form has already been submitted and updated. We can return the replaced
  *   // item as it is.
  *   return $form['replace_textfield'];

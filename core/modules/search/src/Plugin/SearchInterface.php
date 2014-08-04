@@ -120,6 +120,6 @@ interface SearchInterface extends PluginInspectionInterface {
    *
    * @see SearchInterface::searchFormAlter()
    */
-  public function buildSearchUrlQuery($form_state);
+  public function buildSearchUrlQuery(FormStateInterface $form_state);
 
 }

@@ -399,7 +399,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Return the was_defaulted, is_defaulted and revert state of a form.
    */
-  public function getOverrideValues($form, $form_state) {
+  public function getOverrideValues($form, FormStateInterface $form_state) {
     // Make sure the dropdown exists in the first place.
     if (isset($form_state['values']['override']['dropdown'])) {
       // #default_value is used to determine whether it was the default value or not.

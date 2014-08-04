@@ -484,7 +484,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   it back into $element['#default_value'] so that the form will be rendered
    *   with the correct value selected.
    */
-  public static function getSelected($form_state, $parents, $default_value, $element) {
+  public static function getSelected(FormStateInterface $form_state, $parents, $default_value, $element) {
     // For now, don't trust this to work on anything but a #select element.
     if (!isset($element['#type']) || $element['#type'] != 'select' || !isset($element['#options'])) {
       return $default_value;
@@ -674,7 +674,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array whose keys are the names of each display and whose values are
    *   arrays of options for that display.
    */
-  protected function buildDisplayOptions($form, $form_state) {
+  protected function buildDisplayOptions($form, FormStateInterface $form_state) {
     // Display: Master
     $display_options['default'] = $this->defaultDisplayOptions();
     $display_options['default'] += array(
@@ -705,7 +705,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Alters the full array of display options before they are added to the view.
    */
-  protected function alterDisplayOptions(&$display_options, $form, $form_state) {
+  protected function alterDisplayOptions(&$display_options, $form, FormStateInterface $form_state) {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
       $style_plugin = Views::pluginManager('style')->createInstance($options['style']['type']);
@@ -716,7 +716,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Adds the array of display options to the view, with appropriate overrides.
    */
-  protected function addDisplays(View $view, $display_options, $form, $form_state) {
+  protected function addDisplays(View $view, $display_options, $form, FormStateInterface $form_state) {
     // Initialize and store the view executable to get the display plugin
     // instances.
     $executable = $view->getExecutable();
@@ -830,7 +830,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of filter arrays keyed by ID. A sort array contains the options
    *   accepted by a filter handler.
    */
-  protected function defaultDisplayFilters($form, $form_state) {
+  protected function defaultDisplayFilters($form, FormStateInterface $form_state) {
     $filters = array();
 
     // Add any filters provided by the plugin.
@@ -915,7 +915,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of sort arrays keyed by ID. A sort array contains the options
    *   accepted by a sort handler.
    */
-  protected function defaultDisplaySorts($form, $form_state) {
+  protected function defaultDisplaySorts($form, FormStateInterface $form_state) {
     $sorts = array();
 
     // Add any sorts provided by the plugin.
@@ -941,7 +941,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array of sort arrays keyed by ID. A sort array contains the options
    *   accepted by a sort handler.
    */
-  protected function defaultDisplaySortsUser($form, $form_state) {
+  protected function defaultDisplaySortsUser($form, FormStateInterface $form_state) {
     $sorts = array();
 
     // Don't add a sort if there is no form value or the user set the sort to
@@ -1056,7 +1056,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    *   Returns an array of display options.
    */
-  protected function pageFeedDisplayOptions($form, $form_state) {
+  protected function pageFeedDisplayOptions($form, FormStateInterface $form_state) {
     $display_options = array();
     $display_options['pager']['type'] = 'some';
     $display_options['style'] = array('type' => 'rss');

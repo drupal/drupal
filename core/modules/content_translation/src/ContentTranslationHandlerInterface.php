@@ -44,7 +44,7 @@ interface ContentTranslationHandlerInterface {
    * @return string
    *   The source language code.
    */
-  public function getSourceLangcode($form_state);
+  public function getSourceLangcode(FormStateInterface $form_state);
 
   /**
    * Marks translations as outdated.

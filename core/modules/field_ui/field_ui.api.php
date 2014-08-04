@@ -29,7 +29,7 @@
  *
  * @see \Drupal\field_ui\DisplayOverView.
  */
-function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\FormatterInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $view_mode, $form, $form_state) {
+function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\FormatterInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $view_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $element = array();
   // Add a 'my_setting' checkbox to the settings form for 'foo_formatter' field
   // formatters.
@@ -62,7 +62,7 @@ function hook_field_formatter_third_party_settings_form(\Drupal\Core\Field\Forma
  *
  * @see \Drupal\field_ui\FormDisplayOverView.
  */
-function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $form_mode, $form, $form_state) {
+function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetInterface $plugin, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, $form_mode, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $element = array();
   // Add a 'my_setting' checkbox to the settings form for 'foo_widget' field
   // widgets.

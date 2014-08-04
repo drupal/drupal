@@ -8,6 +8,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a base class for tableselect forms.
@@ -27,7 +28,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    * @return array
    *   A form with a tableselect element and a submit button.
    */
-  function tableselectFormBuilder($form, $form_state, $element_properties) {
+  function tableselectFormBuilder($form, FormStateInterface $form_state, $element_properties) {
     list($header, $options) = _form_test_tableselect_get_data();
 
     $form['tableselect'] = $element_properties;

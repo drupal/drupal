@@ -169,7 +169,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    * @return \Drupal\Core\Form\FormInterface
    *   The form object to use.
    */
-  protected function getFormObject($form_state) {
+  protected function getFormObject(FormStateInterface $form_state) {
     // If this is a class, instantiate it.
     $form_step_class = isset($form_state['step_controller'][$form_state['step']]) ? $form_state['step_controller'][$form_state['step']] : 'Drupal\views\Form\ViewsFormMainForm';
     return $this->classResolver->getInstanceFromDefinition($form_step_class);

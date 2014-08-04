@@ -480,7 +480,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /*
    * {@inheritdoc}
    */
-  public function buildSearchUrlQuery($form_state) {
+  public function buildSearchUrlQuery(FormStateInterface $form_state) {
     // Read keyword and advanced search information from the form values,
     // and put these into the GET parameters.
     $keys = trim($form_state['values']['keys']);

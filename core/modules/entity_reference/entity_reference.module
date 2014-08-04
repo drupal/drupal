@@ -106,7 +106,7 @@ function entity_reference_field_storage_config_update(FieldStorageConfigInterfac
  *
  * @see entity_reference_field_instance_settings_form()
  */
-function _entity_reference_field_instance_settings_ajax_process($form, $form_state) {
+function _entity_reference_field_instance_settings_ajax_process($form, FormStateInterface $form_state) {
   _entity_reference_field_instance_settings_ajax_process_element($form, $form);
   return $form;
 }
@@ -158,7 +158,7 @@ function _entity_reference_element_validate_filter(&$element, FormStateInterface
  *
  * @see entity_reference_field_instance_settings_form()
  */
-function entity_reference_settings_ajax($form, $form_state) {
+function entity_reference_settings_ajax($form, FormStateInterface $form_state) {
   $trigger = $form_state['triggering_element'];
   return NestedArray::getValue($form, $trigger['#ajax']['element']);
 }

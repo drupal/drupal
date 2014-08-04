@@ -231,7 +231,7 @@ function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
  * @return
  *   The rendered parent page select element.
  */
-function book_form_update($form, $form_state) {
+function book_form_update($form, FormStateInterface $form_state) {
   return $form['book']['pid'];
 }
 
@@ -352,7 +352,7 @@ function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterf
  *
  * @see node_delete_confirm()
  */
-function book_form_node_delete_confirm_alter(&$form, $form_state) {
+function book_form_node_delete_confirm_alter(&$form, FormStateInterface $form_state) {
   $node = node_load($form['nid']['#value']);
 
   if (isset($node->book) && $node->book['has_children']) {

@@ -76,7 +76,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSourceLangcode($form_state) {
+  public function getSourceLangcode(FormStateInterface $form_state) {
     return isset($form_state['content_translation']['source']) ? $form_state['content_translation']['source']->id : FALSE;
   }
 
@@ -288,7 +288,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
-  public function entityFormSharedElements($element, $form_state, $form) {
+  public function entityFormSharedElements($element, FormStateInterface $form_state, $form) {
     static $ignored_types;
 
     // @todo Find a more reliable way to determine if a form element concerns a

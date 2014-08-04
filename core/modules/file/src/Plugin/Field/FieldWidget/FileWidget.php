@@ -279,7 +279,7 @@ class FileWidget extends WidgetBase {
    *
    * This method is assigned as a #value_callback in formElement() method.
    */
-  public static function value($element, $input = FALSE, $form_state) {
+  public static function value($element, $input = FALSE, FormStateInterface $form_state) {
     if ($input) {
       // Checkboxes lose their value when empty.
       // If the display field is present make sure its unchecked value is saved.

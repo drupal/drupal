@@ -415,7 +415,7 @@ class ModulesListForm extends FormBase {
    * @return array
    *   An array of modules to install and their dependencies.
    */
-  protected function buildModuleList($form_state) {
+  protected function buildModuleList(FormStateInterface $form_state) {
     $packages = $form_state['values']['modules'];
 
     // Build a list of modules to install.

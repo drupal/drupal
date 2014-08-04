@@ -193,7 +193,7 @@ function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state) {
  * @return
  *   The part of the form that has changed.
  */
-function views_ui_ajax_update_form($form, $form_state) {
+function views_ui_ajax_update_form($form, FormStateInterface $form_state) {
   // The region that needs to be updated was stored in a property of the
   // triggering element by views_ui_add_ajax_trigger(), so all we have to do is
   // retrieve that here.
@@ -325,7 +325,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
  * Create the menu path for one of our standard AJAX forms based upon known
  * information about the form.
  */
-function views_ui_build_form_path($form_state) {
+function views_ui_build_form_path(FormStateInterface $form_state) {
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
   $name = $form_state['view']->id();
   $path = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";

@@ -70,7 +70,7 @@ function editor_element_info() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function editor_form_filter_admin_overview_alter(&$form, $form_state) {
+function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $form_state) {
   // @todo Cleanup column injection: http://drupal.org/node/1876718
   // Splice in the column for "Text editor" into the header.
   $position = array_search('name', $form['formats']['#header']) + 1;

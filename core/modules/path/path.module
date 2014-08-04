@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -54,7 +55,7 @@ function path_permission() {
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
-function path_form_node_form_alter(&$form, $form_state) {
+function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $node = $form_state['controller']->getEntity();
   if ($node->hasField('path') && $node->get('path')->access('edit')) {
     $form['path_settings'] = array(

@@ -176,7 +176,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    *
    * @see \Drupal\entity\Entity\EntityFormDisplay::buildForm()
    */
-  public function processForm($element, $form_state, $form) {
+  public function processForm($element, FormStateInterface $form_state, $form) {
     // Assign the weights configured in the form display.
     foreach ($this->getComponents() as $name => $options) {
       if (isset($element[$name])) {
