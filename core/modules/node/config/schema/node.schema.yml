@@ -124,7 +124,7 @@ action.configuration.node_unpublish_by_keyword_action:
       type: sequence
       label: 'Keywords'
       sequence:
-        - type: sequence
+        - type: string
           label: 'Keyword'
 
 block.settings.node_syndicate_block:
