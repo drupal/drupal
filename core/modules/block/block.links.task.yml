@@ -1,7 +1,7 @@
-block.admin_edit:
+entity.block.edit_form:
   title: 'Configure block'
-  route_name: block.admin_edit
-  base_route: block.admin_edit
+  route_name: entity.block.edit_form
+  base_route: entity.block.edit_form
 
 # Per theme block layout pages.
 block.admin_display:

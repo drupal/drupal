@@ -9,7 +9,7 @@ block.admin_demo:
   options:
     _admin_route: FALSE
 
-block.admin_block_delete:
+entity.block.delete_form:
   path: '/admin/structure/block/manage/{block}/delete'
   defaults:
     _entity_form: 'block.delete'
@@ -17,7 +17,7 @@ block.admin_block_delete:
   requirements:
     _permission: 'administer blocks'
 
-block.admin_edit:
+entity.block.edit_form:
   path: '/admin/structure/block/manage/{block}'
   defaults:
     _entity_form: 'block.default'

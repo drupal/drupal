@@ -92,7 +92,7 @@ use Drupal\Core\Template\Attribute;
  * Some routes have placeholders in them, and these can also be defined in a
  * module_name.routing.yml file, as in this example from the Block module:
  * @code
- * block.admin_edit:
+ * entity.block.edit_form:
  *   path: '/admin/structure/block/manage/{block}'
  *   defaults:
  *     _entity_form: 'block.default'
@@ -240,7 +240,7 @@ use Drupal\Core\Template\Attribute;
  * @code
  * block_configure:
  *   title: 'Configure block'
- *   route_name: 'block.admin_edit'
+ *   route_name: 'entity.block.edit_form'
  *   group: 'block'
  * @endcode
  * Some notes:

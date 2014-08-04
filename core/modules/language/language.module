@@ -73,7 +73,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('Changing the selected language here (and leaving this option as the last among the detection and selection options) is the easiest way to change the fallback language for the website, if you need to change how your site works by default (e.g., when using an empty path prefix or using the default domain). <a href="!admin-change-language">Changing the site\'s default language</a> itself might have other undesired side effects.', array('!admin-change-language' => \Drupal::url('language.admin_overview'))) . '</p>';
       return $output;
 
-    case 'block.admin_edit':
+    case 'entity.block.edit_form':
       if (($block = $route_match->getParameter('block')) && $block->get('plugin') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }

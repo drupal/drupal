@@ -352,7 +352,7 @@ use Drupal\Core\Render\Element;
  * the @link menu Menu and routing @endlink topic for more information. Here
  * is a typical entry, for the block configure form:
  * @code
- * block.admin_edit:
+ * entity.block.edit_form:
  *   path: '/admin/structure/block/manage/{block}'
  *   defaults:
  *     _entity_form: 'block.default'
