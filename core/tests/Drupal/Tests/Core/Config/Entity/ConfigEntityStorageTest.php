@@ -69,13 +69,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $configFactory;
 
   /**
-   * The config storage service.
-   *
-   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $configStorage;
-
-  /**
    * The entity query.
    *
    * @var \Drupal\Core\Entity\Query\QueryInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -139,14 +132,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('getDefaultLanguage')
       ->will($this->returnValue(new Language(array('langcode' => 'en'))));
 
-    $this->configStorage = $this->getConfigStorageStub(array());
-
     $this->configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
 
     $this->entityQuery = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
 
     $this->entityStorage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
-      ->setConstructorArgs(array($this->entityType, $this->configFactory, $this->configStorage, $this->uuidService, $this->languageManager))
+      ->setConstructorArgs(array($this->entityType, $this->configFactory, $this->uuidService, $this->languageManager))
       ->setMethods(array('getQuery'))
       ->getMock();
     $this->entityStorage->expects($this->any())
@@ -642,8 +633,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       )));
 
     $this->configFactory->expects($this->once())
+      ->method('listAll')
+      ->with('the_config_prefix.')
+      ->will($this->returnValue(array('the_config_prefix.foo' , 'the_config_prefix.bar')));
+    $this->configFactory->expects($this->once())
       ->method('loadMultiple')
-      ->with(array())
+      ->with(array('the_config_prefix.foo' , 'the_config_prefix.bar'))
       ->will($this->returnValue(array($foo_config_object, $bar_config_object)));
     $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')

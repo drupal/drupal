@@ -58,8 +58,6 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
    *   The entity type definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The config storage service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -71,8 +69,8 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
    * @param \Drupal\Component\Plugin\PluginManagerInterface\FieldTypePluginManagerInterface
    *   The field type plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, StateInterface $state, FieldTypePluginManagerInterface $field_type_manager) {
-    parent::__construct($entity_type, $config_factory, $config_storage, $uuid_service, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, StateInterface $state, FieldTypePluginManagerInterface $field_type_manager) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
     $this->entityManager = $entity_manager;
     $this->state = $state;
     $this->fieldTypeManager = $field_type_manager;
@@ -85,7 +83,6 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     return new static(
       $entity_type,
       $container->get('config.factory'),
-      $container->get('config.storage'),
       $container->get('uuid'),
       $container->get('language_manager'),
       $container->get('entity.manager'),

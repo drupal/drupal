@@ -88,18 +88,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   The entity type definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The config storage service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_type);
 
     $this->configFactory = $config_factory;
-    $this->configStorage = $config_storage;
     $this->uuidService = $uuid_service;
     $this->languageManager = $language_manager;
   }
@@ -111,7 +108,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     return new static(
       $entity_type,
       $container->get('config.factory'),
-      $container->get('config.storage'),
       $container->get('uuid'),
       $container->get('language_manager')
     );
@@ -159,7 +155,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
 
     // Get the names of the configuration entities we are going to load.
     if ($ids === NULL) {
-      $names = $this->configStorage->listAll($prefix);
+      $names = $this->configFactory->listAll($prefix);
     }
     else {
       $names = array();
