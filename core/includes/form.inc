@@ -615,12 +615,12 @@ function form_type_token_value($element, $input = FALSE) {
  * Changes submitted form values during form validation.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->setValue().
+ *   Use $form_state->setValueForElement().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::setValue().
+ * @see \Drupal\Core\Form\FormStateInterface::setValueForElement().
  */
 function form_set_value($element, $value, FormStateInterface $form_state) {
-  \Drupal::formBuilder()->setValue($element, $value, $form_state);
+  $form_state->setValueForElement($element, $value);
 }
 
 /**

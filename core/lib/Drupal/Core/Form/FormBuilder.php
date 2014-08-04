@@ -1019,7 +1019,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Set the element's value in $form_state['values'], but only, if its key
     // does not exist yet (a #value_callback may have already populated it).
     if (!NestedArray::keyExists($form_state->getValues(), $element['#parents'])) {
-      $this->setValue($element, $element['#value'], $form_state);
+      $form_state->setValueForElement($element, $element['#value']);
     }
   }
 
@@ -1081,15 +1081,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       return TRUE;
     }
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValue($element, $value, FormStateInterface &$form_state) {
-    $values = $form_state->getValues();
-    NestedArray::setValue($values, $element['#parents'], $value, TRUE);
-    $form_state->set('values', $values);
   }
 
   /**

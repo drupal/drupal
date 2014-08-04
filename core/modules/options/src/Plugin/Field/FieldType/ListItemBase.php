@@ -145,7 +145,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
         }
       }
 
-      \Drupal::formBuilder()->setValue($element, $values, $form_state);
+      $form_state->setValueForElement($element, $values);
     }
   }
 

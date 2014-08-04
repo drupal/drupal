@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -567,7 +568,7 @@ class FormState implements FormStateInterface, \ArrayAccess {
    * {@inheritdoc}
    */
   public function getValues() {
-    return $this->values;
+    return $this->values ?: array();
   }
 
   /**
@@ -576,6 +577,16 @@ class FormState implements FormStateInterface, \ArrayAccess {
   public function addValue($property, $value) {
     $values = $this->getValues();
     $values[$property] = $value;
+    $this->set('values', $values);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValueForElement($element, $value) {
+    $values = $this->getValues();
+    NestedArray::setValue($values, $element['#parents'], $value, TRUE);
     $this->set('values', $values);
     return $this;
   }

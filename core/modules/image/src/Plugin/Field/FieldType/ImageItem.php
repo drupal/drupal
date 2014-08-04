@@ -396,7 +396,7 @@ class ImageItem extends FileItem {
     else {
       $value = 0;
     }
-    \Drupal::formBuilder()->setValue($element, $value, $form_state);
+    $form_state->setValueForElement($element, $value);
   }
 
   /**

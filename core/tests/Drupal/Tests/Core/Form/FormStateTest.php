@@ -159,4 +159,28 @@ class FormStateTest extends UnitTestCase {
     $form_state->setErrorByName('test', 'message');
   }
 
+  /**
+   * Tests that setting the value for an element adds to the values.
+   *
+   * @covers ::setValueForElement
+   */
+  public function testSetValueForElement() {
+    $element = array(
+      '#parents' => array(
+        'foo',
+        'bar',
+      ),
+    );
+    $value = $this->randomName();
+
+    $form_state = new FormState();
+    $form_state->setValueForElement($element, $value);
+    $expected = array(
+      'foo' => array(
+        'bar' => $value,
+      ),
+    );
+    $this->assertSame($expected, $form_state->getValues());
+  }
+
 }
