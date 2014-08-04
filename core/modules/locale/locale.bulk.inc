@@ -298,7 +298,7 @@ function locale_translate_batch_refresh(array &$context) {
     }
     if ($strings) {
       // Initialize multi-step string refresh.
-      $context['message'] = t('Updating translations for JavaScript and configuration strings.');
+      $context['message'] = t('Updating translations for JavaScript and default configuration.');
       $context['sandbox']['refresh']['strings'] = array_unique($strings);
       $context['sandbox']['refresh']['languages'] = $langcodes;
       $context['sandbox']['refresh']['names'] = array();
@@ -306,7 +306,7 @@ function locale_translate_batch_refresh(array &$context) {
       $context['sandbox']['refresh']['count'] = count($strings);
 
       // We will update strings on later steps.
-      $context['finished'] = 1 - 1 / $context['sandbox']['refresh']['count'];
+      $context['finished'] = 0;
     }
     else {
       $context['finished'] = 1;
@@ -316,6 +316,10 @@ function locale_translate_batch_refresh(array &$context) {
     // Refresh all languages for one object at a time.
     $count = locale_config_update_multiple(array($name), $context['sandbox']['refresh']['languages']);
     $context['results']['stats']['config'] += $count;
+    // Inherit finished information from the "parent" string lookup step so
+    // visual display of status will make sense.
+    $context['finished'] = $context['sandbox']['refresh']['names_finished'];
+    $context['message'] = t('Updating default configuration (@percent%).', array('@percent' => (int) ($context['finished'] * 100)));
   }
   elseif (!empty($context['sandbox']['refresh']['strings'])) {
     // Not perfect but will give some indication of progress.
@@ -327,10 +331,12 @@ function locale_translate_batch_refresh(array &$context) {
     _locale_refresh_translations($context['sandbox']['refresh']['languages'], $next);
     // Check whether we need to refresh configuration objects.
     if ($names = \Drupal\locale\Locale::config()->getStringNames($next)) {
+      $context['sandbox']['refresh']['names_finished'] = $context['finished'];
       $context['sandbox']['refresh']['names'] = $names;
     }
   }
   else {
+    $context['message'] = t('Updated default configuration.');
     $context['finished'] = 1;
   }
 }
