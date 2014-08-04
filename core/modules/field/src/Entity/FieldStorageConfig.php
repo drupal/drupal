@@ -642,20 +642,11 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * @todo Investigate in https://drupal.org/node/2074253.
    */
   public function __sleep() {
-    // Only serialize properties from self::toArray().
-    $properties = array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
-    // Serialize $entityTypeId property so that toArray() works when waking up.
-    $properties[] = 'entityTypeId';
-    return $properties;
-  }
-
-  /**
-   * Implements the magic __wakeup() method.
-   */
-  public function __wakeup() {
-    // Run the values from self::toArray() through __construct().
-    $values = array_intersect_key($this->toArray(), get_object_vars($this));
-    $this->__construct($values);
+    // Only serialize necessary properties, excluding those that can be
+    // recalculated.
+    $properties = get_object_vars($this);
+    unset($properties['schema'], $properties['propertyDefinitions']);
+    return array_keys($properties);
   }
 
   /**
