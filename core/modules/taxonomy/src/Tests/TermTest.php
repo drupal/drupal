@@ -98,6 +98,57 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
+   * Tests that many terms with parents show on each page
+   */
+  function testTaxonomyTermChildTerms() {
+    // Set limit to 10 terms per page. Set variable to 9 so 10 terms appear.
+    \Drupal::config('taxonomy.settings')->set('terms_per_page_admin', '9')->save();
+    $term1 = $this->createTerm($this->vocabulary);
+    $terms_array = '';
+
+    // Create 40 terms. Terms 1-12 get parent of $term1. All others are
+    // individual terms.
+    for ($x = 1; $x <= 40; $x++) {
+      $edit = array();
+      // Set terms in order so we know which terms will be on which pages.
+      $edit['weight'] = $x;
+
+      // Set terms 1-20 to be children of first term created.
+      if ($x <= 12) {
+        $edit['parent'] = $term1->id();
+      }
+      $term = $this->createTerm($this->vocabulary, $edit);
+      $children = taxonomy_term_load_children($term1->id());
+      $parents = taxonomy_term_load_parents($term->id());
+      $terms_array[$x] = taxonomy_term_load($term->id());
+    }
+
+    // Get Page 1.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertText($term1->getName(), 'Parent Term is displayed on Page 1');
+    for ($x = 1; $x <= 13; $x++) {
+      $this->assertText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' found on Page 1');
+    }
+
+    // Get Page 2.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', array('query' => array('page' => 1)));
+    $this->assertText($term1->getName(), 'Parent Term is displayed on Page 2');
+    for ($x = 1; $x <= 18; $x++) {
+      $this->assertText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' found on Page 2');
+    }
+
+    // Get Page 3.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', array('query' => array('page' => 2)));
+    $this->assertNoText($term1->getName(), 'Parent Term is not displayed on Page 3');
+    for ($x = 1; $x <= 17; $x++) {
+      $this->assertNoText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' not found on Page 3');
+    }
+    for ($x =18; $x <= 25; $x++) {
+      $this->assertText($terms_array[$x]->getName(), $terms_array[$x]->getName() . ' found on Page 3');
+    }
+  }
+
+  /**
    * Test that hook_node_$op implementations work correctly.
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.

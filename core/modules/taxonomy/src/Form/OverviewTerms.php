@@ -100,10 +100,10 @@ class OverviewTerms extends FormBase {
     // @todo taxonomy_get_tree needs to be converted to a service and injected.
     //   Will be fixed in http://drupal.org/node/1976298.
     $tree = taxonomy_get_tree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
-    $term = current($tree);
+    $tree_index = 0;
     do {
       // In case this tree is completely empty.
-      if (empty($term)) {
+      if (empty($tree[$tree_index])) {
         break;
       }
       $delta++;
@@ -119,13 +119,14 @@ class OverviewTerms extends FormBase {
       }
 
       // Do not let a term start the page that is not at the root.
+      $term = $tree[$tree_index];
       if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
         $back_step = 0;
-        while ($pterm = prev($tree)) {
+        while ($pterm = $tree[--$tree_index]) {
           $before_entries--;
           $back_step++;
           if ($pterm->depth == 0) {
-            prev($tree);
+            $tree_index--;
             // Jump back to the start of the root level parent.
             continue 2;
           }
@@ -159,7 +160,7 @@ class OverviewTerms extends FormBase {
         $root_entries++;
       }
       $current_page[$key] = $term;
-    } while ($term = next($tree));
+    } while (isset($tree[++$tree_index]));
 
     // Because we didn't use a pager query, set the necessary pager variables.
     $total_entries = $before_entries + $page_entries + $after_entries;
