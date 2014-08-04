@@ -17,8 +17,8 @@ use Drupal\views\Plugin\views\PluginBase;
  * @{
  * Plugins for argument defaults in Views.
  *
- * Argument default plugins provide default values for contextual filters.
- * This is useful for blocks and other display types lacking a natural argument
+ * Argument default plugins provide default values for contextual filters. This
+ * can be useful for blocks and other display types lacking a natural argument
  * input. Examples are plugins to extract node and user IDs from the URL.
  *
  * Argument default plugins extend

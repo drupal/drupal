@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\PluginBase;
  * @{
  * Plugins for validating views contextual filters.
  *
- * Views argument validator plugins validate contextual filters (arguments) on
+ * Views argument validator plugins validate arguments (contextual filters) on
  * views. They can ensure arguments are valid, and even do transformations on
  * the arguments. They can also provide replacement patterns for the view title.
  * For example, the 'content' validator verifies verifies that the argument

@@ -14,10 +14,9 @@ use Drupal\Core\Database\Query\Select;
 /**
  * @defgroup views_cache_plugins Views cache plugins
  * @{
- * Plugins to handle the storage and loading of Views caches.
+ * Plugins to handle Views caches.
  *
- * Cache plugins control the storage and loading of caches in Views, for
- * both result and render caching.
+ * Cache plugins control how caching is done in Views.
  *
  * Cache plugins extend \Drupal\views\Plugin\views\cache\CachePluginBase.
  * They must be annotated with \Drupal\views\Annotation\ViewsCache

@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
  * @{
  * Plugins that control how the collection of results is rendered in a view.
  *
- * Style plugins control a view is displayed. For the most part, they are
+ * Style plugins control how a view is displayed. For the most part, they are
  * object wrappers around theme templates. Examples of styles include HTML
  * lists, tables, full or teaser content views, etc.
  *

@@ -33,8 +33,11 @@ use Drupal\views\ViewExecutable;
  * The following items can go into a hook_views_data() implementation in a
  * field section to affect how the field handler will behave:
  * - additional fields: An array of fields that should be added to the query.
- *   The array is in the form of:
+ *   The array is in one of these forms:
  *   @code
+ *   // Simple form, for fields within the same table.
+ *   array('identifier' => fieldname)
+ *   // Form for fields in a different table.
  *   array('identifier' => array('table' => tablename, 'field' => fieldname))
  *   @endcode
  *   As many fields as are necessary may be in this array.
