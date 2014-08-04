@@ -220,7 +220,7 @@ system.date_format_add:
   requirements:
     _permission: 'administer site configuration'
 
-system.date_format_edit:
+entity.date_format.edit_form:
   path: '/admin/config/regional/date-time/formats/manage/{date_format}'
   defaults:
     _entity_form: 'date_format.edit'
@@ -228,7 +228,7 @@ system.date_format_edit:
   requirements:
     _entity_access: 'date_format.update'
 
-system.date_format_delete:
+entity.date_format.delete_form:
   path: '/admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
     _entity_form: 'date_format.delete'
