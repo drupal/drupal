@@ -274,5 +274,33 @@ class vfsStreamFileTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals(25, $this->file->size());
         $this->assertEquals("lorem ipsum\0\0\0\0\0\0\0\0\0\0\0\0\0\0", $this->file->getContent());
     }
+
+    /**
+     * @test
+     * @group  issue_79
+     * @since  1.3.0
+     */
+    public function withContentAcceptsAnyFileContentInstance()
+    {
+        $mockFileContent = $this->getMock('org\bovigo\vfs\content\FileContent');
+        $mockFileContent->expects($this->once())
+                        ->method('content')
+                        ->will($this->returnValue('foobarbaz'));
+        $this->assertEquals(
+                'foobarbaz',
+                $this->file->withContent($mockFileContent)
+                           ->getContent()
+        );
+    }
+
+    /**
+     * @test
+     * @group  issue_79
+     * @expectedException  \InvalidArgumentException
+     * @since  1.3.0
+     */
+    public function withContentThrowsInvalidArgumentExceptionWhenContentIsNoStringAndNoFileContent()
+    {
+        $this->file->withContent(313);
+    }
 }
-?>

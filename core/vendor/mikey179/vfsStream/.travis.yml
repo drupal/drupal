@@ -1,11 +1,25 @@
 language: php
 
 php:
+  - hhvm
+  - 5.6
   - 5.3
   - 5.4
   - 5.5
 
-before_script:
-  - composer install --dev
+matrix:
+  allow_failures:
+    - php: hhvm
+    - php: 5.6
 
-script: phpunit --coverage-text
+before_script:
+  - "mkdir -p ~/.composer"
+  - composer self-update
+  - composer install
+  - composer require satooshi/php-coveralls:dev-master
+
+script:
+  - vendor/bin/phpunit --coverage-text
+
+after_script:
+  - vendor/bin/coveralls

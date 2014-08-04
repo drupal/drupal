@@ -14,42 +14,99 @@ namespace org\bovigo\vfs;
 class vfsStreamContainerIteratorTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test method to be used for iterating
+     * instance to test
      *
-     * @test
+     * @type  vfsStreamDirectory
      */
-    public function iteration()
+    private $dir;
+    /**
+     * child one
+     *
+     * @type  \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $mockChild1;
+    /**
+     * child two
+     *
+     * @type  \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $mockChild2;
+
+    /**
+     * set up test environment
+     */
+    public function setUp()
     {
-        $dir = new vfsStreamDirectory('foo');
-        $mockChild1 = $this->getMock('org\\bovigo\\vfs\\vfsStreamContent');
-        $mockChild1->expects($this->any())
-                   ->method('getName')
-                   ->will($this->returnValue('bar'));
-        $dir->addChild($mockChild1);
-        $mockChild2 = $this->getMock('org\\bovigo\\vfs\\vfsStreamContent');
-        $mockChild2->expects($this->any())
-                   ->method('getName')
-                   ->will($this->returnValue('baz'));
-        $dir->addChild($mockChild2);
-        $dirIterator = $dir->getIterator();
-        $this->assertEquals('bar', $dirIterator->key());
-        $this->assertTrue($dirIterator->valid());
-        $bar = $dirIterator->current();
-        $this->assertSame($mockChild1, $bar);
-        $dirIterator->next();
-        $this->assertEquals('baz', $dirIterator->key());
-        $this->assertTrue($dirIterator->valid());
-        $baz = $dirIterator->current();
-        $this->assertSame($mockChild2, $baz);
-        $dirIterator->next();
+        $this->dir = new vfsStreamDirectory('foo');
+        $this->mockChild1 = $this->getMock('org\\bovigo\\vfs\\vfsStreamContent');
+        $this->mockChild1->expects($this->any())
+                         ->method('getName')
+                         ->will($this->returnValue('bar'));
+        $this->dir->addChild($this->mockChild1);
+        $this->mockChild2 = $this->getMock('org\\bovigo\\vfs\\vfsStreamContent');
+        $this->mockChild2->expects($this->any())
+                         ->method('getName')
+                         ->will($this->returnValue('baz'));
+        $this->dir->addChild($this->mockChild2);
+    }
+
+    /**
+     * clean up test environment
+     */
+    public function tearDown()
+    {
+        vfsStream::enableDotfiles();
+    }
+
+    /**
+     * @return  array
+     */
+    public function provideSwitchWithExpectations()
+    {
+        return array(array(function() { vfsStream::disableDotfiles(); },
+                           array()
+                     ),
+                     array(function() { vfsStream::enableDotfiles(); },
+                           array('.', '..')
+                     )
+        );
+    }
+
+    private function getDirName($dir)
+    {
+        if (is_string($dir)) {
+            return $dir;
+        }
+
+
+        return $dir->getName();
+    }
+
+    /**
+     * @param  \Closure  $dotFilesSwitch
+     * @param  array     $dirNames
+     * @test
+     * @dataProvider  provideSwitchWithExpectations
+     */
+    public function iteration(\Closure $dotFilesSwitch, array $dirs)
+    {
+        $dirs[] = $this->mockChild1;
+        $dirs[] = $this->mockChild2;
+        $dotFilesSwitch();
+        $dirIterator = $this->dir->getIterator();
+        foreach ($dirs as $dir) {
+            $this->assertEquals($this->getDirName($dir), $dirIterator->key());
+            $this->assertTrue($dirIterator->valid());
+            if (!is_string($dir)) {
+                $this->assertSame($dir, $dirIterator->current());
+            }
+
+            $dirIterator->next();
+        }
+
         $this->assertFalse($dirIterator->valid());
         $this->assertNull($dirIterator->key());
         $this->assertNull($dirIterator->current());
-        $dirIterator->rewind();
-        $this->assertTrue($dirIterator->valid());
-        $this->assertEquals('bar', $dirIterator->key());
-        $bar2 = $dirIterator->current();
-        $this->assertSame($mockChild1, $bar2);
     }
 }
 ?>

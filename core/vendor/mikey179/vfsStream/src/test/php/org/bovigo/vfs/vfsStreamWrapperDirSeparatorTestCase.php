@@ -53,5 +53,21 @@ class vfsStreamWrapperDirSeparatorTestCase extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->root->getChild('dir')->hasChild('bar'));
         $this->assertTrue($this->root->getChild('dir/bar')->hasChild('foo'));
     }
+
+    /**
+     * @test
+     */
+    public function directoryExitsTestUsingTrailingWinDirSeparator()
+    {
+        $structure = array(
+            'dir' => array(
+                'bar' => array(
+                )
+            )
+        );
+        vfsStream::create($structure, $this->root);
+
+        $this->assertTrue(file_exists(vfsStream::url('root/').'dir\\'));
+    }
 }
 ?>

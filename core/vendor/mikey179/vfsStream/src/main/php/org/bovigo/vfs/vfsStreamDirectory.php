@@ -249,5 +249,19 @@ class vfsStreamDirectory extends vfsStreamAbstractContent implements vfsStreamCo
     {
         return new vfsStreamContainerIterator($this->children);
     }
+
+    /**
+     * checks whether dir is a dot dir
+     *
+     * @return  bool
+     */
+    public function isDot()
+    {
+        if ('.' === $this->name || '..' === $this->name) {
+            return true;
+        }
+
+        return false;
+    }
 }
 ?>

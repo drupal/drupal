@@ -37,7 +37,7 @@ class vfsStreamZipTestCase extends \PHPUnit_Framework_TestCase
     public function createZipArchive()
     {
         $zip = new ZipArchive();
-        $this->assertTrue($zip->open(vfsStream::url('root/test.zip'), ZIPARCHIVE::CREATE));
+        $this->assertTrue($zip->open(vfsStream::url('root/test.zip'), ZipArchive::CREATE));
         $this->assertTrue($zip->addFromString("testfile1.txt", "#1 This is a test string added as testfile1.txt.\n"));
         $this->assertTrue($zip->addFromString("testfile2.txt", "#2 This is a test string added as testfile2.txt.\n"));
         $zip->setArchiveComment('a test');
