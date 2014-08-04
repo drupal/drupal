@@ -165,7 +165,7 @@ class FieldStorageEditForm extends FormBase {
     $cardinality = $form_state['values']['field']['cardinality'];
     $cardinality_number = $form_state['values']['field']['cardinality_number'];
     if ($cardinality === 'number' && empty($cardinality_number)) {
-      $this->setFormError('field][cardinality_number', $form_state, $this->t('Number of values is required.'));
+      $form_state->setErrorByName('field][cardinality_number', $this->t('Number of values is required.'));
     }
   }
 

@@ -397,7 +397,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Reset form validation.
     $form_state->set('must_validate', TRUE);
-    $this->clearErrors($form_state);
+    $form_state->clearErrors();
 
     $this->prepareForm($form_id, $form, $form_state);
     $this->processForm($form_id, $form, $form_state);
@@ -494,12 +494,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // form is processed, so scenarios that result in the form being built
       // behind the scenes and again for the browser don't increment all the
       // element IDs needlessly.
-      if (!$this->getAnyErrors()) {
+      if (!FormState::hasAnyErrors()) {
         // In case of errors, do not break HTML IDs of other forms.
         $this->drupalStaticReset('drupal_html_id');
       }
 
-      if (!$form_state['rebuild'] && !$this->formValidator->getAnyErrors()) {
+      if (!$form_state['rebuild'] && !FormState::hasAnyErrors()) {
         if ($submit_response = $this->formSubmitter->doSubmitForm($form, $form_state)) {
           return $submit_response;
         }
@@ -525,7 +525,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       //   along with element-level #submit properties, it makes no sense to
       //   have divergent form execution based on whether the triggering element
       //   has #executes_submit_callback set to TRUE.
-      if (($form_state['rebuild'] || !$form_state['executed']) && !$this->getAnyErrors()) {
+      if (($form_state['rebuild'] || !$form_state['executed']) && !FormState::hasAnyErrors()) {
         // Form building functions (e.g., self::handleInputElement()) may use
         // $form_state['rebuild'] to determine if they are running in the
         // context of a rebuild, so ensure it is set.
@@ -683,48 +683,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   public function doSubmitForm(&$form, FormStateInterface &$form_state) {
     throw new \LogicException('Use FormBuilderInterface::processForm() instead.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setErrorByName($name, FormStateInterface &$form_state, $message = '') {
-    $this->formValidator->setErrorByName($name, $form_state, $message);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearErrors(FormStateInterface &$form_state) {
-    $this->formValidator->clearErrors($form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrors(FormStateInterface &$form_state) {
-    return $this->formValidator->getErrors($form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAnyErrors() {
-    return $this->formValidator->getAnyErrors();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getError($element, FormStateInterface &$form_state) {
-    return $this->formValidator->getError($element, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setError(&$element, FormStateInterface &$form_state, $message = '') {
-    $this->formValidator->setError($element, $form_state, $message);
   }
 
   /**

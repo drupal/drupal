@@ -70,7 +70,7 @@ class DblogFilterForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['type']) && empty($form_state['values']['severity'])) {
-      $this->setFormError('type', $form_state, $this->t('You must select something to filter by.'));
+      $form_state->setErrorByName('type', $this->t('You must select something to filter by.'));
     }
   }
 

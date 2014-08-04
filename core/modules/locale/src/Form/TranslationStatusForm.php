@@ -268,7 +268,7 @@ class TranslationStatusForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check if a language has been selected. 'tableselect' doesn't.
     if (!array_filter($form_state['values']['langcodes'])) {
-      $this->setFormError('', $this->t('Select a language to update.'));
+      $form_state->setErrorByName('', $this->t('Select a language to update.'));
     }
   }
 

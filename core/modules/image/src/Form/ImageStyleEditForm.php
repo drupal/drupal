@@ -158,7 +158,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    */
   public function effectValidate($form, FormStateInterface $form_state) {
     if (!$form_state['values']['new']) {
-      $this->setFormError('new', $form_state, $this->t('Select an effect to add.'));
+      $form_state->setErrorByName('new', $this->t('Select an effect to add.'));
     }
   }
 

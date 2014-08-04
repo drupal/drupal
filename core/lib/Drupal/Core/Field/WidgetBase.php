@@ -389,7 +389,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // @todo Field validation should not be run on fields with FAPI errors to
       //   begin with. See https://drupal.org/node/2070429.
       $element_path = implode('][', $element['#parents']);
-      if ($reported_errors = $form_builder->getErrors($form_state)) {
+      if ($reported_errors = $form_state->getErrors()) {
         foreach (array_keys($reported_errors) as $error_path) {
           if (strpos($error_path, $element_path) === 0) {
             return;
@@ -431,7 +431,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             // @todo: Pass $violation->arrayPropertyPath as property path.
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
             if ($error_element !== FALSE) {
-              $form_builder->setError($error_element, $form_state, $violation->getMessage());
+              $form_state->setError($error_element, $violation->getMessage());
             }
           }
         }

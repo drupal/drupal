@@ -164,8 +164,8 @@ class TranslateEditForm extends TranslateFormBase {
     foreach ($form_state['values']['strings'] as $lid => $translations) {
       foreach ($translations['translations'] as $key => $value) {
         if (!locale_string_is_safe($value)) {
-          $this->setFormError("strings][$lid][translations][$key", $form_state, $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
-          $this->setFormError("translations][$langcode][$key", $form_state, $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
+          $form_state->setErrorByName("strings][$lid][translations][$key", $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
+          $form_state->setErrorByName("translations][$langcode][$key", $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
           $this->logger('locale')->warning('Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value));
         }
       }

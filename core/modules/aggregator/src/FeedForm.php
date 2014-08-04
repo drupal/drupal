@@ -49,10 +49,10 @@ class FeedForm extends ContentEntityForm {
     $result = $feed_storage->getFeedDuplicates($feed);
     foreach ($result as $item) {
       if (strcasecmp($item->label(), $feed->label()) == 0) {
-        $this->setFormError('title', $form_state, $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));
+        $form_state->setErrorByName('title', $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));
       }
       if (strcasecmp($item->getUrl(), $feed->getUrl()) == 0) {
-        $this->setFormError('url', $form_state, $this->t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->getUrl())));
+        $form_state->setErrorByName('url', $this->t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->getUrl())));
       }
     }
     parent::validate($form, $form_state);

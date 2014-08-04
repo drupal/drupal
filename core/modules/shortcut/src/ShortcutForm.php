@@ -66,7 +66,7 @@ class ShortcutForm extends ContentEntityForm {
    */
   public function validate(array $form, FormStateInterface $form_state) {
     if (!shortcut_valid_link($form_state['values']['path'])) {
-      $this->setFormError('path', $form_state, $this->t('The shortcut must correspond to a valid path on the site.'));
+      $form_state->setErrorByName('path', $this->t('The shortcut must correspond to a valid path on the site.'));
     }
 
     parent::validate($form, $form_state);

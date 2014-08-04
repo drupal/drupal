@@ -153,7 +153,7 @@ abstract class SearchPageFormBase extends EntityForm {
       ->condition('id', $form_state['values']['id'], '<>')
       ->execute();
     if ($path) {
-      $this->setFormError('path', $form_state, $this->t('The search page path must be unique.'));
+      $form_state->setErrorByName('path', $this->t('The search page path must be unique.'));
     }
 
     if ($this->plugin instanceof PluginFormInterface) {

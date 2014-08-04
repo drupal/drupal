@@ -88,7 +88,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if (empty($form['#translation_directory']) && $form_state['values']['use_source'] == LOCALE_TRANSLATION_USE_SOURCE_LOCAL) {
-      $this->setFormError('use_source', $form_state, $this->t('You have selected local translation source, but no <a href="@url">Interface translation directory</a> was configured.', array('@url' => url('admin/config/media/file-system'))));
+      $form_state->setErrorByName('use_source', $this->t('You have selected local translation source, but no <a href="@url">Interface translation directory</a> was configured.', array('@url' => url('admin/config/media/file-system'))));
     }
   }
 

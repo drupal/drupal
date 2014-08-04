@@ -210,7 +210,7 @@ class QuickEditController extends ControllerBase {
     else {
       $response->addCommand(new FieldFormCommand(drupal_render($form)));
 
-      $errors = $this->formBuilder()->getErrors($form_state);
+      $errors = $form_state->getErrors();
       if (count($errors)) {
         $status_messages = array(
           '#theme' => 'status_messages'

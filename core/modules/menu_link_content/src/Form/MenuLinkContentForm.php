@@ -401,7 +401,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       $valid = $this->accessManager->checkNamedRoute($extracted['route_name'], $extracted['route_parameters'], $this->account);
     }
     if (!$valid) {
-      $this->setFormError('url', $form_state, $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state['values']['url'])));
+      $form_state->setErrorByName('url', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state['values']['url'])));
     }
     elseif ($extracted['route_name']) {
       // The user entered a Drupal path.

@@ -126,13 +126,13 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
 
     if (!is_array($values)) {
-      \Drupal::formBuilder()->setError($element, $form_state, t('Allowed values list: invalid input.'));
+      $form_state->setError($element, t('Allowed values list: invalid input.'));
     }
     else {
       // Check that keys are valid for the field type.
       foreach ($values as $key => $value) {
         if ($error = static::validateAllowedValue($key)) {
-          \Drupal::formBuilder()->setError($element, $form_state, $error);
+          $form_state->setError($element, $error);
           break;
         }
       }
@@ -141,7 +141,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
       if ($element['#field_has_data']) {
         $lost_keys = array_diff(array_keys($element['#allowed_values']), array_keys($values));
         if (_options_values_in_use($element['#entity_type'], $element['#field_name'], $lost_keys)) {
-          \Drupal::formBuilder()->setError($element, $form_state, t('Allowed values list: some values are being removed while currently in use.'));
+          $form_state->setError($element, t('Allowed values list: some values are being removed while currently in use.'));
         }
       }
 

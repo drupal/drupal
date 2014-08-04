@@ -112,7 +112,7 @@ class ResponsiveImageMappingForm extends EntityForm {
       }
       // Make sure at least one mapping is defined.
       elseif (!$responsive_image_mapping->isNew() && !$responsive_image_mapping->hasMappings()) {
-        $this->setFormError('mappings', $form_state, $this->t('Please select at least one mapping.'));
+        $form_state->setErrorByName('mappings', $this->t('Please select at least one mapping.'));
       }
     }
   }

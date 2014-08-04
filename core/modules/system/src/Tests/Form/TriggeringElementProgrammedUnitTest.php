@@ -82,7 +82,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
     $form_builder->submitForm($this, $form_state);
 
     // Verify that only the specified section was validated.
-    $errors = $form_builder->getErrors($form_state);
+    $errors = $form_state->getErrors();
     $this->assertTrue(isset($errors['one']), "Section 'one' was validated.");
     $this->assertFalse(isset($errors['two']), "Section 'two' was not validated.");
 

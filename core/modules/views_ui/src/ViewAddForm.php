@@ -173,7 +173,7 @@ class ViewAddForm extends ViewFormBase {
 
     foreach ($errors as $display_errors) {
       foreach ($display_errors as $name => $message) {
-        $this->setFormError($name, $form_state, $message);
+        $form_state->setErrorByName($name, $message);
       }
     }
   }

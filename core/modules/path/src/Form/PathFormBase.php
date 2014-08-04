@@ -145,10 +145,10 @@ abstract class PathFormBase extends FormBase {
     $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
     if ($this->aliasStorage->aliasExists($alias, $langcode, $source)) {
-      $this->setFormError('alias', $form_state, t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
+      $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
     }
     if (!drupal_valid_path($source)) {
-      $this->setFormError('source', $form_state, t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
+      $form_state->setErrorByName('source', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
     }
   }
 

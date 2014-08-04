@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Access\AccessManagerInterface;
-use Drupal\Core\Form\FormErrorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
@@ -43,13 +42,6 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected $state;
 
   /**
-   * The form error helper.
-   *
-   * @var \Drupal\Core\Form\FormErrorInterface
-   */
-  protected $formError;
-
-  /**
    * Constructs a PathPluginBase object.
    *
    * @param array $configuration
@@ -62,15 +54,12 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param \Drupal\Core\Form\FormErrorInterface $form_error
-   *   The form error helper.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, FormErrorInterface $form_error) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->routeProvider = $route_provider;
     $this->state = $state;
-    $this->formError = $form_error;
   }
 
   /**
@@ -82,8 +71,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('state'),
-      $container->get('form_validator')
+      $container->get('state')
     );
   }
 
@@ -418,7 +406,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     if ($form_state['section'] == 'path') {
       $errors = $this->validatePath($form_state['values']['path']);
       foreach ($errors as $error) {
-        $this->formError->setError($form['path'], $form_state, $error);
+        $form_state->setError($form['path'], $error);
       }
 
       // Automatically remove '/' and trailing whitespace from path.

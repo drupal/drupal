@@ -163,7 +163,7 @@ class ImportForm extends FormBase {
 
     // Ensure we have the file uploaded.
     if (!$this->file) {
-      $this->setFormError('file', $form_state, $this->t('File to import not found.'));
+      $form_state->setErrorByName('file', $this->t('File to import not found.'));
     }
   }
 

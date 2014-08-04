@@ -10,7 +10,7 @@ namespace Drupal\Core\Form;
 /**
  * Provides an interface for form building and processing.
  */
-interface FormBuilderInterface extends FormErrorInterface {
+interface FormBuilderInterface {
 
   /**
    * Determines the ID of a form.

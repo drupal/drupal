@@ -95,7 +95,7 @@ class FormValidator implements FormValidatorInterface {
         $url = $this->requestStack->getCurrentRequest()->getRequestUri();
 
         // Setting this error will cause the form to fail validation.
-        $this->setErrorByName('form_token', $form_state, $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+        $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
 
         // Stop here and don't run any further validation handlers, because they
         // could invoke non-safe operations which opens the door for CSRF
@@ -261,17 +261,17 @@ class FormValidator implements FormValidatorInterface {
       // variables are also known to be defined and we can test them again.
       if (isset($is_empty_value) && ($is_empty_multiple || $is_empty_string || $is_empty_value)) {
         if (isset($elements['#required_error'])) {
-          $this->setError($elements, $form_state, $elements['#required_error']);
+          $form_state->setError($elements, $elements['#required_error']);
         }
         // A #title is not mandatory for form elements, but without it we cannot
         // set a form error message. So when a visible title is undesirable,
         // form constructors are encouraged to set #title anyway, and then set
         // #title_display to 'invisible'. This improves accessibility.
         elseif (isset($elements['#title'])) {
-          $this->setError($elements, $form_state, $this->t('!name field is required.', array('!name' => $elements['#title'])));
+          $form_state->setError($elements, $this->t('!name field is required.', array('!name' => $elements['#title'])));
         }
         else {
-          $this->setError($elements, $form_state);
+          $form_state->setError($elements);
         }
       }
 
@@ -303,7 +303,7 @@ class FormValidator implements FormValidatorInterface {
   protected function performRequiredValidation(&$elements, FormStateInterface &$form_state) {
     // Verify that the value is not longer than #maxlength.
     if (isset($elements['#maxlength']) && Unicode::strlen($elements['#value']) > $elements['#maxlength']) {
-      $this->setError($elements, $form_state, $this->t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
+      $form_state->setError($elements, $this->t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
     }
 
     if (isset($elements['#options']) && isset($elements['#value'])) {
@@ -317,7 +317,7 @@ class FormValidator implements FormValidatorInterface {
         $value = in_array($elements['#type'], array('checkboxes', 'tableselect')) ? array_keys($elements['#value']) : $elements['#value'];
         foreach ($value as $v) {
           if (!isset($options[$v])) {
-            $this->setError($elements, $form_state, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+            $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
             $this->watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
           }
         }
@@ -336,7 +336,7 @@ class FormValidator implements FormValidatorInterface {
         NestedArray::setValue($form_state['values'], $elements['#parents'], NULL, TRUE);
       }
       elseif (!isset($options[$elements['#value']])) {
-        $this->setError($elements, $form_state, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+        $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
         $this->watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
       }
     }
@@ -352,16 +352,16 @@ class FormValidator implements FormValidatorInterface {
    */
   protected function determineLimitValidationErrors(FormStateInterface &$form_state) {
     // While this element is being validated, it may be desired that some
-    // calls to self::setErrorByName() be suppressed and not result in a form
-    // error, so that a button that implements low-risk functionality (such as
-    // "Previous" or "Add more") that doesn't require all user input to be
-    // valid can still have its submit handlers triggered. The triggering
-    // element's #limit_validation_errors property contains the information
-    // for which errors are needed, and all other errors are to be suppressed.
-    // The #limit_validation_errors property is ignored if submit handlers
-    // will run, but the element doesn't have a #submit property, because it's
-    // too large a security risk to have any invalid user input when executing
-    // form-level submit handlers.
+    // calls to \Drupal\Core\Form\FormStateInterface::setErrorByName() be
+    // suppressed and not result in a form error, so that a button that
+    // implements low-risk functionality (such as "Previous" or "Add more") that
+    // doesn't require all user input to be valid can still have its submit
+    // handlers triggered. The triggering element's #limit_validation_errors
+    // property contains the information for which errors are needed, and all
+    // other errors are to be suppressed. The #limit_validation_errors property
+    // is ignored if submit handlers will run, but the element doesn't have a
+    // #submit property, because it's too large a security risk to have any
+    // invalid user input when executing form-level submit handlers.
     if (isset($form_state['triggering_element']['#limit_validation_errors']) && ($form_state['triggering_element']['#limit_validation_errors'] !== FALSE) && !($form_state['submitted'] && !isset($form_state['triggering_element']['#submit']))) {
       return $form_state['triggering_element']['#limit_validation_errors'];
     }
@@ -389,8 +389,7 @@ class FormValidator implements FormValidatorInterface {
   /**
    * Stores the errors of each element directly on the element.
    *
-   * Because self::getError() and self::getErrors() require the $form_state,
-   * we must provide a way for non-form functions to check the errors for a
+   * We must provide a way for non-form functions to check the errors for a
    * specific element. The most common usage of this is a #pre_render callback.
    *
    * @param array $elements
@@ -406,49 +405,7 @@ class FormValidator implements FormValidatorInterface {
       }
     }
     // Store the errors for this element on the element directly.
-    $elements['#errors'] = $this->getError($elements, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setErrorByName($name, FormStateInterface &$form_state, $message = '') {
-    return $form_state->setErrorByName($name, $message);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setError(&$element, FormStateInterface &$form_state, $message = '') {
-    return $form_state->setError($element, $message);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getError($element, FormStateInterface &$form_state) {
-    return $form_state->getError($element);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearErrors(FormStateInterface &$form_state) {
-    $form_state->clearErrors();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrors(FormStateInterface &$form_state) {
-    return $form_state->getErrors();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAnyErrors() {
-    return FormState::hasAnyErrors();
+    $elements['#errors'] = $form_state->getError($elements);
   }
 
   /**

@@ -230,7 +230,7 @@ class SiteConfigureForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($error = user_validate_name($form_state['values']['account']['name'])) {
-      $this->setFormError('account][name', $form_state, $error);
+      $form_state->setErrorByName('account][name', $error);
     }
   }
 

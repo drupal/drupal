@@ -83,9 +83,6 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
     $container->set('plugin.manager.views.style', $style_manager);
 
-    $form_error = $this->getMock('Drupal\Core\Form\FormErrorInterface');
-    $container->set('form_validator', $form_error);
-
     \Drupal::setContainer($container);
 
     $this->restExport = RestExport::create($container, array(), "test_routes", array());

@@ -82,7 +82,7 @@ class CategoryForm extends EntityForm {
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
       if (!valid_email_address($recipient)) {
-        $this->setFormError('recipients', $form_state, $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
+        $form_state->setErrorByName('recipients', $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
       }
     }
     $form_state['values']['recipients'] = $recipients;

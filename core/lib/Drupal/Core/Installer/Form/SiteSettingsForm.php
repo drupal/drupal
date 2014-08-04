@@ -128,7 +128,7 @@ class SiteSettingsForm extends FormBase {
     $form_state['storage']['database'] = $database;
     $errors = install_database_errors($database, $form_state['values']['settings_file']);
     foreach ($errors as $name => $message) {
-      $this->setFormError($name, $form_state, $message);
+      $form_state->setErrorByName($name, $message);
     }
   }
 

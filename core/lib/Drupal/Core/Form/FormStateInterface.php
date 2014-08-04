@@ -227,16 +227,13 @@ interface FormStateInterface {
    *
    * This will require $form_state['values']['step1'] and everything within it
    * (for example, $form_state['values']['step1']['choice']) to be valid, so
-   * calls to FormErrorInterface::setErrorByName('step1', $form_state, $message)
-   * or
-   * FormErrorInterface::setErrorByName('step1][choice', $form_state, $message)
-   * will prevent the submit handlers from running, and result in the error
-   * message being displayed to the user. However, calls to
-   * FormErrorInterface::setErrorByName('step2', $form_state, $message) and
-   * FormErrorInterface::setErrorByName('step2][groupX][choiceY', $form_state, $message)
-   * will be suppressed, resulting in the message not being displayed to the
-   * user, and the submit handlers will run despite
-   * $form_state['values']['step2'] and
+   * calls to self::setErrorByName('step1', $message) or
+   * self::setErrorByName('step1][choice', $message) will prevent the submit
+   * handlers from running, and result in the error message being displayed to
+   * the user. However, calls to self::setErrorByName('step2', $message) and
+   * self::setErrorByName('step2][groupX][choiceY', $message) will be
+   * suppressed, resulting in the message not being displayed to the user, and
+   * the submit handlers will run despite $form_state['values']['step2'] and
    * $form_state['values']['step2']['groupX']['choiceY'] containing invalid
    * values. Errors for an invalid $form_state['values']['foo'] will be
    * suppressed, but errors flagging invalid values for
@@ -276,7 +273,7 @@ interface FormStateInterface {
   public function setError(&$element, $message = '');
 
   /**
-   * Clears all errors against all form elements made by FormErrorInterface::setErrorByName().
+   * Clears all errors against all form elements made by self::setErrorByName().
    */
   public function clearErrors();
 

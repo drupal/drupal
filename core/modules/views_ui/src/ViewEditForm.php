@@ -257,11 +257,11 @@ class ViewEditForm extends ViewFormBase {
 
     $view = $this->entity;
     if ($view->isLocked()) {
-      $this->setFormError('', $form_state, $this->t('Changes cannot be made to a locked view.'));
+      $form_state->setErrorByName('', $this->t('Changes cannot be made to a locked view.'));
     }
     foreach ($view->getExecutable()->validate() as $display_errors) {
       foreach ($display_errors as $error) {
-        $this->setFormError('', $form_state, $error);
+        $form_state->setErrorByName('', $error);
       }
     }
   }

@@ -164,7 +164,7 @@ abstract class DateFormatFormBase extends EntityForm {
     $pattern = trim($form_state['values']['date_format_pattern']);
     foreach ($this->dateFormatStorage->loadMultiple() as $format) {
       if ($format->getPattern() == $pattern && ($this->entity->isNew() || $format->id() != $this->entity->id())) {
-        $this->setFormError('date_format_pattern', $form_state, $this->t('This format already exists. Enter a unique format string.'));
+        $form_state->setErrorByName('date_format_pattern', $this->t('This format already exists. Enter a unique format string.'));
         continue;
       }
     }

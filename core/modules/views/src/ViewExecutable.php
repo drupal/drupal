@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewStorageInterface;
@@ -1073,7 +1074,7 @@ class ViewExecutable {
     if ($this->display_handler->usesExposed()) {
       $exposed_form = $this->display_handler->getPlugin('exposed_form');
       $this->exposed_widgets = $exposed_form->renderExposedForm();
-      if (\Drupal::formBuilder()->getAnyErrors() || !empty($this->build_info['abort'])) {
+      if (FormState::hasAnyErrors() || !empty($this->build_info['abort'])) {
         $this->built = TRUE;
         // Don't execute the query, $form_state, but rendering will still be executed to display the empty text.
         $this->executed = TRUE;

@@ -194,7 +194,7 @@ class LinkWidget extends WidgetBase {
   public function validateTitle(&$element, FormStateInterface $form_state, $form) {
     if ($element['url']['#value'] !== '' && $element['title']['#value'] === '') {
       $element['title']['#required'] = TRUE;
-      \Drupal::formBuilder()->setError($element['title'], $form_state, $this->t('!name field is required.', array('!name' => $element['title']['#title'])));
+      $form_state->setError($element['title'], $this->t('!name field is required.', array('!name' => $element['title']['#title'])));
     }
   }
 

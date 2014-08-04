@@ -174,27 +174,6 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   }
 
   /**
-   * Files an error against a form element.
-   *
-   * @param string $name
-   *   The name of the form element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param string $message
-   *   (optional) The error message to present to the user.
-   *
-   * @deprecated Use \Drupal\Core\Form\FormStateInterface::setErrorByName().
-   *
-   * @todo Remove in https://www.drupal.org/node/2308821.
-   *
-   * @return $this
-   */
-  protected function setFormError($name, FormStateInterface $form_state, $message = '') {
-    $form_state->setErrorByName($name, $message);
-    return $this;
-  }
-
-  /**
    * Gets the logger for a specific channel.
    *
    * @param string $channel

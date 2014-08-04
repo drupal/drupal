@@ -113,7 +113,7 @@ class TermForm extends ContentEntityForm {
 
     // Ensure numeric values.
     if (isset($form_state['values']['weight']) && !is_numeric($form_state['values']['weight'])) {
-      $this->setFormError('weight', $form_state, $this->t('Weight value must be numeric.'));
+      $form_state->setErrorByName('weight', $this->t('Weight value must be numeric.'));
     }
   }
 

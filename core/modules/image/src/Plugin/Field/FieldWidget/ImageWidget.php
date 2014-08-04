@@ -243,7 +243,7 @@ class ImageWidget extends FileWidget {
       }
       // Check if field is left empty.
       elseif (empty($image_field[$field])) {
-        \Drupal::formBuilder()->setError($element, $form_state, t('The field !title is required', array('!title' => $element['#title'])));
+        $form_state->setError($element, t('The field !title is required', array('!title' => $element['#title'])));
         return;
       }
     }

@@ -242,7 +242,7 @@ class BlockContentForm extends ContentEntityForm {
     if ($this->entity->isNew()) {
       $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state['values']['info']));
       if (!empty($exists)) {
-        $this->setFormError('info', $form_state, $this->t('A block with description %name already exists.', array(
+        $form_state->setErrorByName('info', $this->t('A block with description %name already exists.', array(
           '%name' => $form_state['values']['info'][0]['value'],
         )));
       }

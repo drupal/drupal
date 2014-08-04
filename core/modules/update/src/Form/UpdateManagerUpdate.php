@@ -294,7 +294,7 @@ class UpdateManagerUpdate extends FormBase {
       $disabled = array_filter($form_state['values']['disabled_projects']);
     }
     if (empty($enabled) && empty($disabled)) {
-      $this->setFormError('projects', $form_state, $this->t('You must select at least one project to update.'));
+      $form_state->setErrorByName('projects', $this->t('You must select at least one project to update.'));
     }
   }
 

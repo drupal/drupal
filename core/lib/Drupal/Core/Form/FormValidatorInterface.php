@@ -10,7 +10,7 @@ namespace Drupal\Core\Form;
 /**
  * Provides an interface for validating form submissions.
  */
-interface FormValidatorInterface extends FormErrorInterface {
+interface FormValidatorInterface {
 
   /**
    * Executes custom validation handlers for a given form.

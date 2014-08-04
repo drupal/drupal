@@ -81,7 +81,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   public static function validateElement(array $element, FormStateInterface $form_state) {
     if ($element['#required'] && $element['#value'] == '_none') {
-      \Drupal::formBuilder()->setError($element, $form_state, t('!name field is required.', array('!name' => $element['#title'])));
+      $form_state->setError($element, t('!name field is required.', array('!name' => $element['#title'])));
     }
 
     // Massage submitted form values.

@@ -163,48 +163,48 @@ function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
  * Files an error against a form element.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->setErrorByName().
+ *   Use $form_state->setErrorByName().
  *
- * @see \Drupal\Core\Form\FormErrorInterface::setErrorByName().
+ * @see \Drupal\Core\Form\FormStateInterface::setErrorByName().
  */
 function form_set_error($name, FormStateInterface $form_state, $message = '') {
-  \Drupal::formBuilder()->setErrorByName($name, $form_state, $message);
+  $form_state->setErrorByName($name, $message);
 }
 
 /**
  * Returns an associative array of all errors.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->getErrors().
+ *   Use $form_state->getErrors().
  *
- * @see \Drupal\Core\Form\FormErrorInterface::getErrors()
+ * @see \Drupal\Core\Form\FormStateInterface::getErrors()
  */
 function form_get_errors(FormStateInterface $form_state) {
-  return \Drupal::formBuilder()->getErrors($form_state);
+  return $form_state->getErrors();
 }
 
 /**
  * Returns the error message filed against the given form element.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->getError().
+ *   Use $form_state->getError().
  *
- * @see \Drupal\Core\Form\FormErrorInterface::getError().
+ * @see \Drupal\Core\Form\FormStateInterface::getError().
  */
 function form_get_error($element, FormStateInterface $form_state) {
-  return \Drupal::formBuilder()->getError($element, $form_state);
+  return $form_state->getError($element);
 }
 
 /**
  * Flags an element as having an error.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->setError().
+ *   Use $form_state->setError().
  *
- * @see \Drupal\Core\Form\FormErrorInterface::setError().
+ * @see \Drupal\Core\Form\FormStateInterface::setError().
  */
 function form_error(&$element, FormStateInterface $form_state, $message = '') {
-  \Drupal::formBuilder()->setError($element, $form_state, $message);
+  $form_state->setError($element, $message);
 }
 
 /**

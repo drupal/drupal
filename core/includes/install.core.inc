@@ -832,7 +832,7 @@ function install_get_form($form_id, array &$install_state) {
     $form_builder->submitForm($form_id, $form_state);
 
     // Throw an exception in case of any form validation error.
-    if ($errors = $form_builder->getErrors($form_state)) {
+    if ($errors = $form_state->getErrors()) {
       throw new InstallerException(implode("\n", $errors));
     }
   }

@@ -56,7 +56,7 @@ class ShortcutSetForm extends EntityForm {
     $entity = $this->entity;
     // Check to prevent a duplicate title.
     if ($form_state['values']['label'] != $entity->label() && shortcut_set_title_exists($form_state['values']['label'])) {
-      $this->setFormError('label', $form_state, $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
+      $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
     }
   }
 

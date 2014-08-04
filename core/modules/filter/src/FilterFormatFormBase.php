@@ -227,7 +227,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       ->condition('name', $format_name)
       ->execute();
     if ($format_exists) {
-      $this->setFormError('name', $form_state, $this->t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
+      $form_state->setErrorByName('name', $this->t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
     }
   }
 

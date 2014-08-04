@@ -359,7 +359,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function validateAddSearchPage(array &$form, FormStateInterface $form_state) {
     if (empty($form_state['values']['search_type'])) {
-      $this->formBuilder()->setErrorByName('search_type', $form_state, $this->t('You must select the new search page type.'));
+      $form_state->setErrorByName('search_type', $this->t('You must select the new search page type.'));
     }
   }
 

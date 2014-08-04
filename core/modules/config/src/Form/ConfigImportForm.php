@@ -80,7 +80,7 @@ class ConfigImportForm extends FormBase {
       $form_state['values']['import_tarball'] = $file_upload->getRealPath();
     }
     else {
-      $this->setFormError('import_tarball', $form_state, $this->t('The import tarball could not be uploaded.'));
+      $form_state->setErrorByName('import_tarball', $this->t('The import tarball could not be uploaded.'));
     }
   }
 
