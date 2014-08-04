@@ -5,6 +5,8 @@ services:
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
     arguments: ['@locale.storage', '@cache.default', '@lock', '@config.factory', '@language_manager']

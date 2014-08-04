@@ -33,6 +33,8 @@ services:
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   user.autocomplete:
     class: Drupal\user\UserAutocomplete
     arguments: ['@config.factory', '@entity.manager', '@entity.query']
@@ -55,6 +57,8 @@ services:
   user.tempstore:
     class: Drupal\user\TempStoreFactory
     arguments: ['@serialization.phpserialize', '@database', '@lock', '%user.tempstore.expire%']
+    tags:
+      - { name: backend_overridable }
 
 parameters:
   user.tempstore.expire: 604800

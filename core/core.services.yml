@@ -105,6 +105,8 @@ services:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', 'config']
     public: false
+    tags:
+      - { name: backend_overridable }
   config.storage.file:
     class: Drupal\Core\Config\FileStorage
     factory_class: Drupal\Core\Config\FileStorageFactory
@@ -117,6 +119,8 @@ services:
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]
+    tags:
+      - { name: backend_overridable }
   config.storage.schema:
     class: Drupal\Core\Config\ExtensionInstallStorage
     arguments: ['@config.storage', 'config/schema']
@@ -311,6 +315,8 @@ services:
     class: Drupal\Core\Menu\MenuTreeStorage
     arguments: ['@database', '@cache.menu', 'menu_tree']
     public: false  # Private to plugin.manager.menu.link and menu.link_tree
+    tags:
+      - { name: backend_overridable }
   menu_link.static.overrides:
     class: Drupal\Core\Menu\StaticMenuLinkOverrides
     arguments: ['@config.factory']
@@ -373,6 +379,8 @@ services:
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   router.request_context:
     class: Symfony\Component\Routing\RequestContext
     tags:
@@ -385,6 +393,7 @@ services:
     arguments: ['@database', '@router.builder', '@state']
     tags:
       - { name: event_subscriber }
+      - { name: backend_overridable }
   router.route_preloader:
     class: Drupal\Core\Routing\RoutePreloader
     arguments: ['@router.route_provider', '@state', '@content_negotiation']
@@ -433,12 +442,16 @@ services:
   entity.query.sql:
     class: Drupal\Core\Entity\Query\Sql\QueryFactory
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   entity.query.keyvalue:
     class: Drupal\Core\Entity\KeyValueStore\Query\QueryFactory
     arguments: ['@keyvalue']
   router.dumper:
     class: Drupal\Core\Routing\MatcherDumper
     arguments: ['@database', '@state']
+    tags:
+      - { name: backend_overridable }
   router.builder:
     class: Drupal\Core\Routing\RouteBuilder
     arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@state']
@@ -455,6 +468,8 @@ services:
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
     arguments: ['@database', '@module_handler']
+    tags:
+      - { name: backend_overridable }
   path.matcher:
     class: Drupal\Core\Path\PathMatcher
     arguments: ['@config.factory']
@@ -724,6 +739,8 @@ services:
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
     arguments: ['@database', '@request_stack']
+    tags:
+      - { name: backend_overridable }
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory']
@@ -761,6 +778,8 @@ services:
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   replica_database_ignore__subscriber:
     class: Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber
     tags:
@@ -843,6 +862,8 @@ services:
   session_manager:
     class: Drupal\Core\Session\SessionManager
     arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@settings']
+    tags:
+      - { name: backend_overridable }
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
     arguments: ['@settings']

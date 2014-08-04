@@ -6,11 +6,14 @@ services:
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
     arguments: ['@database', '@module_handler']
+    tags:
+      - { name: backend_overridable }
   access_check.node.revision:
     class: Drupal\node\Access\NodeRevisionAccessCheck
     arguments: ['@entity.manager', '@database']
     tags:
       - { name: access_check, applies_to: _access_node_revision }
+      - { name: backend_overridable }
   access_check.node.add:
     class: Drupal\node\Access\NodeAddAccessCheck
     arguments: ['@entity.manager']

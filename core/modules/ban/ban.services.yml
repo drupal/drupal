@@ -2,6 +2,8 @@ services:
   ban.ip_manager:
     class: Drupal\ban\BanIpManager
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   ban.subscriber:
     class: Drupal\ban\EventSubscriber\BanSubscriber
     tags:
