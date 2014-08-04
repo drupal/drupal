@@ -75,7 +75,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Site name'),
       '#default_value' => $site_config->get('name'),
-      '#required' => TRUE
+      '#required' => TRUE,
     );
     $form['site_information']['site_slogan'] = array(
       '#type' => 'textfield',
