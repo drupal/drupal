@@ -147,6 +147,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       // Build the new form state for the next form in the stack.
       $reflection = new \ReflectionClass($view::$forms[$top[1]]);
       $form_state = $reflection->newInstanceArgs(array_slice($top, 3, 2))->getFormState($view, $top[2], $form_state['ajax']);
+      $form_class = get_class($form_state['build_info']['callback_object']);
 
       $form_state['input'] = array();
       $form_path = views_ui_build_form_path($form_state);
