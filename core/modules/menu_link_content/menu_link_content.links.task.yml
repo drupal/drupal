@@ -1,4 +1,4 @@
-menu_link_content.link_edit:
-  route_name: menu_link_content.link_edit
-  base_route: menu_link_content.link_edit
+entity.menu_link_content.canonical:
+  route_name: entity.menu_link_content.canonical
+  base_route: entity.menu_link_content.canonical
   title: Edit

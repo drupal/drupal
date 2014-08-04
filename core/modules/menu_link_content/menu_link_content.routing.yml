@@ -6,7 +6,7 @@ menu_link_content.link_add:
   requirements:
     _entity_create_access: 'menu_link_content'
 
-menu_link_content.link_edit:
+entity.menu_link_content.canonical:
   path: '/admin/structure/menu/item/{menu_link_content}/edit'
   defaults:
     _entity_form: 'menu_link_content.default'
@@ -17,7 +17,7 @@ menu_link_content.link_edit:
   requirements:
     _entity_access: 'menu_link_content.update'
 
-menu_link_content.link_delete:
+entity.menu_link_content.delete_form:
   path: '/admin/structure/menu/item/{menu_link_content}/delete'
   defaults:
     _entity_form: 'menu_link_content.delete'

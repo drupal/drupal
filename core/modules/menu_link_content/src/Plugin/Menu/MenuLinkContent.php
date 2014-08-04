@@ -181,7 +181,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    */
   public function getDeleteRoute() {
     return array(
-      'route_name' => 'menu_link_content.link_delete',
+      'route_name' => 'entity.menu_link_content.delete_form',
       'route_parameters' => array('menu_link_content' => $this->getEntity()->id()),
     );
   }
@@ -191,7 +191,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    */
   public function getEditRoute() {
     return array(
-      'route_name' => 'menu_link_content.link_edit',
+      'route_name' => 'entity.menu_link_content.canonical',
       'route_parameters' => array('menu_link_content' => $this->getEntity()->id()),
     );
   }

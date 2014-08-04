@@ -39,9 +39,9 @@ use Drupal\Core\Url;
  *     "bundle" = "bundle"
  *   },
  *   links = {
- *     "canonical" = "menu_link_content.link_edit",
- *     "edit-form" = "menu_link_content.link_edit",
- *     "delete-form" = "menu_link_content.link_delete",
+ *     "canonical" = "entity.menu_link_content.canonical",
+ *     "edit-form" = "entity.menu_link_content.canonical",
+ *     "delete-form" = "entity.menu_link_content.delete_form",
  *   }
  * )
  */
