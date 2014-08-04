@@ -1,5 +1,5 @@
-responsive_image.mapping_page_edit:
+entity.responsive_image_mapping.edit_form:
   title: Edit
-  route_name: responsive_image.mapping_page_edit
-  base_route: responsive_image.mapping_page_edit
+  route_name: entity.responsive_image_mapping.edit_form
+  base_route: entity.responsive_image_mapping.edit_form
   weight: -10

@@ -14,7 +14,7 @@ responsive_image.mapping_page_add:
   requirements:
     _permission: 'administer responsive images'
 
-responsive_image.mapping_page_edit:
+entity.responsive_image_mapping.edit_form:
   path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}'
   defaults:
     _entity_form: 'responsive_image_mapping.edit'
@@ -22,7 +22,7 @@ responsive_image.mapping_page_edit:
   requirements:
     _permission: 'administer responsive images'
 
-responsive_image.mapping_page_duplicate:
+entity.responsive_image_mapping.duplicate_form:
   path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/duplicate'
   defaults:
     _entity_form: 'responsive_image_mapping.duplicate'

@@ -132,7 +132,7 @@ class ResponsiveImageMappingForm extends EntityForm {
     // another breakpoint group.
     if (!$responsive_image_mapping->hasMappings()) {
       $form_state['redirect_route'] = array(
-        'route_name' => 'responsive_image.mapping_page_edit',
+        'route_name' => 'entity.responsive_image_mapping.edit_form',
         'route_parameters' => array(
           'responsive_image_mapping' => $responsive_image_mapping->id(),
         ),

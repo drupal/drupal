@@ -66,11 +66,11 @@ function responsive_image_menu() {
   );
   $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping'] = array(
     'title' => 'Edit responsive image mapping',
-    'route_name' => 'responsive_image.mapping_page_edit',
+    'route_name' => 'entity.responsive_image_mapping.edit_form',
   );
   $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping/duplicate'] = array(
     'title' => 'Duplicate responsive image mapping',
-    'route_name' => 'responsive_image.mapping_page_duplicate',
+    'route_name' => 'entity.responsive_image_mapping.duplicate_form',
   );
 
   return $items;
