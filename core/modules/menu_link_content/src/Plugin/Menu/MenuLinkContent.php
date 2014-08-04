@@ -133,7 +133,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       }
       if (!$entity) {
         // Fallback to the loading by the UUID.
-        $uuid = $this->getDerivativeId();
+        $uuid = $this->getUuid();
         $loaded_entities = $storage->loadByProperties(array('uuid' => $uuid));
         $entity = reset($loaded_entities);
       }
@@ -205,6 +205,16 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       'route_name' => 'content_translation.translation_overview_' . $entity_type,
       'route_parameters' => array( $entity_type => $this->getEntity()->id()),
     );
+  }
+
+  /**
+   * Returns the unique ID representing the menu link.
+   *
+   * @return string
+   *   The menu link ID.
+   */
+  protected function getUuid() {
+    $this->getDerivativeId();
   }
 
   /**
