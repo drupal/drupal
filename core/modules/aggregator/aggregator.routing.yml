@@ -49,7 +49,7 @@ aggregator.feed_add:
   options:
     _admin_route: TRUE
 
-aggregator.feed_view:
+entity.aggregator_feed.canonical:
   path: '/aggregator/sources/{aggregator_feed}'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::viewFeed'
@@ -57,7 +57,7 @@ aggregator.feed_view:
   requirements:
     _permission: 'access news feeds'
 
-aggregator.feed_configure:
+entity.aggregator_feed.edit_form:
   path: '/aggregator/sources/{aggregator_feed}/configure'
   defaults:
     _entity_form: 'aggregator_feed.default'
@@ -67,7 +67,7 @@ aggregator.feed_configure:
   options:
     _admin_route: TRUE
 
-aggregator.feed_delete:
+entity.aggregator_feed.delete_form:
   path: '/aggregator/sources/{aggregator_feed}/delete'
   defaults:
     _entity_form: 'aggregator_feed.delete'

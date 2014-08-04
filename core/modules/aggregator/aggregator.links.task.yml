@@ -8,16 +8,16 @@ aggregator.admin_settings:
   weight: 100
   base_route: aggregator.admin_overview
 
-aggregator.feed_view:
-  route_name: aggregator.feed_view
-  base_route: aggregator.feed_view
+entity.aggregator_feed.canonical:
+  route_name: entity.aggregator_feed.canonical
+  base_route: entity.aggregator_feed.canonical
   title: View
-aggregator.feed_configure:
-  route_name: aggregator.feed_configure
-  base_route: aggregator.feed_view
+entity.aggregator_feed.edit_form:
+  route_name: entity.aggregator_feed.edit_form
+  base_route: entity.aggregator_feed.canonical
   title: 'Configure'
   weight: 10
-aggregator.feed_delete:
-  route_name: aggregator.feed_delete
-  tab_root_id: aggregator.feed_view
+entity.aggregator_feed.delete_form:
+  route_name: entity.aggregator_feed.delete_form
+  tab_root_id: entity.aggregator_feed.canonical
   title: Delete

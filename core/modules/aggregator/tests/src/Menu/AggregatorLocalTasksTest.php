@@ -49,7 +49,7 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function testAggregatorSourceLocalTasks($route) {
     $this->assertLocalTasks($route, array(
-      0 => array('aggregator.feed_view', 'aggregator.feed_configure'),
+      0 => array('entity.aggregator_feed.canonical', 'entity.aggregator_feed.edit_form'),
     ));
     ;
   }
@@ -59,8 +59,8 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getAggregatorSourceRoutes() {
     return array(
-      array('aggregator.feed_view'),
-      array('aggregator.feed_configure'),
+      array('entity.aggregator_feed.canonical'),
+      array('entity.aggregator_feed.edit_form'),
     );
   }
 
