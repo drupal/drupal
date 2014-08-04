@@ -56,16 +56,16 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->routeProvider
       ->expects($this->any())
       ->method('getRouteByName')
-      ->with('language.edit')
+      ->with('entity.language_entity.edit_form')
       ->will($this->returnValue(new Route('/admin/config/regional/language/edit/{language_entity}')));
 
     $definition = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
-      'base_route_name' => 'language.edit',
+      'base_route_name' => 'entity.language_entity.edit_form',
       'title' => '!label language',
       'names' => array(),
       'entity_type' => 'language_entity',
-      'route_name' => 'config_translation.item.overview.language.edit',
+      'route_name' => 'config_translation.item.overview.entity.language_entity.edit_form',
     );
 
     $typed_config_manager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');

@@ -30,7 +30,7 @@ language.add:
   requirements:
     _entity_create_access: 'language_entity'
 
-language.edit:
+entity.language_entity.edit_form:
   path: '/admin/config/regional/language/edit/{language_entity}'
   defaults:
     _entity_form: 'language_entity.edit'
@@ -46,7 +46,7 @@ language.admin_overview:
   requirements:
     _permission: 'administer languages'
 
-language.delete:
+entity.language_entity.delete_form:
   path: '/admin/config/regional/language/delete/{language_entity}'
   defaults:
     _entity_form: 'language_entity.delete'

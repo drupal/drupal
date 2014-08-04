@@ -7,7 +7,7 @@ language.negotiation:
   route_name: language.negotiation
   base_route: language.admin_overview
 
-language.edit:
+entity.language_entity.edit_form:
   title: 'Edit'
-  route_name: language.edit
-  base_route: language.edit
+  route_name: entity.language_entity.edit_form
+  base_route: entity.language_entity.edit_form

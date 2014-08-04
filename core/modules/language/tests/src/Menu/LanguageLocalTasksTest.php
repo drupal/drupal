@@ -46,8 +46,8 @@ class LanguageLocalTasksTest extends LocalTaskIntegrationTest {
    * Tests language edit local tasks existence.
    */
   public function testLanguageEditLocalTasks() {
-    $this->assertLocalTasks('language.edit', array(
-      0 => array('language.edit'),
+    $this->assertLocalTasks('entity.language_entity.edit_form', array(
+      0 => array('entity.language_entity.edit_form'),
     ));
   }
 

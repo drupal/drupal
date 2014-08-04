@@ -37,8 +37,8 @@ use Drupal\language\LanguageInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "delete-form" = "language.delete",
- *     "edit-form" = "language.edit"
+ *     "delete-form" = "entity.language_entity.delete_form",
+ *     "edit-form" = "entity.language_entity.edit_form"
  *   }
  * )
  */
