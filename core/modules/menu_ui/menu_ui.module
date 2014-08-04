@@ -75,7 +75,8 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setListBuilderClass('Drupal\menu_ui\MenuListBuilder')
     ->setLinkTemplate('add-form', 'menu_ui.menu_add')
     ->setLinkTemplate('delete-form', 'menu_ui.delete_menu')
-    ->setLinkTemplate('edit-form', 'menu_ui.menu_edit');
+    ->setLinkTemplate('edit-form', 'menu_ui.menu_edit')
+    ->setLinkTemplate('add-link-form', 'menu_link_content.link_add');
 }
 
 

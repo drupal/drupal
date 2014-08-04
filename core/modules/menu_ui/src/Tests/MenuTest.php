@@ -249,6 +249,10 @@ class MenuTest extends MenuWebTestBase {
       ),
     ));
 
+    // Verify add link button.
+    $this->drupalGet('admin/structure/menu');
+    $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button url is correct");
+
     // Add menu links.
     $item1 = $this->addMenuLink('', 'node/' . $node1->id(), $menu_name, TRUE);
     $item2 = $this->addMenuLink($item1->getPluginId(), 'node/' . $node2->id(), $menu_name, FALSE);
