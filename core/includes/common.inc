@@ -582,29 +582,6 @@ function format_size($size, $langcode = NULL) {
 }
 
 /**
- * Formats a time interval with the requested granularity.
- *
- * @param $interval
- *   The length of the interval in seconds.
- * @param $granularity
- *   How many different units to display in the string.
- * @param $langcode
- *   Optional language code to translate to a language other than
- *   what is used to display the page.
- *
- * @return
- *   A translated string representation of the interval.
- *
- * @see \Drupal\Core\Datetime\Date::formatInterval()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('date')->formatInterval().
- */
-function format_interval($interval, $granularity = 2, $langcode = NULL) {
-  return \Drupal::service('date')->formatInterval($interval, $granularity, $langcode);
-}
-
-/**
  * Formats a date, using a date type or a custom date format string.
  *
  * @param $timestamp
