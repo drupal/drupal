@@ -38,8 +38,8 @@ use Drupal\filter\Plugin\FilterInterface;
  *     "status" = "status"
  *   },
  *   links = {
- *     "edit-form" = "filter.format_edit",
- *     "disable" = "filter.admin_disable"
+ *     "edit-form" = "entity.filter_format.edit_form",
+ *     "disable" = "entity.filter_format.disable"
  *   }
  * )
  */

@@ -31,7 +31,7 @@ filter.format_add:
   requirements:
     _entity_create_access: 'filter_format'
 
-filter.format_edit:
+entity.filter_format.edit_form:
   path: '/admin/config/content/formats/manage/{filter_format}'
   defaults:
     _entity_form: filter_format.edit
@@ -39,7 +39,7 @@ filter.format_edit:
   requirements:
     _entity_access: 'filter_format.update'
 
-filter.admin_disable:
+entity.filter_format.disable:
   path: '/admin/config/content/formats/manage/{filter_format}/disable'
   defaults:
     _entity_form: 'filter_format.disable'

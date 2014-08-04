@@ -1,7 +1,7 @@
-filter.format_edit_tab:
-  route_name: filter.format_edit
+entity.filter_format.edit_form_tab:
+  route_name: entity.filter_format.edit_form
   title: 'Configure'
-  base_route: filter.format_edit
+  base_route: entity.filter_format.edit_form
   weight: -10
 
 filter.admin_overview:
