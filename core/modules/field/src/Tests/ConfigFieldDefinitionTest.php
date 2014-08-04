@@ -25,6 +25,16 @@ class ConfigFieldDefinitionTest extends FieldUnitTestBase {
   protected $entityManager;
 
   /**
+   * @var string
+   */
+  private $entityType;
+
+  /**
+   * @var string
+   */
+  private $bundle;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -46,10 +56,10 @@ class ConfigFieldDefinitionTest extends FieldUnitTestBase {
    */
   public function testBundleFieldDefinition() {
     $definitions = $this->entityManager->getFieldDefinitions($this->entityType, $this->bundle);
-    $this->assertTrue(isset($definitions[$this->instance->getName()]));
-    $this->assertTrue($definitions[$this->instance->getName()] instanceof FieldDefinitionInterface);
+    $this->assertTrue(isset($definitions[$this->fieldTestData->instance->getName()]));
+    $this->assertTrue($definitions[$this->fieldTestData->instance->getName()] instanceof FieldDefinitionInterface);
     // Make sure no field for the instance on another entity type is exposed.
-    $this->assertFalse(isset($definitions[$this->instance_rev->getName()]));
+    $this->assertFalse(isset($definitions[$this->fieldTestData->instance_rev->getName()]));
   }
 
   /**
@@ -57,11 +67,11 @@ class ConfigFieldDefinitionTest extends FieldUnitTestBase {
    */
   public function testFieldStorageDefinition() {
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityType);
-    $this->assertTrue(isset($field_storage_definitions[$this->instance->getName()]));
-    $this->assertTrue($field_storage_definitions[$this->instance->getName()] instanceof FieldStorageDefinitionInterface);
+    $this->assertTrue(isset($field_storage_definitions[$this->fieldTestData->instance->getName()]));
+    $this->assertTrue($field_storage_definitions[$this->fieldTestData->instance->getName()] instanceof FieldStorageDefinitionInterface);
     // Make sure no storage field for the instance on another entity type is
     // exposed.
-    $this->assertFalse(isset($field_storage_definitions[$this->instance_rev->getName()]));
+    $this->assertFalse(isset($field_storage_definitions[$this->fieldTestData->instance_rev->getName()]));
   }
 
 }

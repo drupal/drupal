@@ -22,10 +22,25 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
   public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_test', 'filter', 'user', 'text', 'quickedit');
 
   /**
+   * Bag of created fields and instances.
+   *
+   * Allows easy access to test field/instance names/IDs/objects via:
+   * - $this->fields->{$field_name}_field_storage
+   * - $this->fields->{$field_name}_instance
+   *
+   * @see \Drupal\quickedit\Tests\QuickEditTestBase::createFieldWithInstance()
+   *
+   * @var \ArrayObject
+   */
+  protected $fields;
+
+  /**
    * Sets the default field storage backend for fields created during tests.
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->fields = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
 
     $this->installEntitySchema('entity_test');
     $this->installConfig(array('field', 'filter'));
@@ -52,26 +67,26 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
    * @param array $formatter_settings
    *   The formatter settings.
    */
-  public function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
+  protected function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field_storage = $field_name . '_field_storage';
-    $this->$field_storage = entity_create('field_storage_config', array(
+    $this->fields->$field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
       'cardinality' => $cardinality,
     ));
-    $this->$field_storage->save();
+    $this->fields->$field_storage->save();
 
     $instance = $field_name . '_instance';
-    $this->$instance = entity_create('field_instance_config', array(
-      'field_storage' => $this->$field_storage,
+    $this->fields->$instance = entity_create('field_instance_config', array(
+      'field_storage' => $this->fields->$field_storage,
       'bundle' => 'entity_test',
       'label' => $label,
       'description' => $label,
       'weight' => mt_rand(0, 127),
       'settings' => $instance_settings,
     ));
-    $this->$instance->save();
+    $this->fields->$instance->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(

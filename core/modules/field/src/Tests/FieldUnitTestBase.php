@@ -24,10 +24,29 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
   public static $modules = array('user', 'entity', 'system', 'field', 'text', 'entity_test', 'field_test');
 
   /**
+   * Bag of created fields and instances.
+   *
+   * Allows easy access to test field/instance names/IDs/objects via:
+   * - $this->fields->field_name[suffix]
+   * - $this->fields->field_storage[suffix]
+   * - $this->fields->field_storage_uuid[suffix]
+   * - $this->fields->instance[suffix]
+   * - $this->fields->instance_definition[suffix]
+   *
+   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithInstance()
+   *
+   * @var \ArrayObject
+   */
+  protected $fieldTestData;
+
+  /**
    * Set the default field storage backend for fields created during tests.
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
+
+    $this->fieldTestData = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installSchema('system', array('sequences'));
@@ -49,7 +68,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    *   (optional) The entity type on which the instance should be created.
    *   Defaults to the default bundle of the entity type.
    */
-  function createFieldWithInstance($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
+  protected function createFieldWithInstance($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
     if (empty($bundle)) {
       $bundle = $entity_type;
     }
@@ -59,17 +78,17 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $instance = 'instance' . $suffix;
     $instance_definition = 'instance_definition' . $suffix;
 
-    $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
-    $this->$field_storage = entity_create('field_storage_config', array(
-      'name' => $this->$field_name,
+    $this->fieldTestData->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
+    $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
+      'name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
     ));
-    $this->$field_storage->save();
-    $this->$field_storage_uuid = $this->{$field_storage}->uuid();
-    $this->$instance_definition = array(
-      'field_storage' => $this->$field_storage,
+    $this->fieldTestData->$field_storage->save();
+    $this->fieldTestData->$field_storage_uuid = $this->fieldTestData->$field_storage->uuid();
+    $this->fieldTestData->$instance_definition = array(
+      'field_storage' => $this->fieldTestData->$field_storage,
       'bundle' => $bundle,
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
@@ -77,11 +96,11 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
         'test_instance_setting' => $this->randomName(),
       ),
     );
-    $this->$instance = entity_create('field_instance_config', $this->$instance_definition);
-    $this->$instance->save();
+    $this->fieldTestData->$instance = entity_create('field_instance_config', $this->fieldTestData->$instance_definition);
+    $this->fieldTestData->$instance->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
-      ->setComponent($this->$field_name, array(
+      ->setComponent($this->fieldTestData->$field_name, array(
         'type' => 'test_field_widget',
         'settings' => array(
           'test_widget_setting' => $this->randomName(),
@@ -114,7 +133,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    * @return
    *  An array of random values, in the format expected for field values.
    */
-  function _generateTestFieldValues($cardinality) {
+  protected function _generateTestFieldValues($cardinality) {
     $values = array();
     for ($i = 0; $i < $cardinality; $i++) {
       // field_test fields treat 0 as 'empty value'.
@@ -140,7 +159,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {
+  protected function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
     entity_get_controller($entity->getEntityTypeId())->resetCache(array($entity->id()));
     $e = entity_load($entity->getEntityTypeId(), $entity->id());

@@ -68,33 +68,33 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$field_name}->value = 'Hello, world!';
-    $this->entity->{$field_name}->format = 'full_html';
-    $this->entity->save();
+    $entity = entity_create('entity_test');
+    $entity->{$field_name}->value = 'Hello, world!';
+    $entity->{$field_name}->format = 'full_html';
+    $entity->save();
 
     // Editor selection without text processing, with cardinality 1.
-    $this->assertEqual('plain_text', $this->getSelectedEditor($this->entity->id(), $field_name), "Without text processing, cardinality 1, the 'plain_text' editor is selected.");
+    $this->assertEqual('plain_text', $this->getSelectedEditor($entity->id(), $field_name), "Without text processing, cardinality 1, the 'plain_text' editor is selected.");
 
     // Editor selection with text processing, cardinality 1.
-    $this->field_text_instance->settings['text_processing'] = 1;
-    $this->field_text_instance->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With text processing, cardinality 1, the 'form' editor is selected.");
+    $this->fields->field_text_instance->settings['text_processing'] = 1;
+    $this->fields->field_text_instance->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With text processing, cardinality 1, the 'form' editor is selected.");
 
     // Editor selection without text processing, cardinality 1 (again).
-    $this->field_text_instance->settings['text_processing'] = 0;
-    $this->field_text_instance->save();
-    $this->assertEqual('plain_text', $this->getSelectedEditor($this->entity->id(), $field_name), "Without text processing again, cardinality 1, the 'plain_text' editor is selected.");
+    $this->fields->field_text_instance->settings['text_processing'] = 0;
+    $this->fields->field_text_instance->save();
+    $this->assertEqual('plain_text', $this->getSelectedEditor($entity->id(), $field_name), "Without text processing again, cardinality 1, the 'plain_text' editor is selected.");
 
     // Editor selection without text processing, cardinality >1
-    $this->field_text_field_storage->cardinality = 2;
-    $this->field_text_field_storage->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "Without text processing, cardinality >1, the 'form' editor is selected.");
+    $this->fields->field_text_field_storage->cardinality = 2;
+    $this->fields->field_text_field_storage->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "Without text processing, cardinality >1, the 'form' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_text_instance->settings['text_processing'] = 1;
-    $this->field_text_instance->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With text processing, cardinality >1, the 'form' editor is selected.");
+    $this->fields->field_text_instance->settings['text_processing'] = 1;
+    $this->fields->field_text_instance->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With text processing, cardinality >1, the 'form' editor is selected.");
   }
 
   /**
@@ -122,23 +122,23 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$field_name}->value = 'Hello, world!';
-    $this->entity->{$field_name}->format = 'filtered_html';
-    $this->entity->save();
+    $entity = entity_create('entity_test');
+    $entity->{$field_name}->value = 'Hello, world!';
+    $entity->{$field_name}->format = 'filtered_html';
+    $entity->save();
 
     // Editor selection w/ cardinality 1, text format w/o associated text editor.
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
     // Editor selection w/ cardinality 1, text format w/ associated text editor.
-    $this->entity->{$field_name}->format = 'full_html';
-    $this->entity->save();
-    $this->assertEqual('wysiwyg', $this->getSelectedEditor($this->entity->id(), $field_name), "With cardinality 1, and the full_html text format, the 'wysiwyg' editor is selected.");
+    $entity->{$field_name}->format = 'full_html';
+    $entity->save();
+    $this->assertEqual('wysiwyg', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality 1, and the full_html text format, the 'wysiwyg' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_textarea_field_storage->cardinality = 2;
-    $this->field_textarea_field_storage->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
+    $this->fields->field_textarea_field_storage->cardinality = 2;
+    $this->fields->field_textarea_field_storage->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
 
   /**
@@ -159,17 +159,17 @@ class EditorSelectionTest extends QuickEditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$field_name}->value = 42;
-    $this->entity->save();
+    $entity = entity_create('entity_test');
+    $entity->{$field_name}->value = 42;
+    $entity->save();
 
     // Editor selection with cardinality 1.
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With cardinality 1, the 'form' editor is selected.");
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality 1, the 'form' editor is selected.");
 
     // Editor selection with cardinality >1.
-    $this->field_nr_field_storage->cardinality = 2;
-    $this->field_nr_field_storage->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $field_name), "With cardinality >1, the 'form' editor is selected.");
+    $this->fields->field_nr_field_storage->cardinality = 2;
+    $this->fields->field_nr_field_storage->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality >1, the 'form' editor is selected.");
   }
 
 }

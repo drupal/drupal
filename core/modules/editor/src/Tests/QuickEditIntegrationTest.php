@@ -64,7 +64,6 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
 
     // Install the Filter module.
     $this->installSchema('system', 'url_alias');
-    $this->enableModules(array('user', 'filter'));
 
     // Enable the Text Editor and Text Editor Test module.
     $this->enableModules(array('editor', 'editor_test'));
@@ -130,23 +129,23 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->editorSelector = $this->container->get('quickedit.editor.selector');
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$this->field_name}->value = 'Hello, world!';
-    $this->entity->{$this->field_name}->format = 'filtered_html';
-    $this->entity->save();
+    $entity = entity_create('entity_test');
+    $entity->{$this->field_name}->value = 'Hello, world!';
+    $entity->{$this->field_name}->format = 'filtered_html';
+    $entity->save();
 
     // Editor selection w/ cardinality 1, text format w/o associated text editor.
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $this->field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
     // Editor selection w/ cardinality 1, text format w/ associated text editor.
-    $this->entity->{$this->field_name}->format = 'full_html';
-    $this->entity->save();
-    $this->assertEqual('editor', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
+    $entity->{$this->field_name}->format = 'full_html';
+    $entity->save();
+    $this->assertEqual('editor', $this->getSelectedEditor($entity->id(), $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_textarea_field_storage->cardinality = 2;
-    $this->field_textarea_field_storage->save();
-    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
+    $this->fields->field_textarea_field_storage->cardinality = 2;
+    $this->fields->field_textarea_field_storage->save();
+    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
 
   /**
@@ -159,11 +158,11 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create an entity with values for the field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$this->field_name}->value = 'Test';
-    $this->entity->{$this->field_name}->format = 'full_html';
-    $this->entity->save();
-    $entity = entity_load('entity_test', $this->entity->id());
+    $entity = entity_create('entity_test');
+    $entity->{$this->field_name}->value = 'Test';
+    $entity->{$this->field_name}->format = 'full_html';
+    $entity->save();
+    $entity = entity_load('entity_test', $entity->id());
 
     // Verify metadata.
     $items = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED)->get($this->field_name);
@@ -197,11 +196,11 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    */
   public function testGetUntransformedTextCommand() {
     // Create an entity with values for the field.
-    $this->entity = entity_create('entity_test');
-    $this->entity->{$this->field_name}->value = 'Test';
-    $this->entity->{$this->field_name}->format = 'full_html';
-    $this->entity->save();
-    $entity = entity_load('entity_test', $this->entity->id());
+    $entity = entity_create('entity_test');
+    $entity->{$this->field_name}->value = 'Test';
+    $entity->{$this->field_name}->format = 'full_html';
+    $entity->save();
+    $entity = entity_load('entity_test', $entity->id());
 
     // Verify AJAX response.
     $controller = new EditorController();
