@@ -79,13 +79,13 @@ class FormSubmitter implements FormSubmitterInterface {
     $form_state['executed'] = TRUE;
 
     // If no response has been set, process the form redirect.
-    if (!isset($form_state['response']) && $redirect = $this->redirectForm($form_state)) {
-      $form_state['response'] = $redirect;
+    if (!$form_state->has('response') && $redirect = $this->redirectForm($form_state)) {
+      $form_state->setResponse($redirect);
     }
 
     // If there is a response was set, return it instead of continuing.
-    if (isset($form_state['response']) && $form_state['response'] instanceof Response) {
-      return $form_state['response'];
+    if (($response = $form_state->get('response')) && $response instanceof Response) {
+      return $response;
     }
   }
 

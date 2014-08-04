@@ -8,6 +8,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides an interface for an object containing the current state of a form.
@@ -74,6 +75,19 @@ interface FormStateInterface {
    * @return $this
    */
   public function setIfNotExists($property, $value);
+
+  /**
+   * Sets a response for this form.
+   *
+   * If a response is set, it will be used during processing and returned
+   * directly. The form will not be rebuilt or redirected.
+   *
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response to return.
+   *
+   * @return $this
+   */
+  public function setResponse(Response $response);
 
   /**
    * Sets the redirect URL for the form.

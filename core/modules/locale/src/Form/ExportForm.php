@@ -169,7 +169,7 @@ class ExportForm extends FormBase {
 
       $response = new BinaryFileResponse($uri);
       $response->setContentDisposition('attachment', $filename);
-      $form_state['response'] = $response;
+      $form_state->setResponse($response);
     }
     else {
       drupal_set_message($this->t('Nothing to export.'));

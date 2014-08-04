@@ -104,7 +104,7 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * Tests the handling of $form_state['response'].
+   * Tests the handling of FormStateInterface::$response.
    *
    * @dataProvider formStateResponseProvider
    */
@@ -136,7 +136,7 @@ class FormBuilderTest extends FormTestBase {
     catch (\Exception $e) {
       $this->assertSame('exit', $e->getMessage());
     }
-    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $form_state['response']);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $form_state->get('response'));
   }
 
   /**
@@ -150,7 +150,7 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * Tests the handling of a redirect when $form_state['response'] exists.
+   * Tests the handling of a redirect when FormStateInterface::$response exists.
    */
   public function testHandleRedirectWithResponse() {
     $form_id = 'test_form_id';
@@ -176,7 +176,7 @@ class FormBuilderTest extends FormTestBase {
       ->method('submitForm')
       ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $redirect) {
         // Set both the response and the redirect.
-        $form_state['response'] = $response;
+        $form_state->setResponse($response);
         $form_state['redirect'] = $redirect;
       }));
 
@@ -190,7 +190,7 @@ class FormBuilderTest extends FormTestBase {
     catch (\Exception $e) {
       $this->assertSame('exit', $e->getMessage());
     }
-    $this->assertSame($response, $form_state['response']);
+    $this->assertSame($response, $form_state->get('response'));
   }
 
   /**

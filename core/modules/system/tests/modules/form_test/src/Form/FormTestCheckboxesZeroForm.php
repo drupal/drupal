@@ -57,7 +57,7 @@ class FormTestCheckboxesZeroForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if (!empty($form_state['json'])) {
-      $form_state['response'] = new JsonResponse($form_state['values']);
+      $form_state->setResponse(new JsonResponse($form_state['values']));
     }
     else {
       $form_state['redirect'] = FALSE;

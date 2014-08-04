@@ -8,6 +8,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Stores information about the state of a form.
@@ -576,6 +577,14 @@ class FormState implements FormStateInterface, \ArrayAccess {
     $values = $this->getValues();
     $values[$property] = $value;
     $this->set('values', $values);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setResponse(Response $response) {
+    $this->set('response', $response);
     return $this;
   }
 
