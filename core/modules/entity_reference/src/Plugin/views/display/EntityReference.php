@@ -25,7 +25,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *   help = @Translation("Selects referenceable entities for an entity reference field."),
  *   theme = "views_view",
  *   register_theme = FALSE,
- *   uses_hook_menu = FALSE,
+ *   uses_menu_links = FALSE,
  *   entity_reference_display = TRUE
  * )
  */

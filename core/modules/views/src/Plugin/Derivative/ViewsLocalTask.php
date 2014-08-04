@@ -150,7 +150,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
    * @endcode
    */
   protected function getApplicableMenuViews() {
-    return Views::getApplicableViews('uses_hook_menu');
+    return Views::getApplicableViews('uses_menu_links');
   }
 
 }

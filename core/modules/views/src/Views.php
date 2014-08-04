@@ -198,7 +198,7 @@ class Views {
    * setting in their display's plugin settings.
    *
    * @param string $type
-   *   A flag from the display plugin definitions (e.g, 'uses_hook_menu').
+   *   A flag from the display plugin definitions (e.g, 'uses_menu_links').
    *
    * @return array
    *   A list of arrays containing the $view and $display_id.

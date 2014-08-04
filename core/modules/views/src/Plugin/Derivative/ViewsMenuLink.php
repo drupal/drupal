@@ -34,9 +34,7 @@ class ViewsMenuLink implements DeriverInterface {
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $links = array();
-    // @todo Replace uses_hook_menu with an annotation.
-    //   https://www.drupal.org/node/2310371
-    $views = Views::getApplicableViews('uses_hook_menu');
+    $views = Views::getApplicableViews('uses_menu_links');
     foreach ($views as $data) {
       /** @var \Drupal\views\ViewExecutable $view */
       list($view, $display_id) = $data;

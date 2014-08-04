@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   id = "page",
  *   title = @Translation("Page"),
  *   help = @Translation("Display the view as a page, with a URL and menu links."),
- *   uses_hook_menu = TRUE,
+ *   uses_menu_links = TRUE,
  *   uses_route = TRUE,
  *   contextual_links_locations = {"page"},
  *   theme = "views_view",
