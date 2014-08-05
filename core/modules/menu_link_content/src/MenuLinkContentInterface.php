@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\menu_link_content\Entity\MenuLinkContentInterface.
+ * Contains \Drupal\menu_link_content\MenuLinkContentInterface.
  */
 
-namespace Drupal\menu_link_content\Entity;
+namespace Drupal\menu_link_content;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 

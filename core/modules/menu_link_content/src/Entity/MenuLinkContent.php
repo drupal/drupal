@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Url;
+use Drupal\menu_link_content\MenuLinkContentInterface;
 
 /**
  * Defines the menu link content entity class.

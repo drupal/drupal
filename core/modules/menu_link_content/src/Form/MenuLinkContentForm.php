@@ -38,7 +38,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * The content menu link.
    *
-   * @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface
+   * @var \Drupal\menu_link_content\MenuLinkContentInterface
    */
   protected $entity;
 
@@ -336,7 +336,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface $entity */
+    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
     $new_definition = $this->extractFormValues($form, $form_state);
 

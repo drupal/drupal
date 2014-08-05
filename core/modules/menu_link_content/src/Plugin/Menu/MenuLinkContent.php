@@ -49,7 +49,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
   /**
    * The menu link content entity connected to this plugin instance.
    *
-   * @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface
+   * @var \Drupal\menu_link_content\MenuLinkContentInterface
    */
   protected $entity;
 
@@ -111,7 +111,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
   /**
    * Loads the entity associated with this menu link.
    *
-   * @return \Drupal\menu_link_content\Entity\MenuLinkContentInterface
+   * @return \Drupal\menu_link_content\MenuLinkContentInterface
    *   The menu link content entity.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
@@ -143,7 +143,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       // Clone the entity object to avoid tampering with the static cache.
       $this->entity = clone $entity;
       $the_entity = $this->entityManager->getTranslationFromContext($this->entity);
-      /** @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface $the_entity */
+      /** @var \Drupal\menu_link_content\MenuLinkContentInterface $the_entity */
       $this->entity = $the_entity;
       $this->entity->setInsidePlugin();
     }

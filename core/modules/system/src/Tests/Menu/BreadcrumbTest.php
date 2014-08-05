@@ -258,7 +258,7 @@ class BreadcrumbTest extends MenuTestBase {
     $this->drupalLogout();
     foreach ($tags as $name => $data) {
       $term = $data['term'];
-      /** @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface $link */
+      /** @var \Drupal\menu_link_content\MenuLinkContentInterface $link */
       $link = $data['link'];
 
       $link_path = $link->getUrlObject()->getInternalPath();

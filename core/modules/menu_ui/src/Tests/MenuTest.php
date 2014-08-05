@@ -51,7 +51,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * An array of test menu links.
    *
-   * @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface[]
+   * @var \Drupal\menu_link_content\MenuLinkContentInterface[]
    */
   protected $items;
 
@@ -605,7 +605,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Changes the parent of a menu link using the UI.
    *
-   * @param \Drupal\menu_link_content\Entity\MenuLinkContentInterface $item
+   * @param \Drupal\menu_link_content\MenuLinkContentInterface $item
    *   The menu link item to move.
    * @param int $parent
    *   The id of the new parent.

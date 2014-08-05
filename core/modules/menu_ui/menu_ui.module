@@ -192,7 +192,7 @@ function menu_ui_node_type_delete(NodeTypeInterface $type) {
  */
 function menu_ui_node_save(EntityInterface $node) {
   if (!empty($node->menu)) {
-    /** @var \Drupal\menu_link_content\Entity\MenuLinkContentInterface $entity */
+    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
     $definition = $node->menu;
     if (trim($definition['title'])) {
       if (!empty($definition['entity_id'])) {
