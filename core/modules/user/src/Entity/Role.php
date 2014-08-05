@@ -34,9 +34,9 @@ use Drupal\user\RoleInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "user.role_delete",
- *     "edit-form" = "user.role_edit",
- *     "edit-permissions-form" = "user.admin_permission"
+ *     "delete-form" = "entity.user_role.delete_form",
+ *     "edit-form" = "entity.user_role.edit_form",
+ *     "edit-permissions-form" = "entity.user_role.edit_permissions_form"
  *   }
  * )
  */

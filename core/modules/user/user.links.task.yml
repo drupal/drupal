@@ -1,8 +1,8 @@
 
-user.role_edit:
+entity.user_role.edit_form:
   title: 'Edit'
-  route_name: user.role_edit
-  base_route: user.role_edit
+  route_name: entity.user_role.edit_form
+  base_route: entity.user_role.edit_form
 
 user.account_settings_tab:
   route_name: user.account_settings

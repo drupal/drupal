@@ -1,5 +1,5 @@
-user.role_delete:
+entity.user_role.delete_form:
   title: 'Delete role'
   group: role
   weight: 10
-  route_name: 'user.role_delete'
+  route_name: 'entity.user_role.delete_form'

@@ -67,7 +67,7 @@ user.admin_permissions:
   requirements:
     _permission: 'administer permissions'
 
-user.admin_permission:
+entity.user_role.edit_permissions_form:
   path: '/admin/people/permissions/{user_role}'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsRoleSpecificForm'
@@ -99,7 +99,7 @@ user.role_add:
   requirements:
     _permission: 'administer permissions'
 
-user.role_edit:
+entity.user_role.edit_form:
   path: '/admin/people/roles/manage/{user_role}'
   defaults:
     _entity_form: user_role.default
@@ -107,7 +107,7 @@ user.role_edit:
   requirements:
     _entity_access: user_role.update
 
-user.role_delete:
+entity.user_role.delete_form:
   path: '/admin/people/roles/manage/{user_role}/delete'
   defaults:
     _entity_form: user_role.delete
