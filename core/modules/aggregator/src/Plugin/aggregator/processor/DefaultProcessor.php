@@ -13,7 +13,7 @@ use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -56,7 +56,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\Date
+   * @var \Drupal\Core\Datetime\DateFormatter
    */
   protected $dateFormatter;
 
@@ -75,7 +75,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The entity query object for feed items.
    * @param \Drupal\aggregator\ItemStorageInterface $item_storage
    *   The entity storage for feed items.
-   * @param \Drupal\Core\Datetime\Date $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageInterface $item_storage, DateFormatter $date_formatter) {
@@ -99,7 +99,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $container->get('config.factory'),
       $container->get('entity.query')->get('aggregator_item'),
       $container->get('entity.manager')->getStorage('aggregator_item'),
-      $container->get('date')
+      $container->get('date.formatter')
     );
   }
 

@@ -9,7 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
@@ -23,7 +23,7 @@ class FileSystemForm extends ConfigFormBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\Date
+   * @var \Drupal\Core\Datetime\DateFormatter
    */
   protected $dateFormatter;
 
@@ -32,7 +32,7 @@ class FileSystemForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Datetime\Date $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */
   public function __construct(ConfigFactoryInterface $config_factory, DateFormatter $date_formatter) {
@@ -46,7 +46,7 @@ class FileSystemForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static (
       $container->get('config.factory'),
-      $container->get('date')
+      $container->get('date.formatter')
     );
   }
 

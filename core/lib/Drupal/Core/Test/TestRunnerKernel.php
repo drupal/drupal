@@ -33,9 +33,10 @@ class TestRunnerKernel extends DrupalKernel {
     parent::__construct($environment, $class_loader, FALSE);
 
     // Prime the module list and corresponding Extension objects.
-    // @todo Remove System module. Needed because \Drupal\Core\Datetime\Date
-    //   has a (needless) dependency on the 'date_format' entity, so calls to
-    //   format_date()/format_interval() cause a plugin not found exception.
+    // @todo Remove System module. Needed because
+    //   \Drupal\Core\Datetime\DateFormatter has a (needless) dependency on the
+    //   'date_format' entity, so calls to format_date()/format_interval() cause
+    //   a plugin not found exception.
     $this->moduleList = array(
       'system' => 0,
       'simpletest' => 0,

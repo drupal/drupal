@@ -10,7 +10,7 @@ namespace Drupal\node\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
@@ -24,14 +24,14 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\Date
+   * @var \Drupal\Core\Datetime\DateFormatter
    */
   protected $dateFormatter;
 
   /**
    * Constructs a NodeController object.
    *
-   * @param \Drupal\Core\Datetime\Date $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */
   public function __construct(DateFormatter $date_formatter) {
@@ -42,7 +42,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('date'));
+    return new static($container->get('date.formatter'));
   }
 
 

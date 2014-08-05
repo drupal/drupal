@@ -212,7 +212,7 @@ class ContactSitewideTest extends WebTestBase {
     // Submit contact form one over limit.
     $this->drupalGet('contact');
     $this->assertResponse(403);
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => \Drupal::config('contact.settings')->get('flood.limit'), '@interval' => \Drupal::service('date')->formatInterval(600))));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => \Drupal::config('contact.settings')->get('flood.limit'), '@interval' => \Drupal::service('date.formatter')->formatInterval(600))));
 
     // Test listing controller.
     $this->drupalLogin($admin_user);

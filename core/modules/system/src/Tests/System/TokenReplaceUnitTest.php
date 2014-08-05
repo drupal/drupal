@@ -140,12 +140,12 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
 
     // Generate and test tokens.
     $tests = array();
-    $date_service = \Drupal::service('date');
-    $tests['[date:short]'] = $date_service->format($date, 'short', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:medium]'] = $date_service->format($date, 'medium', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:long]'] = $date_service->format($date, 'long', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:custom:m/j/Y]'] = $date_service->format($date, 'custom', 'm/j/Y', NULL, $this->interfaceLanguage->id);
-    $tests['[date:since]'] = $date_service->formatInterval(REQUEST_TIME - $date, 2, $this->interfaceLanguage->id);
+    $date_formatter = \Drupal::service('date.formatter');
+    $tests['[date:short]'] = $date_formatter->format($date, 'short', '', NULL, $this->interfaceLanguage->id);
+    $tests['[date:medium]'] = $date_formatter->format($date, 'medium', '', NULL, $this->interfaceLanguage->id);
+    $tests['[date:long]'] = $date_formatter->format($date, 'long', '', NULL, $this->interfaceLanguage->id);
+    $tests['[date:custom:m/j/Y]'] = $date_formatter->format($date, 'custom', 'm/j/Y', NULL, $this->interfaceLanguage->id);
+    $tests['[date:since]'] = $date_formatter->formatInterval(REQUEST_TIME - $date, 2, $this->interfaceLanguage->id);
     $tests['[date:raw]'] = Xss::filter($date);
 
     // Test to make sure that we generated something for each token.

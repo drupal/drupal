@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @ingroup i18n
  */
-class Date {
+class DateFormatter {
   use StringTranslationTrait;
 
   /**

@@ -59,8 +59,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:url]'] = url('comment/' . $comment->id(), $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->id() . '/edit', $url_options);
-    $tests['[comment:created:since]'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->id);
-    $tests['[comment:changed:since]'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->id);
+    $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->id);
+    $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->id);
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
     $tests['[comment:parent:title]'] = String::checkPlain($parent_comment->getSubject());
     $tests['[comment:node:nid]'] = $comment->getCommentedEntityId();

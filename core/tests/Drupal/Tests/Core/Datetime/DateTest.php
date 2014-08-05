@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Datetime;
 
-use Drupal\Core\Datetime\Date as DateFormatter;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -40,7 +40,7 @@ class DateTest extends UnitTestCase {
   /**
    * The tested date service class.
    *
-   * @var \Drupal\Core\Datetime\Date
+   * @var \Drupal\Core\Datetime\DateFormatter
    */
   protected $dateFormatter;
 
@@ -57,7 +57,7 @@ class DateTest extends UnitTestCase {
    *
    * @dataProvider providerTestFormatInterval
    *
-   * @see \Drupal\Core\Datetime\Date::formatInterval()
+   * @see \Drupal\Core\Datetime\DateFormatter::formatInterval()
    */
   public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL) {
     // Mocks a simple formatPlural implementation.

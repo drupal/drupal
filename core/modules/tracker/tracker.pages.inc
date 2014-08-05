@@ -92,7 +92,7 @@ function tracker_page($account = NULL) {
         'title' => array('data' => l($node->getTitle(), 'node/' . $node->id()) . ' ' . drupal_render($mark_build)),
         'author' => array('data' => array('#theme' => 'username', '#account' => $node->getOwner())),
         'replies' => array('class' => array('replies'), 'data' => $comments),
-        'last updated' => array('data' => t('!time ago', array('!time' => \Drupal::service('date')->formatInterval(REQUEST_TIME - $node->last_activity)))),
+        'last updated' => array('data' => t('!time ago', array('!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->last_activity)))),
       );
 
       $rows[] = $row;

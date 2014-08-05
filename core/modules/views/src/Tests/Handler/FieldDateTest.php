@@ -64,11 +64,11 @@ class FieldDateTest extends ViewUnitTestBase {
     }
 
     $intervals = array(
-      'raw time ago' => $this->container->get('date')->formatInterval(REQUEST_TIME - $time, 2),
-      'time ago' => t('%time ago', array('%time' => $this->container->get('date')->formatInterval(REQUEST_TIME - $time, 2))),
+      'raw time ago' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2),
+      'time ago' => t('%time ago', array('%time' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2))),
       // TODO write tests for them
-//       'raw time span' => $this->container->get('date')->formatInterval(REQUEST_TIME - $time, 2),
-//       'time span' => t('%time hence', array('%time' => $this->container->get('date')->formatInterval(REQUEST_TIME - $time, 2))),
+//       'raw time span' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2),
+//       'time span' => t('%time hence', array('%time' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2))),
     );
     $this->assertRenderedDatesEqual($view, $intervals);
   }

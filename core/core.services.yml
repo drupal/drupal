@@ -787,8 +787,8 @@ services:
   country_manager:
     class: Drupal\Core\Locale\CountryManager
     arguments: ['@module_handler']
-  date:
-    class: Drupal\Core\Datetime\Date
+  date.formatter:
+    class: Drupal\Core\Datetime\DateFormatter
     arguments: ['@entity.manager', '@language_manager', '@string_translation', '@config.factory']
   feed.bridge.reader:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
