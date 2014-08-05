@@ -11,6 +11,8 @@ use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * Defines an AJAX command to open certain content in a dialog.
+ *
+ * @ingroup ajax
  */
 class OpenDialogCommand implements CommandInterface {
 

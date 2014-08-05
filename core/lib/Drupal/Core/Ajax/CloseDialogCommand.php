@@ -9,6 +9,8 @@ namespace Drupal\Core\Ajax;
 
 /**
  * Defines an AJAX command that closes the current active dialog.
+ *
+ * @ingroup ajax
  */
 class CloseDialogCommand implements CommandInterface {
 

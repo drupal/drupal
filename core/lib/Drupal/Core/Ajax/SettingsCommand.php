@@ -18,6 +18,8 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.settings()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class SettingsCommand implements CommandInterface {
 

@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * JSON response object for AJAX requests.
+ *
+ * @ingroup ajax
  */
 class AjaxResponse extends JsonResponse {
 

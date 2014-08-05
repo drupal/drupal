@@ -20,6 +20,8 @@ use Drupal\Core\Ajax\InsertCommand;
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/prepend#content
+ *
+ * @ingroup ajax
  */
 class PrependCommand extends InsertCommand {
 

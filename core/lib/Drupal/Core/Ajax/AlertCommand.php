@@ -11,6 +11,8 @@ use Drupal\Core\Ajax\CommandInterface;
 
 /**
  * AJAX command for a javascript alert box.
+ *
+ * @ingroup ajax
  */
 class AlertCommand implements CommandInterface {
 

@@ -17,6 +17,8 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.restripe()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class RestripeCommand implements CommandInterface {
 

@@ -20,6 +20,8 @@ use Drupal\Core\Ajax\InsertCommand;
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Attributes/html#val
+ *
+ * @ingroup ajax
  */
 class HtmlCommand extends InsertCommand {
 

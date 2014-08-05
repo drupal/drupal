@@ -16,6 +16,8 @@ use Drupal\Core\Ajax\CommandInterface;
  * defined in misc/ajax.js.
  *
  * @see misc/ajax.js
+ *
+ * @ingroup ajax
  */
 class AddCssCommand implements CommandInterface {
 

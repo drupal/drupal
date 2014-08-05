@@ -18,6 +18,8 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class InsertCommand implements CommandInterface {
 

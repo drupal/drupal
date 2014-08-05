@@ -21,6 +21,8 @@ use Drupal\Core\Ajax\InsertCommand;
  *
  * See
  * @link http://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
+ *
+ * @ingroup ajax
  */
 class ReplaceCommand extends InsertCommand {
 

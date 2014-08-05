@@ -11,6 +11,8 @@ use Drupal\Core\Ajax\OpenDialogCommand;
 
 /**
  * Defines an AJAX command to open certain content in a dialog in a modal dialog.
+ *
+ * @ingroup ajax
  */
 class OpenModalDialogCommand extends OpenDialogCommand {
   /**

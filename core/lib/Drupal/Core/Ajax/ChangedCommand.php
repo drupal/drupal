@@ -17,6 +17,8 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.changed()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class ChangedCommand implements CommandInterface {
 

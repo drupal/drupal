@@ -19,6 +19,8 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.invoke()
  * defined in misc/ajax.js.
+ *
+ * @ingroup ajax
  */
 class InvokeCommand implements CommandInterface {
 

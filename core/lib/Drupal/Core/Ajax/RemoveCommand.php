@@ -20,6 +20,8 @@ use Drupal\Core\Ajax\CommandInterface;
  * defined in misc/ajax.js.
  *
  * @see http://docs.jquery.com/Manipulation/remove#expr
+ *
+ * @ingroup ajax
  */
 class RemoveCommand Implements CommandInterface {
 
