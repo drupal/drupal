@@ -50,8 +50,8 @@ function config_test_entity_type_alter(array &$entity_types) {
   // Create a clone of config_test that does not have a status.
   $entity_types['config_test_no_status'] = clone $entity_types['config_test'];
   $config_test_no_status = &$entity_types['config_test_no_status'];
-  $config_test_no_status->setLinkTemplate('edit-form', 'config_test.entity_config_test_no_status');
-  $config_test_no_status->setLinkTemplate('delete-form', 'config_test.entity_delete_config_test_no_status');
+  $config_test_no_status->setLinkTemplate('edit-form', 'entity.config_test.edit_form_config_test_no_status');
+  $config_test_no_status->setLinkTemplate('delete-form', 'entity.config_test.delete_form_config_test_no_status');
 
   $keys = $config_test_no_status->getKeys();
   unset($keys['status']);
