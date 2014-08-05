@@ -56,19 +56,19 @@ class TrackerNodeAccessTest extends WebTestBase {
     ));
 
     // User with access should see both nodes created.
-    $this->drupalGet('tracker');
+    $this->drupalGet('activity');
     $this->assertText($private_node->getTitle(), 'Private node is visible to user with private access.');
     $this->assertText($public_node->getTitle(), 'Public node is visible to user with private access.');
-    $this->drupalGet('user/' . $access_user->id() . '/track');
+    $this->drupalGet('user/' . $access_user->id() . '/activity');
     $this->assertText($private_node->getTitle(), 'Private node is visible to user with private access.');
     $this->assertText($public_node->getTitle(), 'Public node is visible to user with private access.');
 
     // User without access should not see private node.
     $this->drupalLogin($no_access_user);
-    $this->drupalGet('tracker');
+    $this->drupalGet('activity');
     $this->assertNoText($private_node->getTitle(), 'Private node is not visible to user without private access.');
     $this->assertText($public_node->getTitle(), 'Public node is visible to user without private access.');
-    $this->drupalGet('user/' . $access_user->id() . '/track');
+    $this->drupalGet('user/' . $access_user->id() . '/activity');
     $this->assertNoText($private_node->getTitle(), 'Private node is not visible to user without private access.');
     $this->assertText($public_node->getTitle(), 'Public node is visible to user without private access.');
   }

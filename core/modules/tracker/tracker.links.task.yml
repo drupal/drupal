@@ -12,4 +12,4 @@ tracker.users_recent_tab:
 tracker.user_tab:
   route_name: tracker.user_tab
   base_route: user.view
-  title: 'Track'
+  title: 'Activity'
