@@ -330,6 +330,16 @@ views_handler:
     provider:
       type: string
       label: 'Provider'
+    dependencies:
+      type: mapping
+      label: 'Dependencies'
+      mapping:
+        module:
+          type: sequence
+          label: 'Modules'
+          sequence:
+            - type: string
+              label: 'Dependency'
 
 views_argument:
   type: views_handler

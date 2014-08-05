@@ -70,23 +70,24 @@ class NodeLanguageTest extends NodeTestBase {
     // "English", or "Spanish", as there is a language field in the view
     // that prints out those words.
     $this->node_titles = array(
+      'es' => array(
+        'Primero nodo es',
+        'Segundo nodo es',
+        'Tercera nodo es',
+      ),
       'en' => array(
         'First node en',
         'Second node en',
       ),
-      'es' => array(
-        'Primero nodo es',
-        'Segundo nodo es',
-      ),
       'fr' => array(
-        'Premier nodule fr',
+        'Premier nœud fr',
       )
     );
 
     // Create nodes with translations.
-    foreach ($this->node_titles['en'] as $index => $title) {
-      $node = $this->drupalCreateNode(array('title' => $title, 'langcode' => 'en', 'type' => 'page'));
-      foreach (array('es', 'fr') as $langcode) {
+    foreach ($this->node_titles['es'] as $index => $title) {
+      $node = $this->drupalCreateNode(array('title' => $title, 'langcode' => 'es', 'type' => 'page', 'promote' => 1));
+      foreach (array('en', 'fr') as $langcode) {
         if (isset($this->node_titles[$langcode][$index])) {
           $translation = $node->addTranslation($langcode, array('title' => $this->node_titles[$langcode][$index]));
           $translation->body->value = $this->randomName(32);
@@ -94,6 +95,9 @@ class NodeLanguageTest extends NodeTestBase {
       }
       $node->save();
     }
+
+    $user = $this->drupalCreateUser(array('access content overview', 'access content'));
+    $this->drupalLogin($user);
   }
 
   /**
@@ -142,5 +146,43 @@ class NodeLanguageTest extends NodeTestBase {
     $this->assertNoText('English', 'English language is not shown on ' . $message);
     $this->assertNoText('French', 'French language is not shown on ' . $message);
     $this->assertText('Spanish', 'Spanish language is shown on ' . $message);
+
+    // Test the front page view filter. Only node titles in the current language
+    // should be displayed on the front page by default.
+    foreach ($this->node_titles as $langcode => $titles) {
+      $this->drupalGet(($langcode == 'en' ? '' : "$langcode/") . 'node');
+      foreach ($titles as $title) {
+        $this->assertText($title);
+      }
+      foreach ($this->node_titles as $control_langcode => $control_titles) {
+        if ($langcode != $control_langcode) {
+          foreach ($control_titles as $title) {
+            $this->assertNoText($title);
+          }
+        }
+      }
+    }
+
+    // Test the node admin view filter. By default all translations should show.
+    $this->drupalGet('admin/content');
+    foreach ($this->node_titles as $titles) {
+      foreach ($titles as $title) {
+        $this->assertText($title);
+      }
+    }
+    // When filtered, only the specific languages should show.
+    foreach ($this->node_titles as $langcode => $titles) {
+      $this->drupalGet('admin/content', array('query' => array('langcode' => $langcode)));
+      foreach ($titles as $title) {
+        $this->assertText($title);
+      }
+      foreach ($this->node_titles as $control_langcode => $control_titles) {
+        if ($langcode != $control_langcode) {
+          foreach ($control_titles as $title) {
+            $this->assertNoText($title);
+          }
+        }
+      }
+    }
   }
 }

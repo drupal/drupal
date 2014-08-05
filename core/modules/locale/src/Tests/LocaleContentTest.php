@@ -199,30 +199,4 @@ class LocaleContentTest extends WebTestBase {
     $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the Spanish node.');
   }
 
-
-  /**
-   * Test filtering Node content by language.
-   */
-  public function testNodeAdminLanguageFilter() {
-    \Drupal::moduleHandler()->install(array('views'));
-    // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
-
-    // Log in as admin.
-    $this->drupalLogin($admin_user);
-
-    // Enable multiple languages.
-    $this->drupalPostForm('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
-    $this->drupalPostForm('admin/config/regional/language/add', array('predefined_langcode' => 'zh-hant'), t('Add language'));
-
-    // Create two nodes: English and Chinese.
-    $node_en = $this->drupalCreateNode(array('langcode' => 'en'));
-    $node_zh_hant = $this->drupalCreateNode(array('langcode' => 'zh-hant'));
-
-    // Verify filtering by language.
-    $this->drupalGet('admin/content', array('query' => array('langcode' => 'zh-hant')));
-    $this->assertLinkByHref('node/' . $node_zh_hant->id() . '/edit');
-    $this->assertNoLinkByHref('node/' . $node_en->id() . '/edit');
-  }
-
 }

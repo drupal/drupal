@@ -245,13 +245,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $display['display_options']['row']['options']['rendering_language'] = 'translation_language_renderer';
     $view->save();
 
-    // Test that the frontpage view displays all translated nodes correctly by
-    // checking that the title for each translation is present.
-    $this->drupalGet('node');
-    foreach ($this->langcodes as $langcode) {
-      $this->assertText($values[$langcode]['title'][0]['value']);
-    }
-
     // Need to check from the beginning, including the base_path, in the url
     // since the pattern for the default language might be a substring of
     // the strings for other languages.
@@ -261,6 +254,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     // See also assertTaxonomyPage() in NodeAccessBaseTableTest.
     $node_href = 'node/' . $node->id();
     foreach ($this->langcodes as $langcode) {
+      $this->drupalGet('node', array('language' => \Drupal::languageManager()->getLanguage($langcode)));
       $num_match_found = 0;
       if ($langcode == 'en') {
         // Site default language does not have langcode prefix in the URL.
@@ -282,6 +276,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     // language.
     $comment_form_href = 'node/' . $node->id() . '#comment-form';
     foreach ($this->langcodes as $langcode) {
+      $this->drupalGet('node', array('language' => \Drupal::languageManager()->getLanguage($langcode)));
       $num_match_found = 0;
       if ($langcode == 'en') {
         // Site default language does not have langcode prefix in the URL.
