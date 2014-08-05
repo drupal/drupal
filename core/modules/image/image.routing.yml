@@ -6,7 +6,7 @@ image.style_add:
   requirements:
     _permission: 'administer image styles'
 
-image.style_edit:
+entity.image_style.edit_form:
   path: '/admin/config/media/image-styles/manage/{image_style}'
   defaults:
     _entity_form: image_style.edit
@@ -14,7 +14,7 @@ image.style_edit:
   requirements:
     _permission: 'administer image styles'
 
-image.style_delete:
+entity.image_style.delete_form:
   path: '/admin/config/media/image-styles/manage/{image_style}/delete'
   defaults:
     _entity_form: 'image_style.delete'
@@ -22,7 +22,7 @@ image.style_delete:
   requirements:
     _permission: 'administer image styles'
 
-image.style_flush:
+entity.image_style.flush_form:
   path: '/admin/config/media/image-styles/manage/{image_style}/flush'
   defaults:
     _entity_form: 'image_style.flush'

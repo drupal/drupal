@@ -1,7 +1,7 @@
-image.style_edit:
+entity.image_style.edit_form:
   title: 'Edit'
-  route_name: image.style_edit
-  base_route: image.style_edit
+  route_name: entity.image_style.edit_form
+  base_route: entity.image_style.edit_form
 
 image.style_list:
   title: List

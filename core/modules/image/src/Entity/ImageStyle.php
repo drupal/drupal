@@ -42,9 +42,9 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "label" = "label"
  *   },
  *   links = {
- *     "flush-form" = "image.style_flush",
- *     "edit-form" = "image.style_edit",
- *     "delete-form" = "image.style_delete"
+ *     "flush-form" = "entity.image_style.flush_form",
+ *     "edit-form" = "entity.image_style.edit_form",
+ *     "delete-form" = "entity.image_style.delete_form"
  *   }
  * )
  */
