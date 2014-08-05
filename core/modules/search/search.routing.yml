@@ -22,7 +22,7 @@ search.add_type:
   requirements:
     _entity_create_access: 'search_page'
 
-search.edit:
+entity.search_page.edit_form:
   path: '/admin/config/search/pages/manage/{search_page}'
   defaults:
     _entity_form: 'search_page.edit'
@@ -30,7 +30,7 @@ search.edit:
   requirements:
     _entity_access: 'search_page.update'
 
-search.enable:
+entity.search_page.enable:
   path: '/admin/config/search/pages/manage/{search_page}/enable'
   defaults:
     _controller: '\Drupal\search\Controller\SearchController::performOperation'
@@ -38,7 +38,7 @@ search.enable:
   requirements:
     _entity_access: 'search_page.update'
 
-search.disable:
+entity.search_page.disable:
   path: '/admin/config/search/pages/manage/{search_page}/disable'
   defaults:
     _controller: '\Drupal\search\Controller\SearchController::performOperation'
@@ -46,14 +46,14 @@ search.disable:
   requirements:
     _entity_access: 'search_page.disable'
 
-search.set_default:
+entity.search_page.set_default:
   path: '/admin/config/search/pages/manage/{search_page}/set-default'
   defaults:
     _controller: '\Drupal\search\Controller\SearchController::setAsDefault'
   requirements:
     _entity_access: 'search_page.update'
 
-search.delete:
+entity.search_page.delete_form:
   path: '/admin/config/search/pages/manage/{search_page}/delete'
   defaults:
     _entity_form: 'search_page.delete'

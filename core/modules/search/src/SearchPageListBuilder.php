@@ -305,7 +305,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     else {
       $operations['default'] = array(
         'title' => $this->t('Set as default'),
-        'route_name' => 'search.set_default',
+        'route_name' => 'entity.search_page.set_default',
         'route_parameters' => array(
           'search_page' => $entity->id(),
         ),
