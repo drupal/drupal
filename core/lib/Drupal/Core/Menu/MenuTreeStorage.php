@@ -635,11 +635,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function loadByProperties(array $properties) {
-    // @todo Only allow loading by plugin definition properties.
-         https://www.drupal.org/node/2302165
     $query = $this->connection->select($this->table, $this->options);
     $query->fields($this->table, $this->definitionFields());
     foreach ($properties as $name => $value) {
+      if (!in_array($name, $this->definitionFields())) {
+        $fields = implode(', ', $this->definitionFields());
+        throw new \InvalidArgumentException(String::format('An invalid property name, @name was specified. Allowed property names are: @fields.', array('@name' => $name, '@fields' => $fields)));
+      }
       $query->condition($name, $value);
     }
     $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);

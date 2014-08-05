@@ -300,6 +300,29 @@ class MenuTreeStorageTest extends KernelTestBase {
   }
 
   /**
+   * Tests MenuTreeStorage::loadByProperties().
+   */
+  public function testLoadByProperties() {
+    $properties = array('foo' => 'bar');
+    $msg = 'An invalid property name throws an exception.';
+    try {
+      $this->treeStorage->loadByProperties($properties);
+      $this->fail($msg);
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->assertEqual(
+        'An invalid property name, foo was specified. Allowed property names are: menu_name, route_name, route_parameters, url, title, title_arguments, title_context, description, parent, weight, options, expanded, hidden, provider, metadata, class, form_class, id.',
+        $e->getMessage()
+      );
+      $this->pass($msg);
+    }
+    $this->addMenuLink(1);
+    $properties = array(array('menu_name' => 'tools'));
+    $links = $this->treeStorage->loadByProperties($properties);
+    $this->assertEqual('tools', $links[1]['menu_name']);
+  }
+
+  /**
    * Adds a link with the given ID and supply defaults.
    */
   protected function addMenuLink($id, $parent = '', $route_name = 'test', $route_parameters = array(), $menu_name = 'tools', $extra = array()) {

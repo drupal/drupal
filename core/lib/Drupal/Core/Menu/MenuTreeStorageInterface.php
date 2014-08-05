@@ -71,6 +71,9 @@ interface MenuTreeStorageInterface {
    * @param array $properties
    *   The properties to filter by.
    *
+   * @throws \InvalidArgumentException
+   *   Thrown if an invalid property name is specified in $properties.
+   *
    * @return array
    *   An array of menu link definition arrays.
    */
