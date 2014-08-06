@@ -525,37 +525,9 @@ function _toolbar_get_subtrees_hash($langcode) {
     // caches later, based on the user's ID regardless of language.
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE, 'menu' => 'admin'));
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE, 'menu' => 'admin', 'user_roles' => TRUE));
   }
   return $hash;
-}
-
-/**
- * Implements hook_modules_installed().
- */
-function toolbar_modules_installed($modules) {
-  _toolbar_clear_user_cache();
-}
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function toolbar_modules_uninstalled($modules) {
-  _toolbar_clear_user_cache();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for user entities.
- */
-function toolbar_user_update(UserInterface $user) {
-  _toolbar_clear_user_cache($user->id());
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for user_role entities.
- */
-function toolbar_user_role_update(RoleInterface $role) {
-  _toolbar_clear_user_cache();
 }
 
 /**
@@ -573,18 +545,3 @@ function _toolbar_get_user_cid($uid, $langcode) {
   return 'toolbar_' . $uid . ':' . $langcode;
 }
 
-/**
- * Clears the Toolbar user cache.
- *
- * @param int $uid
- *   (optional) The user ID whose toolbar cache entry to clear.
- */
-function _toolbar_clear_user_cache($uid = NULL) {
-  // Clear by the 'user' tag in order to delete all caches, in any language,
-  // associated with this user.
-  if (isset($uid)) {
-    Cache::deleteTags(array('user' => array($uid)));
-  } else {
-    \Drupal::cache('toolbar')->deleteAll();
-  }
-}
