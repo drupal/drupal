@@ -128,7 +128,11 @@ class FormTestDisabledElementsForm extends FormBase {
 
     // Date.
     $date = new DrupalDateTime('1978-11-01 10:30:00', 'Europe/Berlin');
-    $expected = array('date' => '1978-11-01 10:30:00', 'timezone_type' => 3, 'timezone' => 'Europe/Berlin',);
+    // Starting with PHP 5.4.30, 5.5.15, JSON encoded DateTime objects include
+    // microsends. Make sure that the expected value is correct for all versions
+    // by encoding and decoding it again instead of hardcoding it.
+    // See https://github.com/php/php-src/commit/fdb2709dd27c5987c2d2c8aaf0cdbebf9f17f643
+    $expected = json_decode(json_encode($date), TRUE);
     $form['disabled_container']['disabled_container_datetime'] = array(
       '#type' => 'datetime',
       '#title' => 'datetime',
