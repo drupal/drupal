@@ -158,6 +158,11 @@ function _openid_xrds_parse($raw_xml) {
     return array();
   }
 
+  // Also stop parsing if there is an unreasonably large number of tags.
+  if ($dom->getElementsByTagName('*')->length > variable_get('openid_xrds_maximum_tag_count', 30000)) {
+    return array();
+  }
+
   // Parse the DOM document for the information we need.
   if ($xml = simplexml_import_dom($dom)) {
     foreach ($xml->children(OPENID_NS_XRD)->XRD as $xrd) {

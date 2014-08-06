@@ -1,4 +1,8 @@
 
+Drupal 7.31, 2014-08-06
+----------------------
+- Fixed security issues (denial of service). See SA-CORE-2014-004.
+
 Drupal 7.30, 2014-07-24
 -----------------------
 - Fixed a regression introduced in Drupal 7.29 that caused files or images
