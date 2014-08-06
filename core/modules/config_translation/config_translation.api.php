@@ -89,24 +89,5 @@ function hook_config_translation_info_alter(&$info) {
 }
 
 /**
- * Alter config typed data definitions.
- *
- * Used to automatically generate translation forms, you can alter the typed
- * data types representing each configuration schema type to change default
- * labels or form element renderers.
- *
- * @param $definitions
- *   Associative array of configuration type definitions keyed by schema type
- *   names. The elements are themselves array with information about the type.
- */
-function hook_config_translation_type_info_alter(&$definitions) {
-  // Enhance the text and date type definitions with classes to generate proper
-  // form elements in ConfigTranslationFormBase. Other translatable types will
-  // appear as a one line textfield.
-  $definitions['text']['form_element_class'] = '\Drupal\config_translation\FormElement\Textarea';
-  $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
-}
-
-/**
  * @} End of "addtogroup hooks".
  */

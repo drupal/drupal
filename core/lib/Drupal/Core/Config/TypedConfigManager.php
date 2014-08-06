@@ -9,19 +9,14 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
 /**
  * Manages config type plugins.
  */
 class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
-
-  /**
-   * The cache ID for the definitions.
-   *
-   * @var string
-   */
-  const CACHE_ID = 'typed_config_definitions';
 
   /**
    * A storage instance for reading configuration data.
@@ -45,13 +40,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   protected $definitions;
 
   /**
-   * Cache backend for the definitions.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $configStorage
@@ -61,10 +49,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to use for caching the definitions.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache) {
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler) {
     $this->configStorage = $configStorage;
     $this->schemaStorage = $schemaStorage;
-    $this->cache = $cache;
+    $this->setCacheBackend($cache, 'typed_config_definitions');
+    $this->discovery = new ConfigSchemaDiscovery($schemaStorage);
+    $this->alterInfo('config_schema_info');
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -150,31 +141,9 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * {@inheritdoc}
    */
-  public function getDefinitions() {
-    if (!isset($this->definitions)) {
-      if ($cache = $this->cache->get($this::CACHE_ID)) {
-        $this->definitions = $cache->data;
-      }
-      else {
-        $this->definitions = array();
-        foreach ($this->schemaStorage->readMultiple($this->schemaStorage->listAll()) as $schema) {
-          foreach ($schema as $type => $definition) {
-            $this->definitions[$type] = $definition;
-          }
-        }
-        $this->cache->set($this::CACHE_ID, $this->definitions);
-      }
-    }
-    return $this->definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function clearCachedDefinitions() {
-    $this->definitions = NULL;
     $this->schemaStorage->reset();
-    $this->cache->delete($this::CACHE_ID);
+    parent::clearCachedDefinitions();
   }
 
   /**

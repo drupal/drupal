@@ -192,9 +192,9 @@ function config_translation_entity_operation(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_config_translation_type_info_alter().
+ * Implements hook_config_schema_info_alter().
  */
-function config_translation_config_translation_type_info_alter(&$definitions) {
+function config_translation_config_schema_info_alter(&$definitions) {
   // Enhance the text and date type definitions with classes to generate proper
   // form elements in ConfigTranslationFormBase. Other translatable types will
   // appear as a one line textfield.

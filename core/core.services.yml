@@ -132,7 +132,9 @@ services:
     class: Drupal\Core\Config\InstallStorage
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery']
+    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler']
+    tags:
+      - { name: plugin_manager_cache_clear }
   context.handler:
     class: Drupal\Core\Plugin\Context\ContextHandler
     arguments: ['@typed_data_manager']

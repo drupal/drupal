@@ -37,7 +37,8 @@ class DefaultConfigTest extends KernelTestBase {
     $typed_config = new TypedConfigManager(
       \Drupal::service('config.storage'),
       new TestInstallStorage(InstallStorage::CONFIG_SCHEMA_DIRECTORY),
-      \Drupal::service('cache.discovery')
+      \Drupal::service('cache.discovery'),
+      \Drupal::service('module_handler')
     );
 
     // Create a configuration storage with access to default configuration in

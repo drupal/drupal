@@ -50,13 +50,6 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   protected $localeStorage;
 
   /**
-   * The module handler to invoke the alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The mapper for configuration translation.
    *
    * @var \Drupal\config_translation\ConfigMapperInterface
@@ -100,14 +93,11 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   The configuration mapper manager.
    * @param \Drupal\locale\StringStorageInterface $locale_storage
    *   The translation storage object.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke the alter hook.
    */
-  public function __construct(TypedConfigManagerInterface $typed_config_manager, ConfigMapperManagerInterface $config_mapper_manager, StringStorageInterface $locale_storage, ModuleHandlerInterface $module_handler, ConfigurableLanguageManagerInterface $language_manager) {
+  public function __construct(TypedConfigManagerInterface $typed_config_manager, ConfigMapperManagerInterface $config_mapper_manager, StringStorageInterface $locale_storage, ConfigurableLanguageManagerInterface $language_manager) {
     $this->typedConfigManager = $typed_config_manager;
     $this->configMapperManager = $config_mapper_manager;
     $this->localeStorage = $locale_storage;
-    $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
   }
 
@@ -119,7 +109,6 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $container->get('config.typed'),
       $container->get('plugin.manager.config_translation.mapper'),
       $container->get('locale.storage'),
-      $container->get('module_handler'),
       $container->get('language_manager')
     );
   }
@@ -311,13 +300,6 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       }
       else {
         $definition = $element->getDataDefinition();
-
-        // Invoke hook_config_translation_type_info_alter() implementations to
-        // alter the configuration types.
-        $definitions = array(
-          $definition['type'] => &$definition,
-        );
-        $this->moduleHandler->alter('config_translation_type_info', $definitions);
 
         // Create form element only for translatable items.
         if (!isset($definition['translatable']) || !isset($definition['type'])) {
