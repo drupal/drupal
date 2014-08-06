@@ -851,20 +851,6 @@
  */
 
 /**
- * @defgroup migration Migration API
- * @{
- * Overview of the Migration API, which migrates data into Drupal.
- *
- * @todo write this
- *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
- *
- * See https://drupal.org/node/2127611
- * @}
- */
-
-/**
  * @defgroup testing Automated tests
  * @{
  * Overview of PHPUnit tests and Simpletest tests.

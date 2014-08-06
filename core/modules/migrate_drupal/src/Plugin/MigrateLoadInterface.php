@@ -9,6 +9,13 @@ namespace Drupal\migrate_drupal\Plugin;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 
+/**
+ * Defines an interface for migration load plugins.
+ *
+ * @see \Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity
+ *
+ * @ingroup migration
+ */
 interface MigrateLoadInterface {
 
   /**

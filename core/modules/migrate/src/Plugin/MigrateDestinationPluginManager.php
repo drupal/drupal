@@ -20,6 +20,8 @@ use Drupal\migrate\Entity\MigrationInterface;
  * @see \Drupal\migrate\Plugin\destination\DestinationBase
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
+ *
+ * @ingroup migration
  */
 class MigrateDestinationPluginManager extends MigratePluginManager {
 

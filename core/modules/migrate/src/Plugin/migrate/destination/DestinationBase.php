@@ -20,6 +20,8 @@ use Drupal\migrate\Plugin\RequirementsInterface;
  * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
+ *
+ * @ingroup migration
  */
 abstract class DestinationBase extends PluginBase implements MigrateDestinationInterface, RequirementsInterface {
 

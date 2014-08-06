@@ -24,6 +24,8 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
  * @see plugin_api
  *
+ * @ingroup migration
+ *
  * @Annotation
  */
 class MigrateDestination extends Plugin {

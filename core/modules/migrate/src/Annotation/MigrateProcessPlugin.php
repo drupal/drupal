@@ -19,10 +19,12 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- * @see \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase
+ * @see \Drupal\migrate\ProcessPluginBase
  * @see \Drupal\migrate\Annotation\MigrateSource
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
+ *
+ * @ingroup migration
  *
  * @Annotation
  */

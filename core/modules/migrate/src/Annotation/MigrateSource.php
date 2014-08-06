@@ -25,6 +25,8 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
  *
+ * @ingroup migration
+ *
  * @Annotation
  */
 class MigrateSource extends Plugin {

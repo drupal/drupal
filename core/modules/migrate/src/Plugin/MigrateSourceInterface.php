@@ -16,6 +16,8 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Annotation\MigrateSource
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  * @see plugin_api
+ *
+ * @ingroup migration
  */
 interface MigrateSourceInterface extends \Countable, PluginInspectionInterface {
 

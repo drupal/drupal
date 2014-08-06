@@ -18,6 +18,8 @@ use Drupal\migrate_drupal\Plugin\MigrateLoadInterface;
 /**
  * Base class for entity load plugins.
  *
+ * @ingroup migration
+ *
  * @PluginID("drupal_entity")
  */
 class LoadEntity extends PluginBase implements MigrateLoadInterface {

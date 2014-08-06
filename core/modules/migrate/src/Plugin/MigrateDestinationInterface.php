@@ -19,6 +19,8 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
  * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
+ *
+ * @ingroup migration
  */
 interface MigrateDestinationInterface extends PluginInspectionInterface {
 

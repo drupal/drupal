@@ -24,6 +24,8 @@ use Drupal\migrate\Entity\MigrationInterface;
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  * @see \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase
  * @see plugin_api
+ *
+ * @ingroup migration
  */
 class MigratePluginManager extends DefaultPluginManager {
 
