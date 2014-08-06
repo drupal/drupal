@@ -1,6 +1,10 @@
 
-Drupal 7.31, xxxx-xx-xx (development version)
+Drupal 7.32, xxxx-xx-xx (development version)
 -----------------------
+
+Drupal 7.31, 2014-08-06
+----------------------
+- Fixed security issues (denial of service). See SA-CORE-2014-004.
 
 Drupal 7.30, 2014-07-24
 -----------------------
