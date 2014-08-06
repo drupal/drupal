@@ -15,6 +15,22 @@ function xrds_parse($xml) {
   xml_set_element_handler($parser, '_xrds_element_start', '_xrds_element_end');
   xml_set_character_data_handler($parser, '_xrds_cdata');
 
+  // Since DOCTYPE declarations from an untrusted source could be malicious, we
+  // stop parsing here and treat the XML as invalid. XRDS documents do not
+  // require, and are not expected to have, a DOCTYPE.
+  if (preg_match('/<!DOCTYPE/i', $xml)) {
+    return array();
+  }
+
+  // Also stop parsing if there is an unreasonably large number of tags.
+  // substr_count() has much better performance (compared to preg_match_all())
+  // for large payloads but is less accurate, so we check for twice the desired
+  // number of allowed tags (to take into account opening/closing tags as well
+  // as false positives).
+  if (substr_count($xml, '<') > 2 * variable_get('openid_xrds_maximum_tag_count', 30000)) {
+    return array();
+  }
+
   xml_parse($parser, $xml);
   xml_parser_free($parser);
 
