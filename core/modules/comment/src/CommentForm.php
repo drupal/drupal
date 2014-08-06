@@ -88,8 +88,8 @@ class CommentForm extends ContentEntityForm {
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
 
     if (!$this->currentUser->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-      $form['#attached']['library'][] = 'core/jquery.cookie';
-      $form['#attributes']['class'][] = 'user-info-from-cookie';
+      $form['#attached']['library'][] = 'core/drupal.form';
+      $form['#attributes']['data-user-info-from-browser'] = TRUE;
     }
 
     // If not replying to a comment, use our dedicated page callback for new
@@ -155,6 +155,9 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
       $form['author']['name']['#theme'] = 'username';
       $form['author']['name']['#account'] = $this->currentUser;
+    }
+    elseif($this->currentUser->isAnonymous()) {
+      $form['author']['name']['#attributes']['data-drupal-default-value'] = $this->config('user.settings')->get('anonymous');
     }
 
     $language_configuration = \Drupal::moduleHandler()->invoke('language', 'get_default_configuration', array('comment', $comment->getTypeId()));
@@ -367,11 +370,6 @@ class CommentForm extends ContentEntityForm {
     $logger = $this->logger('content');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
-      // Save the anonymous user information to a cookie for reuse.
-      if ($this->currentUser->isAnonymous()) {
-        user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));
-      }
-
       $comment->save();
       $form_state['values']['cid'] = $comment->id();
 

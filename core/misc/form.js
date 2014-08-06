@@ -170,21 +170,29 @@
   };
 
   /**
-   * Prepopulate form fields with information from the visitor cookie.
+   * Prepopulate form fields with information from the visitor browser.
    */
-  Drupal.behaviors.fillUserInfoFromCookie = {
+  Drupal.behaviors.fillUserInfoFromBrowser = {
     attach: function (context, settings) {
       var userInfo = ['name', 'mail', 'homepage'];
-      $('form.user-info-from-cookie').once('user-info-from-cookie', function () {
-        var $formContext = $(this);
-        var i, il, $element, cookie;
-        for (i = 0, il = userInfo.length; i < il; i += 1) {
-          $element = $formContext.find('[name=' + userInfo[i] + ']');
-          cookie = $.cookie('Drupal.visitor.' + userInfo[i]);
-          if ($element.length && cookie) {
-            $element.val(cookie);
+      var $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
+      if ($forms.length) {
+        userInfo.map(function (info) {
+          var $element = $forms.find('[name=' + info + ']');
+          var browserData = localStorage.getItem('Drupal.visitor.' + info);
+          var emptyOrDefault = ($element.val() === '' || ($element.attr('data-drupal-default-value') === $element.val()));
+          if ($element.length && emptyOrDefault && browserData) {
+            $element.val(browserData);
           }
-        }
+        });
+      }
+      $forms.on('submit', function () {
+        userInfo.map(function (info) {
+          var $element = $forms.find('[name=' + info + ']');
+          if ($element.length) {
+            localStorage.setItem('Drupal.visitor.' + info, $element.val());
+          }
+        });
       });
     }
   };
