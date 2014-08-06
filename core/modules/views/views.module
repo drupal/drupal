@@ -788,22 +788,6 @@ function views_disable_view(View $view) {
 }
 
 /**
- * Loads a view from configuration.
- *
- * @param string $name
- *   The name of the view.
- *
- * @return \Drupal\views\ViewExecutable
- *   A reference to the $view object.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getView().
- */
-function views_get_view($name) {
-  return Views::getView($name);
-}
-
-/**
  * Replaces views substitution placeholders.
  *
  * @param array $element
