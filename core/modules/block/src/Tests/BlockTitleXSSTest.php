@@ -33,7 +33,7 @@ class BlockTitleXSSTest extends WebTestBase {
    * Test XSS in title.
    */
   function testXSSInTitle() {
-    \Drupal::state()->set('block_test.content', $this->randomName());
+    \Drupal::state()->set('block_test.content', $this->randomMachineName());
     $this->drupalGet('');
     $this->assertNoRaw('<script>alert("XSS label");</script>', 'The block title was properly sanitized when rendered.');
 

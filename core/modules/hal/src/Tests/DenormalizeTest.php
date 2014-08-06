@@ -122,26 +122,26 @@ class DenormalizeTest extends NormalizerTestBase {
       ),
       'field_test_text' => array(
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'full_html',
         ),
       ),
       'field_test_translatable_text' => array(
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'full_html',
         ),
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'filtered_html',
         ),
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'filtered_html',
           'lang' => 'de',
         ),
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'full_html',
           'lang' => 'de',
         ),
@@ -187,7 +187,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ),
       'field_test_text' => array(
         array(
-          'value' => $this->randomName(),
+          'value' => $this->randomMachineName(),
           'format' => 'full_html',
         ),
       ),

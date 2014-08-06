@@ -84,8 +84,8 @@ class FilterFormatAccessTest extends WebTestBase {
     $formats = array();
     for ($i = 0; $i < 3; $i++) {
       $edit = array(
-        'format' => drupal_strtolower($this->randomName()),
-        'name' => $this->randomName(),
+        'format' => drupal_strtolower($this->randomMachineName()),
+        'name' => $this->randomMachineName(),
       );
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
@@ -213,8 +213,8 @@ class FilterFormatAccessTest extends WebTestBase {
     // Create node to edit.
     $this->drupalLogin($this->admin_user);
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit[$body_value_key] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit[$body_value_key] = $this->randomMachineName(16);
     $edit[$body_format_key] = $this->disallowed_format->format;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -229,7 +229,7 @@ class FilterFormatAccessTest extends WebTestBase {
 
     // Verify that title can be changed, but preview displays original body.
     $new_edit = array();
-    $new_edit['title[0][value]'] = $this->randomName(8);
+    $new_edit['title[0][value]'] = $this->randomMachineName(8);
     $this->drupalPostForm(NULL, $new_edit, t('Preview'));
     $this->assertText($edit[$body_value_key], 'Old body found in preview.');
 
@@ -269,7 +269,7 @@ class FilterFormatAccessTest extends WebTestBase {
     // Verify that trying to save the node without selecting a new text format
     // produces an error message, and does not result in the node being saved.
     $old_title = $new_edit['title[0][value]'];
-    $new_title = $this->randomName(8);
+    $new_title = $this->randomMachineName(8);
     $edit = array();
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
@@ -304,7 +304,7 @@ class FilterFormatAccessTest extends WebTestBase {
     // format.
     $this->drupalLogin($this->filter_admin_user);
     $old_title = $new_title;
-    $new_title = $this->randomName(8);
+    $new_title = $this->randomMachineName(8);
     $edit = array();
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));

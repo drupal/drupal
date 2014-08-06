@@ -57,7 +57,7 @@ class BlockLanguageTest extends WebTestBase {
     // Enable a standard block and set the visibility setting for one language.
     $edit = array(
       'settings[visibility][language][langcodes][en]' => TRUE,
-      'id' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));

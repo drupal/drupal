@@ -70,8 +70,8 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->entityTypeId = $this->randomName();
-    $this->provider = $this->randomName();
+    $this->entityTypeId = $this->randomMachineName();
+    $this->provider = $this->randomMachineName();
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
                      ->method('getProvider')
@@ -85,7 +85,7 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
-    $this->breakpointGroupId = $this->randomName(9);
+    $this->breakpointGroupId = $this->randomMachineName(9);
     $this->breakpointGroup = $this->getMock('Drupal\breakpoint\Entity\BreakpointGroup', array(), array(array('name' => 'test', 'id' => $this->breakpointGroupId)));
 
     $this->breakpointGroupStorage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');

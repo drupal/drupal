@@ -71,7 +71,7 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // Write out some files.
     $php = new FileStorage($this->standardSettings);
-    $name = $this->randomName() . '/' . $this->randomName() . '.php';
+    $name = $this->randomMachineName() . '/' . $this->randomMachineName() . '.php';
 
     // Find a global that doesn't exist.
     do {

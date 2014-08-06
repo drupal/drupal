@@ -310,7 +310,7 @@ class SelectTest extends DatabaseTestBase {
     // after shuffling it (in other words, nearly impossible).
     $number_of_items = 52;
     while (db_query("SELECT MAX(id) FROM {test}")->fetchField() < $number_of_items) {
-      db_insert('test')->fields(array('name' => $this->randomName()))->execute();
+      db_insert('test')->fields(array('name' => $this->randomMachineName()))->execute();
     }
 
     // First select the items in order and make sure we get an ordered list.

@@ -29,7 +29,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $files = $this->drupalGetTestFiles('image');
     // Create 10 files so the default image fids are not a single value.
     for ($i = 1; $i <= 10; $i++) {
-      $filename = $this->randomName() . "$i";
+      $filename = $this->randomMachineName() . "$i";
       $desired_filepath = 'public://' . $filename;
       file_unmanaged_copy($files[0]->uri, $desired_filepath, FILE_EXISTS_ERROR);
       $file = entity_create('file', array('uri' => $desired_filepath, 'filename' => $filename, 'name' => $filename));
@@ -43,7 +43,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     }
 
     // Create an image field and add an instance to the article content type.
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $storage_settings['default_image'] = array(
       'fid' => $default_images['field']->id(),
       'alt' => '',
@@ -285,7 +285,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    */
   public function testInvalidDefaultImage() {
     $field_storage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'image',
       'settings' => array(
@@ -302,7 +302,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field_instance = entity_create('field_instance_config',  array(
       'field_storage' => $field_storage,
       'bundle' => 'page',
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
       'settings' => array(
         'default_image' => array(
           'fid' => 100000,

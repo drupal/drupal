@@ -30,7 +30,7 @@ class BlockHtmlTest extends WebTestBase {
 
     // Enable the test_html block, to test HTML ID and attributes.
     \Drupal::state()->set('block_test.attributes', array('data-custom-attribute' => 'foo'));
-    \Drupal::state()->set('block_test.content', $this->randomName());
+    \Drupal::state()->set('block_test.content', $this->randomMachineName());
     $this->drupalPlaceBlock('test_html', array('id' => 'test_html_block'));
 
     // Enable a menu block, to test more complicated HTML.

@@ -38,9 +38,9 @@ class PagePreviewTest extends NodeTestBase {
 
     // Add a vocabulary so we can test different view modes.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
-      'vid' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
+      'vid' => $this->randomMachineName(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
     ));
@@ -50,8 +50,8 @@ class PagePreviewTest extends NodeTestBase {
 
     // Add a term to the vocabulary.
     $term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
       'vid' => $this->vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
@@ -60,7 +60,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->term = $term;
 
     // Set up a field and instance.
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
@@ -110,8 +110,8 @@ class PagePreviewTest extends NodeTestBase {
 
     // Fill in node creation form and preview node.
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $edit[$term_key] = $this->term->getName();
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
@@ -142,8 +142,8 @@ class PagePreviewTest extends NodeTestBase {
     // Check with two new terms on the edit form, additionally to the existing
     // one.
     $edit = array();
-    $newterm1 = $this->randomName(8);
-    $newterm2 = $this->randomName(8);
+    $newterm1 = $this->randomMachineName(8);
+    $newterm2 = $this->randomMachineName(8);
     $edit[$term_key] = $this->term->getName() . ', ' . $newterm1 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
@@ -158,7 +158,7 @@ class PagePreviewTest extends NodeTestBase {
     // Check with one more new term, keeping old terms, removing the existing
     // one.
     $edit = array();
-    $newterm3 = $this->randomName(8);
+    $newterm3 = $this->randomMachineName(8);
     $edit[$term_key] = $newterm1 . ', ' . $newterm3 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
@@ -183,10 +183,10 @@ class PagePreviewTest extends NodeTestBase {
 
     // Fill in node creation form and preview node.
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $edit[$term_key] = $this->term->id();
-    $edit['revision_log'] = $this->randomName(32);
+    $edit['revision_log'] = $this->randomMachineName(32);
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.

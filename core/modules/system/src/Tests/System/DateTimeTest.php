@@ -77,7 +77,7 @@ class DateTimeTest extends WebTestBase {
 
     // Add custom date format.
     $this->clickLink(t('Add format'));
-    $date_format_id = strtolower($this->randomName(8));
+    $date_format_id = strtolower($this->randomMachineName(8));
     $name = ucwords($date_format_id);
     $date_format = 'd.m.Y - H:i';
     $edit = array(

@@ -60,7 +60,7 @@ class ForumUninstallTest extends WebTestBase {
       'pid' => 0,
       'uid' => 0,
       'status' => CommentInterface::PUBLISHED,
-      'subject' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
       'hostname' => '127.0.0.1',
     ));
     $comment->save();

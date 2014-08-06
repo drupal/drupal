@@ -31,8 +31,8 @@ class CommentTitleTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
 
     // Post comment #1 and verify that h3's are not rendered.
-    $subject_text = $this->randomName();
-    $comment_text = $this->randomName();
+    $subject_text = $this->randomMachineName();
+    $comment_text = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created.
     $regex = '/<a id="comment-' . $comment->id() . '"(.*?)';
@@ -57,8 +57,8 @@ class CommentTitleTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
 
     // Post comment #1 and verify that title is rendered in h3.
-    $subject_text = $this->randomName();
-    $comment_text = $this->randomName();
+    $subject_text = $this->randomMachineName();
+    $comment_text = $this->randomMachineName();
     $comment1 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created.
     $this->assertTrue($this->commentExists($comment1), 'Comment #1. Comment found.');

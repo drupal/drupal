@@ -169,7 +169,7 @@ class FormStateTest extends UnitTestCase {
         'bar',
       ),
     );
-    $value = $this->randomName();
+    $value = $this->randomMachineName();
 
     $form_state = new FormState();
     $form_state->setValueForElement($element, $value);

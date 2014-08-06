@@ -47,7 +47,7 @@ class StyleOpmlTest extends PluginTestBase {
   public function testOpmlOutput() {
     // Create a test feed.
     $values = array(
-      'title' => $this->randomName(10),
+      'title' => $this->randomMachineName(10),
       'url' => 'http://example.com/rss.xml',
       'refresh' => '900',
     );

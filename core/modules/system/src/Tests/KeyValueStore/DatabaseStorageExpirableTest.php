@@ -106,7 +106,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $this->assertIdenticalObject($this->objects[5], $stores[1]->get('foo'));
 
     // Test that setWithExpireIfNotExists() succeeds only the first time.
-    $key = $this->randomName();
+    $key = $this->randomMachineName();
     for ($i = 0; $i <= 1; $i++) {
       // setWithExpireIfNotExists() should be TRUE the first time (when $i is
       // 0) and FALSE the second time (when $i is 1).
@@ -145,12 +145,12 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $this->assertIdentical(count($stores[0]->getMultiple(array('yesterday', 'troubles'))), 1);
 
     // Store items set to expire in the past in various ways.
-    $stores[0]->setWithExpire($this->randomName(), $this->objects[0], -7 * $day);
-    $stores[0]->setWithExpireIfNotExists($this->randomName(), $this->objects[1], -5 * $day);
+    $stores[0]->setWithExpire($this->randomMachineName(), $this->objects[0], -7 * $day);
+    $stores[0]->setWithExpireIfNotExists($this->randomMachineName(), $this->objects[1], -5 * $day);
     $stores[0]->setMultipleWithExpire(
       array(
-        $this->randomName() => $this->objects[2],
-        $this->randomName() => $this->objects[3],
+        $this->randomMachineName() => $this->objects[2],
+        $this->randomMachineName() => $this->objects[3],
       ),
       -3 * $day
     );

@@ -33,7 +33,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
    */
   function testWriteFunctions() {
     // Generate a test file
-    $filename = $this->randomName();
+    $filename = $this->randomMachineName();
     $filepath = conf_path() . '/files/' . $filename;
     file_put_contents($filepath, $filename);
 
@@ -64,7 +64,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Attempt to release a shared lock
     $this->assertTrue(flock($handle, LOCK_UN | LOCK_NB), 'Able to release a shared lock using the read-only stream wrapper.');
     // Attempt to write to the file
-    $this->assertFalse(@fwrite($handle, $this->randomName()), 'Unable to write to file using the read-only stream wrapper.');
+    $this->assertFalse(@fwrite($handle, $this->randomMachineName()), 'Unable to write to file using the read-only stream wrapper.');
     // Attempt to flush output to the file
     $this->assertFalse(@fflush($handle), 'Unable to flush output to file using the read-only stream wrapper.');
     // Attempt to close the stream.  (Suppress errors, as fclose triggers fflush.)
@@ -76,7 +76,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $this->assertTrue(file_exists($filepath), 'Unlink File was not actually deleted.');
 
     // Test the mkdir() function by attempting to create a directory.
-    $dirname = $this->randomName();
+    $dirname = $this->randomMachineName();
     $dir = conf_path() . '/files/' . $dirname;
     $readonlydir = $this->scheme . '://' . $dirname;
     $this->assertFalse(@drupal_mkdir($readonlydir, 0775, 0), 'Unable to create directory with read-only stream wrapper.');

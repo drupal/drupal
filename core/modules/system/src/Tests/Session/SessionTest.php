@@ -83,7 +83,7 @@ class SessionTest extends WebTestBase {
 
     $this->drupalLogin($user);
 
-    $value_1 = $this->randomName();
+    $value_1 = $this->randomMachineName();
     $this->drupalGet('session-test/set/' . $value_1);
     $this->assertText($value_1, 'The session value was stored.', 'Session');
     $this->drupalGet('session-test/get');
@@ -91,7 +91,7 @@ class SessionTest extends WebTestBase {
 
     // Attempt to write over val_1. If drupal_save_session(FALSE) is working.
     // properly, val_1 will still be set.
-    $value_2 = $this->randomName();
+    $value_2 = $this->randomMachineName();
     $this->drupalGet('session-test/no-set/' . $value_2);
     $this->assertText($value_2, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
@@ -109,14 +109,14 @@ class SessionTest extends WebTestBase {
     $this->assertNoText($value_1, "After logout, previous user's session data is not available.", 'Session');
 
     // Now try to store some data as an anonymous user.
-    $value_3 = $this->randomName();
+    $value_3 = $this->randomMachineName();
     $this->drupalGet('session-test/set/' . $value_3);
     $this->assertText($value_3, 'Session data stored for anonymous user.', 'Session');
     $this->drupalGet('session-test/get');
     $this->assertText($value_3, 'Session correctly returned the stored data for an anonymous user.', 'Session');
 
     // Try to store data when drupal_save_session(FALSE).
-    $value_4 = $this->randomName();
+    $value_4 = $this->randomMachineName();
     $this->drupalGet('session-test/no-set/' . $value_4);
     $this->assertText($value_4, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');

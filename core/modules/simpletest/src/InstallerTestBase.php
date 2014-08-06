@@ -82,7 +82,7 @@ abstract class InstallerTestBase extends WebTestBase {
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
-      'pass_raw' => $this->randomName(),
+      'pass_raw' => $this->randomMachineName(),
     ));
 
     // If any $settings are defined for this test, copy and prepare an actual

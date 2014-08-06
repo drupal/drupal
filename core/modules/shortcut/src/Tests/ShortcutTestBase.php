@@ -90,7 +90,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    */
   function generateShortcutSet($label = '', $id = NULL) {
     $set = ShortcutSet::create(array(
-      'id' => isset($id) ? $id : strtolower($this->randomName()),
+      'id' => isset($id) ? $id : strtolower($this->randomMachineName()),
       'label' => empty($label) ? $this->randomString() : $label,
     ));
     $set->save();

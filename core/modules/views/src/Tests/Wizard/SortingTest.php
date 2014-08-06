@@ -26,13 +26,13 @@ class SortingTest extends WizardTestBase {
 
     // Create a view that sorts oldest first.
     $view1 = array();
-    $view1['label'] = $this->randomName(16);
-    $view1['id'] = strtolower($this->randomName(16));
-    $view1['description'] = $this->randomName(16);
+    $view1['label'] = $this->randomMachineName(16);
+    $view1['id'] = strtolower($this->randomMachineName(16));
+    $view1['description'] = $this->randomMachineName(16);
     $view1['show[sort]'] = 'node_field_data-created:ASC';
     $view1['page[create]'] = 1;
-    $view1['page[title]'] = $this->randomName(16);
-    $view1['page[path]'] = $this->randomName(16);
+    $view1['page[title]'] = $this->randomMachineName(16);
+    $view1['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view1, t('Save and edit'));
     $this->drupalGet($view1['page[path]']);
     $this->assertResponse(200);
@@ -51,13 +51,13 @@ class SortingTest extends WizardTestBase {
 
     // Create a view that sorts newest first.
     $view2 = array();
-    $view2['label'] = $this->randomName(16);
-    $view2['id'] = strtolower($this->randomName(16));
-    $view2['description'] = $this->randomName(16);
+    $view2['label'] = $this->randomMachineName(16);
+    $view2['id'] = strtolower($this->randomMachineName(16));
+    $view2['description'] = $this->randomMachineName(16);
     $view2['show[sort]'] = 'node_field_data-created:DESC';
     $view2['page[create]'] = 1;
-    $view2['page[title]'] = $this->randomName(16);
-    $view2['page[path]'] = $this->randomName(16);
+    $view2['page[title]'] = $this->randomMachineName(16);
+    $view2['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Save and edit'));
     $this->drupalGet($view2['page[path]']);
     $this->assertResponse(200);

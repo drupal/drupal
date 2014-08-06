@@ -26,7 +26,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
    */
   function testRevisions() {
     $type_name = 'article';
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);
     // Create the same fields for users.
     $this->createFileField($field_name, 'user', 'user');

@@ -52,9 +52,9 @@ class CommentCSSTest extends CommentTestBase {
         'field_name' => 'comment',
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
-        'subject' => $this->randomName(),
+        'subject' => $this->randomMachineName(),
         'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-        'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
+        'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomMachineName())),
       ));
       $comment->save();
 

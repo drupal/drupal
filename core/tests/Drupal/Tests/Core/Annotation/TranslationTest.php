@@ -64,7 +64,7 @@ class TranslationTest extends UnitTestCase {
       ),
       'Foo'
     );
-    $random = $this->randomName();
+    $random = $this->randomMachineName();
     $random_html_entity = '&' . $random;
     $data[] = array(
       array(
@@ -74,7 +74,7 @@ class TranslationTest extends UnitTestCase {
           '@baz' => $random_html_entity,
           '%qux' => $random_html_entity,
         ),
-        'context' => $this->randomName(),
+        'context' => $this->randomMachineName(),
       ),
       'Foo ' . $random . ' &amp;' . $random . ' <em class="placeholder">&amp;' . $random . '</em>',
     );

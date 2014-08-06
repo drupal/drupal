@@ -38,7 +38,7 @@ class LanguageUnitTest extends UnitTestCase {
    * @covers ::setName()
    */
   public function testGetName() {
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $this->assertSame($this->language, $this->language->setName($name));
     $this->assertSame($name, $this->language->getName());
   }
@@ -50,7 +50,7 @@ class LanguageUnitTest extends UnitTestCase {
    * @covers ::setId()
    */
   public function testGetLangcode() {
-    $language_code = $this->randomName(2);
+    $language_code = $this->randomMachineName(2);
     $this->assertSame($this->language, $this->language->setId($language_code));
     $this->assertSame($language_code, $this->language->getId());
   }
@@ -86,7 +86,7 @@ class LanguageUnitTest extends UnitTestCase {
    * @covers ::setNegotiationMethodId()
    */
   public function testGetNegotiationMethodId() {
-    $method_id = $this->randomName();
+    $method_id = $this->randomMachineName();
     $this->assertSame($this->language, $this->language->setNegotiationMethodId($method_id));
     $this->assertSame($method_id, $this->language->getNegotiationMethodId());
   }

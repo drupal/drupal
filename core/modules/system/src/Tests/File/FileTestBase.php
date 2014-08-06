@@ -129,7 +129,7 @@ abstract class FileTestBase extends DrupalUnitTestBase {
   function createDirectory($path = NULL) {
     // A directory to operate on.
     if (!isset($path)) {
-      $path = file_default_scheme() . '://' . $this->randomName();
+      $path = file_default_scheme() . '://' . $this->randomMachineName();
     }
     $this->assertTrue(drupal_mkdir($path) && is_dir($path), 'Directory was created successfully.');
     return $path;
@@ -154,7 +154,7 @@ abstract class FileTestBase extends DrupalUnitTestBase {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
-      $filepath = 'Файл для тестирования ' . $this->randomName();
+      $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
       $scheme = file_default_scheme();

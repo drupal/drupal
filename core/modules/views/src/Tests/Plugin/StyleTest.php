@@ -61,7 +61,7 @@ class StyleTest extends ViewTestBase {
     $view->style_plugin->init($view, $view->display_handler);
     $this->assertTrue($view->rowPlugin instanceof RowTest, 'Make sure the right row plugin class is loaded.');
 
-    $random_text = $this->randomName();
+    $random_text = $this->randomMachineName();
     $view->rowPlugin->setOutput($random_text);
 
     $output = $view->preview();
@@ -80,7 +80,7 @@ class StyleTest extends ViewTestBase {
     $this->assertTrue($view->style_plugin instanceof StyleTestPlugin, 'Make sure the right style plugin class is loaded.');
     $this->assertTrue($view->rowPlugin instanceof Fields, 'Make sure that rowPlugin is now a fields instance.');
 
-    $random_text = $this->randomName();
+    $random_text = $this->randomMachineName();
     // Set some custom text to the output and make sure that this value is
     // rendered.
     $view->style_plugin->setOutput($random_text);
@@ -171,14 +171,14 @@ class StyleTest extends ViewTestBase {
     if ($stripped) {
 
       // Add some html to the result and expected value.
-      $rand = '<a data="' . $this->randomName() . '" />';
+      $rand = '<a data="' . $this->randomMachineName() . '" />';
       $view->result[0]->views_test_data_job .= $rand;
       $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_job = 'Singer' . $rand;
       $expected['Job: Singer']['group'] = 'Job: Singer';
-      $rand = '<a data="' . $this->randomName() . '" />';
+      $rand = '<a data="' . $this->randomMachineName() . '" />';
       $view->result[1]->views_test_data_job .= $rand;
       $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_job = 'Singer' . $rand;
-      $rand = '<a data="' . $this->randomName() . '" />';
+      $rand = '<a data="' . $this->randomMachineName() . '" />';
       $view->result[2]->views_test_data_job .= $rand;
       $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_job = 'Drummer' . $rand;
       $expected['Job: Drummer']['group'] = 'Job: Drummer';
@@ -222,7 +222,7 @@ class StyleTest extends ViewTestBase {
 
     // Setup some random css class.
     $view->initStyle();
-    $random_name = $this->randomName();
+    $random_name = $this->randomMachineName();
     $view->style_plugin->options['row_class'] = $random_name . " test-token-[name]";
 
     $output = $view->preview();

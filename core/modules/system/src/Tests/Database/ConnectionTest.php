@@ -40,7 +40,7 @@ class ConnectionTest extends DatabaseTestBase {
     $this->assertIdentical($db2, $db2b, 'A second call to getConnection() returns the same object.');
 
     // Try to open an unknown target.
-    $unknown_target = $this->randomName();
+    $unknown_target = $this->randomMachineName();
     $db3 = Database::getConnection($unknown_target, 'default');
     $this->assertNotNull($db3, 'Opening an unknown target returns a real connection object.');
     $this->assertIdentical($db1, $db3, 'An unknown target opens the default connection.');

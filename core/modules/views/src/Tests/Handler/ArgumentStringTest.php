@@ -39,7 +39,7 @@ class ArgumentStringTest extends HandlerTestBase {
     foreach (array('a', 'b', 'c') as $char) {
       for ($i = 0; $i < $counter; $i++) {
         $edit = array(
-          'title' => $char . $this->randomName(),
+          'title' => $char . $this->randomMachineName(),
         );
         $this->drupalCreateNode($edit);
       }

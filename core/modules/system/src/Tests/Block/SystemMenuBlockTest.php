@@ -31,8 +31,8 @@ class SystemMenuBlockTest extends DrupalUnitTestBase {
    */
   public function testSystemMenuBlockConfigDependencies() {
     // Add a new custom menu.
-    $menu_name = $this->randomName(16);
-    $label = $this->randomName(16);
+    $menu_name = $this->randomMachineName(16);
+    $label = $this->randomMachineName(16);
 
     $menu = entity_create('menu', array(
       'id' => $menu_name,

@@ -81,7 +81,7 @@ class TelephoneFieldTest extends WebTestBase {
 
     // Test basic entery of telephone field.
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
       'field_telephone[0][value]' => "123456789",
     );
 
@@ -90,7 +90,7 @@ class TelephoneFieldTest extends WebTestBase {
 
     // Add number with a space in it. Need to ensure it is stripped on output.
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
       'field_telephone[0][value]' => "1234 56789",
     );
 

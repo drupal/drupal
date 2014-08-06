@@ -35,7 +35,7 @@ class GarbageCollectionTest extends UnitTestBase {
    * Tests garbage collection.
    */
   public function testGarbageCollection() {
-    $collection = $this->randomName();
+    $collection = $this->randomMachineName();
     $store = new DatabaseStorageExpirable($collection, new PhpSerialize(), Database::getConnection());
 
     // Insert some items and confirm that they're set.

@@ -56,43 +56,43 @@ class FormTest extends WebTestBase {
     $empty_arrays = array('array()' => array());
     $empty_checkbox = array(NULL);
 
-    $elements['textfield']['element'] = array('#title' => $this->randomName(), '#type' => 'textfield');
+    $elements['textfield']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'textfield');
     $elements['textfield']['empty_values'] = $empty_strings;
 
-    $elements['telephone']['element'] = array('#title' => $this->randomName(), '#type' => 'tel');
+    $elements['telephone']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'tel');
     $elements['telephone']['empty_values'] = $empty_strings;
 
-    $elements['url']['element'] = array('#title' => $this->randomName(), '#type' => 'url');
+    $elements['url']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'url');
     $elements['url']['empty_values'] = $empty_strings;
 
-    $elements['search']['element'] = array('#title' => $this->randomName(), '#type' => 'search');
+    $elements['search']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'search');
     $elements['search']['empty_values'] = $empty_strings;
 
-    $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password');
+    $elements['password']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'password');
     $elements['password']['empty_values'] = $empty_strings;
 
-    $elements['password_confirm']['element'] = array('#title' => $this->randomName(), '#type' => 'password_confirm');
+    $elements['password_confirm']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'password_confirm');
     // Provide empty values for both password fields.
     foreach ($empty_strings as $key => $value) {
       $elements['password_confirm']['empty_values'][$key] = array('pass1' => $value, 'pass2' => $value);
     }
 
-    $elements['textarea']['element'] = array('#title' => $this->randomName(), '#type' => 'textarea');
+    $elements['textarea']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'textarea');
     $elements['textarea']['empty_values'] = $empty_strings;
 
-    $elements['radios']['element'] = array('#title' => $this->randomName(), '#type' => 'radios', '#options' => array('' => t('None'), $this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['radios']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => array('' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
     $elements['radios']['empty_values'] = $empty_arrays;
 
-    $elements['checkbox']['element'] = array('#title' => $this->randomName(), '#type' => 'checkbox', '#required' => TRUE);
+    $elements['checkbox']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'checkbox', '#required' => TRUE);
     $elements['checkbox']['empty_values'] = $empty_checkbox;
 
-    $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['checkboxes']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'checkboxes', '#options' => array($this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
-    $elements['select']['element'] = array('#title' => $this->randomName(), '#type' => 'select', '#options' => array('' => t('None'), $this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['select']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'select', '#options' => array('' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
     $elements['select']['empty_values'] = $empty_strings;
 
-    $elements['file']['element'] = array('#title' => $this->randomName(), '#type' => 'file');
+    $elements['file']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'file');
     $elements['file']['empty_values'] = $empty_strings;
 
     // Regular expression to find the expected marker on required elements.
@@ -101,7 +101,7 @@ class FormTest extends WebTestBase {
     foreach ($elements as $type => $data) {
       foreach ($data['empty_values'] as $key => $empty) {
         foreach (array(TRUE, FALSE) as $required) {
-          $form_id = $this->randomName();
+          $form_id = $this->randomMachineName();
           $form = array();
           $form_state = new FormState();
           $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));

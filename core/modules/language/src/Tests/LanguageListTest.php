@@ -44,7 +44,7 @@ class LanguageListTest extends WebTestBase {
 
     // Add custom language.
     $langcode = 'xx';
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
@@ -77,7 +77,7 @@ class LanguageListTest extends WebTestBase {
     $this->clickLink(t('Edit'));
     $this->assertTitle(t('Edit language | Drupal'), 'Page title is "Edit language".');
     // Edit a language.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'name' => $name,
     );
@@ -128,7 +128,7 @@ class LanguageListTest extends WebTestBase {
     // language so we must add a new language and make it the default before
     // deleting English.
     $langcode = 'xx';
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
@@ -162,10 +162,10 @@ class LanguageListTest extends WebTestBase {
    */
   function testLanguageStates() {
     // Add some languages, and also lock some of them.
-    language_save(new Language(array('name' => $this->randomName(), 'id' => 'l1')));
-    language_save(new Language(array('name' => $this->randomName(), 'id' => 'l2', 'locked' => TRUE)));
-    language_save(new Language(array('name' => $this->randomName(), 'id' => 'l3')));
-    language_save(new Language(array('name' => $this->randomName(), 'id' => 'l4', 'locked' => TRUE)));
+    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l1')));
+    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l2', 'locked' => TRUE)));
+    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l3')));
+    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l4', 'locked' => TRUE)));
     $expected_locked_languages = array('l4' => 'l4', 'l2' => 'l2', 'und' => 'und', 'zxx' => 'zxx');
     $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx');
     $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');

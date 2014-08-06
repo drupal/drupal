@@ -144,10 +144,10 @@ class CommentLinksTest extends CommentTestBase {
           'pid' => 0,
           'uid' => 0,
           'status' => CommentInterface::PUBLISHED,
-          'subject' => $this->randomName(),
+          'subject' => $this->randomMachineName(),
           'hostname' => '127.0.0.1',
           'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-          'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
+          'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomMachineName())),
         ));
         $comment->save();
         $this->comment = $comment;

@@ -21,7 +21,7 @@ class BreakpointCRUDTest extends BreakpointTestBase {
    */
   public function testBreakpointCRUD() {
     // Add a breakpoint with minimum data only.
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
     $breakpoint = entity_create('breakpoint', array(
       'label' => $label,
       'mediaQuery' => '(min-width: 600px)',

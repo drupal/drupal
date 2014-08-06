@@ -35,7 +35,7 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $this->assertText('forum', 'forum type is found on node/add');
 
     // Customize forum description.
-    $description = $this->randomName();
+    $description = $this->randomMachineName();
     $edit = array('description' => $description);
     $this->drupalPostForm('admin/structure/types/manage/forum', $edit, t('Save content type'));
 

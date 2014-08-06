@@ -40,7 +40,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     foreach (array('aa', 'bb', 'cc', 'cs') as $language_code) {
       $language = new Language(array(
         'id' => $language_code,
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
       ));
       language_save($language);
     }
@@ -52,7 +52,7 @@ class MenuLanguageTest extends MenuWebTestBase {
   function testMenuLanguage() {
     // Create a test menu to test the various language-related settings.
     // Machine name has to be lowercase.
-    $menu_name = Unicode::strtolower($this->randomName(16));
+    $menu_name = Unicode::strtolower($this->randomMachineName(16));
     $label = $this->randomString();
     $edit = array(
       'id' => $menu_name,
@@ -136,7 +136,7 @@ class MenuLanguageTest extends MenuWebTestBase {
   function testMenuLanguageRemovedEnglish() {
     // Create a test menu to test language settings.
     // Machine name has to be lowercase.
-    $menu_name = Unicode::strtolower($this->randomName(16));
+    $menu_name = Unicode::strtolower($this->randomMachineName(16));
     $edit = array(
       'id' => $menu_name,
       'description' => '',

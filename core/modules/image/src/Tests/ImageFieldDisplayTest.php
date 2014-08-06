@@ -46,7 +46,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * Test image formatters on node display.
    */
   function _testImageFieldFormatters($scheme) {
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
 
     // Create a new node with an image attached.
@@ -167,7 +167,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   function testImageFieldSettings() {
     $test_image = current($this->drupalGetTestFiles('image'));
     list(, $test_image_extension) = explode('.', $test_image->filename);
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $instance_settings = array(
       'alt_field' => 1,
       'file_extensions' => $test_image_extension,
@@ -210,8 +210,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image = array(
       '#theme' => 'image',
       '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
-      '#alt' => $this->randomName(),
-      '#title' => $this->randomName(),
+      '#alt' => $this->randomMachineName(),
+      '#title' => $this->randomMachineName(),
       '#width' => 40,
       '#height' => 20,
     );
@@ -226,8 +226,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
     $edit = array(
-      $field_name . '[0][alt]' => $this->randomName($test_size),
-      $field_name . '[0][title]' => $this->randomName($test_size),
+      $field_name . '[0][alt]' => $this->randomMachineName($test_size),
+      $field_name . '[0][title]' => $this->randomMachineName($test_size),
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $schema = $instance->getFieldStorageDefinition()->getSchema();
@@ -267,7 +267,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   function testImageFieldDefaultImage() {
     // Create a new image field.
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article');
 
     // Create a new node, with no images and verify that no images are
@@ -339,7 +339,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertFalse($default_image['fid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
-    $private_field_name = strtolower($this->randomName());
+    $private_field_name = strtolower($this->randomMachineName());
     $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
     // Add a default image to the new field.
     $edit = array(

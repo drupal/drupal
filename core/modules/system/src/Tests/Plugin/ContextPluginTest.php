@@ -25,7 +25,7 @@ class ContextPluginTest extends KernelTestBase {
    * Tests basic context definition and value getters and setters.
    */
   function testContext() {
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $manager = new MockBlockManager();
     $plugin = $manager->createInstance('user_name');
     // Create a node, add it as context, catch the exception.

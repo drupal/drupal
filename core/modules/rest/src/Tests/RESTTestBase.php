@@ -186,7 +186,7 @@ abstract class RESTTestBase extends WebTestBase {
     switch ($entity_type) {
       case 'entity_test':
         return array(
-          'name' => $this->randomName(),
+          'name' => $this->randomMachineName(),
           'user_id' => 1,
           'field_test_text' => array(0 => array(
             'value' => $this->randomString(),
@@ -198,10 +198,10 @@ abstract class RESTTestBase extends WebTestBase {
       case 'node_type':
         return array(
           'type' => 'article',
-          'name' => $this->randomName(),
+          'name' => $this->randomMachineName(),
         );
       case 'user':
-        return array('name' => $this->randomName());
+        return array('name' => $this->randomMachineName());
       default:
         return array();
     }

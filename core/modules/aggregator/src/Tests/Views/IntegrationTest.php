@@ -63,11 +63,11 @@ class IntegrationTest extends ViewUnitTestBase {
    */
   public function testAggregatorItemView() {
     $feed = $this->feedStorage->create(array(
-      'title' => $this->randomName(),
+      'title' => $this->randomMachineName(),
       'url' => 'http://drupal.org/',
       'refresh' => 900,
       'checked' => 123543535,
-      'description' => $this->randomName(),
+      'description' => $this->randomMachineName(),
     ));
     $feed->save();
 
@@ -77,10 +77,10 @@ class IntegrationTest extends ViewUnitTestBase {
       $values = array();
       $values['fid'] = $feed->id();
       $values['timestamp'] = mt_rand(REQUEST_TIME - 10, REQUEST_TIME + 10);
-      $values['title'] = $this->randomName();
-      $values['description'] = $this->randomName();
+      $values['title'] = $this->randomMachineName();
+      $values['description'] = $this->randomMachineName();
       // Add a image to ensure that the sanitizing can be tested below.
-      $values['author'] = $this->randomName() . '<img src="http://example.com/example.png" \>"';
+      $values['author'] = $this->randomMachineName() . '<img src="http://example.com/example.png" \>"';
       $values['link'] = 'http://drupal.org/node/' . mt_rand(1000, 10000);
       $values['guid'] = $this->randomString();
 

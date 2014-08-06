@@ -132,7 +132,7 @@ class WriteRecordTest extends DrupalUnitTestBase {
 
     // Insert an object record for a table with a multi-field primary key.
     $composite_primary = new \stdClass();
-    $composite_primary->name = $this->randomName();
+    $composite_primary->name = $this->randomMachineName();
     $composite_primary->age = mt_rand();
     $insert_result = drupal_write_record('test_composite_primary', $composite_primary);
     $this->assertTrue($insert_result == SAVED_NEW, 'Correct value returned when a record is inserted with drupal_write_record() for a table with a multi-field primary key.');

@@ -74,8 +74,8 @@ class EntityRevisionsTest extends WebTestBase {
 
       $entity = entity_load($entity_type, $entity->id->value);
       $entity->setNewRevision(TRUE);
-      $names[] = $entity->name->value = $this->randomName(32);
-      $texts[] = $entity->field_test_text->value = $this->randomName(32);
+      $names[] = $entity->name->value = $this->randomMachineName(32);
+      $texts[] = $entity->field_test_text->value = $this->randomMachineName(32);
       $entity->save();
       $revision_ids[] = $entity->revision_id->value;
 

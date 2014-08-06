@@ -207,7 +207,7 @@ class ElementsTableSelectTest extends WebTestBase {
    *   An array containing the processed form, the form_state and any errors.
    */
   private function formSubmitHelper($form, $edit) {
-    $form_id = $this->randomName();
+    $form_id = $this->randomMachineName();
     $form_state = new FormState();
 
     $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));

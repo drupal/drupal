@@ -246,7 +246,7 @@ class ViewPageControllerTest extends UnitTestCase {
    */
   public function testHandleWithNotExistingView() {
     // Pass in a non existent view.
-    $random_view_id = $this->randomName();
+    $random_view_id = $this->randomMachineName();
 
     $request = new Request();
     $request->attributes->set('view_id', $random_view_id);

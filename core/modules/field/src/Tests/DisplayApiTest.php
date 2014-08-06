@@ -63,7 +63,7 @@ class DisplayApiTest extends FieldUnitTestBase {
 
     // Create a field and instance.
     $this->field_name = 'test_field';
-    $this->label = $this->randomName();
+    $this->label = $this->randomMachineName();
     $this->cardinality = 4;
 
     $field_storage = array(
@@ -83,13 +83,13 @@ class DisplayApiTest extends FieldUnitTestBase {
       'default' => array(
         'type' => 'field_test_default',
         'settings' => array(
-          'test_formatter_setting' => $this->randomName(),
+          'test_formatter_setting' => $this->randomMachineName(),
         ),
       ),
       'teaser' => array(
         'type' => 'field_test_default',
         'settings' => array(
-          'test_formatter_setting' => $this->randomName(),
+          'test_formatter_setting' => $this->randomMachineName(),
         ),
       ),
     );
@@ -133,7 +133,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       'label' => 'hidden',
       'type' => 'field_test_multiple',
       'settings' => array(
-        'test_formatter_setting_multiple' => $this->randomName(),
+        'test_formatter_setting_multiple' => $this->randomMachineName(),
         'alter' => TRUE,
       ),
     );
@@ -153,7 +153,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       'label' => 'visually_hidden',
       'type' => 'field_test_multiple',
       'settings' => array(
-        'test_formatter_setting_multiple' => $this->randomName(),
+        'test_formatter_setting_multiple' => $this->randomMachineName(),
         'alter' => TRUE,
       ),
     );
@@ -173,7 +173,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       'label' => 'hidden',
       'type' => 'field_test_with_prepare_view',
       'settings' => array(
-        'test_formatter_setting_additional' => $this->randomName(),
+        'test_formatter_setting_additional' => $this->randomMachineName(),
       ),
     );
     $this->render($items->view($display));
@@ -220,7 +220,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $display = array(
       'type' => 'field_test_multiple',
       'settings' => array(
-        'test_formatter_setting_multiple' => $this->randomName(),
+        'test_formatter_setting_multiple' => $this->randomMachineName(),
       ),
     );
     $setting = $display['settings']['test_formatter_setting_multiple'];
@@ -234,7 +234,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $display = array(
       'type' => 'field_test_with_prepare_view',
       'settings' => array(
-        'test_formatter_setting_additional' => $this->randomName(),
+        'test_formatter_setting_additional' => $this->randomMachineName(),
       ),
     );
     $setting = $display['settings']['test_formatter_setting_additional'];
@@ -272,7 +272,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       'label' => 'hidden',
       'type' => 'field_empty_test',
       'settings' => array(
-        'test_empty_string' => '**EMPTY FIELD**' . $this->randomName(),
+        'test_empty_string' => '**EMPTY FIELD**' . $this->randomMachineName(),
       ),
     );
     // $this->entity is set by the setUp() method and by default contains 4

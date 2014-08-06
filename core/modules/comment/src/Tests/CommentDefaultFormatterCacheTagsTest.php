@@ -57,7 +57,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
    */
   public function testCacheTags() {
     // Create the entity that will be commented upon.
-    $commented_entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $commented_entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
     $commented_entity->save();
 
     // Verify cache tags on the rendered entity before it has comments.

@@ -32,7 +32,7 @@ class FilterNoFormatTest extends WebTestBase {
   function testCheckMarkupNoFormat() {
     // Create some text. Include some HTML and line breaks, so we get a good
     // test of the filtering that is applied to it.
-    $text = "<strong>" . $this->randomName(32) . "</strong>\n\n<div>" . $this->randomName(32) . "</div>";
+    $text = "<strong>" . $this->randomMachineName(32) . "</strong>\n\n<div>" . $this->randomMachineName(32) . "</div>";
 
     // Make sure that when this text is run through check_markup() with no text
     // format, it is filtered as though it is in the fallback format.

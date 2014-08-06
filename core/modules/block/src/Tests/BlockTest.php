@@ -24,11 +24,11 @@ class BlockTest extends BlockTestBase {
   function testBlockVisibility() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
-    $title = $this->randomName(8);
+    $title = $this->randomMachineName(8);
     // Enable a standard block.
     $default_theme = \Drupal::config('system.theme')->get('default');
     $edit = array(
-      'id' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
     );
@@ -65,11 +65,11 @@ class BlockTest extends BlockTestBase {
   function testBlockVisibilityListedEmpty() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
-    $title = $this->randomName(8);
+    $title = $this->randomMachineName(8);
     // Enable a standard block.
     $default_theme = \Drupal::config('system.theme')->get('default');
     $edit = array(
-      'id' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
       'settings[visibility][request_path][negate]' => TRUE,
@@ -98,7 +98,7 @@ class BlockTest extends BlockTestBase {
     // Select the 'Powered by Drupal' block to be configured and moved.
     $block = array();
     $block['id'] = 'system_powered_by_block';
-    $block['settings[label]'] = $this->randomName(8);
+    $block['settings[label]'] = $this->randomMachineName(8);
     $block['theme'] = \Drupal::config('system.theme')->get('default');
     $block['region'] = 'header';
 
@@ -161,7 +161,7 @@ class BlockTest extends BlockTestBase {
       $this->assertTitle(t('Block layout') . ' | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = array();
-      $block['id'] = strtolower($this->randomName());
+      $block['id'] = strtolower($this->randomMachineName());
       $block['theme'] = $theme;
       $block['region'] = 'content';
       $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
@@ -198,8 +198,8 @@ class BlockTest extends BlockTestBase {
   function testHideBlockTitle() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
-    $title = $this->randomName(8);
-    $id = strtolower($this->randomName(8));
+    $title = $this->randomMachineName(8);
+    $id = strtolower($this->randomMachineName(8));
     // Enable a standard block.
     $default_theme = \Drupal::config('system.theme')->get('default');
     $edit = array(

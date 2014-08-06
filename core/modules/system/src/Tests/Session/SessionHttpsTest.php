@@ -135,7 +135,7 @@ class SessionHttpsTest extends WebTestBase {
 
     $this->curlClose();
     // Start an anonymous session on the insecure site.
-    $session_data = $this->randomName();
+    $session_data = $this->randomMachineName();
     $this->drupalGet('session-test/set/' . $session_data);
     // Check secure cookie on insecure page.
     $this->assertFalse(isset($this->cookies[$secure_session_name]), 'The secure cookie is not sent on insecure pages.');
@@ -265,7 +265,7 @@ class SessionHttpsTest extends WebTestBase {
     // retrieved over HTTP works.
     $form = $this->xpath('//form[@id="session-test-form"]');
     $form[0]['action'] = $this->httpsUrl('session-test/form');
-    $edit = array('input' => $this->randomName(32));
+    $edit = array('input' => $this->randomMachineName(32));
     $this->curlClose();
     $this->drupalPostForm(NULL, $edit, 'Save', array('Cookie: ' . $secure_session_name . '=' . $ssid));
     $this->assertText(String::format('Ok: @input', array('@input' => $edit['input'])));

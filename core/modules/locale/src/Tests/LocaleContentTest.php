@@ -71,7 +71,7 @@ class LocaleContentTest extends WebTestBase {
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
@@ -105,8 +105,8 @@ class LocaleContentTest extends WebTestBase {
     $this->assertText($name, 'Language present.');
 
     // Create a node.
-    $node_title = $this->randomName();
-    $node_body = $this->randomName();
+    $node_title = $this->randomMachineName();
+    $node_body = $this->randomMachineName();
     $edit = array(
       'type' => $type2->type,
       'title' => $node_title,

@@ -56,7 +56,7 @@ class BreakpointConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->entityTypeId = $this->randomName();
+    $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
@@ -114,7 +114,7 @@ class BreakpointConfigEntityUnitTest extends UnitTestCase {
    */
   public function testNameException () {
     new Breakpoint(array(
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
       'source' => 'custom_module',
       'sourceType' => 'oops',
     ));

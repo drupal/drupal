@@ -130,8 +130,8 @@ class JoinTest extends RelationshipJoinTestBase {
     $this->assertEqual($join_info['join type'], 'INNER');
 
     // Setup addition conditions and make sure it is used.
-    $random_name_1 = $this->randomName();
-    $random_name_2 = $this->randomName();
+    $random_name_1 = $this->randomMachineName();
+    $random_name_2 = $this->randomMachineName();
     $configuration['extra'] = array(
       array(
         'field' => 'name',

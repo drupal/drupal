@@ -54,7 +54,7 @@ class TranslationWebTest extends FieldTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
 
     $field = array(
       'name' => $this->field_name,
@@ -110,7 +110,7 @@ class TranslationWebTest extends FieldTestBase {
     // Create a new revision.
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $entity->{$field_name}->value,
       'revision' => TRUE,
     );

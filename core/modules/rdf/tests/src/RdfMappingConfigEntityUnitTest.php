@@ -49,7 +49,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->entityTypeId = $this->randomName();
+    $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
@@ -71,7 +71,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    $target_entity_type_id = $this->randomName(16);
+    $target_entity_type_id = $this->randomMachineName(16);
 
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
@@ -101,15 +101,15 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithEntityBundle() {
-    $target_entity_type_id = $this->randomName(16);
+    $target_entity_type_id = $this->randomMachineName(16);
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
                      ->method('getProvider')
                      ->will($this->returnValue('test_module'));
-    $bundle_id = $this->randomName(10);
+    $bundle_id = $this->randomMachineName(10);
     $values = array('targetEntityType' => $target_entity_type_id , 'bundle' => $bundle_id);
 
-    $bundle_entity_type_id = $this->randomName(17);
+    $bundle_entity_type_id = $this->randomMachineName(17);
     $bundle_entity = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
     $bundle_entity
       ->expects($this->once())

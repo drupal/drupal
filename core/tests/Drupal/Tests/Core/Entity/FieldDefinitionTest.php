@@ -41,7 +41,7 @@ class FieldDefinitionTest extends UnitTestCase {
     // Mock the field type manager and place it in the container.
     $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
-    $this->fieldType = $this->randomName();
+    $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = array(
       'id' => $this->fieldType,
       'settings' => array(
@@ -78,7 +78,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldName() {
     $definition = FieldDefinition::create($this->fieldType);
-    $field_name = $this->randomName();
+    $field_name = $this->randomMachineName();
     $definition->setName($field_name);
     $this->assertEquals($field_name, $definition->getName());
   }
@@ -88,7 +88,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldLabel() {
     $definition = FieldDefinition::create($this->fieldType);
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
     $definition->setLabel($label);
     $this->assertEquals($label, $definition->getLabel());
   }
@@ -98,7 +98,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldDescription() {
     $definition = FieldDefinition::create($this->fieldType);
-    $description = $this->randomName();
+    $description = $this->randomMachineName();
     $definition->setDescription($description);
     $this->assertEquals($description, $definition->getDescription());
   }
@@ -116,8 +116,8 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldSettings() {
     $definition = FieldDefinition::create($this->fieldType);
-    $setting = $this->randomName();
-    $value = $this->randomName();
+    $setting = $this->randomMachineName();
+    $value = $this->randomMachineName();
     $definition->setSetting($setting, $value);
     $this->assertEquals($value, $definition->getSetting($setting));
     $default_settings = $this->fieldTypeDefinition['settings'] + $this->fieldTypeDefinition['instance_settings'];
@@ -141,7 +141,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldDefaultValue() {
     $definition = FieldDefinition::create($this->fieldType);
-    $value = $this->randomName();
+    $value = $this->randomMachineName();
     $definition->setDefaultValue($value);
     $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
@@ -205,7 +205,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldProvider() {
     $definition = FieldDefinition::create($this->fieldType);
-    $provider = $this->randomName();
+    $provider = $this->randomMachineName();
     $definition->setProvider($provider);
     $this->assertEquals($provider, $definition->getProvider());
   }

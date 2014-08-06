@@ -24,8 +24,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     parent::setUp();
 
     // Create random field name.
-    $this->field_label = $this->randomName(8);
-    $this->field_name_input =  strtolower($this->randomName(8));
+    $this->field_label = $this->randomMachineName(8);
+    $this->field_name_input =  strtolower($this->randomMachineName(8));
     $this->field_name = 'field_'. $this->field_name_input;
 
     // Create Basic page and Article node types.
@@ -251,12 +251,12 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testFieldPrefix() {
     // Change default field prefix.
-    $field_prefix = strtolower($this->randomName(10));
+    $field_prefix = strtolower($this->randomMachineName(10));
     \Drupal::config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
 
     // Create a field input and label exceeding the new maxlength, which is 22.
     $field_exceed_max_length_label = $this->randomString(23);
-    $field_exceed_max_length_input = $this->randomName(23);
+    $field_exceed_max_length_input = $this->randomMachineName(23);
 
     // Try to create the field.
     $edit = array(
@@ -347,7 +347,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIAddNewField($bundle_path1, $edit1);
 
     // Create an additional node type.
-    $type_name2 = strtolower($this->randomName(8)) . '_test';
+    $type_name2 = strtolower($this->randomMachineName(8)) . '_test';
     $type2 = $this->drupalCreateContentType(array('name' => $type_name2, 'type' => $type_name2));
     $type_name2 = $type2->type;
 
@@ -408,7 +408,7 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
     // programatically as there's no way to create a locked field through UI.
-    $field_name = strtolower($this->randomName(8));
+    $field_name = strtolower($this->randomMachineName(8));
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
@@ -495,7 +495,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * Tests renaming a bundle.
    */
   function testRenameBundle() {
-    $type2 = strtolower($this->randomName(8)) . '_test';
+    $type2 = strtolower($this->randomMachineName(8)) . '_test';
 
     $options = array(
       'type' => $type2,
@@ -512,7 +512,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // create a new field with the same name.
     $edit = array(
       'fields[_add_new_field][field_name]' => 'tags',
-      'fields[_add_new_field][label]' => $this->randomName(),
+      'fields[_add_new_field][label]' => $this->randomMachineName(),
       'fields[_add_new_field][type]' => 'taxonomy_term_reference',
     );
     $url = 'admin/structure/types/manage/' . $this->type . '/fields';

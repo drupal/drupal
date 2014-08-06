@@ -52,7 +52,7 @@ class FieldAccessTest extends DrupalUnitTestBase {
    */
   function testFieldAccess() {
     $values = array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'user_id' => 1,
       'field_test_text' => array(
         'value' => 'no access value',

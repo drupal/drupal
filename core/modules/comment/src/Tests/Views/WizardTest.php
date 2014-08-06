@@ -41,11 +41,11 @@ class WizardTest extends WizardTestBase {
    */
   public function testCommentWizard() {
     $view = array();
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['show[wizard_key]'] = 'comment';
     $view['page[create]'] = TRUE;
-    $view['page[path]'] = $this->randomName(16);
+    $view['page[path]'] = $this->randomMachineName(16);
 
     // Just triggering the saving should automatically choose a proper row
     // plugin.
@@ -71,7 +71,7 @@ class WizardTest extends WizardTestBase {
     $expected_options = array('comment', 'fields');
     $this->assertEqual($options, $expected_options);
 
-    $view['id'] = strtolower($this->randomName(16));
+    $view['id'] = strtolower($this->randomMachineName(16));
     $this->drupalPostForm(NULL, $view, t('Save and edit'));
     $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 

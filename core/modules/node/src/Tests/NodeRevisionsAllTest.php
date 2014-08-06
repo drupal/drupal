@@ -48,12 +48,12 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Create three revisions.
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
-      $logs[] = $node->revision_log = $this->randomName(32);
+      $logs[] = $node->revision_log = $this->randomMachineName(32);
 
       // Create revision with a random title and body and update variables.
-      $node->title = $this->randomName();
+      $node->title = $this->randomMachineName();
       $node->body = array(
-        'value' => $this->randomName(32),
+        'value' => $this->randomMachineName(32),
         'format' => filter_default_format(),
       );
       $node->setNewRevision();

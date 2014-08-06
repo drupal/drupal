@@ -56,8 +56,8 @@ class EntityQueryTest extends EntityUnitTestBase {
 
     $this->installConfig(array('language'));
 
-    $figures = drupal_strtolower($this->randomName());
-    $greetings = drupal_strtolower($this->randomName());
+    $figures = drupal_strtolower($this->randomMachineName());
+    $greetings = drupal_strtolower($this->randomMachineName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
       $field_storage = entity_create('field_storage_config', array(
         'name' => $field_name,
@@ -74,7 +74,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       // For the sake of tablesort, make sure the second bundle is higher than
       // the first one. Beware: MySQL is not case sensitive.
       do {
-        $bundle = $this->randomName();
+        $bundle = $this->randomMachineName();
       } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
       entity_test_create_bundle($bundle);
       foreach ($field_storages as $field_storage) {
@@ -127,12 +127,12 @@ class EntityQueryTest extends EntityUnitTestBase {
     for ($i = 1; $i <= 15; $i++) {
       $entity = entity_create('entity_test_mulrev', array(
         'type' => $bundles[$i & 1],
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
         'langcode' => 'en',
       ));
       // Make sure the name is set for every language that we might create.
       foreach (array('tr', 'pl') as $langcode) {
-        $entity->getTranslation($langcode)->name = $this->randomName();
+        $entity->getTranslation($langcode)->name = $this->randomMachineName();
       }
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
@@ -433,7 +433,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       'translatable' => TRUE,
     ));
     $field_storage->save();
-    $bundle = $this->randomName();
+    $bundle = $this->randomMachineName();
     entity_create('field_instance_config', array(
       'field_storage' => $field_storage,
       'bundle' => $bundle,

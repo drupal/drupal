@@ -124,8 +124,8 @@ class StandardProfileTest extends WebTestBase {
 
     // Create term.
     $this->term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
       'vid' => 'tags',
     ));
     $this->term->save();
@@ -501,8 +501,8 @@ class StandardProfileTest extends WebTestBase {
       'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'subject' => $this->randomName(),
-      'comment_body' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => $this->randomMachineName(),
       'status' => 1,
     );
     if ($contact) {

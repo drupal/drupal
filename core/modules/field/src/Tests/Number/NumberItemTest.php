@@ -55,7 +55,7 @@ class NumberItemTest extends FieldUnitTestBase {
     $entity->field_float = $float;
     $decimal = '31.3';
     $entity->field_decimal = $decimal;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

@@ -28,7 +28,7 @@ class ConditionFormTest extends WebTestBase {
   function testConfigForm() {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomName()));
+    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomMachineName()));
     $article->save();
     $this->drupalGet('condition_test');
     $this->assertField('bundles[article]', 'There is an article bundle selector.');

@@ -45,9 +45,9 @@ class DefaultViewsTest extends ViewTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
-      'vid' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
+      'vid' => drupal_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('page' => 'page'),
@@ -56,7 +56,7 @@ class DefaultViewsTest extends ViewTestBase {
     $this->vocabulary->save();
 
     // Setup a field and instance.
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
@@ -153,8 +153,8 @@ class DefaultViewsTest extends ViewTestBase {
     $filter_formats = filter_formats();
     $format = array_pop($filter_formats);
     $term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
       // Use the first available text format.
       'format' => $format->format,
       'vid' => $vocabulary->id(),

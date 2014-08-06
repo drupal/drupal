@@ -75,8 +75,8 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Change the name and description.
     $vocabulary = $original_vocabulary;
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
+    $vocabulary->name = $this->randomMachineName();
+    $vocabulary->description = $this->randomMachineName();
     $vocabulary->save();
 
     // Load the vocabulary.
@@ -154,7 +154,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Change the machine name.
     $old_name = $this->vocabulary->id();
-    $new_name = drupal_strtolower($this->randomName());
+    $new_name = drupal_strtolower($this->randomMachineName());
     $this->vocabulary->vid = $new_name;
     $this->vocabulary->save();
 
@@ -173,7 +173,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testUninstallReinstall() {
     // Fields and field instances attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
-    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
     $storage_definition = array(
       'name' => $field_name,
       'entity_type' => 'taxonomy_term',
@@ -185,7 +185,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
       'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
-      'label' => $this->randomName() . '_label',
+      'label' => $this->randomMachineName() . '_label',
     );
     entity_create('field_instance_config', $instance_definition)->save();
 

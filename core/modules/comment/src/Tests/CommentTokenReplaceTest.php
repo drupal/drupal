@@ -36,11 +36,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Create a node and a comment.
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $parent_comment = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $parent_comment = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $parent_comment->id());
-    $child_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $child_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName());
     $comment = Comment::load($child_comment->id());
     $comment->setHomepage('http://example.org/');
 

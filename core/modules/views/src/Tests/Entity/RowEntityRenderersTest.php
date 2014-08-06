@@ -85,7 +85,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
 
       foreach ($langcodes as $langcode) {
         // Ensure we have a predictable result order.
-        $values[$i][$langcode] = $i . '-' . $langcode . '-' . $this->randomName();
+        $values[$i][$langcode] = $i . '-' . $langcode . '-' . $this->randomMachineName();
 
         if ($langcode != $default_langcode) {
           $node->addTranslation($langcode, array('title' => $values[$i][$langcode]));

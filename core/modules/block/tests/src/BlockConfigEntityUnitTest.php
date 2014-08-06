@@ -49,7 +49,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->entityTypeId = $this->randomName();
+    $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
@@ -81,7 +81,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
       ->setMethods(array('getPluginBags'))
       ->getMock();
     // Create a configurable plugin that would add a dependency.
-    $instance_id = $this->randomName();
+    $instance_id = $this->randomMachineName();
     $instance = new TestConfigurablePlugin(array(), $instance_id, array('provider' => 'test'));
 
     // Create a plugin bag to contain the instance.

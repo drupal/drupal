@@ -81,7 +81,7 @@ class FeedParserTest extends AggregatorTestBase {
   function testRedirectFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = url('aggregator/redirect', array('absolute' => TRUE));
-    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomName()));
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomMachineName()));
     $feed->save();
     $feed->refreshItems();
 
@@ -95,7 +95,7 @@ class FeedParserTest extends AggregatorTestBase {
   function testInvalidFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = 'http:/www.drupal.org';
-    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomName()));
+    $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomMachineName()));
     $feed->save();
 
     // Update the feed. Use the UI to be able to check the message easily.

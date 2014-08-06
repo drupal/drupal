@@ -57,7 +57,7 @@ class ShapeItemTest extends FieldUnitTestBase {
     $color = 'blue';
     $entity->{$this->field_name}->shape = $shape;
     $entity->{$this->field_name}->color = $color;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

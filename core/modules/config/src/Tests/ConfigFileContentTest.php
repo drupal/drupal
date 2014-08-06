@@ -183,7 +183,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
    * Tests serialization of configuration to file.
    */
   function testSerialization() {
-    $name = $this->randomName(10) . '.' . $this->randomName(10);
+    $name = $this->randomMachineName(10) . '.' . $this->randomMachineName(10);
     $config_data = array(
       // Indexed arrays; the order of elements is essential.
       'numeric keys' => array('i', 'n', 'd', 'e', 'x', 'e', 'd'),

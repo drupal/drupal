@@ -48,9 +48,9 @@ class RowEntityTest extends ViewUnitTestBase {
    * Tests the entity row handler.
    */
   public function testEntityRow() {
-    $vocab = entity_create('taxonomy_vocabulary', array('name' => $this->randomName(), 'vid' => strtolower($this->randomName())));
+    $vocab = entity_create('taxonomy_vocabulary', array('name' => $this->randomMachineName(), 'vid' => strtolower($this->randomMachineName())));
     $vocab->save();
-    $term = entity_create('taxonomy_term', array('name' => $this->randomName(), 'vid' => $vocab->id() ));
+    $term = entity_create('taxonomy_term', array('name' => $this->randomMachineName(), 'vid' => $vocab->id() ));
     $term->save();
 
     $view = Views::getView('test_entity_row');

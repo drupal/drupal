@@ -105,7 +105,7 @@ class ArgumentDefaultTest extends PluginTestBase {
    * Tests fixed default argument.
    */
   function testArgumentDefaultFixed() {
-    $random = $this->randomName();
+    $random = $this->randomMachineName();
     $view = Views::getView('test_argument_default_fixed');
     $view->setDisplay();
     $options = $view->display_handler->getOption('arguments');
@@ -116,7 +116,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $this->assertEqual($view->argument['null']->getDefaultArgument(), $random, 'Fixed argument should be used by default.');
 
     // Make sure that a normal argument provided is used
-    $random_string = $this->randomName();
+    $random_string = $this->randomMachineName();
     $view->executeDisplay('default', array($random_string));
 
     $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');

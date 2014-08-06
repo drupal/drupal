@@ -54,7 +54,7 @@ class MailCaptureTest extends WebTestBase {
         'id' => 'drupal_mail_test_' . $index,
         'headers' => array('Content-type'=> 'text/html'),
         'subject' => $this->randomString(64),
-        'to' => $this->randomName(32) . '@example.com',
+        'to' => $this->randomMachineName(32) . '@example.com',
         'body' => $this->randomString(512),
       );
       drupal_mail_system('drupal_mail_test', $index)->mail($message);

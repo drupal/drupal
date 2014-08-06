@@ -282,7 +282,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add an instance to that bundle.
@@ -299,7 +299,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, "Data is retrieved for the new bundle");
 
     // Rename the bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
     entity_test_rename_bundle($this->fieldTestData->instance_definition['bundle'], $new_bundle, $entity_type);
 
     // Check that the instance definition has been updated.
@@ -321,7 +321,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->createFieldWithInstance('', $entity_type);
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add an instance to that bundle.
@@ -329,7 +329,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     entity_create('field_instance_config', $this->fieldTestData->instance_definition)->save();
 
     // Create a second field for the test bundle
-    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
     $field_storage = array(
       'name' => $field_name,
       'entity_type' => $entity_type,
@@ -341,8 +341,8 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'field_name' => $field_name,
       'entity_type' => $entity_type,
       'bundle' => $this->fieldTestData->instance->bundle,
-      'label' => $this->randomName() . '_label',
-      'description' => $this->randomName() . '_description',
+      'label' => $this->randomMachineName() . '_label',
+      'description' => $this->randomMachineName() . '_description',
       'weight' => mt_rand(0, 127),
     );
     entity_create('field_instance_config', $instance)->save();

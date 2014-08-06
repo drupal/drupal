@@ -23,7 +23,7 @@ class NodeTitleXSSTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $xss = '<script>alert("xss")</script>';
-    $title = $xss . $this->randomName();
+    $title = $xss . $this->randomMachineName();
     $edit = array();
     $edit['title[0][value]'] = $title;
 

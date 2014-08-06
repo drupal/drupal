@@ -73,7 +73,7 @@ class UserValidationTest extends DrupalUnitTestBase {
 
     // Only test one example invalid name here, the rest is already covered in
     // the testUsernames() method in this class.
-    $name = $this->randomName(61);
+    $name = $this->randomMachineName(61);
     $user->set('name', $name);
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when name is too long.');
@@ -93,7 +93,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('The name %name is already taken.', array('%name' => 'existing')));
 
     // Make the name valid.
-    $user->set('name', $this->randomName());
+    $user->set('name', $this->randomMachineName());
 
     $user->set('mail', 'invalid');
     $violations = $user->validate();
@@ -101,7 +101,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
-    $mail = $this->randomName(EMAIL_MAX_LENGTH - 11) . '@example.com';
+    $mail = $this->randomMachineName(EMAIL_MAX_LENGTH - 11) . '@example.com';
     $user->set('mail', $mail);
     $violations = $user->validate();
     // @todo There are two violations because EmailItem::getConstraints()

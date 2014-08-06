@@ -33,8 +33,8 @@ class PageEditTest extends NodeTestBase {
     $body_key = 'body[0][value]';
     // Create node to edit.
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
@@ -56,8 +56,8 @@ class PageEditTest extends NodeTestBase {
 
     // Edit the content of the node.
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     // Stay on the current page, without reloading.
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
@@ -71,8 +71,8 @@ class PageEditTest extends NodeTestBase {
     // Edit the same node, creating a new revision.
     $this->drupalGet("node/" . $node->id() . "/edit");
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $edit['revision'] = TRUE;
     $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
 
@@ -98,8 +98,8 @@ class PageEditTest extends NodeTestBase {
     // Create node to edit.
     $body_key = 'body[0][value]';
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save and publish'));
 
     // Check that the node was authored by the currently logged in user.

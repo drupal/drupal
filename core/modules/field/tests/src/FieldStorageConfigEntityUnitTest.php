@@ -70,7 +70,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
       ->will($this->returnValue('field'));
 
     // Create a mock entity type to attach the field to.
-    $attached_entity_type_id = $this->randomName();
+    $attached_entity_type_id = $this->randomMachineName();
     $attached_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $attached_entity_type->expects($this->any())
       ->method('getProvider')

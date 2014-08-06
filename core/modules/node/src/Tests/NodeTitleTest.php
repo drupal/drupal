@@ -39,7 +39,7 @@ class NodeTitleTest extends NodeTestBase {
     // Add the node to the frontpage so we can test if teaser links are
     // clickable.
     $settings = array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);

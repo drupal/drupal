@@ -42,7 +42,7 @@ class EntityTest extends NormalizerTestBase {
     $node_type = entity_create('node_type', array('type' => 'example_type'));
     $node_type->save();
 
-    $user = entity_create('user', array('name' => $this->randomName()));
+    $user = entity_create('user', array('name' => $this->randomMachineName()));
     $user->save();
 
     // Add comment type.
@@ -55,15 +55,15 @@ class EntityTest extends NormalizerTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'example_type');
 
     $node = entity_create('node', array(
-      'title' => $this->randomName(),
+      'title' => $this->randomMachineName(),
       'uid' => $user->id(),
       'type' => $node_type->id(),
       'status' => NODE_PUBLISHED,
       'promote' => 1,
       'sticky' => 0,
       'body' => array(
-        'value' => $this->randomName(),
-        'format' => $this->randomName(),
+        'value' => $this->randomMachineName(),
+        'format' => $this->randomMachineName(),
       )
     ));
     $node->save();
@@ -94,11 +94,11 @@ class EntityTest extends NormalizerTestBase {
     $vocabulary->save();
 
     $term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'vid' => $vocabulary->id(),
       'description' => array(
-        'value' => $this->randomName(),
-        'format' => $this->randomName(),
+        'value' => $this->randomMachineName(),
+        'format' => $this->randomMachineName(),
       )
     ));
     $term->save();
@@ -126,7 +126,7 @@ class EntityTest extends NormalizerTestBase {
     $node_type = entity_create('node_type', array('type' => 'example_type'));
     $node_type->save();
 
-    $user = entity_create('user', array('name' => $this->randomName()));
+    $user = entity_create('user', array('name' => $this->randomMachineName()));
     $user->save();
 
     // Add comment type.
@@ -139,23 +139,23 @@ class EntityTest extends NormalizerTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'example_type');
 
     $node = entity_create('node', array(
-      'title' => $this->randomName(),
+      'title' => $this->randomMachineName(),
       'uid' => $user->id(),
       'type' => $node_type->id(),
       'status' => NODE_PUBLISHED,
       'promote' => 1,
       'sticky' => 0,
       'body' => array(
-        'value' => $this->randomName(),
-        'format' => $this->randomName(),
+        'value' => $this->randomMachineName(),
+        'format' => $this->randomMachineName(),
       )
     ));
     $node->save();
 
     $comment = entity_create('comment', array(
       'uid' => $user->id(),
-      'subject' => $this->randomName(),
-      'comment_body' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => $this->randomMachineName(),
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment'

@@ -27,9 +27,9 @@ class BasicTest extends WizardTestBase {
 
     // Create a simple and not at all useful view.
     $view1 = array();
-    $view1['label'] = $this->randomName(16);
-    $view1['id'] = strtolower($this->randomName(16));
-    $view1['description'] = $this->randomName(16);
+    $view1['label'] = $this->randomMachineName(16);
+    $view1['id'] = strtolower($this->randomMachineName(16));
+    $view1['description'] = $this->randomMachineName(16);
     $view1['page[create]'] = FALSE;
     $this->drupalPostForm('admin/structure/views/add', $view1, t('Save and edit'));
     $this->assertResponse(200);
@@ -50,14 +50,14 @@ class BasicTest extends WizardTestBase {
 
     // Now create a page with simple node listing and an attached feed.
     $view2 = array();
-    $view2['label'] = $this->randomName(16);
-    $view2['id'] = strtolower($this->randomName(16));
-    $view2['description'] = $this->randomName(16);
+    $view2['label'] = $this->randomMachineName(16);
+    $view2['id'] = strtolower($this->randomMachineName(16));
+    $view2['description'] = $this->randomMachineName(16);
     $view2['page[create]'] = 1;
-    $view2['page[title]'] = $this->randomName(16);
-    $view2['page[path]'] = $this->randomName(16);
+    $view2['page[title]'] = $this->randomMachineName(16);
+    $view2['page[path]'] = $this->randomMachineName(16);
     $view2['page[feed]'] = 1;
-    $view2['page[feed_properties][path]'] = $this->randomName(16);
+    $view2['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Save and edit'));
     $this->drupalGet($view2['page[path]']);
     $this->assertResponse(200);
@@ -92,16 +92,16 @@ class BasicTest extends WizardTestBase {
 
     // Create a view with a page and a block, and filter the listing.
     $view3 = array();
-    $view3['label'] = $this->randomName(16);
-    $view3['id'] = strtolower($this->randomName(16));
-    $view3['description'] = $this->randomName(16);
+    $view3['label'] = $this->randomMachineName(16);
+    $view3['id'] = strtolower($this->randomMachineName(16));
+    $view3['description'] = $this->randomMachineName(16);
     $view3['show[wizard_key]'] = 'node';
     $view3['show[type]'] = 'page';
     $view3['page[create]'] = 1;
-    $view3['page[title]'] = $this->randomName(16);
-    $view3['page[path]'] = $this->randomName(16);
+    $view3['page[title]'] = $this->randomMachineName(16);
+    $view3['page[path]'] = $this->randomMachineName(16);
     $view3['block[create]'] = 1;
-    $view3['block[title]'] = $this->randomName(16);
+    $view3['block[title]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view3, t('Save and edit'));
     $this->drupalGet($view3['page[path]']);
     $this->assertResponse(200);
@@ -158,12 +158,12 @@ class BasicTest extends WizardTestBase {
    * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::mergeDefaults().
    */
   public function testWizardDefaultValues() {
-    $random_id = strtolower($this->randomName(16));
+    $random_id = strtolower($this->randomMachineName(16));
     // Create a basic view.
     $view = array();
-    $view['label'] = $this->randomName(16);
+    $view['label'] = $this->randomMachineName(16);
     $view['id'] = $random_id;
-    $view['description'] = $this->randomName(16);
+    $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 

@@ -158,8 +158,8 @@ class ForumBlockTest extends WebTestBase {
 
     for ($index = 0; $index < $count; $index++) {
       // Generate a random subject/body.
-      $title = $this->randomName(20);
-      $body = $this->randomName(200);
+      $title = $this->randomMachineName(20);
+      $body = $this->randomMachineName(200);
       // Forum posts are ordered by timestamp, so force a unique timestamp by
       // changing the date.
       $date->modify('+1 minute');

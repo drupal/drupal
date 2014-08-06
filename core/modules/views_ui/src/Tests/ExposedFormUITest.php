@@ -112,7 +112,7 @@ class ExposedFormUITest extends UITestBase {
     // error.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/body_value');
     $edit = array();
-    $edit["options[group_info][group_items][1][title]"] = $this->randomName();
+    $edit["options[group_info][group_items][1][title]"] = $this->randomMachineName();
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', array(), 'Validation did not run for the empty operator.');

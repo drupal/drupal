@@ -194,7 +194,7 @@ class BlockUiTest extends WebTestBase {
   public function testBlockPlacementIndicator() {
     // Select the 'Powered by Drupal' block to be placed.
     $block = array();
-    $block['id'] = strtolower($this->randomName());
+    $block['id'] = strtolower($this->randomMachineName());
     $block['theme'] = 'stark';
     $block['region'] = 'content';
 

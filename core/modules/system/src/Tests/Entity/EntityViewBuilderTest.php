@@ -183,7 +183,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
   protected function createTestEntity($entity_type) {
     $data = array(
       'bundle' => $entity_type,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     );
     return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
   }

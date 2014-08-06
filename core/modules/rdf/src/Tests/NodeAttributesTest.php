@@ -49,7 +49,7 @@ class NodeAttributesTest extends NodeTestBase {
     // escaped more than once.
     $node = $this->drupalCreateNode(array(
       'type' => 'article',
-      'title' => $this->randomName(8) . "'",
+      'title' => $this->randomMachineName(8) . "'",
     ));
 
     $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));

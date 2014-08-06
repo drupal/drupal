@@ -66,7 +66,7 @@ class ArgumentValidateTest extends UserTestBase {
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist
-    $this->assertFalse($view->argument['null']->validateArgument($this->randomName()));
+    $this->assertFalse($view->argument['null']->validateArgument($this->randomMachineName()));
   }
 
 }

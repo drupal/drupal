@@ -111,7 +111,7 @@ class CommentFieldsTest extends CommentTestBase {
     // asserting that the body is actually posted correctly.
     $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->web_user);
-    $this->postComment($book_node, $this->randomName(), $this->randomName());
+    $this->postComment($book_node, $this->randomMachineName(), $this->randomMachineName());
   }
 
   /**
@@ -131,7 +131,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);
-    $edit = array('comment_body[0][value]' => $this->randomName(8));
+    $edit = array('comment_body[0][value]' => $this->randomMachineName(8));
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Save'));
   }
 }

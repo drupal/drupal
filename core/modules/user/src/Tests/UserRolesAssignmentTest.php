@@ -52,8 +52,8 @@ class UserRolesAssignmentTest extends WebTestBase {
     $rid = $this->drupalCreateRole(array('administer users'));
     // Create a new user and add the role at the same time.
     $edit = array(
-      'name' => $this->randomName(),
-      'mail' => $this->randomName() . '@example.com',
+      'name' => $this->randomMachineName(),
+      'mail' => $this->randomMachineName() . '@example.com',
       'pass[pass1]' => $pass = $this->randomString(),
       'pass[pass2]' => $pass,
       "roles[$rid]" => $rid,

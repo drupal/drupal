@@ -279,8 +279,8 @@ class RenderTest extends DrupalUnitTestBase {
    * Tests sorting by weight.
    */
   function testDrupalRenderSorting() {
-    $first = $this->randomName();
-    $second = $this->randomName();
+    $first = $this->randomMachineName();
+    $second = $this->randomMachineName();
     // Build an array with '#weight' set for each element.
     $elements = array(
       'second' => array(
@@ -391,8 +391,8 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertEqual(drupal_render($element), 'foobar', 'Defaults work');
     $element = array(
       '#theme' => 'common_test_foo',
-      '#foo' => $this->randomName(),
-      '#bar' => $this->randomName(),
+      '#foo' => $this->randomMachineName(),
+      '#bar' => $this->randomMachineName(),
     );
     // Tests that passing arguments to the theme function works.
     $this->assertEqual(drupal_render($element), $element['#foo'] . $element['#bar'], 'Passing arguments to theme functions works');

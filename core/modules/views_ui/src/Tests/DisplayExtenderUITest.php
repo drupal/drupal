@@ -36,7 +36,7 @@ class DisplayExtenderUITest extends UITestBase {
     $this->drupalGet($view_edit_url);
     $this->assertLinkByHref($display_option_url, 0, 'Make sure the option defined by the test display extender appears in the UI.');
 
-    $random_text = $this->randomName();
+    $random_text = $this->randomMachineName();
     $this->drupalPostForm($display_option_url, array('test_extender_test_option' => $random_text), t('Apply'));
     $this->assertLink($random_text);
     $this->drupalPostForm(NULL, array(), t('Save'));

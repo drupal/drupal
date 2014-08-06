@@ -48,7 +48,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $langcode = 'xx';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms'));
     $this->drupalLogin($admin_user);
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
@@ -65,7 +65,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertTrue($string, 'Configuration strings have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.
-    $site_name = $this->randomName(20);
+    $site_name = $this->randomMachineName(20);
     $search = array(
       'string' => $string->source,
       'langcode' => $langcode,
@@ -141,7 +141,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertTrue(count($translations) == 1 && $translation->source == $string->source && empty($translation->translation), 'Got only one string for image configuration and has no translation.');
 
     // Translate using the UI so configuration is refreshed.
-    $image_style_label = $this->randomName(20);
+    $image_style_label = $this->randomMachineName(20);
     $search = array(
       'string' => $string->source,
       'langcode' => $langcode,
@@ -180,7 +180,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertTrue($override->isNew(), 'Translated configuration for image module removed.');
 
     // Translate default category using the UI so configuration is refreshed.
-    $category_label = $this->randomName(20);
+    $category_label = $this->randomMachineName(20);
     $search = array(
       'string' => 'Website feedback',
       'langcode' => $langcode,

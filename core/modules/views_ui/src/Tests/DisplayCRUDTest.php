@@ -115,8 +115,8 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertUrl($path_prefix . '/page_2', array(), 'The user got redirected to the new display.');
 
     // Set the title and override the css classes.
-    $random_title = $this->randomName();
-    $random_css = $this->randomName();
+    $random_title = $this->randomMachineName();
+    $random_css = $this->randomMachineName();
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", array('title' => $random_title), t('Apply'));
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
 

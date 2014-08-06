@@ -26,7 +26,7 @@ class BreakpointGroupCRUDTest extends BreakpointGroupTestBase {
     for ($i = 0; $i <= 3; $i++) {
       $width = ($i + 1) * 200;
       $breakpoint = entity_create('breakpoint', array(
-        'name' => drupal_strtolower($this->randomName()),
+        'name' => drupal_strtolower($this->randomMachineName()),
         'weight' => $i,
         'mediaQuery' => "(min-width: {$width}px)",
       ));
@@ -34,7 +34,7 @@ class BreakpointGroupCRUDTest extends BreakpointGroupTestBase {
       $breakpoints[$breakpoint->id()] = $breakpoint;
     }
     // Add a breakpoint group with minimum data only.
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
 
     $group = entity_create('breakpoint_group', array(
       'label' => $label,

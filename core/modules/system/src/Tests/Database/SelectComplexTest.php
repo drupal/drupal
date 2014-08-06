@@ -327,8 +327,8 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->enableModules(array('field', 'user'));
 
     $account = entity_create('user', array(
-      'name' => $this->randomName(),
-      'mail' => $this->randomName() . '@example.com',
+      'name' => $this->randomMachineName(),
+      'mail' => $this->randomMachineName() . '@example.com',
     ));
 
     $query = db_select('test_task', 'tt', array('target' => 'replica'));

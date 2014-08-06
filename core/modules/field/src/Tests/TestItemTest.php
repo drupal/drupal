@@ -56,7 +56,7 @@ class TestItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $value = rand(1, 10);
     $entity->field_test = $value;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

@@ -29,9 +29,9 @@ class CommentPagerTest extends CommentTestBase {
     // Create a node and three comments.
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.');
 
@@ -62,7 +62,7 @@ class CommentPagerTest extends CommentTestBase {
     // Post a reply to the oldest comment and test again.
     $oldest_comment = reset($comments);
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $oldest_comment->id());
-    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     $this->setCommentsPerPage(2);
     // We are still in flat view - the replies should not be on the first page,
@@ -80,7 +80,7 @@ class CommentPagerTest extends CommentTestBase {
 
     // If (# replies > # comments per page) in threaded expanded view,
     // the overage should be bumped.
-    $reply2 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $reply2 = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->drupalGet('node/' . $node->id(), array('query' => array('page' => 0)));
     $this->assertFalse($this->commentExists($reply2, TRUE), 'In threaded mode where # replies > # comments per page, the newest reply does not appear on page 1.');
 
@@ -104,25 +104,25 @@ class CommentPagerTest extends CommentTestBase {
     // Create a node and three comments.
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the second comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[1]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the first comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[0]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the last comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[2]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the second comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[3]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // At this point, the comment tree is:
     // - 0
@@ -204,21 +204,21 @@ class CommentPagerTest extends CommentTestBase {
     // Create a node and three comments.
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $comments = array();
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
-    $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comments[] = $this->postComment($node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the second comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[1]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the first comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[0]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Post a reply to the last comment.
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $comments[2]->id());
-    $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $comments[] = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // At this point, the comment tree is:
     // - 0

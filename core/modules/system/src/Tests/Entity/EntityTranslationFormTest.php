@@ -56,8 +56,8 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Create a node with language LanguageInterface::LANGCODE_NOT_SPECIFIED.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
 
     $this->drupalGet('node/add/page');
     $form_langcode = \Drupal::state()->get('entity_test.form_langcode') ?: FALSE;
@@ -87,8 +87,8 @@ class EntityTranslationFormTest extends WebTestBase {
     // Create a node with language.
     $edit = array();
     $langcode = $this->langcodes[0];
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     $edit['langcode'] = $langcode;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit['title[0][value]'])), 'Basic page created.');
@@ -106,7 +106,7 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Create a body translation and check the form language.
     $langcode2 = $this->langcodes[1];
-    $node->getTranslation($langcode2)->body->value = $this->randomName(16);
+    $node->getTranslation($langcode2)->body->value = $this->randomMachineName(16);
     $node->save();
     $this->drupalGet($langcode2 . '/node/' . $node->id() . '/edit');
     $form_langcode = \Drupal::state()->get('entity_test.form_langcode') ?: FALSE;

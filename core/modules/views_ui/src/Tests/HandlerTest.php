@@ -91,7 +91,7 @@ class HandlerTest extends UITestBase {
       }
 
       $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');
-      $random_label = $this->randomName();
+      $random_label = $this->randomMachineName();
       $this->drupalPostForm(NULL, array('options[admin_label]' => $random_label), t('Apply'));
 
       $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default', array(), 'The user got redirected to the views edit form.');

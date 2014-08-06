@@ -50,7 +50,7 @@ class SystemAuthorizeTest extends WebTestBase {
    * Tests the FileTransfer hooks
    */
   function testFileTransferHooks() {
-    $page_title = $this->randomName(16);
+    $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertTitle(strtr('@title | Drupal', array('@title' => $page_title)), 'authorize.php page title is correct.');
     $this->assertNoText('It appears you have reached this page in error.');

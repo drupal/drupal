@@ -44,7 +44,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->auth_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
 
     // Ensure we have a node page to access.
-    $this->node = $this->drupalCreateNode(array('title' => $this->randomName(255), 'uid' => $this->auth_user->id()));
+    $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->auth_user->id()));
 
     // Enable access logging.
     \Drupal::config('statistics.settings')

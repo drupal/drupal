@@ -46,7 +46,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->fieldName = strtolower($this->randomName());
+    $this->fieldName = strtolower($this->randomMachineName());
 
     $type_name = 'article';
     $this->createFileField($this->fieldName, 'node', $type_name);

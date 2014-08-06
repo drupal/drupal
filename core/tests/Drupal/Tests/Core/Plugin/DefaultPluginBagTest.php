@@ -22,7 +22,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
     $this->setupPluginBag();
     $definitions = $this->getPluginDefinitions();
 
-    $this->assertFalse($this->defaultPluginBag->has($this->randomName()), 'Nonexistent plugin found.');
+    $this->assertFalse($this->defaultPluginBag->has($this->randomMachineName()), 'Nonexistent plugin found.');
 
     foreach (array_keys($definitions) as $plugin_id) {
       $this->assertTrue($this->defaultPluginBag->has($plugin_id));

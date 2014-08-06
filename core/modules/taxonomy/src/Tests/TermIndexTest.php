@@ -27,7 +27,7 @@ class TermIndexTest extends TaxonomyTestBase {
     // Create a vocabulary and add two term reference fields to article nodes.
     $this->vocabulary = $this->createVocabulary();
 
-    $this->field_name_1 = drupal_strtolower($this->randomName());
+    $this->field_name_1 = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name_1,
       'entity_type' => 'node',
@@ -58,7 +58,7 @@ class TermIndexTest extends TaxonomyTestBase {
       ))
       ->save();
 
-    $this->field_name_2 = drupal_strtolower($this->randomName());
+    $this->field_name_2 = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name_2,
       'entity_type' => 'node',
@@ -100,8 +100,8 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName();
-    $edit['body[0][value]'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomMachineName();
+    $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->field_name_1}[]"] = $term_1->id();
     $edit["{$this->field_name_2}[]"] = $term_1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
@@ -148,7 +148,7 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Redo the above tests without interface.
     $node = node_load($node->id(), TRUE);
-    $node->title = $this->randomName();
+    $node->title = $this->randomMachineName();
 
     // Update the article with no term changed.
     $node->save();

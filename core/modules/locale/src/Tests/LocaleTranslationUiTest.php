@@ -49,10 +49,10 @@ class LocaleTranslationUiTest extends WebTestBase {
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     // This will be the translation of $name.
-    $translation = $this->randomName(16);
-    $translation_to_en = $this->randomName(16);
+    $translation = $this->randomMachineName(16);
+    $translation_to_en = $this->randomMachineName(16);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -209,7 +209,7 @@ class LocaleTranslationUiTest extends WebTestBase {
 
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
 
     // Add custom language.
     $edit = array(
@@ -242,7 +242,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
-      $lid => $this->randomName(),
+      $lid => $this->randomMachineName(),
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
@@ -269,16 +269,16 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
 
     // These will be the invalid translations of $name.
-    $key = $this->randomName(16);
+    $key = $this->randomMachineName(16);
     $bad_translations[$key] = "<script>alert('xss');</script>" . $key;
-    $key = $this->randomName(16);
+    $key = $this->randomMachineName(16);
     $bad_translations[$key] = '<img SRC="javascript:alert(\'xss\');">' . $key;
-    $key = $this->randomName(16);
+    $key = $this->randomMachineName(16);
     $bad_translations[$key] = '<<SCRIPT>alert("xss");//<</SCRIPT>' . $key;
-    $key = $this->randomName(16);
+    $key = $this->randomMachineName(16);
     $bad_translations[$key] = "<BODY ONLOAD=alert('xss')>" . $key;
 
     // Add custom language.
@@ -326,9 +326,9 @@ class LocaleTranslationUiTest extends WebTestBase {
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     // This will be the translation of $name.
-    $translation = $this->randomName(16);
+    $translation = $this->randomMachineName(16);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -343,7 +343,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => 'yy',
-      'name' => $this->randomName(16),
+      'name' => $this->randomMachineName(16),
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -446,7 +446,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->assertText(t('No strings available.'), "Search didn't find the translation.");
 
     // Search for a string that isn't in the system.
-    $unavailable_string = $this->randomName(16);
+    $unavailable_string = $this->randomMachineName(16);
     $search = array(
       'string' => $unavailable_string,
       'langcode' => $langcode,
@@ -467,15 +467,15 @@ class LocaleTranslationUiTest extends WebTestBase {
 
     // Create test source string.
     $string = $this->container->get('locale.storage')->createString(array(
-      'source' => $this->randomName(100),
-      'context' => $this->randomName(20),
+      'source' => $this->randomMachineName(100),
+      'context' => $this->randomMachineName(20),
     ))->save();
 
     // Create translation for new string and save it as non-customized.
     $translation = $this->container->get('locale.storage')->createTranslation(array(
       'lid' => $string->lid,
       'language' => 'de',
-      'translation' => $this->randomName(100),
+      'translation' => $this->randomMachineName(100),
       'customized' => 0,
     ))->save();
 
@@ -517,7 +517,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
-      $lid => $this->randomName(100),
+      $lid => $this->randomMachineName(100),
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 

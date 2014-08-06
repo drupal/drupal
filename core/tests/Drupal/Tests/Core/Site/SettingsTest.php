@@ -37,7 +37,7 @@ class SettingsTest extends UnitTestCase {
     $this->config = array(
       'one' => '1',
       'two' => '2',
-      'hash_salt' => $this->randomName(),
+      'hash_salt' => $this->randomMachineName(),
     );
     $this->settings = new Settings($this->config);
   }

@@ -32,7 +32,7 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
 
     // Add a custom lanugage.
     $langcode = 'xx';
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,

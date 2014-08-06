@@ -50,13 +50,13 @@ class LinkItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $url = 'http://www.drupal.org?test_param=test_value';
     $parsed_url = UrlHelper::parse($url);
-    $title = $this->randomName();
-    $class = $this->randomName();
+    $title = $this->randomMachineName();
+    $class = $this->randomMachineName();
     $entity->field_test->url = $parsed_url['path'];
     $entity->field_test->title = $title;
     $entity->field_test->first()->get('options')->set('query', $parsed_url['query']);
     $entity->field_test->first()->get('options')->set('attributes', array('class' => $class));
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify that the field value is changed.
@@ -73,7 +73,7 @@ class LinkItemTest extends FieldUnitTestBase {
 
     // Update only the entity name property to check if the link field data will
     // remain intact.
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
@@ -83,8 +83,8 @@ class LinkItemTest extends FieldUnitTestBase {
 
     // Verify changing the field value.
     $new_url = 'http://drupal.org';
-    $new_title = $this->randomName();
-    $new_class = $this->randomName();
+    $new_title = $this->randomMachineName();
+    $new_class = $this->randomMachineName();
     $entity->field_test->url = $new_url;
     $entity->field_test->title = $new_title;
     $entity->field_test->first()->get('options')->set('query', NULL);

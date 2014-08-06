@@ -407,7 +407,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Create a custom language with language code 'xx' and a random
     // name.
     $langcode = 'xx';
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,

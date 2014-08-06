@@ -39,7 +39,7 @@ class LinkFieldUITest extends WebTestBase {
     $type_path = 'admin/structure/types/manage/' . $type->type;
 
     // Add a link field to the newly-created type.
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
     $field_name = drupal_strtolower($label);
     $edit = array(
       'fields[_add_new_field][label]' => $label,

@@ -42,7 +42,7 @@ class FileMoveTest extends WebTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $desired_filepath = 'public://' . $this->randomName();
+    $desired_filepath = 'public://' . $this->randomMachineName();
     $result = file_move(clone $file, $desired_filepath, FILE_EXISTS_ERROR);
 
     // Check if image has been moved.

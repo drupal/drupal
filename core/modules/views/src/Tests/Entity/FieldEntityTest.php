@@ -38,7 +38,7 @@ class FieldEntityTest extends ViewTestBase {
     // The view is a view of comments, their nodes and their authors, so there
     // are three layers of entities.
 
-    $account = entity_create('user', array('name' => $this->randomName(), 'bundle' => 'user'));
+    $account = entity_create('user', array('name' => $this->randomMachineName(), 'bundle' => 'user'));
     $account->save();
     $this->drupalCreateContentType(array('type' => 'page'));
     $this->container->get('comment.manager')->addDefaultField('node', 'page');

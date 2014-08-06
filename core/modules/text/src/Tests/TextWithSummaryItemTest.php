@@ -62,10 +62,10 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
 
     // Create an entity with a summary and no text format.
     $entity = entity_create($entity_type);
-    $entity->summary_field->value = $value = $this->randomName();
-    $entity->summary_field->summary = $summary = $this->randomName();
+    $entity->summary_field->value = $value = $this->randomMachineName();
+    $entity->summary_field->summary = $summary = $this->randomMachineName();
     $entity->summary_field->format = NULL;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load($entity_type, $entity->id());

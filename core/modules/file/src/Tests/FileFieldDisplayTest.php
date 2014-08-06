@@ -20,7 +20,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
    * Tests normal formatter display on node display.
    */
   function testNodeDisplay() {
-    $field_name = strtolower($this->randomName());
+    $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
     $field_settings = array(
       'display_field' => '1',
@@ -70,7 +70,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
 
     // Add a description and make sure that it is displayed.
-    $description = $this->randomName();
+    $description = $this->randomMachineName();
     $edit = array(
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,

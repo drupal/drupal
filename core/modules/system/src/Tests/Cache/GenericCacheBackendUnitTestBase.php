@@ -108,7 +108,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
 
   public function setUp() {
     $this->cachebackends = array();
-    $this->defaultValue = $this->randomName(10);
+    $this->defaultValue = $this->randomMachineName(10);
 
     parent::setUp();
 

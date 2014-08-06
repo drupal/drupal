@@ -1302,7 +1302,7 @@ abstract class TestBase {
    *
    * Do not use this method when special characters are not possible (e.g., in
    * machine or file names that have already been validated); instead, use
-   * \Drupal\simpletest\TestBase::randomName().
+   * \Drupal\simpletest\TestBase::randomMachineName().
    *
    * @param int $length
    *   Length of random string to generate.
@@ -1363,7 +1363,7 @@ abstract class TestBase {
    *
    * @see \Drupal\Component\Utility\Random::name()
    */
-  public function randomName($length = 8) {
+  public function randomMachineName($length = 8) {
     return $this->getRandomGenerator()->name($length, TRUE);
   }
 

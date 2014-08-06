@@ -165,7 +165,7 @@ class BreadcrumbTest extends MenuTestBase {
 
     foreach ($menus as $menu) {
       // Create a parent node in the current menu.
-      $title = $this->randomName();
+      $title = $this->randomMachineName();
       $node2 = $this->drupalCreateNode(array(
         'type' => $type,
         'title' => $title,

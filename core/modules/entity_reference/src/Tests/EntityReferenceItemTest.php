@@ -49,14 +49,14 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->installEntitySchema('taxonomy_term');
 
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'vid' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'vid' => drupal_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->vocabulary->save();
 
     $this->term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'vid' => $this->vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
@@ -76,7 +76,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Just being able to create the entity like this verifies a lot of code.
     $entity = entity_create('entity_test');
     $entity->field_test_taxonomy_term->target_id = $tid;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
@@ -88,7 +88,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test_taxonomy_term->entity->uuid(), $this->term->uuid());
 
     // Change the name of the term via the reference.
-    $new_name = $this->randomName();
+    $new_name = $this->randomMachineName();
     $entity->field_test_taxonomy_term->entity->setName($new_name);
     $entity->field_test_taxonomy_term->entity->save();
     // Verify it is the correct name.
@@ -97,7 +97,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
 
     // Make sure the computed term reflects updates to the term id.
     $term2 = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'vid' => $this->term->bundle(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
@@ -110,7 +110,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Delete terms so we have nothing to reference and try again
     $term->delete();
     $term2->delete();
-    $entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
     $entity->save();
   }
 
@@ -123,7 +123,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Just being able to create the entity like this verifies a lot of code.
     $entity = entity_create('entity_test');
     $entity->field_test_taxonomy_vocabulary->target_id = $referenced_entity_id;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
@@ -135,7 +135,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->uuid(), $this->vocabulary->uuid());
 
     // Change the name of the term via the reference.
-    $new_name = $this->randomName();
+    $new_name = $this->randomMachineName();
     $entity->field_test_taxonomy_vocabulary->entity->name = $new_name;
     $entity->field_test_taxonomy_vocabulary->entity->save();
     // Verify it is the correct name.
@@ -144,8 +144,8 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
 
     // Make sure the computed term reflects updates to the term id.
     $vocabulary2 = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'vid' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'vid' => drupal_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary2->save();
@@ -157,7 +157,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Delete terms so we have nothing to reference and try again
     $this->vocabulary->delete();
     $vocabulary2->delete();
-    $entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $entity = entity_create('entity_test', array('name' => $this->randomMachineName()));
     $entity->save();
   }
 

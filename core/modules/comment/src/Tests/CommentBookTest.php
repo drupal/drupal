@@ -43,8 +43,8 @@ class CommentBookTest extends WebTestBase {
     $book_node->book['bid'] = 'new';
     $book_node->save();
 
-    $comment_subject = $this->randomName(8);
-    $comment_body = $this->randomName(8);
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
     $comment = entity_create('comment', array(
       'subject' => $comment_subject,
       'comment_body' => $comment_body,

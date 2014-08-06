@@ -23,7 +23,7 @@ class UnmanagedCopyTest extends FileTestBase {
     $uri = $this->createUri();
 
     // Copying to a new name.
-    $desired_filepath = 'public://' . $this->randomName();
+    $desired_filepath = 'public://' . $this->randomMachineName();
     $new_filepath = file_unmanaged_copy($uri, $desired_filepath, FILE_EXISTS_ERROR);
     $this->assertTrue($new_filepath, 'Copy was successful.');
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
@@ -32,7 +32,7 @@ class UnmanagedCopyTest extends FileTestBase {
     $this->assertFilePermissions($new_filepath, Settings::get('file_chmod_file', FILE_CHMOD_FILE));
 
     // Copying with rename.
-    $desired_filepath = 'public://' . $this->randomName();
+    $desired_filepath = 'public://' . $this->randomMachineName();
     $this->assertTrue(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
     $newer_filepath = file_unmanaged_copy($uri, $desired_filepath, FILE_EXISTS_RENAME);
     $this->assertTrue($newer_filepath, 'Copy was successful.');
@@ -50,9 +50,9 @@ class UnmanagedCopyTest extends FileTestBase {
    */
   function testNonExistent() {
     // Copy non-existent file
-    $desired_filepath = $this->randomName();
+    $desired_filepath = $this->randomMachineName();
     $this->assertFalse(file_exists($desired_filepath), "Randomly named file doesn't exists.");
-    $new_filepath = file_unmanaged_copy($desired_filepath, $this->randomName());
+    $new_filepath = file_unmanaged_copy($desired_filepath, $this->randomMachineName());
     $this->assertFalse($new_filepath, 'Copying a missing file fails.');
   }
 

@@ -40,8 +40,8 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
    */
   public function testConfigurationRename() {
     $content_type = entity_create('node_type', array(
-      'type' => Unicode::strtolower($this->randomName(16)),
-      'name' => $this->randomName(),
+      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
     ));
     $content_type->save();
     $staged_type = $content_type->type;
@@ -53,7 +53,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->copyConfig($active, $staging);
 
     // Change the machine name of the content type.
-    $content_type->type = Unicode::strtolower($this->randomName(8));
+    $content_type->type = Unicode::strtolower($this->randomMachineName(8));
     $content_type->save();
     $active_type = $content_type->type;
     $renamed_config_name = $content_type->getEntityType()->getConfigPrefix() . '.' . $content_type->id();

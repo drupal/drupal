@@ -53,7 +53,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Post comment #1 as web_user2.
     $this->drupalLogin($this->web_user2);
-    $comment_text = $this->randomName();
+    $comment_text = $this->randomMachineName();
     $this->postComment($this->node, $comment_text);
 
     // Checks the new values of node comment statistics with comment #1.
@@ -76,7 +76,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Post comment #2 as anonymous (comment approval enabled).
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', TRUE);
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), '', TRUE);
 
     // Checks the new values of node comment statistics with comment #2 and
     // ensure they haven't changed since the comment has not been moderated.
@@ -97,7 +97,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Post comment #3 as anonymous.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', array('name' => $this->randomName()));
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), '', array('name' => $this->randomMachineName()));
     $comment_loaded = Comment::load($anonymous_comment->id());
 
     // Checks the new values of node comment statistics with comment #3.

@@ -55,7 +55,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
       'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16), 'format' => 'plain_text')),
+      'body' => array(array('value' => $this->randomMachineName(32), 'summary' => $this->randomMachineName(16), 'format' => 'plain_text')),
     ));
     $node->save();
 
@@ -102,7 +102,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(array('value' => $this->randomName(32), 'format' => 'plain_text')),
+      'body' => array(array('value' => $this->randomMachineName(32), 'format' => 'plain_text')),
     ));
     $node->save();
 

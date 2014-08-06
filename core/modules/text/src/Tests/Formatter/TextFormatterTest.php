@@ -98,7 +98,7 @@ class TextFormatterTest extends EntityUnitTestBase {
     );
 
     // Create the entity to be referenced.
-    $entity = entity_create($this->entityType, array('name' => $this->randomName()));
+    $entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
     $entity->processed_text = array(
       'value' => 'Hello, world!',
       'format' => 'my_text_format',

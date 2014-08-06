@@ -46,7 +46,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     // Setup a field.
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
     $this->field_storage = entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
@@ -110,7 +110,7 @@ class TermFieldTest extends TaxonomyTestBase {
     // Submit with some value.
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       $this->field_name => array($term->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -167,7 +167,7 @@ class TermFieldTest extends TaxonomyTestBase {
     );
     $this->field_storage->save();
     // Change the machine name.
-    $new_name = drupal_strtolower($this->randomName());
+    $new_name = drupal_strtolower($this->randomMachineName());
     $this->vocabulary->vid = $new_name;
     $this->vocabulary->save();
 

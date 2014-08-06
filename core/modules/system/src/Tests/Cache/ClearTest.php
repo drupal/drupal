@@ -18,7 +18,7 @@ class ClearTest extends CacheTestBase {
 
   function setUp() {
     $this->default_bin = 'render';
-    $this->default_value = $this->randomName(10);
+    $this->default_value = $this->randomMachineName(10);
 
     parent::setUp();
   }

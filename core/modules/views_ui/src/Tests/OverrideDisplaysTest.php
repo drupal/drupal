@@ -20,10 +20,10 @@ class OverrideDisplaysTest extends UITestBase {
   function testOverrideDisplays() {
     // Create a basic view that shows all content, with a page and a block
     // display.
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
-    $view['page[path]'] = $this->randomName(16);
+    $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
     $view_path = $view['page[path]'];
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
@@ -33,7 +33,7 @@ class OverrideDisplaysTest extends UITestBase {
     // things up so that they both inherit from the default display, and we
     // therefore only need to change that to have it take effect for both.
     $edit = array();
-    $edit['title'] = $original_title = $this->randomName(16);
+    $edit['title'] = $original_title = $this->randomMachineName(16);
     $edit['override[dropdown]'] = 'default';
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", array(), t('Save'));
@@ -61,7 +61,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Change the title for the page display only, and make sure that the
     // original title still appears on the page.
     $edit = array();
-    $edit['title'] = $new_title = $this->randomName(16);
+    $edit['title'] = $new_title = $this->randomMachineName(16);
     $edit['override[dropdown]'] = 'page_1';
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", array(), t('Save'));
@@ -79,15 +79,15 @@ class OverrideDisplaysTest extends UITestBase {
     // identical titles, but give the block a different one, so we expect the
     // page and feed to inherit their titles from the default display, but the
     // block to override it.
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
-    $view['page[title]'] = $this->randomName(16);
-    $view['page[path]'] = $this->randomName(16);
+    $view['page[title]'] = $this->randomMachineName(16);
+    $view['page[path]'] = $this->randomMachineName(16);
     $view['page[feed]'] = 1;
-    $view['page[feed_properties][path]'] = $this->randomName(16);
+    $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
-    $view['block[title]'] = $this->randomName(16);
+    $view['block[title]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Add a node that will appear in the view, so that the block will actually
@@ -128,7 +128,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Edit the page and change the title. This should automatically change
     // the feed's title also, but not the block.
     $edit = array();
-    $edit['title'] = $new_default_title = $this->randomName(16);
+    $edit['title'] = $new_default_title = $this->randomMachineName(16);
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", array(), t('Save'));
     $this->drupalGet($view['page[path]']);
@@ -149,7 +149,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Edit the block and change the title. This should automatically change
     // the block title only, and leave the defaults alone.
     $edit = array();
-    $edit['title'] = $new_block_title = $this->randomName(16);
+    $edit['title'] = $new_block_title = $this->randomMachineName(16);
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, t('Apply'));
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", array(), t('Save'));
     $this->drupalGet($view['page[path]']);
@@ -171,19 +171,19 @@ class OverrideDisplaysTest extends UITestBase {
     // Create a basic view with a page, block.
     // Because there is both a title on page and block we expect the title on
     // the block be overriden.
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
-    $view['page[title]'] = $this->randomName(16);
-    $view['page[path]'] = $this->randomName(16);
+    $view['page[title]'] = $this->randomMachineName(16);
+    $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
-    $view['block[title]'] = $this->randomName(16);
+    $view['block[title]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Revert the title of the block back to the default ones, but submit some
     // new values to be sure that the new value is not stored.
     $edit = array();
-    $edit['title'] = $new_block_title = $this->randomName();
+    $edit['title'] = $new_block_title = $this->randomMachineName();
     $edit['override[dropdown]'] = 'default_revert';
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, t('Apply'));

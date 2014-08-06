@@ -183,7 +183,7 @@ class ForumTest extends WebTestBase {
     // Test adding a comment to a forum topic.
     $node = $this->createForumTopic($this->forum, FALSE);
     $edit = array();
-    $edit['comment_body[0][value]'] = $this->randomName();
+    $edit['comment_body[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
@@ -219,8 +219,8 @@ class ForumTest extends WebTestBase {
 
     // Create an orphan forum item.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(10);
-    $edit['body[0][value]'] = $this->randomName(120);
+    $edit['title[0][value]'] = $this->randomMachineName(10);
+    $edit['body[0][value]'] = $this->randomMachineName(120);
     $this->drupalLogin($this->admin_user);
     $this->drupalPostForm('node/add/forum', $edit, t('Save'));
 
@@ -321,8 +321,8 @@ class ForumTest extends WebTestBase {
 
     // Generate a random name and description.
     $edit = array(
-      'name' => $this->randomName(10),
-      'description' => $this->randomName(100),
+      'name' => $this->randomMachineName(10),
+      'description' => $this->randomMachineName(100),
     );
 
     // Edit the vocabulary.
@@ -359,8 +359,8 @@ class ForumTest extends WebTestBase {
    */
   function createForum($type, $parent = 0) {
     // Generate a random name/description.
-    $name = $this->randomName(10);
-    $description = $this->randomName(100);
+    $name = $this->randomMachineName(10);
+    $description = $this->randomMachineName(100);
 
     $edit = array(
       'name[0][value]' => $name,
@@ -451,8 +451,8 @@ class ForumTest extends WebTestBase {
     $this->drupalLogin($this->post_comment_user);
     // Post a reply to the topic.
     $edit = array();
-    $edit['subject[0][value]'] = $this->randomName();
-    $edit['comment_body[0][value]'] = $this->randomName();
+    $edit['subject[0][value]'] = $this->randomMachineName();
+    $edit['comment_body[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
@@ -481,8 +481,8 @@ class ForumTest extends WebTestBase {
    */
   function createForumTopic($forum, $container = FALSE) {
     // Generate a random subject/body.
-    $title = $this->randomName(20);
-    $body = $this->randomName(200);
+    $title = $this->randomMachineName(20);
+    $body = $this->randomMachineName(200);
 
     $edit = array(
       'title[0][value]' => $title,
@@ -572,7 +572,7 @@ class ForumTest extends WebTestBase {
       // Edit forum node (including moving it to another forum).
       $edit = array();
       $edit['title[0][value]'] = 'node/' . $node->id();
-      $edit['body[0][value]'] = $this->randomName(256);
+      $edit['body[0][value]'] = $this->randomMachineName(256);
       // Assume the topic is initially associated with $forum.
       $edit['taxonomy_forums'] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;

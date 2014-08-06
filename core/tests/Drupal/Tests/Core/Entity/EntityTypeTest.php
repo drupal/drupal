@@ -196,7 +196,7 @@ class EntityTypeTest extends UnitTestCase {
    * @covers ::__construct
    */
   public function testIdExceedsMaxLength() {
-    $id = $this->randomName(33);
+    $id = $this->randomMachineName(33);
     $message = 'Attempt to create an entity type with an ID longer than 32 characters: ' . $id;
     $this->setExpectedException('Drupal\Core\Entity\Exception\EntityTypeIdLengthException', $message);
     $this->setUpEntityType(array('id' => $id));
@@ -206,7 +206,7 @@ class EntityTypeTest extends UnitTestCase {
    * @covers ::id
    */
   public function testId() {
-    $id = $this->randomName(32);
+    $id = $this->randomMachineName(32);
     $entity_type = $this->setUpEntityType(array('id' => $id));
     $this->assertEquals($id, $entity_type->id());
   }

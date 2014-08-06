@@ -34,9 +34,9 @@ class TagTest extends ViewUnitTestBase {
     $tags = array();
     for ($i = 0; $i < 16; $i++) {
       $suffix = $i % 2 ? 'odd' : 'even';
-      $tag = 'autocomplete_tag_test_' . $suffix . $this->randomName();
+      $tag = 'autocomplete_tag_test_' . $suffix . $this->randomMachineName();
       $tags[] = $tag;
-      entity_create('view', array('tag' => $tag, 'id' => $this->randomName()))->save();
+      entity_create('view', array('tag' => $tag, 'id' => $this->randomMachineName()))->save();
     }
 
     // Make sure just ten results are returns.
@@ -57,7 +57,7 @@ class TagTest extends ViewUnitTestBase {
     }
 
     // Make sure an invalid result doesn't return anything.
-    $request->query->set('q', $this->randomName());
+    $request->query->set('q', $this->randomMachineName());
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
     $this->assertEqual(count($matches), 0, "Make sure an invalid tag doesn't return anything.");

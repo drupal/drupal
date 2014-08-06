@@ -95,7 +95,7 @@ class ContentTranslationSyncUnitTest extends DrupalUnitTestBase {
     $field_values = $this->unchangedFieldValues;
     $item = array();
     foreach ($this->columns as $column) {
-      $item[$column] = $this->randomName();
+      $item[$column] = $this->randomMachineName();
     }
     $field_values[$sync_langcode][] = $item;
     $this->synchronizer->synchronizeItems($field_values, $unchanged_items, $sync_langcode, $this->langcodes, $this->synchronized);

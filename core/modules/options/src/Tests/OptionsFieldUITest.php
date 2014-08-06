@@ -39,7 +39,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = 'test_' . strtolower($this->randomName());
+    $type_name = 'test_' . strtolower($this->randomMachineName());
     $this->type_name = $type_name;
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
@@ -185,7 +185,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $array = array('zero' => 'Zero', 'One' => 'One');
     $this->assertAllowedValuesInput($string, $array, 'Mixed lists are accepted.');
     // Overly long keys.
-    $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomName(256) . "|One", 'each key must be a string at most 255 characters long', 'Overly long keys are rejected.');
+    $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomMachineName(256) . "|One", 'each key must be a string at most 255 characters long', 'Overly long keys are rejected.');
 
     // Create a node with actual data for the field.
     $settings = array(
@@ -292,12 +292,12 @@ class OptionsFieldUITest extends FieldTestBase {
    * Tests normal and key formatter display on node display.
    */
   function testNodeDisplay() {
-    $this->field_name = strtolower($this->randomName());
+    $this->field_name = strtolower($this->randomMachineName());
     $this->createOptionsField('list_integer');
     $node = $this->drupalCreateNode(array('type' => $this->type));
 
-    $on = $this->randomName();
-    $off = $this->randomName();
+    $on = $this->randomMachineName();
+    $off = $this->randomMachineName();
     $edit = array(
       'field[settings][allowed_values]' =>
         "1|$on

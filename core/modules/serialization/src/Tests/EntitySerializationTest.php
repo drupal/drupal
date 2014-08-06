@@ -50,10 +50,10 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     // Create a test entity to serialize.
     $this->values = array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'user_id' => \Drupal::currentUser()->id(),
       'field_test_text' => array(
-        'value' => $this->randomName(),
+        'value' => $this->randomMachineName(),
         'format' => 'full_html',
       ),
     );

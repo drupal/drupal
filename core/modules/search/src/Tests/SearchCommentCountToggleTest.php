@@ -52,8 +52,8 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Create a comment array
     $edit_comment = array();
-    $edit_comment['subject[0][value]'] = $this->randomName();
-    $edit_comment['comment_body[0][value]'] = $this->randomName();
+    $edit_comment['subject[0][value]'] = $this->randomMachineName();
+    $edit_comment['comment_body[0][value]'] = $this->randomMachineName();
 
     // Post comment to the test node with comment
     $this->drupalPostForm('comment/reply/node/' . $this->searchable_nodes['1 comment']->id() . '/comment', $edit_comment, t('Save'));

@@ -39,8 +39,8 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $entities = array(
       entity_create('menu', array('id' => 'primary-links')),
       entity_create('menu', array('id' => 'secondary-links')),
-      entity_create('block_content', array('id' => 1, 'type' => 'basic', 'info' => $this->randomName(8))),
-      entity_create('block_content', array('id' => 2, 'type' => 'basic', 'info' => $this->randomName(8))),
+      entity_create('block_content', array('id' => 1, 'type' => 'basic', 'info' => $this->randomMachineName(8))),
+      entity_create('block_content', array('id' => 2, 'type' => 'basic', 'info' => $this->randomMachineName(8))),
     );
     foreach ($entities as $entity) {
       $entity->enforceIsNew(TRUE);

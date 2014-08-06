@@ -31,7 +31,7 @@ class ApiDataTest extends FieldTestBase {
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
       $edit = array(
-        $field_names[0] => array((array('value' => $this->randomName()))),
+        $field_names[0] => array((array('value' => $this->randomMachineName()))),
       );
       $nodes[] = $this->drupalCreateNode($edit);
     }

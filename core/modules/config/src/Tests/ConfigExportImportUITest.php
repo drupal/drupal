@@ -63,7 +63,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->content_type = $this->drupalCreateContentType();
 
     // Create a field.
-    $this->fieldName = drupal_strtolower($this->randomName());
+    $this->fieldName = drupal_strtolower($this->randomMachineName());
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $this->fieldName,
       'entity_type' => 'node',
@@ -112,7 +112,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertNoFieldByName("{$this->fieldName}[0][value]", '', 'Widget is not displayed');
 
     // Import the configuration.
-    $filename = 'temporary://' . $this->randomName();
+    $filename = 'temporary://' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');
@@ -140,7 +140,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->drupalGetContent();
-    $filename = file_directory_temp() .'/' . $this->randomName();
+    $filename = file_directory_temp() .'/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
 
     // Set up the active storage collections to test import.

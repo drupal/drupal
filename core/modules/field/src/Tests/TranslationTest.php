@@ -75,7 +75,7 @@ class TranslationTest extends FieldUnitTestBase {
 
     $this->installConfig(array('language'));
 
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
 
     $this->entity_type = 'entity_test';
 
@@ -139,7 +139,7 @@ class TranslationTest extends FieldUnitTestBase {
     }
 
     // Test default values.
-    $field_name_default = drupal_strtolower($this->randomName() . '_field_name');
+    $field_name_default = drupal_strtolower($this->randomMachineName() . '_field_name');
     $field_definition = $this->field_definition;
     $field_definition['name'] = $field_name_default;
     $field_storage = entity_create('field_storage_config', $field_definition);

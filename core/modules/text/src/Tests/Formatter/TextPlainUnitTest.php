@@ -44,7 +44,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
       $this->bundle = $this->entity_type;
     }
 
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
     $this->field_type = 'text_long';
     $this->field_settings = array();
     $this->instance_settings = array(
@@ -65,7 +65,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $this->instance = entity_create('field_instance_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->bundle,
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
       'settings' => $this->instance_settings,
     ));
     $this->instance->save();

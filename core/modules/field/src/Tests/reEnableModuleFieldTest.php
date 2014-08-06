@@ -78,7 +78,7 @@ class reEnableModuleFieldTest extends WebTestBase {
     // Submit an article node with a telephone field so data exist for the
     // field.
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
       'field_telephone[0][value]' => "123456789",
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

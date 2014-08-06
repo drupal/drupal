@@ -225,7 +225,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->setBlockCacheConfig(array(
       'max_age' => 600,
     ));
-    $alter_add_key = $this->randomName();
+    $alter_add_key = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
@@ -239,7 +239,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds an additional cache tag.
-    $alter_add_tag = $this->randomName();
+    $alter_add_tag = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_tag', $alter_add_tag);
     $expected_tags = NestedArray::mergeDeep($default_tags, array($alter_add_tag => TRUE));
     $build = $this->getBlockRenderArray();

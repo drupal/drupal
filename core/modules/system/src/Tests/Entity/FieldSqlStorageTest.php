@@ -63,7 +63,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->installEntitySchema('entity_test_rev');
     $entity_type = 'entity_test_rev';
 
-    $this->field_name = strtolower($this->randomName());
+    $this->field_name = strtolower($this->randomMachineName());
     $this->field_cardinality = 4;
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $this->field_name,
@@ -255,7 +255,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $storage = $this->container->get('entity.manager')->getStorage($entity_type);
 
     // Create two fields with instances, and generate randome values.
-    $name_base = drupal_strtolower($this->randomName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
+    $name_base = drupal_strtolower($this->randomMachineName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
     $field_names = array();
     $values = array();
     for ($i = 0; $i < 2; $i++) {

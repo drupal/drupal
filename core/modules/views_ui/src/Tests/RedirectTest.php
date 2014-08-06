@@ -27,7 +27,7 @@ class RedirectTest extends UITestBase {
   public function testRedirect() {
     $view_name = 'test_view';
 
-    $random_destination = $this->randomName();
+    $random_destination = $this->randomMachineName();
     $edit_path = "admin/structure/views/view/$view_name/edit";
 
     $this->drupalPostForm($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
@@ -37,7 +37,7 @@ class RedirectTest extends UITestBase {
     // but have the old url in the destination the user should be redirected to
     // the new path.
     $view_name = 'test_redirect_view';
-    $new_path = $this->randomName();
+    $new_path = $this->randomMachineName();
 
     $edit_path = "admin/structure/views/view/$view_name/edit";
     $path_edit_path = "admin/structure/views/nojs/display/$view_name/page_1/path";

@@ -213,7 +213,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $langcode = 'en';
     $edit = array(
       // User names have by default length 8.
-      'content_translation[name]' => $this->randomName(12),
+      'content_translation[name]' => $this->randomMachineName(12),
       'content_translation[created]' => '19/11/1978',
     );
     $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode));
@@ -243,7 +243,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    * Returns an array of entity field values to be tested.
    */
   protected function getNewEntityValues($langcode) {
-    return array($this->fieldName => array(array('value' => $this->randomName(16))));
+    return array($this->fieldName => array(array('value' => $this->randomMachineName(16))));
   }
 
   /**

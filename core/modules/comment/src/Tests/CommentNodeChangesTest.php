@@ -21,7 +21,7 @@ class CommentNodeChangesTest extends CommentTestBase {
    */
   function testNodeDeletion() {
     $this->drupalLogin($this->web_user);
-    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($comment->id(), 'The comment could be loaded.');
     $this->node->delete();
     $this->assertFalse(Comment::load($comment->id()), 'The comment could not be loaded after the node was deleted.');

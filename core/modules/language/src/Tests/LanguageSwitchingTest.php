@@ -40,7 +40,7 @@ class LanguageSwitchingTest extends WebTestBase {
     $block = $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, array(
       'id' => 'test_language_block',
       // Ensure a 2-byte UTF-8 sequence is in the tested output.
-      'label' => $this->randomName(8) . '×',
+      'label' => $this->randomMachineName(8) . '×',
     ));
 
     // Add language.

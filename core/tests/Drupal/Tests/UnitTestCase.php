@@ -47,7 +47,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
    *
    * @see \Drupal\Component\Utility\Random::name()
    */
-  public function randomName($length = 8) {
+  public function randomMachineName($length = 8) {
     return $this->getRandomGenerator()->name($length, TRUE);
   }
 

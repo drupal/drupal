@@ -56,11 +56,11 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'status' => 0,
     ));
     $published = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'status' => 1,
     ));
 
@@ -82,28 +82,28 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'uid' => $this->user->id(),
       'status' => 0,
     ));
     $my_published = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'uid' => $this->user->id(),
       'status' => 1,
     ));
     $other_published_no_comment = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'uid' => $this->other_user->id(),
       'status' => 1,
     ));
     $other_published_my_comment = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'uid' => $this->other_user->id(),
       'status' => 1,
     ));
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, t('Save'));
 
@@ -131,7 +131,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $edit = array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
     );
 
     $node = $this->drupalCreateNode($edit);
@@ -175,13 +175,13 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $node = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
     ));
 
     // Add a comment to the page.
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $comment, t('Save'));
     // The new comment is automatically viewed by the current user. Simulate the
@@ -201,8 +201,8 @@ class TrackerTest extends WebTestBase {
 
     // Add another comment as other_user.
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
@@ -221,11 +221,11 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $node_one = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
     ));
 
     $node_two = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
     ));
 
     // Now get other_user to track these pieces of content.
@@ -233,8 +233,8 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the first page.
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
 
@@ -244,8 +244,8 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the second page.
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_two->id() . '/comment', $comment, t('Save'));
 
@@ -264,8 +264,8 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the second page.
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
 
@@ -291,7 +291,7 @@ class TrackerTest extends WebTestBase {
     $nodes = array();
     for ($i = 1; $i <= 3; $i++) {
       $edits[$i] = array(
-        'title' => $this->randomName(),
+        'title' => $this->randomMachineName(),
       );
       $nodes[$i] = $this->drupalCreateNode($edits[$i]);
     }
@@ -299,8 +299,8 @@ class TrackerTest extends WebTestBase {
     // Add a comment to the last node as other user.
     $this->drupalLogin($this->other_user);
     $comment = array(
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(20),
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $nodes[3]->id() . '/comment', $comment, t('Save'));
 
@@ -345,7 +345,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode(array(
-      'title' => $this->randomName(),
+      'title' => $this->randomMachineName(),
     ));
 
     // Assert that the node is displayed.

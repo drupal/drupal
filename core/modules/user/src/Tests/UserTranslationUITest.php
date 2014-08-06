@@ -31,7 +31,7 @@ class UserTranslationUITest extends ContentTranslationUITest {
   function setUp() {
     $this->entityTypeId = 'user';
     $this->testLanguageSelector = FALSE;
-    $this->name = $this->randomName();
+    $this->name = $this->randomMachineName();
     parent::setUp();
 
     entity_get_controller('user')->resetCache();

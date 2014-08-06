@@ -57,7 +57,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     parent::setUp();
 
     // Create a content type.
-    $this->bundle = $this->randomName();
+    $this->bundle = $this->randomMachineName();
     $this->contentType = $this->drupalCreateContentType(array('type' => $this->bundle));
 
     // Create a translator user.

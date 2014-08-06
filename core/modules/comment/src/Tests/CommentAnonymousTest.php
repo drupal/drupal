@@ -39,7 +39,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
-    $anonymous_comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $anonymous_comment1 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment1), 'Anonymous comment without contact info found.');
 
     // Allow contact info.
@@ -48,7 +48,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Attempt to edit anonymous comment.
     $this->drupalGet('comment/' . $anonymous_comment1->id() . '/edit');
-    $edited_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $edited_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($edited_comment, FALSE), 'Modified reply found.');
     $this->drupalLogout();
 
@@ -56,15 +56,15 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
-    $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $anonymous_comment2 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');
 
     // Ensure anonymous users cannot post in the name of registered users.
     $edit = array(
       'name' => $this->admin_user->getUsername(),
-      'mail' => $this->randomName() . '@example.com',
-      'subject[0][value]' => $this->randomName(),
-      'comment_body[0][value]' => $this->randomName(),
+      'mail' => $this->randomMachineName() . '@example.com',
+      'subject[0][value]' => $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(),
     );
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
     $this->assertText(t('The name you used belongs to a registered user.'));
@@ -78,15 +78,15 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
-    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     // Name should have 'Anonymous' for value by default.
     $this->assertText(t('Email field is required.'), 'Email required.');
     $this->assertFalse($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) not found.');
 
     // Post comment with contact info (required).
-    $author_name = $this->randomName();
-    $author_mail = $this->randomName() . '@example.com';
-    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), array('name' => $author_name, 'mail' => $author_mail));
+    $author_name = $this->randomMachineName();
+    $author_mail = $this->randomMachineName() . '@example.com';
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), array('name' => $author_name, 'mail' => $author_mail));
     $this->assertTrue($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) found.');
 
     // Make sure the user data appears correctly when editing the comment.

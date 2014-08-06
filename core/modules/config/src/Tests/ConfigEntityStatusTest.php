@@ -28,7 +28,7 @@ class ConfigEntityStatusTest extends DrupalUnitTestBase {
    */
   function testCRUD() {
     $entity = entity_create('config_test', array(
-      'id' => strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()),
     ));
     $this->assertTrue($entity->status(), 'Default status is enabled.');
     $entity->save();

@@ -57,7 +57,7 @@ class BlockContentListTest extends WebTestBase {
     $this->assertResponse(200);
     $edit = array();
     $edit['info[0][value]'] = $label;
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Confirm that once the user returns to the listing, the text of the label

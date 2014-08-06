@@ -247,10 +247,10 @@ class ContactPersonalTest extends WebTestBase {
     else {
       $this->assertNoFieldChecked('edit-contact--2');
     }
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $edit = array(
       'name' => $name,
-      'mail' => $this->randomName() . '@example.com',
+      'mail' => $this->randomMachineName() . '@example.com',
       'pass[pass1]' => $pass = $this->randomString(),
       'pass[pass2]' => $pass,
       'notify' => FALSE,
@@ -280,8 +280,8 @@ class ContactPersonalTest extends WebTestBase {
    */
   protected function submitPersonalContact(AccountInterface $account, array $message = array()) {
     $message += array(
-      'subject[0][value]' => $this->randomName(16),
-      'message[0][value]' => $this->randomName(64),
+      'subject[0][value]' => $this->randomMachineName(16),
+      'message[0][value]' => $this->randomMachineName(64),
     );
     $this->drupalPostForm('user/' . $account->id() . '/contact', $message, t('Send message'));
     return $message;

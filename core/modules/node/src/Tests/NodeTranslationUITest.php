@@ -71,7 +71,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
-    return array('title' => array(array('value' => $this->randomName()))) + parent::getNewEntityValues($langcode);
+    return array('title' => array(array('value' => $this->randomMachineName()))) + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -201,7 +201,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    */
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
-    $disabledBundle = $this->randomName();
+    $disabledBundle = $this->randomMachineName();
     $this->drupalCreateContentType(array('type' => $disabledBundle, 'name' => $disabledBundle));
 
     // Create a node for each bundle.

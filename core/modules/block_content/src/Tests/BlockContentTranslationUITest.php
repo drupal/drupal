@@ -66,7 +66,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
    *   Created custom block.
    */
   protected function createBlockContent($title = FALSE, $bundle = FALSE) {
-    $title = ($title ? : $this->randomName());
+    $title = ($title ? : $this->randomMachineName());
     $bundle = ($bundle ? : $this->bundle);
     $block_content = entity_create('block_content', array(
       'info' => $title,
@@ -81,7 +81,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
-    return array('info' => Unicode::strtolower($this->randomName())) + parent::getNewEntityValues($langcode);
+    return array('info' => Unicode::strtolower($this->randomMachineName())) + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -129,7 +129,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
    */
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
-    $disabled_bundle = $this->randomName();
+    $disabled_bundle = $this->randomMachineName();
     $bundle = entity_create('block_content_type', array(
       'id' => $disabled_bundle,
       'label' => $disabled_bundle,

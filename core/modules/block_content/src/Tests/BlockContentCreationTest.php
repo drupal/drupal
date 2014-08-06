@@ -53,7 +53,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Create a block.
     $edit = array();
     $edit['info[0][value]'] = 'Test Block';
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
@@ -97,8 +97,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
    */
   public function testDefaultBlockContentCreation() {
     $edit = array();
-    $edit['info[0][value]'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['info[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     // Don't pass the custom block type in the url so the default is forced.
     $this->drupalPostForm('block/add', $edit, t('Save'));
 
@@ -157,8 +157,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public function testBlockDelete() {
     // Create a block.
     $edit = array();
-    $edit['info[0][value]'] = $this->randomName(8);
-    $body = $this->randomName(16);
+    $edit['info[0][value]'] = $this->randomMachineName(8);
+    $body = $this->randomMachineName(16);
     $edit['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
@@ -190,8 +190,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Create another block and force the plugin cache to flush.
     $edit2 = array();
-    $edit2['info[0][value]'] = $this->randomName(8);
-    $body2 = $this->randomName(16);
+    $edit2['info[0][value]'] = $this->randomMachineName(8);
+    $body2 = $this->randomMachineName(16);
     $edit2['body[0][value]'] = $body2;
     $this->drupalPostForm('block/add/basic', $edit2, t('Save'));
 
@@ -200,8 +200,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Create another block with no instances, and test we don't get a
     // confirmation message about deleting instances.
     $edit3 = array();
-    $edit3['info[0][value]'] = $this->randomName(8);
-    $body = $this->randomName(16);
+    $edit3['info[0][value]'] = $this->randomMachineName(8);
+    $body = $this->randomMachineName(16);
     $edit3['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit3, t('Save'));
 

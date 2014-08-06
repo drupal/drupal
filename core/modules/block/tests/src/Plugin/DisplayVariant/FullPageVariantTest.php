@@ -72,7 +72,7 @@ class FullPageVariantTest extends UnitTestCase {
    * @covers ::getRegionAssignments
    */
   public function testBuild() {
-    $theme = $this->randomName();
+    $theme = $this->randomMachineName();
     $display_variant = $this->setUpDisplayVariant();
     $this->themeNegotiator->expects($this->any())
       ->method('determineActiveTheme')

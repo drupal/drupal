@@ -64,7 +64,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     foreach (array('aa', 'bb', 'cc') as $language_code) {
       $language = new Language(array(
         'id' => $language_code,
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
       ));
       language_save($language);
     }

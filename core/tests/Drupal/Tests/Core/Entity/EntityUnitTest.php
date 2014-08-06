@@ -92,7 +92,7 @@ class EntityUnitTest extends UnitTestCase {
       'langcode' => 'en',
       'uuid' => '3bb9ee60-bea5-4622-b89b-a63319d10b3a',
     );
-    $this->entityTypeId = $this->randomName();
+    $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
 
@@ -170,8 +170,8 @@ class EntityUnitTest extends UnitTestCase {
     // Make a mock with one method that we use as the entity's uri_callback. We
     // check that it is called, and that the entity's label is the callback's
     // return value.
-    $callback_label = $this->randomName();
-    $property_label = $this->randomName();
+    $callback_label = $this->randomMachineName();
+    $property_label = $this->randomMachineName();
     $callback_container = $this->getMock(get_class());
     $callback_container->expects($this->once())
       ->method(__FUNCTION__)
@@ -208,7 +208,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testAccess() {
     $access = $this->getMock('\Drupal\Core\Entity\EntityAccessControllerInterface');
-    $operation = $this->randomName();
+    $operation = $this->randomMachineName();
     $access->expects($this->at(0))
       ->method('access')
       ->with($this->entity, $operation)
@@ -314,7 +314,7 @@ class EntityUnitTest extends UnitTestCase {
     $second_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
       ->disableOriginalConstructor()
       ->setMethods($methods)
-      ->setMockClassName($this->randomName())
+      ->setMockClassName($this->randomMachineName())
       ->getMock();
     $second_entity_type->setClass('Drupal\entity_test\Entity\EntityTestMulRev');
 
@@ -354,7 +354,7 @@ class EntityUnitTest extends UnitTestCase {
     $second_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
       ->disableOriginalConstructor()
       ->setMethods($methods)
-      ->setMockClassName($this->randomName())
+      ->setMockClassName($this->randomMachineName())
       ->getMock();
     $second_entity_type->setClass('Drupal\entity_test\Entity\EntityTest');
 
@@ -505,7 +505,7 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::delete
    */
   public function testDelete() {
-    $this->entity->id = $this->randomName();
+    $this->entity->id = $this->randomMachineName();
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     // Testing the argument of the delete() method consumes too much memory.
     $storage->expects($this->once())

@@ -50,7 +50,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $view = Views::getView('test_field_tokens');
     $this->executeView($view);
 
-    $random_text = $this->randomName();
+    $random_text = $this->randomMachineName();
     $view->field['job']->setTestValue($random_text);
     $this->assertEqual($view->field['job']->theme($view->result[0]), $random_text, 'Make sure the render method rendered the manual set value.');
   }
@@ -143,7 +143,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $id_field = $view->field['id'];
 
     // Don't check the rewrite checkbox, so the text shouldn't appear.
-    $id_field->options['alter']['text'] = $random_text = $this->randomName();
+    $id_field->options['alter']['text'] = $random_text = $this->randomMachineName();
     $output = $id_field->theme($row);
     $this->assertNotSubString($output, $random_text);
 
@@ -191,7 +191,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $job_field->options['alter']['alter_text'] = TRUE;
     $job_field->options['alter']['text'] = '[test-token]';
 
-    $random_text = $this->randomName();
+    $random_text = $this->randomMachineName();
     $job_field->setTestValue($random_text);
     $output = $job_field->advancedRender($row);
     $this->assertSubString($output, $random_text, format_string('Make sure the self token (!value) appears in the output (!output)', array('!value' => $random_text, '!output' => $output)));
@@ -242,8 +242,8 @@ class FieldUnitTest extends ViewUnitTestBase {
 
     $column_map_reversed = array_flip($this->column_map);
     $view->row_index = 0;
-    $random_name = $this->randomName();
-    $random_value = $this->randomName();
+    $random_name = $this->randomMachineName();
+    $random_value = $this->randomMachineName();
 
     // Test when results are not rewritten and empty values are not hidden.
     $view->field['name']->options['hide_alter_empty'] = FALSE;
@@ -461,7 +461,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $column_map_reversed = array_flip($this->column_map);
     $view->row_index = 0;
 
-    $empty_text = $view->field['name']->options['empty'] = $this->randomName();
+    $empty_text = $view->field['name']->options['empty'] = $this->randomMachineName();
     $view->result[0]->{$column_map_reversed['name']} = "";
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $empty_text, 'If a field is empty, the empty text should be used for the output.');
@@ -477,7 +477,7 @@ class FieldUnitTest extends ViewUnitTestBase {
 
     $view->result[0]->{$column_map_reversed['name']} = "";
     $view->field['name']->options['alter']['alter_text'] = TRUE;
-    $alter_text = $view->field['name']->options['alter']['text'] = $this->randomName();
+    $alter_text = $view->field['name']->options['alter']['text'] = $this->randomMachineName();
     $view->field['name']->options['hide_alter_empty'] = FALSE;
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $alter_text, 'If a field is empty, some rewrite text exists, but hide_alter_empty is not checked, render the rewrite text.');

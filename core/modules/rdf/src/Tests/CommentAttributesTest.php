@@ -155,7 +155,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Posts comment #2 as anonymous user.
     $anonymous_user = array();
-    $anonymous_user['name'] = $this->randomName();
+    $anonymous_user['name'] = $this->randomMachineName();
     $anonymous_user['mail'] = 'tester@simpletest.org';
     $anonymous_user['homepage'] = 'http://example.org/';
     $comment2 = $this->saveComment($this->node->id(), 0, $anonymous_user);
@@ -331,8 +331,8 @@ class CommentAttributesTest extends CommentTestBase {
       'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'subject' => $this->randomName(),
-      'comment_body' => $this->randomName(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => $this->randomMachineName(),
       'status' => 1,
     );
     if ($contact) {

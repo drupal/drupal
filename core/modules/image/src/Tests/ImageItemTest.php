@@ -70,9 +70,9 @@ class ImageItemTest extends FieldUnitTestBase {
     // Create a test entity with the image field set.
     $entity = entity_create('entity_test');
     $entity->image_test->target_id = $this->image->id();
-    $entity->image_test->alt = $alt = $this->randomName();
-    $entity->image_test->title = $title = $this->randomName();
-    $entity->name->value = $this->randomName();
+    $entity->image_test->alt = $alt = $this->randomMachineName();
+    $entity->image_test->title = $title = $this->randomMachineName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
@@ -95,7 +95,7 @@ class ImageItemTest extends FieldUnitTestBase {
     $image2->save();
 
     $entity->image_test->target_id = $image2->id();
-    $entity->image_test->alt = $new_alt = $this->randomName();
+    $entity->image_test->alt = $new_alt = $this->randomMachineName();
     // The width and height is only updated when width is not set.
     $entity->image_test->width = NULL;
     $entity->save();
@@ -112,7 +112,7 @@ class ImageItemTest extends FieldUnitTestBase {
 
     // Delete the image and try to save the entity again.
     $this->image->delete();
-    $entity = entity_create('entity_test', array('mame' => $this->randomName()));
+    $entity = entity_create('entity_test', array('mame' => $this->randomMachineName()));
     $entity->save();
   }
 

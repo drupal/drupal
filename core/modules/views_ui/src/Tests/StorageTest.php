@@ -43,9 +43,9 @@ class StorageTest extends UITestBase {
     language_save($language);
 
     $edit = array(
-      'label' => $this->randomName(),
-      'tag' => $this->randomName(),
-      'description' => $this->randomName(30),
+      'label' => $this->randomMachineName(),
+      'tag' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(30),
       'langcode' => 'fr',
     );
 

@@ -46,7 +46,7 @@ class LocalePathTest extends WebTestBase {
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     // The domain prefix.
     $prefix = $langcode;
     $edit = array(
@@ -71,7 +71,7 @@ class LocalePathTest extends WebTestBase {
 
     // Create a path alias in default language (English).
     $path = 'admin/config/search/path/add';
-    $english_path = $this->randomName(8);
+    $english_path = $this->randomMachineName(8);
     $edit = array(
       'source'   => 'node/' . $node->id(),
       'alias'    => $english_path,
@@ -80,7 +80,7 @@ class LocalePathTest extends WebTestBase {
     $this->drupalPostForm($path, $edit, t('Save'));
 
     // Create a path alias in new custom language.
-    $custom_language_path = $this->randomName(8);
+    $custom_language_path = $this->randomMachineName(8);
     $edit = array(
       'source'   => 'node/' . $node->id(),
       'alias'    => $custom_language_path,
@@ -97,7 +97,7 @@ class LocalePathTest extends WebTestBase {
     $this->assertText($node->label(), 'Custom language alias works.');
 
     // Create a custom path.
-    $custom_path = $this->randomName(8);
+    $custom_path = $this->randomMachineName(8);
 
     // Check priority of language for alias by source path.
     $edit = array(

@@ -21,13 +21,13 @@ class AddFeedTest extends WebTestBase {
    * Tests drupal_add_feed() with paths, URLs, and titles.
    */
   function testBasicFeedAddNoTitle() {
-    $path = $this->randomName(12);
-    $external_url = 'http://' . $this->randomName(12) . '/' . $this->randomName(12);
-    $fully_qualified_local_url = url($this->randomName(12), array('absolute' => TRUE));
+    $path = $this->randomMachineName(12);
+    $external_url = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
+    $fully_qualified_local_url = url($this->randomMachineName(12), array('absolute' => TRUE));
 
-    $path_for_title = $this->randomName(12);
-    $external_for_title = 'http://' . $this->randomName(12) . '/' . $this->randomName(12);
-    $fully_qualified_for_title = url($this->randomName(12), array('absolute' => TRUE));
+    $path_for_title = $this->randomMachineName(12);
+    $external_for_title = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
+    $fully_qualified_for_title = url($this->randomMachineName(12), array('absolute' => TRUE));
 
     // Possible permutations of drupal_add_feed() to test.
     // - 'input_url': the path passed to drupal_add_feed(),
@@ -48,15 +48,15 @@ class AddFeedTest extends WebTestBase {
       ),
       'path with title' => array(
         'url' => url($path_for_title, array('absolute' => TRUE)),
-        'title' => $this->randomName(12),
+        'title' => $this->randomMachineName(12),
       ),
       'external URL with title' => array(
         'url' => $external_for_title,
-        'title' => $this->randomName(12),
+        'title' => $this->randomMachineName(12),
       ),
       'local URL with title' => array(
         'url' => $fully_qualified_for_title,
-        'title' => $this->randomName(12),
+        'title' => $this->randomMachineName(12),
       ),
     );
 

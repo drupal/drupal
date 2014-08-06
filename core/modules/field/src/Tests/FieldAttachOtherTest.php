@@ -43,7 +43,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $entity = clone($entity_init);
     $display = entity_get_display($entity_type, $entity->bundle(), 'full');
 
-    $formatter_setting = $this->randomName();
+    $formatter_setting = $this->randomMachineName();
     $display_options = array(
       'label' => 'above',
       'type' => 'field_test_default',
@@ -53,7 +53,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     );
     $display->setComponent($this->fieldTestData->field_name, $display_options);
 
-    $formatter_setting_2 = $this->randomName();
+    $formatter_setting_2 = $this->randomMachineName();
     $display_options_2 = array(
       'label' => 'above',
       'type' => 'field_test_default',
@@ -95,7 +95,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Multiple formatter.
     $entity = clone($entity_init);
-    $formatter_setting = $this->randomName();
+    $formatter_setting = $this->randomMachineName();
     $display->setComponent($this->fieldTestData->field_name, array(
       'label' => 'above',
       'type' => 'field_test_multiple',
@@ -113,7 +113,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Test a formatter that uses hook_field_formatter_prepare_view().
     $entity = clone($entity_init);
-    $formatter_setting = $this->randomName();
+    $formatter_setting = $this->randomMachineName();
     $display->setComponent($this->fieldTestData->field_name, array(
       'label' => 'above',
       'type' => 'field_test_with_prepare_view',

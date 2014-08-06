@@ -131,7 +131,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       '' => FALSE,
       'de,pl' => FALSE,
       'iecRswK4eh' => FALSE,
-      $this->randomName(10) => FALSE,
+      $this->randomMachineName(10) => FALSE,
 
       // Chinese langcodes.
       'zh-cn, en-us;q=0.90, en;q=0.80, zh;q=0.70' => 'zh-hans',

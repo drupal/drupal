@@ -81,7 +81,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $entity->save();
 
     // Create the base element that we'll use in the tests below.
-    $path = $this->randomName();
+    $path = $this->randomMachineName();
     $base_element = array(
       '#theme' => 'image_formatter',
       '#image_style' => 'test',
@@ -106,7 +106,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders without title, alt, or path options.');
 
     // Link the image to a fragment on the page, and not a full URL.
-    $fragment = $this->randomName();
+    $fragment = $this->randomMachineName();
     $element = $base_element;
     $element['#path']['path'] = '';
     $element['#path']['options'] = array(

@@ -45,7 +45,7 @@ class EntityDisplayModeTest extends WebTestBase {
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));
     $edit = array(
-      'id' => strtolower($this->randomName()) . '.' . strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -53,7 +53,7 @@ class EntityDisplayModeTest extends WebTestBase {
 
     // Test adding a view mode.
     $edit = array(
-      'id' => strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -91,7 +91,7 @@ class EntityDisplayModeTest extends WebTestBase {
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));
     $edit = array(
-      'id' => strtolower($this->randomName()) . '.' . strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -99,7 +99,7 @@ class EntityDisplayModeTest extends WebTestBase {
 
     // Test adding a form mode.
     $edit = array(
-      'id' => strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

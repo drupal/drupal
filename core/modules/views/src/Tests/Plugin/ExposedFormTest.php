@@ -57,7 +57,7 @@ class ExposedFormTest extends ViewTestBase {
     $view->setDisplay();
 
     $exposed_form = $view->display_handler->getOption('exposed_form');
-    $exposed_form['options']['submit_button'] = $expected_label = $this->randomName();
+    $exposed_form['options']['submit_button'] = $expected_label = $this->randomMachineName();
     $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();
 
@@ -105,7 +105,7 @@ class ExposedFormTest extends ViewTestBase {
     $view->setDisplay();
 
     $exposed_form = $view->display_handler->getOption('exposed_form');
-    $exposed_form['options']['reset_button_label'] = $expected_label = $this->randomName();
+    $exposed_form['options']['reset_button_label'] = $expected_label = $this->randomMachineName();
     $exposed_form['options']['reset_button'] = TRUE;
     $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();

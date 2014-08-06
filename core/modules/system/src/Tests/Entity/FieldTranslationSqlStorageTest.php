@@ -27,8 +27,8 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
 
     $controller = $this->entityManager->getStorage($entity_type);
     $values = array(
-      $this->field_name => $this->randomName(),
-      $this->untranslatable_field_name => $this->randomName(),
+      $this->field_name => $this->randomMachineName(),
+      $this->untranslatable_field_name => $this->randomMachineName(),
     );
     $entity = $controller->create($values);
     $entity->save();
@@ -61,7 +61,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $entity = $this->reloadEntity($entity);
     $entity->langcode->value = $this->langcodes[0];
     $translation = $entity->addTranslation($this->langcodes[1]);
-    $translated_value = $this->randomName();
+    $translated_value = $this->randomMachineName();
     $translation->get($this->field_name)->value = $translated_value;
     $translation->save();
     $this->toggleFieldTranslatability($entity_type, $entity_type);

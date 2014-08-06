@@ -27,7 +27,7 @@ class SiteNameTest extends WebTestBase {
    * Overrides \Drupal\simpletest\WebTestBase::installParameters().
    */
   protected function installParameters() {
-    $this->siteName = $this->randomName();
+    $this->siteName = $this->randomMachineName();
     $parameters = parent::installParameters();
     $parameters['forms']['install_configure_form']['site_name'] = $this->siteName;
     return $parameters;

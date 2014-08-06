@@ -46,7 +46,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
       $block->setNewRevision(TRUE);
-      $block->setRevisionLog($this->randomName(32));
+      $block->setRevisionLog($this->randomMachineName(32));
       $logs[] = $block->getRevisionLog();
       $block->save();
       $blocks[] = $block->getRevisionId();
@@ -80,7 +80,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     // Save this as a non-default revision.
     $loaded->setNewRevision();
     $loaded->isDefaultRevision(FALSE);
-    $loaded->body = $this->randomName(8);
+    $loaded->body = $this->randomMachineName(8);
     $loaded->save();
 
     $this->drupalGet('block/' . $loaded->id());

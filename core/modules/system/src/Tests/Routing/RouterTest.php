@@ -52,7 +52,7 @@ class RouterTest extends WebTestBase {
    */
   public function testControllerPlaceholders() {
     // Test with 0 and a random value.
-    $values = array("0", $this->randomName());
+    $values = array("0", $this->randomMachineName());
     foreach ($values as $value) {
       $this->drupalGet('router_test/test3/' . $value);
       $this->assertResponse(200);

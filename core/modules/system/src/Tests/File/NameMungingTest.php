@@ -16,8 +16,8 @@ class NameMungingTest extends FileTestBase {
   function setUp() {
     parent::setUp();
     $this->bad_extension = 'php';
-    $this->name = $this->randomName() . '.' . $this->bad_extension . '.txt';
-    $this->name_with_uc_ext = $this->randomName() . '.' . strtoupper($this->bad_extension) . '.txt';
+    $this->name = $this->randomMachineName() . '.' . $this->bad_extension . '.txt';
+    $this->name_with_uc_ext = $this->randomMachineName() . '.' . strtoupper($this->bad_extension) . '.txt';
   }
 
   /**
@@ -36,7 +36,7 @@ class NameMungingTest extends FileTestBase {
    * Tests munging with a null byte in the filename.
    */
   function testMungeNullByte() {
-    $prefix = $this->randomName();
+    $prefix = $this->randomMachineName();
     $filename = $prefix . '.' . $this->bad_extension . "\0.txt";
     $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->bad_extension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
   }

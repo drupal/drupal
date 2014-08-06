@@ -63,10 +63,10 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     $this->state->set('entity_test.translation', TRUE);
 
     // Create a translatable test field.
-    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
 
     // Create an untranslatable test field.
-    $this->untranslatable_field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->untranslatable_field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
 
     // Create field instances in all entity variations.
     foreach (entity_test_entity_types() as $entity_type) {

@@ -185,7 +185,7 @@ abstract class FileManagedTestBase extends WebTestBase {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
-      $filepath = 'Файл для тестирования ' . $this->randomName();
+      $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
       $scheme = file_default_scheme();

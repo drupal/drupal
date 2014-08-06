@@ -135,7 +135,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalCreateNode(array(
       'type' => 'article',
       'body' => array(
-        array('value' => $this->randomName(32), 'format' => 'full_html')
+        array('value' => $this->randomMachineName(32), 'format' => 'full_html')
       ),
     ));
 

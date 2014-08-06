@@ -76,7 +76,7 @@ class UserRoleConditionTest extends KernelTestBase {
     ))->save();
 
     // Create new role.
-    $rid = strtolower($this->randomName(8));
+    $rid = strtolower($this->randomMachineName(8));
     $label = $this->randomString(8);
     $role = Role::create(array(
       'id' => $rid,
@@ -95,7 +95,7 @@ class UserRoleConditionTest extends KernelTestBase {
 
     // Setup an authenticated user for our tests.
     $this->authenticated = User::create(array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     ));
     $this->authenticated->save();
     // Add the custom role.

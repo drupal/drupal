@@ -49,7 +49,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->drupalLogin($admin_user);
     // Create first valid category.
     $mail = 'simpletest@example.com';
-    $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($mail)), '', TRUE);
+    $this->addCategory($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($mail)), '', TRUE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Ensure that anonymous can submit site-wide contact form.
@@ -58,7 +58,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
     $this->assertNoText(t('Category'));
-    $this->submitContact($name = $this->randomName(16), $mail, $subject = $this->randomName(16), $id, $message = $this->randomName(64));
+    $this->submitContact($name = $this->randomMachineName(16), $mail, $subject = $this->randomMachineName(16), $id, $message = $this->randomMachineName(64));
     $this->assertText(t('Your message has been sent.'));
 
     $messages = Message::loadMultiple();

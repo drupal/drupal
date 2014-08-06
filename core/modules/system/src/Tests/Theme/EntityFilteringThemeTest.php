@@ -113,7 +113,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
       'subject' => $this->xss_label,
-      'comment_body' => array($this->randomName()),
+      'comment_body' => array($this->randomMachineName()),
     ));
     $this->comment->save();
   }

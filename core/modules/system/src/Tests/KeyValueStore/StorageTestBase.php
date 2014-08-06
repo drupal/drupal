@@ -185,7 +185,7 @@ abstract class StorageTestBase extends UnitTestBase {
   public function testSetIfNotExists() {
     $stores = $this->createStorage();
 
-    $key = $this->randomName();
+    $key = $this->randomMachineName();
     // Test that setIfNotExists() succeeds only the first time.
     for ($i = 0; $i <= 1; $i++) {
       // setIfNotExists() should be TRUE the first time (when $i is 0) and

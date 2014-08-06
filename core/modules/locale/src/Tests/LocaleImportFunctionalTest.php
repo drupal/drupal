@@ -91,7 +91,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->assertRaw(t('One translation file could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog'))), 'The empty translation file was successfully imported.');
 
     // Try importing a .po file which doesn't exist.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $this->drupalPostForm('admin/config/regional/translate/import', array(
       'langcode' => 'fr',
       'files[file]' => $name,
@@ -263,7 +263,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $this->randomName(16),
+      'name' => $this->randomMachineName(16),
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));

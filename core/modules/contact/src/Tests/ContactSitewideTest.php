@@ -93,7 +93,7 @@ class ContactSitewideTest extends WebTestBase {
     // Test invalid recipients.
     $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
-      $this->addCategory($this->randomName(16), $this->randomName(16), $invalid_recipient, '', FALSE);
+      $this->addCategory($this->randomMachineName(16), $this->randomMachineName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid email address.', array('%recipient' => $invalid_recipient)));
     }
 
@@ -107,13 +107,13 @@ class ContactSitewideTest extends WebTestBase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
     $max_length_exceeded = $max_length + 1;
-    $this->addCategory($id = drupal_strtolower($this->randomName($max_length_exceeded)), $label = $this->randomName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
+    $this->addCategory($id = drupal_strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
     $this->assertText(format_string('Machine-readable name cannot be longer than !max characters but is currently !exceeded characters long.', array('!max' => $max_length, '!exceeded' => $max_length_exceeded)));
-    $this->addCategory($id = drupal_strtolower($this->randomName($max_length)), $label = $this->randomName($max_length), implode(',', array($recipients[0])), '', TRUE);
+    $this->addCategory($id = drupal_strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Create first valid category.
-    $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
+    $this->addCategory($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Check that the category was created in site default language.
@@ -125,7 +125,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertNoUniqueText($label, 'New category included in categories list.');
 
     // Test update contact form category.
-    $this->updateCategory($id, $label = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
+    $this->updateCategory($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE);
     $config = \Drupal::config('contact.category.' . $id)->get();
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
@@ -148,10 +148,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add more categories.
-    $this->addCategory(drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
+    $this->addCategory(drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
-    $this->addCategory($name = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
+    $this->addCategory($name = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Try adding a category that already exists.
@@ -176,19 +176,19 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Submit contact form with invalid values.
-    $this->submitContact('', $recipients[0], $this->randomName(16), $id, $this->randomName(64));
+    $this->submitContact('', $recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
     $this->assertText(t('Your name field is required.'));
 
-    $this->submitContact($this->randomName(16), '', $this->randomName(16), $id, $this->randomName(64));
+    $this->submitContact($this->randomMachineName(16), '', $this->randomMachineName(16), $id, $this->randomMachineName(64));
     $this->assertText(t('Your email address field is required.'));
 
-    $this->submitContact($this->randomName(16), $invalid_recipients[0], $this->randomName(16), $id, $this->randomName(64));
+    $this->submitContact($this->randomMachineName(16), $invalid_recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
     $this->assertRaw(t('The email address %mail is not valid.', array('%mail' => 'invalid')));
 
-    $this->submitContact($this->randomName(16), $recipients[0], '', $id, $this->randomName(64));
+    $this->submitContact($this->randomMachineName(16), $recipients[0], '', $id, $this->randomMachineName(64));
     $this->assertText(t('Subject field is required.'));
 
-    $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, '');
+    $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, '');
     $this->assertText(t('Message field is required.'));
 
     // Test contact form with no default category selected.
@@ -201,12 +201,12 @@ class ContactSitewideTest extends WebTestBase {
     // Try to access contact form with non-existing category IDs.
     $this->drupalGet('contact/0');
     $this->assertResponse(404);
-    $this->drupalGet('contact/' . $this->randomName());
+    $this->drupalGet('contact/' . $this->randomMachineName());
     $this->assertResponse(404);
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
-      $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, $this->randomName(64));
+      $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
       $this->assertText(t('Your message has been sent.'));
     }
     // Submit contact form one over limit.
@@ -219,9 +219,9 @@ class ContactSitewideTest extends WebTestBase {
 
     $this->deleteCategories();
 
-    $label = $this->randomName(16);
+    $label = $this->randomMachineName(16);
     $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
-    $category = drupal_strtolower($this->randomName(16));
+    $category = drupal_strtolower($this->randomMachineName(16));
     $this->addCategory($category, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
     $this->clickLink(t('Edit'));
@@ -245,8 +245,8 @@ class ContactSitewideTest extends WebTestBase {
 
     // Create a simple textfield.
     $edit = array(
-      'fields[_add_new_field][label]' => $field_label = $this->randomName(),
-      'fields[_add_new_field][field_name]' => Unicode::strtolower($this->randomName()),
+      'fields[_add_new_field][label]' => $field_label = $this->randomMachineName(),
+      'fields[_add_new_field][field_name]' => Unicode::strtolower($this->randomMachineName()),
       'fields[_add_new_field][type]' => 'text',
     );
     $field_name = 'field_' . $edit['fields[_add_new_field][field_name]'];
@@ -260,9 +260,9 @@ class ContactSitewideTest extends WebTestBase {
 
     // Submit the contact form and verify the content.
     $edit = array(
-      'subject[0][value]' => $this->randomName(),
-      'message[0][value]' => $this->randomName(),
-      $field_name . '[0][value]' => $this->randomName(),
+      'subject[0][value]' => $this->randomMachineName(),
+      'message[0][value]' => $this->randomMachineName(),
+      $field_name . '[0][value]' => $this->randomMachineName(),
     );
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $mails = $this->drupalGetMails();
@@ -281,8 +281,8 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Set up three categories, 2 with an auto-reply and one without.
-    $foo_autoreply = $this->randomName(40);
-    $bar_autoreply = $this->randomName(40);
+    $foo_autoreply = $this->randomMachineName(40);
+    $bar_autoreply = $this->randomMachineName(40);
     $this->addCategory('foo', 'foo', 'foo@example.com', $foo_autoreply, FALSE);
     $this->addCategory('bar', 'bar', 'bar@example.com', $bar_autoreply, FALSE);
     $this->addCategory('no_autoreply', 'no_autoreply', 'bar@example.com', '', FALSE);
@@ -292,9 +292,9 @@ class ContactSitewideTest extends WebTestBase {
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
 
     // Test the auto-reply for category 'foo'.
-    $email = $this->randomName(32) . '@example.com';
-    $subject = $this->randomName(64);
-    $this->submitContact($this->randomName(16), $email, $subject, 'foo', $this->randomString(128));
+    $email = $this->randomMachineName(32) . '@example.com';
+    $subject = $this->randomMachineName(64);
+    $this->submitContact($this->randomMachineName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one email going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
@@ -302,8 +302,8 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($foo_autoreply)));
 
     // Test the auto-reply for category 'bar'.
-    $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
+    $email = $this->randomMachineName(32) . '@example.com';
+    $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for category 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
@@ -311,8 +311,8 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
-    $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
+    $email = $this->randomMachineName(32) . '@example.com';
+    $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 0);
   }

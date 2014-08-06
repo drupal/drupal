@@ -50,7 +50,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
     $style_plugin->options['default'] = 'id';
     $this->assertTrue($style_plugin->buildSort(), 'If no order but a default order is specified, the normal sort should be used.');
 
-    $request->attributes->set('order', $this->randomName());
+    $request->attributes->set('order', $this->randomMachineName());
     $this->assertTrue($style_plugin->buildSort(), 'If no valid field is chosen for order, the normal sort should be used.');
 
     $request->attributes->set('order', 'id');
@@ -98,7 +98,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
     $this->prepareView($view);
     $style_plugin = $view->style_plugin;
     $request->query->set('sort', 'asc');
-    $random_name = $this->randomName();
+    $random_name = $this->randomMachineName();
     $request->query->set('order', $random_name);
     $style_plugin->buildSortPost();
     $this->assertIdentical($style_plugin->order, 'asc', 'No sort order was set, when invalid sort order was specified.');

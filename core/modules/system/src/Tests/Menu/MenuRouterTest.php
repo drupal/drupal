@@ -62,7 +62,7 @@ class MenuRouterTest extends WebTestBase {
    */
   protected function doTestHookMenuIntegration() {
     // Generate base path with random argument.
-    $base_path = 'foo/' . $this->randomName(8);
+    $base_path = 'foo/' . $this->randomMachineName(8);
     $this->drupalGet($base_path);
     // Confirm correct controller activated.
     $this->assertText('test1');

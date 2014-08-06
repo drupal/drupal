@@ -69,11 +69,11 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // We want a taxonomy term reference field. It needs a vocabulary, terms,
     // a field and an instance. First, create the vocabulary.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'vid' => drupal_strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomMachineName()),
     ));
     $vocabulary->save();
     // Second, create the field.
-    $this->fieldName = strtolower($this->randomName());
+    $this->fieldName = strtolower($this->randomMachineName());
     $field = array(
       'name' => $this->fieldName,
       'entity_type' => 'entity_test',
@@ -91,7 +91,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {
       $term = entity_create('taxonomy_term', array(
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
         'vid' => $vocabulary->id(),
       ));
       $term->save();
@@ -103,7 +103,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // 1st account and 1st term.
     for ($i = 0; $i <= 2; $i++) {
       $entity = entity_create('entity_test', array('type' => 'test_bundle'));
-      $entity->name->value = $this->randomName();
+      $entity->name->value = $this->randomMachineName();
       $index = $i ? 1 : 0;
       $entity->user_id->target_id = $this->accounts[$index]->id();
       $entity->{$this->fieldName}->target_id = $this->terms[$index]->id();

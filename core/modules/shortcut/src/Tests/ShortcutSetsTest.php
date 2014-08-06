@@ -22,8 +22,8 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Add shortcut set'));
     $edit = array(
-      'label' => $this->randomName(),
-      'id' => strtolower($this->randomName()),
+      'label' => $this->randomMachineName(),
+      'id' => strtolower($this->randomMachineName()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $new_set = $this->container->get('entity.manager')->getStorage('shortcut_set')->load($edit['id']);
@@ -36,7 +36,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests switching a user's own shortcut set.
    */
   function testShortcutSetSwitchOwn() {
-    $new_set = $this->generateShortcutSet($this->randomName());
+    $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     // Attempt to switch the default shortcut set to the newly created shortcut
     // set.
@@ -50,7 +50,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests switching another user's shortcut set.
    */
   function testShortcutSetAssign() {
-    $new_set = $this->generateShortcutSet($this->randomName());
+    $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     shortcut_set_assign_user($new_set, $this->shortcut_user);
     $current_set = shortcut_current_displayed_set($this->shortcut_user);
@@ -63,7 +63,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetSwitchCreate() {
     $edit = array(
       'set' => 'new',
-      'id' => strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     );
     $this->drupalPostForm('user/' . $this->admin_user->id() . '/shortcuts', $edit, t('Change set'));
@@ -89,7 +89,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetRename() {
     $set = $this->set;
 
-    $new_label = $this->randomName();
+    $new_label = $this->randomMachineName();
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Edit shortcut set'));
     $this->drupalPostForm(NULL, array('label' => $new_label), t('Save'));
@@ -101,7 +101,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests renaming a shortcut set to the same name as another set.
    */
   function testShortcutSetRenameAlreadyExists() {
-    $set = $this->generateShortcutSet($this->randomName());
+    $set = $this->generateShortcutSet($this->randomMachineName());
     $existing_label = $this->set->label();
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id(), array('label' => $existing_label), t('Save'));
     $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_label)));
@@ -113,7 +113,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests unassigning a shortcut set.
    */
   function testShortcutSetUnassign() {
-    $new_set = $this->generateShortcutSet($this->randomName());
+    $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     shortcut_set_assign_user($new_set, $this->shortcut_user);
     shortcut_set_unassign_user($this->shortcut_user);
@@ -126,7 +126,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests deleting a shortcut set.
    */
   function testShortcutSetDelete() {
-    $new_set = $this->generateShortcutSet($this->randomName());
+    $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete', array(), t('Delete'));
     $sets = entity_load_multiple('shortcut_set');
@@ -145,7 +145,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests creating a new shortcut set with a defined set name.
    */
   function testShortcutSetCreateWithSetName() {
-    $random_name = $this->randomName();
+    $random_name = $this->randomMachineName();
     $new_set = $this->generateShortcutSet($random_name, $random_name);
     $sets = entity_load_multiple('shortcut_set');
     $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');

@@ -176,7 +176,7 @@ class ValidationTest extends WebTestBase {
 
     // Invalid password.
     $edit = array(
-      'password' => $this->randomName(),
+      'password' => $this->randomMachineName(),
     );
     $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw($textfield_error);

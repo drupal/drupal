@@ -61,9 +61,9 @@ class DateFormatsMachineNameTest extends WebTestBase {
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'), 'It is not possible to create a date format with the machine name "fallback". It is a built-in format that already exists.');
 
     // Create a date format with a machine name distinct from the previous two.
-    $id = Unicode::strtolower($this->randomName(16));
+    $id = Unicode::strtolower($this->randomMachineName(16));
     $edit = array(
-      'label' => $this->randomName(16),
+      'label' => $this->randomMachineName(16),
       'id' => $id,
       'date_format_pattern' => 'd/m/Y',
     );
@@ -72,7 +72,7 @@ class DateFormatsMachineNameTest extends WebTestBase {
 
     // Try to create a date format with same machine name as the previous one.
     $edit = array(
-      'label' => $this->randomName(16),
+      'label' => $this->randomMachineName(16),
       'id' => $id,
       'date_format_pattern' => 'd-m-Y',
     );

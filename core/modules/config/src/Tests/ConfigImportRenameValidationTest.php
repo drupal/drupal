@@ -68,10 +68,10 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
    */
   public function testRenameValidation() {
     // Create a test entity.
-    $test_entity_id = $this->randomName();
+    $test_entity_id = $this->randomMachineName();
     $test_entity = entity_create('config_test', array(
       'id' => $test_entity_id,
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
     ));
     $test_entity->save();
     $uuid = $test_entity->uuid();
@@ -84,8 +84,8 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
 
     // Create a content type with a matching UUID in the active storage.
     $content_type = entity_create('node_type', array(
-      'type' => Unicode::strtolower($this->randomName(16)),
-      'name' => $this->randomName(),
+      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
       'uuid' => $uuid,
     ));
     $content_type->save();

@@ -91,9 +91,9 @@ class BlockDependenciesTest extends ViewUnitTestBase {
     $settings += array(
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
-      'id' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomMachineName(8)),
       'theme' => \Drupal::config('system.theme')->get('default'),
-      'label' => $this->randomName(8),
+      'label' => $this->randomMachineName(8),
       'visibility' => array(),
       'weight' => 0,
       'cache' => array(

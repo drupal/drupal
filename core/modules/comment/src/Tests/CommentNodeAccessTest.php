@@ -59,8 +59,8 @@ class CommentNodeAccessTest extends CommentTestBase {
 
     // Post comment.
     $this->drupalLogin($this->web_user);
-    $comment_text = $this->randomName();
-    $comment_subject = $this->randomName();
+    $comment_text = $this->randomMachineName();
+    $comment_subject = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $comment_subject);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
@@ -71,8 +71,8 @@ class CommentNodeAccessTest extends CommentTestBase {
 
     // Reply to comment, creating second comment.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
-    $reply_text = $this->randomName();
-    $reply_subject = $this->randomName();
+    $reply_text = $this->randomMachineName();
+    $reply_subject = $this->randomMachineName();
     $reply = $this->postComment(NULL, $reply_text, $reply_subject, TRUE);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
 

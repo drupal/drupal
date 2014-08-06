@@ -79,7 +79,7 @@ class CommentValidationTest extends EntityUnitTestBase {
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
-      'comment_body' => $this->randomName(),
+      'comment_body' => $this->randomMachineName(),
     ));
 
     $violations = $comment->validate();
@@ -112,7 +112,7 @@ class CommentValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
     $comment->set('mail', NULL);
-    $comment->set('homepage', 'http://example.com/' . $this->randomName(237));
+    $comment->set('homepage', 'http://example.com/' . $this->randomMachineName(237));
     $this->assertLengthViolation($comment, 'homepage', 255);
 
     $comment->set('homepage', 'invalid');

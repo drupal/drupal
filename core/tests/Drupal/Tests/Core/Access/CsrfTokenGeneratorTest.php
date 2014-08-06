@@ -51,7 +51,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
       ->will($this->returnValue($this->key));
 
     $settings = array(
-      'hash_salt' => $this->randomName(),
+      'hash_salt' => $this->randomMachineName(),
     );
 
     new Settings($settings);
@@ -64,8 +64,8 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    */
   public function testGet() {
     $this->assertInternalType('string', $this->generator->get());
-    $this->assertNotSame($this->generator->get(), $this->generator->get($this->randomName()));
-    $this->assertNotSame($this->generator->get($this->randomName()), $this->generator->get($this->randomName()));
+    $this->assertNotSame($this->generator->get(), $this->generator->get($this->randomMachineName()));
+    $this->assertNotSame($this->generator->get($this->randomMachineName()), $this->generator->get($this->randomMachineName()));
   }
 
   /**

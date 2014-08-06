@@ -43,9 +43,9 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $node->save();
 
     $view = array();
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
-    $view['description'] = $this->randomName(16);
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[wizard_key]'] = 'node_revision';
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));

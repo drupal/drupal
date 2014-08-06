@@ -60,7 +60,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests link field URL validation.
    */
   function testURLValidation() {
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -149,7 +149,7 @@ class LinkFieldTest extends WebTestBase {
     foreach ($valid_entries as $value) {
       $edit = array(
         'user_id' => 1,
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
         "{$field_name}[0][url]" => $value,
       );
       $this->drupalPostForm('entity_test/add', $edit, t('Save'));
@@ -172,7 +172,7 @@ class LinkFieldTest extends WebTestBase {
     foreach ($invalid_entries as $invalid_value) {
       $edit = array(
         'user_id' => 1,
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
         "{$field_name}[0][url]" => $invalid_value,
       );
       $this->drupalPostForm('entity_test/add', $edit, t('Save'));
@@ -184,7 +184,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests the link title settings of a link field.
    */
   function testLinkTitle() {
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -270,7 +270,7 @@ class LinkFieldTest extends WebTestBase {
     $value = 'http://www.example.com/';
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][url]" => $value,
       "{$field_name}[0][title]" => '',
     );
@@ -284,10 +284,10 @@ class LinkFieldTest extends WebTestBase {
     $this->assertRaw($expected_link);
 
     // Verify that a link with text is rendered using the link text.
-    $title = $this->randomName();
+    $title = $this->randomMachineName();
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][title]" => $title,
     );
     $this->drupalPostForm("entity_test/manage/$id", $edit, t('Save'));
@@ -302,7 +302,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests the default 'link' formatter.
    */
   function testLinkFormatter() {
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -346,7 +346,7 @@ class LinkFieldTest extends WebTestBase {
     $title2 = 'A very long & strange example title that could break the nice layout of the site';
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][url]" => $url1,
       // Note that $title1 is not submitted.
       "{$field_name}[0][title]" => '',
@@ -444,7 +444,7 @@ class LinkFieldTest extends WebTestBase {
    * merged, since they involve different configuration and output.
    */
   function testLinkSeparateFormatter() {
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -486,7 +486,7 @@ class LinkFieldTest extends WebTestBase {
     $title2 = 'A very long & strange example title that could break the nice layout of the site';
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][url]" => $url1,
       "{$field_name}[1][url]" => $url2,
       "{$field_name}[1][title]" => $title2,

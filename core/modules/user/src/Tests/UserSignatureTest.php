@@ -79,7 +79,7 @@ class UserSignatureTest extends WebTestBase {
     $node = $this->drupalCreateNode(array(
       'body' => array(
         0 => array(
-          'value' => $this->randomName(32),
+          'value' => $this->randomMachineName(32),
           'format' => 'full_html',
         ),
       ),
@@ -91,7 +91,7 @@ class UserSignatureTest extends WebTestBase {
 
     // Log in as a regular user and create a signature.
     $this->drupalLogin($this->web_user);
-    $signature_text = "<h1>" . $this->randomName() . "</h1>";
+    $signature_text = "<h1>" . $this->randomMachineName() . "</h1>";
     $edit = array(
       'signature[value]' => $signature_text,
     );
@@ -106,8 +106,8 @@ class UserSignatureTest extends WebTestBase {
 
     // Create a comment.
     $edit = array();
-    $edit['subject[0][value]'] = $this->randomName(8);
-    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit, t('Preview'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 

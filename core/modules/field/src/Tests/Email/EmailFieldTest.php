@@ -53,7 +53,7 @@ class EmailFieldTest extends WebTestBase {
    */
   function testEmailField() {
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
@@ -91,7 +91,7 @@ class EmailFieldTest extends WebTestBase {
     $value = 'test@example.com';
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

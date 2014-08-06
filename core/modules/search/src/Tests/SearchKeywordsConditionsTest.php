@@ -42,14 +42,14 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $this->drupalGet('search/dummy_path');
     $this->assertNoText('Dummy search snippet to display');
     // With keys - get results.
-    $keys = 'bike shed ' . $this->randomName();
+    $keys = 'bike shed ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
-    $keys = 'blue drop ' . $this->randomName();
+    $keys = 'blue drop ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
     // Add some conditions and keys.
-    $keys = 'moving drop ' . $this->randomName();
+    $keys = 'moving drop ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", array('query' => array('keys' => 'bike', 'search_conditions' => $keys)));
     $this->assertText("Dummy search snippet to display.");
     $this->assertRaw(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE));

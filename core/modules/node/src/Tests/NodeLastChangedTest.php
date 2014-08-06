@@ -33,7 +33,7 @@ class NodeLastChangedTest extends DrupalUnitTestBase {
    * Runs basic tests for node_last_changed function.
    */
   function testNodeLastChanged() {
-    $node = entity_create('node', array('type' => 'article', 'title' => $this->randomName()));
+    $node = entity_create('node', array('type' => 'article', 'title' => $this->randomMachineName()));
     $node->save();
 
     // Test node last changed timestamp.

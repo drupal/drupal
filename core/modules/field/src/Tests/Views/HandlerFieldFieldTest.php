@@ -67,10 +67,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       for ($key = 0; $key < 3; $key++) {
         $field_storage = $this->fieldStorages[$key];
-        $edit[$field_storage->getName()][0]['value'] = $this->randomName(8);
+        $edit[$field_storage->getName()][0]['value'] = $this->randomMachineName(8);
       }
       for ($j = 0; $j < 5; $j++) {
-        $edit[$this->fieldStorages[3]->getName()][$j]['value'] = $this->randomName(8);
+        $edit[$this->fieldStorages[3]->getName()][$j]['value'] = $this->randomMachineName(8);
       }
       // Set this field to be empty.
       $edit[$this->fieldStorages[4]->getName()] = array(array('value' => NULL));

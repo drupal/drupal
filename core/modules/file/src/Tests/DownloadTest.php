@@ -71,7 +71,7 @@ class DownloadTest extends FileManagedTestBase {
     // Set file downloads to private so handler functions get called.
 
     // Create a file.
-    $contents = $this->randomName(8);
+    $contents = $this->randomMachineName(8);
     $file = $this->createFile(NULL, $contents, 'private');
     $url  = file_create_url($file->getFileUri());
 
@@ -91,7 +91,7 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertResponse(403, 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
-    $url = file_create_url('private://' . $this->randomName());
+    $url = file_create_url('private://' . $this->randomMachineName());
     $this->drupalHead($url);
     $this->assertResponse(404, 'Correctly returned 404 response for a non-existent file.');
   }

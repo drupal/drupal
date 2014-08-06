@@ -51,19 +51,19 @@ class SearchLanguageTest extends SearchTestBase {
       array(
         'title' => 'First node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       array(
         'title' => 'Second node this is the Spanish title',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'es',
       ),
       array(
         'title' => 'Third node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
     );
@@ -74,12 +74,12 @@ class SearchLanguageTest extends SearchTestBase {
 
     // Add English translation to the second node.
     $translation = $this->searchable_nodes[1]->addTranslation('en', array('title' => 'Second node en'));
-    $translation->body->value = $this->randomName(32);
+    $translation->body->value = $this->randomMachineName(32);
     $this->searchable_nodes[1]->save();
 
     // Add Spanish translation to the third node.
     $translation = $this->searchable_nodes[2]->addTranslation('es', array('title' => 'Third node es'));
-    $translation->body->value = $this->randomName(32);
+    $translation->body->value = $this->randomMachineName(32);
     $this->searchable_nodes[2]->save();
 
     // Update the index and then run the shutdown method.

@@ -52,7 +52,7 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('node/add/page');
     $this->assertText(t('Create Basic page'));
     $this->assertNoText(t('Menu settings'));
-    $node_title = $this->randomName();
+    $node_title = $this->randomMachineName();
     $edit = array(
       'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
@@ -70,7 +70,7 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
-    $node_title = $this->randomName();
+    $node_title = $this->randomMachineName();
     $edit = array(
       'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
@@ -117,7 +117,7 @@ class MenuNodeTest extends WebTestBase {
     $item = entity_create('menu_link_content', array(
       'route_name' => 'node.view',
       'route_parameters' => array('node' => $node->id()),
-      'title' => $this->randomName(16),
+      'title' => $this->randomMachineName(16),
       'menu_name' => 'admin',
       'bundle' => 'menu_link_content',
     ));
@@ -141,7 +141,7 @@ class MenuNodeTest extends WebTestBase {
     $child_item = entity_create('menu_link_content', array(
       'route_name' => 'node.view',
       'route_parameters' => array('node' => $child_node->id()),
-      'title' => $this->randomName(16),
+      'title' => $this->randomMachineName(16),
       'parent' => $item->getPluginId(),
       'menu_name' => $item->getMenuName(),
       'bundle' => 'menu_link_content',

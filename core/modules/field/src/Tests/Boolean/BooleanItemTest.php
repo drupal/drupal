@@ -52,7 +52,7 @@ class BooleanItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $value = '1';
     $entity->field_boolean = $value;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

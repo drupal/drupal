@@ -57,7 +57,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
    */
   public function testReadOnly() {
     $php = new FileStorage($this->standardSettings);
-    $name = $this->randomName() . '/' . $this->randomName() . '.php';
+    $name = $this->randomMachineName() . '/' . $this->randomMachineName() . '.php';
 
     // Find a global that doesn't exist.
     do {

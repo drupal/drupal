@@ -34,8 +34,8 @@ class FilterDefaultFormatTest extends WebTestBase {
     $formats = array();
     for ($i = 0; $i < 2; $i++) {
       $edit = array(
-        'format' => drupal_strtolower($this->randomName()),
-        'name' => $this->randomName(),
+        'format' => drupal_strtolower($this->randomMachineName()),
+        'name' => $this->randomMachineName(),
       );
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();

@@ -35,7 +35,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $this->nodeBundle = 'article';
     $this->bundle = 'comment_article';
     $this->testLanguageSelector = FALSE;
-    $this->subject = $this->randomName();
+    $this->subject = $this->randomMachineName();
     parent::setUp();
   }
 
@@ -107,7 +107,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     // Comment subject is not translatable hence we use a fixed value.
     return array(
       'subject' => array(array('value' => $this->subject)),
-      'comment_body' => array(array('value' => $this->randomName(16))),
+      'comment_body' => array(array('value' => $this->randomMachineName(16))),
     ) + parent::getNewEntityValues($langcode);
   }
 

@@ -43,11 +43,11 @@ class NestedFormTest extends FieldTestBase {
     $this->instance = array(
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-      'label' => $this->randomName() . '_label',
+      'label' => $this->randomMachineName() . '_label',
       'description' => '[site:name]_description',
       'weight' => mt_rand(0, 127),
       'settings' => array(
-        'test_instance_setting' => $this->randomName(),
+        'test_instance_setting' => $this->randomMachineName(),
       ),
     );
   }

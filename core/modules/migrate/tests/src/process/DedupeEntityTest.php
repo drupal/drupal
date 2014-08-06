@@ -72,7 +72,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
     $configuration['length'] = isset($length) ? $length : NULL;
     $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityQueryFactory);
     $this->entityQueryExpects($count);
-    $value = $this->randomName(32);
+    $value = $this->randomMachineName(32);
     $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
     $expected = Unicode::substr($value, $start, $length);
     $expected .= $count ? $postfix . $count : '';

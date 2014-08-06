@@ -110,7 +110,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    */
   function previewNodeImage($image, $field_name, $type) {
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
     );
     $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('node/add/' . $type, $edit, t('Preview'));
@@ -128,7 +128,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    */
   function uploadNodeImage($image, $field_name, $type) {
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
     );
     $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save and publish'));

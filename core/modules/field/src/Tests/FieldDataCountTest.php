@@ -56,7 +56,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
 
     // Create 1 entity without the field.
     $entity = entity_create('entity_test');
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     $this->assertIdentical($field_storage->hasdata(), FALSE, 'There are no entities with field data.');
@@ -69,7 +69,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
       $value2 = mt_rand(1,99);
       $entity->field_int[0]->value = $value;
       $entity->field_int[1]->value = $value2;
-      $entity->name->value = $this->randomName();
+      $entity->name->value = $this->randomMachineName();
       $entity->save();
     }
 

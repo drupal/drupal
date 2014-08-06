@@ -34,7 +34,7 @@ class BasicAuthTest extends WebTestBase {
     $this->assertResponse('200', 'HTTP response is OK');
     $this->curlClose();
 
-    $this->basicAuthGet('router_test/test11', $account->getUsername(), $this->randomName());
+    $this->basicAuthGet('router_test/test11', $account->getUsername(), $this->randomMachineName());
     $this->assertNoText($account->getUsername(), 'Bad basic auth credentials do not authenticate the user.');
     $this->assertResponse('403', 'Access is not granted.');
     $this->curlClose();

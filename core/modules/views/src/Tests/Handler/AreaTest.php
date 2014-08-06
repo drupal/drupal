@@ -69,7 +69,7 @@ class AreaTest extends HandlerTestBase {
       $this->assertText('Test Example area');
 
       // Then setup a no empty label.
-      $labels[$type] = $this->randomName();
+      $labels[$type] = $this->randomMachineName();
       $this->drupalPostForm($edit_path, array('options[admin_label]' => $labels[$type]), t('Apply'));
       // Make sure that the new label appears on the site.
       $this->assertText($labels[$type]);

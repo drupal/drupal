@@ -344,13 +344,13 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     // This is the language indicator on the translation search screen for
     // untranslated strings.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
     // This will be the translation of $name.
-    $translation = $this->randomName(16);
-    $translation_to_en = $this->randomName(16);
+    $translation = $this->randomMachineName(16);
+    $translation_to_en = $this->randomMachineName(16);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -439,7 +439,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
@@ -464,7 +464,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,

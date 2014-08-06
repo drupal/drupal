@@ -114,7 +114,7 @@ class ViewsBlockTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\block\ViewsBlock::build()
    */
   public function testBuild() {
-    $output = $this->randomName(100);
+    $output = $this->randomMachineName(100);
     $build = array('#markup' => $output);
     $this->executable->expects($this->once())
       ->method('executeDisplay')

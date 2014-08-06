@@ -55,7 +55,7 @@ class LoggerChannelTest extends UnitTestCase {
    */
   public function testLog(callable $expected, Request $request = NULL, AccountInterface $current_user = NULL) {
     $channel = new LoggerChannel('test');
-    $message = $this->randomName();
+    $message = $this->randomMachineName();
     $logger = $this->getMock('Psr\Log\LoggerInterface');
     $logger->expects($this->once())
       ->method('log')
@@ -79,7 +79,7 @@ class LoggerChannelTest extends UnitTestCase {
    * @covers ::sortLoggers
    */
   public function testSortLoggers() {
-    $channel = new LoggerChannel($this->randomName());
+    $channel = new LoggerChannel($this->randomMachineName());
     $index_order = '';
     for ($i = 0; $i < 4; $i++) {
       $logger = $this->getMock('Psr\Log\LoggerInterface');
@@ -93,7 +93,7 @@ class LoggerChannelTest extends UnitTestCase {
       $channel->addLogger($logger, $i);
     }
 
-    $channel->log(rand(0, 7), $this->randomName());
+    $channel->log(rand(0, 7), $this->randomMachineName());
     // Ensure that the logger added in the end fired first.
     $this->assertEquals($index_order, '3210');
   }

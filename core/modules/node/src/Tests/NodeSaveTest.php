@@ -42,10 +42,10 @@ class NodeSaveTest extends NodeTestBase {
     // Node ID must be a number that is not in the database.
     $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
     $test_nid = $max_nid + mt_rand(1000, 1000000);
-    $title = $this->randomName(8);
+    $title = $this->randomMachineName(8);
     $node = array(
       'title' => $title,
-      'body' => array(array('value' => $this->randomName(32))),
+      'body' => array(array('value' => $this->randomMachineName(32))),
       'uid' => $this->web_user->id(),
       'type' => 'article',
       'nid' => $test_nid,
@@ -74,7 +74,7 @@ class NodeSaveTest extends NodeTestBase {
     $edit = array(
       'uid' => $this->web_user->id(),
       'type' => 'article',
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
     );
 
     entity_create('node', $edit)->save();
@@ -101,7 +101,7 @@ class NodeSaveTest extends NodeTestBase {
     $edit = array(
       'uid' => $this->web_user->id(),
       'type' => 'article',
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
       'changed' => 979534800, // Drupal 1.0 release.
     );

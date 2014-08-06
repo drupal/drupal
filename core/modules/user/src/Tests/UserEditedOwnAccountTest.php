@@ -27,7 +27,7 @@ class UserEditedOwnAccountTest extends WebTestBase {
 
     // Change own username.
     $edit = array();
-    $edit['name'] = $this->randomName();
+    $edit['name'] = $this->randomMachineName();
     $this->drupalPostForm('user/' . $account->id() . '/edit', $edit, t('Save'));
 
     // Log out.

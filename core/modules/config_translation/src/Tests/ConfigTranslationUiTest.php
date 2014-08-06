@@ -566,7 +566,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     $langcode = 'xx';
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,

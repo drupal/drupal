@@ -22,13 +22,13 @@ class RegionContentTest extends WebTestBase {
     global $theme_key;
 
     $block_regions = array_keys(system_region_list($theme_key));
-    $delimiter = $this->randomName(32);
+    $delimiter = $this->randomMachineName(32);
     $values = array();
     // Set some random content for each region available.
     foreach ($block_regions as $region) {
-      $first_chunk = $this->randomName(32);
+      $first_chunk = $this->randomMachineName(32);
       drupal_add_region_content($region, $first_chunk);
-      $second_chunk = $this->randomName(32);
+      $second_chunk = $this->randomMachineName(32);
       drupal_add_region_content($region, $second_chunk);
       // Store the expected result for a drupal_get_region_content call for this region.
       $values[$region] = $first_chunk . $delimiter . $second_chunk;

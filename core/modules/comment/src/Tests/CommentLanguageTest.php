@@ -89,10 +89,10 @@ class CommentLanguageTest extends WebTestBase {
     // only content language has to.
     foreach ($this->container->get('language_manager')->getLanguages() as $node_langcode => $node_language) {
       // Create "Article" content.
-      $title = $this->randomName();
+      $title = $this->randomMachineName();
       $edit = array(
         'title[0][value]' => $title,
-        'body[0][value]' => $this->randomName(),
+        'body[0][value]' => $this->randomMachineName(),
         'langcode' => $node_langcode,
         'comment[0][status]' => CommentItemInterface::OPEN,
       );
@@ -103,9 +103,9 @@ class CommentLanguageTest extends WebTestBase {
       foreach ($this->container->get('language_manager')->getLanguages() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
-        $comment_values[$node_langcode][$langcode] = $this->randomName();
+        $comment_values[$node_langcode][$langcode] = $this->randomMachineName();
         $edit = array(
-          'subject[0][value]' => $this->randomName(),
+          'subject[0][value]' => $this->randomMachineName(),
           'comment_body[0][value]' => $comment_values[$node_langcode][$langcode],
         );
         $this->drupalPostForm($prefix . 'node/' . $node->id(), $edit, t('Preview'));

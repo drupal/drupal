@@ -42,7 +42,7 @@ class RowUITest extends UITestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertFieldByName('row_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
-    $random_name = $this->randomName();
+    $random_name = $this->randomMachineName();
     $edit = array(
       'row_options[test_option]' => $random_name
     );

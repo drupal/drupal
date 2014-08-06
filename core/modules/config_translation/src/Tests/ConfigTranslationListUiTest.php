@@ -90,7 +90,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   protected function doBlockListTest() {
     // Add a test block, any block will do.
     // Set the machine name so the translate link can be built later.
-    $id = Unicode::strtolower($this->randomName(16));
+    $id = Unicode::strtolower($this->randomMachineName(16));
     $this->drupalPlaceBlock('system_powered_by_block', array('id' => $id));
 
     // Get the Block listing.
@@ -113,8 +113,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // this does not test more than necessary.
     $this->drupalGet('admin/structure/menu/add');
     // Lowercase the machine name.
-    $menu_name = Unicode::strtolower($this->randomName(16));
-    $label = $this->randomName(16);
+    $menu_name = Unicode::strtolower($this->randomMachineName(16));
+    $label = $this->randomMachineName(16);
     $edit = array(
       'id' => $menu_name,
       'description' => '',
@@ -159,9 +159,9 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test vocabulary to decouple looking for translate operations
     // link so this does not test more than necessary.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
-      'vid' => Unicode::strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
     ));
     $vocabulary->save();
 
@@ -184,8 +184,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
     $block_content_type = entity_create('block_content_type', array(
-      'id' => Unicode::strtolower($this->randomName(16)),
-      'label' => $this->randomName(),
+      'id' => Unicode::strtolower($this->randomMachineName(16)),
+      'label' => $this->randomMachineName(),
       'revision' => FALSE
     ));
     $block_content_type->save();
@@ -209,8 +209,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test contact form to decouple looking for translate operations
     // link so this does not test more than necessary.
     $contact_form = entity_create('contact_category', array(
-      'id' => Unicode::strtolower($this->randomName(16)),
-      'label' => $this->randomName(),
+      'id' => Unicode::strtolower($this->randomMachineName(16)),
+      'label' => $this->randomMachineName(),
     ));
     $contact_form->save();
 
@@ -233,8 +233,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test content type to decouple looking for translate operations
     // link so this does not test more than necessary.
     $content_type = entity_create('node_type', array(
-      'type' => Unicode::strtolower($this->randomName(16)),
-      'name' => $this->randomName(),
+      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
     ));
     $content_type->save();
 
@@ -257,8 +257,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test format to decouple looking for translate operations
     // link so this does not test more than necessary.
     $filter_format = entity_create('filter_format', array(
-      'format' => Unicode::strtolower($this->randomName(16)),
-      'name' => $this->randomName(),
+      'format' => Unicode::strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
     ));
     $filter_format->save();
 
@@ -281,7 +281,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create a test shortcut to decouple looking for translate operations
     // link so this does not test more than necessary.
     $shortcut = entity_create('shortcut_set', array(
-      'id' => Unicode::strtolower($this->randomName(16)),
+      'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomString(),
     ));
     $shortcut->save();
@@ -304,7 +304,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doUserRoleListTest() {
     // Create a test role to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $role_id = Unicode::strtolower($this->randomName(16));
+    $role_id = Unicode::strtolower($this->randomMachineName(16));
     $this->drupalCreateRole(array(), $role_id);
 
     // Get the role listing.
@@ -361,7 +361,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
    */
   public function doResponsiveImageListTest() {
     $edit = array();
-    $edit['label'] = $this->randomName();
+    $edit['label'] = $this->randomMachineName();
     $edit['id'] = strtolower($edit['label']);
 
     $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
@@ -385,8 +385,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doFieldListTest() {
     // Create a base content type.
     $content_type = entity_create('node_type', array(
-      'type' => Unicode::strtolower($this->randomName(16)),
-      'name' => $this->randomName(),
+      'type' => Unicode::strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
     ));
     $content_type->save();
 

@@ -48,7 +48,7 @@ class DefaultViewsTest extends UITestBase {
 
     // Edit the view and change the title. Make sure that the new title is
     // displayed.
-    $new_title = $this->randomName(16);
+    $new_title = $this->randomMachineName(16);
     $edit = array('title' => $new_title);
     $this->drupalPostForm('admin/structure/views/nojs/display/glossary/page_1/title', $edit, t('Apply'));
     $this->drupalPostForm('admin/structure/views/view/glossary/edit/page_1', array(), t('Save'));
@@ -87,7 +87,7 @@ class DefaultViewsTest extends UITestBase {
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Duplicate'), '/glossary');
-    $random_name = strtolower($this->randomName());
+    $random_name = strtolower($this->randomMachineName());
     $this->drupalPostForm(NULL, array('id' => $random_name), t('Duplicate'));
     $this->assertUrl("admin/structure/views/view/$random_name", array(), 'The custom view name got saved.');
 

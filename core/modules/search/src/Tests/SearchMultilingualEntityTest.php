@@ -76,19 +76,19 @@ class SearchMultilingualEntityTest extends SearchTestBase {
       array(
         'title' => 'First node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       array(
         'title' => 'Second node this is the English title',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       array(
         'title' => 'Third node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
         'langcode' => 'en',
       ),
       // After the third node, we don't care what the settings are. But we
@@ -112,14 +112,14 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Add a single translation to the second node.
     $translation = $this->searchable_nodes[1]->addTranslation('hu', array('title' => 'Second node hu'));
-    $translation->body->value = $this->randomName(32);
+    $translation->body->value = $this->randomMachineName(32);
     $this->searchable_nodes[1]->save();
 
     // Add two translations to the third node.
     $translation = $this->searchable_nodes[2]->addTranslation('hu', array('title' => 'Third node this is the Hungarian title'));
-    $translation->body->value = $this->randomName(32);
+    $translation->body->value = $this->randomMachineName(32);
     $translation = $this->searchable_nodes[2]->addTranslation('sv', array('title' => 'Third node sv'));
-    $translation->body->value = $this->randomName(32);
+    $translation->body->value = $this->randomMachineName(32);
     $this->searchable_nodes[2]->save();
 
     // Verify that we have 8 nodes left to do.

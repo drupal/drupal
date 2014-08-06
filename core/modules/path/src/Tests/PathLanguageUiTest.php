@@ -43,7 +43,7 @@ class PathLanguageUiTest extends PathTestBase {
    * Tests that a language-neutral URL alias works.
    */
   function testLanguageNeutralUrl() {
-    $name = $this->randomName(8);
+    $name = $this->randomMachineName(8);
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
@@ -57,7 +57,7 @@ class PathLanguageUiTest extends PathTestBase {
    * Tests that a default language URL alias works.
    */
   function testDefaultLanguageUrl() {
-    $name = $this->randomName(8);
+    $name = $this->randomMachineName(8);
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
@@ -72,7 +72,7 @@ class PathLanguageUiTest extends PathTestBase {
    * Tests that a non-default language URL alias works.
    */
   function testNonDefaultUrl() {
-    $name = $this->randomName(8);
+    $name = $this->randomMachineName(8);
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;

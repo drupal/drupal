@@ -36,7 +36,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->vocabulary2 = $this->createVocabulary();
 
     // Set up a field and instance.
-    $this->field_name = drupal_strtolower($this->randomName());
+    $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
@@ -87,7 +87,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is displayed.');
     $edit = array(
       'user_id' => mt_rand(0, 10),
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$this->field_name}[]" => array($term1->id(), $term2->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -129,7 +129,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // Term 1 should still pass validation.
     $edit = array(
       'user_id' => mt_rand(0, 10),
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$this->field_name}[]" => array($term1->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

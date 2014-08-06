@@ -53,7 +53,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'datetime',
       'settings' => array('datetime_type' => 'date'),
@@ -102,7 +102,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value][date]" => $date->format($date_format),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -171,7 +171,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value][date]" => $date->format($date_format),
       "{$field_name}[0][value][time]" => $date->format($time_format),
     );
@@ -260,7 +260,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     );
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
@@ -290,7 +290,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Create a field storage with settings to validate.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'datetime',
       'settings' => array('datetime_type' => 'date'),

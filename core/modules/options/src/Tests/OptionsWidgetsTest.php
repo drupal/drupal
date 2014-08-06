@@ -110,7 +110,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     ));
     $entity->save();
     $entity_init = clone $entity;
@@ -167,7 +167,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     ));
     $entity->save();
     $entity_init = clone $entity;
@@ -257,7 +257,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     ));
     $entity->save();
     $entity_init = clone $entity;
@@ -356,7 +356,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
     ));
     $entity->save();
     $entity_init = clone $entity;

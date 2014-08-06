@@ -58,12 +58,12 @@ class BooleanFieldTest extends WebTestBase {
    * Tests boolean field.
    */
   function testBooleanField() {
-    $on = $this->randomName();
-    $off = $this->randomName();
-    $label = $this->randomName();
+    $on = $this->randomMachineName();
+    $off = $this->randomMachineName();
+    $label = $this->randomMachineName();
 
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomName());
+    $field_name = drupal_strtolower($this->randomMachineName());
     $this->field = FieldStorageConfig::create(array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
@@ -104,7 +104,7 @@ class BooleanFieldTest extends WebTestBase {
     // Submit and ensure it is accepted.
     $edit = array(
       'user_id' => 1,
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       "{$field_name}[value]" => 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

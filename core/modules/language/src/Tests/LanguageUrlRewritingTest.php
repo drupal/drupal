@@ -52,7 +52,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
   function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
     $non_existing = \Drupal::languageManager()->getDefaultLanguage();
-    $non_existing->id = $this->randomName();
+    $non_existing->id = $this->randomMachineName();
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
 
     // Check that URL rewriting is not applied to subrequests.
@@ -85,7 +85,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     // If the rewritten URL has not a language prefix we pick a random prefix so
     // we can always check the prefixed URL.
     $prefixes = language_negotiation_url_prefixes();
-    $stored_prefix = isset($prefixes[$language->id]) ? $prefixes[$language->id] : $this->randomName();
+    $stored_prefix = isset($prefixes[$language->id]) ? $prefixes[$language->id] : $this->randomMachineName();
     if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
       $prefix = $stored_prefix;
     }

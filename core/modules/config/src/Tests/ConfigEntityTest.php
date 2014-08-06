@@ -94,9 +94,9 @@ class ConfigEntityTest extends WebTestBase {
 
     // Verify properties on a newly created entity.
     $config_test = entity_create('config_test', $expected = array(
-      'id' => $this->randomName(),
+      'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
-      'style' => $this->randomName(),
+      'style' => $this->randomMachineName(),
     ));
     $this->assertTrue($config_test->uuid());
     $this->assertNotEqual($config_test->uuid(), $empty->uuid());
@@ -146,7 +146,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Test with a short ID.
     $id_length_config_test = entity_create('config_test', array(
-      'id' => $this->randomName(8),
+      'id' => $this->randomMachineName(8),
     ));
     try {
       $id_length_config_test->save();
@@ -160,7 +160,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Test with an ID of the maximum allowed length.
     $id_length_config_test = entity_create('config_test', array(
-      'id' => $this->randomName(static::MAX_ID_LENGTH),
+      'id' => $this->randomMachineName(static::MAX_ID_LENGTH),
     ));
     try {
       $id_length_config_test->save();
@@ -174,7 +174,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Test with an ID exeeding the maximum allowed length.
     $id_length_config_test = entity_create('config_test', array(
-      'id' => $this->randomName(static::MAX_ID_LENGTH + 1),
+      'id' => $this->randomMachineName(static::MAX_ID_LENGTH + 1),
     ));
     try {
       $status = $id_length_config_test->save();
@@ -204,7 +204,7 @@ class ConfigEntityTest extends WebTestBase {
     }
 
     // Verify that renaming the ID returns correct status and properties.
-    $ids = array($expected['id'], 'second_' . $this->randomName(4), 'third_' . $this->randomName(4));
+    $ids = array($expected['id'], 'second_' . $this->randomMachineName(4), 'third_' . $this->randomMachineName(4));
     for ($i = 1; $i < 3; $i++) {
       $old_id = $ids[$i - 1];
       $new_id = $ids[$i];
@@ -234,10 +234,10 @@ class ConfigEntityTest extends WebTestBase {
    * Tests CRUD operations through the UI.
    */
   function testCRUDUI() {
-    $id = strtolower($this->randomName());
-    $label1 = $this->randomName();
-    $label2 = $this->randomName();
-    $label3 = $this->randomName();
+    $id = strtolower($this->randomMachineName());
+    $label1 = $this->randomMachineName();
+    $label2 = $this->randomMachineName();
+    $label3 = $this->randomMachineName();
     $message_insert = format_string('%label configuration has been created.', array('%label' => $label1));
     $message_update = format_string('%label configuration has been updated.', array('%label' => $label2));
     $message_delete = format_string('%label configuration has been deleted.', array('%label' => $label2));
@@ -291,7 +291,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Rename the configuration entity's ID/machine name.
     $edit = array(
-      'id' => strtolower($this->randomName()),
+      'id' => strtolower($this->randomMachineName()),
       'label' => $label3,
     );
     $this->drupalPostForm("admin/structure/config_test/manage/$id", $edit, 'Save');

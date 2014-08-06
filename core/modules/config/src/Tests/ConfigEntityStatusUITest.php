@@ -28,10 +28,10 @@ class ConfigEntityStatusUITest extends WebTestBase {
    * Tests status operations.
    */
   function testCRUD() {
-    $id = strtolower($this->randomName());
+    $id = strtolower($this->randomMachineName());
     $edit = array(
       'id' => $id,
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
     );
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
 

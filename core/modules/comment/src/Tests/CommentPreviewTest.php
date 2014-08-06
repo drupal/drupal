@@ -42,7 +42,7 @@ class CommentPreviewTest extends CommentTestBase {
     // Login as web user and add a signature and a user picture.
     $this->drupalLogin($this->web_user);
     \Drupal::config('user.settings')->set('signatures', 1)->save();
-    $test_signature = $this->randomName();
+    $test_signature = $this->randomMachineName();
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $image = current($this->drupalGetTestFiles('image'));
     $edit['files[user_picture_0]'] = drupal_realpath($image->uri);
@@ -50,8 +50,8 @@ class CommentPreviewTest extends CommentTestBase {
 
     // As the web user, fill in the comment form and preview the comment.
     $edit = array();
-    $edit['subject[0][value]'] = $this->randomName(8);
-    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
@@ -83,8 +83,8 @@ class CommentPreviewTest extends CommentTestBase {
 
     $edit = array();
     $date = new DrupalDateTime('2008-03-02 17:23');
-    $edit['subject[0][value]'] = $this->randomName(8);
-    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
     $edit['name'] = $web_user->getUsername();
     $edit['date[date]'] = $date->format('Y-m-d');
     $edit['date[time]'] = $date->format('H:i:s');

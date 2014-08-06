@@ -23,7 +23,7 @@ class UserSaveTest extends WebTestBase {
     // User ID must be a number that is not in the database.
     $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
     $test_uid = $max_uid + mt_rand(1000, 1000000);
-    $test_name = $this->randomName();
+    $test_name = $this->randomMachineName();
 
     // Create the base user, based on drupalCreateUser().
     $user = entity_create('user', array(

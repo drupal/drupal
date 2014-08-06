@@ -44,7 +44,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     parent::setUp();
 
     $this->fieldStorageDefinition = array(
-      'name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
@@ -98,7 +98,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Check that the specified field exists.
     try {
-      $this->instanceDefinition['field_name'] = $this->randomName();
+      $this->instanceDefinition['field_name'] = $this->randomMachineName();
       entity_create('field_instance_config', $this->instanceDefinition)->save();
       $this->fail(t('Cannot create an instance of a non-existing field.'));
     }
@@ -131,9 +131,9 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // Check that basic changes are saved.
     $instance = entity_load('field_instance_config', 'entity_test.' . $this->instanceDefinition['bundle'] . '.' . $this->instanceDefinition['field_name']);
     $instance->required = !$instance->isRequired();
-    $instance->label = $this->randomName();
-    $instance->description = $this->randomName();
-    $instance->settings['test_instance_setting'] = $this->randomName();
+    $instance->label = $this->randomMachineName();
+    $instance->description = $this->randomMachineName();
+    $instance->settings['test_instance_setting'] = $this->randomMachineName();
     $instance->save();
 
     $instance_new = entity_load('field_instance_config', 'entity_test.' . $this->instanceDefinition['bundle'] . '.' . $this->instanceDefinition['field_name']);

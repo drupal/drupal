@@ -54,7 +54,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $value = '2014-01-01T20:00:00Z';
     $entity->field_datetime = $value;
-    $entity->name->value = $this->randomName();
+    $entity->name->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.
@@ -66,7 +66,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_datetime[0]->value, $value);
 
     // Verify changing the date value.
-    $new_value = $this->randomName();
+    $new_value = $this->randomMachineName();
     $entity->field_datetime->value = $new_value;
     $this->assertEqual($entity->field_datetime->value, $new_value);
 

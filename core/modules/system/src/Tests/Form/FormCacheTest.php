@@ -29,12 +29,12 @@ class FormCacheTest extends DrupalUnitTestBase {
     parent::setUp();
     $this->installSchema('system', array('key_value_expire'));
 
-    $this->form_build_id = $this->randomName();
+    $this->form_build_id = $this->randomMachineName();
     $this->form = array(
-      '#property' => $this->randomName(),
+      '#property' => $this->randomMachineName(),
     );
     $this->form_state = new FormState();
-    $this->form_state['example'] = $this->randomName();
+    $this->form_state['example'] = $this->randomMachineName();
   }
 
   /**
@@ -60,7 +60,7 @@ class FormCacheTest extends DrupalUnitTestBase {
     $this->assertTrue(empty($cached_form_state['example']));
 
     // Test that loading the cache with a different form_id fails.
-    $wrong_form_build_id = $this->randomName(9);
+    $wrong_form_build_id = $this->randomMachineName(9);
     $cached_form_state = new FormState();
     $this->assertFalse(form_get_cache($wrong_form_build_id, $cached_form_state), 'No form returned from cache');
     $this->assertTrue(empty($cached_form_state['example']), 'Cached form state was not loaded');
@@ -72,7 +72,7 @@ class FormCacheTest extends DrupalUnitTestBase {
   function testNoCacheToken() {
     $this->container->set('current_user', new UserSession(array('uid' => 0)));
 
-    $this->form_state['example'] = $this->randomName();
+    $this->form_state['example'] = $this->randomMachineName();
     form_set_cache($this->form_build_id, $this->form, $this->form_state);
 
     $cached_form_state = new FormState();

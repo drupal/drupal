@@ -43,7 +43,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITest {
   protected function getNewEntityValues($langcode) {
     $user = $this->drupalCreateUser();
     return array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'user_id' => $user->id(),
     ) + parent::getNewEntityValues($langcode);
   }

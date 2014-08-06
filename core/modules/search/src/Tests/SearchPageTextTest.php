@@ -34,7 +34,7 @@ class SearchPageTextTest extends SearchTestBase {
     $this->assertTitle($title, 'Search page title is correct');
 
     $edit = array();
-    $edit['keys'] = 'bike shed ' . $this->randomName();
+    $edit['keys'] = 'bike shed ' . $this->randomMachineName();
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
@@ -50,7 +50,7 @@ class SearchPageTextTest extends SearchTestBase {
 
     // Test that search keywords containing slashes are correctly loaded
     // from the GET params and displayed in the search form.
-    $arg = $this->randomName() . '/' . $this->randomName();
+    $arg = $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->drupalGet('search/node', array('query' => array('keys' => $arg)));
     $input = $this->xpath("//input[@id='edit-keys' and @value='{$arg}']");
     $this->assertFalse(empty($input), 'Search keys with a / are correctly set as the default value in the search box.');
@@ -61,7 +61,7 @@ class SearchPageTextTest extends SearchTestBase {
     $keys = array();
     for ($i = 0; $i < $limit + 1; $i++) {
       // Use a key of 4 characters to ensure we never generate 'AND' or 'OR'.
-      $keys[] = $this->randomName(4);
+      $keys[] = $this->randomMachineName(4);
       if ($i % 2 == 0) {
         $keys[] = 'OR';
       }
@@ -79,18 +79,18 @@ class SearchPageTextTest extends SearchTestBase {
 
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
-    $this->drupalPostForm('search/node', array('or' => $this->randomName() . ' ' . $this->randomName()), t('Advanced search'));
+    $this->drupalPostForm('search/node', array('or' => $this->randomMachineName() . ' ' . $this->randomMachineName()), t('Advanced search'));
     $this->assertNoText(t('Please enter some keywords'), 'With advanced OR keywords entered, no keywords message is not displayed on node page');
-    $this->drupalPostForm('search/node', array('phrase' => '"' . $this->randomName() . '" "' . $this->randomName() . '"'), t('Advanced search'));
+    $this->drupalPostForm('search/node', array('phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'), t('Advanced search'));
     $this->assertNoText(t('Please enter some keywords'), 'With advanced phrase entered, no keywords message is not displayed on node page');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
     // do not still see the message.
-    $this->drupalPostForm('search/node', array('keys' => $this->randomName(1)), t('Search'));
+    $this->drupalPostForm('search/node', array('keys' => $this->randomMachineName(1)), t('Search'));
     $this->assertText('You must include at least one positive keyword', 'Keyword message is displayed when searching for short word');
     $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
-    $this->drupalPostForm(NULL, array('keys' => $this->randomName()), t('Search'));
+    $this->drupalPostForm(NULL, array('keys' => $this->randomMachineName()), t('Search'));
     $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Test that if you search for a URL with .. in it, you still end up at

@@ -35,7 +35,7 @@ class FieldCustomTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Alter the text of the field to a random string.
-    $random = $this->randomName();
+    $random = $this->randomMachineName();
     $view->displayHandlers->get('default')->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',

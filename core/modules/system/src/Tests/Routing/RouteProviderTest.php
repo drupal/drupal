@@ -398,7 +398,7 @@ class RouteProviderTest extends UnitTestBase {
     }
     $this->assertTrue($exception_thrown, 'Random route was not found.');
 
-    $routes = $provider->getRoutesByNames(array('route_c', 'route_d', $this->randomName()));
+    $routes = $provider->getRoutesByNames(array('route_c', 'route_d', $this->randomMachineName()));
     $this->assertEqual(count($routes), 2, 'Only two valid routes found.');
     $this->assertEqual($routes['route_c']->getPath(), '/path/two');
     $this->assertEqual($routes['route_d']->getPath(), '/path/three');

@@ -46,9 +46,9 @@ class NodeAccessPagerTest extends WebTestBase {
         'entity_id' => $node->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
-        'subject' => $this->randomName(),
+        'subject' => $this->randomMachineName(),
         'comment_body' => array(
-          array('value' => $this->randomName()),
+          array('value' => $this->randomMachineName()),
         ),
         'status' => CommentInterface::PUBLISHED,
       ));

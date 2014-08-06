@@ -48,9 +48,9 @@ class UserAttributesTest extends WebTestBase {
     $user1 = $this->drupalCreateUser(array('access user profiles'));
 
     $authors = array(
-      $this->drupalCreateUser(array(), $this->randomName(30)),
-      $this->drupalCreateUser(array(), $this->randomName(20)),
-      $this->drupalCreateUser(array(), $this->randomName(5))
+      $this->drupalCreateUser(array(), $this->randomMachineName(30)),
+      $this->drupalCreateUser(array(), $this->randomMachineName(20)),
+      $this->drupalCreateUser(array(), $this->randomMachineName(5))
     );
 
     $this->drupalLogin($user1);

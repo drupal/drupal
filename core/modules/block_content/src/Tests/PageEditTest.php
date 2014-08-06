@@ -24,8 +24,8 @@ class PageEditTest extends BlockContentTestBase {
     $body_key = 'body[0][value]';
     // Create block to edit.
     $edit = array();
-    $edit['info[0][value]'] = drupal_strtolower($this->randomName(8));
-    $edit[$body_key] = $this->randomName(16);
+    $edit['info[0][value]'] = drupal_strtolower($this->randomMachineName(8));
+    $edit[$body_key] = $this->randomMachineName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the block exists in the database.
@@ -40,16 +40,16 @@ class PageEditTest extends BlockContentTestBase {
 
     // Edit the content of the block.
     $edit = array();
-    $edit[$title_key] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     // Stay on the current page, without reloading.
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Edit the same block, creating a new revision.
     $this->drupalGet("block/" . $block->id());
     $edit = array();
-    $edit['info[0][value]'] = $this->randomName(8);
-    $edit[$body_key] = $this->randomName(16);
+    $edit['info[0][value]'] = $this->randomMachineName(8);
+    $edit[$body_key] = $this->randomMachineName(16);
     $edit['revision'] = TRUE;
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

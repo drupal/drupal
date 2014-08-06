@@ -78,7 +78,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
   public function testUserTempStore() {
     // Create a key/value collection.
     $factory = new TempStoreFactory(new PhpSerialize(), Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
-    $collection = $this->randomName();
+    $collection = $this->randomMachineName();
 
     // Create two mock users.
     for ($i = 0; $i <= 1; $i++) {
@@ -91,7 +91,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
       $stores[$i] = $factory->get($collection, $users[$i]);
     }
 
-    $key = $this->randomName();
+    $key = $this->randomMachineName();
     // Test that setIfNotExists() succeeds only the first time.
     for ($i = 0; $i <= 1; $i++) {
       // setIfNotExists() should be TRUE the first time (when $i is 0) and

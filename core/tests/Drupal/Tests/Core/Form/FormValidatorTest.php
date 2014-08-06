@@ -469,7 +469,7 @@ class FormValidatorTest extends UnitTestCase {
         array(
           '#type' => 'textfield',
           '#maxlength' => 7,
-          '#value' => $this->randomName(8),
+          '#value' => $this->randomMachineName(8),
         ),
         String::format('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => 'Test', '%max' => '7', '%length' => 8)),
         FALSE,

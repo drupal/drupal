@@ -157,7 +157,7 @@ class RowTest extends UnitTestCase {
     $this->assertFalse($row->needsUpdate());
 
     // Set the same hash value and ensure it was not changed.
-    $random = $this->randomName();
+    $random = $this->randomMachineName();
     $test_id_map = array(
       'original_hash' => $random,
       'hash' => $random,
@@ -168,8 +168,8 @@ class RowTest extends UnitTestCase {
 
     // Set different has values to ensure it is marked as changed.
     $test_id_map = array(
-      'original_hash' => $this->randomName(),
-      'hash' => $this->randomName(),
+      'original_hash' => $this->randomMachineName(),
+      'hash' => $this->randomMachineName(),
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
     );
     $row->setIdMap($test_id_map);

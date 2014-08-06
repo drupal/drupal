@@ -42,7 +42,7 @@ class ThemeTest extends WebTestBase {
     // Ensure invalid theme settings form URLs return a proper 404.
     $this->drupalGet('admin/appearance/settings/bartik');
     $this->assertResponse(404, 'The theme settings form URL for a disabled theme could not be found.');
-    $this->drupalGet('admin/appearance/settings/' . $this->randomName());
+    $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
     $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
 
     // Specify a filesystem path to be used for the logo.

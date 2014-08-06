@@ -55,7 +55,7 @@ class BlockContentFieldTest extends BlockContentTestBase {
 
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'block_content',
       'type' => 'link',
       'cardinality' => 2,
@@ -84,7 +84,7 @@ class BlockContentFieldTest extends BlockContentTestBase {
     // Create a block.
     $this->drupalGet('block/add/link');
     $edit = array(
-      'info[0][value]' => $this->randomName(8),
+      'info[0][value]' => $this->randomMachineName(8),
       $this->fieldStorage->getName() . '[0][url]' => 'http://example.com',
       $this->fieldStorage->getName() . '[0][title]' => 'Example.com'
     );

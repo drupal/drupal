@@ -89,7 +89,7 @@ class BlockBaseTest extends UnitTestCase {
 
     $this->assertEquals(4, $conditions_bag->count(), "There are 4 condition plugins");
 
-    $instance_id = $this->randomName();
+    $instance_id = $this->randomMachineName();
     $pages = 'node/1';
     $condition_config = array('id' => 'request_path', 'pages' => $pages);
     $block_base->setVisibilityConfig($instance_id, $condition_config);

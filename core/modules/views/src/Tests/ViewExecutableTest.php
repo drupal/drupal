@@ -313,12 +313,12 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertEqual($view->generateHandlerId('test', $test_ids), 'test_2');
 
     // Test the getPath() method.
-    $path = $this->randomName();
+    $path = $this->randomMachineName();
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);
     $view->setDisplay('page_1');
     $this->assertEqual($view->getPath(), $path);
     // Test the override_path property override.
-    $override_path = $this->randomName();
+    $override_path = $this->randomMachineName();
     $view->override_path = $override_path;
     $this->assertEqual($view->getPath(), $override_path);
 

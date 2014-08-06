@@ -32,7 +32,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     foreach (array('aa', 'bb', 'cc') as $language_code) {
       $language = new Language(array(
         'id' => $language_code,
-        'name' => $this->randomName(),
+        'name' => $this->randomMachineName(),
       ));
       language_save($language);
     }
@@ -51,7 +51,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->assertField('edit-langcode', t('The language selector field was found on the page.'));
     // Submit the term.
     $edit = array(
-      'name[0][value]' => $this->randomName(),
+      'name[0][value]' => $this->randomMachineName(),
       'langcode' => 'aa',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

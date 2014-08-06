@@ -45,7 +45,7 @@ abstract class TrackerTestBase extends ViewTestBase {
     $this->drupalLogin($account);
 
     $this->node = $this->drupalCreateNode(array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'uid' => $account->id(),
       'status' => 1,
     ));
@@ -54,8 +54,8 @@ abstract class TrackerTestBase extends ViewTestBase {
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
-      'subject' => $this->randomName(),
-      'comment_body[' . LanguageInterface::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
+      'subject' => $this->randomMachineName(),
+      'comment_body[' . LanguageInterface::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomMachineName(20),
     ));
 
   }

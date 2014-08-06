@@ -83,10 +83,10 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $this->assertEqual($edits[1]->closing[0], $add_key . ': ' . $add_data, format_string("The staging value for key '%add_key' is '%add_data'.", array('%add_key' => $add_key, '%add_data' => $add_data)));
 
     // Test diffing a renamed config entity.
-    $test_entity_id = $this->randomName();
+    $test_entity_id = $this->randomMachineName();
     $test_entity = entity_create('config_test', array(
       'id' => $test_entity_id,
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
     ));
     $test_entity->save();
     $data = $active->read('config_test.dynamic.' . $test_entity_id);
@@ -99,7 +99,7 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $this->assertEqual(count($edits), 1, 'There is one item in the diff');
 
     // Rename the entity.
-    $new_test_entity_id = $this->randomName();
+    $new_test_entity_id = $this->randomMachineName();
     $test_entity->set('id', $new_test_entity_id);
     $test_entity->save();
 

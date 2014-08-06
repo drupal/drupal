@@ -39,10 +39,10 @@ class BlockContentSaveTest extends BlockContentTestBase {
     // Custom block ID must be a number that is not in the database.
     $max_id = db_query('SELECT MAX(id) FROM {block_content}')->fetchField();
     $test_id = $max_id + mt_rand(1000, 1000000);
-    $info = $this->randomName(8);
+    $info = $this->randomMachineName(8);
     $block_array = array(
       'info' => $info,
-      'body' => array('value' => $this->randomName(32)),
+      'body' => array('value' => $this->randomMachineName(32)),
       'type' => 'basic',
       'id' => $test_id
     );

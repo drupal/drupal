@@ -173,7 +173,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
-    $dom_id = $this->randomName(20);
+    $dom_id = $this->randomMachineName(20);
     $request->request->set('view_dom_id', $dom_id);
     $request->request->set('pager_element', '0');
 

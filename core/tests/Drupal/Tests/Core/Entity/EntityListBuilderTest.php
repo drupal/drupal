@@ -88,10 +88,10 @@ class EntityListBuilderTest extends UnitTestCase {
    * @covers \Drupal\Core\Entity\EntityListBuilder::getOperations
    */
   public function testGetOperations() {
-    $operation_name = $this->randomName();
+    $operation_name = $this->randomMachineName();
     $operations = array(
       $operation_name => array(
-        'title' => $this->randomName(),
+        'title' => $this->randomMachineName(),
       ),
     );
     $this->moduleHandler->expects($this->once())

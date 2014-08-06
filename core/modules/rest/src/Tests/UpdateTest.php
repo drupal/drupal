@@ -138,7 +138,7 @@ class UpdateTest extends RESTTestBase {
 
     // Try to send invalid data to trigger the entity validation constraints.
     // Send a UUID that is too long.
-    $entity->set('uuid', $this->randomName(129));
+    $entity->set('uuid', $this->randomMachineName(129));
     $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
     $response = $this->httpRequest($entity->getSystemPath(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
     $this->assertResponse(422);

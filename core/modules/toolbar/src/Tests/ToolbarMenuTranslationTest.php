@@ -62,7 +62,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     $this->assertEqual(count($xpath), 1, 'The menu item class ok before translation.');
 
     // Translate the menu item.
-    $menu_item_translated = $this->randomName();
+    $menu_item_translated = $this->randomMachineName();
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(

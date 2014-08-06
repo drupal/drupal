@@ -75,7 +75,7 @@ class AreaEntityTest extends ViewTestBase {
 
     $entities = array();
     for ($i = 0; $i < 3; $i++) {
-      $random_label = $this->randomName();
+      $random_label = $this->randomMachineName();
       $data = array('bundle' => 'entity_test', 'name' => $random_label);
       $entity_test = $this->container->get('entity.manager')->getStorage('entity_test')->create($data);
       $entity_test->save();

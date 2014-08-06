@@ -90,7 +90,7 @@ class NodeLanguageTest extends NodeTestBase {
       foreach (array('en', 'fr') as $langcode) {
         if (isset($this->node_titles[$langcode][$index])) {
           $translation = $node->addTranslation($langcode, array('title' => $this->node_titles[$langcode][$index]));
-          $translation->body->value = $this->randomName(32);
+          $translation->body->value = $this->randomMachineName(32);
         }
       }
       $node->save();

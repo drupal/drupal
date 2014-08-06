@@ -70,8 +70,8 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->editorId = $this->randomName();
-    $this->entityTypeId = $this->randomName();
+    $this->editorId = $this->randomMachineName();
+    $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())

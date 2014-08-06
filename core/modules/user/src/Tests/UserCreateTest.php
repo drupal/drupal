@@ -84,10 +84,10 @@ class UserCreateTest extends WebTestBase {
     // We create two users, notifying one and not notifying the other, to
     // ensure that the tests work in both cases.
     foreach (array(FALSE, TRUE) as $notify) {
-      $name = $this->randomName();
+      $name = $this->randomMachineName();
       $edit = array(
         'name' => $name,
-        'mail' => $this->randomName() . '@example.com',
+        'mail' => $this->randomMachineName() . '@example.com',
         'pass[pass1]' => $pass = $this->randomString(),
         'pass[pass2]' => $pass,
         'notify' => $notify,

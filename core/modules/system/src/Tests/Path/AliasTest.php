@@ -172,28 +172,28 @@ class AliasTest extends PathUnitTestBase {
 
     // Non-existing path roots should be NULL too. Use a length of 7 to avoid
     // possible conflict with random aliases below.
-    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertNull($whitelist->get($this->randomMachineName()));
 
     // Add an alias for user/1, user should get whitelisted now.
-    $aliasStorage->save('user/1', $this->randomName());
+    $aliasStorage->save('user/1', $this->randomMachineName());
     $aliasManager->cacheClear();
     $this->assertTrue($whitelist->get('user'));
     $this->assertNull($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertNull($whitelist->get($this->randomMachineName()));
 
     // Add an alias for admin, both should get whitelisted now.
-    $aliasStorage->save('admin/something', $this->randomName());
+    $aliasStorage->save('admin/something', $this->randomMachineName());
     $aliasManager->cacheClear();
     $this->assertTrue($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertNull($whitelist->get($this->randomMachineName()));
 
     // Remove the user alias again, whitelist entry should be removed.
     $aliasStorage->delete(array('source' => 'user/1'));
     $aliasManager->cacheClear();
     $this->assertNull($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertNull($whitelist->get($this->randomMachineName()));
 
     // Destruct the whitelist so that the caches are written.
     $whitelist->destruct();
@@ -205,7 +205,7 @@ class AliasTest extends PathUnitTestBase {
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
     $this->assertNull($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertNull($whitelist->get($this->randomMachineName()));
     $this->assertEqual($memoryCounterBackend->getCounter('get', 'path_alias_whitelist'), 1);
     $this->assertEqual($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
 

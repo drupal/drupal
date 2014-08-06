@@ -276,7 +276,7 @@ class HandlerTest extends ViewTestBase {
     $view = Views::getView('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
-    $view->addHandler('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
+    $view->addHandler('default', 'relationship', $this->randomMachineName(), $this->randomMachineName(), array(), 'broken_relationship');
     // Setup a valid relationship.
     $view->addHandler('default', 'relationship', 'comment_field_data', 'node', array('relationship' => 'cid'), 'valid_relationship');
     $view->initHandlers();
@@ -286,7 +286,7 @@ class HandlerTest extends ViewTestBase {
     $field->setRelationship();
     $this->assertFalse($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
 
-    $field->options['relationship'] = $this->randomName();
+    $field->options['relationship'] = $this->randomMachineName();
     $field->setRelationship();
     $this->assertFalse($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
 
@@ -328,8 +328,8 @@ class HandlerTest extends ViewTestBase {
 
     // Set another table/field combination and make sure there are new
     // placeholders.
-    $table = $handler->table = $this->randomName();
-    $field = $handler->field = $this->randomName();
+    $table = $handler->table = $this->randomMachineName();
+    $field = $handler->field = $this->randomMachineName();
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.

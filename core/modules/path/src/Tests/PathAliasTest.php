@@ -40,7 +40,7 @@ class PathAliasTest extends PathTestBase {
     // Create alias.
     $edit = array();
     $edit['source'] = 'node/' . $node1->id();
-    $edit['alias'] = $this->randomName(8);
+    $edit['alias'] = $this->randomMachineName(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Check the path alias whitelist cache.
@@ -71,7 +71,7 @@ class PathAliasTest extends PathTestBase {
     // Create alias.
     $edit = array();
     $edit['source'] = 'node/' . $node1->id();
-    $edit['alias'] = $this->randomName(8);
+    $edit['alias'] = $this->randomMachineName(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm that the alias works.
@@ -122,7 +122,7 @@ class PathAliasTest extends PathTestBase {
     // Create a really long alias.
     $edit = array();
     $edit['source'] = 'node/' . $node1->id();
-    $alias = $this->randomName(128);
+    $alias = $this->randomMachineName(128);
     $edit['alias'] = $alias;
     // The alias is shortened to 50 characters counting the elipsis.
     $truncated_alias = substr($alias, 0, 47);
@@ -141,7 +141,7 @@ class PathAliasTest extends PathTestBase {
 
     // Create alias.
     $edit = array();
-    $edit['path[0][alias]'] = $this->randomName(8);
+    $edit['path[0][alias]'] = $this->randomMachineName(8);
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
@@ -211,7 +211,7 @@ class PathAliasTest extends PathTestBase {
     // Create one node with a random alias.
     $node_one = $this->drupalCreateNode();
     $edit = array();
-    $edit['path[0][alias]'] = $this->randomName();
+    $edit['path[0][alias]'] = $this->randomMachineName();
     $this->drupalPostForm('node/' . $node_one->id() . '/edit', $edit, t('Save'));
 
     // Now create another node and try to set the same alias.

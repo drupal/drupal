@@ -34,7 +34,7 @@ class RedirectTest extends WebTestBase {
     // Test basic redirection.
     $edit = array(
       'redirection' => TRUE,
-      'destination' => $this->randomName(),
+      'destination' => $this->randomMachineName(),
     );
     $this->drupalPostForm($path, $edit, t('Submit'));
     $this->assertUrl($edit['destination'], array(), 'Basic redirection works.');
@@ -50,7 +50,7 @@ class RedirectTest extends WebTestBase {
     // Test redirection with query parameters.
     $edit = array(
       'redirection' => TRUE,
-      'destination' => $this->randomName(),
+      'destination' => $this->randomMachineName(),
     );
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
     $this->assertUrl($edit['destination'], array(), 'Redirection with query parameters works.');

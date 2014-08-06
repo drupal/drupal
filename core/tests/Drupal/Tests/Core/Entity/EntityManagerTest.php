@@ -985,8 +985,8 @@ class EntityManagerTest extends UnitTestCase {
   function testgetExtraFields() {
     $this->setUpEntityManager();
 
-    $entity_type_id = $this->randomName();
-    $bundle = $this->randomName();
+    $entity_type_id = $this->randomMachineName();
+    $bundle = $this->randomMachineName();
     $language_code = 'en';
     $hook_bundle_extra_fields = array(
       $entity_type_id => array(

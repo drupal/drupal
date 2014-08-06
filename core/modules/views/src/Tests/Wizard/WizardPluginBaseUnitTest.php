@@ -53,9 +53,9 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     $form = array();
     $form_state = new FormState();
     $form = $this->wizard->buildForm($form, $form_state);
-    $random_id = strtolower($this->randomName());
-    $random_label = $this->randomName();
-    $random_description = $this->randomName();
+    $random_id = strtolower($this->randomMachineName());
+    $random_label = $this->randomMachineName();
+    $random_description = $this->randomMachineName();
 
     // Add a new language and mark it as default.
     $language = new Language(array(

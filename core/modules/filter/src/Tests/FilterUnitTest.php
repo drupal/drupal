@@ -252,7 +252,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
 
     // Very long string hitting PCRE limits.
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
-    $source = $this->randomName($limit);
+    $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
     $success = $this->assertEqual($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
     if (!$success) {

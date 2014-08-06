@@ -88,7 +88,7 @@ class RssTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomMachineName();
     $edit[$this->field_name . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 

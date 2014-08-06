@@ -26,7 +26,7 @@ class BreakpointGroupAPITest extends BreakpointGroupTestBase {
    */
   public function testConfigName() {
     // Try an invalid sourceType.
-    $label = $this->randomName();
+    $label = $this->randomMachineName();
     $breakpoint_group = entity_create('breakpoint_group', array(
       'label' => $label,
       'name' => drupal_strtolower($label),

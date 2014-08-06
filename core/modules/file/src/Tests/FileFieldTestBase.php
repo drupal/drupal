@@ -139,7 +139,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
       'revision' => (string) (int) $new_revision,
     );
 

@@ -43,7 +43,7 @@ class FrontPageTest extends WebTestBase {
   public function testDrupalFrontPage() {
     // Create a promoted node to test the <title> tag on the front page view.
     $settings = array(
-      'title' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
       'promote' => 1,
     );
     $this->drupalCreateNode($settings);

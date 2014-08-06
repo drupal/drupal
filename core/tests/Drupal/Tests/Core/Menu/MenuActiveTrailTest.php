@@ -98,24 +98,24 @@ class MenuActiveTrailTest extends UnitTestCase {
     $empty_active_trail_cache_key = 'menu_trail.';
 
     // No active link is returned when zero links match the current route.
-    $data[] = array($request, array(), $this->randomName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, array(), $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
 
     // The first (and only) matching link is returned when one link matches the
     // current route.
-    $data[] = array($request, array('baby_llama_link_1' => $link_1), $this->randomName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
+    $data[] = array($request, array('baby_llama_link_1' => $link_1), $this->randomMachineName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
 
     // The first of multiple matching links is returned when multiple links
     // match the current route, where "first" is determined by sorting by key.
-    $data[] = array($request, array('baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2), $this->randomName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
+    $data[] = array($request, array('baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2), $this->randomMachineName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
 
     // No active link is returned in case of a 403.
     $request = new Request();
     $request->attributes->set('_exception_statuscode', 403);
-    $data[] = array($request, FALSE, $this->randomName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
 
     // No active link is returned when the route name is missing.
     $request = new Request();
-    $data[] = array($request, FALSE, $this->randomName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
 
     return $data;
   }

@@ -42,7 +42,7 @@ class FrontPageTest extends ViewTestBase {
    * Tests the frontpage.
    */
   public function testFrontPage() {
-    $site_name = $this->randomName();
+    $site_name = $this->randomMachineName();
     $this->container->get('config.factory')
       ->get('system.site')
       ->set('name', $site_name)
@@ -62,7 +62,7 @@ class FrontPageTest extends ViewTestBase {
     for ($i = 0; $i < 20; $i++) {
       $values = array();
       $values['type'] = 'article';
-      $values['title'] = $this->randomName();
+      $values['title'] = $this->randomMachineName();
       $values['promote'] = TRUE;
       $values['status'] = TRUE;
       // Test descending sort order.
@@ -89,7 +89,7 @@ class FrontPageTest extends ViewTestBase {
 
     $values = array();
     $values['type'] = 'article';
-    $values['title'] = $this->randomName();
+    $values['title'] = $this->randomMachineName();
     $values['status'] = TRUE;
     $values['promote'] = FALSE;
     $node = $this->nodeStorage->create($values);
@@ -98,7 +98,7 @@ class FrontPageTest extends ViewTestBase {
 
     $values['promote'] = TRUE;
     $values['status'] = FALSE;
-    $values['title'] = $this->randomName();
+    $values['title'] = $this->randomMachineName();
     $node = $this->nodeStorage->create($values);
     $node->save();
     $not_expected_nids[] = $node->id();
@@ -106,7 +106,7 @@ class FrontPageTest extends ViewTestBase {
     $values['promote'] = TRUE;
     $values['sticky'] = TRUE;
     $values['status'] = FALSE;
-    $values['title'] = $this->randomName();
+    $values['title'] = $this->randomMachineName();
     $node = $this->nodeStorage->create($values);
     $node->save();
     $not_expected_nids[] = $node->id();

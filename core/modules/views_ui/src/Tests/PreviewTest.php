@@ -78,13 +78,13 @@ class PreviewTest extends UITestBase {
 
     // Test feed preview.
     $view = array();
-    $view['label'] = $this->randomName(16);
-    $view['id'] = strtolower($this->randomName(16));
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
-    $view['page[title]'] = $this->randomName(16);
-    $view['page[path]'] = $this->randomName(16);
+    $view['page[title]'] = $this->randomMachineName(16);
+    $view['page[path]'] = $this->randomMachineName(16);
     $view['page[feed]'] = 1;
-    $view['page[feed_properties][path]'] = $this->randomName(16);
+    $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->clickLink(t('Feed'));
     $this->drupalPostForm(NULL, array(), t('Update preview'));

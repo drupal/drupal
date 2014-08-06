@@ -63,7 +63,7 @@ abstract class BlockContentTestBase extends WebTestBase {
    *   Created custom block.
    */
   protected function createBlockContent($title = FALSE, $bundle = 'basic') {
-    $title = ($title ? : $this->randomName());
+    $title = ($title ? : $this->randomMachineName());
     if ($block_content = entity_create('block_content', array(
       'info' => $title,
       'type' => $bundle,

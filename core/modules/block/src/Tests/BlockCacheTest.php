@@ -64,7 +64,7 @@ class BlockCacheTest extends WebTestBase {
     ));
 
     // Enable our test block. Set some content for it to display.
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normal_user);
     $this->drupalGet('');
@@ -72,7 +72,7 @@ class BlockCacheTest extends WebTestBase {
 
     // Change the content, but the cached copy should still be served.
     $old_content = $current_content;
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
     $this->assertText($old_content, 'Block is served from the cache.');
@@ -85,7 +85,7 @@ class BlockCacheTest extends WebTestBase {
 
     // Test whether the cached data is served for the correct users.
     $old_content = $current_content;
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogout();
     $this->drupalGet('');
@@ -112,14 +112,14 @@ class BlockCacheTest extends WebTestBase {
       'max_age' => 600,
     ));
 
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
 
     $old_content = $current_content;
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalLogout();
@@ -135,7 +135,7 @@ class BlockCacheTest extends WebTestBase {
       'max_age' => 0,
     ));
 
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     // If max_age = 0 has no effect, the next request would be cached.
@@ -143,7 +143,7 @@ class BlockCacheTest extends WebTestBase {
     $this->assertText($current_content, 'Block content displays.');
 
     // A cached copy should not be served.
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
     $this->assertText($current_content, 'Maximum age of zero prevents blocks from being cached.');
@@ -158,7 +158,7 @@ class BlockCacheTest extends WebTestBase {
       'contexts' => array('cache_context.user'),
     ));
 
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normal_user);
 
@@ -166,7 +166,7 @@ class BlockCacheTest extends WebTestBase {
     $this->assertText($current_content, 'Block content displays.');
 
     $old_content = $current_content;
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('');
@@ -190,14 +190,14 @@ class BlockCacheTest extends WebTestBase {
       'contexts' => array('cache_context.url'),
     ));
 
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('test-page');
     $this->assertText($current_content, 'Block content displays on the test page.');
 
     $old_content = $current_content;
-    $current_content = $this->randomName();
+    $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('user');

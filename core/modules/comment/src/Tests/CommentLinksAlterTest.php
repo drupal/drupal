@@ -28,8 +28,8 @@ class CommentLinksAlterTest extends CommentTestBase {
    */
   public function testCommentLinksAlter() {
     $this->drupalLogin($this->web_user);
-    $comment_text = $this->randomName();
-    $subject = $this->randomName();
+    $comment_text = $this->randomMachineName();
+    $subject = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $subject);
 
     $this->drupalGet('node/' . $this->node->id());

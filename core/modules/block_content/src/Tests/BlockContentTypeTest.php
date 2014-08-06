@@ -169,7 +169,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
           $this->clickLink('foo');
         }
         // Create a new block.
-        $edit = array('info[0][value]' => $this->randomName(8));
+        $edit = array('info[0][value]' => $this->randomMachineName(8));
         $this->drupalPostForm(NULL, $edit, t('Save'));
         $blocks = $storage->loadByProperties(array('info' => $edit['info[0][value]']));
         if (!empty($blocks)) {
@@ -190,7 +190,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/block/block-content');
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
-    $edit = array('info[0][value]' => $this->randomName(8));
+    $edit = array('info[0][value]' => $this->randomMachineName(8));
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage->loadByProperties(array('info' => $edit['info[0][value]']));
     if (!empty($blocks)) {

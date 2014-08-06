@@ -28,8 +28,8 @@ class CommentActionsTest extends CommentTestBase {
    */
   function testCommentPublishUnpublishActions() {
     $this->drupalLogin($this->web_user);
-    $comment_text = $this->randomName();
-    $subject = $this->randomName();
+    $comment_text = $this->randomMachineName();
+    $subject = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $subject);
 
     // Unpublish a comment.
@@ -48,11 +48,11 @@ class CommentActionsTest extends CommentTestBase {
    */
   function testCommentUnpublishByKeyword() {
     $this->drupalLogin($this->admin_user);
-    $keyword_1 = $this->randomName();
-    $keyword_2 = $this->randomName();
+    $keyword_1 = $this->randomMachineName();
+    $keyword_2 = $this->randomMachineName();
     $action = entity_create('action', array(
       'id' => 'comment_unpublish_by_keyword_action',
-      'label' => $this->randomName(),
+      'label' => $this->randomMachineName(),
       'type' => 'comment',
       'configuration' => array(
         'keywords' => array($keyword_1, $keyword_2),
@@ -61,7 +61,7 @@ class CommentActionsTest extends CommentTestBase {
     ));
     $action->save();
 
-    $comment = $this->postComment($this->node, $keyword_2, $this->randomName());
+    $comment = $this->postComment($this->node, $keyword_2, $this->randomMachineName());
 
     // Load the full comment so that status is available.
     $comment = Comment::load($comment->id());

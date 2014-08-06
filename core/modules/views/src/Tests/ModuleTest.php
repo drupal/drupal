@@ -50,8 +50,8 @@ class ModuleTest extends ViewUnitTestBase {
     $types = array('field', 'area', 'filter');
     foreach ($types as $type) {
       $item = array(
-        'table' => $this->randomName(),
-        'field' => $this->randomName(),
+        'table' => $this->randomMachineName(),
+        'field' => $this->randomMachineName(),
       );
       $handler = $this->container->get('plugin.manager.views.' . $type)->getHandler($item);
       $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));

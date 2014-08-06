@@ -68,9 +68,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
     // Create "Basic page" content.
     $langcode = language_get_default_langcode('node', 'page');
     $title_key = 'title[0][value]';
-    $title_value = $this->randomName(8);
+    $title_value = $this->randomMachineName(8);
     $body_key = 'body[0][value]';
-    $body_value = $this->randomName(16);
+    $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
     $edit = array();
@@ -87,7 +87,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $langcode = 'it';
     $this->drupalGet("node/{$node->id()}/edit");
     $edit = array(
-      $title_key => $this->randomName(8),
+      $title_key => $this->randomMachineName(8),
       'langcode' => $langcode,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -112,9 +112,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
     $title_key = 'title[0][value]';
-    $title_value = $this->randomName(8);
+    $title_value = $this->randomMachineName(8);
     $body_key = 'body[0][value]';
-    $body_value = $this->randomName(16);
+    $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
     $edit = array();

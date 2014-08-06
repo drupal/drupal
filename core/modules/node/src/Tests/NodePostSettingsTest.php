@@ -34,8 +34,8 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
@@ -51,8 +51,8 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit['title[0][value]'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.

@@ -199,8 +199,8 @@ class UserCancelTest extends WebTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Add a comment to the page.
-    $comment_subject = $this->randomName(8);
-    $comment_body = $this->randomName(8);
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
     $comment = entity_create('comment', array(
       'subject' => $comment_subject,
       'comment_body' => $comment_body,
@@ -314,8 +314,8 @@ class UserCancelTest extends WebTestBase {
 
     // Create comment.
     $edit = array();
-    $edit['subject[0][value]'] = $this->randomName(8);
-    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
 
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
     $this->drupalPostForm(NULL, array(), t('Save'));

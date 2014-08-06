@@ -78,7 +78,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $instance = 'instance' . $suffix;
     $instance_definition = 'instance_definition' . $suffix;
 
-    $this->fieldTestData->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
+    $this->fieldTestData->$field_name = drupal_strtolower($this->randomMachineName() . '_field_name' . $suffix);
     $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
       'name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
@@ -90,10 +90,10 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->fieldTestData->$instance_definition = array(
       'field_storage' => $this->fieldTestData->$field_storage,
       'bundle' => $bundle,
-      'label' => $this->randomName() . '_label',
-      'description' => $this->randomName() . '_description',
+      'label' => $this->randomMachineName() . '_label',
+      'description' => $this->randomMachineName() . '_description',
       'settings' => array(
-        'test_instance_setting' => $this->randomName(),
+        'test_instance_setting' => $this->randomMachineName(),
       ),
     );
     $this->fieldTestData->$instance = entity_create('field_instance_config', $this->fieldTestData->$instance_definition);
@@ -103,7 +103,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
       ->setComponent($this->fieldTestData->$field_name, array(
         'type' => 'test_field_widget',
         'settings' => array(
-          'test_widget_setting' => $this->randomName(),
+          'test_widget_setting' => $this->randomMachineName(),
         )
       ))
       ->save();

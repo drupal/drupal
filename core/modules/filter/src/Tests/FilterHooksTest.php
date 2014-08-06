@@ -31,7 +31,7 @@ class FilterHooksTest extends WebTestBase {
    */
   function testFilterHooks() {
     // Create content type, with underscores.
-    $type_name = 'test_' . strtolower($this->randomName());
+    $type_name = 'test_' . strtolower($this->randomMachineName());
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $node_permission = "create $type_name content";
 
@@ -39,9 +39,9 @@ class FilterHooksTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a text format.
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $edit = array();
-    $edit['format'] = drupal_strtolower($this->randomName());
+    $edit['format'] = drupal_strtolower($this->randomMachineName());
     $edit['name'] = $name;
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
@@ -58,10 +58,10 @@ class FilterHooksTest extends WebTestBase {
     $this->assertText('hook_filter_format_update invoked.');
 
     // Use the format created.
-    $title = $this->randomName(8);
+    $title = $this->randomMachineName(8);
     $edit = array();
     $edit['title[0][value]'] = $title;
-    $edit['body[0][value]'] = $this->randomName(32);
+    $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
     $this->drupalPostForm("node/add/{$type->type}", $edit, t('Save and publish'));
     $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)));

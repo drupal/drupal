@@ -52,20 +52,20 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
     $this->assertIdentical($storage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix()), $expected_id);
 
     // Create three entities, two with the same style.
-    $style = $this->randomName(8);
+    $style = $this->randomMachineName(8);
     for ($i = 0; $i < 2; $i++) {
       $entity = $this->storage->create(array(
-        'id' => $this->randomName(),
+        'id' => $this->randomMachineName(),
         'label' => $this->randomString(),
         'style' => $style,
       ));
       $entity->save();
     }
     $entity = $this->storage->create(array(
-      'id' => $this->randomName(),
+      'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
       // Use a different length for the entity to ensure uniqueness.
-      'style' => $this->randomName(9),
+      'style' => $this->randomMachineName(9),
     ));
     $entity->save();
 

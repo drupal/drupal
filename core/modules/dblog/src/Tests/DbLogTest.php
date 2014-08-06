@@ -222,7 +222,7 @@ class DbLogTest extends WebTestBase {
    */
   private function doUser() {
     // Set user variables.
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $pass = user_password();
     // Add a user using the form to generate an add user event (which is not
     // triggered by drupalCreateUser).
@@ -291,7 +291,7 @@ class DbLogTest extends WebTestBase {
     }
     $this->assertTrue($link, 'DBLog event was recorded: [delete user]');
     // Visit random URL (to generate page not found event).
-    $not_found_url = $this->randomName(60);
+    $not_found_url = $this->randomMachineName(60);
     $this->drupalGet($not_found_url);
     $this->assertResponse(404);
     // View the database log page-not-found report page.
@@ -377,16 +377,16 @@ class DbLogTest extends WebTestBase {
     switch ($type) {
       case 'forum':
         $content = array(
-          'title[0][value]' => $this->randomName(8),
+          'title[0][value]' => $this->randomMachineName(8),
           'taxonomy_forums' => array(1),
-          'body[0][value]' => $this->randomName(32),
+          'body[0][value]' => $this->randomMachineName(32),
         );
         break;
 
       default:
         $content = array(
-          'title[0][value]' => $this->randomName(8),
-          'body[0][value]' => $this->randomName(32),
+          'title[0][value]' => $this->randomMachineName(8),
+          'body[0][value]' => $this->randomMachineName(32),
         );
         break;
     }
@@ -404,7 +404,7 @@ class DbLogTest extends WebTestBase {
    */
   private function getContentUpdate($type) {
     $content = array(
-      'body[0][value]' => $this->randomName(32),
+      'body[0][value]' => $this->randomMachineName(32),
     );
     return $content;
   }
@@ -460,7 +460,7 @@ class DbLogTest extends WebTestBase {
     $type_names = array();
     $types = array();
     for ($i = 0; $i < 3; $i++) {
-      $type_names[] = $type_name = $this->randomName();
+      $type_names[] = $type_name = $this->randomMachineName();
       $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(

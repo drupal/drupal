@@ -80,7 +80,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $this->drupalGet('node/add/' . $this->referencing_type);
     $this->assertFieldByXPath('//input[@id="edit-test-field-0-target-id" and contains(@class, "form-autocomplete")]', NULL, 'The autocomplete input element appears.');
 
-    $new_title = $this->randomName();
+    $new_title = $this->randomMachineName();
 
     // Assert referenced node does not exist.
     $base_query = \Drupal::entityQuery('node');
@@ -93,7 +93,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $this->assertFalse($result, 'Referenced node does not exist yet.');
 
     $edit = array(
-      'title[0][value]' => $this->randomName(),
+      'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $new_title,
     );
     $this->drupalPostForm("node/add/$this->referencing_type", $edit, 'Save');

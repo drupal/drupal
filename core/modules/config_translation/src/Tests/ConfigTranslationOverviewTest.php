@@ -77,7 +77,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
 
     foreach ($labels as $label) {
       $test_entity = entity_create('config_test', array(
-        'id' => $this->randomName(),
+        'id' => $this->randomMachineName(),
         'label' => $label,
       ));
       $test_entity->save();

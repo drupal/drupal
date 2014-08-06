@@ -48,8 +48,8 @@ class CommentBlockTest extends CommentTestBase {
     // below.
     $timestamp = REQUEST_TIME;
     for ($i = 0; $i < 11; ++$i) {
-      $subject = ($i % 2) ? $this->randomName() : '';
-      $comments[$i] = $this->postComment($this->node, $this->randomName(), $subject);
+      $subject = ($i % 2) ? $this->randomMachineName() : '';
+      $comments[$i] = $this->postComment($this->node, $this->randomMachineName(), $subject);
       $comments[$i]->created->value = $timestamp--;
       $comments[$i]->save();
     }

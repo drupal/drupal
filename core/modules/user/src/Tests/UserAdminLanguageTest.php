@@ -170,7 +170,7 @@ class UserAdminLanguageTest extends WebTestBase {
   function addCustomLanguage() {
     $langcode = 'xx';
     // The English name for the language.
-    $name = $this->randomName(16);
+    $name = $this->randomMachineName(16);
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,

@@ -67,13 +67,13 @@ class TokenTest extends UnitTestCase {
     $token_info = array(
       'types' => array(
         'foo' => array(
-          'name' => $this->randomName(),
+          'name' => $this->randomMachineName(),
         ),
       ),
     );
 
     $language = $this->getMock('\Drupal\Core\Language\Language');
-    $language->id = $this->randomName();
+    $language->id = $this->randomMachineName();
 
     $this->languageManager->expects($this->once())
       ->method('getCurrentLanguage')

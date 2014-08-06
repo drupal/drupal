@@ -66,8 +66,8 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     if ($permissions) {
       // Create a new role and apply permissions to it.
       $role = entity_create('user_role', array(
-        'id' => strtolower($this->randomName(8)),
-        'label' => $this->randomName(8),
+        'id' => strtolower($this->randomMachineName(8)),
+        'label' => $this->randomMachineName(8),
       ));
       $role->save();
       user_role_grant_permissions($role->id(), $permissions);
@@ -75,7 +75,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     }
 
     $account = entity_create('user', $values + array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'status' => 1,
     ));
     $account->enforceIsNew();
