@@ -17,6 +17,9 @@ $config['system.logging']['error_level'] = 'verbose';
 $config['system.performance']['css']['preprocess'] = FALSE;
 $config['system.performance']['js']['preprocess'] = FALSE;
 
+// Disable the render cache, by using the Null cache back-end.
+$settings['cache']['bins']['render'] = 'cache.backend.null';
+
 /**
  * Enable access to rebuild.php.
  *
