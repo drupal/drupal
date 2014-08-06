@@ -1,7 +1,10 @@
-language.admin:
+drupal.language.admin:
   version: VERSION
   js:
     language.admin.js: {}
+  css:
+    theme:
+      css/language.admin.css: {}
   dependencies:
     - core/jquery
     - core/drupal

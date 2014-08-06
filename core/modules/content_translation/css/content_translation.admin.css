@@ -6,9 +6,6 @@
 #language-content-settings-form table .bundle {
   width: 24%;
 }
-#language-content-settings-form table td.bundle {
-  font-weight: bold;
-}
 #language-content-settings-form table .field {
   padding-left: 3em; /* LTR */
   width: 24%;
