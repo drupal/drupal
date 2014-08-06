@@ -50,8 +50,6 @@ class FormStateTest extends UnitTestCase {
     $redirect = new RedirectResponse('/example');
     $data[] = array(array('redirect' => $redirect), $redirect);
 
-    $data[] = array(array('redirect_route' => array('route_name' => 'test_route_a')), new Url('test_route_a', array(), array('absolute' => TRUE)));
-    $data[] = array(array('redirect_route' => array('route_name' => 'test_route_b', 'route_parameters' => array('key' => 'value'))), new Url('test_route_b', array('key' => 'value'), array('absolute' => TRUE)));
     $data[] = array(array('redirect_route' => new Url('test_route_b', array('key' => 'value'))), new Url('test_route_b', array('key' => 'value'), array('absolute' => TRUE)));
 
     $data[] = array(array('programmed' => TRUE), NULL);

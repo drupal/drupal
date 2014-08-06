@@ -40,7 +40,7 @@ class ConfigExportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect_route']['route_name'] = 'config.export_download';
+    $form_state->setRedirect('config.export_download');
   }
 
 }

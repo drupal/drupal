@@ -89,7 +89,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       );
     }
 
-    $form_state['redirect_route']['route_name'] = 'language.negotiation';
+    $form_state->setRedirect('language.negotiation');
 
     return parent::buildForm($form, $form_state);
   }

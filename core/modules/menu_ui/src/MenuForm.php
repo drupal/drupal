@@ -192,7 +192,7 @@ class MenuForm extends EntityForm {
       $this->logger('menu')->notice('Menu %label has been added.', array('%label' => $menu->label(), 'link' => $edit_link));
     }
 
-    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 
   /**

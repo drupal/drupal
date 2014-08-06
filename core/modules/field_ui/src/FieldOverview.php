@@ -478,7 +478,13 @@ class FieldOverview extends OverviewBase {
     if ($destinations) {
       $destination = drupal_get_destination();
       $destinations[] = $destination['destination'];
-      $form_state['redirect_route'] = FieldUI::getNextDestination($destinations, $form_state);
+      $next_destination = FieldUI::getNextDestination($destinations, $form_state);
+      if (isset($next_destination['route_name'])) {
+        $form_state->setRedirect($next_destination['route_name'], $next_destination['route_parameters'], $next_destination['options']);
+      }
+      else {
+        $form_state['redirect'] = $next_destination;
+      }
     }
     elseif (!$error) {
       drupal_set_message($this->t('Your settings have been saved.'));

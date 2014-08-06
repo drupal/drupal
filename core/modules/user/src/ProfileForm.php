@@ -65,10 +65,10 @@ class ProfileForm extends AccountForm {
       $query->remove('destination');
     }
     // We redirect from user/%/edit to user/%/cancel to make the tabs disappear.
-    $form_state['redirect_route'] = array(
-      'route_name' => 'user.cancel',
-      'route_parameters' => array('user' => $this->entity->id()),
-      'options' => array('query' => $destination),
+    $form_state->setRedirect(
+      'user.cancel',
+      array('user' => $this->entity->id()),
+      array('query' => $destination)
     );
   }
 

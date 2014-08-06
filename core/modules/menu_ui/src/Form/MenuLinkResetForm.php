@@ -106,7 +106,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->link = $this->menuLinkManager->resetLink($this->link->getPluginId());
     drupal_set_message($this->t('The menu link was reset to its default settings.'));
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
   /**

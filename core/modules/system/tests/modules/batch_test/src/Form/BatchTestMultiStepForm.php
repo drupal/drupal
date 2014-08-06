@@ -9,7 +9,6 @@ namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Generate form of id batch_test_multistep_form.
@@ -62,7 +61,7 @@ class BatchTestMultiStepForm extends FormBase {
       $form_state['rebuild'] = TRUE;
     }
 
-    $form_state['redirect_route'] = new Url('batch_test.redirect');
+    $form_state->setRedirect('batch_test.redirect');
   }
 
 }

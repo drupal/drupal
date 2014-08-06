@@ -66,7 +66,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
 
     drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
     $this->logger('taxonomy')->notice('Deleted term %name.', array('%name' => $this->entity->getName()));
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

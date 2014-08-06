@@ -179,7 +179,7 @@ abstract class SearchPageFormBase extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
 
-    $form_state['redirect_route']['route_name'] = 'search.settings';
+    $form_state->setRedirect('search.settings');
   }
 
 }

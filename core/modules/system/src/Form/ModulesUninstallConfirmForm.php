@@ -201,7 +201,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     $this->moduleHandler->uninstall($this->modules);
 
     drupal_set_message($this->t('The selected modules have been uninstalled.'));
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

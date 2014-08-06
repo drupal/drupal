@@ -91,7 +91,7 @@ class TranslateFilterForm extends TranslateFormBase {
         $_SESSION['locale_translate_filter'][$name] = $form_state['values'][$name];
       }
     }
-    $form_state['redirect_route']['route_name'] = 'locale.translate_page';
+    $form_state->setRedirect('locale.translate_page');
   }
 
   /**
@@ -99,7 +99,7 @@ class TranslateFilterForm extends TranslateFormBase {
    */
   public function resetForm(array &$form, FormStateInterface $form_state) {
     $_SESSION['locale_translate_filter'] = array();
-    $form_state['redirect_route']['route_name'] = 'locale.translate_page';
+    $form_state->setRedirect('locale.translate_page');
   }
 
 }

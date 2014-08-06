@@ -71,9 +71,7 @@ class MenuLinkContentDeleteForm extends ContentEntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('The menu link %title has been deleted.', $t_args));
     $this->logger->notice('Deleted menu link %title.', $t_args);
-    $form_state['redirect_route'] = array(
-      'route_name' => '<front>',
-    );
+    $form_state->setRedirect('<front>');
   }
 
 }

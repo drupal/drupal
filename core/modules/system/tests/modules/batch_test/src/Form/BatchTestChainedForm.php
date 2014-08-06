@@ -9,7 +9,6 @@ namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Generate form of id batch_test_chained_form.
@@ -65,7 +64,7 @@ class BatchTestChainedForm extends FormBase {
     $form_state['values']['value']++;
     batch_set(_batch_test_batch_1());
 
-    $form_state['redirect_route'] = new Url('batch_test.redirect');
+    $form_state->setRedirect('batch_test.redirect');
   }
 
   /**
@@ -78,7 +77,7 @@ class BatchTestChainedForm extends FormBase {
     $form_state['values']['value']++;
     batch_set(_batch_test_batch_2());
 
-    $form_state['redirect_route'] = new Url('batch_test.redirect');
+    $form_state->setRedirect('batch_test.redirect');
   }
 
   /**
@@ -90,7 +89,7 @@ class BatchTestChainedForm extends FormBase {
 
     $form_state['values']['value']++;
 
-    $form_state['redirect_route'] = new Url('batch_test.redirect');
+    $form_state->setRedirect('batch_test.redirect');
   }
 
   /**
@@ -103,7 +102,7 @@ class BatchTestChainedForm extends FormBase {
     $form_state['values']['value']++;
     batch_set(_batch_test_batch_3());
 
-    $form_state['redirect_route'] = new Url('batch_test.redirect');
+    $form_state->setRedirect('batch_test.redirect');
   }
 
 }

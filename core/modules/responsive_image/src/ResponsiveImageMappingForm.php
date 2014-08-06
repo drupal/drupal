@@ -131,15 +131,13 @@ class ResponsiveImageMappingForm extends EntityForm {
     // Redirect to edit form after creating a new mapping or after selecting
     // another breakpoint group.
     if (!$responsive_image_mapping->hasMappings()) {
-      $form_state['redirect_route'] = array(
-        'route_name' => 'entity.responsive_image_mapping.edit_form',
-        'route_parameters' => array(
-          'responsive_image_mapping' => $responsive_image_mapping->id(),
-        ),
+      $form_state->setRedirect(
+        'entity.responsive_image_mapping.edit_form',
+        array('responsive_image_mapping' => $responsive_image_mapping->id())
       );
     }
     else {
-      $form_state['redirect_route']['route_name'] = 'responsive_image.mapping_page';
+      $form_state->setRedirect('responsive_image.mapping_page');
     }
   }
 

@@ -43,7 +43,7 @@ class FeedItemsDeleteForm extends ContentEntityConfirmFormBase {
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->deleteItems();
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

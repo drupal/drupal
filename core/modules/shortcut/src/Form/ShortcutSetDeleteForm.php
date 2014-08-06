@@ -9,7 +9,6 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\shortcut\ShortcutSetStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
@@ -104,7 +103,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $form_state['redirect_route'] = new Url('shortcut.set_admin');
+    $form_state->setRedirect('shortcut.set_admin');
     drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $this->entity->label())));
   }
 

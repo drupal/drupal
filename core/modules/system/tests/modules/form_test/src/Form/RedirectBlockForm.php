@@ -9,7 +9,6 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Builds a simple form that redirects on submit.
@@ -39,6 +38,6 @@ class RedirectBlockForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect_route'] = new Url('form_test.route1', array(), array('query' => array('test1' => 'test2')));
+    $form_state->setRedirect('form_test.route1', array(), array('query' => array('test1' => 'test2')));
   }
 }

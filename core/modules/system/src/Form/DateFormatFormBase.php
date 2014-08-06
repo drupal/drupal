@@ -174,7 +174,7 @@ abstract class DateFormatFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function submit(array $form, FormStateInterface $form_state) {
-    $form_state['redirect_route']['route_name'] = 'system.date_format_list';
+    $form_state->setRedirect('system.date_format_list');
     $form_state['values']['pattern'] = trim($form_state['values']['date_format_pattern']);
 
     parent::submit($form, $form_state);

@@ -53,14 +53,16 @@ class EditForm extends PathFormBase {
    * Submits the delete form.
    */
   public function deleteSubmit(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect_route'] = new Url('path.delete', array(
+    $url = new Url('path.delete', array(
       'pid' => $form_state['values']['pid'],
     ));
 
     if ($this->getRequest()->query->has('destination')) {
-      $form_state['redirect_route']->setOption('query', drupal_get_destination());
+      $url->setOption('query', drupal_get_destination());
       $this->getRequest()->query->remove('destination');
     }
+
+    $form_state->setRedirectUrl($url);
   }
 
 }

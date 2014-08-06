@@ -90,6 +90,23 @@ interface FormStateInterface {
   public function setResponse(Response $response);
 
   /**
+   * Sets the redirect for the form.
+   *
+   * @param string $route_name
+   *   The name of the route
+   * @param array $route_parameters
+   *   (optional) An associative array of parameter names and values.
+   * @param array $options
+   *   (optional) An associative array of additional options. See
+   *   \Drupal\Core\Url for the available keys.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm()
+   */
+  public function setRedirect($route_name, array $route_parameters = array(), array $options = array());
+
+  /**
    * Sets the redirect URL for the form.
    *
    * @param \Drupal\Core\Url $url
@@ -99,7 +116,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm()
    */
-  public function setRedirect(Url $url);
+  public function setRedirectUrl(Url $url);
 
   /**
    * Gets the value to use for redirecting after the form has been executed.

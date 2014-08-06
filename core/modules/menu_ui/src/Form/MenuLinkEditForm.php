@@ -95,11 +95,9 @@ class MenuLinkEditForm extends FormBase {
     $link = $form['#plugin_form']->submitConfigurationForm($form, $form_state);
 
     drupal_set_message($this->t('The menu link has been saved.'));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'menu_ui.menu_edit',
-      'route_parameters' => array(
-        'menu' => $link->getMenuName(),
-      ),
+    $form_state->setRedirect(
+      'menu_ui.menu_edit',
+      array('menu' => $link->getMenuName())
     );
   }
 

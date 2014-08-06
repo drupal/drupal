@@ -103,7 +103,7 @@ class BlockContentTypeForm extends EntityForm {
       $logger->notice('Custom block type %label has been added.', array('%label' => $block_type->label(), 'link' => $edit_link));
     }
 
-    $form_state['redirect_route']['route_name'] = 'block_content.type_list';
+    $form_state->setRedirect('block_content.type_list');
   }
 
 }

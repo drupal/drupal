@@ -67,7 +67,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
       language_set_browser_drupal_langcode_mappings($mappings);
     }
 
-    $form_state['redirect_route']['route_name'] = 'language.negotiation_browser';
+    $form_state->setRedirect('language.negotiation_browser');
   }
 
 }

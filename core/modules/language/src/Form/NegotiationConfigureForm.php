@@ -174,7 +174,7 @@ class NegotiationConfigureForm extends FormBase {
       $this->blockManager->clearCachedDefinitions();
     }
 
-    $form_state['redirect_route']['route_name'] = 'language.negotiation';
+    $form_state->setRedirect('language.negotiation');
     drupal_set_message($this->t('Language negotiation configuration saved.'));
   }
 

@@ -78,7 +78,7 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
     $node_type_storage = $this->entityManager->getStorage('node_type');
     $node_type = $node_type_storage->load($this->entity->bundle())->label();
     drupal_set_message(t('@type %title has been deleted.', array('@type' => $node_type, '%title' => $this->entity->label())));
-    $form_state['redirect_route']['route_name'] = '<front>';
+    $form_state->setRedirect('<front>');
   }
 
 }

@@ -91,9 +91,10 @@ class SearchPageForm extends EntityForm {
     // parameters so that the search results generation is triggered.
     $query = $this->entity->getPlugin()->buildSearchUrlQuery($form_state);
     $route = 'search.view_' . $form_state['search_page_id'];
-    $form_state['redirect_route'] = array(
-      'route_name' => $route,
-      'options' => array('query' => $query),
+    $form_state->setRedirect(
+      $route,
+      array(),
+      array('query' => $query)
     );
   }
 }

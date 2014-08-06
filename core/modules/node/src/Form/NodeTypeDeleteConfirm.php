@@ -89,7 +89,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
     drupal_set_message(t('The content type %name has been deleted.', $t_args));
     $this->logger('node')->notice('Deleted content type %name.', $t_args);
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

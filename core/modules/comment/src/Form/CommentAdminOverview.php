@@ -281,9 +281,7 @@ class CommentAdminOverview extends FormBase {
       }
     }
     drupal_set_message($this->t('The update has been performed.'));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'comment.admin',
-    );
+    $form_state->setRedirect('comment.admin');
   }
 
 }

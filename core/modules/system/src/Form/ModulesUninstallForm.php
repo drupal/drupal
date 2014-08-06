@@ -153,7 +153,7 @@ class ModulesUninstallForm extends FormBase {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state['values']['uninstall'])) {
       drupal_set_message($this->t('No modules selected.'), 'error');
-      $form_state['redirect_route']['route_name'] = 'system.modules_uninstall';
+      $form_state->setRedirect('system.modules_uninstall');
     }
   }
 
@@ -168,6 +168,6 @@ class ModulesUninstallForm extends FormBase {
     $this->keyValueExpirable->setWithExpire($account, $uninstall, 60);
 
     // Redirect to the confirm form.
-    $form_state['redirect_route']['route_name'] = 'system.modules_uninstall_confirm';
+    $form_state->setRedirect('system.modules_uninstall_confirm');
   }
 }

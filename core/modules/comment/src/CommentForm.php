@@ -403,6 +403,6 @@ class CommentForm extends ContentEntityForm {
       drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject())), 'error');
       // Redirect the user to the entity they are commenting on.
     }
-    $form_state['redirect_route'] = $uri;
+    $form_state->setRedirectUrl($uri);
   }
 }

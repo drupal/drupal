@@ -453,7 +453,7 @@ class OverviewTerms extends FormBase {
   public function submitReset(array &$form, FormStateInterface $form_state) {
     /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
     $vocabulary = $form_state['taxonomy']['vocabulary'];
-    $form_state['redirect_route'] = $vocabulary->urlInfo('reset');
+    $form_state->setRedirectUrl($vocabulary->urlInfo('reset'));
   }
 
 }

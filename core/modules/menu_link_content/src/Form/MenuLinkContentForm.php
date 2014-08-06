@@ -363,11 +363,9 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
 
     if ($saved) {
       drupal_set_message($this->t('The menu link has been saved.'));
-      $form_state['redirect_route'] = array(
-        'route_name' => 'entity.menu_link_content.canonical',
-        'route_parameters' => array(
-          'menu_link_content' => $menu_link->id(),
-        ),
+      $form_state->setRedirect(
+        'entity.menu_link_content.canonical',
+        array('menu_link_content' => $menu_link->id())
       );
     }
     else {

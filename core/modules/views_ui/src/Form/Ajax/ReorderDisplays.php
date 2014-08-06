@@ -193,8 +193,9 @@ class ReorderDisplays extends ViewsFormBase {
 
     // Store in cache.
     $view->cacheSet();
-    $form_state['redirect_route'] = $view->urlInfo('edit-form');
-    $form_state['redirect_route']->setOption('fragment', 'views-tab-default');
+    $url = $view->urlInfo('edit-form')
+      ->setOption('fragment', 'views-tab-default');
+    $form_state->setRedirectUrl($url);
   }
 
 }

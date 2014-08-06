@@ -258,10 +258,10 @@ class MessageForm extends ContentEntityForm {
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
     if ($message->isPersonal() && $user->hasPermission('access user profiles')) {
-      $form_state['redirect_route'] = $message->getPersonalRecipient()->urlInfo();
+      $form_state->setRedirectUrl($message->getPersonalRecipient()->urlInfo());
     }
     else {
-      $form_state['redirect_route']['route_name'] = '<front>';
+      $form_state->setRedirect('<front>');
     }
     // Save the message. In core this is a no-op but should contrib wish to
     // implement message storage, this will make the task of swapping in a real

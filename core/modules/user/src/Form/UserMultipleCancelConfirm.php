@@ -199,7 +199,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         }
       }
     }
-    $form_state['redirect_route']['route_name'] = 'user.admin_account';
+    $form_state->setRedirect('user.admin_account');
   }
 
 }

@@ -74,7 +74,7 @@ class ShortcutSetForm extends EntityForm {
     else {
       drupal_set_message(t('Updated set name to %set-name.', array('%set-name' => $entity->label())));
     }
-    $form_state['redirect_route'] = $this->entity->urlInfo('customize-form');
+    $form_state->setRedirectUrl($this->entity->urlInfo('customize-form'));
   }
 
 }

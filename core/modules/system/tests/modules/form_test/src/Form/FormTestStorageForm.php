@@ -121,7 +121,7 @@ class FormTestStorageForm extends FormBase {
     if (isset($form_state['storage']['thing']['changed'])) {
       drupal_set_message("The thing has been changed.");
     }
-    $form_state['redirect_route']['route_name'] = '<front>';
+    $form_state->setRedirect('<front>');
   }
 
 }

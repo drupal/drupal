@@ -75,7 +75,7 @@ class ViewDuplicateForm extends ViewFormBase {
     $this->entity->save();
 
     // Redirect the user to the view admin form.
-    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
     return $this->entity;
   }
 

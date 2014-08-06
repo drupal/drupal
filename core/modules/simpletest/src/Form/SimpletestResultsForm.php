@@ -266,7 +266,7 @@ class SimpletestResultsForm extends FormBase {
     }
 
     if (!$classes) {
-      $form_state['redirect_route']['route_name'] = 'simpletest.test_form';
+      $form_state->setRedirect('simpletest.test_form');
       return;
     }
 
@@ -283,7 +283,9 @@ class SimpletestResultsForm extends FormBase {
     $simpletest_test_form = new SimpletestTestForm();
     $simpletest_test_form->buildForm($form_execute, $form_state_execute);
     $simpletest_test_form->submitForm($form_execute, $form_state_execute);
-    $form_state['redirect_route'] = $form_state_execute['redirect_route'];
+    if ($redirect = $form_state_execute->getRedirect()) {
+      $form_state->setRedirectUrl($redirect);
+    }
   }
 
   /**

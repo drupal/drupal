@@ -201,7 +201,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
  */
 function field_ui_form_node_type_form_submit($form, FormStateInterface $form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('node', $form_state['values']['type'])) {
-    $form_state['redirect_route'] = $route_info;
+    $form_state->setRedirectUrl($route_info);
   }
 }
 

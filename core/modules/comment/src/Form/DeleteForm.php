@@ -53,7 +53,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
     drupal_set_message($this->t('The comment and all its replies have been deleted.'));
     $this->logger('content')->notice('Deleted comment @cid and its replies.', array('@cid' => $this->entity->id()));
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

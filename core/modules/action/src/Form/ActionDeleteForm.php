@@ -46,7 +46,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
     $this->logger('user')->notice('Deleted action %aid (%action)', array('%aid' => $this->entity->id(), '%action' => $this->entity->label()));
     drupal_set_message($this->t('Action %action was deleted', array('%action' => $this->entity->label())));
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

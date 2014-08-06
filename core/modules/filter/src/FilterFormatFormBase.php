@@ -258,7 +258,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       }
     }
 
-    $form_state['redirect_route']['route_name'] = 'filter.admin_overview';
+    $form_state->setRedirect('filter.admin_overview');
 
     return $this->entity;
   }

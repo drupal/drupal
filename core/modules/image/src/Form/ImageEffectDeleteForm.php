@@ -74,7 +74,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->imageStyle->deleteImageEffect($this->imageEffect);
     drupal_set_message($this->t('The image effect %name has been deleted.', array('%name' => $this->imageEffect->label())));
-    $form_state['redirect_route'] = $this->imageStyle->urlInfo('edit-form');
+    $form_state->setRedirectUrl($this->imageStyle->urlInfo('edit-form'));
   }
 
 }

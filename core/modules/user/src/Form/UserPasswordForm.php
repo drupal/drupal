@@ -138,7 +138,7 @@ class UserPasswordForm extends FormBase {
       drupal_set_message($this->t('Further instructions have been sent to your email address.'));
     }
 
-    $form_state['redirect_route']['route_name'] = 'user.page';
+    $form_state->setRedirect('user.page');
   }
 
 }

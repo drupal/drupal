@@ -194,7 +194,7 @@ class NodeTypeForm extends EntityForm {
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 
-    $form_state['redirect_route']['route_name'] = 'node.overview_types';
+    $form_state->setRedirect('node.overview_types');
   }
 
 }

@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\AliasStorageInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -170,7 +169,7 @@ abstract class PathFormBase extends FormBase {
     $this->aliasStorage->save($source, $alias, $langcode, $pid);
 
     drupal_set_message($this->t('The alias has been saved.'));
-    $form_state['redirect_route'] = new Url('path.admin_overview');
+    $form_state->setRedirect('path.admin_overview');
   }
 
 }

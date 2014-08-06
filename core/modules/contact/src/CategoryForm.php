@@ -120,7 +120,7 @@ class CategoryForm extends EntityForm {
         ->save();
     }
 
-    $form_state['redirect_route']['route_name'] = 'contact.category_list';
+    $form_state->setRedirect('contact.category_list');
   }
 
 }

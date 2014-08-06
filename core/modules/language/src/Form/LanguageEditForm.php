@@ -56,7 +56,7 @@ class LanguageEditForm extends LanguageFormBase {
     $language->direction = $form_state['values']['direction'];
     language_save($language);
 
-    $form_state['redirect_route']['route_name'] = 'language.admin_overview';
+    $form_state->setRedirect('language.admin_overview');
   }
 
 }

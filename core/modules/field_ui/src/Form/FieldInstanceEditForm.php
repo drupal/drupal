@@ -196,14 +196,14 @@ class FieldInstanceEditForm extends FormBase {
     if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
       $request->query->remove('destinations');
       if (isset($next_destination['route_name'])) {
-        $form_state['redirect_route'] = $next_destination;
+        $form_state->setRedirect($next_destination['route_name'], $next_destination['route_parameters'], $next_destination['options']);
       }
       else {
         $form_state['redirect'] = $next_destination;
       }
     }
     else {
-      $form_state['redirect_route'] = FieldUI::getOverviewRouteInfo($this->instance->entity_type, $this->instance->bundle);
+      $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->instance->entity_type, $this->instance->bundle));
     }
   }
 
@@ -218,15 +218,13 @@ class FieldInstanceEditForm extends FormBase {
       $request->query->remove('destination');
     }
     $entity_type = $this->entityManager->getDefinition($this->instance->entity_type);
-    $form_state['redirect_route'] = array(
-      'route_name' => 'field_ui.delete_' . $this->instance->entity_type,
-      'route_parameters' => array(
+    $form_state->setRedirect(
+      'field_ui.delete_' . $this->instance->entity_type,
+      array(
         $entity_type->getBundleEntityType() => $this->instance->bundle,
         'field_instance_config' => $this->instance->id(),
       ),
-      'options' => array(
-        'query' => $destination,
-      ),
+      array('query' => $destination)
     );
   }
 

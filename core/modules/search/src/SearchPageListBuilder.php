@@ -351,7 +351,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function searchAdminReindexSubmit(array &$form, FormStateInterface $form_state) {
     // Send the user to the confirmation page.
-    $form_state['redirect_route']['route_name'] = 'search.reindex_confirm';
+    $form_state->setRedirect('search.reindex_confirm');
   }
 
   /**
@@ -367,11 +367,9 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    * Form submission handler for adding a new search page.
    */
   public function submitAddSearchPage(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'search.add_type',
-      'route_parameters' => array(
-        'search_plugin_id' => $form_state['values']['search_type'],
-      ),
+    $form_state->setRedirect(
+      'search.add_type',
+      array('search_plugin_id' => $form_state['values']['search_type'])
     );
   }
 

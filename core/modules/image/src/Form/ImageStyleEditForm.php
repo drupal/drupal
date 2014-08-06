@@ -186,15 +186,13 @@ class ImageStyleEditForm extends ImageStyleFormBase {
 
     // Load the configuration form for this option.
     if (is_subclass_of($effect['class'], '\Drupal\image\ConfigurableImageEffectInterface')) {
-      $form_state['redirect_route'] = array(
-        'route_name' => 'image.effect_add_form',
-        'route_parameters' => array(
+      $form_state->setRedirect(
+        'image.effect_add_form',
+        array(
           'image_style' => $this->entity->id(),
           'image_effect' => $form_state['values']['new'],
         ),
-        'options' => array(
-          'query' => array('weight' => $form_state['values']['weight']),
-        ),
+        array('query' => array('weight' => $form_state['values']['weight']))
       );
     }
     // If there's no form, immediately add the image effect.

@@ -75,7 +75,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message(t('Removed date format %format.', array('%format' => $this->entity->label())));
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

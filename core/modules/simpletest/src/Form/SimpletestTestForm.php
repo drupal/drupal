@@ -215,11 +215,9 @@ class SimpletestTestForm extends FormBase {
     }
     if (!empty($tests_list)) {
       $test_id = simpletest_run_tests($tests_list, 'drupal');
-      $form_state['redirect_route'] = array(
-        'route_name' => 'simpletest.result_form',
-        'route_parameters' => array(
-          'test_id' => $test_id,
-        ),
+      $form_state->setRedirect(
+        'simpletest.result_form',
+        array('test_id' => $test_id)
       );
     }
   }

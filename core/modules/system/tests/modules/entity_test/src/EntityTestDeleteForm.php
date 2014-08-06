@@ -39,7 +39,7 @@ class EntityTestDeleteForm extends ContentEntityConfirmFormBase {
     $entity = $this->entity;
     $entity->delete();
     drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId())));
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

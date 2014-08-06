@@ -78,7 +78,7 @@ abstract class ImageStyleFormBase extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
-    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 
 }

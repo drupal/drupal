@@ -65,7 +65,7 @@ class ReindexConfirm extends ConfirmFormBase {
     if ($form['confirm']) {
       search_reindex();
       drupal_set_message($this->t('The index will be rebuilt.'));
-      $form_state['redirect_route'] = $this->getCancelUrl();
+      $form_state->setRedirectUrl($this->getCancelUrl());
     }
   }
 }

@@ -242,9 +242,9 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     }
     $config_factory->setOverrideState($old_state);
 
-    $form_state['redirect_route'] = array(
-      'route_name' => $this->mapper->getOverviewRoute(),
-      'route_parameters' => $this->mapper->getOverviewRouteParameters(),
+    $form_state->setRedirect(
+      $this->mapper->getOverviewRoute(),
+      $this->mapper->getOverviewRouteParameters()
     );
   }
 

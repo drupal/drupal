@@ -449,15 +449,13 @@ class NodeForm extends ContentEntityForm {
       $form_state['values']['nid'] = $node->id();
       $form_state['nid'] = $node->id();
       if ($node->access('view')) {
-        $form_state['redirect_route'] = array(
-          'route_name' => 'node.view',
-          'route_parameters' => array(
-            'node' => $node->id(),
-          ),
+        $form_state->setRedirect(
+          'node.view',
+          array('node' => $node->id())
         );
       }
       else {
-        $form_state['redirect_route']['route_name'] = '<front>';
+        $form_state->setRedirect('<front>');
       }
     }
     else {

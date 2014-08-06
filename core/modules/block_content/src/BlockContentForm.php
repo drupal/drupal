@@ -215,16 +215,16 @@ class BlockContentForm extends ContentEntityForm {
         if (!$theme = $block->getTheme()) {
           $theme = $this->config('system.theme')->get('default');
         }
-        $form_state['redirect_route'] = array(
-          'route_name' => 'block.admin_add',
-          'route_parameters' => array(
+        $form_state->setRedirect(
+          'block.admin_add',
+          array(
             'plugin_id' => 'block_content:' . $block->uuid(),
             'theme' => $theme,
-          ),
+          )
         );
       }
       else {
-        $form_state['redirect_route']['route_name'] = 'block_content.list';
+        $form_state->setRedirect('block_content.list');
       }
     }
     else {

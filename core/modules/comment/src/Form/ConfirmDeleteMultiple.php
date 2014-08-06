@@ -108,7 +108,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
 
     if (!$comment_counter) {
       drupal_set_message($this->t('There do not appear to be any comments to delete, or your selected comment was deleted by another administrator.'));
-      $form_state['redirect_route']['route_name'] = 'comment.admin';
+      $form_state->setRedirect('comment.admin');
     }
 
     return parent::buildForm($form, $form_state);
@@ -124,7 +124,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
       $this->logger('content')->notice('Deleted @count comments.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

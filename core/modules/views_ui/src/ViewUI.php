@@ -302,7 +302,7 @@ class ViewUI implements ViewStorageInterface {
       $this->cacheSet();
     }
 
-    $form_state['redirect_route'] = $this->urlInfo('edit-form');
+    $form_state->setRedirectUrl($this->urlInfo('edit-form'));
   }
 
   /**

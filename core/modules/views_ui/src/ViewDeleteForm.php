@@ -46,7 +46,7 @@ class ViewDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('View %name deleted',array('%name' => $this->entity->label())));
 
-    $form_state->setRedirect($this->getCancelUrl());
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

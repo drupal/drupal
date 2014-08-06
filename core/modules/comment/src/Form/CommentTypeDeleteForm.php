@@ -143,7 +143,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $form_state['redirect_route']['route_name'] = 'comment.type_list';
+    $form_state->setRedirect('comment.type_list');
     drupal_set_message($this->t('Comment type %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger->notice('comment type %label has been deleted.', array('%label' => $this->entity->label()));
   }

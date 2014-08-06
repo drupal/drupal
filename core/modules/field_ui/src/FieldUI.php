@@ -48,6 +48,9 @@ class FieldUI {
     $next_destination = array_shift($destinations);
     if (is_array($next_destination)) {
       $next_destination['options']['query']['destinations'] = $destinations;
+      $next_destination += array(
+        'route_parameters' => array(),
+      );
     }
     else {
       $options = UrlHelper::parse($next_destination);

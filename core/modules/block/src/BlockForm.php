@@ -181,14 +181,12 @@ class BlockForm extends EntityForm {
     $entity->save();
 
     drupal_set_message($this->t('The block configuration has been saved.'));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'block.admin_display_theme',
-      'route_parameters' => array(
+    $form_state->setRedirect(
+      'block.admin_display_theme',
+      array(
         'theme' => $form_state['values']['theme'],
       ),
-      'options' => array(
-        'query' => array('block-placement' => drupal_html_class($this->entity->id()))
-      ),
+      array('query' => array('block-placement' => drupal_html_class($this->entity->id())))
     );
   }
 

@@ -108,11 +108,13 @@ class UserPasswordResetForm extends FormBase {
     // Let the user's password be changed without the current password check.
     $token = Crypt::randomBytesBase64(55);
     $_SESSION['pass_reset_' . $user->id()] = $token;
-    $form_state['redirect_route']['route_name'] = 'user.edit';
-    $form_state['redirect_route']['route_parameters'] = array('user' => $user->id());
-    $form_state['redirect_route']['options'] = array(
-      'query' => array('pass-reset-token' => $token),
-      'absolute' => TRUE,
+    $form_state->setRedirect(
+      'user.edit',
+      array('user' => $user->id()),
+      array(
+        'query' => array('pass-reset-token' => $token),
+        'absolute' => TRUE,
+      )
     );
   }
 

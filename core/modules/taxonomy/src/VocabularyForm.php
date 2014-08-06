@@ -143,13 +143,13 @@ class VocabularyForm extends EntityForm {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
         $this->logger('taxonomy')->notice('Created new vocabulary %name.', array('%name' => $vocabulary->name, 'link' => $edit_link));
-        $form_state['redirect_route'] = $vocabulary->urlInfo('overview-form');
+        $form_state->setRedirectUrl($vocabulary->urlInfo('overview-form'));
         break;
 
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
         $this->logger('taxonomy')->notice('Updated vocabulary %name.', array('%name' => $vocabulary->name, 'link' => $edit_link));
-        $form_state['redirect_route']['route_name'] = 'taxonomy.vocabulary_list';
+        $form_state->setRedirect('taxonomy.vocabulary_list');
         break;
     }
 

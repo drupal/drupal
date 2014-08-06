@@ -92,7 +92,7 @@ class ForumForm extends TermForm {
         break;
     }
 
-    $form_state['redirect_route']['route_name'] = 'forum.overview';
+    $form_state->setRedirect('forum.overview');
     return $term;
   }
 

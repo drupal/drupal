@@ -152,7 +152,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       drupal_set_message($this->t('The configuration options have been saved.'));
     }
 
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }
