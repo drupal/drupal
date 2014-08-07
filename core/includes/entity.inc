@@ -314,25 +314,6 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
 }
 
 /**
- * Returns the entity access controller for the given entity type.
- *
- * @param string $entity_type
- *   The type of the entity.
- *
- * @return \Drupal\Core\Entity\EntityAccessControllerInterface
- *   An entity access controller instance.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getAccessController().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::entityManager()->getAccessController().
- */
-function entity_access_controller($entity_type) {
-  return \Drupal::entityManager()
-    ->getAccessController($entity_type);
-}
-
-/**
  * Returns the render array for an entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity

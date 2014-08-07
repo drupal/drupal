@@ -299,10 +299,10 @@ use Drupal\Core\Render\Element;
  *     the content. Configuration translation is handled automatically by the
  *     Configuration Translation module, without the need of a controller class.
  *   - access: If your configuration entity has complex permissions, you might
- *     need an access controller, implementing
- *     \Drupal\Core\Entity\EntityAccessControllerInterface, but most entities
+ *     need an access control handling, implementing
+ *     \Drupal\Core\Entity\EntityAccessControlHandlerInterface, but most entities
  *     can just use the 'admin_permission' annotation instead. Note that if you
- *     are creating your own access controller, you should override the
+ *     are creating your own access control handler, you should override the
  *     checkAccess() and checkCreateAccess() methods, not access().
  *   - storage: A class implementing
  *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
@@ -478,7 +478,7 @@ use Drupal\Core\Render\Element;
  * The interface related to access checking in entities and fields is
  * \Drupal\Core\Access\AccessibleInterface.
  *
- * The default entity access controller invokes two hooks while checking
+ * The default entity access control handler invokes two hooks while checking
  * access on a single entity: hook_entity_access() is invoked first, and
  * then hook_ENTITY_TYPE_access() (where ENTITY_TYPE is the machine name
  * of the entity type). If no module returns a TRUE or FALSE value from
@@ -517,7 +517,7 @@ use Drupal\Core\Render\Element;
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
  *   deny access.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
  * @see hook_ENTITY_TYPE_access()
  *
@@ -543,7 +543,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
  *   deny access.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
  * @see hook_entity_access()
  *
@@ -565,7 +565,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
  *   deny access.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_access()
  * @see hook_ENTITY_TYPE_create_access()
  *
@@ -587,7 +587,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
  *   deny access.
  *
- * @see \Drupal\Core\Entity\EntityAccessController
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_access()
  * @see hook_entity_create_access()
  *
@@ -1799,7 +1799,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  * Control access to fields.
  *
  * This hook is invoked from
- * \Drupal\Core\Entity\EntityAccessController::fieldAccess() to let modules
+ * \Drupal\Core\Entity\EntityAccessControlHandler::fieldAccess() to let modules
  * grant or deny operations on fields.
  *
  * @param string $operation

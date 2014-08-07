@@ -20,7 +20,7 @@ use Drupal\views\ViewStorageInterface;
  *   id = "view",
  *   label = @Translation("View"),
  *   controllers = {
- *     "access" = "Drupal\views\ViewAccessController"
+ *     "access" = "Drupal\views\ViewAccessControlHandler"
  *   },
  *   admin_permission = "administer views",
  *   entity_keys = {

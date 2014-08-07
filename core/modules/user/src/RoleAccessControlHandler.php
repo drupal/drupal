@@ -2,19 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\user\RoleAccessController.
+ * Contains \Drupal\user\RoleAccessControlHandler.
  */
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access controller for the user_role entity type.
+ * Defines the access control handler for the user role entity type.
+ *
+ * @see \Drupal\user\Entity\Role
  */
-class RoleAccessController extends EntityAccessController {
+class RoleAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

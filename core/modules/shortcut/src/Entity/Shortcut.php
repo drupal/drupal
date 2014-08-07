@@ -22,7 +22,7 @@ use Drupal\shortcut\ShortcutInterface;
  *   id = "shortcut",
  *   label = @Translation("Shortcut link"),
  *   controllers = {
- *     "access" = "Drupal\shortcut\ShortcutAccessController",
+ *     "access" = "Drupal\shortcut\ShortcutAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutForm",
  *       "add" = "Drupal\shortcut\ShortcutForm",

@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\TermAccessController.
+ * Contains \Drupal\taxonomy\TermAccessControlHandler.
  */
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines an access controller for the taxonomy term entity.
+ * Defines the access control handler for the taxonomy term entity type.
  *
  * @see \Drupal\taxonomy\Entity\Term
  */
-class TermAccessController extends EntityAccessController {
+class TermAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

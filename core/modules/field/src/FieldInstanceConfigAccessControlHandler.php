@@ -2,19 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldInstanceConfigAccessController.
+ * Contains \Drupal\field\FieldInstanceConfigAccessControlHandler.
  */
 
 namespace Drupal\field;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access controller for the field instance entity type.
+ * Defines the access control handler for the field instance entity type.
+ *
+ * @see \Drupal\field\Entity\FieldInstanceConfig
  */
-class FieldInstanceConfigAccessController extends EntityAccessController {
+class FieldInstanceConfigAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

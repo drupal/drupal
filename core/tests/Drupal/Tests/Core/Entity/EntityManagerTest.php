@@ -323,19 +323,19 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAccessController() method.
+   * Tests the getAccessControlHandler() method.
    *
-   * @covers ::getAccessController()
+   * @covers ::getAccessControlHandler()
    */
-  public function testGetAccessController() {
+  public function testGetAccessControlHandler() {
     $class = $this->getTestControllerClass();
     $entity = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity->expects($this->once())
-      ->method('getAccessClass')
+      ->method('getAccessControlClass')
       ->will($this->returnValue($class));
     $this->setUpEntityManager(array('test_entity_type' => $entity));
 
-    $this->assertInstanceOf($class, $this->entityManager->getAccessController('test_entity_type'));
+    $this->assertInstanceOf($class, $this->entityManager->getAccessControlHandler('test_entity_type'));
   }
 
   /**

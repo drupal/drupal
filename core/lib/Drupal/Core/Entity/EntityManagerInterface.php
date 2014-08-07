@@ -106,15 +106,15 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getFieldMapByFieldType($field_type);
 
   /**
-   * Creates a new access controller instance.
+   * Creates a new access control handler instance.
    *
    * @param string $entity_type
-   *   The entity type for this access controller.
+   *   The entity type for this access control handler.
    *
-   * @return \Drupal\Core\Entity\EntityAccessControllerInterface.
-   *   A access controller instance.
+   * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
+   *   A access control handler instance.
    */
-  public function getAccessController($entity_type);
+  public function getAccessControlHandler($entity_type);
 
   /**
    * Returns the route information for an entity type's bundle.

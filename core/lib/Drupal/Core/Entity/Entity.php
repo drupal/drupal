@@ -280,11 +280,11 @@ abstract class Entity implements EntityInterface {
   public function access($operation, AccountInterface $account = NULL) {
     if ($operation == 'create') {
       return $this->entityManager()
-        ->getAccessController($this->entityTypeId)
+        ->getAccessControlHandler($this->entityTypeId)
         ->createAccess($this->bundle(), $account);
     }
     return $this->entityManager()
-      ->getAccessController($this->entityTypeId)
+      ->getAccessControlHandler($this->entityTypeId)
       ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account);
   }
 

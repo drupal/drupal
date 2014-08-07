@@ -142,10 +142,10 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockP
  * @return bool|null
  *   FALSE denies access. TRUE allows access unless another module returns
  *   FALSE. If all modules return NULL, then default access rules from
- *   \Drupal\block\BlockAccessController::checkAccess() are used.
+ *   \Drupal\block\BlockAccessControlHandler::checkAccess() are used.
  *
- * @see \Drupal\Core\Entity\EntityAccessController::access()
- * @see \Drupal\block\BlockAccessController::checkAccess()
+ * @see \Drupal\Core\Entity\EntityAccessControlHandler::access()
+ * @see \Drupal\block\BlockAccessControlHandler::checkAccess()
  * @ingroup block_api
  */
 function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\user\Entity\User $account, $langcode) {

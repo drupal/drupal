@@ -2,32 +2,30 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityAccessController.
+ * Contains \Drupal\Core\Entity\EntityAccessControlHandler.
  */
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a default implementation for entity access controllers.
+ * Defines a default implementation for entity access control handler.
  */
-class EntityAccessController extends EntityControllerBase implements EntityAccessControllerInterface {
+class EntityAccessControlHandler extends EntityControllerBase implements EntityAccessControlHandlerInterface {
 
   /**
-   * Stores calculcated access check results.
+   * Stores calculated access check results.
    *
    * @var array
    */
   protected $accessCache = array();
 
   /**
-   * The entity type ID of the access controller instance.
+   * The entity type ID of the access control handler instance.
    *
    * @var string
    */
@@ -41,7 +39,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
   protected $entityType;
 
   /**
-   * Constructs an access controller instance.
+   * Constructs an access control handler instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -64,7 +62,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
 
     // Invoke hook_entity_access() and hook_ENTITY_TYPE_access(). Hook results
     // take precedence over overridden implementations of
-    // EntityAccessController::checkAccess(). Entities that have checks that
+    // EntityAccessControlHandler::checkAccess(). Entities that have checks that
     // need to be done before the hook is invoked should do so by overriding
     // this method.
 
@@ -78,7 +76,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
-      // controller check create access.
+      // handler check create access.
       $return = (bool) $this->checkAccess($entity, $operation, $langcode, $account);
     }
     return $this->setCache($return, $entity->uuid(), $operation, $langcode, $account);
@@ -214,7 +212,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
 
     // Invoke hook_entity_create_access() and hook_ENTITY_TYPE_create_access().
     // Hook results take precedence over overridden implementations of
-    // EntityAccessController::checkAccess(). Entities that have checks that
+    // EntityAccessControlHandler::checkAccess(). Entities that have checks that
     // need to be done before the hook is invoked should do so by overriding
     // this method.
 
@@ -228,7 +226,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
-      // controller check create access.
+      // handler check create access.
       $return = (bool) $this->checkCreateAccess($account, $context, $entity_bundle);
     }
     return $this->setCache($return, $cid, 'create', $context['langcode'], $account);

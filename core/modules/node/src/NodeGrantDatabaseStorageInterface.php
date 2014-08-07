@@ -10,7 +10,7 @@ namespace Drupal\node;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Provides an interface for node access controllers.
+ * Provides an interface for node access grant storage.
  */
 interface NodeGrantDatabaseStorageInterface {
 

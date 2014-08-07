@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\EntityAccessTest.
+ * Contains \Drupal\system\Tests\Entity\EntityAccessHControlandlerTest.
  */
 
 namespace Drupal\system\Tests\Entity;
@@ -10,14 +10,14 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 
 /**
- * Tests entity access.
+ * Tests the entity access control handler.
  *
  * @group Entity
  */
-class EntityAccessTest extends EntityLanguageTestBase  {
+class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
 
   function setUp() {
     parent::setUp();
@@ -67,16 +67,16 @@ class EntityAccessTest extends EntityLanguageTestBase  {
   }
 
   /**
-   * Ensures that the default controller is used as a fallback.
+   * Ensures that the default handler is used as a fallback.
    */
   function testEntityAccessDefaultController() {
     // The implementation requires that the global user id can be loaded.
     \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2)));
 
-    // Check that the default access controller is used for entities that don't
-    // have a specific access controller defined.
-    $controller = $this->container->get('entity.manager')->getAccessController('entity_test_default_access');
-    $this->assertTrue($controller instanceof EntityAccessController, 'The default entity controller is used for the entity_test_default_access entity type.');
+    // Check that the default access control handler is used for entities that don't
+    // have a specific access control handler defined.
+    $handler = $this->container->get('entity.manager')->getAccessControlHandler('entity_test_default_access');
+    $this->assertTrue($handler instanceof EntityAccessControlHandler, 'The default entity handler is used for the entity_test_default_access entity type.');
 
     $entity = entity_create('entity_test_default_access');
     $this->assertEntityAccess(array(

@@ -19,7 +19,7 @@ use Drupal\node\NodeTypeInterface;
  *   id = "node_type",
  *   label = @Translation("Content type"),
  *   controllers = {
- *     "access" = "Drupal\node\NodeTypeAccessController",
+ *     "access" = "Drupal\node\NodeTypeAccessControlHandler",
  *     "form" = {
  *       "add" = "Drupal\node\NodeTypeForm",
  *       "edit" = "Drupal\node\NodeTypeForm",

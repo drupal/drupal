@@ -19,7 +19,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *   label = @Translation("Shortcut set"),
  *   controllers = {
  *     "storage" = "Drupal\shortcut\ShortcutSetStorage",
- *     "access" = "Drupal\shortcut\ShortcutSetAccessController",
+ *     "access" = "Drupal\shortcut\ShortcutSetAccessControlHandler",
  *     "list_builder" = "Drupal\shortcut\ShortcutSetListBuilder",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutSetForm",

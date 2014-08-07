@@ -60,7 +60,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * {@inheritdoc}
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {
-    // @todo Move this logic into a translation access controller checking also
+    // @todo Move this logic into a translation access control handler checking also
     //   the translation language and the given account.
     $entity_type = $entity->getEntityType();
     $translate_permission = TRUE;

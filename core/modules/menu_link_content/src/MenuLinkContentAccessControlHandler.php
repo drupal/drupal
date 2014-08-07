@@ -1,23 +1,23 @@
 <?php
 /**
  * @file
- * Contains \Drupal\menu_link_content\MenuLinkContentAccessController.
+ * Contains \Drupal\menu_link_content\MenuLinkContentAccessControlHandler.
  */
 
 namespace Drupal\menu_link_content;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines the access controller for the user entity type.
+ * Defines the access control handler for the user entity type.
  */
-class MenuLinkContentAccessController extends EntityAccessController implements EntityControllerInterface {
+class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler implements EntityControllerInterface {
 
   /**
    * The access manager to check routes by name.
@@ -27,7 +27,7 @@ class MenuLinkContentAccessController extends EntityAccessController implements 
   protected $accessManager;
 
   /**
-   * Creates a new MenuLinkContentAccessController.
+   * Creates a new MenuLinkContentAccessControlHandler.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.

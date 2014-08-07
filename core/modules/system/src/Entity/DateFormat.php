@@ -19,7 +19,7 @@ use Drupal\system\DateFormatInterface;
  *   id = "date_format",
  *   label = @Translation("Date format"),
  *   controllers = {
- *     "access" = "Drupal\system\DateFormatAccessController",
+ *     "access" = "Drupal\system\DateFormatAccessControlHandler",
  *     "list_builder" = "Drupal\system\DateFormatListBuilder",
  *     "form" = {
  *       "add" = "Drupal\system\Form\DateFormatAddForm",

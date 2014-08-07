@@ -25,7 +25,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *       "default" = "Drupal\config_test\ConfigTestForm",
  *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"
  *     },
- *     "access" = "Drupal\config_test\ConfigTestAccessController"
+ *     "access" = "Drupal\config_test\ConfigTestAccessControlHandler"
  *   },
  *   config_prefix = "dynamic",
  *   entity_keys = {

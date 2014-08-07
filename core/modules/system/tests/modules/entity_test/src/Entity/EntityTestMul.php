@@ -19,7 +19,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *   label = @Translation("Test entity - data table"),
  *   controllers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
- *     "access" = "Drupal\entity_test\EntityTestAccessController",
+ *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"

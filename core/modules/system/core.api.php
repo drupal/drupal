@@ -565,8 +565,9 @@
  *   to check access. See the @link menu Routing topic @endlink for more
  *   information.
  * - Entities: Access for various entity operations is designated either with
- *   simple permissions or access controller classes in the entity annotation.
- *   See the @link entity_api Entity API topic @endlink for more information.
+ *   simple permissions or access control handler classes in the entity
+ *   annotation. See the @link entity_api Entity API topic @endlink for more
+ *   information.
  * - Other code: There is a 'current_user' service, which can be injected into
  *   classes to provide access to the current user account (see the
  *   @link container Services and Dependency Injection topic @endlink for more

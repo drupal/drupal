@@ -24,7 +24,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
  *   controllers = {
- *     "access" = "Drupal\field\FieldInstanceConfigAccessController",
+ *     "access" = "Drupal\field\FieldInstanceConfigAccessControlHandler",
  *     "storage" = "Drupal\field\FieldInstanceConfigStorage"
  *   },
  *   config_prefix = "instance",

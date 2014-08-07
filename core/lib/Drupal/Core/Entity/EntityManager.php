@@ -271,8 +271,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function getAccessController($entity_type) {
-    return $this->getController($entity_type, 'access', 'getAccessClass');
+  public function getAccessControlHandler($entity_type) {
+    return $this->getController($entity_type, 'access', 'getAccessControlClass');
   }
 
   /**

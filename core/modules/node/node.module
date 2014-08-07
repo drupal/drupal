@@ -1111,7 +1111,7 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * @{
  * The node access system determines who can do what to which nodes.
  *
- * In determining access rights for a node, \Drupal\node\NodeAccessController
+ * In determining access rights for a node, \Drupal\node\NodeAccessControlHandler
  * first checks whether the user has the "bypass node access" permission. Such
  * users have unrestricted access to all nodes. user 1 will always pass this
  * check.
@@ -1315,7 +1315,7 @@ function node_access_view_all_nodes($account = NULL) {
     $access[$account->id()] = TRUE;
   }
   else {
-    $access[$account->id()] = \Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
+    $access[$account->id()] = \Drupal::entityManager()->getAccessControlHandler('node')->checkAllGrants($account);
   }
 
   return $access[$account->id()];
@@ -1439,8 +1439,8 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
-  $access_controller = \Drupal::entityManager()->getAccessController('node');
-  $access_controller->deleteGrants();
+  $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+  $access_control_handler->deleteGrants();
   // Only recalculate if the site is using a node_access module.
   if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
@@ -1467,14 +1467,14 @@ function node_access_rebuild($batch_mode = FALSE) {
         // To preserve database integrity, only write grants if the node
         // loads successfully.
         if (!empty($node)) {
-          $access_controller->writeGrants($node);
+          $access_control_handler->writeGrants($node);
         }
       }
     }
   }
   else {
     // Not using any node_access modules. Add the default grant.
-    $access_controller->writeDefaultGrant();
+    $access_control_handler->writeDefaultGrant();
   }
 
   if (!isset($batch)) {
@@ -1513,7 +1513,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // To preserve database integrity, only write grants if the node
     // loads successfully.
     if (!empty($node)) {
-      \Drupal::entityManager()->getAccessController('node')->writeGrants($node);
+      \Drupal::entityManager()->getAccessControlHandler('node')->writeGrants($node);
     }
     $context['sandbox']['progress']++;
     $context['sandbox']['current_node'] = $nid;

@@ -550,11 +550,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function access($operation, AccountInterface $account = NULL) {
     if ($operation == 'create') {
       return $this->entityManager()
-        ->getAccessController($this->entityTypeId)
+        ->getAccessControlHandler($this->entityTypeId)
         ->createAccess($this->bundle(), $account);
     }
     return $this->entityManager()
-      ->getAccessController($this->entityTypeId)
+      ->getAccessControlHandler($this->entityTypeId)
       ->access($this, $operation, $this->activeLangcode, $account);
   }
 

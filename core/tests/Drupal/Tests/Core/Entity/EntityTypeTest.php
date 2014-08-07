@@ -131,16 +131,16 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAccessClass() method.
+   * Tests the getAccessControlClass() method.
    */
-  public function testGetAccessClass() {
+  public function testGetAccessControlClass() {
     $controller = $this->getTestControllerClass();
     $entity_type = $this->setUpEntityType(array(
       'controllers' => array(
         'access' => $controller,
       ),
     ));
-    $this->assertSame($controller, $entity_type->getAccessClass());
+    $this->assertSame($controller, $entity_type->getAccessControlClass());
   }
 
   /**

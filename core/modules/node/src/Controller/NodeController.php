@@ -64,7 +64,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('node_type')->loadMultiple() as $type) {
-      if ($this->entityManager()->getAccessController('node')->createAccess($type->type)) {
+      if ($this->entityManager()->getAccessControlHandler('node')->createAccess($type->type)) {
         $content[$type->type] = $type;
       }
     }

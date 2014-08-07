@@ -22,7 +22,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *   label = @Translation("Custom menu link"),
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\ContentEntityDatabaseStorage",
- *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessController",
+ *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",
  *       "delete" = "Drupal\menu_link_content\Form\MenuLinkContentDeleteForm"

@@ -23,11 +23,11 @@ abstract class NodeTestBase extends WebTestBase {
   public static $modules = array('node', 'datetime');
 
   /**
-   * The node access controller.
+   * The node access control handler.
    *
-   * @var \Drupal\Core\Entity\EntityAccessControllerInterface
+   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    */
-  protected $accessController;
+  protected $accessHandler;
 
   function setUp() {
     parent::setUp();
@@ -43,7 +43,7 @@ abstract class NodeTestBase extends WebTestBase {
       )));
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
-    $this->accessController = \Drupal::entityManager()->getAccessController('node');
+    $this->accessHandler = \Drupal::entityManager()->getAccessControlHandler('node');
   }
 
   /**
@@ -67,7 +67,7 @@ abstract class NodeTestBase extends WebTestBase {
       if (empty($langcode)) {
         $langcode = $node->prepareLangcode();
       }
-      $this->assertEqual($result, $this->accessController->access($node, $op, $langcode, $account), $this->nodeAccessAssertMessage($op, $result, $langcode));
+      $this->assertEqual($result, $this->accessHandler->access($node, $op, $langcode, $account), $this->nodeAccessAssertMessage($op, $result, $langcode));
     }
   }
 
@@ -85,7 +85,7 @@ abstract class NodeTestBase extends WebTestBase {
    *   to check. If NULL, the untranslated (fallback) access is checked.
    */
   function assertNodeCreateAccess($bundle, $result, AccountInterface $account, $langcode = NULL) {
-    $this->assertEqual($result, $this->accessController->createAccess($bundle, $account, array(
+    $this->assertEqual($result, $this->accessHandler->createAccess($bundle, $account, array(
       'langcode' => $langcode,
     )), $this->nodeAccessAssertMessage('create', $result, $langcode));
   }

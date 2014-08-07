@@ -114,7 +114,7 @@ function forum_menu_local_tasks(&$data, $route_name) {
     // Loop through all bundles for forum taxonomy vocabulary field.
     $field_map = \Drupal::entityManager()->getFieldMap();
     foreach ($field_map['node']['taxonomy_forums']['bundles'] as $type) {
-      if (\Drupal::entityManager()->getAccessController('node')->createAccess($type)) {
+      if (\Drupal::entityManager()->getAccessControlHandler('node')->createAccess($type)) {
         $links[$type] = array(
           '#theme' => 'menu_local_action',
           '#link' => array(

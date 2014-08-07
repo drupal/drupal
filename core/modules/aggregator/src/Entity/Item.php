@@ -24,7 +24,7 @@ use Drupal\Core\Url;
  *   controllers = {
  *     "storage" = "Drupal\aggregator\ItemStorage",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder",
- *     "access" = "Drupal\aggregator\FeedAccessController",
+ *     "access" = "Drupal\aggregator\FeedAccessControlHandler",
  *   },
  *   uri_callback = "Drupal\aggregator\Entity\Item::buildUri",
  *   base_table = "aggregator_item",

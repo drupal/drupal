@@ -18,7 +18,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *   id = "entity_test_rev",
  *   label = @Translation("Test entity - revisions"),
  *   controllers = {
- *     "access" = "Drupal\entity_test\EntityTestAccessController",
+ *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"

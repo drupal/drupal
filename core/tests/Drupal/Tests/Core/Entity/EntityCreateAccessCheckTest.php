@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
+ *
  * @group Entity
  */
 class EntityCreateAccessCheckTest extends UnitTestCase {
@@ -48,7 +49,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       array('test_entity', 'entity_test:{bundle_argument}', FALSE, AccessCheckInterface::DENY),
       array('', 'entity_test:{bundle_argument}', FALSE, AccessCheckInterface::DENY),
       // When the bundle is not provided, access should be denied even if the
-      // access controller would allow access.
+      // access control handler would allow access.
       array('', 'entity_test:{bundle_argument}', TRUE, AccessCheckInterface::DENY),
     );
   }
@@ -61,18 +62,18 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
   public function testAccess($entity_bundle, $requirement, $access, $expected) {
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
-    // Don't expect a call to the access controller when we have a bundle
+    // Don't expect a call to the access control handler when we have a bundle
     // argument requirement but no bundle is provided.
     if ($entity_bundle || strpos($requirement, '{') === FALSE) {
-      $access_controller = $this->getMock('Drupal\Core\Entity\EntityAccessControllerInterface');
-      $access_controller->expects($this->once())
+      $access_control_handler = $this->getMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');
+      $access_control_handler->expects($this->once())
         ->method('createAccess')
         ->with($entity_bundle)
         ->will($this->returnValue($access));
 
       $entity_manager->expects($this->any())
-        ->method('getAccessController')
-        ->will($this->returnValue($access_controller));
+        ->method('getAccessControlHandler')
+        ->will($this->returnValue($access_control_handler));
     }
 
     $applies_check = new EntityCreateAccessCheck($entity_manager);

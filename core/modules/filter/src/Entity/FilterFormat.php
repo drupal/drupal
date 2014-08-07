@@ -27,7 +27,7 @@ use Drupal\filter\Plugin\FilterInterface;
  *       "disable" = "Drupal\filter\Form\FilterDisableForm"
  *     },
  *     "list_builder" = "Drupal\filter\FilterFormatListBuilder",
- *     "access" = "Drupal\filter\FilterFormatAccess",
+ *     "access" = "Drupal\filter\FilterFormatAccessControlHandler",
  *   },
  *   config_prefix = "format",
  *   admin_permission = "administer filters",

@@ -22,7 +22,7 @@ use Drupal\language\LanguageInterface;
  *   label = @Translation("Language"),
  *   controllers = {
  *     "list_builder" = "Drupal\language\LanguageListBuilder",
- *     "access" = "Drupal\language\LanguageAccessController",
+ *     "access" = "Drupal\language\LanguageAccessControlHandler",
  *     "form" = {
  *       "add" = "Drupal\language\Form\LanguageAddForm",
  *       "edit" = "Drupal\language\Form\LanguageEditForm",

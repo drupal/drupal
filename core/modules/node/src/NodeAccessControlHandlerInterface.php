@@ -1,14 +1,17 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \Drupal\node\NodeAccessControlHandlerInterface.
  */
 
 namespace Drupal\node;
 
 use Drupal\Core\Session\AccountInterface;
 
-interface NodeAccessControllerInterface {
+/**
+ * Node specific entity access control methods.
+ */
+interface NodeAccessControlHandlerInterface {
 
   /**
    * Gets the list of node access grants.

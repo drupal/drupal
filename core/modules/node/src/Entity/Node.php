@@ -26,7 +26,7 @@ use Drupal\user\UserInterface;
  *   controllers = {
  *     "storage" = "Drupal\node\NodeStorage",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
- *     "access" = "Drupal\node\NodeAccessController",
+ *     "access" = "Drupal\node\NodeAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
@@ -103,7 +103,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     // default revision. There's no need to delete existing records if the node
     // is new.
     if ($this->isDefaultRevision()) {
-      \Drupal::entityManager()->getAccessController('node')->writeGrants($this, $update);
+      \Drupal::entityManager()->getAccessControlHandler('node')->writeGrants($this, $update);
     }
 
     // Reindex the node when it is updated. The node is automatically indexed
@@ -151,7 +151,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     }
 
     return \Drupal::entityManager()
-      ->getAccessController($this->entityTypeId)
+      ->getAccessControlHandler($this->entityTypeId)
       ->access($this, $operation, $this->prepareLangcode(), $account);
   }
 

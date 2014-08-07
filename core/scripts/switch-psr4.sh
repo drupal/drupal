@@ -8,7 +8,7 @@ namespace Drupal\Core\SwitchPsr4;
  * Moves module-provided class files to their PSR-4 location.
  *
  * E.g.:
- * core/modules/action/{lib/Drupal/action → src}/ActionAccessController.php
+ * core/modules/action/{lib/Drupal/action → src}/ActionAccessControlHandler.php
  * core/modules/action/{lib/Drupal/action → src}/ActionAddForm.php
  */
 

@@ -23,7 +23,7 @@ use Drupal\user\UserInterface;
  *   label = @Translation("File"),
  *   controllers = {
  *     "storage" = "Drupal\file\FileStorage",
- *     "access" = "Drupal\file\FileAccessController",
+ *     "access" = "Drupal\file\FileAccessControlHandler",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder"
  *   },
  *   base_table = "file_managed",

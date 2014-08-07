@@ -213,8 +213,8 @@ class Field extends FieldPluginBase {
    */
   public function access(AccountInterface $account) {
     $base_table = $this->get_base_table();
-    $access_controller = $this->entityManager->getAccessController($this->definition['entity_tables'][$base_table]);
-    return $access_controller->fieldAccess('view', $this->getFieldDefinition(), $account);
+    $access_control_handler = $this->entityManager->getAccessControlHandler($this->definition['entity_tables'][$base_table]);
+    return $access_control_handler->fieldAccess('view', $this->getFieldDefinition(), $account);
   }
 
   /**

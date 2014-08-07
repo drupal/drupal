@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\NodeTypeAccessController.
+ * Contains \Drupal\taxonomy\NodeTypeAccessControlHandler.
  */
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines an access controller for the node type entity.
+ * Defines the access control handler for the node type entity type.
  *
- * @see \Drupal\node\Entity\NodeType.
+ * @see \Drupal\node\Entity\NodeType
  */
-class NodeTypeAccessController extends EntityAccessController {
+class NodeTypeAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

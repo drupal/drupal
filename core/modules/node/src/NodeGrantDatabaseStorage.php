@@ -38,7 +38,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   protected $moduleHandler;
 
   /**
-   * Constructs a NodeAccessController object.
+   * Constructs a NodeGrantDatabaseStorage object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.

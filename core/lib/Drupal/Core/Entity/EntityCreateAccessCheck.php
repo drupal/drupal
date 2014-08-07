@@ -69,7 +69,7 @@ class EntityCreateAccessCheck implements AccessInterface {
         return static::DENY;
       }
     }
-    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle, $account) ? static::ALLOW : static::DENY;
+    return $this->entityManager->getAccessControlHandler($entity_type)->createAccess($bundle, $account) ? static::ALLOW : static::DENY;
   }
 
 }
