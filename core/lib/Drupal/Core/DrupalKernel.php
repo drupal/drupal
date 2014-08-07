@@ -526,8 +526,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
       }
     }
-    if (!empty($GLOBALS['conf']['container_yamls'])) {
-      $this->serviceYamls['site'] = $GLOBALS['conf']['container_yamls'];
+    if ($container_yamls = Settings::get('container_yamls')) {
+      $this->serviceYamls['site'] = $container_yamls;
     }
     if (file_exists($site_services_yml = $this->getSitePath() . '/services.yml')) {
       $this->serviceYamls['site'][] = $site_services_yml;

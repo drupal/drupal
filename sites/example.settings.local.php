@@ -10,6 +10,9 @@
  * mention 'settings.local.php'.
  */
 
+// Enable local development services.
+$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
+
 // Show all error messages, with backtrace information.
 $config['system.logging']['error_level'] = 'verbose';
 
@@ -17,7 +20,8 @@ $config['system.logging']['error_level'] = 'verbose';
 $config['system.performance']['css']['preprocess'] = FALSE;
 $config['system.performance']['js']['preprocess'] = FALSE;
 
-// Disable the render cache, by using the Null cache back-end.
+// Disable the render cache, by using the Null cache back-end defined by the
+// development.services.yml file above.
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 
 /**

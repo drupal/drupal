@@ -1,0 +1,9 @@
+# Local development services.
+#
+# To activate this feature, follow the instructions at the top of the
+# 'example.settings.local.php' file, which sits next to this file.
+services:
+  cache.backend.memory:
+    class: Drupal\Core\Cache\MemoryBackendFactory
+  cache.backend.null:
+    class: Drupal\Core\Cache\NullBackendFactory
