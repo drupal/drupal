@@ -195,18 +195,6 @@ abstract class AccountForm extends ContentEntityForm {
     );
 
     $roles = array_map(array('\Drupal\Component\Utility\String', 'checkPlain'), user_role_names(TRUE));
-    // The disabled checkbox subelement for the 'authenticated user' role
-    // must be generated separately and added to the checkboxes element,
-    // because of a limitation in Form API not supporting a single disabled
-    // checkbox within a set of checkboxes.
-    // @todo This should be solved more elegantly. See issue #119038.
-    $checkbox_authenticated = array(
-      '#type' => 'checkbox',
-      '#title' => $roles[DRUPAL_AUTHENTICATED_RID],
-      '#default_value' => TRUE,
-      '#disabled' => TRUE,
-    );
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
 
     $form['account']['roles'] = array(
       '#type' => 'checkboxes',
@@ -214,7 +202,12 @@ abstract class AccountForm extends ContentEntityForm {
       '#default_value' => (!$register ? $account->getRoles() : array()),
       '#options' => $roles,
       '#access' => $roles && $user->hasPermission('administer permissions'),
-      DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
+    );
+
+    // Special handling for the inevitable "Authenticated user" role.
+    $form['account']['roles'][DRUPAL_AUTHENTICATED_RID] = array(
+      '#default_value' => TRUE,
+      '#disabled' => TRUE,
     );
 
     $form['account']['notify'] = array(
