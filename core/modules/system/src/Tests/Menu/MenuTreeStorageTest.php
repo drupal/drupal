@@ -303,23 +303,26 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Tests MenuTreeStorage::loadByProperties().
    */
   public function testLoadByProperties() {
-    $properties = array('foo' => 'bar');
+    $tests = array(
+      array('foo' => 'bar'),
+      array(0 => 'wrong'),
+    );
     $msg = 'An invalid property name throws an exception.';
-    try {
-      $this->treeStorage->loadByProperties($properties);
-      $this->fail($msg);
+    foreach ($tests as $properties) {
+      try {
+        $this->treeStorage->loadByProperties($properties);
+        $this->fail($msg);
+      }
+      catch (\InvalidArgumentException $e) {
+        $this->assertTrue(preg_match('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage()), 'Found expected exception message.');
+        $this->pass($msg);
+      }
     }
-    catch (\InvalidArgumentException $e) {
-      $this->assertEqual(
-        'An invalid property name, foo was specified. Allowed property names are: menu_name, route_name, route_parameters, url, title, title_arguments, title_context, description, parent, weight, options, expanded, hidden, provider, metadata, class, form_class, id.',
-        $e->getMessage()
-      );
-      $this->pass($msg);
-    }
-    $this->addMenuLink(1);
-    $properties = array(array('menu_name' => 'tools'));
+    $this->addMenuLink('test_link.1', '', 'test', array(), 'menu1');
+    $properties = array('menu_name' => 'menu1');
     $links = $this->treeStorage->loadByProperties($properties);
-    $this->assertEqual('tools', $links[1]['menu_name']);
+    $this->assertEqual('menu1', $links['test_link.1']['menu_name']);
+    $this->assertEqual('test', $links['test_link.1']['route_name']);
   }
 
   /**

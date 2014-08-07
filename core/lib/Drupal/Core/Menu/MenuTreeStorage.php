@@ -638,7 +638,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, $this->options);
     $query->fields($this->table, $this->definitionFields());
     foreach ($properties as $name => $value) {
-      if (!in_array($name, $this->definitionFields())) {
+      if (!in_array($name, $this->definitionFields(), TRUE)) {
         $fields = implode(', ', $this->definitionFields());
         throw new \InvalidArgumentException(String::format('An invalid property name, @name was specified. Allowed property names are: @fields.', array('@name' => $name, '@fields' => $fields)));
       }
