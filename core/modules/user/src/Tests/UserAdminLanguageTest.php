@@ -118,31 +118,37 @@ class UserAdminLanguageTest extends WebTestBase {
     $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
     $this->assertText('Language negotiation method: language-default');
+    $this->drupalGet('xx/' . $path);
+    $this->assertText('Language negotiation method: language-url');
 
     // Set a preferred language code for the user.
-    $path = 'user/' . $this->adminUser->id() . '/edit';
     $edit = array();
     $edit['preferred_admin_langcode'] = 'xx';
     $this->drupalPostForm($path, $edit, t('Save'));
 
     // Test negotiation with the URL method first. The admin method will only
     // be used if the URL method did not match.
-    $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
     $this->assertText('Language negotiation method: language-user-admin');
-    $path = 'xx/user/' . $this->adminUser->id() . '/edit';
-    $this->drupalGet($path);
+    $this->drupalGet('xx/' . $path);
     $this->assertText('Language negotiation method: language-url');
 
     // Test negotiation with the admin language method first. The admin method
     // will be used at all times.
     $this->setLanguageNegotiation(TRUE);
-    $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
     $this->assertText('Language negotiation method: language-user-admin');
-    $path = 'xx/user/' . $this->adminUser->id() . '/edit';
-    $this->drupalGet($path);
+    $this->drupalGet('xx/' . $path);
     $this->assertText('Language negotiation method: language-user-admin');
+
+    // Unset the preferred language code for the user.
+    $edit = array();
+    $edit['preferred_admin_langcode'] = '';
+    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-default');
+    $this->drupalGet('xx/' . $path);
+    $this->assertText('Language negotiation method: language-url');
   }
 
   /**

@@ -182,26 +182,26 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
-  function getPreferredLangcode($default = NULL) {
+  function getPreferredLangcode($fallback_to_default = TRUE) {
     $language_list = language_list();
     if (!empty($this->preferred_langcode) && isset($language_list[$this->preferred_langcode])) {
       return $language_list[$this->preferred_langcode]->id;
     }
     else {
-      return $default ? $default : language_default()->id;
+      return $fallback_to_default ? language_default()->id : '';
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  function getPreferredAdminLangcode($default = NULL) {
+  function getPreferredAdminLangcode($fallback_to_default = TRUE) {
     $language_list = language_list();
     if (!empty($this->preferred_admin_langcode) && isset($language_list[$this->preferred_admin_langcode])) {
       return $language_list[$this->preferred_admin_langcode]->id;
     }
     else {
-      return $default ? $default : language_default()->id;
+      return $fallback_to_default ? language_default()->id : '';
     }
   }
 

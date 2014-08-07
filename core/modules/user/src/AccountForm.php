@@ -248,7 +248,7 @@ abstract class AccountForm extends ContentEntityForm {
 
     $user_preferred_langcode = $register ? $language_interface->id : $account->getPreferredLangcode();
 
-    $user_preferred_admin_langcode = $register ? $language_interface->id : $account->getPreferredAdminLangcode();
+    $user_preferred_admin_langcode = $register ? $language_interface->id : $account->getPreferredAdminLangcode(FALSE);
 
     // Is the user preferred language added?
     $user_language_added = FALSE;
@@ -286,6 +286,8 @@ abstract class AccountForm extends ContentEntityForm {
       '#languages' => LanguageInterface::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_admin_langcode,
       '#access' => $show_admin_language,
+      '#empty_option' => $this->t('- No preference -'),
+      '#empty_value' => '',
     );
     // User entities contain both a langcode property (for identifying the
     // language of the entity data) and a preferred_langcode property (see
