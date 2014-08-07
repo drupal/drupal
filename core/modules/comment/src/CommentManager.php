@@ -114,25 +114,8 @@ class CommentManager implements CommentManagerInterface {
       return array();
     }
 
-    $map = $this->getAllFields();
+    $map = $this->entityManager->getFieldMapByFieldType('comment');
     return isset($map[$entity_type_id]) ? $map[$entity_type_id] : array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAllFields() {
-    $map = $this->entityManager->getFieldMap();
-    // Build a list of comment fields only.
-    $comment_fields = array();
-    foreach ($map as $entity_type => $data) {
-      foreach ($data as $field_name => $field_info) {
-        if ($field_info['type'] == 'comment') {
-          $comment_fields[$entity_type][$field_name] = $field_info;
-        }
-      }
-    }
-    return $comment_fields;
   }
 
   /**

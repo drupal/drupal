@@ -102,12 +102,10 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
       $field_ids = array();
-      $field_map = \Drupal::entityManager()->getFieldMap();
+      $field_map = \Drupal::entityManager()->getFieldMapByFieldType('taxonomy_term_reference');
       foreach ($field_map as $entity_type => $fields) {
         foreach ($fields as $field => $info) {
-          if ($info['type'] == 'taxonomy_term_reference') {
-            $field_ids[] = $entity_type . '.' . $field;
-          }
+          $field_ids[] = $entity_type . '.' . $field;
         }
       }
 

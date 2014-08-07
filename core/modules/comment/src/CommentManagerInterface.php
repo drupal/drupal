@@ -44,11 +44,6 @@ interface CommentManagerInterface {
   public function getFields($entity_type_id);
 
   /**
-   * Utility function to return all comment fields.
-   */
-  public function getAllFields();
-
-  /**
    * Utility method to add the default comment field to an entity.
    *
    * Attaches a comment field named 'comment' to the given entity type and

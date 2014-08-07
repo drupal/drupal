@@ -135,6 +135,16 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $fieldMap = array();
 
   /**
+   * An array keyed by field type. Each value is an array whose key are entity
+   * types including arrays in the same form that $fieldMap.
+   *
+   * It helps access the mapping between types and fields by the field type.
+   *
+   * @var array
+   */
+  protected $fieldMapByFieldType = array();
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -566,6 +576,25 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFieldMapByFieldType($field_type) {
+    if (!isset($this->fieldMapByFieldType[$field_type])) {
+      $filtered_map = array();
+      $map = $this->getFieldMap();
+      foreach ($map as $entity_type => $fields) {
+        foreach ($fields as $field_name => $field_info) {
+          if ($field_info['type'] == $field_type) {
+            $filtered_map[$entity_type][$field_name] = $field_info;
+          }
+        }
+      }
+      $this->fieldMapByFieldType[$field_type] = $filtered_map;
+    }
+    return $this->fieldMapByFieldType[$field_type];
+  }
+
+  /**
    * Builds field storage definitions for an entity type.
    *
    * @param string $entity_type_id
@@ -610,6 +639,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->fieldDefinitions = array();
     $this->fieldStorageDefinitions = array();
     $this->fieldMap = array();
+    $this->fieldMapByFieldType = array();
     $this->displayModeInfo = array();
     $this->extraFields = array();
     Cache::deleteTags(array('entity_field_info' => TRUE));
