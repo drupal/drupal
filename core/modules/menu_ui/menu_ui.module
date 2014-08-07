@@ -459,7 +459,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
     '#type' => 'details',
     '#title' => t('Menu settings'),
     '#attached' => array(
-      'library' => array('menu/drupal.menu.admin'),
+      'library' => array('menu_ui/drupal.menu_ui.admin'),
     ),
     '#group' => 'additional_settings',
   );
@@ -485,7 +485,28 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
     '#attributes' => array('class' => array('menu-title-select')),
   );
 
+  $form['actions']['submit']['#validate'][] = 'menu_ui_form_node_type_form_validate';
   $form['actions']['submit']['#submit'][] = 'menu_ui_form_node_type_form_submit';
+}
+
+/**
+ * Submit handler for forms with menu options.
+ *
+ * @see menu_ui_form_node_type_form_alter().
+ */
+function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
+  $available_menus = array_filter($form_state['values']['menu_options']);
+  // If there is at least one menu allowed, the selected item should be in
+  // one of them.
+  if (count($available_menus)) {
+    $menu_item_id_parts = explode(':', $form_state['values']['menu_parent']);
+    if (!in_array($menu_item_id_parts[0], $available_menus)) {
+      form_set_error('menu_parent', $form_state, t('The selected menu item is not under one of the selected menus.'));
+    }
+  }
+  else {
+    $form_state['values']['menu_parent'] = '';
+  }
 }
 
 /**

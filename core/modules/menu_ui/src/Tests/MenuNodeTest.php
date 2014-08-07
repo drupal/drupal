@@ -61,6 +61,16 @@ class MenuNodeTest extends WebTestBase {
     $node = $this->drupalGetNodeByTitle($node_title);
     $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
 
+    // Test that we cannot set a menu item from a menu that is not set as
+    // available.
+    $edit = array(
+      'menu_options[tools]' => 1,
+      'menu_parent' => 'main:',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->assertText(t('The selected menu item is not under one of the selected menus.'));
+    $this->assertNoRaw(t('The content type %name has been updated.', array('%name' => 'Basic page')));
+
     // Enable Tools menu as available menu.
     $edit = array(
       'menu_options[main]' => 1,
@@ -68,6 +78,7 @@ class MenuNodeTest extends WebTestBase {
       'menu_parent' => 'main:',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %name has been updated.', array('%name' => 'Basic page')));
 
     // Create a node.
     $node_title = $this->randomMachineName();
