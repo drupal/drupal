@@ -141,7 +141,7 @@ class UpdateReady extends FormBase {
       // whatever FileTransfer object authorize.php creates for us.
       else {
         system_authorized_init('update_authorize_run_update', drupal_get_path('module', 'update') . '/update.authorize.inc', array($updates), $this->t('Update manager'));
-        $form_state['redirect'] = system_authorized_get_url();
+        $form_state->setRedirectUrl(system_authorized_get_url());
       }
     }
   }

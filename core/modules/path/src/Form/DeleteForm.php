@@ -89,7 +89,7 @@ class DeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->aliasStorage->delete(array('pid' => $this->pathAlias['pid']));
 
-    $form_state['redirect'] = 'admin/config/search/path';
+    $form_state->setRedirect('path.admin_overview');
   }
 
 }

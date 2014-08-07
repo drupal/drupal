@@ -60,7 +60,7 @@ class FormTestCheckboxesZeroForm extends FormBase {
       $form_state->setResponse(new JsonResponse($form_state['values']));
     }
     else {
-      $form_state['redirect'] = FALSE;
+      $form_state['no_redirect'] = TRUE;
     }
   }
 

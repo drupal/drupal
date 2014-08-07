@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "user_cancel_user_action",
  *   label = @Translation("Cancel the selected user accounts"),
  *   type = "user",
- *   confirm_form_path = "admin/people/cancel"
+ *   confirm_form_route_name = "user.multiple_cancel_confirm"
  * )
  */
 class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {

@@ -263,8 +263,8 @@ class BulkForm extends FieldPluginBase {
       $action->execute($entities);
 
       $operation_definition = $action->getPluginDefinition();
-      if (!empty($operation_definition['confirm_form_path'])) {
-        $form_state['redirect'] = $operation_definition['confirm_form_path'];
+      if (!empty($operation_definition['confirm_form_route_name'])) {
+        $form_state->setRedirect($operation_definition['confirm_form_route_name']);
       }
 
       $count = count(array_filter($form_state['values'][$this->options['id']]));

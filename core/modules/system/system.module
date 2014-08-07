@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\block\BlockPluginInterface;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use GuzzleHttp\Exception\RequestException;
@@ -790,7 +791,7 @@ function _system_themes_access($theme) {
  * using the URL from system_authorized_get_url(). Redirecting yourself is
  * necessary when your authorized operation is being triggered by a form
  * submit handler, since calling redirecting in a submit handler is a bad
- * idea, and you should instead set $form_state['redirect'].
+ * idea, and you should instead use $form_state->setRedirect().
  *
  * Once the SESSION is setup for the operation and the user is redirected to
  * authorize.php, they will be prompted for their connection credentials (core
@@ -817,14 +818,14 @@ function _system_themes_access($theme) {
  * not to assume any code exists. Example (system_authorized_run()):
  * @code
  *   system_authorized_init($callback, $file, $arguments, $page_title);
- *   return new RedirectResponse(system_authorized_get_url());
+ *   return new RedirectResponse(system_authorized_get_url()->toString());
  * @endcode
  * Example (update_manager_install_form_submit()):
  * @code
  *  system_authorized_init('update_authorize_run_install',
  *    drupal_get_path('module', 'update') . '/update.authorize.inc',
  *    $arguments, t('Update manager'));
- *  $form_state['redirect'] = system_authorized_get_url();
+ *  $form_state->setRedirectUrl(system_authorized_get_url());
  * @endcode
  *
  * @param $callback
@@ -863,7 +864,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  *
  * @param array $options
  *   Optional array of options to pass to url().
- * @return
+ * @return \Drupal\Core\Url
  *   The full URL to authorize.php, using HTTPS if available.
  *
  * @see system_authorized_init()
@@ -873,7 +874,10 @@ function system_authorized_get_url(array $options = array()) {
   // Force HTTPS if available, regardless of what the caller specifies.
   $options['https'] = TRUE;
   // Prefix with $base_url so url() treats it as an external link.
-  return url($base_url . '/core/authorize.php', $options);
+  $url = Url::createFromPath($base_url . '/core/authorize.php');
+  $url_options = $url->getOptions();
+  $url->setOptions($options + $url_options);
+  return $url;
 }
 
 /**
@@ -881,6 +885,8 @@ function system_authorized_get_url(array $options = array()) {
  *
  * @param array $options
  *   Optional array of options to pass to url().
+ *
+ * @return \Drupal\Core\Url
  */
 function system_authorized_batch_processing_url(array $options = array()) {
   $options['query'] = array('batch' => '1');
@@ -894,7 +900,7 @@ function system_authorized_batch_processing_url(array $options = array()) {
  */
 function system_authorized_run($callback, $file, $arguments = array(), $page_title = NULL) {
   system_authorized_init($callback, $file, $arguments, $page_title);
-  return new RedirectResponse(system_authorized_get_url());
+  return new RedirectResponse(system_authorized_get_url()->toString());
 }
 
 /**
@@ -905,7 +911,7 @@ function system_authorized_run($callback, $file, $arguments = array(), $page_tit
 function system_authorized_batch_process() {
   $finish_url = system_authorized_get_url();
   $process_url = system_authorized_batch_processing_url();
-  return batch_process($finish_url, $process_url);
+  return batch_process($finish_url->toString(), $process_url->toString());
 }
 
 /**

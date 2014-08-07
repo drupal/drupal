@@ -42,20 +42,14 @@ class FormStateTest extends UnitTestCase {
     $data = array();
     $data[] = array(array(), NULL);
 
-    $data[] = array(array('redirect' => 'foo'), 'foo');
-    $data[] = array(array('redirect' => array('foo')), array('foo'));
-    $data[] = array(array('redirect' => array('bar', array('query' => array('foo' => 'baz')))), array('bar', array('query' => array('foo' => 'baz'))));
-    $data[] = array(array('redirect' => array('baz', array(), 301)), array('baz', array(), 301));
-
     $redirect = new RedirectResponse('/example');
     $data[] = array(array('redirect' => $redirect), $redirect);
 
-    $data[] = array(array('redirect_route' => new Url('test_route_b', array('key' => 'value'))), new Url('test_route_b', array('key' => 'value'), array('absolute' => TRUE)));
+    $data[] = array(array('redirect' => new Url('test_route_b', array('key' => 'value'))), new Url('test_route_b', array('key' => 'value')));
 
     $data[] = array(array('programmed' => TRUE), NULL);
     $data[] = array(array('rebuild' => TRUE), NULL);
     $data[] = array(array('no_redirect' => TRUE), NULL);
-    $data[] = array(array('redirect' => FALSE), NULL);
 
     return $data;
   }

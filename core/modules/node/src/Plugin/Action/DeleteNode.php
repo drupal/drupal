@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "node_delete_action",
  *   label = @Translation("Delete selected content"),
  *   type = "node",
- *   confirm_form_path = "admin/content/node/delete"
+ *   confirm_form_route_name = "node.multiple_delete_confirm"
  * )
  */
 class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {

@@ -111,33 +111,25 @@ class FormState implements FormStateInterface, \ArrayAccess {
    * Used when a form needs to return some kind of a
    * \Symfony\Component\HttpFoundation\Response object, e.g., a
    * \Symfony\Component\HttpFoundation\BinaryFileResponse when triggering a
-   * file download. If you use the $form_state['redirect'] key, it will be used
-   * to build a \Symfony\Component\HttpFoundation\RedirectResponse and will
-   * populate this key.
+   * file download. If you use self::setRedirect() or self::setRedirectUrl(),
+   * it will be used to build a
+   * \Symfony\Component\HttpFoundation\RedirectResponse and will populate this
+   * key.
    *
    * @var \Symfony\Component\HttpFoundation\Response|null
    */
   protected $response;
 
   /**
-   * Used to redirect the form on submission. It may either be a  string
-   * containing the destination URL, or an array of arguments compatible with
-   * url(). See url() for complete information.
+   * Used to redirect the form on submission.
+   *
+   * @see self::getRedirect()
    *
    * This property is uncacheable.
    *
-   * @var string|array|null
+   * @var \Drupal\Core\Url|\Symfony\Component\HttpFoundation\RedirectResponse|null
    */
   protected $redirect;
-
-  /**
-   * Used for route-based redirects.
-   *
-   * This property is uncacheable.
-   *
-   * @var \Drupal\Core\Url|array
-   */
-  protected $redirect_route;
 
   /**
    * If set to TRUE the form will NOT perform a redirect, even if
@@ -611,7 +603,7 @@ class FormState implements FormStateInterface, \ArrayAccess {
    * {@inheritdoc}
    */
   public function setRedirectUrl(Url $url) {
-    $this->set('redirect_route', $url);
+    $this->set('redirect', $url);
     return $this;
   }
 
@@ -633,14 +625,6 @@ class FormState implements FormStateInterface, \ArrayAccess {
       return FALSE;
     }
 
-    // Check for a route-based redirection.
-    if ($redirect_route = $this->get('redirect_route')) {
-      $redirect_route->setAbsolute();
-      return $redirect_route;
-    }
-
-    // @todo Remove once all redirects are converted away from paths in
-    //   https://www.drupal.org/node/2315807.
     return $this->get('redirect');
   }
 

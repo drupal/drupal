@@ -49,21 +49,18 @@ interface FormSubmitterInterface {
    * destination should be, based on the $form_state and the 'destination'
    * query string in the request URL, and redirects the user there.
    *
-   * Usually (for exceptions, see below) $form_state['redirect'] determines
-   * where to redirect the user. This can be set either to a string (the path to
-   * redirect to), or an array of arguments for url(). If
-   * $form_state['redirect'] is missing, the user is usually (again, see below
-   * for exceptions) redirected back to the page they came from, where they
-   * should see a fresh, unpopulated copy of the form.
+   * The result of \Drupal\Core\Form|FormStateInterface::getRedirect()
+   * determines where to redirect the user. See the possible return values
+   * listed there. If the result is FALSE, then the user will not be redirected.
    *
-   * Here is an example of how to set up a form to redirect to the path 'node':
+   * Here is an example of how to set up a form to redirect to the path 'user':
    * @code
-   * $form_state->set('redirect', 'node');
+   * $form_state->setRedirect('user.page');
    * @endcode
    * And here is an example of how to redirect to 'node/123?foo=bar#baz':
    * @code
-   * $form_state->set('redirect', array(
-   *   'node/123',
+   * $form_state->setRedirect('node.view',
+   *   array('node' => 123),
    *   array(
    *     'query' => array(
    *       'foo' => 'bar',
@@ -73,27 +70,7 @@ interface FormSubmitterInterface {
    * ));
    * @endcode
    *
-   * There are several exceptions to the "usual" behavior described above:
-   * - If $form_state['programmed'] is TRUE, the form submission was usually
-   *   invoked via self::submitForm(), so any redirection would break the script
-   *   that invoked self::submitForm() and no redirection is done.
-   * - If $form_state['rebuild'] is TRUE, the form is being rebuilt, and no
-   *   redirection is done.
-   * - If $form_state['no_redirect'] is TRUE, redirection is disabled. This is
-   *   set, for instance, by \Drupal\system\FormAjaxController::getForm() to
-   *   prevent redirection in Ajax callbacks. $form_state['no_redirect'] should
-   *   never be set or altered by form builder functions or form validation
-   *   or submit handlers.
-   * - If $form_state['redirect'] is set to FALSE, redirection is disabled.
-   * - If none of the above conditions has prevented redirection, then the
-   *   redirect is accomplished by returning a RedirectResponse, passing in the
-   *   value of $form_state['redirect'] if it is set, or the current path if it
-   *   is not. RedirectResponse preferentially uses the value of
-   *   \Drupal::request->query->get('destination') (the 'destination' URL query
-   *   string) if it is present, so this will override any values set by
-   *   $form_state['redirect'].
-   *
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null

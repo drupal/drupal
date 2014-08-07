@@ -1418,7 +1418,7 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
   // Set the form to rebuild so that $form is correctly updated in response to
   // processing the file removal. Since this function did not change $form_state
   // if the upload button was clicked, a rebuild isn't necessary in that
-  // situation and setting $form_state['redirect'] to FALSE would suffice.
+  // situation and setting $form_state['no_redirect'] to TRUE would suffice.
   // However, we choose to always rebuild, to keep the form processing workflow
   // consistent between the two buttons.
   $form_state['rebuild'] = TRUE;

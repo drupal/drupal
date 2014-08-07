@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
@@ -16,6 +17,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\user\TempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -324,7 +326,10 @@ class ViewEditForm extends ViewFormBase {
           $query->remove('destination');
         }
       }
-      $form_state['redirect'] = $destination;
+      if (!UrlHelper::isExternal($destination)) {
+        $destination = $GLOBALS['base_url'] . '/' . $destination;
+      }
+      $form_state->setRedirectUrl(Url::createFromPath($destination));
     }
 
     $view->save();
@@ -778,22 +783,28 @@ class ViewEditForm extends ViewFormBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, FormStateInterface $form_state) {
-    $query = $this->requestStack->getCurrentRequest()->query;
-    // @todo: Revisit this when http://drupal.org/node/1668866 is in.
-    $destination = $query->get('destination');
-    if (isset($destination) && $form_state['redirect'] !== FALSE) {
-      if (!isset($form_state['redirect'])) {
-        $form_state['redirect'] = current_path();
+    $request = $this->requestStack->getCurrentRequest();
+    $destination = $request->query->get('destination');
+
+    $redirect = $form_state->getRedirect();
+    // If there is a destination, and redirects are not explicitly disabled, add
+    // the destination as a query string to the redirect and suppress it for the
+    // current request.
+    if (isset($destination) && $redirect !== FALSE) {
+      // Create a valid redirect if one does not exist already.
+      if (!($redirect instanceof Url)) {
+        $redirect = Url::createFromRequest($request);
       }
-      if (is_string($form_state['redirect'])) {
-        $form_state['redirect'] = array($form_state['redirect']);
-      }
-      $options = isset($form_state['redirect'][1]) ? $form_state['redirect'][1] : array();
+
+      // Add the current destination to the redirect unless one exists already.
+      $options = $redirect->getOptions();
       if (!isset($options['query']['destination'])) {
         $options['query']['destination'] = $destination;
+        $redirect->setOptions($options);
       }
-      $form_state['redirect'][1] = $options;
-      $query->remove('destination');
+
+      $form_state->setRedirectUrl($redirect);
+      $request->query->remove('destination');
     }
   }
 

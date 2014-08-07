@@ -127,10 +127,6 @@ class FormSubmitter implements FormSubmitterInterface {
    * {@inheritdoc}
    */
   public function redirectForm(FormStateInterface $form_state) {
-    // According to RFC 7231, 303 See Other status code must be used to redirect
-    // user agent (and not default 302 Found).
-    // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
-    $status_code = Response::HTTP_SEE_OTHER;
     $redirect = $form_state->getRedirect();
 
     // Allow using redirect responses directly if needed.
@@ -141,35 +137,7 @@ class FormSubmitter implements FormSubmitterInterface {
     $url = NULL;
     // Check for a route-based redirection.
     if ($redirect instanceof Url) {
-      $url = $redirect->toString();
-    }
-    // An array contains the path to use for the redirect, as well as options to
-    // use for generating the URL.
-    elseif (is_array($redirect)) {
-      if (isset($redirect[1])) {
-        $options = $redirect[1];
-      }
-      else {
-        $options = array();
-      }
-      // Redirections should always use absolute URLs.
-      $options['absolute'] = TRUE;
-      if (isset($redirect[2])) {
-        $status_code = $redirect[2];
-      }
-      $url = $this->urlGenerator->generateFromPath($redirect[0], $options);
-    }
-    // A string represents the path to use for the redirect.
-    elseif (is_string($redirect)) {
-      // This function can be called from the installer, which guarantees
-      // that $redirect will always be a string, so catch that case here
-      // and use the appropriate redirect function.
-      if ($this->drupalInstallationAttempted()) {
-        install_goto($redirect);
-      }
-      else {
-        $url = $this->urlGenerator->generateFromPath($redirect, array('absolute' => TRUE));
-      }
+      $url = $redirect->setAbsolute()->toString();
     }
     // If no redirect was specified, redirect to the current path.
     elseif ($redirect === NULL) {
@@ -183,7 +151,10 @@ class FormSubmitter implements FormSubmitterInterface {
     }
 
     if ($url) {
-      return new RedirectResponse($url, $status_code);
+      // According to RFC 7231, 303 See Other status code must be used to redirect
+      // user agent (and not default 302 Found).
+      // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
+      return new RedirectResponse($url, Response::HTTP_SEE_OTHER);
     }
   }
 

@@ -195,12 +195,7 @@ class FieldInstanceEditForm extends FormBase {
     $request = $this->getRequest();
     if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
       $request->query->remove('destinations');
-      if (isset($next_destination['route_name'])) {
-        $form_state->setRedirect($next_destination['route_name'], $next_destination['route_parameters'], $next_destination['options']);
-      }
-      else {
-        $form_state['redirect'] = $next_destination;
-      }
+      $form_state->setRedirectUrl($next_destination);
     }
     else {
       $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->instance->entity_type, $this->instance->bundle));

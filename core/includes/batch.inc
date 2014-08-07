@@ -16,9 +16,11 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Timer;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\Percentage;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -446,13 +448,15 @@ function _batch_finished() {
     if (!isset($_batch['form_state'])) {
       $_batch['form_state'] = new FormState();
     }
-    if (!isset($_batch['form_state']['redirect'])) {
-      if (isset($_batch['redirect'])) {
-        $_batch['form_state']['redirect'] = $_batch['redirect'];
+    if ($_batch['form_state']->getRedirect() === NULL) {
+      $redirect = $_batch['batch_redirect'] ?: $_batch['source_url'];
+      $options = UrlHelper::parse($redirect);
+      if (!UrlHelper::isExternal($options['path'])) {
+        $options['path'] = $GLOBALS['base_url'] . '/' . $options['path'];
       }
-      else {
-        $_batch['form_state']['redirect'] = $_batch['source_url'];
-      }
+      $redirect = Url::createFromPath($options['path']);
+      $redirect->setOptions($options);
+      $_batch['form_state']->setRedirectUrl($redirect);
     }
 
     // Use \Drupal\Core\Form\FormSubmitterInterface::redirectForm() to handle

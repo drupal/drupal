@@ -98,10 +98,6 @@ class TermForm extends ContentEntityForm {
       '#value' => $term->id(),
     );
 
-    if ($term->isNew()) {
-      $form_state['redirect'] = current_path();
-    }
-
     return parent::form($form, $form_state, $term);
   }
 

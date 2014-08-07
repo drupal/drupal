@@ -177,7 +177,7 @@ class FormBuilderTest extends FormTestBase {
       ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $redirect) {
         // Set both the response and the redirect.
         $form_state->setResponse($response);
-        $form_state['redirect'] = $redirect;
+        $form_state->set('redirect', $redirect);
       }));
 
     $form_state = new FormState();

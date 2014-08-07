@@ -3066,7 +3066,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
       'url' => $url,
       'url_options' => array(),
       'source_url' => current_path(),
-      'redirect' => $redirect,
+      'batch_redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],
       'redirect_callback' => $redirect_callback,
     );

@@ -127,10 +127,6 @@ interface FormStateInterface {
    *   The value will be one of the following:
    *   - A fully prepared \Symfony\Component\HttpFoundation\RedirectResponse.
    *   - An instance of \Drupal\Core\Url to use for the redirect.
-   *   - A numerically-indexed array where the first value is the path to use
-   *     for the redirect, and the optional second value is an array of options
-   *     for generating the URL from the path.
-   *   - The path to use for the redirect.
    *   - NULL, to signify that no redirect was specified and that the current
    *     path should be used for the redirect.
    *   - FALSE, to signify that no redirect should take place.

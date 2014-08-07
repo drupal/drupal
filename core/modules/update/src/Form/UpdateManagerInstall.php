@@ -216,7 +216,7 @@ class UpdateManagerInstall extends FormBase {
     // whatever FileTransfer object authorize.php creates for us.
     else {
       system_authorized_init('update_authorize_run_install', drupal_get_path('module', 'update') . '/update.authorize.inc', $arguments, $this->t('Update manager'));
-      $form_state['redirect'] = system_authorized_get_url();
+      $form_state->setRedirectUrl(system_authorized_get_url());
     }
   }
 

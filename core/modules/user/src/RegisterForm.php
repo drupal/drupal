@@ -60,12 +60,6 @@ class RegisterForm extends AccountForm {
     // Start with the default user account fields.
     $form = parent::form($form, $form_state, $account);
 
-    if ($admin) {
-      // Redirect back to page which initiated the create request; usually
-      // admin/people/create.
-      $form_state['redirect'] = current_path();
-    }
-
     return $form;
   }
 

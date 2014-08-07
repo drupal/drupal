@@ -98,57 +98,34 @@ class FormSubmitterTest extends UnitTestCase {
   }
 
   /**
-   * Tests the redirectForm() method when a redirect is expected.
+   * Tests the redirectForm() method when the redirect is NULL.
    *
    * @covers ::redirectForm
-   *
-   * @dataProvider providerTestRedirectWithResult
    */
-  public function testRedirectWithResult($redirect_value, $result, $status = 303) {
+  public function testRedirectWithNull() {
     $form_submitter = $this->getFormSubmitter();
     $this->urlGenerator->expects($this->once())
       ->method('generateFromPath')
-      ->will($this->returnValueMap(array(
-          array(NULL, array('query' => array(), 'absolute' => TRUE), '<front>'),
-          array('foo', array('absolute' => TRUE), 'foo'),
-          array('bar', array('query' => array('foo' => 'baz'), 'absolute' => TRUE), 'bar'),
-          array('baz', array('absolute' => TRUE), 'baz'),
-        ))
-      );
+      ->with(NULL, array('query' => array(), 'absolute' => TRUE))
+      ->willReturn('<front>');
 
     $form_state = $this->getMock('Drupal\Core\Form\FormStateInterface');
     $form_state->expects($this->once())
       ->method('getRedirect')
-      ->willReturn($redirect_value);
+      ->willReturn(NULL);
     $redirect = $form_submitter->redirectForm($form_state);
-    $this->assertSame($result, $redirect->getTargetUrl());
-    $this->assertSame($status, $redirect->getStatusCode());
+    $this->assertSame('<front>', $redirect->getTargetUrl());
+    $this->assertSame(303, $redirect->getStatusCode());
   }
 
   /**
-   * Provides test data for testing the redirectForm() method with a redirect.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestRedirectWithResult() {
-    return array(
-      array(NULL, '<front>'),
-      array('foo', 'foo'),
-      array(array('foo'), 'foo'),
-      array(array('bar', array('query' => array('foo' => 'baz'))), 'bar'),
-      array(array('baz', array(), 301), 'baz', 301),
-    );
-  }
-
-  /**
-   * Tests the redirectForm() with redirect_route when a redirect is expected.
+   * Tests redirectForm() when a redirect is a Url object.
    *
    * @covers ::redirectForm
    *
-   * @dataProvider providerTestRedirectWithRouteWithResult
+   * @dataProvider providerTestRedirectWithUrl
    */
-  public function testRedirectWithRouteWithResult($redirect_value, $result, $status = 303) {
+  public function testRedirectWithUrl(Url $redirect_value, $result, $status = 303) {
     $container = new ContainerBuilder();
     $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);
@@ -176,7 +153,7 @@ class FormSubmitterTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public function providerTestRedirectWithRouteWithResult() {
+  public function providerTestRedirectWithUrl() {
     return array(
       array(new Url('test_route_a', array(), array('absolute' => TRUE)), 'test-route'),
       array(new Url('test_route_b', array('key' => 'value'), array('absolute' => TRUE)), 'test-route/value'),
