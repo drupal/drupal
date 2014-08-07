@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @defgroup themeable Default theme implementations
+ * @defgroup themeable Theme system overview
  * @{
  * Functions and templates for the user interface that themes can override.
  *
@@ -148,12 +148,13 @@
  *
  * @see hooks
  * @see callbacks
+ * @see theme_render
  *
  * @} End of "defgroup themeable".
  */
 
 /**
- * @defgroup theme_render Theme system and Render API
+ * @defgroup theme_render Render API overview
  * @{
  * Overview of the Theme system and Render API.
  *
@@ -222,6 +223,8 @@
  *
  * @todo Check these links. Some are for Drupal 7, and might need updates for
  *   Drupal 8.
+ * @see themeable
+ *
  * @}
  */
 

@@ -46,7 +46,8 @@
  * - @link cache Caching @endlink
  * - @link utility Utility classes and functions @endlink
  * - @link user_api User accounts, permissions, and roles @endlink
- * - @link theme_render Theme system and render API @endlink
+ * - @link theme_render Render API @endlink
+ * - @link themeable Theme system @endlink
  * - @link migration Migration @endlink
  *
  * @section additional Additional topics
