@@ -24,7 +24,7 @@ abstract class SqlBase extends PagerPluginBase {
       'contains' => array(
         'items_per_page' => array('default' => FALSE, 'bool' => TRUE),
         'items_per_page_label' => array('default' => 'Items per page', 'translatable' => TRUE),
-        'items_per_page_options' => array('default' => '5, 10, 20, 40, 60'),
+        'items_per_page_options' => array('default' => '5, 10, 25, 50'),
         'items_per_page_options_all' => array('default' => FALSE, 'bool' => TRUE),
         'items_per_page_options_all_label' => array('default' => '- All -', 'translatable' => TRUE),
 
@@ -204,8 +204,8 @@ abstract class SqlBase extends PagerPluginBase {
     if (!empty($form_state['values']['pager_options']['expose']['items_per_page']) && !empty($form_state['values']['pager_options']['items_per_page'])) {
       $items_per_page = $form_state['values']['pager_options']['items_per_page'];
       if (array_search($items_per_page, $options) === FALSE) {
-        form_set_error('pager_options][expose][items_per_page_options', $form_state, t('Insert the items per page (@items_per_page) from above.',
-            array('@items_per_page' => $items_per_page))
+        form_set_error('pager_options][expose][items_per_page_options', $form_state, t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
+          array('@items_per_page' => $items_per_page))
         );
       }
     }
