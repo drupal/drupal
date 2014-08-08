@@ -72,11 +72,12 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
           ->getStorage($target_type)
           ->loadMultiple($entity_ids);
 
+        $entity_uuids = array();
         foreach ($entities as $id => $entity) {
           $entity_uuids[$entity->uuid()] = $id;
         }
         foreach ($uuids as $delta => $uuid) {
-          if ($entity_uuids[$uuid]) {
+          if (isset($entity_uuids[$uuid])) {
             $default_value[$delta]['target_id'] = $entity_uuids[$uuid];
             unset($default_value[$delta]['target_uuid']);
           }
