@@ -9,11 +9,10 @@
  * - string node: The complete HTML tag whose contents are being captioned.
  * - string tag: The name of the HTML tag whose contents are being captioned.
  * - string caption: The caption text.
- * - string|NULL align: (optional) The alignment: 'left', 'center', 'right' or
- *   NULL.
+ * - string classes: The classes of the captioned HTML tag.
  */
 #}
-<figure class="caption caption-{{ tag }} {%- if align %} align-{{ align }} {%- endif %}">
+<figure class="caption caption-{{ tag }}{%- if classes %} {{ classes }}{%- endif %}">
 {{ node }}
 <figcaption>{{ caption }}</figcaption>
 </figure>

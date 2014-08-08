@@ -135,9 +135,9 @@ class EditorImageDialog extends FormBase {
       '#parents' => array('attributes', 'height'),
     );
 
-    // When Drupal core's filter_caption is being used, the text editor may
+    // When Drupal core's filter_align is being used, the text editor may
     // offer the ability to change the alignment.
-    if (isset($image_element['data-align'])) {
+    if (isset($image_element['data-align']) && $filter_format->filters('filter_align')->status) {
       $form['align'] = array(
         '#title' => $this->t('Align'),
         '#type' => 'radios',
@@ -156,7 +156,7 @@ class EditorImageDialog extends FormBase {
 
     // When Drupal core's filter_caption is being used, the text editor may
     // offer the ability to in-place edit the image's caption: show a toggle.
-    if (isset($image_element['hasCaption'])) {
+    if (isset($image_element['hasCaption']) && $filter_format->filters('filter_caption')->status) {
       $form['caption'] = array(
         '#title' => $this->t('Caption'),
         '#type' => 'checkbox',

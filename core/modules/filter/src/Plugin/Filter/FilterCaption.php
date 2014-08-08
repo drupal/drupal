@@ -16,12 +16,14 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
- * Provides a filter to display image captions and align images.
+ * Provides a filter to caption elements.
+ *
+ * When used in combination with the filter_align filter, this must run last.
  *
  * @Filter(
  *   id = "filter_caption",
- *   title = @Translation("Display image captions and align images"),
- *   description = @Translation("Uses data-caption and data-align attributes on &lt;img&gt; tags to caption and align images."),
+ *   title = @Translation("Caption images"),
+ *   description = @Translation("Uses a <code>data-caption</code> attribute on <code>&lt;img&gt;</code> tags to caption images."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
@@ -33,60 +35,35 @@ class FilterCaption extends FilterBase {
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
 
-    if (stristr($text, 'data-caption') !== FALSE || stristr($text, 'data-align') !== FALSE) {
-      $caption_found = FALSE;
+    if (stristr($text, 'data-caption') !== FALSE) {
       $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
-      foreach ($xpath->query('//*[@data-caption or @data-align]') as $node) {
-        $caption = NULL;
-        $align = NULL;
+      foreach ($xpath->query('//*[@data-caption]') as $node) {
+        // Read the data-caption attribute's value, then delete it.
+        $caption = String::checkPlain($node->getAttribute('data-caption'));
+        $node->removeAttribute('data-caption');
 
-        // Retrieve, then remove the data-caption and data-align attributes.
-        if ($node->hasAttribute('data-caption')) {
-          $caption = String::checkPlain($node->getAttribute('data-caption'));
-          $node->removeAttribute('data-caption');
-          // Sanitize caption: decode HTML encoding, limit allowed HTML tags;
-          // only allow inline tags that are allowed by default, plus <br>.
-          $caption = String::decodeEntities($caption);
-          $caption = Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br'));
-          // The caption must be non-empty.
-          if (Unicode::strlen($caption) === 0) {
-            $caption = NULL;
-          }
-        }
-        if ($node->hasAttribute('data-align')) {
-          $align = $node->getAttribute('data-align');
-          $node->removeAttribute('data-align');
-          // Only allow 3 values: 'left', 'center' and 'right'.
-          if (!in_array($align, array('left', 'center', 'right'))) {
-            $align = NULL;
-          }
-        }
+        // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
+        // allow inline tags that are allowed by default, plus <br>.
+        $caption = String::decodeEntities($caption);
+        $caption = Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br'));
 
-        // Don't transform the HTML if there isn't a caption after validation.
-        if ($caption === NULL) {
-          // If there is a valid alignment, then transform the data-align
-          // attribute to a corresponding alignment class.
-          if ($align !== NULL) {
-            $classes = $node->getAttribute('class');
-            $classes = (strlen($classes) > 0) ? explode(' ', $classes) : array();
-            $classes[] = 'align-' . $align;
-            $node->setAttribute('class', implode(' ', $classes));
-          }
+        // The caption must be non-empty.
+        if (Unicode::strlen($caption) === 0) {
           continue;
         }
-        else {
-          $caption_found = TRUE;
-        }
 
-        // Given the updated node, caption and alignment: re-render it with a
-        // caption.
+        // Given the updated node and caption: re-render it with a caption, but
+        // bubble up the value of the class attribute of the captioned element,
+        // this allows it to collaborate with e.g. the filter_align filter.
+        $classes = $node->getAttribute('class');
+        $node->removeAttribute('class');
         $filter_caption = array(
           '#theme' => 'filter_caption',
           '#node' => SafeMarkup::set($node->C14N()),
           '#tag' => $node->tagName,
           '#caption' => $caption,
-          '#align' => $align,
+          '#classes' => $classes,
         );
         $altered_html = drupal_render($filter_caption);
 
@@ -103,15 +80,12 @@ class FilterCaption extends FilterBase {
         $node->parentNode->replaceChild($updated_node, $node);
       }
 
-      $result->setProcessedText(Html::serialize($dom));
-
-      if ($caption_found) {
-        $result->addAssets(array(
+      $result->setProcessedText(Html::serialize($dom))
+        ->addAssets(array(
           'library' => array(
             'filter/caption',
           ),
         ));
-      }
     }
 
     return $result;
@@ -123,15 +97,17 @@ class FilterCaption extends FilterBase {
   public function tips($long = FALSE) {
     if ($long) {
       return $this->t('
-        <p>You can add image captions and align images left, right or centered. Examples:</p>
+        <p>You can caption images, videos, blockquotes, and so on. Examples:</p>
         <ul>
-          <li>Caption an image: <code>&lt;img src="" data-caption="This is a caption" /&gt;</code></li>
-          <li>Align an image: <code>&lt;img src="" data-align="center" /&gt;</code></li>
-          <li>Caption & align an image: <code>&lt;img src="" data-caption="Alpaca" data-align="right" /&gt;</code></li>
+            <li><code>&lt;img src="" data-caption="This is a caption" /&gt;</code></li>
+            <li><code>&lt;video src="" data-caption="The Drupal Dance" /&gt;</code></li>
+            <li><code>&lt;blockquote data-caption="Dries Buytaert"&gt;Drupal is awesome!&lt;/blockquote&gt;</code></li>
+            <li><code>&lt;code data-caption="Hello world in JavaScript."&gt;alert("Hello world!");&lt;/code&gt;</code></li>
         </ul>');
     }
     else {
-      return $this->t('You can caption (data-caption="Text") and align images (data-align="center"), but also video, blockquotes, and so on.');
+      return $this->t('You can caption images (<code>data-caption="Text"<code>), but also videos, blockquotes, and so on.');
     }
   }
+
 }

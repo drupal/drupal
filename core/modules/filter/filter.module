@@ -80,7 +80,7 @@ function filter_theme() {
         'node' => NULL,
         'tag' => NULL,
         'caption' => NULL,
-        'align' => NULL,
+        'classes' => NULL,
       ),
       'template' => 'filter-caption',
     )

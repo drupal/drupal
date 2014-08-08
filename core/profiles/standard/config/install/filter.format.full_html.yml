@@ -5,6 +5,12 @@ weight: 1
 roles:
   - administrator
 filters:
+  filter_align:
+    id: filter_align
+    provider: filter
+    status: true
+    weight: 8
+    settings: {  }
   filter_caption:
     id: filter_caption
     provider: filter

@@ -33,6 +33,10 @@
           return;
         }
 
+        // Only perform the downcasting/upcasting for to the enabled filters.
+        var captionFilterEnabled = editor.config.drupalImageCaption_captionFilterEnabled;
+        var alignFilterEnabled = editor.config.drupalImageCaption_alignFilterEnabled;
+
         // Override default features definitions for drupalimagecaption.
         CKEDITOR.tools.extend(widgetDefinition.features, {
           caption: {
@@ -63,13 +67,17 @@
           var captionHtml = caption && caption.getData();
           var attrs = img.attributes;
 
-          // If image contains a non-empty caption, serialize caption to the
-          // data-caption attribute.
-          if (captionHtml) {
-            attrs['data-caption'] = captionHtml;
+          if (captionFilterEnabled) {
+            // If image contains a non-empty caption, serialize caption to the
+            // data-caption attribute.
+            if (captionHtml) {
+              attrs['data-caption'] = captionHtml;
+            }
           }
-          if (this.data.align !== 'none') {
-            attrs['data-align'] = this.data.align;
+          if (alignFilterEnabled) {
+            if (this.data.align !== 'none') {
+              attrs['data-align'] = this.data.align;
+            }
           }
           attrs['data-editor-file-uuid'] = this.data['data-editor-file-uuid'];
 
@@ -96,60 +104,69 @@
 
           // We won't need the attributes during editing: we'll use widget.data
           // to store them (except the caption, which is stored in the DOM).
-          var caption = attrs['data-caption'];
-          data.align = attrs['data-align'];
+          if (captionFilterEnabled) {
+            var caption = attrs['data-caption'];
+            delete attrs['data-caption'];
+          }
+          if (alignFilterEnabled) {
+            data.align = attrs['data-align'];
+            delete attrs['data-align'];
+          }
           data['data-editor-file-uuid' ] = attrs['data-editor-file-uuid'];
-          delete attrs['data-caption'];
-          delete attrs['data-align'];
           delete attrs['data-editor-file-uuid'];
 
-          // Unwrap from <p> wrapper created by HTML parser for captioned image.
-          // Captioned image will be transformed to <figure>, so we don't want
-          // the <p> anymore.
-          if (element.parent.name === 'p' && caption) {
-            var index = element.getIndex();
-            var splitBefore = index > 0;
-            var splitAfter = index + 1 < element.parent.children.length;
+          if (captionFilterEnabled) {
+            // Unwrap from <p> wrapper created by HTML parser for a captioned
+            // image. The captioned image will be transformed to <figure>, so we
+            // don't want the <p> anymore.
+            if (element.parent.name === 'p' && caption) {
+              var index = element.getIndex();
+              var splitBefore = index > 0;
+              var splitAfter = index + 1 < element.parent.children.length;
 
-            if (splitBefore) {
-              element.parent.split(index);
-            }
-            index = element.getIndex();
-            if (splitAfter) {
-              element.parent.split(index + 1);
+              if (splitBefore) {
+                element.parent.split(index);
+              }
+              index = element.getIndex();
+              if (splitAfter) {
+                element.parent.split(index + 1);
+              }
+
+              element.parent.replaceWith(element);
+              retElement = element;
             }
 
-            element.parent.replaceWith(element);
-            retElement = element;
+            // If this image has a caption, create a full <figure> structure.
+            if (caption) {
+              var figure = new CKEDITOR.htmlParser.element('figure');
+              caption = new CKEDITOR.htmlParser.fragment.fromHtml(caption, 'figcaption');
+
+              // Use Drupal's data-placeholder attribute to insert a CSS-based,
+              // translation-ready placeholder for empty captions. Note that it
+              // also must to be done for new instances (see
+              // widgetDefinition._createDialogSaveCallback).
+              caption.attributes['data-placeholder'] = placeholderText;
+
+              element.replaceWith(figure);
+              figure.add(element);
+              figure.add(caption);
+              figure.attributes['class'] = editor.config.image2_captionedClass;
+              retElement = figure;
+            }
           }
 
-          // If this image has a caption, create a full <figure> structure.
-          if (caption) {
-            var figure = new CKEDITOR.htmlParser.element('figure');
-            caption = new CKEDITOR.htmlParser.fragment.fromHtml(caption, 'figcaption');
-
-            // Use Drupal's data-placeholder attribute to insert a CSS-based,
-            // translation-ready placeholder for empty captions. Note that it
-            // also must to be done for new instances (see
-            // widgetDefinition._createDialogSaveCallback).
-            caption.attributes['data-placeholder'] = placeholderText;
-
-            element.replaceWith(figure);
-            figure.add(element);
-            figure.add(caption);
-            figure.attributes['class'] = editor.config.image2_captionedClass;
-            retElement = figure;
-          }
-
-          // If this image doesn't have a caption, but it is centered, make sure
-          // that it's wrapped with <p>, which will become a part of the widget.
-          if (data.align === 'center' && !caption) {
-            var p = new CKEDITOR.htmlParser.element('p');
-            element.replaceWith(p);
-            p.add(element);
-            // Apply the class for centered images.
-            p.addClass(editor.config.image2_alignClasses[1]);
-            retElement = p;
+          if (alignFilterEnabled) {
+            // If this image doesn't have a caption (or the caption filter is
+            // disabled), but it is centered, make sure that it's wrapped with
+            // <p>, which will become a part of the widget.
+            if (data.align === 'center' && (!captionFilterEnabled || !caption)) {
+              var p = new CKEDITOR.htmlParser.element('p');
+              element.replaceWith(p);
+              p.add(element);
+              // Apply the class for centered images.
+              p.addClass(editor.config.image2_alignClasses[1]);
+              retElement = p;
+            }
           }
 
           // Return the upcasted element (<img>, <figure> or <p>).

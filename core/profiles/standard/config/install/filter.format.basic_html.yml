@@ -14,6 +14,12 @@ filters:
       allowed_html: '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h4> <h5> <h6> <p> <span> <img>'
       filter_html_help: false
       filter_html_nofollow: false
+  filter_align:
+    id: filter_align
+    provider: filter
+    status: true
+    weight: 7
+    settings: {  }
   filter_caption:
     id: filter_caption
     provider: filter
