@@ -472,7 +472,7 @@
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
  * // Delete or invalidate all cache items with certain tags.
- * \Drupal\Core\Cache\Cache::deleteTags(array('node' => array(1));
+ * \Drupal\Core\Cache\Cache::deleteTags(array('node' => array(1)));
  * \Drupal\Core\Cache\Cache::invalidateTags(array('user' => array(1)));
  * @endcode
  *
