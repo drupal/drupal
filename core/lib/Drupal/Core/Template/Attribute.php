@@ -80,8 +80,18 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    *   An AttributeValueBase representation of the attribute's value.
    */
   protected function createAttributeValue($name, $value) {
-    if (is_array($value)) {
-      $value = new AttributeArray($name, $value);
+    // If the value is already an AttributeValueBase object, return it
+    // straight away.
+    if ($value instanceOf AttributeValueBase) {
+      return $value;
+    }
+    // An array value or 'class' attribute name are forced to always be an
+    // AttributeArray value for consistency.
+    if (is_array($value) || $name == 'class') {
+      // Cast the value to an array if the value was passed in as a string.
+      // @todo Decide to fix all the broken instances of class as a string
+      // in core or cast them.
+      $value = new AttributeArray($name, (array) $value);
     }
     elseif (is_bool($value)) {
       $value = new AttributeBoolean($name, $value);
@@ -104,6 +114,68 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    */
   public function offsetExists($name) {
     return isset($this->storage[$name]);
+  }
+
+  /**
+   * Adds argument values by merging them on to array of existing CSS classes.
+   *
+   * @param string|array ...
+   *   CSS classes to add to the class attribute array.
+   *
+   * @return $this
+   */
+  public function addClass() {
+    $args = func_get_args();
+    $classes = array();
+    foreach ($args as $arg) {
+      // Merge the values passed in from the classes array.
+      // The argument is cast to an array to support comma separated single
+      // values or one or more array arguments.
+      $classes = array_merge($classes, (array) $arg);
+    }
+
+    // Merge if there are values, just add them otherwise.
+    if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
+      // Merge the values passed in from the class value array.
+      $classes = array_merge($this->storage['class']->value(), $classes);
+      // Filter out any duplicate values.
+      $classes = array_unique($classes);
+      $this->storage['class']->exchangeArray($classes);
+    }
+    else {
+      // Filter out any duplicate values.
+      $classes = array_unique($classes);
+      $this->offsetSet('class', $classes);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Removes argument values from array of existing CSS classes.
+   *
+   * @param string|array ...
+   *   CSS classes to remove from the class attribute array.
+   *
+   * @return $this
+   */
+  public function removeClass() {
+    // With no class attribute, there is no need to remove.
+    if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
+      $args = func_get_args();
+      $classes = array();
+      foreach ($args as $arg) {
+        // Merge the values passed in from the classes array.
+        // The argument is cast to an array to support comma separated single
+        // values or one or more array arguments.
+        $classes = array_merge($classes, (array) $arg);
+      }
+
+      // Remove the values passed in from the value array.
+      $classes = array_diff($this->storage['class']->value(), $classes);
+      $this->storage['class']->exchangeArray($classes);
+    }
+    return $this;
   }
 
   /**
