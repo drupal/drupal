@@ -6,7 +6,9 @@
  */
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\comment\CommentManagerInterface;
 
 /**
  * Implements hook_install().
@@ -87,6 +89,12 @@ function forum_install() {
     ));
     if (empty($field_storages)) {
       Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', CommentItemInterface::OPEN, 'comment_forum');
+
+      // Add here because we don't have param in addDefaultField function.
+      $instance = FieldInstanceConfig::loadByName('node', 'forum', 'comment_forum');
+      $instance->settings['default_mode'] = CommentManagerInterface::COMMENT_MODE_FLAT;
+      $instance->save();
+
       // Hide label for comment field.
       entity_get_display('node', 'forum', 'default')
         ->setComponent('comment_forum', array(
