@@ -100,9 +100,10 @@
       {% endif %}
       {{ page.content }}
     </main>
-
-    <footer id="footer" role="contentinfo" class="layout-column">
-      {{ feed_icons }}
-    </footer>
+    {% if feed_icons %}
+      <footer id="footer" role="contentinfo" class="layout-column">
+          {{ feed_icons }}
+      </footer>
+    {% endif %}
 
   </div>
