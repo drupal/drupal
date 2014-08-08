@@ -1,14 +1,11 @@
 <?php
 
 /**
- * @file Contains Drupal\Core\Routing\LinkGeneratorTrait.
+ * @file
+ * Contains Drupal\Core\Routing\UrlGeneratorTrait.
  */
 
 namespace Drupal\Core\Routing;
-
-
-use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 
 /**
  * Wrapper methods for the Url Generator.
@@ -62,7 +59,7 @@ trait UrlGeneratorTrait {
    * @return $this
    */
   public function setUrlGenerator(UrlGeneratorInterface $generator) {
-    $this->linkGenerator = $generator;
+    $this->urlGenerator = $generator;
 
     return $this;
   }
