@@ -204,6 +204,10 @@ function file_views_data() {
   // entities, and then on each core entity type base table so that we can
   // provide general relationships between entities and files.
   $data['file_usage']['table']['join'] = array(
+    'file_managed' => array(
+      'field' => 'fid',
+      'left_field' => 'fid',
+    ),
     // Link ourself to the {node} table
     // so we can provide node->file relationships.
     'node' => array(
