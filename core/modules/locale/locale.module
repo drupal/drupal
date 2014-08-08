@@ -542,6 +542,13 @@ function locale_system_remove($components) {
 }
 
 /**
+ * Implements hook_cache_flush().
+ */
+function locale_cache_flush() {
+  \Drupal::state()->delete('system.javascript_parsed');
+}
+
+/**
  * Implements hook_js_alter().
  */
 function locale_js_alter(&$javascript) {
@@ -1397,4 +1404,3 @@ function locale_translation_language_table($form_element) {
   }
   return $form_element;
 }
-

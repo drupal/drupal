@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PerformanceForm extends ConfigFormBase {
 
   /**
-   * The render cache object.
+   * The render cache bin.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
@@ -34,6 +35,20 @@ class PerformanceForm extends ConfigFormBase {
   protected $dateFormatter;
 
   /**
+   * The CSS asset collection optimizer service.
+   *
+   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
+   */
+  protected $cssCollectionOptimizer;
+
+  /**
+   * The JavaScript asset collection optimizer service.
+   *
+   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
+   */
+  protected $jsCollectionOptimizer;
+
+  /**
    * Constructs a PerformanceForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -41,12 +56,18 @@ class PerformanceForm extends ConfigFormBase {
    * @param \Drupal\Core\Cache\CacheBackendInterface $render_cache
    * @param \Drupal\Core\Datetime\DateFormatter $date_formater
    *   The date formatter service.
+   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
+   *   The CSS asset collection optimizer service.
+   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $js_collection_optimizer
+   *   The JavaScript asset collection optimizer service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatter $date_formater) {
+  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatter $date_formater, AssetCollectionOptimizerInterface $css_collection_optimizer, AssetCollectionOptimizerInterface $js_collection_optimizer) {
     parent::__construct($config_factory);
 
     $this->renderCache = $render_cache;
     $this->dateFormatter = $date_formater;
+    $this->cssCollectionOptimizer = $css_collection_optimizer;
+    $this->jsCollectionOptimizer = $js_collection_optimizer;
   }
 
   /**
@@ -56,7 +77,9 @@ class PerformanceForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('cache.render'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('asset.css.collection_optimizer'),
+      $container->get('asset.js.collection_optimizer')
     );
   }
 
@@ -157,8 +180,8 @@ class PerformanceForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_clear_css_cache();
-    drupal_clear_js_cache();
+    $this->cssCollectionOptimizer->deleteAll();
+    $this->jsCollectionOptimizer->deleteAll();
     // This form allows page compression settings to be changed, which can
     // invalidate cached pages in the render cache, so it needs to be cleared on
     // form submit.

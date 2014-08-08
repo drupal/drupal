@@ -72,8 +72,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    * variable is emptied to force a rebuild of the cache. Second, the cache file
    * is generated if it is missing on disk. Old cache files are not deleted
    * immediately when the lookup variable is emptied, but are deleted after a
-   * set period by drupal_delete_file_if_stale(). This ensures that files
-   * referenced by a cached page will still be available.
+   * configurable period (@code system.performance.stale_file_threshold @endcode)
+   * to ensure that files referenced by a cached page will still be available.
    */
   public function optimize(array $js_assets) {
     // Group the assets.
@@ -163,4 +163,26 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
     }
     return hash('sha256', serialize($js_data));
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAll() {
+    return $this->state->get('system.js_cache_files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteAll() {
+    $this->state->delete('system.js_cache_files');
+    $delete_stale = function($uri) {
+      // Default stale file threshold is 30 days.
+      if (REQUEST_TIME - filemtime($uri) > \Drupal::config('system.performance')->get('stale_file_threshold')) {
+        file_unmanaged_delete($uri);
+      }
+    };
+    file_scan_directory('public://js', '/.*/', array('callback' => $delete_stale));
+  }
+
 }

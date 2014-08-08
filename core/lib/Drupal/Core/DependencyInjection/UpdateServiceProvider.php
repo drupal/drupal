@@ -42,7 +42,8 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
         ->addArgument(new Reference('config.factory'))
         ->addArgument(new Reference('module_handler'))
         ->addArgument(new Reference('state'))
-        ->addArgument(new Reference('info_parser'));
+        ->addArgument(new Reference('info_parser'))
+        ->addArgument(new Reference('asset.css.collection_optimizer'));
     }
   }
 

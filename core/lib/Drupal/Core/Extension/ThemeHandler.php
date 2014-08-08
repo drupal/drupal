@@ -8,6 +8,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
@@ -93,6 +94,13 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $extensionDiscovery;
 
   /**
+   * The CSS asset collection optimizer service.
+   *
+   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
+   */
+  protected $cssCollectionOptimizer;
+
+  /**
    * Constructs a new ThemeHandler.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -103,6 +111,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   The state store.
    * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
    *   The info parser to parse the theme.info.yml files.
+   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
+   *   The CSS asset collection optimizer service.
    * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
    *   (optional) The config installer to install configuration. This optional
    *   to allow the theme handler to work before Drupal is installed and has a
@@ -112,11 +122,12 @@ class ThemeHandler implements ThemeHandlerInterface {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
     $this->infoParser = $info_parser;
+    $this->cssCollectionOptimizer = $css_collection_optimizer;
     $this->configInstaller = $config_installer;
     $this->routeBuilder = $route_builder;
     $this->extensionDiscovery = $extension_discovery;
@@ -260,7 +271,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       watchdog('system', '%theme theme enabled.', array('%theme' => $key), WATCHDOG_INFO);
     }
 
-    $this->clearCssCache();
+    $this->cssCollectionOptimizer->deleteAll();
     $this->resetSystem();
 
     // Invoke hook_themes_enabled() after the themes have been enabled.
@@ -297,7 +308,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       }
     }
 
-    $this->clearCssCache();
+    $this->cssCollectionOptimizer->deleteAll();
 
     $extension_config = $this->configFactory->get('core.extension');
     $current_theme_data = $this->state->get('system.theme.data', array());
@@ -634,13 +645,6 @@ class ThemeHandler implements ThemeHandlerInterface {
    */
   protected function systemListReset() {
     system_list_reset();
-  }
-
-  /**
-   * Wraps drupal_clear_css_cache().
-   */
-  protected function clearCssCache() {
-    drupal_clear_css_cache();
   }
 
   /**

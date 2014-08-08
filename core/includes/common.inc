@@ -1328,24 +1328,12 @@ function drupal_pre_render_styles($elements) {
 
 /**
  * Deletes old cached CSS files.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
  */
 function drupal_clear_css_cache() {
-  \Drupal::state()->delete('drupal_css_cache_files');
-  file_scan_directory('public://css', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
-}
-
-/**
- * Deletes files modified more than a set time ago.
- *
- * Callback for file_scan_directory() within:
- * - drupal_clear_css_cache()
- * - drupal_clear_js_cache()
- */
-function drupal_delete_file_if_stale($uri) {
-  // Default stale file threshold is 30 days.
-  if (REQUEST_TIME - filemtime($uri) > \Drupal::config('system.performance')->get('stale_file_threshold')) {
-    file_unmanaged_delete($uri);
-  }
+  \Drupal::service('asset.css.collection_optimizer')->deleteAll();
 }
 
 /**
@@ -2463,11 +2451,12 @@ function drupal_attach_tabledrag(&$element, array $options) {
 
 /**
  * Deletes old cached JavaScript files and variables.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
  */
 function drupal_clear_js_cache() {
-  \Drupal::state()->delete('system.javascript_parsed');
-  \Drupal::state()->delete('system.js_cache_files');
-  file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
+  \Drupal::service('asset.js.collection_optimizer')->deleteAll();
 }
 
 /**
@@ -3956,8 +3945,8 @@ function drupal_flush_all_caches() {
   }
 
   // Flush asset file caches.
-  drupal_clear_css_cache();
-  drupal_clear_js_cache();
+  \Drupal::service('asset.css.collection_optimizer')->deleteAll();
+  \Drupal::service('asset.js.collection_optimizer')->deleteAll();
   _drupal_flush_css_js();
 
   // Reset all static caches.

@@ -22,4 +22,17 @@ interface AssetCollectionOptimizerInterface {
    */
   public function optimize(array $assets);
 
+  /**
+   * Returns all optimized asset collections assets.
+   *
+   * @return string[]
+   *   URIs for all optimized asset collection assets.
+   */
+  public function getAll();
+
+  /**
+   * Deletes all optimized asset collections assets.
+   */
+  public function deleteAll();
+
 }
