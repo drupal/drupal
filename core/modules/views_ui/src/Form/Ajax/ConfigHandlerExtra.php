@@ -106,7 +106,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
     $item = $form_state['handler']->options;
 
     // Store the data we're given.
-    foreach ($form_state['values']['options'] as $key => $value) {
+    foreach ($form_state->getValue('options') as $key => $value) {
       $item[$key] = $value;
     }
 

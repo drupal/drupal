@@ -92,8 +92,8 @@ abstract class DateFormatFormBase extends EntityForm {
    */
   public static function dateTimeLookup(array $form, FormStateInterface $form_state) {
     $format = '';
-    if (!empty($form_state['values']['date_format_pattern'])) {
-      $format = t('Displayed as %date_format', array('%date_format' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', $form_state['values']['date_format_pattern'])));
+    if (!$form_state->isValueEmpty('date_format_pattern')) {
+      $format = t('Displayed as %date_format', array('%date_format' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', $form_state->getValue('date_format_pattern'))));
     }
     // Return a command instead of a string, since the Ajax framework
     // automatically prepends an additional empty DIV element for a string, which
@@ -161,7 +161,7 @@ abstract class DateFormatFormBase extends EntityForm {
     // The machine name field should already check to see if the requested
     // machine name is available. Regardless of machine_name or human readable
     // name, check to see if the provided pattern exists.
-    $pattern = trim($form_state['values']['date_format_pattern']);
+    $pattern = trim($form_state->getValue('date_format_pattern'));
     foreach ($this->dateFormatStorage->loadMultiple() as $format) {
       if ($format->getPattern() == $pattern && ($this->entity->isNew() || $format->id() != $this->entity->id())) {
         $form_state->setErrorByName('date_format_pattern', $this->t('This format already exists. Enter a unique format string.'));
@@ -175,7 +175,7 @@ abstract class DateFormatFormBase extends EntityForm {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect('system.date_format_list');
-    $form_state['values']['pattern'] = trim($form_state['values']['date_format_pattern']);
+    $form_state->setValue('pattern', trim($form_state->getValue('date_format_pattern')));
 
     parent::submit($form, $form_state);
     $this->entity->save();

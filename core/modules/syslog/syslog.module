@@ -66,9 +66,9 @@ function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $f
  */
 function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::config('syslog.settings')
-    ->set('identity', $form_state['values']['syslog_identity'])
-    ->set('facility', $form_state['values']['syslog_facility'])
-    ->set('format', $form_state['values']['syslog_format'])
+    ->set('identity', $form_state->getValue('syslog_identity'))
+    ->set('facility', $form_state->getValue('syslog_facility'))
+    ->set('format', $form_state->getValue('syslog_format'))
     ->save();
 }
 

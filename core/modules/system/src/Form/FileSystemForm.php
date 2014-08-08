@@ -122,12 +122,12 @@ class FileSystemForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('system.file')
-      ->set('path.private', $form_state['values']['file_private_path'])
-      ->set('path.temporary', $form_state['values']['file_temporary_path'])
-      ->set('temporary_maximum_age', $form_state['values']['temporary_maximum_age']);
+      ->set('path.private', $form_state->getValue('file_private_path'))
+      ->set('path.temporary', $form_state->getValue('file_temporary_path'))
+      ->set('temporary_maximum_age', $form_state->getValue('temporary_maximum_age'));
 
-    if (isset($form_state['values']['file_default_scheme'])) {
-      $config->set('default_scheme', $form_state['values']['file_default_scheme']);
+    if ($form_state->hasValue('file_default_scheme')) {
+      $config->set('default_scheme', $form_state->getValue('file_default_scheme'));
     }
     $config->save();
 

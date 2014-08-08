@@ -105,7 +105,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['block_mode'] = $form_state['values']['book_block_mode'];
+    $this->configuration['block_mode'] = $form_state->getValue('book_block_mode');
   }
 
   /**

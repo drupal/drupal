@@ -85,7 +85,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['message'] = $form_state['values']['message'];
+    $this->configuration['message'] = $form_state->getValue('message');
     unset($this->configuration['node']);
   }
 

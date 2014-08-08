@@ -29,7 +29,7 @@ class FormTestTableSelectMultipleFalseForm extends FormTestTableSelectFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message(t('Submitted: @value', array('@value' => $form_state['values']['tableselect'])));
+    drupal_set_message(t('Submitted: @value', array('@value' => $form_state->getValue('tableselect'))));
   }
 
 }

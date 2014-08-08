@@ -253,8 +253,10 @@ abstract class FilterPluginBase extends HandlerBase {
    * Simple submit handler
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    unset($form_state['values']['expose_button']); // don't store this.
-    unset($form_state['values']['group_button']); // don't store this.
+    // Do not store these values.
+    $form_state->unsetValue('expose_button');
+    $form_state->unsetValue('group_button');
+
     if (!$this->isAGroup()) {
       $this->operatorSubmit($form, $form_state);
       $this->valueSubmit($form, $form_state);
@@ -612,15 +614,15 @@ abstract class FilterPluginBase extends HandlerBase {
    * Validate the options form.
    */
   public function validateExposeForm($form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['options']['expose']['identifier'])) {
+    $identifier = $form_state->getValue(array('options', 'expose', 'identifier'));
+    if (empty($identifier)) {
       form_error($form['expose']['identifier'], $form_state, t('The identifier is required if the filter is exposed.'));
     }
-
-    if (!empty($form_state['values']['options']['expose']['identifier']) && $form_state['values']['options']['expose']['identifier'] == 'value') {
+    elseif ($identifier == 'value') {
       form_error($form['expose']['identifier'], $form_state, t('This identifier is not allowed.'));
     }
 
-    if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $form_state['values']['options']['expose']['identifier'])) {
+    if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $identifier)) {
       form_error($form['expose']['identifier'], $form_state, t('This identifier is used by another handler.'));
     }
   }
@@ -629,24 +631,25 @@ abstract class FilterPluginBase extends HandlerBase {
    * Validate the build group options form.
    */
   protected function buildGroupValidate($form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['options']['group_info'])) {
-      if (empty($form_state['values']['options']['group_info']['identifier'])) {
+    if (!$form_state->isValueEmpty(array('options', 'group_info'))) {
+      $identifier = $form_state->getValue(array('options', 'group_info', 'identifier'));
+      if (empty($identifier)) {
         form_error($form['group_info']['identifier'], $form_state, t('The identifier is required if the filter is exposed.'));
       }
 
-      if (!empty($form_state['values']['options']['group_info']['identifier']) && $form_state['values']['options']['group_info']['identifier'] == 'value') {
+      elseif ($identifier == 'value') {
         form_error($form['group_info']['identifier'], $form_state, t('This identifier is not allowed.'));
       }
 
-      if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $form_state['values']['options']['group_info']['identifier'])) {
+      if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $identifier)) {
         form_error($form['group_info']['identifier'], $form_state, t('This identifier is used by another handler.'));
       }
     }
 
-    if (!empty($form_state['values']['options']['group_info']['group_items'])) {
+    if ($group_items = $form_state->getValue(array('options', 'group_info', 'group_items'))) {
       $operators = $this->operators();
 
-      foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
+      foreach ($group_items as $id => $group) {
         if (empty($group['remove'])) {
 
           // Check if the title is defined but value wasn't defined.
@@ -676,32 +679,33 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   protected function buildGroupSubmit($form, FormStateInterface $form_state) {
     $groups = array();
-    uasort($form_state['values']['options']['group_info']['group_items'], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+    $group_items = $form_state->getValue(array('options', 'group_info', 'group_items'));
+    uasort($group_items, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
     // Filter out removed items.
 
     // Start from 1 to avoid problems with #default_value in the widget.
     $new_id = 1;
     $new_default = 'All';
-    foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
+    foreach ($group_items as $id => $group) {
       if (empty($group['remove'])) {
         // Don't store this.
         unset($group['remove']);
         unset($group['weight']);
         $groups[$new_id] = $group;
 
-        if ($form_state['values']['options']['group_info']['default_group'] === $id) {
+        if ($form_state->getValue(array('options', 'group_info', 'default_group')) == $id) {
           $new_default = $new_id;
         }
       }
       $new_id++;
     }
     if ($new_default != 'All') {
-      $form_state['values']['options']['group_info']['default_group'] = $new_default;
+      $form_state->setValue(array('options', 'group_info', 'default_group'), $new_default);
     }
-    $filter_default_multiple = array_filter($form_state['values']['options']['group_info']['default_group_multiple']);
-    $form_state['values']['options']['group_info']['default_group_multiple'] = $filter_default_multiple;
+    $filter_default_multiple = $form_state->getValue(array('options', 'group_info', 'default_group_multiple'));
+    $form_state->setValue(array('options', 'group_info', 'default_group_multiple'), array_filter($filter_default_multiple));
 
-    $form_state['values']['options']['group_info']['group_items'] = $groups;
+    $form_state->setValue(array('options', 'group_info', 'group_items'), $groups);
   }
 
   /**
@@ -951,7 +955,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // After the general settings, comes a table with all the existent groups.
     $default_weight = 0;
     foreach ($this->options['group_info']['group_items'] as $item_id => $item) {
-      if (!empty($form_state['values']['options']['group_info']['group_items'][$item_id]['remove'])) {
+      if (!$form_state->isValueEmpty(array('options', 'group_info', 'group_items', $item_id, 'remove'))) {
         continue;
       }
       // Each rows contains three widgets:

@@ -301,11 +301,11 @@ class NodeForm extends ContentEntityForm {
     }
 
     // Validate the "authored by" field.
-    if (!empty($form_state['values']['uid']) && !user_load_by_name($form_state['values']['uid'])) {
+    if (!$form_state->isValueEmpty('uid') && !user_load_by_name($form_state->getValue('uid'))) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      $form_state->setErrorByName('uid', $this->t('The username %name does not exist.', array('%name' => $form_state['values']['uid'])));
+      $form_state->setErrorByName('uid', $this->t('The username %name does not exist.', array('%name' => $form_state->getValue('uid'))));
     }
 
     // Validate the "authored on" field.
@@ -338,7 +338,7 @@ class NodeForm extends ContentEntityForm {
     $node = parent::submit($form, $form_state);
 
     // Save as a new revision if requested to do so.
-    if (!empty($form_state['values']['revision']) && $form_state['values']['revision'] != FALSE) {
+    if (!$form_state->isValueEmpty('revision') && $form_state->getValue('revision') != FALSE) {
       $node->setNewRevision();
       // If a new revision is created, save the current user as revision author.
       $node->setRevisionCreationTime(REQUEST_TIME);
@@ -409,15 +409,15 @@ class NodeForm extends ContentEntityForm {
     $entity = parent::buildEntity($form, $form_state);
     // A user might assign the node author by entering a user name in the node
     // form, which we then need to translate to a user ID.
-    if (!empty($form_state['values']['uid']) && $account = user_load_by_name($form_state['values']['uid'])) {
+    if (!$form_state->isValueEmpty('uid') && $account = user_load_by_name($form_state->getValue('uid'))) {
       $entity->setOwnerId($account->id());
     }
     else {
       $entity->setOwnerId(0);
     }
 
-    if (!empty($form_state['values']['created']) && $form_state['values']['created'] instanceOf DrupalDateTime) {
-      $entity->setCreatedTime($form_state['values']['created']->getTimestamp());
+    if (!$form_state->isValueEmpty('created') && $form_state->getValue('created') instanceOf DrupalDateTime) {
+      $entity->setCreatedTime($form_state->getValue('created')->getTimestamp());
     }
     else {
       $entity->setCreatedTime(REQUEST_TIME);
@@ -446,7 +446,7 @@ class NodeForm extends ContentEntityForm {
     }
 
     if ($node->id()) {
-      $form_state['values']['nid'] = $node->id();
+      $form_state->setValue('nid', $node->id());
       $form_state['nid'] = $node->id();
       if ($node->access('view')) {
         $form_state->setRedirect(

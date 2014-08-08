@@ -52,9 +52,9 @@ class FormTestRedirectForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['redirection'])) {
-      if (!empty($form_state['values']['destination'])) {
-        $form_state->setRedirectUrl(Url::createFromPath($GLOBALS['base_url'] . '/' . $form_state['values']['destination']));
+    if (!$form_state->isValueEmpty('redirection')) {
+      if (!$form_state->isValueEmpty('destination')) {
+        $form_state->setRedirectUrl(Url::createFromPath($GLOBALS['base_url'] . '/' . $form_state->getValue('destination')));
       }
     }
     else {

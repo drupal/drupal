@@ -59,9 +59,10 @@ class BatchTestChainedForm extends FormBase {
     batch_test_stack(NULL, TRUE);
 
     batch_test_stack('submit handler 1');
-    batch_test_stack('value = ' . $form_state['values']['value']);
+    batch_test_stack('value = ' . $form_state->getValue('value'));
 
-    $form_state['values']['value']++;
+    $value = &$form_state->getValue('value');
+    $value++;
     batch_set(_batch_test_batch_1());
 
     $form_state->setRedirect('batch_test.redirect');
@@ -72,9 +73,10 @@ class BatchTestChainedForm extends FormBase {
    */
   public static function batchTestChainedFormSubmit2($form, FormStateInterface $form_state) {
     batch_test_stack('submit handler 2');
-    batch_test_stack('value = ' . $form_state['values']['value']);
+    batch_test_stack('value = ' . $form_state->getValue('value'));
 
-    $form_state['values']['value']++;
+    $value = &$form_state->getValue('value');
+    $value++;
     batch_set(_batch_test_batch_2());
 
     $form_state->setRedirect('batch_test.redirect');
@@ -85,9 +87,10 @@ class BatchTestChainedForm extends FormBase {
    */
   public static function batchTestChainedFormSubmit3($form, FormStateInterface $form_state) {
     batch_test_stack('submit handler 3');
-    batch_test_stack('value = ' . $form_state['values']['value']);
+    batch_test_stack('value = ' . $form_state->getValue('value'));
 
-    $form_state['values']['value']++;
+    $value = &$form_state->getValue('value');
+    $value++;
 
     $form_state->setRedirect('batch_test.redirect');
   }
@@ -97,9 +100,10 @@ class BatchTestChainedForm extends FormBase {
    */
   public static function batchTestChainedFormSubmit4($form, FormStateInterface $form_state) {
     batch_test_stack('submit handler 4');
-    batch_test_stack('value = ' . $form_state['values']['value']);
+    batch_test_stack('value = ' . $form_state->getValue('value'));
 
-    $form_state['values']['value']++;
+    $value = &$form_state->getValue('value');
+    $value++;
     batch_set(_batch_test_batch_3());
 
     $form_state->setRedirect('batch_test.redirect');

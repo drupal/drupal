@@ -281,7 +281,7 @@ abstract class HandlerBase extends PluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
-    // be moved into one because of the form_state['values'] hierarchy. Those
+    // be moved into one because of the $form_state->getValues() hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
     // be moved to their fieldset during pre_render.
     $form['#pre_render'][] = array(get_class($this), 'preRenderAddFieldsetMarkup');
@@ -377,7 +377,7 @@ abstract class HandlerBase extends PluginBase {
    * There is no need for this function to actually store the data.
    */
   public function submitGroupByForm(&$form, FormStateInterface $form_state) {
-    $form_state['handler']->options['group_type'] = $form_state['values']['options']['group_type'];
+    $form_state['handler']->options['group_type'] = $form_state->getValue(array('options', 'group_type'));
   }
 
   /**
@@ -944,7 +944,7 @@ abstract class HandlerBase extends PluginBase {
 
     // Add the incoming options to existing options because items using
     // the extra form may not have everything in the form here.
-    $options = $form_state['values']['options'] + $this->options;
+    $options = $form_state->getValue('options') + $this->options;
 
     // This unpacks only options that are in the definition, ensuring random
     // extra stuff on the form is not sent through.

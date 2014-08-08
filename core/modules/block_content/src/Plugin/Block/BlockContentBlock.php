@@ -139,7 +139,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   public function blockSubmit($form, FormStateInterface $form_state) {
     // Invalidate the block cache to update custom block-based derivatives.
     if ($this->moduleHandler->moduleExists('block')) {
-      $this->configuration['view_mode'] = $form_state['values']['block_content']['view_mode'];
+      $this->configuration['view_mode'] = $form_state->getValue(array('block_content', 'view_mode'));
       $this->blockManager->clearCachedDefinitions();
     }
   }

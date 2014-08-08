@@ -129,16 +129,16 @@ class BasicSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('views.settings')
-      ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
-      ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
-      ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])
-      ->set('ui.exposed_filter_any_label', $form_state['values']['ui_exposed_filter_any_label'])
-      ->set('ui.always_live_preview', $form_state['values']['ui_always_live_preview'])
-      ->set('ui.show.preview_information', $form_state['values']['ui_show_preview_information'])
-      ->set('ui.show.sql_query.where', $form_state['values']['ui_show_sql_query_where'])
-      ->set('ui.show.sql_query.enabled', $form_state['values']['ui_show_sql_query_enabled'])
-      ->set('ui.show.performance_statistics', $form_state['values']['ui_show_performance_statistics'])
-      ->set('ui.show.additional_queries', $form_state['values']['ui_show_additional_queries'])
+      ->set('ui.show.master_display', $form_state->getValue('ui_show_master_display'))
+      ->set('ui.show.advanced_column', $form_state->getValue('ui_show_advanced_column'))
+      ->set('ui.show.display_embed', $form_state->getValue('ui_show_display_embed'))
+      ->set('ui.exposed_filter_any_label', $form_state->getValue('ui_exposed_filter_any_label'))
+      ->set('ui.always_live_preview', $form_state->getValue('ui_always_live_preview'))
+      ->set('ui.show.preview_information', $form_state->getValue('ui_show_preview_information'))
+      ->set('ui.show.sql_query.where', $form_state->getValue('ui_show_sql_query_where'))
+      ->set('ui.show.sql_query.enabled', $form_state->getValue('ui_show_sql_query_enabled'))
+      ->set('ui.show.performance_statistics', $form_state->getValue('ui_show_performance_statistics'))
+      ->set('ui.show.additional_queries', $form_state->getValue('ui_show_additional_queries'))
       ->save();
 
     parent::submitForm($form, $form_state);

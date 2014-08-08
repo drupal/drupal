@@ -48,12 +48,12 @@ class Date extends Numeric {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
-    if (!empty($this->options['exposed']) && empty($form_state['values']['options']['expose']['required'])) {
+    if (!empty($this->options['exposed']) && $form_state->isValueEmpty(array('options', 'expose', 'required'))) {
       // Who cares what the value is if it's exposed and non-required.
       return;
     }
 
-    $this->validateValidTime($form['value'], $form_state, $form_state['values']['options']['operator'], $form_state['values']['options']['value']);
+    $this->validateValidTime($form['value'], $form_state, $form_state->getValue(array('options', 'operator')), $form_state->getValue(array('options', 'value')));
   }
 
   public function validateExposed(&$form, FormStateInterface $form_state) {
@@ -66,9 +66,9 @@ class Date extends Numeric {
       return;
     }
 
-    $value = &$form_state['values'][$this->options['expose']['identifier']];
+    $value = &$form_state->getValue($this->options['expose']['identifier']);
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) {
-      $operator = $form_state['values'][$this->options['expose']['operator_id']];
+      $operator = &$form_state->getValue($this->options['expose']['operator_id']);
     }
     else {
       $operator = $this->operator;
@@ -110,7 +110,7 @@ class Date extends Numeric {
     // $group['value'] array contains the type of filter (date or offset)
     // and therefore the number of items the comparission has to be done
     // against 'one' instead of 'zero'.
-    foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
+    foreach ($form_state->getValue(array('options', 'group_info', 'group_items')) as $id => $group) {
       if (empty($group['remove'])) {
         // Check if the title is defined but value wasn't defined.
         if (!empty($group['title'])) {

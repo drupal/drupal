@@ -165,8 +165,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['views_label_checkbox'])) {
-      $this->configuration['views_label'] = $form_state['values']['views_label'];
+    if (!$form_state->isValueEmpty('views_label_checkbox')) {
+      $this->configuration['views_label'] = $form_state->getValue('views_label');
     }
     else {
       $this->configuration['views_label'] = '';

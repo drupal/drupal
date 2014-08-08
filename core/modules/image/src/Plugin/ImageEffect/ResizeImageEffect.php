@@ -94,8 +94,8 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
 
-    $this->configuration['height'] = $form_state['values']['height'];
-    $this->configuration['width'] = $form_state['values']['width'];
+    $this->configuration['height'] = $form_state->getValue('height');
+    $this->configuration['width'] = $form_state->getValue('width');
   }
 
 }

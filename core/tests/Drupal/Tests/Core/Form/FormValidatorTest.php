@@ -107,7 +107,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->expects($this->once())
       ->method('setErrorByName')
       ->with('form_token', 'The form has become outdated. Copy any unsaved work in the form below and then <a href="/test/example?foo=bar">reload this page</a>.');
-    $form_state['values']['form_token'] = 'some_random_token';
+    $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state['validation_complete']);
   }
@@ -137,7 +137,7 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_state->expects($this->never())
       ->method('setErrorByName');
-    $form_state['values']['form_token'] = 'some_random_token';
+    $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state['validation_complete']);
   }
@@ -178,14 +178,15 @@ class FormValidatorTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
+    $triggering_element['#limit_validation_errors'] = $sections;
     $form = array();
-    $form_state = new FormState();
-    $form_state['triggering_element'] = $triggering_element;
-    $form_state['triggering_element']['#limit_validation_errors'] = $sections;
+    $form_state = new FormState(array(
+      'values' => $values,
+      'triggering_element' => $triggering_element,
+    ));
 
-    $form_state['values'] = $values;
     $form_validator->validateForm('test_form_id', $form, $form_state);
-    $this->assertSame($expected, $form_state['values']);
+    $this->assertSame($expected, $form_state->getValues());
   }
 
   public function providerTestHandleErrorsWithLimitedValidation() {
@@ -405,7 +406,6 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->expects($this->once())
       ->method('setError')
       ->with($this->isType('array'), $expected_message);
-    $form_state['values'] = array();
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 

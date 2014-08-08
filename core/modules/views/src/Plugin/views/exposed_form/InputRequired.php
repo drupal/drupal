@@ -45,8 +45,9 @@ class InputRequired extends ExposedFormPluginBase {
   }
 
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    $form_state['values']['exposed_form_options']['text_input_required_format'] = $form_state['values']['exposed_form_options']['text_input_required']['format'];
-    $form_state['values']['exposed_form_options']['text_input_required'] = $form_state['values']['exposed_form_options']['text_input_required']['value'];
+    $exposed_form_options = $form_state->getValue('exposed_form_options');
+    $form_state->setValue(array('exposed_form_options', 'text_input_required_format'), $exposed_form_options['text_input_required']['format']);
+    $form_state->setValue(array('exposed_form_options', 'text_input_required'), $exposed_form_options['text_input_required']['value']);
     parent::submitOptionsForm($form, $form_state);
   }
 

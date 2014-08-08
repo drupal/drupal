@@ -143,8 +143,8 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['block_count'] = $form_state['values']['block_count'];
-    $this->configuration['feed'] = $form_state['values']['feed'];
+    $this->configuration['block_count'] = $form_state->getValue('block_count');
+    $this->configuration['feed'] = $form_state->getValue('feed');
   }
 
   /**

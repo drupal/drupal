@@ -48,7 +48,7 @@ class LoggingForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.logging')
-      ->set('error_level', $form_state['values']['error_level'])
+      ->set('error_level', $form_state->getValue('error_level'))
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -136,12 +136,12 @@ abstract class PathFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $source = &$form_state['values']['source'];
+    $source = &$form_state->getValue('source');
     $source = $this->aliasManager->getPathByAlias($source);
-    $alias = $form_state['values']['alias'];
+    $alias = $form_state->getValue('alias');
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
-    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $langcode = $form_state->getValue('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     if ($this->aliasStorage->aliasExists($alias, $langcode, $source)) {
       $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
@@ -158,13 +158,13 @@ abstract class PathFormBase extends FormBase {
     // Remove unnecessary values.
     form_state_values_clean($form_state);
 
-    $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
-    $source = &$form_state['values']['source'];
+    $pid = $form_state->getValue('pid', 0);
+    $source = &$form_state->getValue('source');
     $source = $this->aliasManager->getPathByAlias($source);
-    $alias = $form_state['values']['alias'];
+    $alias = $form_state->getValue('alias');
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
-    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $langcode = $form_state->getValue('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     $this->aliasStorage->save($source, $alias, $langcode, $pid);
 

@@ -219,7 +219,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
-    // be moved into one because of the form_state['values'] hierarchy. Those
+    // be moved into one because of the $form_state->getValues() hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
     // be moved to their fieldset during pre_render.
     $form['#pre_render'][] = array(get_class($this), 'preRenderAddFieldsetMarkup');
@@ -375,7 +375,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * easier storage. Moving the form elements into fieldsets during form
    * building would break up that hierarchy. Therefore, we wait until the
    * pre_render stage, where any changes we make affect presentation only and
-   * aren't reflected in $form_state['values'].
+   * aren't reflected in $form_state->getValues().
    *
    * @param array $form
    *   The form build array to alter.

@@ -678,8 +678,8 @@ class Field extends FieldPluginBase {
     $item = &$form_state['handler']->options;
 
     // Add settings for "field API" fields.
-    $item['group_column'] = $form_state['values']['options']['group_column'];
-    $item['group_columns'] = array_filter($form_state['values']['options']['group_columns']);
+    $item['group_column'] = $form_state->getValue(array('options', 'group_column'));
+    $item['group_columns'] = array_filter($form_state->getValue(array('options', 'group_columns')));
   }
 
   /**

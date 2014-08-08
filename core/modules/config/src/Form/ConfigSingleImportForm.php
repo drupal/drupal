@@ -185,20 +185,20 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
 
     // Decode the submitted import.
-    $data = Yaml::decode($form_state['values']['import']);
+    $data = Yaml::decode($form_state->getValue('import'));
 
     // Validate for config entities.
-    if ($form_state['values']['config_type'] !== 'system.simple') {
-      $definition = $this->entityManager->getDefinition($form_state['values']['config_type']);
+    if ($form_state->getValue('config_type') !== 'system.simple') {
+      $definition = $this->entityManager->getDefinition($form_state->getValue('config_type'));
       $id_key = $definition->getKey('id');
 
       // If a custom entity ID is specified, override the value in the
       // configuration data being imported.
-      if (!empty($form_state['values']['custom_entity_id'])) {
-        $data[$id_key] = $form_state['values']['custom_entity_id'];
+      if (!$form_state->isValueEmpty('custom_entity_id')) {
+        $data[$id_key] = $form_state->getValue('custom_entity_id');
       }
 
-      $entity_storage = $this->entityManager->getStorage($form_state['values']['config_type']);
+      $entity_storage = $this->entityManager->getStorage($form_state->getValue('config_type'));
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {
         $form_state->setErrorByName('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition->getLabel())));
@@ -222,7 +222,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       }
     }
     else {
-      $config = $this->config($form_state['values']['config_name']);
+      $config = $this->config($form_state->getValue('config_name'));
       $this->configExists = !$config->isNew() ? $config : FALSE;
     }
 
@@ -237,7 +237,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     // If this form has not yet been confirmed, store the values and rebuild.
     if (!$this->data) {
       $form_state['rebuild'] = TRUE;
-      $this->data = $form_state['values'];
+      $this->data = $form_state->getValues();
       return;
     }
 

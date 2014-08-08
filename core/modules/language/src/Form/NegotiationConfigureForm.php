@@ -138,11 +138,11 @@ class NegotiationConfigureForm extends FormBase {
     foreach ($configurable_types as $type) {
       $customized[$type] = in_array($type, $stored_values);
       $method_weights = array();
-      $enabled_methods = $form_state['values'][$type]['enabled'];
+      $enabled_methods = $form_state->getValue(array($type, 'enabled'));
       $enabled_methods[LanguageNegotiationSelected::METHOD_ID] = TRUE;
-      $method_weights_input = $form_state['values'][$type]['weight'];
-      if (isset($form_state['values'][$type]['configurable'])) {
-        $customized[$type] = !empty($form_state['values'][$type]['configurable']);
+      $method_weights_input = $form_state->getValue(array($type, 'weight'));
+      if ($form_state->hasValue(array($type, 'configurable'))) {
+        $customized[$type] = !$form_state->isValueEmpty(array($type, 'configurable'));
       }
 
       foreach ($method_weights_input as $method_id => $weight) {

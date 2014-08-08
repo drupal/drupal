@@ -63,7 +63,7 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submit(array $form, FormStateInterface $form_state) {
-    $this->entity->set('replacementID', $form_state['values']['replacement']);
+    $this->entity->set('replacementID', $form_state->getValue('replacement'));
     $this->entity->delete();
     drupal_set_message($this->t('Style %name was deleted.', array('%name' => $this->entity->label())));
     $form_state->setRedirectUrl($this->getCancelUrl());

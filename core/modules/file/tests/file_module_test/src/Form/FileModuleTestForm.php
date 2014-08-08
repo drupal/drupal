@@ -73,10 +73,10 @@ class FileModuleTestForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form['#tree']) {
-      $uploads = $form_state['values']['nested']['file'];
+      $uploads = $form_state->getValue(array('nested', 'file'));
     }
     else {
-      $uploads = $form_state['values']['file'];
+      $uploads = $form_state->getValue('file');
     }
 
     if ($form['nested']['file']['#extended']) {

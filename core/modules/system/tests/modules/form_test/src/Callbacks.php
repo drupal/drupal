@@ -19,7 +19,7 @@ class Callbacks {
    */
   public function validateName(&$element, FormStateInterface $form_state) {
     $triggered = FALSE;
-    if ($form_state['values']['name'] == 'element_validate') {
+    if ($form_state->getValue('name') == 'element_validate') {
       // Alter the form element.
       $element['#value'] = '#value changed by #element_validate';
       // Alter the submitted value in $form_state.
@@ -27,8 +27,8 @@ class Callbacks {
 
       $triggered = TRUE;
     }
-    if ($form_state['values']['name'] == 'element_validate_access') {
-      $form_state['storage']['form_test_name'] = $form_state['values']['name'];
+    if ($form_state->getValue('name') == 'element_validate_access') {
+      $form_state['storage']['form_test_name'] = $form_state->getValue('name');
       // Alter the form element.
       $element['#access'] = FALSE;
 
@@ -43,7 +43,7 @@ class Callbacks {
 
     if ($triggered) {
       // Output the element's value from $form_state.
-      drupal_set_message(t('@label value: @value', array('@label' => $element['#title'], '@value' => $form_state['values']['name'])));
+      drupal_set_message(t('@label value: @value', array('@label' => $element['#title'], '@value' => $form_state->getValue('name'))));
 
       // Trigger a form validation error to see our changes.
       form_set_error('', $form_state);

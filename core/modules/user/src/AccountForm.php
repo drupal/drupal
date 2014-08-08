@@ -311,8 +311,8 @@ abstract class AccountForm extends ContentEntityForm {
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.
 
-    if (is_string(key($form_state['values']['roles']))) {
-      $form_state['values']['roles'] = array_keys(array_filter($form_state['values']['roles']));
+    if (is_string(key($form_state->getValue('roles')))) {
+      $form_state->setValue('roles', array_keys(array_filter($form_state->getValue('roles'))));
     }
     return parent::buildEntity($form, $form_state);
   }
@@ -325,8 +325,8 @@ abstract class AccountForm extends ContentEntityForm {
 
     $account = $this->entity;
     // Validate new or changing username.
-    if (isset($form_state['values']['name'])) {
-      if ($error = user_validate_name($form_state['values']['name'])) {
+    if ($form_state->hasValue('name')) {
+      if ($error = user_validate_name($form_state->getValue('name'))) {
         $form_state->setErrorByName('name', $error);
       }
       // Cast the user ID as an integer. It might have been set to NULL, which
@@ -334,18 +334,18 @@ abstract class AccountForm extends ContentEntityForm {
       else {
         $name_taken = (bool) $this->entityQuery->get('user')
           ->condition('uid', (int) $account->id(), '<>')
-          ->condition('name', $form_state['values']['name'])
+          ->condition('name', $form_state->getValue('name'))
           ->range(0, 1)
           ->count()
           ->execute();
 
         if ($name_taken) {
-          $form_state->setErrorByName('name', $this->t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+          $form_state->setErrorByName('name', $this->t('The name %name is already taken.', array('%name' => $form_state->getValue('name'))));
         }
       }
     }
 
-    $mail = $form_state['values']['mail'];
+    $mail = $form_state->getValue('mail');
 
     if (!empty($mail)) {
       $mail_taken = (bool) $this->entityQuery->get('user')
@@ -368,17 +368,17 @@ abstract class AccountForm extends ContentEntityForm {
 
     // Make sure the signature isn't longer than the size of the database field.
     // Signatures are disabled by default, so make sure it exists first.
-    if (isset($form_state['values']['signature'])) {
+    if ($signature = $form_state->getValue('signature')) {
       // Move text format for user signature into 'signature_format'.
-      $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
+      $form_state->setValue('signature_format', $signature['format']);
       // Move text value for user signature into 'signature'.
-      $form_state['values']['signature'] = $form_state['values']['signature']['value'];
+      $form_state->setValue('signature', $signature['value']);
 
       // @todo Make the user signature field use a widget to benefit from
       //   automatic typed data validation in https://drupal.org/node/2227381.
       $field_definitions = $this->entityManager->getFieldDefinitions('user', $this->getEntity()->bundle());
       $max_length = $field_definitions['signature']->getSetting('max_length');
-      if (drupal_strlen($form_state['values']['signature']) > $max_length) {
+      if (drupal_strlen($form_state->getValue('signature')) > $max_length) {
         $form_state->setErrorByName('signature', $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $max_length)));
       }
     }

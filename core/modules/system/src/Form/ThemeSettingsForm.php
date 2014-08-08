@@ -330,7 +330,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         // File upload was attempted.
         if ($file) {
           // Put the temporary file in form_values so we can save it on submit.
-          $form_state['values']['logo_upload'] = $file;
+          $form_state->setValue('logo_upload', $file);
         }
         else {
           // File upload failed.
@@ -346,7 +346,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         // File upload was attempted.
         if ($file) {
           // Put the temporary file in form_values so we can save it on submit.
-          $form_state['values']['favicon_upload'] = $file;
+          $form_state->setValue('favicon_upload', $file);
         }
         else {
           // File upload failed.
@@ -356,14 +356,14 @@ class ThemeSettingsForm extends ConfigFormBase {
 
       // If the user provided a path for a logo or favicon file, make sure a file
       // exists at that path.
-      if ($form_state['values']['logo_path']) {
-        $path = $this->validatePath($form_state['values']['logo_path']);
+      if ($form_state->getValue('logo_path')) {
+        $path = $this->validatePath($form_state->getValue('logo_path'));
         if (!$path) {
           $form_state->setErrorByName('logo_path', $this->t('The custom logo path is invalid.'));
         }
       }
-      if ($form_state['values']['favicon_path']) {
-        $path = $this->validatePath($form_state['values']['favicon_path']);
+      if ($form_state->getValue('favicon_path')) {
+        $path = $this->validatePath($form_state->getValue('favicon_path'));
         if (!$path) {
           $form_state->setErrorByName('favicon_path', $this->t('The custom favicon path is invalid.'));
         }
@@ -377,14 +377,14 @@ class ThemeSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->config($form_state['values']['config_key']);
+    $config = $this->config($form_state->getValue('config_key'));
 
     // Exclude unnecessary elements before saving.
     form_state_values_clean($form_state);
-    unset($form_state['values']['var']);
-    unset($form_state['values']['config_key']);
+    $form_state->unsetValue('var');
+    $form_state->unsetValue('config_key');
 
-    $values = $form_state['values'];
+    $values = $form_state->getValues();
 
     // If the user uploaded a new logo or favicon, save it to a permanent location
     // and use it in place of the default theme-provided file.

@@ -56,7 +56,7 @@ class FormTestArgumentsObject extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The FormTestArgumentsObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')
-      ->set('bananas', $form_state['values']['bananas'])
+      ->set('bananas', $form_state->getValue('bananas'))
       ->save();
   }
 

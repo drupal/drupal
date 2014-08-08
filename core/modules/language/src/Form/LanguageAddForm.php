@@ -33,7 +33,7 @@ class LanguageAddForm extends LanguageFormBase {
     $predefined_languages = $this->languageManager->getStandardLanguageListWithoutConfigured();
 
     $predefined_languages['custom'] = $this->t('Custom language...');
-    $predefined_default = !empty($form_state['values']['predefined_langcode']) ? $form_state['values']['predefined_langcode'] : key($predefined_languages);
+    $predefined_default = $form_state->getValue('predefined_langcode', key($predefined_languages));
     $form['predefined_langcode'] = array(
       '#type' => 'select',
       '#title' => $this->t('Language name'),
@@ -83,14 +83,14 @@ class LanguageAddForm extends LanguageFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $form_state['values']['predefined_langcode'];
+    $langcode = $form_state->getValue('predefined_langcode');
     if ($langcode == 'custom') {
-      $langcode = $form_state['values']['langcode'];
+      $langcode = $form_state->getValue('langcode');
       // Custom language form.
       $language = new Language(array(
         'id' => $langcode,
-        'name' => $form_state['values']['name'],
-        'direction' => $form_state['values']['direction'],
+        'name' => $form_state->getValue('name'),
+        'direction' => $form_state->getValue('direction'),
       ));
     }
     else {
@@ -119,8 +119,8 @@ class LanguageAddForm extends LanguageFormBase {
    * Validates the language addition form on custom language button.
    */
   public function validateCustom(array $form, FormStateInterface $form_state) {
-    if ($form_state['values']['predefined_langcode'] == 'custom') {
-      $langcode = $form_state['values']['langcode'];
+    if ($form_state->getValue('predefined_langcode') == 'custom') {
+      $langcode = $form_state->getValue('langcode');
       // Reuse the editing form validation routine if we add a custom language.
       $this->validateCommon($form['custom_language'], $form_state);
 
@@ -137,7 +137,7 @@ class LanguageAddForm extends LanguageFormBase {
    * Element specific validator for the Add language button.
    */
   public function validatePredefined($form, FormStateInterface $form_state) {
-    $langcode = $form_state['values']['predefined_langcode'];
+    $langcode = $form_state->getValue('predefined_langcode');
     if ($langcode == 'custom') {
       $form_state->setErrorByName('predefined_langcode', $this->t('Fill in the language details and save the language with <em>Add custom language</em>.'));
     }

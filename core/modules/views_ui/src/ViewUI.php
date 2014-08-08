@@ -401,12 +401,13 @@ class ViewUI implements ViewStorageInterface {
    */
   public function getOverrideValues($form, FormStateInterface $form_state) {
     // Make sure the dropdown exists in the first place.
-    if (isset($form_state['values']['override']['dropdown'])) {
+    if ($form_state->hasValue(array('override', 'dropdown'))) {
       // #default_value is used to determine whether it was the default value or not.
       // So the available options are: $display, 'default' and 'default_revert', not 'defaults'.
       $was_defaulted = ($form['override']['dropdown']['#default_value'] === 'defaults');
-      $is_defaulted = ($form_state['values']['override']['dropdown'] === 'default');
-      $revert = ($form_state['values']['override']['dropdown'] === 'default_revert');
+      $dropdown = $form_state->getValue(array('override', 'dropdown'));
+      $is_defaulted = ($dropdown === 'default');
+      $revert = ($dropdown === 'default_revert');
 
       if ($was_defaulted !== $is_defaulted && isset($form['#section'])) {
         // We're changing which display these values apply to.
@@ -499,9 +500,9 @@ class ViewUI implements ViewStorageInterface {
       $display->setOverride($section);
     }
 
-    if (!empty($form_state['values']['name']) && is_array($form_state['values']['name'])) {
+    if (!$form_state->isValueEmpty('name') && is_array($form_state->getValue('name'))) {
       // Loop through each of the items that were checked and add them to the view.
-      foreach (array_keys(array_filter($form_state['values']['name'])) as $field) {
+      foreach (array_keys(array_filter($form_state->getValue('name'))) as $field) {
         list($table, $field) = explode('.', $field, 2);
 
         if ($cut = strpos($field, '$')) {

@@ -57,7 +57,7 @@ class Language extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['langcodes'] = array_filter($form_state['values']['langcodes']);
+    $this->configuration['langcodes'] = array_filter($form_state->getValue('langcodes'));
     parent::submitConfigurationForm($form, $form_state);
   }
 

@@ -56,7 +56,7 @@ class ShortcutForm extends ContentEntityForm {
 
     // Set the computed 'path' value so it can used in the preSave() method to
     // derive the route name and parameters.
-    $entity->path->value = $form_state['values']['path'];
+    $entity->path->value = $form_state->getValue('path');
 
     return $entity;
   }
@@ -65,7 +65,7 @@ class ShortcutForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validate(array $form, FormStateInterface $form_state) {
-    if (!shortcut_valid_link($form_state['values']['path'])) {
+    if (!shortcut_valid_link($form_state->getValue('path'))) {
       $form_state->setErrorByName('path', $this->t('The shortcut must correspond to a valid path on the site.'));
     }
 

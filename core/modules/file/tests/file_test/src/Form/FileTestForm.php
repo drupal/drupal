@@ -81,8 +81,8 @@ class FileTestForm implements FormInterface {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.
-    if (!empty($form_state['values']['file_subdir'])) {
-      $destination = 'temporary://' . $form_state['values']['file_subdir'];
+    if (!$form_state->isValueEmpty('file_subdir')) {
+      $destination = 'temporary://' . $form_state->getValue('file_subdir');
       file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
     }
     else {
@@ -91,20 +91,20 @@ class FileTestForm implements FormInterface {
 
     // Setup validators.
     $validators = array();
-    if ($form_state['values']['is_image_file']) {
+    if ($form_state->getValue('is_image_file')) {
       $validators['file_validate_is_image'] = array();
     }
 
-    if ($form_state['values']['allow_all_extensions']) {
+    if ($form_state->getValue('allow_all_extensions')) {
       $validators['file_validate_extensions'] = array();
     }
-    elseif (!empty($form_state['values']['extensions'])) {
-      $validators['file_validate_extensions'] = array($form_state['values']['extensions']);
+    elseif (!$form_state->isValueEmpty('extensions')) {
+      $validators['file_validate_extensions'] = array($form_state->getValue('extensions'));
     }
 
-    $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state['values']['file_test_replace']);
+    $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
     if ($file) {
-      $form_state['values']['file_test_upload'] = $file;
+      $form_state->setValue('file_test_upload', $file);
       drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->getFileUri())));
       drupal_set_message(t('File name is @filename.', array('@filename' => $file->getFilename())));
       drupal_set_message(t('File MIME type is @mimetype.', array('@mimetype' => $file->getMimeType())));

@@ -110,7 +110,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['url'] = $form_state['values']['url'];
+    $this->configuration['url'] = $form_state->getValue('url');
   }
 
 }

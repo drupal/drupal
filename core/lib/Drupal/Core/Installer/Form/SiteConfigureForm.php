@@ -229,7 +229,7 @@ class SiteConfigureForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($error = user_validate_name($form_state['values']['account']['name'])) {
+    if ($error = user_validate_name($form_state->getValue(array('account', 'name')))) {
       $form_state->setErrorByName('account][name', $error);
     }
   }
@@ -239,36 +239,39 @@ class SiteConfigureForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
-      ->set('name', $form_state['values']['site_name'])
-      ->set('mail', $form_state['values']['site_mail'])
+      ->set('name', $form_state->getValue('site_name'))
+      ->set('mail', $form_state->getValue('site_mail'))
       ->save();
 
     $this->config('system.date')
-      ->set('timezone.default', $form_state['values']['date_default_timezone'])
-      ->set('country.default', $form_state['values']['site_default_country'])
+      ->set('timezone.default', $form_state->getValue('date_default_timezone'))
+      ->set('country.default', $form_state->getValue('site_default_country'))
       ->save();
 
+    $account_values = $form_state->getValue('account');
+
     // Enable update.module if this option was selected.
-    if ($form_state['values']['update_status_module'][1]) {
+    $update_status_module = $form_state->getValue('update_status_module');
+    if ($update_status_module[1]) {
       $this->moduleHandler->install(array('file', 'update'), FALSE);
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
-      if ($form_state['values']['update_status_module'][2]) {
+      if ($update_status_module[2]) {
         // Reset the configuration factory so it is updated with the new module.
         $this->resetConfigFactory();
-        $this->config('update.settings')->set('notification.emails', array($form_state['values']['account']['mail']))->save();
+        $this->config('update.settings')->set('notification.emails', array($account_values['mail']))->save();
       }
     }
 
     // We precreated user 1 with placeholder values. Let's save the real values.
     $account = $this->userStorage->load(1);
-    $account->init = $account->mail = $form_state['values']['account']['mail'];
+    $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();
     $account->activate();
-    $account->timezone = $form_state['values']['date_default_timezone'];
-    $account->pass = $form_state['values']['account']['pass'];
-    $account->name = $form_state['values']['account']['name'];
+    $account->timezone = $form_state->getValue('date_default_timezone');
+    $account->pass = $account_values['pass'];
+    $account->name = $account_values['name'];
     $account->save();
 
     // Record when this install ran.

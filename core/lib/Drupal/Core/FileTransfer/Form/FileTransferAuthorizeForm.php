@@ -46,9 +46,7 @@ class FileTransferAuthorizeForm extends FormBase {
     }
 
     // Decide on a default backend.
-    if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default'])) {
-      $authorize_filetransfer_default = $form_state['values']['connection_settings']['authorize_filetransfer_default'];
-    }
+    if ($authorize_filetransfer_default = $form_state->getValue(array('connection_settings', 'authorize_filetransfer_default')));
     elseif ($authorize_filetransfer_default = $this->config('system.authorize')->get('filetransfer_default'));
     else {
       $authorize_filetransfer_default = key($available_backends);
@@ -111,7 +109,7 @@ class FileTransferAuthorizeForm extends FormBase {
       $form['connection_settings'][$name] += $this->addConnectionSettings($name);
 
       // Start non-JS code.
-      if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default']) && $form_state['values']['connection_settings']['authorize_filetransfer_default'] == $name) {
+      if ($form_state->getValue(array('connection_settings', 'authorize_filetransfer_default')) == $name) {
 
         // Change the submit button to the submit_process one.
         $form['submit_process']['#attributes'] = array();
@@ -146,9 +144,9 @@ class FileTransferAuthorizeForm extends FormBase {
       return;
     }
 
-    if (isset($form_state['values']['connection_settings'])) {
-      $backend = $form_state['values']['connection_settings']['authorize_filetransfer_default'];
-      $filetransfer = $this->getFiletransfer($backend, $form_state['values']['connection_settings'][$backend]);
+    if ($form_connection_settings = $form_state->getValue('connection_settings')) {
+      $backend = $form_connection_settings['authorize_filetransfer_default'];
+      $filetransfer = $this->getFiletransfer($backend, $form_connection_settings[$backend]);
       try {
         if (!$filetransfer) {
           throw new \Exception($this->t('The connection protocol %backend does not exist.', array('%backend' => $backend)));
@@ -170,11 +168,12 @@ class FileTransferAuthorizeForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $form_connection_settings = $form_state->getValue('connection_settings');
     switch ($form_state['triggering_element']['#name']) {
       case 'process_updates':
 
         // Save the connection settings to the DB.
-        $filetransfer_backend = $form_state['values']['connection_settings']['authorize_filetransfer_default'];
+        $filetransfer_backend = $form_connection_settings['authorize_filetransfer_default'];
 
         // If the database is available then try to save our settings. We have
         // to make sure it is available since this code could potentially (will
@@ -182,7 +181,7 @@ class FileTransferAuthorizeForm extends FormBase {
         // database is set up.
         try {
           $connection_settings = array();
-          foreach ($form_state['values']['connection_settings'][$filetransfer_backend] as $key => $value) {
+          foreach ($form_connection_settings[$filetransfer_backend] as $key => $value) {
             // We do *not* want to store passwords in the database, unless the
             // backend explicitly says so via the magic #filetransfer_save form
             // property. Otherwise, we store everything that's not explicitly
@@ -202,7 +201,7 @@ class FileTransferAuthorizeForm extends FormBase {
           // Save the connection settings minus the password.
           $this->config('system.authorize')->set('filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
 
-          $filetransfer = $this->getFiletransfer($filetransfer_backend, $form_state['values']['connection_settings'][$filetransfer_backend]);
+          $filetransfer = $this->getFiletransfer($filetransfer_backend, $form_connection_settings[$filetransfer_backend]);
 
           // Now run the operation.
           $this->runOperation($filetransfer);
@@ -220,7 +219,7 @@ class FileTransferAuthorizeForm extends FormBase {
 
       case 'change_connection_type':
         $form_state['rebuild'] = TRUE;
-        unset($form_state['values']['connection_settings']['authorize_filetransfer_default']);
+        $form_state->unsetValue(array('connection_settings', 'authorize_filetransfer_default'));
         break;
     }
   }

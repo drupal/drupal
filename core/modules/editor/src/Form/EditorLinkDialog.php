@@ -90,7 +90,7 @@ class EditorLinkDialog extends FormBase {
       $response->addCommand(new HtmlCommand('#editor-link-dialog-form', $output));
     }
     else {
-      $response->addCommand(new EditorDialogSave($form_state['values']));
+      $response->addCommand(new EditorDialogSave($form_state->getValues()));
       $response->addCommand(new CloseModalDialogCommand());
     }
 

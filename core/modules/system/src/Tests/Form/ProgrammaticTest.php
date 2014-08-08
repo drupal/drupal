@@ -99,11 +99,10 @@ class ProgrammaticTest extends WebTestBase {
    * Test the programmed_bypass_access_check flag.
    */
   public function testProgrammaticAccessBypass() {
-    $form_state = new FormState();
-    $form_state['values'] = array(
+    $form_state = new FormState(array('values' => array(
       'textfield' => 'dummy value',
       'field_restricted' => 'dummy value'
-    );
+    )));
 
     // Programmatically submit the form with a value for the restricted field.
     // Since programmed_bypass_access_check is set to TRUE by default, the

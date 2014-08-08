@@ -58,7 +58,7 @@ class CheckboxTest extends WebTestBase {
       }
     }
 
-    // Ensure that $form_state['values'] is populated correctly for a checkboxes
+    // Ensure that $form_state->getValues() is populated correctly for a checkboxes
     // group that includes a 0-indexed array of options.
     $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero', array(), 'Save'));
     $this->assertIdentical($results->checkbox_off, array(0, 0, 0), 'All three in checkbox_off are zeroes: off.');

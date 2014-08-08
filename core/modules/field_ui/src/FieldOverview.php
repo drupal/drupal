@@ -298,7 +298,7 @@ class FieldOverview extends OverviewBase {
    * @see \Drupal\field_ui\FieldOverview::validateForm()
    */
   protected function validateAddNew(array $form, FormStateInterface $form_state) {
-    $field = $form_state['values']['fields']['_add_new_field'];
+    $field = $form_state->getValue(array('fields', '_add_new_field'));
 
     // Validate if any information was provided in the 'add new field' row.
     if (array_filter(array($field['label'], $field['field_name'], $field['type']))) {
@@ -340,9 +340,7 @@ class FieldOverview extends OverviewBase {
   protected function validateAddExisting(array $form, FormStateInterface $form_state) {
     // The form element might be absent if no existing fields can be added to
     // this bundle.
-    if (isset($form_state['values']['fields']['_add_existing_field'])) {
-      $field = $form_state['values']['fields']['_add_existing_field'];
-
+    if ($field = $form_state->getValue(array('fields', '_add_existing_field'))) {
       // Validate if any information was provided in the
       // 're-use existing field' row.
       if (array_filter(array($field['label'], $field['field_name']))) {
@@ -364,7 +362,7 @@ class FieldOverview extends OverviewBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $error = FALSE;
-    $form_values = $form_state['values']['fields'];
+    $form_values = $form_state->getValue('fields');
     $destinations = array();
 
     // Create new field.

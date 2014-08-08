@@ -87,8 +87,8 @@ class TranslateFilterForm extends TranslateFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $filters = $this->translateFilters();
     foreach ($filters as $name => $filter) {
-      if (isset($form_state['values'][$name])) {
-        $_SESSION['locale_translate_filter'][$name] = $form_state['values'][$name];
+      if ($form_state->hasValue($name)) {
+        $_SESSION['locale_translate_filter'][$name] = $form_state->getValue($name);
       }
     }
     $form_state->setRedirect('locale.translate_page');

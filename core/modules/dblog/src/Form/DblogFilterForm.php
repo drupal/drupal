@@ -69,7 +69,7 @@ class DblogFilterForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['type']) && empty($form_state['values']['severity'])) {
+    if ($form_state->isValueEmpty('type') && $form_state->isValueEmpty('severity')) {
       $form_state->setErrorByName('type', $this->t('You must select something to filter by.'));
     }
   }
@@ -80,8 +80,8 @@ class DblogFilterForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $filters = dblog_filters();
     foreach ($filters as $name => $filter) {
-      if (isset($form_state['values'][$name])) {
-        $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
+      if ($form_state->hasValue($name)) {
+        $_SESSION['dblog_overview_filter'][$name] = $form_state->getValue($name);
       }
     }
   }

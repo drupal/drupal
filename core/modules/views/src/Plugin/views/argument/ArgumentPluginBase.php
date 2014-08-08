@@ -345,74 +345,75 @@ abstract class ArgumentPluginBase extends HandlerBase {
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['options'])) {
+    $option_values = &$form_state->getValue('options');
+    if (empty($option_values)) {
       return;
     }
 
     // Let the plugins do validation.
-    $default_id = $form_state['values']['options']['default_argument_type'];
+    $default_id = $option_values['default_argument_type'];
     $plugin = $this->getPlugin('argument_default', $default_id);
     if ($plugin) {
-      $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $form_state['values']['options']['argument_default'][$default_id]);
+      $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $option_values['argument_default'][$default_id]);
     }
 
     // summary plugin
-    $summary_id = $form_state['values']['options']['summary']['format'];
+    $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
-      $plugin->validateOptionsForm($form['summary']['options'][$summary_id], $form_state, $form_state['values']['options']['summary']['options'][$summary_id]);
+      $plugin->validateOptionsForm($form['summary']['options'][$summary_id], $form_state, $option_values['summary']['options'][$summary_id]);
     }
 
-    $sanitized_id = $form_state['values']['options']['validate']['type'];
+    $sanitized_id = $option_values['validate']['type'];
     // Correct ID for js sanitized version.
     $validate_id = static::decodeValidatorId($sanitized_id);
     $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
-      $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$sanitized_id]);
+      $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $option_values['validate']['options'][$sanitized_id]);
     }
 
   }
 
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['options'])) {
+    $option_values = &$form_state->getValue('options');
+    if (empty($option_values)) {
       return;
     }
 
     // Let the plugins make submit modifications if necessary.
-    $default_id = $form_state['values']['options']['default_argument_type'];
+    $default_id = $option_values['default_argument_type'];
     $plugin = $this->getPlugin('argument_default', $default_id);
     if ($plugin) {
-      $options = &$form_state['values']['options']['argument_default'][$default_id];
+      $options = &$option_values['argument_default'][$default_id];
       $plugin->submitOptionsForm($form['argument_default'][$default_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
-      $form_state['values']['options']['default_argument_options'] = $options;
+      $option_values['default_argument_options'] = $options;
     }
 
     // summary plugin
-    $summary_id = $form_state['values']['options']['summary']['format'];
+    $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
-      $options = &$form_state['values']['options']['summary']['options'][$summary_id];
+      $options = &$option_values['summary']['options'][$summary_id];
       $plugin->submitOptionsForm($form['summary']['options'][$summary_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
-      $form_state['values']['options']['summary_options'] = $options;
+      $option_values['summary_options'] = $options;
     }
 
-    $sanitized_id = $form_state['values']['options']['validate']['type'];
+    $sanitized_id = $option_values['validate']['type'];
     // Correct ID for js sanitized version.
-    $form_state['values']['options']['validate']['type'] = $validate_id = static::decodeValidatorId($sanitized_id);
+    $option_values['validate']['type'] = $validate_id = static::decodeValidatorId($sanitized_id);
     $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
-      $options = &$form_state['values']['options']['validate']['options'][$sanitized_id];
+      $options = &$option_values['validate']['options'][$sanitized_id];
       $plugin->submitOptionsForm($form['validate']['options'][$sanitized_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
-      $form_state['values']['options']['validate_options'] = $options;
+      $option_values['validate_options'] = $options;
     }
 
     // Clear out the content of title if it's not enabled.
-    $options = &$form_state['values']['options'];
-    if (empty($options['title_enable'])) {
-      $options['title'] = '';
+    if (empty($option_values['title_enable'])) {
+      $option_values['title'] = '';
     }
   }
 

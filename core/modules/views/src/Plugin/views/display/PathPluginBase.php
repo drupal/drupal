@@ -404,13 +404,13 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     parent::validateOptionsForm($form, $form_state);
 
     if ($form_state['section'] == 'path') {
-      $errors = $this->validatePath($form_state['values']['path']);
+      $errors = $this->validatePath($form_state->getValue('path'));
       foreach ($errors as $error) {
         $form_state->setError($form['path'], $error);
       }
 
       // Automatically remove '/' and trailing whitespace from path.
-      $form_state['values']['path'] = trim($form_state['values']['path'], '/ ');
+      $form_state->setValue('path', trim($form_state->getValue('path'), '/ '));
     }
   }
 
@@ -421,7 +421,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     parent::submitOptionsForm($form, $form_state);
 
     if ($form_state['section'] == 'path') {
-      $this->setOption('path', $form_state['values']['path']);
+      $this->setOption('path', $form_state->getValue('path'));
     }
   }
 

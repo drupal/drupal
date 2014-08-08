@@ -99,10 +99,10 @@ abstract class LanguageFormBase extends EntityForm {
    */
   public function validateCommon(array $form, FormStateInterface $form_state) {
     // Ensure sane field values for langcode and name.
-    if (!isset($form['langcode_view']) && preg_match('@[^a-zA-Z_-]@', $form_state['values']['langcode'])) {
+    if (!isset($form['langcode_view']) && preg_match('@[^a-zA-Z_-]@', $form_state->getValue('langcode'))) {
       $form_state->setErrorByName('langcode', $this->t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => $form['langcode']['#title'])));
     }
-    if ($form_state['values']['name'] != String::checkPlain($form_state['values']['name'])) {
+    if ($form_state->getValue('name') != String::checkPlain($form_state->getValue('name'))) {
       $form_state->setErrorByName('name', $this->t('%field cannot contain any markup.', array('%field' => $form['name']['#title'])));
     }
   }

@@ -306,7 +306,7 @@ class InOperator extends FilterPluginBase {
     // *only* a list of checkboxes that were set, and we can use that
     // instead.
 
-    $form_state['values']['options']['value'] = $form['value']['#value'];
+    $form_state->setValue(array('options', 'value'), $form['value']['#value']);
   }
 
   public function adminSummary() {

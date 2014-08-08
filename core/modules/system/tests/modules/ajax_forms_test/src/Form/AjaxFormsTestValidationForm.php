@@ -30,7 +30,7 @@ class AjaxFormsTestValidationForm extends FormBase {
       '#title' => $this->t('AJAX-enabled textfield.'),
       '#description' => $this->t("When this one AJAX-triggers and the spare required field is empty, you should not get an error."),
       '#type' => 'textfield',
-      '#default_value' => !empty($form_state['values']['drivertext']) ? $form_state['values']['drivertext'] : "",
+      '#default_value' => $form_state->getValue('drivertext', ''),
       '#ajax' => array(
         'callback' => 'ajax_forms_test_validation_form_callback',
         'wrapper' => 'message_area',
@@ -43,7 +43,7 @@ class AjaxFormsTestValidationForm extends FormBase {
       '#title' => $this->t('AJAX-enabled number field.'),
       '#description' => $this->t("When this one AJAX-triggers and the spare required field is empty, you should not get an error."),
       '#type' => 'number',
-      '#default_value' => !empty($form_state['values']['drivernumber']) ? $form_state['values']['drivernumber'] : "",
+      '#default_value' => $form_state->getValue('drivernumber', ''),
       '#ajax' => array(
         'callback' => 'ajax_forms_test_validation_number_form_callback',
         'wrapper' => 'message_area_number',

@@ -196,7 +196,7 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
  * @todo: Remove this in favor of an entity field.
  */
 function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state) {
-  $entity->book = $form_state['values']['book'];
+  $entity->book = $form_state->getValue('book');
 
   // Always save a revision for non-administrators.
   if (!empty($entity->book['bid']) && !\Drupal::currentUser()->hasPermission('administer nodes')) {
@@ -218,7 +218,7 @@ function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStat
  */
 function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
   $node = $form_state['controller']->getEntity();
-  $node->book = $form_state['values']['book'];
+  $node->book = $form_state->getValue('book');
   $form_state['rebuild'] = TRUE;
 }
 

@@ -61,9 +61,9 @@ class RssFeedsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.rss')
-      ->set('channel.description', $form_state['values']['feed_description'])
-      ->set('items.limit', $form_state['values']['feed_default_items'])
-      ->set('items.view_mode', $form_state['values']['feed_view_mode'])
+      ->set('channel.description', $form_state->getValue('feed_description'))
+      ->set('items.limit', $form_state->getValue('feed_default_items'))
+      ->set('items.view_mode', $form_state->getValue('feed_view_mode'))
       ->save();
 
     parent::submitForm($form, $form_state);

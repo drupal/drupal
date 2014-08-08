@@ -287,11 +287,11 @@ class UpdateManagerUpdate extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['projects'])) {
-      $enabled = array_filter($form_state['values']['projects']);
+    if (!$form_state->isValueEmpty('projects')) {
+      $enabled = array_filter($form_state->getValue('projects'));
     }
-    if (!empty($form_state['values']['disabled_projects'])) {
-      $disabled = array_filter($form_state['values']['disabled_projects']);
+    if (!$form_state->isValueEmpty('disabled_projects')) {
+      $disabled = array_filter($form_state->getValue('disabled_projects'));
     }
     if (empty($enabled) && empty($disabled)) {
       $form_state->setErrorByName('projects', $this->t('You must select at least one project to update.'));
@@ -305,8 +305,8 @@ class UpdateManagerUpdate extends FormBase {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
     $projects = array();
     foreach (array('projects', 'disabled_projects') as $type) {
-      if (!empty($form_state['values'][$type])) {
-        $projects = array_merge($projects, array_keys(array_filter($form_state['values'][$type])));
+      if (!$form_state->isValueEmpty($type)) {
+        $projects = array_merge($projects, array_keys(array_filter($form_state->getValue($type))));
       }
     }
     $operations = array();
@@ -315,7 +315,7 @@ class UpdateManagerUpdate extends FormBase {
         'update_manager_batch_project_get',
         array(
           $project,
-          $form_state['values']['project_downloads'][$project],
+          $form_state->getValue(array('project_downloads', $project)),
         ),
       );
     }

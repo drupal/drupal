@@ -330,16 +330,16 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
 
     $search_settings = $this->configFactory->get('search.settings');
     // If these settings change, the index needs to be rebuilt.
-    if (($search_settings->get('index.minimum_word_size') != $form_state['values']['minimum_word_size']) || ($search_settings->get('index.overlap_cjk') != $form_state['values']['overlap_cjk'])) {
-      $search_settings->set('index.minimum_word_size', $form_state['values']['minimum_word_size']);
-      $search_settings->set('index.overlap_cjk', $form_state['values']['overlap_cjk']);
+    if (($search_settings->get('index.minimum_word_size') != $form_state->getValue('minimum_word_size')) || ($search_settings->get('index.overlap_cjk') != $form_state->getValue('overlap_cjk'))) {
+      $search_settings->set('index.minimum_word_size', $form_state->getValue('minimum_word_size'));
+      $search_settings->set('index.overlap_cjk', $form_state->getValue('overlap_cjk'));
       drupal_set_message($this->t('The index will be rebuilt.'));
       search_reindex();
     }
 
     $search_settings
-      ->set('index.cron_limit', $form_state['values']['cron_limit'])
-      ->set('logging', $form_state['values']['logging'])
+      ->set('index.cron_limit', $form_state->getValue('cron_limit'))
+      ->set('logging', $form_state->getValue('logging'))
       ->save();
 
     drupal_set_message($this->t('The configuration options have been saved.'));
@@ -358,7 +358,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    * Form validation handler for adding a new search page.
    */
   public function validateAddSearchPage(array &$form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['search_type'])) {
+    if ($form_state->isValueEmpty('search_type')) {
       $form_state->setErrorByName('search_type', $this->t('You must select the new search page type.'));
     }
   }
@@ -369,7 +369,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   public function submitAddSearchPage(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect(
       'search.add_type',
-      array('search_plugin_id' => $form_state['values']['search_type'])
+      array('search_plugin_id' => $form_state->getValue('search_type'))
     );
   }
 

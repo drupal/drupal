@@ -165,11 +165,11 @@ class PerformanceForm extends ConfigFormBase {
     $this->renderCache->deleteAll();
 
     $this->config('system.performance')
-      ->set('cache.page.use_internal', $form_state['values']['cache'])
-      ->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age'])
-      ->set('response.gzip', $form_state['values']['page_compression'])
-      ->set('css.preprocess', $form_state['values']['preprocess_css'])
-      ->set('js.preprocess', $form_state['values']['preprocess_js'])
+      ->set('cache.page.use_internal', $form_state->getValue('cache'))
+      ->set('cache.page.max_age', $form_state->getValue('page_cache_maximum_age'))
+      ->set('response.gzip', $form_state->getValue('page_compression'))
+      ->set('css.preprocess', $form_state->getValue('preprocess_css'))
+      ->set('js.preprocess', $form_state->getValue('preprocess_js'))
       ->save();
 
     parent::submitForm($form, $form_state);

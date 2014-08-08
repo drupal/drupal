@@ -89,7 +89,7 @@ class FormTestProgrammaticForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['textfield'])) {
+    if ($form_state->isValueEmpty('textfield')) {
       form_set_error('textfield', $form_state, t('Textfield is required.'));
     }
   }
@@ -98,7 +98,7 @@ class FormTestProgrammaticForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['storage']['programmatic_form_submit'] = $form_state['values'];
+    $form_state['storage']['programmatic_form_submit'] = $form_state->getValues();
   }
 
 }

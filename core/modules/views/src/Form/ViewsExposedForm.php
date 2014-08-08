@@ -156,7 +156,7 @@ class ViewsExposedForm extends FormBase {
         $handlers[$key]->submitExposed($form, $form_state);
       }
     }
-    $form_state['view']->exposed_data = $form_state['values'];
+    $form_state['view']->exposed_data = $form_state->getValues();
     $form_state['view']->exposed_raw_input = array();
 
     $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', '', 'reset');
@@ -164,7 +164,7 @@ class ViewsExposedForm extends FormBase {
     $exposed_form_plugin = $form_state['exposed_form_plugin'];
     $exposed_form_plugin->exposedFormSubmit($form, $form_state, $exclude);
 
-    foreach ($form_state['values'] as $key => $value) {
+    foreach ($form_state->getValues() as $key => $value) {
       if (!in_array($key, $exclude)) {
         $form_state['view']->exposed_raw_input[$key] = $value;
       }

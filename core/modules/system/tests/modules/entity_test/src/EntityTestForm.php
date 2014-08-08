@@ -69,7 +69,7 @@ class EntityTestForm extends ContentEntityForm {
     $entity = parent::submit($form, $form_state);
 
     // Save as a new revision if requested to do so.
-    if (!empty($form_state['values']['revision'])) {
+    if (!$form_state->isValueEmpty('revision')) {
       $entity->setNewRevision();
     }
 

@@ -59,7 +59,7 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['negate'] = $form_state['values']['negate'];
+    $this->configuration['negate'] = $form_state->getValue('negate');
   }
 
   /**

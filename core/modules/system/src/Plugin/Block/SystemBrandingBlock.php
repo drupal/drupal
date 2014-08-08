@@ -175,9 +175,10 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['use_site_logo'] = $form_state['values']['block_branding']['use_site_logo'];
-    $this->configuration['use_site_name'] = $form_state['values']['block_branding']['use_site_name'];
-    $this->configuration['use_site_slogan'] = $form_state['values']['block_branding']['use_site_slogan'];
+    $block_branding = $form_state->getValue('block_branding');
+    $this->configuration['use_site_logo'] = $block_branding['use_site_logo'];
+    $this->configuration['use_site_name'] = $block_branding['use_site_name'];
+    $this->configuration['use_site_slogan'] = $block_branding['use_site_slogan'];
   }
 
   /**

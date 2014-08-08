@@ -122,16 +122,16 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     // Cancel account immediately, if the current user has administrative
     // privileges, no confirmation mail shall be sent, and the user does not
     // attempt to cancel the own account.
-    if ($this->currentUser()->hasPermission('administer users') && empty($form_state['values']['user_cancel_confirm']) && $this->entity->id() != $this->currentUser()->id()) {
-      user_cancel($form_state['values'], $this->entity->id(), $form_state['values']['user_cancel_method']);
+    if ($this->currentUser()->hasPermission('administer users') && $form_state->isValueEmpty('user_cancel_confirm') && $this->entity->id() != $this->currentUser()->id()) {
+      user_cancel($form_state->getValues(), $this->entity->id(), $form_state->getValue('user_cancel_method'));
 
       $form_state->setRedirect('user.admin_account');
     }
     else {
       // Store cancelling method and whether to notify the user in
       // $this->entity for user_cancel_confirm().
-      $this->entity->user_cancel_method = $form_state['values']['user_cancel_method'];
-      $this->entity->user_cancel_notify = $form_state['values']['user_cancel_notify'];
+      $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
+      $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();
       _user_mail_notify('cancel_confirm', $this->entity);
       drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your email address.'));

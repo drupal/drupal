@@ -101,12 +101,12 @@ class NegotiationUrlForm extends ConfigFormBase {
     $languages = language_list();
 
     // Count repeated values for uniqueness check.
-    $count = array_count_values($form_state['values']['prefix']);
+    $count = array_count_values($form_state->getValue('prefix'));
     foreach ($languages as $langcode => $language) {
-      $value = $form_state['values']['prefix'][$langcode];
+      $value = $form_state->getValue(array('prefix', $langcode));
 
       if ($value === '') {
-        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
+        if (!$language->default && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
           // although it is required for selected negotiation type.
           $form_state->setErrorByName("prefix][$langcode", t('The prefix may only be left blank for the default language.'));
@@ -125,12 +125,12 @@ class NegotiationUrlForm extends ConfigFormBase {
     }
 
     // Count repeated values for uniqueness check.
-    $count = array_count_values($form_state['values']['domain']);
+    $count = array_count_values($form_state->getValue('domain'));
     foreach ($languages as $langcode => $language) {
-      $value = $form_state['values']['domain'][$langcode];
+      $value = $form_state->getValue(array('domain', $langcode));
 
       if ($value === '') {
-        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LanguageNegotiationUrl::CONFIG_DOMAIN) {
+        if (!$language->default && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
           $form_state->setErrorByName("domain][$langcode", t('The domain may only be left blank for the default language.'));
@@ -145,7 +145,7 @@ class NegotiationUrlForm extends ConfigFormBase {
 
     // Domain names should not contain protocol and/or ports.
     foreach ($languages as $langcode => $name) {
-      $value = $form_state['values']['domain'][$langcode];
+      $value = $form_state->getValue(array('domain', $langcode));
       if (!empty($value)) {
         // Ensure we have exactly one protocol when checking the hostname.
         $host = 'http://' . str_replace(array('http://', 'https://'), '', $value);
@@ -164,12 +164,12 @@ class NegotiationUrlForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save selected format (prefix or domain).
     $this->config('language.negotiation')
-      ->set('url.source', $form_state['values']['language_negotiation_url_part'])
+      ->set('url.source', $form_state->getValue('language_negotiation_url_part'))
       ->save();
 
     // Save new domain and prefix values.
-    language_negotiation_url_prefixes_save($form_state['values']['prefix']);
-    language_negotiation_url_domains_save($form_state['values']['domain']);
+    language_negotiation_url_prefixes_save($form_state->getValue('prefix'));
+    language_negotiation_url_domains_save($form_state->getValue('domain'));
 
     parent::submitForm($form, $form_state);
   }

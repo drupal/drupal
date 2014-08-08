@@ -127,7 +127,7 @@ class ViewExecutable {
   // Exposed widget input
 
   /**
-   * All the form data from $form_state['values'].
+   * All the form data from $form_state->getValues().
    *
    * @var array
    */
@@ -141,7 +141,7 @@ class ViewExecutable {
   public $exposed_input = array();
 
   /**
-   * Exposed widget input directly from the $form_state['values'].
+   * Exposed widget input directly from the $form_state->getValues().
    *
    * @var array
    */

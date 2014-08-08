@@ -116,8 +116,8 @@ class SiteSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $driver = $form_state['values']['driver'];
-    $database = $form_state['values'][$driver];
+    $driver = $form_state->getValue('driver');
+    $database = $form_state->getValue($driver);
     $drivers = drupal_get_database_types();
     $reflection = new \ReflectionClass($drivers[$driver]);
     $install_namespace = $reflection->getNamespaceName();
@@ -126,7 +126,7 @@ class SiteSettingsForm extends FormBase {
     $database['driver'] = $driver;
 
     $form_state['storage']['database'] = $database;
-    $errors = install_database_errors($database, $form_state['values']['settings_file']);
+    $errors = install_database_errors($database, $form_state->getValue('settings_file'));
     foreach ($errors as $name => $message) {
       $form_state->setErrorByName($name, $message);
     }

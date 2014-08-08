@@ -172,8 +172,8 @@ class BookManager implements BookManagerInterface {
   public function addFormElements(array $form, FormStateInterface $form_state, NodeInterface $node, AccountInterface $account, $collapsed = TRUE) {
     // If the form is being processed during the Ajax callback of our book bid
     // dropdown, then $form_state will hold the value that was selected.
-    if (isset($form_state['values']['book'])) {
-      $node->book = $form_state['values']['book'];
+    if ($form_state->hasValue('book')) {
+      $node->book = $form_state->getValue('book');
     }
     $form['book'] = array(
       '#type' => 'details',

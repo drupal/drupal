@@ -48,8 +48,9 @@ class Text extends TokenizeAreaPluginBase {
    * {@inheritdoc}
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    $form_state['values']['options']['format'] = $form_state['values']['options']['content']['format'];
-    $form_state['values']['options']['content'] = $form_state['values']['options']['content']['value'];
+    $content = $form_state->getValue(array('options', 'content'));
+    $form_state->setValue(array('options', 'format'), $content['format']);
+    $form_state->setValue(array('options', 'content'), $content['value']);
     parent::submitOptionsForm($form, $form_state);
   }
 

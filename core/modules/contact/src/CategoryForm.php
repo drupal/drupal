@@ -77,7 +77,7 @@ class CategoryForm extends EntityForm {
     parent::validate($form, $form_state);
 
     // Validate and each email recipient.
-    $recipients = explode(',', $form_state['values']['recipients']);
+    $recipients = explode(',', $form_state->getValue('recipients'));
 
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
@@ -85,7 +85,7 @@ class CategoryForm extends EntityForm {
         $form_state->setErrorByName('recipients', $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
       }
     }
-    $form_state['values']['recipients'] = $recipients;
+    $form_state->setValue('recipients', $recipients);
   }
 
   /**
@@ -108,7 +108,7 @@ class CategoryForm extends EntityForm {
     }
 
     // Update the default category.
-    if ($form_state['values']['selected']) {
+    if ($form_state->getValue('selected')) {
       $contact_settings
         ->set('default_category', $category->id())
         ->save();

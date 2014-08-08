@@ -503,7 +503,7 @@ class FormTest extends WebTestBase {
     }
 
     // Submit the form with no input, as the browser does for disabled elements,
-    // and fetch the $form_state['values'] that is passed to the submit handler.
+    // and fetch the $form_state->getValues() that is passed to the submit handler.
     $this->drupalPostForm('form-test/disabled-elements', array(), t('Submit'));
     $returned_values['normal'] = Json::decode($this->content);
 

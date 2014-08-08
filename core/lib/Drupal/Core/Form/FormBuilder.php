@@ -237,7 +237,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Now that we have a constructed form, process it. This is where:
     // - Element #process functions get called to further refine $form.
     // - User input, if any, gets incorporated in the #value property of the
-    //   corresponding elements and into $form_state['values'].
+    //   corresponding elements and into $form_state->getValues().
     // - Validation and submission handlers are called.
     // - If this submission is part of a multistep workflow, the form is rebuilt
     //   to contain the information of the next step.
@@ -386,7 +386,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // the form, to be consistent with what self::buildForm() does for
     // non-programmatic submissions (form builder functions may expect it to be
     // there).
-    $form_state->set('input', $form_state->get('values'));
+    $form_state->set('input', $form_state->getValues());
 
     $form_state->set('programmed', TRUE);
 
@@ -466,8 +466,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // self::doBuildForm() finishes building the form by calling element
     // #process functions and mapping user input, if any, to #value properties,
-    // and also storing the values in $form_state['values']. We need to retain
-    // the unprocessed $form in case it needs to be cached.
+    // and also storing the values in $form_state->getValues(). We need to
+    // retain the unprocessed $form in case it needs to be cached.
     $unprocessed_form = $form;
     $form = $this->doBuildForm($form_id, $form, $form_state);
 
@@ -869,10 +869,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // buttons often have their #name property not derived from their
         // #parents property, we can't assume that input processing that's
         // happened up until here has resulted in
-        // $form_state['values'][BUTTON_NAME] being set. But it's common for
+        // $form_state->getValue(BUTTON_NAME) being set. But it's common for
         // forms to have several buttons named 'op' and switch on
-        // $form_state['values']['op'] during submit handler execution.
-        $form_state->addValue($triggering_element['#name'], $triggering_element['#value']);
+        // $form_state->getValue('op') during submit handler execution.
+        $form_state->setValue($triggering_element['#name'], $triggering_element['#value']);
       }
     }
     return $element;
@@ -1016,7 +1016,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
-    // Set the element's value in $form_state['values'], but only, if its key
+    // Set the element's value in $form_state->getValues(), but only, if its key
     // does not exist yet (a #value_callback may have already populated it).
     if (!NestedArray::keyExists($form_state->getValues(), $element['#parents'])) {
       $form_state->setValueForElement($element, $element['#value']);

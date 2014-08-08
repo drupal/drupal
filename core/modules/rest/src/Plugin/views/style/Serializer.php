@@ -107,7 +107,8 @@ class Serializer extends StylePluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
-    $form_state['values']['style_options']['formats'] = array_filter($form_state['values']['style_options']['formats']);
+    $formats = $form_state->getValue(array('style_options', 'formats'));
+    $form_state->setValue(array('style_options', 'formats'), array_filter($formats));
   }
 
   /**

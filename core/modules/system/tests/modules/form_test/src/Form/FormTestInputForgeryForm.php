@@ -46,7 +46,7 @@ class FormTestInputForgeryForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    return new JsonResponse($form_state['values']);
+    return new JsonResponse($form_state->getValues());
   }
 
 }

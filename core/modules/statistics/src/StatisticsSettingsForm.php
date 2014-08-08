@@ -82,7 +82,7 @@ class StatisticsSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('statistics.settings')
-      ->set('count_content_views', $form_state['values']['statistics_count_content_views'])
+      ->set('count_content_views', $form_state->getValue('statistics_count_content_views'))
       ->save();
 
     // The popular statistics block is dependent on these settings, so clear the

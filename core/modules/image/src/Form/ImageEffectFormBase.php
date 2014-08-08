@@ -107,11 +107,11 @@ abstract class ImageEffectFormBase extends FormBase {
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for validation.
     $effect_data = new FormState(array(
-      'values' => $form_state['values']['data'],
+      'values' => $form_state->getValue('data'),
     ));
     $this->imageEffect->validateConfigurationForm($form, $effect_data);
     // Update the original form values.
-    $form_state['values']['data'] = $effect_data['values'];
+    $form_state->setValue('data', $effect_data['values']);
   }
 
   /**
@@ -123,13 +123,13 @@ abstract class ImageEffectFormBase extends FormBase {
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for submission.
     $effect_data = new FormState(array(
-      'values' => $form_state['values']['data'],
+      'values' => $form_state->getValue('data'),
     ));
     $this->imageEffect->submitConfigurationForm($form, $effect_data);
     // Update the original form values.
-    $form_state['values']['data'] = $effect_data['values'];
+    $form_state->setValue('data', $effect_data['values']);
 
-    $this->imageEffect->setWeight($form_state['values']['weight']);
+    $this->imageEffect->setWeight($form_state->getValue('weight'));
     if (!$this->imageEffect->getUuid()) {
       $this->imageStyle->addImageEffect($this->imageEffect->getConfiguration());
     }

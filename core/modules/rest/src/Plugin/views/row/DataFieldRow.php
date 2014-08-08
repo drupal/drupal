@@ -123,7 +123,7 @@ class DataFieldRow extends RowPluginBase {
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Collect an array of aliases to validate.
-    $aliases = static::extractFromOptionsArray('alias', $form_state['values']['row_options']['field_options']);
+    $aliases = static::extractFromOptionsArray('alias', $form_state->getValue(array('row_options', 'field_options')));
 
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.

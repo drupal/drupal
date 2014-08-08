@@ -128,7 +128,7 @@ class FormTestSelectForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setResponse(new JsonResponse($form_state['values']));
+    $form_state->setResponse(new JsonResponse($form_state->getValues()));
   }
 
 }

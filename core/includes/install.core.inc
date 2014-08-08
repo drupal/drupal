@@ -155,7 +155,7 @@ function install_drupal($settings = array()) {
  * 'langcode' that are normally passed in via the URL) and 'forms' (which can
  * be used to programmatically submit forms during the installation; the keys
  * of each element indicate the name of the installation task that the form
- * submission is for, and the values are used as the $form_state['values']
+ * submission is for, and the values are used as the $form_state->getValues()
  * array that is passed on to the form submission via drupal_form_submit()).
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::submitForm()
@@ -182,7 +182,7 @@ function install_state_defaults() {
     // An array of forms to be programmatically submitted during the
     // installation. The keys of each element indicate the name of the
     // installation task that the form submission is for, and the values are
-    // used as the $form_state['values'] array that is passed on to the form
+    // used as the $form_state->getValues() array that is passed on to the form
     // submission via drupal_form_submit().
     'forms' => array(),
     // This becomes TRUE only at the end of the installation process, after
@@ -824,10 +824,9 @@ function install_get_form($form_id, array &$install_state) {
   else {
     // For non-interactive installs, submit the form programmatically with the
     // values taken from the installation state.
-    $form_state['values'] = array();
     $install_form_id = $form_builder->getFormId($form_id, $form_state);
     if (!empty($install_state['forms'][$install_form_id])) {
-      $form_state['values'] = $install_state['forms'][$install_form_id];
+      $form_state->set('values', $install_state['forms'][$install_form_id]);
     }
     $form_builder->submitForm($form_id, $form_state);
 

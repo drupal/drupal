@@ -399,10 +399,11 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * Form submission handler for the main block administration form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $entities = entity_load_multiple('block', array_keys($form_state['values']['blocks']));
+    $entities = entity_load_multiple('block', array_keys($form_state->getValue('blocks')));
     foreach ($entities as $entity_id => $entity) {
-      $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);
-      $entity->set('region', $form_state['values']['blocks'][$entity_id]['region']);
+      $entity_values = $form_state->getValue(array('blocks', $entity_id));
+      $entity->set('weight', $entity_values['weight']);
+      $entity->set('region', $entity_values['region']);
       if ($entity->get('region') == BlockInterface::BLOCK_REGION_NONE) {
         $entity->disable();
       }

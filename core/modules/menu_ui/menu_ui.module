@@ -408,8 +408,8 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
  * @see menu_ui_form_node_form_alter()
  */
 function menu_ui_node_submit(EntityInterface $node, $form, FormStateInterface $form_state) {
-  if (!empty($form_state['values']['menu'])) {
-    $definition = $form_state['values']['menu'];
+  if (!$form_state->isValueEmpty('menu')) {
+    $definition = $form_state->getValue('menu');
     if (empty($definition['enabled'])) {
       if ($definition['entity_id']) {
         $entity = entity_load('menu_link_content', $definition['entity_id']);
@@ -495,17 +495,17 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
  * @see menu_ui_form_node_type_form_alter().
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
-  $available_menus = array_filter($form_state['values']['menu_options']);
+  $available_menus = array_filter($form_state->getValue('menu_options'));
   // If there is at least one menu allowed, the selected item should be in
   // one of them.
   if (count($available_menus)) {
-    $menu_item_id_parts = explode(':', $form_state['values']['menu_parent']);
+    $menu_item_id_parts = explode(':', $form_state->getValue('menu_parent'));
     if (!in_array($menu_item_id_parts[0], $available_menus)) {
       form_set_error('menu_parent', $form_state, t('The selected menu item is not under one of the selected menus.'));
     }
   }
   else {
-    $form_state['values']['menu_parent'] = '';
+    $form_state->setValue('menu_parent', '');
   }
 }
 
@@ -517,8 +517,8 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 function menu_ui_form_node_type_form_submit(&$form, FormStateInterface $form_state) {
   $type = $form_state['controller']->getEntity();
   \Drupal::config('menu.entity.node.' . $type->id())
-    ->set('available_menus', array_values(array_filter($form_state['values']['menu_options'])))
-    ->set('parent', $form_state['values']['menu_parent'])
+    ->set('available_menus', array_values(array_filter($form_state->getValue('menu_options'))))
+    ->set('parent', $form_state->getValue('menu_parent'))
     ->save();
 }
 

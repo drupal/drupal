@@ -122,7 +122,7 @@ abstract class VariantBase extends PluginBase implements VariantInterface {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['label'] = $form_state['values']['label'];
+    $this->configuration['label'] = $form_state->getValue('label');
   }
 
   /**

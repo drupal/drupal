@@ -106,7 +106,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   public function partialSubmitForm(array &$form, FormStateInterface $form_state) {
     // The title has not been validated, thus its value - in case of the test case
     // an empty string - may not be set.
-    if (!isset($form_state['values']['title']) && isset($form_state['values']['test'])) {
+    if (!$form_state->hasValue('title') && $form_state->hasValue('test')) {
       drupal_set_message('Only validated values appear in the form values.');
     }
   }

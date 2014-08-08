@@ -209,7 +209,7 @@ class Block extends DisplayPluginBase {
       case 'block_category':
       case 'allow':
       case 'block_hide_empty':
-        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
+        $this->setOption($form_state['section'], $form_state->getValue($form_state['section']));
         break;
     }
   }
@@ -289,8 +289,8 @@ class Block extends DisplayPluginBase {
    * * @see \Drupal\views\Plugin\Block\ViewsBlock::blockSubmit()
    */
   public function blockSubmit(ViewsBlock $block, $form, FormStateInterface $form_state) {
-    if (isset($form_state['values']['override']['items_per_page'])) {
-      $block->setConfigurationValue('items_per_page', $form_state['values']['override']['items_per_page']);
+    if ($items_per_page = $form_state->getValue(array('override', 'items_per_page'))) {
+      $block->setConfigurationValue('items_per_page', $items_per_page);
     }
   }
 

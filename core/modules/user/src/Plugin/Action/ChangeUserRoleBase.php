@@ -77,7 +77,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['rid'] = $form_state['values']['rid'];
+    $this->configuration['rid'] = $form_state->getValue('rid');
   }
 
   /**

@@ -90,7 +90,7 @@ class SelectProfileForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
-    $install_state['parameters']['profile'] = $form_state['values']['profile'];
+    $install_state['parameters']['profile'] = $form_state->getValue('profile');
   }
 
 }

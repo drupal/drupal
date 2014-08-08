@@ -244,10 +244,10 @@ class Feed extends PathPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'title':
-        $this->setOption('sitename_title', $form_state['values']['sitename_title']);
+        $this->setOption('sitename_title', $form_state->getValue('sitename_title'));
         break;
       case 'displays':
-        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
+        $this->setOption($form_state['section'], $form_state->getValue($form_state['section']));
         break;
     }
   }

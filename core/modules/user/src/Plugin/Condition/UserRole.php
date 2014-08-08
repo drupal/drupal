@@ -52,7 +52,7 @@ class UserRole extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['roles'] = array_filter($form_state['values']['roles']);
+    $this->configuration['roles'] = array_filter($form_state->getValue('roles'));
     parent::submitConfigurationForm($form, $form_state);
   }
 

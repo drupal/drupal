@@ -114,5 +114,5 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
  * @see dblog_form_system_logging_settings_alter()
  */
 function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('dblog.settings')->set('row_limit', $form_state['values']['dblog_row_limit'])->save();
+  \Drupal::config('dblog.settings')->set('row_limit', $form_state->getValue('dblog_row_limit'))->save();
 }

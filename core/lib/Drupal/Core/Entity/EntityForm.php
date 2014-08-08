@@ -307,8 +307,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   protected function updateFormLangcode(FormStateInterface $form_state) {
     // Update the form language as it might have changed.
-    if (isset($form_state['values']['langcode']) && $this->isDefaultFormLangcode($form_state)) {
-      $form_state['langcode'] = $form_state['values']['langcode'];
+    if ($form_state->hasValue('langcode') && $this->isDefaultFormLangcode($form_state)) {
+      $form_state['langcode'] = $form_state->getValue('langcode');
     }
   }
 
@@ -352,7 +352,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // @todo: This relies on a method that only exists for config and content
     //   entities, in a different way. Consider moving this logic to a config
     //   entity specific implementation.
-    foreach ($form_state['values'] as $key => $value) {
+    foreach ($form_state->getValues() as $key => $value) {
       $entity->set($key, $value);
     }
   }

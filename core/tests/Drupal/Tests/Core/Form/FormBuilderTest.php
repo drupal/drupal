@@ -128,7 +128,6 @@ class FormBuilderTest extends FormTestBase {
 
     $form_state = new FormState();
     try {
-      $form_state['values'] = array();
       $form_state['input']['form_id'] = $form_id;
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
       $this->fail('TestFormBuilder::sendResponse() was not triggered.');
@@ -182,7 +181,6 @@ class FormBuilderTest extends FormTestBase {
 
     $form_state = new FormState();
     try {
-      $form_state['values'] = array();
       $form_state['input']['form_id'] = $form_id;
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
       $this->fail('TestFormBuilder::sendResponse() was not triggered.');

@@ -149,8 +149,8 @@ abstract class SearchPageFormBase extends EntityForm {
 
     // Ensure each path is unique.
     $path = $this->entityQuery->get('search_page')
-      ->condition('path', $form_state['values']['path'])
-      ->condition('id', $form_state['values']['id'], '<>')
+      ->condition('path', $form_state->getValue('path'))
+      ->condition('id', $form_state->getValue('id'), '<>')
       ->execute();
     if ($path) {
       $form_state->setErrorByName('path', $this->t('The search page path must be unique.'));

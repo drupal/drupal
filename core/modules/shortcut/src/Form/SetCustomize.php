@@ -102,7 +102,8 @@ class SetCustomize extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     foreach ($this->entity->getShortcuts() as $shortcut) {
-      $shortcut->setWeight($form_state['values']['shortcuts']['links'][$shortcut->id()]['weight']);
+      $weight = $form_state->getValue(array('shortcuts', 'links', $shortcut->id(), 'weight'));
+      $shortcut->setWeight($weight);
       $shortcut->save();
     }
     drupal_set_message(t('The shortcut set has been updated.'));

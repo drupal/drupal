@@ -137,9 +137,9 @@ interface FormBuilderInterface {
    *   name exists, it is called to build the form array.
    * @param $form_state
    *   The current state of the form. Most important is the
-   *   $form_state['values'] collection, a tree of data used to simulate the
+   *   $form_state->getValues() collection, a tree of data used to simulate the
    *   incoming \Drupal::request()->request information from a user's form
-   *   submission. If a key is not filled in $form_state['values'], then the
+   *   submission. If a key is not filled in $form_state->getValues(), then the
    *   default value of the respective element is used. To submit an unchecked
    *   checkbox or other control that browsers submit by not having a
    *   \Drupal::request()->request entry, include the key, but set the value to
@@ -158,7 +158,7 @@ interface FormBuilderInterface {
    *   @endcode
    *   would be called via self::submitForm() as follows:
    *   @code
-   *   $form_state['values'] = $my_form_values;
+   *   $form_state->set('values', $my_form_values);
    *   $form_state['build_info']['args'] = array(&$object);
    *   drupal_form_submit('mymodule_form', $form_state);
    *   @endcode
@@ -166,11 +166,12 @@ interface FormBuilderInterface {
    * @code
    * // register a new user
    * $form_state = new FormState();
-   * $form_state['values']['name'] = 'robo-user';
-   * $form_state['values']['mail'] = 'robouser@example.com';
-   * $form_state['values']['pass']['pass1'] = 'password';
-   * $form_state['values']['pass']['pass2'] = 'password';
-   * $form_state['values']['op'] = t('Create new account');
+   * $values['name'] = 'robo-user';
+   * $values['mail'] = 'robouser@example.com';
+   * $values['pass']['pass1'] = 'password';
+   * $values['pass']['pass2'] = 'password';
+   * $values['op'] = t('Create new account');
+   * $form_state->set('values', $values);
    * drupal_form_submit('user_register_form', $form_state);
    * @endcode
    */
@@ -302,7 +303,7 @@ interface FormBuilderInterface {
    *   the next submission needs to be processed, a multi-step workflow is
    *   needed. This is most commonly implemented with a submit handler setting
    *   persistent data within $form_state based on *validated* values in
-   *   $form_state['values'] and setting $form_state['rebuild']. The form
+   *   $form_state->getValues() and setting $form_state['rebuild']. The form
    *   building functions must then be implemented to use the $form_state data
    *   to rebuild the form with the structure appropriate for the new state.
    * - Where user input must affect the rendering of the form without affecting

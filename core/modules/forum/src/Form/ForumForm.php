@@ -66,7 +66,7 @@ class ForumForm extends TermForm {
     $term = parent::buildEntity($form, $form_state);
 
     // Assign parents from forum parent select field.
-    $term->parent = array($form_state['values']['parent'][0]);
+    $term->parent = array($form_state->getValue(array('parent', 0)));
 
     return $term;
   }
@@ -83,7 +83,7 @@ class ForumForm extends TermForm {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
         $this->logger('forum')->notice('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id())));
-        $form_state['values']['tid'] = $term->id();
+        $form_state->setValue('tid', $term->id());
         break;
 
       case SAVED_UPDATED:

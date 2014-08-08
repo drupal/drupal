@@ -79,7 +79,7 @@ abstract class ForumBlockBase extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['block_count'] = $form_state['values']['block_count'];
+    $this->configuration['block_count'] = $form_state->getValue('block_count');
   }
 
   /**

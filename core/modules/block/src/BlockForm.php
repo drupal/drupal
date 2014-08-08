@@ -128,7 +128,7 @@ class BlockForm extends EntityForm {
    * Handles switching the available regions based on the selected theme.
    */
   public function themeSwitch($form, FormStateInterface $form_state) {
-    $form['region']['#options'] = system_region_list($form_state['values']['theme'], REGIONS_VISIBLE);
+    $form['region']['#options'] = system_region_list($form_state->getValue('theme'), REGIONS_VISIBLE);
     return $form['region'];
   }
 
@@ -150,12 +150,12 @@ class BlockForm extends EntityForm {
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
     $settings = new FormState(array(
-      'values' => $form_state['values']['settings']
+      'values' => $form_state->getValue('settings')
     ));
     // Call the plugin validate handler.
     $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
     // Update the original form values.
-    $form_state['values']['settings'] = $settings['values'];
+    $form_state->setValue('settings', $settings['values']);
   }
 
   /**
@@ -169,13 +169,13 @@ class BlockForm extends EntityForm {
     // settings form element, so just pass that to the block for submission.
     // @todo Find a way to avoid this manipulation.
     $settings = new FormState(array(
-      'values' => $form_state['values']['settings'],
+      'values' => $form_state->getValue('settings'),
     ));
 
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);
     // Update the original form values.
-    $form_state['values']['settings'] = $settings['values'];
+    $form_state->setValue('settings', $settings['values']);
 
     // Save the settings of the plugin.
     $entity->save();
@@ -184,7 +184,7 @@ class BlockForm extends EntityForm {
     $form_state->setRedirect(
       'block.admin_display_theme',
       array(
-        'theme' => $form_state['values']['theme'],
+        'theme' => $form_state->getValue('theme'),
       ),
       array('query' => array('block-placement' => drupal_html_class($this->entity->id())))
     );

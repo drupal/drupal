@@ -163,9 +163,9 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['items']['expire'] = $form_state['values']['aggregator_clear'];
-    $this->configuration['items']['teaser_length'] = $form_state['values']['aggregator_teaser_length'];
-    $this->configuration['source']['list_max'] = $form_state['values']['aggregator_summary_items'];
+    $this->configuration['items']['expire'] = $form_state->getValue('aggregator_clear');
+    $this->configuration['items']['teaser_length'] = $form_state->getValue('aggregator_teaser_length');
+    $this->configuration['source']['list_max'] = $form_state->getValue('aggregator_summary_items');
     // @todo Refactor aggregator plugins to ConfigEntity so this is not needed.
     $this->setConfiguration($this->configuration);
   }

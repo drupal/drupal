@@ -52,11 +52,9 @@ class Name extends InOperator {
   }
 
   protected function valueValidate($form, FormStateInterface $form_state) {
-    $values = Tags::explode($form_state['values']['options']['value']);
-    $uids = $this->validate_user_strings($form['value'], $form_state, $values);
-
-    if ($uids) {
-      $form_state['values']['options']['value'] = $uids;
+    $values = Tags::explode($form_state->getValue(array('options', 'value')));
+    if ($uids = $this->validate_user_strings($form['value'], $form_state, $values)) {
+      $form_state->setValue(array('options', 'value'), $uids);
     }
   }
 
@@ -83,7 +81,7 @@ class Name extends InOperator {
     }
 
     $identifier = $this->options['expose']['identifier'];
-    $input = $form_state['values'][$identifier];
+    $input = $form_state->getValue($identifier);
 
     if ($this->options['is_grouped'] && isset($this->options['group_info']['group_items'][$input])) {
       $this->operator = $this->options['group_info']['group_items'][$input]['operator'];

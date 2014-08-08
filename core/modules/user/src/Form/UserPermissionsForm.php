@@ -186,8 +186,8 @@ class UserPermissionsForm extends FormBase {
    * {@inheritdoc}
    */
   function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state['values']['role_names'] as $role_name => $name) {
-      user_role_change_permissions($role_name, $form_state['values'][$role_name]);
+    foreach ($form_state->getValue('role_names') as $role_name => $name) {
+      user_role_change_permissions($role_name, $form_state->getValue($role_name));
     }
 
     drupal_set_message($this->t('The changes have been saved.'));

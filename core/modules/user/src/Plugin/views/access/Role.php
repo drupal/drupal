@@ -82,14 +82,14 @@ class Role extends AccessPluginBase {
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    if (!array_filter($form_state['values']['access_options']['role'])) {
+    $role = $form_state->getValue(array('access_options', 'role'));
+    $role = array_filter($role);
+
+    if (!$role) {
       form_error($form['role'], $form_state, t('You must select at least one role if type is "by role"'));
     }
-  }
 
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    // I hate checkboxes.
-    $form_state['values']['access_options']['role'] = array_filter($form_state['values']['access_options']['role']);
+    $form_state->setValue(array('access_options', 'role'), $role);
   }
 
 }

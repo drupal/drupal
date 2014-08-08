@@ -53,7 +53,7 @@ class TestBlockInstantiation extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['display_message'] = $form_state['values']['display_message'];
+    $this->configuration['display_message'] = $form_state->getValue('display_message');
   }
 
   /**

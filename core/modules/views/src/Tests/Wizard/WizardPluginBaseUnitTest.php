@@ -65,12 +65,12 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     ));
     language_save($language);
 
-    $form_state['values'] = array(
+    $form_state->set('values', array(
       'id' => $random_id,
       'label' => $random_label,
       'description' => $random_description,
       'base_table' => 'views_test_data',
-    );
+    ));
 
     $this->wizard->validateView($form, $form_state);
     $view = $this->wizard->createView($form, $form_state);

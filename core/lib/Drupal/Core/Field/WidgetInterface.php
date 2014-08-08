@@ -83,9 +83,9 @@ interface WidgetInterface extends WidgetBaseInterface {
    *   - #field_parents: The 'parents' space for the field in the form. Most
    *       widgets can simply overlook this property. This identifies the
    *       location where the field values are placed within
-   *       $form_state['values'], and is used to access processing information
-   *       for the field through the getWidgetState() and setWidgetState()
-   *       methods.
+   *       $form_state->getValues(), and is used to access processing
+   *       information for the field through the getWidgetState() and
+   *       setWidgetState() methods.
    *   - #title: The sanitized element label for the field instance, ready for
    *     output.
    *   - #description: The sanitized element description for the field instance,

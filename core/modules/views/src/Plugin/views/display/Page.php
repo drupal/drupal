@@ -383,11 +383,12 @@ class Page extends PathPluginBase {
 
     if ($form_state['section'] == 'menu') {
       $path = $this->getOption('path');
-      if ($form_state['values']['menu']['type'] == 'normal' && strpos($path, '%') !== FALSE) {
+      $menu_type = $form_state->getValue(array('menu', 'type'));
+      if ($menu_type == 'normal' && strpos($path, '%') !== FALSE) {
         form_error($form['menu']['type'], $form_state, t('Views cannot create normal menu items for paths with a % in them.'));
       }
 
-      if ($form_state['values']['menu']['type'] == 'default tab' || $form_state['values']['menu']['type'] == 'tab') {
+      if ($menu_type == 'default tab' || $menu_type == 'tab') {
         $bits = explode('/', $path);
         $last = array_pop($bits);
         if ($last == '%') {
@@ -395,7 +396,7 @@ class Page extends PathPluginBase {
         }
       }
 
-      if ($form_state['values']['menu']['type'] != 'none' && empty($form_state['values']['menu']['title'])) {
+      if ($menu_type != 'none' && $form_state->isValueEmpty(array('menu', 'title'))) {
         form_error($form['menu']['title'], $form_state, t('Title is required for this menu type.'));
       }
     }
@@ -409,14 +410,14 @@ class Page extends PathPluginBase {
 
     switch ($form_state['section']) {
       case 'menu':
-        $this->setOption('menu', $form_state['values']['menu']);
+        $this->setOption('menu', $form_state->getValue('menu'));
         // send ajax form to options page if we use it.
-        if ($form_state['values']['menu']['type'] == 'default tab') {
+        if ($form_state->getValue(array('menu', 'type')) == 'default tab') {
           $form_state['view']->addFormToStack('display', $this->display['id'], 'tab_options');
         }
         break;
       case 'tab_options':
-        $this->setOption('tab_options', $form_state['values']['tab_options']);
+        $this->setOption('tab_options', $form_state->getValue('tab_options'));
         break;
     }
   }

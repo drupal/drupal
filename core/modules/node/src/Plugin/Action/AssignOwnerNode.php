@@ -119,7 +119,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state['values']['owner_name']))->fetchField();
+    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state->getValue('owner_name')))->fetchField();
     if (!$exists) {
       form_set_error('owner_name', $form_state, t('Enter a valid username.'));
     }
@@ -129,7 +129,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']))->fetchField();
+    $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users} WHERE name = :name', array(':name' => $form_state->getValue('owner_name')))->fetchField();
   }
 
 }

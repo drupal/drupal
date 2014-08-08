@@ -238,7 +238,11 @@ function form_builder($form_id, &$element, FormStateInterface $form_state) {
  */
 function form_state_values_clean(FormStateInterface $form_state) {
   // Remove internal Form API values.
-  unset($form_state['values']['form_id'], $form_state['values']['form_token'], $form_state['values']['form_build_id'], $form_state['values']['op']);
+  $form_state
+    ->unsetValue('form_id')
+    ->unsetValue('form_token')
+    ->unsetValue('form_build_id')
+    ->unsetValue('op');
 
   // Remove button values.
   // form_builder() collects all button elements in a form. We remove the button
@@ -247,9 +251,9 @@ function form_state_values_clean(FormStateInterface $form_state) {
     // Remove this button's value from the submitted form values by finding
     // the value corresponding to this button.
     // We iterate over the #parents of this button and move a reference to
-    // each parent in $form_state['values']. For example, if #parents is:
+    // each parent in $form_state->getValues(). For example, if #parents is:
     //   array('foo', 'bar', 'baz')
-    // then the corresponding $form_state['values'] part will look like this:
+    // then the corresponding $form_state->getValues() part will look like this:
     // array(
     //   'foo' => array(
     //     'bar' => array(
@@ -259,14 +263,14 @@ function form_state_values_clean(FormStateInterface $form_state) {
     // )
     // We start by (re)moving 'baz' to $last_parent, so we are able unset it
     // at the end of the iteration. Initially, $values will contain a
-    // reference to $form_state['values'], but in the iteration we move the
-    // reference to $form_state['values']['foo'], and finally to
-    // $form_state['values']['foo']['bar'], which is the level where we can
-    // unset 'baz' (that is stored in $last_parent).
+    // reference to $form_state->getValues(), but in the iteration we move the
+    // reference to $form_state->getValue('foo'), and finally to
+    // $form_state->getValue(array('foo', 'bar')), which is the level where we
+    // can unset 'baz' (that is stored in $last_parent).
     $parents = $button['#parents'];
     $last_parent = array_pop($parents);
     $key_exists = NULL;
-    $values = &NestedArray::getValue($form_state['values'], $parents, $key_exists);
+    $values = &NestedArray::getValue($form_state->getValues(), $parents, $key_exists);
     if ($key_exists && is_array($values)) {
       unset($values[$last_parent]);
     }
@@ -285,7 +289,7 @@ function form_state_values_clean(FormStateInterface $form_state) {
  *   The current state of the form.
  *
  * @return
- *   The data that will appear in the $form_state['values'] collection
+ *   The data that will appear in the $form_state->getValues() collection
  *   for this element. Return nothing to use the default.
  */
 function form_type_image_button_value($form, $input, FormStateInterface $form_state) {
@@ -414,7 +418,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return array
- *   The data that will appear in the $form_state['values'] collection
+ *   The data that will appear in the $form_state->getValues() collection
  *   for this element. Return nothing to use the default.
  */
 function form_type_table_value(array $element, $input = FALSE) {
@@ -2021,8 +2025,8 @@ function form_process_vertical_tabs($element, FormStateInterface $form_state) {
   // form is rendered, e.g. on preview pages or when form validation
   // fails.
   $name = implode('__', $element['#parents']);
-  if (isset($form_state['values'][$name . '__active_tab'])) {
-    $element['#default_tab'] = $form_state['values'][$name . '__active_tab'];
+  if ($form_state->hasValue($name . '__active_tab')){
+    $element['#default_tab'] = $form_state->getValue($name . '__active_tab');
   }
   $element[$name . '__active_tab'] = array(
     '#type' => 'hidden',
@@ -2373,7 +2377,7 @@ function form_validate_number(&$element, FormStateInterface $form_state) {
  *   element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $form_state['values'] collection for
+ *   The data that will appear in the $form_state->getValues() collection for
  *   this element. Return nothing to use the default.
  */
 function form_type_range_value($element, $input = FALSE) {

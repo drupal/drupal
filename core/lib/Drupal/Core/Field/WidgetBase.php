@@ -331,10 +331,10 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();
 
-    // Extract the values from $form_state['values'].
+    // Extract the values from $form_state->getValues().
     $path = array_merge($form['#parents'], array($field_name));
     $key_exists = NULL;
-    $values = NestedArray::getValue($form_state['values'], $path, $key_exists);
+    $values = NestedArray::getValue($form_state->getValues(), $path, $key_exists);
 
     if ($key_exists) {
       // Account for drag-and-drop reordering if needed.

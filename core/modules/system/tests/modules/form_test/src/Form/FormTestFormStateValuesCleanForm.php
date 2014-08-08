@@ -46,7 +46,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
     form_state_values_clean($form_state);
     // This won't have a proper JSON header, but Drupal doesn't check for that
     // anyway so this is fine until it's replaced with a JsonResponse.
-    print Json::encode($form_state['values']);
+    print Json::encode($form_state->getValues());
     exit;
   }
 

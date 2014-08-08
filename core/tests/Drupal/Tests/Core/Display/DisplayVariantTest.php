@@ -144,7 +144,7 @@ class DisplayVariantTest extends UnitTestCase {
     $form = array();
     $label = $this->randomMachineName();
     $form_state = new FormState();
-    $form_state['values']['label'] = $label;
+    $form_state->setValue('label', $label);
     $display_variant->submitConfigurationForm($form, $form_state);
     $this->assertSame($label, $display_variant->label());
   }

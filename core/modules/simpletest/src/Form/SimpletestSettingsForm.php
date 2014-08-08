@@ -91,13 +91,13 @@ class SimpletestSettingsForm extends ConfigFormBase {
     $config = $this->config('simpletest.settings');
     // If a username was provided but a password wasn't, preserve the existing
     // password.
-    if (!empty($form_state['values']['simpletest_httpauth_username']) && empty($form_state['values']['simpletest_httpauth_password'])) {
-      $form_state['values']['simpletest_httpauth_password'] = $config->get('httpauth.password');
+    if (!$form_state->isValueEmpty('simpletest_httpauth_username') && $form_state->isValueEmpty('simpletest_httpauth_password')) {
+      $form_state->setValue('simpletest_httpauth_password', $config->get('httpauth.password'));
     }
 
     // If a password was provided but a username wasn't, the credentials are
     // incorrect, so throw an error.
-    if (empty($form_state['values']['simpletest_httpauth_username']) && !empty($form_state['values']['simpletest_httpauth_password'])) {
+    if ($form_state->isValueEmpty('simpletest_httpauth_username') && !$form_state->isValueEmpty('simpletest_httpauth_password')) {
       $form_state->setErrorByName('simpletest_httpauth_username', $this->t('HTTP authentication credentials must include a username in addition to a password.'));
     }
 
@@ -109,11 +109,11 @@ class SimpletestSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('simpletest.settings')
-      ->set('clear_results', $form_state['values']['simpletest_clear_results'])
-      ->set('verbose', $form_state['values']['simpletest_verbose'])
-      ->set('httpauth.method', $form_state['values']['simpletest_httpauth_method'])
-      ->set('httpauth.username', $form_state['values']['simpletest_httpauth_username'])
-      ->set('httpauth.password', $form_state['values']['simpletest_httpauth_password'])
+      ->set('clear_results', $form_state->getValue('simpletest_clear_results'))
+      ->set('verbose', $form_state->getValue('simpletest_verbose'))
+      ->set('httpauth.method', $form_state->getValue('simpletest_httpauth_method'))
+      ->set('httpauth.username', $form_state->getValue('simpletest_httpauth_username'))
+      ->set('httpauth.password', $form_state->getValue('simpletest_httpauth_password'))
       ->save();
 
     parent::submitForm($form, $form_state);

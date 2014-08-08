@@ -100,7 +100,7 @@ class UpdateReady extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Store maintenance_mode setting so we can restore it when done.
     $_SESSION['maintenance_mode'] = $this->state->get('system.maintenance_mode');
-    if ($form_state['values']['maintenance_mode'] == TRUE) {
+    if ($form_state->getValue('maintenance_mode') == TRUE) {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 

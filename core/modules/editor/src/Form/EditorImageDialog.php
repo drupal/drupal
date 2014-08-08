@@ -190,14 +190,15 @@ class EditorImageDialog extends FormBase {
 
     // Convert any uploaded files from the FID values to data-editor-file-uuid
     // attributes.
-    if (!empty($form_state['values']['fid'][0])) {
-      $file = file_load($form_state['values']['fid'][0]);
+    $fid = $form_state->getValue(array('fid', 0));
+    if (!empty($fid)) {
+      $file = file_load($fid);
       $file_url = file_create_url($file->getFileUri());
       // Transform absolute image URLs to relative image URLs: prevent problems
       // on multisite set-ups and prevent mixed content errors.
       $file_url = file_url_transform_relative($file_url);
-      $form_state['values']['attributes']['src'] = $file_url;
-      $form_state['values']['attributes']['data-editor-file-uuid'] = $file->uuid();
+      $form_state->setValue(array('attributes', 'src'), $file_url);
+      $form_state->setValue(array('attributes', 'data-editor-file-uuid'), $file->uuid());
     }
 
     if (form_get_errors($form_state)) {
@@ -208,7 +209,7 @@ class EditorImageDialog extends FormBase {
       $response->addCommand(new HtmlCommand('#editor-image-dialog-form', $output));
     }
     else {
-      $response->addCommand(new EditorDialogSave($form_state['values']));
+      $response->addCommand(new EditorDialogSave($form_state->getValues()));
       $response->addCommand(new CloseModalDialogCommand());
     }
 

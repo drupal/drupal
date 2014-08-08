@@ -66,9 +66,9 @@ class ForumSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('forum.settings')
-      ->set('topics.hot_threshold', $form_state['values']['forum_hot_topic'])
-      ->set('topics.page_limit', $form_state['values']['forum_per_page'])
-      ->set('topics.order', $form_state['values']['forum_order'])
+      ->set('topics.hot_threshold', $form_state->getValue('forum_hot_topic'))
+      ->set('topics.page_limit', $form_state->getValue('forum_per_page'))
+      ->set('topics.order', $form_state->getValue('forum_order'))
       ->save();
 
     parent::submitForm($form, $form_state);

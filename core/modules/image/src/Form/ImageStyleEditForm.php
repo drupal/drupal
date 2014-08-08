@@ -157,7 +157,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    * Validate handler for image effect.
    */
   public function effectValidate($form, FormStateInterface $form_state) {
-    if (!$form_state['values']['new']) {
+    if (!$form_state->getValue('new')) {
       $form_state->setErrorByName('new', $this->t('Select an effect to add.'));
     }
   }
@@ -168,12 +168,12 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   public function effectSave($form, FormStateInterface $form_state) {
 
     // Update image effect weights.
-    if (!empty($form_state['values']['effects'])) {
-      $this->updateEffectWeights($form_state['values']['effects']);
+    if (!$form_state->isValueEmpty('effects')) {
+      $this->updateEffectWeights($form_state->getValue('effects'));
     }
 
-    $this->entity->set('name', $form_state['values']['name']);
-    $this->entity->set('label', $form_state['values']['label']);
+    $this->entity->set('name', $form_state->getValue('name'));
+    $this->entity->set('label', $form_state->getValue('label'));
 
     $status = parent::save($form, $form_state);
 
@@ -182,7 +182,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     }
 
     // Check if this field has any configuration options.
-    $effect = $this->imageEffectManager->getDefinition($form_state['values']['new']);
+    $effect = $this->imageEffectManager->getDefinition($form_state->getValue('new'));
 
     // Load the configuration form for this option.
     if (is_subclass_of($effect['class'], '\Drupal\image\ConfigurableImageEffectInterface')) {
@@ -190,9 +190,9 @@ class ImageStyleEditForm extends ImageStyleFormBase {
         'image.effect_add_form',
         array(
           'image_style' => $this->entity->id(),
-          'image_effect' => $form_state['values']['new'],
+          'image_effect' => $form_state->getValue('new'),
         ),
-        array('query' => array('weight' => $form_state['values']['weight']))
+        array('query' => array('weight' => $form_state->getValue('weight')))
       );
     }
     // If there's no form, immediately add the image effect.
@@ -200,7 +200,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       $effect = array(
         'id' => $effect['id'],
         'data' => array(),
-        'weight' => $form_state['values']['weight'],
+        'weight' => $form_state->getValue('weight'),
       );
       $effect_id = $this->entity->addImageEffect($effect);
       $this->entity->save();
@@ -216,8 +216,8 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   public function save(array $form, FormStateInterface $form_state) {
 
     // Update image effect weights.
-    if (!empty($form_state['values']['effects'])) {
-      $this->updateEffectWeights($form_state['values']['effects']);
+    if (!$form_state->isValueEmpty('effects')) {
+      $this->updateEffectWeights($form_state->getValue('effects'));
     }
 
     parent::save($form, $form_state);
@@ -253,7 +253,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    * {@inheritdoc}
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    foreach ($form_state['values'] as $key => $value) {
+    foreach ($form_state->getValues() as $key => $value) {
       // Do not copy effects here, see self::updateEffectWeights().
       if ($key != 'effects') {
         $entity->set($key, $value);

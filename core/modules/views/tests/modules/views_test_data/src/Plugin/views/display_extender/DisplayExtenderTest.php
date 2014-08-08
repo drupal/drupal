@@ -82,7 +82,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'test_extender_test_option':
-        $this->displayHandler->setOption('test_extender_test_option', $form_state['values']['test_extender_test_option']);
+        $this->displayHandler->setOption('test_extender_test_option', $form_state->getValue('test_extender_test_option'));
         break;
     }
   }

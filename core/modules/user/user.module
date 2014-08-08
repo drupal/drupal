@@ -488,7 +488,7 @@ function _user_language_selector_langcode_value($element, $input, FormStateInter
   if (isset($form_state['complete_form']['language']['preferred_langcode']['#description'])) {
     $form_state['complete_form']['language']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
   }
-  return $form_state['values']['preferred_langcode'];
+  return $form_state->getValue('preferred_langcode');
 }
 
 /**
@@ -498,13 +498,13 @@ function _user_language_selector_langcode_value($element, $input, FormStateInter
  */
 function user_validate_current_pass(&$form, FormStateInterface $form_state) {
   $account = $form_state['user'];
-  foreach ($form_state['values']['current_pass_required_values'] as $key => $name) {
+  foreach ($form_state->getValue('current_pass_required_values') as $key => $name) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
     $current_value = $account->hasField($key) ? $account->get($key)->value : $account->$key;
-    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
-      $current_pass_failed = empty($form_state['values']['current_pass']) || !\Drupal::service('password')->check($form_state['values']['current_pass'], $account);
+    if ((strlen(trim($form_state->getValue($key))) > 0) && ($form_state->getValue($key) != $current_value)) {
+      $current_pass_failed = $form_state->isValueEmpty('current_pass') || !\Drupal::service('password')->check($form_state->getValue('current_pass'), $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', $form_state, t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key, $form_state);

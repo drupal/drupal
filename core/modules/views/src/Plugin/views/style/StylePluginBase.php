@@ -338,11 +338,12 @@ abstract class StylePluginBase extends PluginBase {
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Don't run validation on style plugins without the grouping setting.
-    if (isset($form_state['values']['style_options']['grouping'])) {
+    if ($form_state->hasValue(array('style_options', 'grouping'))) {
       // Don't save grouping if no field is specified.
-      foreach ($form_state['values']['style_options']['grouping'] as $index => $grouping) {
+      $groupings = $form_state->getValue(array('style_options', 'grouping'));
+      foreach ($groupings as $index => $grouping) {
         if (empty($grouping['field'])) {
-          unset($form_state['values']['style_options']['grouping'][$index]);
+          $form_state->unsetValue(array('style_options', 'grouping', $index));
         }
       }
     }

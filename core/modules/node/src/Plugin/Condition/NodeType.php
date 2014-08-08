@@ -88,7 +88,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['bundles'] = array_filter($form_state['values']['bundles']);
+    $this->configuration['bundles'] = array_filter($form_state->getValue('bundles'));
     parent::submitConfigurationForm($form, $form_state);
   }
 

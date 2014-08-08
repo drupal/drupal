@@ -119,13 +119,13 @@ class VocabularyForm extends EntityForm {
     $vocabulary = $this->entity;
     // Delete the old language settings for the vocabulary, if the machine name
     // is changed.
-    if ($vocabulary && $vocabulary->id() && $vocabulary->id() != $form_state['values']['vid']) {
+    if ($vocabulary && $vocabulary->id() && $vocabulary->id() != $form_state->getValue('vid')) {
       language_clear_default_configuration('taxonomy_term', $vocabulary->id());
     }
     // Since the machine name is not known yet, and it can be changed anytime,
     // we have to also update the bundle property for the default language
     // configuration in order to have the correct bundle value.
-    $form_state['language']['default_language']['bundle'] = $form_state['values']['vid'];
+    $form_state['language']['default_language']['bundle'] = $form_state->getValue('vid');
   }
 
   /**
@@ -153,7 +153,7 @@ class VocabularyForm extends EntityForm {
         break;
     }
 
-    $form_state['values']['vid'] = $vocabulary->id();
+    $form_state->setValue('vid', $vocabulary->id());
     $form_state['vid'] = $vocabulary->id();
   }
 

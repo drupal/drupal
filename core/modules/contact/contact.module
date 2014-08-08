@@ -188,8 +188,8 @@ function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
  */
 function contact_user_profile_form_submit($form, FormStateInterface $form_state) {
   $account = $form_state['controller']->getEntity();
-  if ($account->id() && isset($form_state['values']['contact'])) {
-    \Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state['values']['contact']);
+  if ($account->id() && $form_state->hasValue('contact')) {
+    \Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state->getValue('contact'));
   }
 }
 
@@ -224,6 +224,6 @@ function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form
  */
 function contact_form_user_admin_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::config('contact.settings')
-    ->set('user_default_enabled', $form_state['values']['contact_default_status'])
+    ->set('user_default_enabled', $form_state->getValue('contact_default_status'))
     ->save();
 }

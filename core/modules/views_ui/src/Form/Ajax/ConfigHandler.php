@@ -233,7 +233,7 @@ class ConfigHandler extends ViewsFormBase {
 
     // Add the incoming options to existing options because items using
     // the extra form may not have everything in the form here.
-    $options = $form_state['values']['options'] + $form_state['handler']->options;
+    $options = $form_state->getValue('options') + $form_state['handler']->options;
 
     // This unpacks only options that are in the definition, ensuring random
     // extra stuff on the form is not sent through.

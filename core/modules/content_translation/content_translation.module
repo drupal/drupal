@@ -775,7 +775,7 @@ function content_translation_language_configuration_element_process(array $eleme
  */
 function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
   $key = $form_state['content_translation']['key'];
-  $values = $form_state['values'][$key];
+  $values = $form_state->getValue($key);
   if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
     foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
@@ -797,7 +797,7 @@ function content_translation_language_configuration_element_validate($element, F
 function content_translation_language_configuration_element_submit(array $form, FormStateInterface $form_state) {
   $key = $form_state['content_translation']['key'];
   $context = $form_state['language'][$key];
-  $enabled = $form_state['values'][$key]['content_translation'];
+  $enabled = $form_state->getValue(array($key, 'content_translation'));
 
   if (content_translation_enabled($context['entity_type'], $context['bundle']) != $enabled) {
     content_translation_set_config($context['entity_type'], $context['bundle'], 'enabled', $enabled);

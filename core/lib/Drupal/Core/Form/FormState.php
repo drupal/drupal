@@ -196,7 +196,7 @@ class FormState implements FormStateInterface, \ArrayAccess {
    *
    * @var array
    */
-  protected $values;
+  protected $values = array();
 
   /**
    * The array of values as they were submitted by the user.
@@ -559,28 +559,61 @@ class FormState implements FormStateInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function getValues() {
-    return $this->values ?: array();
+  public function &getValues() {
+    return $this->values;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addValue($property, $value) {
-    $values = $this->getValues();
-    $values[$property] = $value;
-    $this->set('values', $values);
+  public function &getValue($key, $default = NULL) {
+    $exists = NULL;
+    $value = &NestedArray::getValue($this->getValues(), (array) $key, $exists);
+    if (!$exists) {
+      $value = $default;
+    }
+    return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($key, $value) {
+    NestedArray::setValue($this->getValues(), (array) $key, $value, TRUE);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unsetValue($key) {
+    NestedArray::unsetValue($this->getValues(), (array) $key);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasValue($key) {
+    $exists = NULL;
+    $value = NestedArray::getValue($this->getValues(), (array) $key, $exists);
+    return $exists && isset($value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValueEmpty($key) {
+    $exists = NULL;
+    $value = NestedArray::getValue($this->getValues(), (array) $key, $exists);
+    return !$exists || empty($value);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setValueForElement($element, $value) {
-    $values = $this->getValues();
-    NestedArray::setValue($values, $element['#parents'], $value, TRUE);
-    $this->set('values', $values);
-    return $this;
+    return $this->setValue($element['#parents'], $value);
   }
 
   /**
@@ -670,10 +703,10 @@ class FormState implements FormStateInterface, \ArrayAccess {
           // Exploding by '][' reconstructs the element's #parents. If the
           // reconstructed #parents begin with the same keys as the specified
           // section, then the element's values are within the part of
-          // $form_state['values'] that the clicked button requires to be valid,
-          // so errors for this element must be recorded. As the exploded array
-          // will all be strings, we need to cast every value of the section
-          // array to string.
+          // $form_state->getValues() that the clicked button requires to be
+          // valid, so errors for this element must be recorded. As the exploded
+          // array will all be strings, we need to cast every value of the
+          // section array to string.
           if (array_slice(explode('][', $name), 0, count($section)) === array_map('strval', $section)) {
             $record = TRUE;
             break;

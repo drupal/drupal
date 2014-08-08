@@ -185,7 +185,7 @@ class FieldInstanceEditForm extends FormBase {
     $this->instance->default_value = $default_value;
 
     // Merge incoming values into the instance.
-    foreach ($form_state['values']['instance'] as $key => $value) {
+    foreach ($form_state->getValue('instance') as $key => $value) {
       $this->instance->$key = $value;
     }
     $this->instance->save();

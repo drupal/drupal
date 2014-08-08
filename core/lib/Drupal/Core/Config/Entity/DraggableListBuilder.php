@@ -147,7 +147,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state['values'][$this->entitiesKey] as $id => $value) {
+    foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
       if (isset($this->entities[$id]) && $this->entities[$id]->get($this->weightKey) != $value['weight']) {
         // Save entity only when its weight was changed.
         $this->entities[$id]->set($this->weightKey, $value['weight']);

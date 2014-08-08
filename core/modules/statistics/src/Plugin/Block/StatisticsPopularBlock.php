@@ -110,9 +110,9 @@ class StatisticsPopularBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['top_day_num'] = $form_state['values']['statistics_block_top_day_num'];
-    $this->configuration['top_all_num'] = $form_state['values']['statistics_block_top_all_num'];
-    $this->configuration['top_last_num'] = $form_state['values']['statistics_block_top_last_num'];
+    $this->configuration['top_day_num'] = $form_state->getValue('statistics_block_top_day_num');
+    $this->configuration['top_all_num'] = $form_state->getValue('statistics_block_top_all_num');
+    $this->configuration['top_last_num'] = $form_state->getValue('statistics_block_top_last_num');
   }
 
   /**

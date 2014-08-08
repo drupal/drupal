@@ -114,7 +114,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['boost'] = $form_state['values']['extra_type_settings']['boost'];
+    $this->configuration['boost'] = $form_state->getValue(array('extra_type_settings', 'boost'));
   }
 
   /**

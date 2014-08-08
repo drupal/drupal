@@ -76,7 +76,7 @@ class EditDetails extends ViewsFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state['view'];
-    foreach ($form_state['values'] as $key => $value) {
+    foreach ($form_state->getValues() as $key => $value) {
       // Only save values onto the view if they're actual view properties
       // (as opposed to 'op' or 'form_build_id').
       if (isset($form['details'][$key])) {

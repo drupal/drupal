@@ -226,12 +226,12 @@ class RearrangeFilter extends ViewsFormBase {
       $old_fields = $display->getOption($types['filter']['plural']);
     }
 
-    $groups = $form_state['values']['filter_groups'];
+    $groups = $form_state->getValue('filter_groups');
     // Whatever button was clicked, re-calculate field information.
     $new_fields = $order = array();
 
     // Make an array with the weights
-    foreach ($form_state['values']['filters'] as $field => $info) {
+    foreach ($form_state->getValue('filters') as $field => $info) {
       // add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
       if (is_array($info) && empty($info['removed'])) {

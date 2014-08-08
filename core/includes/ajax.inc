@@ -99,7 +99,7 @@ use Drupal\Core\Form\FormStateInterface;
  * get the format string entered by the user:
  * @code
  * $format_value = \Drupal\Component\Utility\NestedArray::getValue(
- *   $form_state['values'],
+ *   $form_state->getValues(),
  *   $form_state['triggering_element']['#array_parents']);
  * @endcode
  *

@@ -118,9 +118,9 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['confirm']) {
+    if ($form_state->getValue('confirm')) {
       $this->commentStorage->delete($this->comments);
-      $count = count($form_state['values']['comments']);
+      $count = count($form_state->getValue('comments'));
       $this->logger('content')->notice('Deleted @count comments.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }

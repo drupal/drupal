@@ -205,7 +205,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_values = $form_state['values']['config_names'];
+    $form_values = $form_state->getValue('config_names');
 
     // For the form submission handling, use the raw data.
     $config_factory = $this->configFactory();

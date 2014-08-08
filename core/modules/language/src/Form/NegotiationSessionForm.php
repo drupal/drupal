@@ -44,7 +44,7 @@ class NegotiationSessionForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.settings')
-      ->set('session.parameter', $form_state['values']['language_negotiation_session_param'])
+      ->set('session.parameter', $form_state->getValue('language_negotiation_session_param'))
       ->save();
 
     parent::submitForm($form, $form_state);

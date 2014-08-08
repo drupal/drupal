@@ -217,11 +217,9 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = Tags::explode($form_state['values']['options']['value']);
-    $tids = $this->validate_term_strings($form['value'], $values, $form_state);
-
-    if ($tids) {
-      $form_state['values']['options']['value'] = $tids;
+    $values = Tags::explode($form_state->getValue('options', 'value'));
+    if ($tids = $this->validate_term_strings($form['value'], $values, $form_state)) {
+      $form_state->setValue(array('options', 'value'), $tids);
     }
   }
 
@@ -261,8 +259,8 @@ class TaxonomyIndexTid extends ManyToOne {
 
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
-      if ($form_state['values'][$identifier] != 'All')  {
-        $this->validated_exposed_input = (array) $form_state['values'][$identifier];
+      if ($form_state->getValue($identifier) != 'All')  {
+        $this->validated_exposed_input = (array) $form_state->getValue($identifier);
       }
       return;
     }
@@ -271,7 +269,7 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = Tags::explode($form_state['values'][$identifier]);
+    $values = Tags::explode($form_state->getValue($identifier));
 
     $tids = $this->validate_term_strings($form[$identifier], $values, $form_state);
     if ($tids) {

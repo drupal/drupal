@@ -79,7 +79,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function settingsFormSubmit($form, FormStateInterface $form_state) {
     \Drupal::config('system.image.gd')
-      ->set('jpeg_quality', $form_state['values']['gd']['image_jpeg_quality'])
+      ->set('jpeg_quality', $form_state->getValue(array('gd', 'image_jpeg_quality')))
       ->save();
   }
 

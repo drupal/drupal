@@ -157,7 +157,9 @@ abstract class SortPluginBase extends HandlerBase {
    * Simple submit handler
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    unset($form_state['values']['expose_button']); // don't store this.
+    // Do not store this values.
+    $form_state->unsetValue('expose_button');
+
     $this->sortSubmit($form, $form_state);
     if (!empty($this->options['exposed'])) {
       $this->submitExposeForm($form, $form_state);

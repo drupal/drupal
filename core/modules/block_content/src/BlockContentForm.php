@@ -180,7 +180,7 @@ class BlockContentForm extends ContentEntityForm {
     $block = parent::submit($form, $form_state);
 
     // Save as a new revision if requested to do so.
-    if (!empty($form_state['values']['revision'])) {
+    if (!$form_state->isValueEmpty('revision')) {
       $block->setNewRevision();
     }
 
@@ -209,7 +209,7 @@ class BlockContentForm extends ContentEntityForm {
     }
 
     if ($block->id()) {
-      $form_state['values']['id'] = $block->id();
+      $form_state->setValue('id', $block->id());
       $form_state['id'] = $block->id();
       if ($insert) {
         if (!$theme = $block->getTheme()) {
@@ -240,10 +240,10 @@ class BlockContentForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($this->entity->isNew()) {
-      $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state['values']['info']));
+      $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state->getValue('info')));
       if (!empty($exists)) {
         $form_state->setErrorByName('info', $this->t('A block with description %name already exists.', array(
-          '%name' => $form_state['values']['info'][0]['value'],
+          '%name' => $form_state->getValue(array('info', 0, 'value')),
         )));
       }
     }

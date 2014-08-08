@@ -1871,24 +1871,24 @@ abstract class DisplayPluginBase extends PluginBase {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     switch ($form_state['section']) {
       case 'display_title':
-        if (empty($form_state['values']['display_title'])) {
+        if ($form_state->isValueEmpty('display_title')) {
           form_error($form['display_title'], $form_state, t('Display title may not be empty.'));
         }
         break;
       case 'css_class':
-        $css_class = $form_state['values']['css_class'];
+        $css_class = $form_state->getValue('css_class');
         if (preg_match('/[^a-zA-Z0-9-_ ]/', $css_class)) {
           form_error($form['css_class'], $form_state, t('CSS classes must be alphanumeric or dashes only.'));
         }
       break;
       case 'display_id':
-        if ($form_state['values']['display_id']) {
-          if (preg_match('/[^a-z0-9_]/', $form_state['values']['display_id'])) {
+        if ($form_state->getValue('display_id')) {
+          if (preg_match('/[^a-z0-9_]/', $form_state->getValue('display_id'))) {
             form_error($form['display_id'], $form_state, t('Display name must be letters, numbers, or underscores only.'));
           }
 
           foreach ($this->view->displayHandlers as $id => $display) {
-            if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display->new_id) && $form_state['values']['display_id'] == $display->new_id))) {
+            if ($id != $this->view->current_display && ($form_state->getValue('display_id') == $id || (isset($display->new_id) && $form_state->getValue('display_id') == $display->new_id))) {
               form_error($form['display_id'], $form_state, t('Display id should be unique.'));
             }
           }
@@ -1930,45 +1930,45 @@ abstract class DisplayPluginBase extends PluginBase {
     $section = $form_state['section'];
     switch ($section) {
       case 'display_id':
-        if (isset($form_state['values']['display_id'])) {
-          $this->display['new_id'] = $form_state['values']['display_id'];
+        if ($form_state->hasValue('display_id')) {
+          $this->display['new_id'] = $form_state->getValue('display_id');
         }
         break;
       case 'display_title':
-        $this->display['display_title'] = $form_state['values']['display_title'];
-        $this->setOption('display_description', $form_state['values']['display_description']);
+        $this->display['display_title'] = $form_state->getValue('display_title');
+        $this->setOption('display_description', $form_state->getValue('display_description'));
         break;
       case 'query':
         $plugin = $this->getPlugin('query');
         if ($plugin) {
           $plugin->submitOptionsForm($form['query']['options'], $form_state);
-          $this->setOption('query', $form_state['values'][$section]);
+          $this->setOption('query', $form_state->getValue($section));
         }
         break;
 
       case 'link_display':
-        $this->setOption('link_url', $form_state['values']['link_url']);
+        $this->setOption('link_url', $form_state->getValue('link_url'));
       case 'title':
       case 'css_class':
       case 'display_comment':
       case 'distinct':
       case 'group_by':
-        $this->setOption($section, $form_state['values'][$section]);
+        $this->setOption($section, $form_state->getValue($section));
         break;
       case 'field_langcode':
-        $this->setOption('field_langcode', $form_state['values']['field_langcode']);
-        $this->setOption('field_langcode_add_to_query', $form_state['values']['field_langcode_add_to_query']);
+        $this->setOption('field_langcode', $form_state->getValue('field_langcode'));
+        $this->setOption('field_langcode_add_to_query', $form_state->getValue('field_langcode_add_to_query'));
         break;
       case 'use_ajax':
       case 'hide_attachment_summary':
       case 'show_admin_links':
       case 'exposed_block':
-        $this->setOption($section, (bool) $form_state['values'][$section]);
+        $this->setOption($section, (bool) $form_state->getValue($section));
         break;
       case 'use_more':
-        $this->setOption($section, intval($form_state['values'][$section]));
-        $this->setOption('use_more_always', intval($form_state['values']['use_more_always']));
-        $this->setOption('use_more_text', $form_state['values']['use_more_text']);
+        $this->setOption($section, intval($form_state->getValue($section)));
+        $this->setOption('use_more_always', intval($form_state->getValue('use_more_always')));
+        $this->setOption('use_more_text', $form_state->getValue('use_more_text'));
         break;
 
       case 'access':
@@ -1979,12 +1979,13 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'style':
         $plugin_type = $section;
         $plugin_options = $this->getOption($plugin_type);
-        if ($plugin_options['type'] != $form_state['values'][$plugin_type]['type']) {
-          $plugin = Views::pluginManager($plugin_type)->createInstance($form_state['values'][$plugin_type]['type']);
+        $type = $form_state->getValue(array($plugin_type, 'type'));
+        if ($plugin_options['type'] != $type) {
+          $plugin = Views::pluginManager($plugin_type)->createInstance($type);
           if ($plugin) {
             $plugin->init($this->view, $this, $plugin_options['options']);
             $plugin_options = array(
-              'type' => $form_state['values'][$plugin_type]['type'],
+              'type' => $type,
               'options' => $plugin->options,
               'provider' => $plugin->definition['provider']
             );
@@ -2008,7 +2009,7 @@ abstract class DisplayPluginBase extends PluginBase {
         if ($plugin = $this->getPlugin($plugin_type)) {
           $plugin_options = $this->getOption($plugin_type);
           $plugin->submitOptionsForm($form[$plugin_type . '_options'], $form_state);
-          $plugin_options['options'] = $form_state['values'][$section];
+          $plugin_options['options'] = $form_state->getValue($section);
           $this->setOption($plugin_type, $plugin_options);
         }
         break;

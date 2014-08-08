@@ -109,7 +109,7 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['theme'] = $form_state['values']['theme'];
+    $this->configuration['theme'] = $form_state->getValue('theme');
     parent::submitConfigurationForm($form, $form_state);
   }
 

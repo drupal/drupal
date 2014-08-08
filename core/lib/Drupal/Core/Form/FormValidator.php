@@ -91,7 +91,7 @@ class FormValidator implements FormValidatorInterface {
     // If the session token was set by self::prepareForm(), ensure that it
     // matches the current user's session.
     if (isset($form['#token'])) {
-      if (!$this->csrfToken->validate($form_state['values']['form_token'], $form['#token'])) {
+      if (!$this->csrfToken->validate($form_state->getValue('form_token'), $form['#token'])) {
         $url = $this->requestStack->getCurrentRequest()->getRequestUri();
 
         // Setting this error will cause the form to fail validation.
@@ -130,17 +130,17 @@ class FormValidator implements FormValidatorInterface {
     if (isset($form_state['triggering_element']['#limit_validation_errors']) && $form_state['triggering_element']['#limit_validation_errors'] !== FALSE) {
       $values = array();
       foreach ($form_state['triggering_element']['#limit_validation_errors'] as $section) {
-        // If the section exists within $form_state['values'], even if the value
-        // is NULL, copy it to $values.
+        // If the section exists within $form_state->getValues(), even if the
+        // value is NULL, copy it to $values.
         $section_exists = NULL;
-        $value = NestedArray::getValue($form_state['values'], $section, $section_exists);
+        $value = NestedArray::getValue($form_state->getValues(), $section, $section_exists);
         if ($section_exists) {
           NestedArray::setValue($values, $section, $value);
         }
       }
       // A button's #value does not require validation, so for convenience we
       // allow the value of the clicked button to be retained in its normal
-      // $form_state['values'] locations, even if these locations are not
+      // $form_state->getValues() locations, even if these locations are not
       // included in #limit_validation_errors.
       if (!empty($form_state['triggering_element']['#is_button'])) {
         $button_value = $form_state['triggering_element']['#value'];
@@ -149,20 +149,20 @@ class FormValidator implements FormValidatorInterface {
         // dictated by #parents. If it is, copy it to $values, but do not
         // override what may already be in $values.
         $parents = $form_state['triggering_element']['#parents'];
-        if (!NestedArray::keyExists($values, $parents) && NestedArray::getValue($form_state['values'], $parents) === $button_value) {
+        if (!NestedArray::keyExists($values, $parents) && NestedArray::getValue($form_state->getValues(), $parents) === $button_value) {
           NestedArray::setValue($values, $parents, $button_value);
         }
 
         // Additionally, self::doBuildForm() places the button value in
-        // $form_state['values'][BUTTON_NAME]. If it's still there, after
+        // $form_state->getValue(BUTTON_NAME). If it's still there, after
         // validation handlers have run, copy it to $values, but do not override
         // what may already be in $values.
         $name = $form_state['triggering_element']['#name'];
-        if (!isset($values[$name]) && isset($form_state['values'][$name]) && $form_state['values'][$name] === $button_value) {
+        if (!isset($values[$name]) && $form_state->getValue($name) === $button_value) {
           $values[$name] = $button_value;
         }
       }
-      $form_state['values'] = $values;
+      $form_state->set('values', $values);
     }
   }
 
@@ -194,8 +194,8 @@ class FormValidator implements FormValidatorInterface {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form. The current user-submitted data is stored
-   *   in $form_state['values'], though form validation functions are passed an
-   *   explicit copy of the values for the sake of simplicity. Validation
+   *   in $form_state->getValues(), though form validation functions are passed
+   *   an explicit copy of the values for the sake of simplicity. Validation
    *   handlers can also $form_state to pass information on to submit handlers.
    *   For example:
    *     $form_state['data_for_submission'] = $data;
@@ -291,8 +291,8 @@ class FormValidator implements FormValidatorInterface {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form. The current user-submitted data is stored
-   *   in $form_state['values'], though form validation functions are passed an
-   *   explicit copy of the values for the sake of simplicity. Validation
+   *   in $form_state->getValues(), though form validation functions are passed
+   *   an explicit copy of the values for the sake of simplicity. Validation
    *   handlers can also $form_state to pass information on to submit handlers.
    *   For example:
    *     $form_state['data_for_submission'] = $data;
@@ -333,7 +333,7 @@ class FormValidator implements FormValidatorInterface {
       // @see form_process_select()
       elseif ($elements['#type'] == 'select' && !$elements['#multiple'] && $elements['#required'] && !isset($elements['#default_value']) && $elements['#value'] === $elements['#empty_value']) {
         $elements['#value'] = NULL;
-        NestedArray::setValue($form_state['values'], $elements['#parents'], NULL, TRUE);
+        $form_state->setValueForElement($elements, NULL);
       }
       elseif (!isset($options[$elements['#value']])) {
         $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));

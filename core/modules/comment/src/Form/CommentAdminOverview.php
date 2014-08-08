@@ -252,9 +252,9 @@ class CommentAdminOverview extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
+    $form_state->setValue('comments', array_diff($form_state->getValue('comments'), array(0)));
     // We can't execute any 'Update options' if no comments were selected.
-    if (count($form_state['values']['comments']) == 0) {
+    if (count($form_state->getValue('comments')) == 0) {
       $form_state->setErrorByName('', $this->t('Select one or more comments to perform the update on.'));
     }
   }
@@ -263,8 +263,8 @@ class CommentAdminOverview extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $operation = $form_state['values']['operation'];
-    $cids = $form_state['values']['comments'];
+    $operation = $form_state->getValue('operation');
+    $cids = $form_state->getValue('comments');
 
     foreach ($cids as $cid) {
       // Delete operation handled in \Drupal\comment\Form\ConfirmDeleteMultiple

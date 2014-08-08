@@ -175,4 +175,143 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($expected, $form_state->getValues());
   }
 
+  /**
+   * @covers ::getValue
+   *
+   * @dataProvider providerTestGetValue
+   */
+  public function testGetValue($key, $expected, $default = NULL) {
+    $form_state = new FormState(array('values' => array(
+      'foo' => 'one',
+      'bar' => array(
+        'baz' => 'two',
+      ),
+    )));
+    $this->assertSame($expected, $form_state->getValue($key, $default));
+  }
+
+  public function providerTestGetValue() {
+    $data = array();
+    $data[] = array(
+      'foo', 'one',
+    );
+    $data[] = array(
+      array('bar', 'baz'), 'two',
+    );
+    $data[] = array(
+      array('foo', 'bar', 'baz'), NULL,
+    );
+    $data[] = array(
+      'baz', 'baz', 'baz',
+    );
+    return $data;
+  }
+
+  /**
+   * @covers ::setValue
+   *
+   * @dataProvider providerTestSetValue
+   */
+  public function testSetValue($key, $value, $expected) {
+    $form_state = new FormState(array('values' => array('bar' => 'wrong')));
+    $form_state->setValue($key, $value);
+    $this->assertSame($expected, $form_state->getValues());
+  }
+
+  public function providerTestSetValue() {
+    $data = array();
+    $data[] = array(
+      'foo', 'one', array('bar' => 'wrong', 'foo' => 'one'),
+    );
+    $data[] = array(
+      array('bar', 'baz'), 'two', array('bar' => array('baz' => 'two')),
+    );
+    $data[] = array(
+      array('foo', 'bar', 'baz'), NULL, array('bar' => 'wrong', 'foo' => array('bar' => array('baz' => NULL))),
+    );
+    return $data;
+  }
+
+  /**
+   * @covers ::hasValue
+   *
+   * @dataProvider providerTestHasValue
+   */
+  public function testHasValue($key, $expected) {
+    $form_state = new FormState(array('values' => array(
+      'foo' => 'one',
+      'bar' => array(
+        'baz' => 'two',
+      ),
+      'true' => TRUE,
+      'false' => FALSE,
+      'null' => NULL,
+    )));
+    $this->assertSame($expected, $form_state->hasValue($key));
+  }
+
+  public function providerTestHasValue() {
+    $data = array();
+    $data[] = array(
+      'foo', TRUE,
+    );
+    $data[] = array(
+      array('bar', 'baz'), TRUE,
+    );
+    $data[] = array(
+      array('foo', 'bar', 'baz'), FALSE,
+    );
+    $data[] = array(
+      'true', TRUE,
+    );
+    $data[] = array(
+      'false', TRUE,
+    );
+    $data[] = array(
+      'null', FALSE,
+    );
+    return $data;
+  }
+
+  /**
+   * @covers ::isValueEmpty
+   *
+   * @dataProvider providerTestIsValueEmpty
+   */
+  public function testIsValueEmpty($key, $expected) {
+    $form_state = new FormState(array('values' => array(
+      'foo' => 'one',
+      'bar' => array(
+        'baz' => 'two',
+      ),
+      'true' => TRUE,
+      'false' => FALSE,
+      'null' => NULL,
+    )));
+    $this->assertSame($expected, $form_state->isValueEmpty($key));
+  }
+
+  public function providerTestIsValueEmpty() {
+    $data = array();
+    $data[] = array(
+      'foo', FALSE,
+    );
+    $data[] = array(
+      array('bar', 'baz'), FALSE,
+    );
+    $data[] = array(
+      array('foo', 'bar', 'baz'), TRUE,
+    );
+    $data[] = array(
+      'true', FALSE,
+    );
+    $data[] = array(
+      'false', TRUE,
+    );
+    $data[] = array(
+      'null', TRUE,
+    );
+    return $data;
+  }
+
 }

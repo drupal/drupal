@@ -366,7 +366,7 @@ class OverviewTerms extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Sort term order based on weight.
-    uasort($form_state['values']['terms'], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+    uasort($form_state->getValue('terms'), array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
 
     $vocabulary = $form_state['taxonomy']['vocabulary'];
     // Update the current hierarchy type as we go.
@@ -396,7 +396,7 @@ class OverviewTerms extends FormBase {
 
     // Renumber the current page weights and assign any new parents.
     $level_weights = array();
-    foreach ($form_state['values']['terms'] as $tid => $values) {
+    foreach ($form_state->getValue('terms') as $tid => $values) {
       if (isset($form['terms'][$tid]['#term'])) {
         $term = $form['terms'][$tid]['#term'];
         // Give terms at the root level a weight in sequence with terms on previous pages.

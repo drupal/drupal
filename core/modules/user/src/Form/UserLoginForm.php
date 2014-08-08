@@ -136,9 +136,9 @@ class UserLoginForm extends FormBase {
    * Sets an error if supplied username has been blocked.
    */
   public function validateName(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
+    if (!$form_state->isValueEmpty('name') && user_is_blocked($form_state->getValue('name'))) {
       // Blocked in user administration.
-      $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
+      $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state->getValue('name'))));
     }
   }
 
@@ -148,9 +148,9 @@ class UserLoginForm extends FormBase {
    * If successful, $form_state['uid'] is set to the matching user ID.
    */
   public function validateAuthentication(array &$form, FormStateInterface $form_state) {
-    $password = trim($form_state['values']['pass']);
+    $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
-    if (!empty($form_state['values']['name']) && !empty($password)) {
+    if (!$form_state->isValueEmpty('name') && !empty($password)) {
       // Do not allow any login from the current user's IP if the limit has been
       // reached. Default is 50 failed attempts allowed in one hour. This is
       // independent of the per-user limit to catch attempts from one IP to log
@@ -160,7 +160,7 @@ class UserLoginForm extends FormBase {
         $form_state['flood_control_triggered'] = 'ip';
         return;
       }
-      $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name'], 'status' => 1));
+      $accounts = $this->userStorage->loadByProperties(array('name' => $form_state->getValue('name'), 'status' => 1));
       $account = reset($accounts);
       if ($account) {
         if ($flood_config->get('uid_only')) {
@@ -185,7 +185,7 @@ class UserLoginForm extends FormBase {
       }
       // We are not limited by flood control, so try to authenticate.
       // Set $form_state['uid'] as a flag for self::validateFinal().
-      $form_state['uid'] = $this->userAuth->authenticate($form_state['values']['name'], $password);
+      $form_state['uid'] = $this->userAuth->authenticate($form_state->getValue('name'), $password);
     }
   }
 
@@ -214,10 +214,10 @@ class UserLoginForm extends FormBase {
         }
       }
       else {
-        $form_state->setErrorByName('name', $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
-        $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name']));
+        $form_state->setErrorByName('name', $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state->getValue('name')))))));
+        $accounts = $this->userStorage->loadByProperties(array('name' => $form_state->getValue('name')));
         if (!empty($accounts)) {
-          $this->logger('user')->notice('Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+          $this->logger('user')->notice('Login attempt failed for %user.', array('%user' => $form_state->getValue('name')));
         }
         else {
           // If the username entered is not a valid user,

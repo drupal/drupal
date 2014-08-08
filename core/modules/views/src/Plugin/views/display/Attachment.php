@@ -220,13 +220,13 @@ class Attachment extends DisplayPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'displays':
-        $form_state['values'][$form_state['section']] = array_filter($form_state['values'][$form_state['section']]);
+        $form_state->setValue($form_state['section'], array_filter($form_state->getValue($form_state['section'])));
       case 'inherit_arguments':
       case 'inherit_pager':
       case 'render_pager':
       case 'inherit_exposed_filters':
       case 'attachment_position':
-        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
+        $this->setOption($form_state['section'], $form_state->getValue($form_state['section']));
         break;
     }
   }

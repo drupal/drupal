@@ -181,12 +181,79 @@ interface FormStateInterface {
    * @return array
    *   An associative array of values submitted to the form.
    */
-  public function getValues();
+  public function &getValues();
 
   /**
-   * {@inheritdoc}
+   * Returns the submitted form value for a specific key.
+   *
+   * @param string|array $key
+   *   Values are stored as a multi-dimensional associative array. If $key is a
+   *   string, it will return $values[$key]. If $key is an array, each element
+   *   of the array will be used as a nested key. If $key = array('foo', 'bar')
+   *   it will return $values['foo']['bar'].
+   * @param mixed $default
+   *   (optional) The default value if the specified key does not exist.
+   *
+   * @return mixed
+   *   The value for the given key, or NULL.
    */
-  public function addValue($property, $value);
+  public function &getValue($key, $default = NULL);
+
+  /**
+   * Sets the submitted form value for a specific key.
+   *
+   * @param string|array $key
+   *   Values are stored as a multi-dimensional associative array. If $key is a
+   *   string, it will use $values[$key] = $value. If $key is an array, each
+   *   element of the array will be used as a nested key. If
+   *   $key = array('foo', 'bar') it will use $values['foo']['bar'] = $value.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return $this
+   */
+  public function setValue($key, $value);
+
+  /**
+   * Removes a specific key from the submitted form values.
+   *
+   * @param string|array $key
+   *   Values are stored as a multi-dimensional associative array. If $key is a
+   *   string, it will use unset($values[$key]). If $key is an array, each
+   *   element of the array will be used as a nested key. If
+   *   $key = array('foo', 'bar') it will use unset($values['foo']['bar']).
+   *
+   * @return $this
+   */
+  public function unsetValue($key);
+
+  /**
+   * Determines if a specific key is present in the submitted form values.
+   *
+   * @param string|array $key
+   *   Values are stored as a multi-dimensional associative array. If $key is a
+   *   string, it will return isset($values[$key]). If $key is an array, each
+   *   element of the array will be used as a nested key. If
+   *   $key = array('foo', 'bar') it will return isset($values['foo']['bar']).
+   *
+   * @return bool
+   *   TRUE if the $key is set, FALSE otherwise.
+   */
+  public function hasValue($key);
+
+  /**
+   * Determines if a specific key has a value in the submitted form values.
+   *
+   * @param string|array $key
+   *   Values are stored as a multi-dimensional associative array. If $key is a
+   *   string, it will return empty($values[$key]). If $key is an array, each
+   *   element of the array will be used as a nested key. If
+   *   $key = array('foo', 'bar') it will return empty($values['foo']['bar']).
+   *
+   * @return bool
+   *   TRUE if the $key has no value, FALSE otherwise.
+   */
+  public function isValueEmpty($key);
 
   /**
    * Changes submitted form values during form validation.
@@ -208,8 +275,8 @@ interface FormStateInterface {
    *   set $element['#parents'] to be an array giving the path through the form
    *   array's keys to the element whose value you want to update. For instance,
    *   if you want to update the value of $form['elem1']['elem2'], which should
-   *   be stored in $form_state['values']['elem1']['elem2'], you would set
-   *   $element['#parents'] = array('elem1','elem2').
+   *   be stored in $form_state->getValue(array('elem1', 'elem2')), you would
+   *   set $element['#parents'] = array('elem1','elem2').
    * @param mixed $value
    *   The new value for the form element.
    *
@@ -250,9 +317,9 @@ interface FormStateInterface {
    * values to the database.
    *
    * The #limit_validation_errors property is a list of "sections" within
-   * $form_state['values'] that must contain valid values. Each "section" is an
-   * array with the ordered set of keys needed to reach that part of
-   * $form_state['values'] (i.e., the #parents property of the element).
+   * $form_state->getValues() that must contain valid values. Each "section" is
+   * an array with the ordered set of keys needed to reach that part of
+   * $form_state->getValues() (i.e., the #parents property of the element).
    *
    * Example 1: Allow the "Previous" button to function, regardless of whether
    * any user input is valid.
@@ -274,33 +341,35 @@ interface FormStateInterface {
    *     '#type' => 'submit',
    *     '#value' => t('Previous'),
    *     '#limit_validation_errors' => array(
-   *       array('step1'),      // Validate $form_state['values']['step1'].
-   *       array('foo', 'bar'), // Validate $form_state['values']['foo']['bar'].
+   *       // Validate $form_state->getValue('step1').
+   *       array('step1'),
+   *       // Validate $form_state->getValue(array('foo', 'bar')).
+   *       array('foo', 'bar'),
    *     ),
    *     '#submit' => array('some_submit_function'), // #submit required.
    *   );
    * @endcode
    *
-   * This will require $form_state['values']['step1'] and everything within it
-   * (for example, $form_state['values']['step1']['choice']) to be valid, so
-   * calls to self::setErrorByName('step1', $message) or
+   * This will require $form_state->getValue('step1') and everything within it
+   * (for example, $form_state->getValue(array('step1', 'choice'))) to be valid,
+   * so calls to self::setErrorByName('step1', $message) or
    * self::setErrorByName('step1][choice', $message) will prevent the submit
    * handlers from running, and result in the error message being displayed to
    * the user. However, calls to self::setErrorByName('step2', $message) and
    * self::setErrorByName('step2][groupX][choiceY', $message) will be
    * suppressed, resulting in the message not being displayed to the user, and
-   * the submit handlers will run despite $form_state['values']['step2'] and
-   * $form_state['values']['step2']['groupX']['choiceY'] containing invalid
-   * values. Errors for an invalid $form_state['values']['foo'] will be
+   * the submit handlers will run despite $form_state->getValue('step2') and
+   * $form_state->getValue(array('step2', 'groupX', 'choiceY')) containing
+   * invalid values. Errors for an invalid $form_state->getValue('foo') will be
    * suppressed, but errors flagging invalid values for
-   * $form_state['values']['foo']['bar'] and everything within it will be
-   * flagged and submission prevented.
+   * $form_state->getValue(array('foo', 'bar')) and everything within it will
+   * be flagged and submission prevented.
    *
    * Partial form validation is implemented by suppressing errors rather than by
    * skipping the input processing and validation steps entirely, because some
    * forms have button-level submit handlers that call Drupal API functions that
-   * assume that certain data exists within $form_state['values'], and while not
-   * doing anything with that data that requires it to be valid, PHP errors
+   * assume that certain data exists within $form_state->getValues(), and while
+   * not doing anything with that data that requires it to be valid, PHP errors
    * would be triggered if the input processing and validation steps were fully
    * skipped.
    *

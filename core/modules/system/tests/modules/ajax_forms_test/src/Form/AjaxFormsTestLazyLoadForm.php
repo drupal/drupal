@@ -56,7 +56,7 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['add_files']) {
+    if ($form_state->getValue('add_files')) {
       $path = drupal_get_path('module', 'system');
       $attached = array(
         '#attached' => array(

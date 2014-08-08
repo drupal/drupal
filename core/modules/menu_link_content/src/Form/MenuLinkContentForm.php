@@ -212,15 +212,15 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
-    $new_definition['expanded'] = !empty($form_state['values']['expanded']['value']) ? 1 : 0;
-    $new_definition['hidden'] = empty($form_state['values']['enabled']) ? 1 : 0;
-    list($menu_name, $parent) = explode(':', $form_state['values']['menu_parent'], 2);
+    $new_definition['expanded'] = !$form_state->isValueEmpty(array('expanded', 'value')) ? 1 : 0;
+    $new_definition['hidden'] = $form_state->isValueEmpty('enabled') ? 1 : 0;
+    list($menu_name, $parent) = explode(':', $form_state->getValue('menu_parent'), 2);
     if (!empty($menu_name)) {
       $new_definition['menu_name'] = $menu_name;
     }
     $new_definition['parent'] = isset($parent) ? $parent : '';
 
-    $extracted = $this->extractUrl($form_state['values']['url']);
+    $extracted = $this->extractUrl($form_state->getValue('url'));
     $new_definition['url'] = $extracted['url'];
     $new_definition['route_name'] = $extracted['route_name'];
     $new_definition['route_parameters'] = $extracted['route_parameters'];
@@ -231,9 +231,9 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     if ($extracted['fragment']) {
       $new_definition['options']['fragment'] = $extracted['fragment'];
     }
-    $new_definition['title'] = $form_state['values']['title'][0]['value'];
-    $new_definition['description'] = $form_state['values']['description'][0]['value'];
-    $new_definition['weight'] = (int) $form_state['values']['weight'][0]['value'];
+    $new_definition['title'] = $form_state->getValue(array('title', 0, 'value'));
+    $new_definition['description'] = $form_state->getValue(array('description', 0, 'value'));
+    $new_definition['weight'] = (int) $form_state->getValue(array('weight', 0, 'value'));
 
     return $new_definition;
   }
@@ -386,7 +386,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   The current state of the form.
    */
   protected function doValidate(array $form, FormStateInterface $form_state) {
-    $extracted = $this->extractUrl($form_state['values']['url']);
+    $extracted = $this->extractUrl($form_state->getValue('url'));
 
     // If both URL and route_name are empty, the entered value is not valid.
     $valid = FALSE;
@@ -399,7 +399,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       $valid = $this->accessManager->checkNamedRoute($extracted['route_name'], $extracted['route_parameters'], $this->account);
     }
     if (!$valid) {
-      $form_state->setErrorByName('url', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state['values']['url'])));
+      $form_state->setErrorByName('url', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state->getValue('url'))));
     }
     elseif ($extracted['route_name']) {
       // The user entered a Drupal path.

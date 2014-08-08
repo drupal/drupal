@@ -79,8 +79,8 @@ class ViewPreviewForm extends ViewFormBase {
     );
 
     $args = array();
-    if (!empty($form_state['values']['view_args'])) {
-      $args = explode('/', $form_state['values']['view_args']);
+    if (!$form_state->isValueEmpty('view_args')) {
+      $args = explode('/', $form_state->getValue('view_args'));
     }
 
     if (!empty($form_state['show_preview']) || !empty($form_state['input']['js'])) {

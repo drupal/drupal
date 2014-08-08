@@ -89,10 +89,10 @@ class ActionAdminManageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['action']) {
+    if ($form_state->getValue('action')) {
       $form_state->setRedirect(
         'action.admin_add',
-        array('action_id' => $form_state['values']['action'])
+        array('action_id' => $form_state->getValue('action'))
       );
     }
   }

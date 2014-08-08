@@ -135,8 +135,8 @@ class NegotiationBrowserForm extends ConfigFormBase {
 
     // Check all mappings.
     $mappings = array();
-    if (isset($form_state['values']['mappings'])) {
-      $mappings = $form_state['values']['mappings'];
+    if ($form_state->hasValue('mappings')) {
+      $mappings = $form_state->getValue('mappings');
       foreach ($mappings as $key => $data) {
         // Make sure browser_langcode is unique.
         if (array_key_exists($data['browser_langcode'], $unique_values)) {
@@ -150,7 +150,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
     }
 
     // Check new mapping.
-    $data = $form_state['values']['new_mapping'];
+    $data = $form_state->getValue('new_mapping');
     if (!empty($data['browser_langcode'])) {
       // Make sure browser_langcode is unique.
       if (array_key_exists($data['browser_langcode'], $unique_values)) {

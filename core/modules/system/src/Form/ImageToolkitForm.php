@@ -98,7 +98,7 @@ class ImageToolkitForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.image')
-      ->set('toolkit', $form_state['values']['image_toolkit'])
+      ->set('toolkit', $form_state->getValue('image_toolkit'))
       ->save();
 
     // Call the form submit handler for each of the toolkits.

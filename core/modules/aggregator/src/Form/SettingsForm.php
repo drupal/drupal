@@ -207,15 +207,15 @@ class SettingsForm extends ConfigFormBase {
       $instance->submitConfigurationForm($form, $form_state);
     }
 
-    $config->set('items.allowed_html', $form_state['values']['aggregator_allowed_html_tags']);
-    if (isset($form_state['values']['aggregator_fetcher'])) {
-      $config->set('fetcher', $form_state['values']['aggregator_fetcher']);
+    $config->set('items.allowed_html', $form_state->getValue('aggregator_allowed_html_tags'));
+    if ($form_state->hasValue('aggregator_fetcher')) {
+      $config->set('fetcher', $form_state->getValue('aggregator_fetcher'));
     }
-    if (isset($form_state['values']['aggregator_parser'])) {
-      $config->set('parser', $form_state['values']['aggregator_parser']);
+    if ($form_state->hasValue('aggregator_parser')) {
+      $config->set('parser', $form_state->getValue('aggregator_parser'));
     }
-    if (isset($form_state['values']['aggregator_processors'])) {
-      $config->set('processors', array_filter($form_state['values']['aggregator_processors']));
+    if ($form_state->hasValue('aggregator_processors')) {
+      $config->set('processors', array_filter($form_state->getValue('aggregator_processors')));
     }
     $config->save();
   }

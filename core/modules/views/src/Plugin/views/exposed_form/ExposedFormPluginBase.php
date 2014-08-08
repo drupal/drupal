@@ -294,7 +294,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
    *   $view->exposed_raw_input
    */
   public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) {
-    if (!empty($form_state['values']['op']) && $form_state['values']['op'] == $this->options['reset_button_label']) {
+    if (!$form_state->isValueEmpty('op') && $form_state->getValue('op') == $this->options['reset_button_label']) {
       $this->resetForm($form, $form_state);
     }
     if (isset($form_state['pager_plugin'])) {
@@ -325,7 +325,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
       $this->view->exposed_data = array();
     }
 
-    $form_state['values'] = array();
+    $form_state['redirect'] = current_path();
   }
 
 }

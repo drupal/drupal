@@ -484,7 +484,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Performs some cleanup tasks on the options array before saving it.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    $options = &$form_state['values']['options'];
+    $options = &$form_state->getValue('options');
     $types = array('element_type', 'element_label_type', 'element_wrapper_type');
     $classes = array_combine(array('element_class', 'element_label_class', 'element_wrapper_class'), $types);
 

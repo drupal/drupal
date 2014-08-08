@@ -98,7 +98,7 @@ class FormTestStorageForm extends FormBase {
     // This presumes that another submitted form value triggers a validation error
     // elsewhere in the form. Form API should still update the cached form storage
     // though.
-    if (\Drupal::request()->get('cache') && $form_state['values']['value'] == 'change_title') {
+    if (\Drupal::request()->get('cache') && $form_state->getValue('value') == 'change_title') {
       $form_state['storage']['thing']['changed'] = TRUE;
     }
   }
@@ -107,8 +107,8 @@ class FormTestStorageForm extends FormBase {
    * {@inheritdoc}
    */
   public function continueSubmitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['storage']['thing']['title'] = $form_state['values']['title'];
-    $form_state['storage']['thing']['value'] = $form_state['values']['value'];
+    $form_state['storage']['thing']['title'] = $form_state->getValue('title');
+    $form_state['storage']['thing']['value'] = $form_state->getValue('value');
     $form_state['rebuild'] = TRUE;
   }
 
@@ -116,7 +116,7 @@ class FormTestStorageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message("Title: " . String::checkPlain($form_state['values']['title']));
+    drupal_set_message("Title: " . String::checkPlain($form_state->getValue('title')));
     drupal_set_message("Form constructions: " . $_SESSION['constructions']);
     if (isset($form_state['storage']['thing']['changed'])) {
       drupal_set_message("The thing has been changed.");

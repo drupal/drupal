@@ -108,7 +108,7 @@ class UserPasswordForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $name = trim($form_state['values']['name']);
+    $name = trim($form_state->getValue('name'));
     // Try to load by email.
     $users = $this->userStorage->loadByProperties(array('mail' => $name, 'status' => '1'));
     if (empty($users)) {
@@ -130,7 +130,7 @@ class UserPasswordForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $langcode = $this->languageManager->getCurrentLanguage()->id;
 
-    $account = $form_state['values']['account'];
+    $account = $form_state->getValue('account');
     // Mail one time login URL and instructions using current language.
     $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {

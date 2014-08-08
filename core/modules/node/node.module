@@ -1074,7 +1074,7 @@ function node_form_system_site_information_settings_form_alter(&$form, FormState
  */
 function node_form_system_site_information_settings_form_submit($form, FormStateInterface $form_state) {
   \Drupal::config('node.settings')
-    ->set('items_per_page', $form_state['values']['default_nodes_main'])
+    ->set('items_per_page', $form_state->getValue('default_nodes_main'))
     ->save();
 }
 
@@ -1101,7 +1101,7 @@ function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $fo
  */
 function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
   \Drupal::config('node.settings')
-    ->set('use_admin_theme', $form_state['values']['use_admin_theme'])
+    ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
     ->save();
   \Drupal::service('router.builder')->setRebuildNeeded();
 }

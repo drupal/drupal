@@ -243,7 +243,7 @@ class Sql extends QueryPluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
-    $value = explode(',', NestedArray::getValue($form_state['values'], $element['#parents']));
+    $value = explode(',', NestedArray::getValue($form_state->getValues(), $element['#parents']));
     $value = array_filter(array_map('trim', $value));
     form_set_value($element, $value, $form_state);
   }

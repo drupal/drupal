@@ -126,7 +126,7 @@ function datetime_theme() {
 function datetime_datetime_widget_validate(&$element, FormStateInterface $form_state) {
   if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
-    $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
+    $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {
       // The date should have been returned to a date object at this point by
       // datetime_validate(), which runs before this.
@@ -164,7 +164,7 @@ function datetime_datetime_widget_validate(&$element, FormStateInterface $form_s
 function datetime_datelist_widget_validate(&$element, FormStateInterface $form_state) {
   if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
-    $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
+    $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {
       // The date should have been returned to a date object at this point by
       // datetime_validate(), which runs before this.
@@ -534,7 +534,7 @@ function form_type_datetime_value($element, $input = FALSE) {
 function datetime_datetime_validate($element, FormStateInterface $form_state) {
 
   $input_exists = FALSE;
-  $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
+  $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
   if ($input_exists) {
 
     $title = !empty($element['#title']) ? $element['#title'] : '';
@@ -875,7 +875,7 @@ function form_type_datelist_value($element, $input = FALSE, FormStateInterface $
  */
 function datetime_datelist_validate($element, FormStateInterface $form_state) {
   $input_exists = FALSE;
-  $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
+  $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
   if ($input_exists) {
 
     // If there's empty input and the field is not required, set it to empty.

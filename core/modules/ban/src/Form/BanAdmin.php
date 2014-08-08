@@ -105,7 +105,7 @@ class BanAdmin extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $ip = trim($form_state['values']['ip']);
+    $ip = trim($form_state->getValue('ip'));
     if ($this->ipManager->isBanned($ip)) {
       $form_state->setErrorByName('ip', $this->t('This IP address is already banned.'));
     }
@@ -121,7 +121,7 @@ class BanAdmin extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $ip = trim($form_state['values']['ip']);
+    $ip = trim($form_state->getValue('ip'));
     $this->ipManager->banIp($ip);
     drupal_set_message($this->t('The IP address %ip has been banned.', array('%ip' => $ip)));
     $form_state->setRedirect('ban.admin_page');

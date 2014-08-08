@@ -489,8 +489,9 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  * The resulting value for the element will be an array holding the value and
  * the format. For example, the value for the body element will be:
  * @code
- *   $form_state['values']['body']['value'] = 'foo';
- *   $form_state['values']['body']['format'] = 'foo';
+ *   $values = $form_state->getValue('body');
+ *   $values['value'] = 'foo';
+ *   $values['format'] = 'foo';
  * @endcode
  *
  * @param $element

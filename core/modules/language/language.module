@@ -271,7 +271,7 @@ function language_configuration_element_submit(&$form, FormStateInterface $form_
   // values.
   if (isset($form_state['language'])) {
     foreach ($form_state['language'] as $element_name => $values) {
-      language_save_default_configuration($values['entity_type'], $values['bundle'],  $form_state['values'][$element_name]);
+      language_save_default_configuration($values['entity_type'], $values['bundle'],  $form_state->getValue($element_name));
     }
   }
 }
@@ -676,7 +676,7 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
  */
 function language_system_regional_settings_form_submit($form, FormStateInterface $form_state) {
   $languages = \Drupal::languageManager()->getLanguages();
-  $language = $languages[$form_state['values']['site_default_language']];
+  $language = $languages[$form_state->getValue('site_default_language')];
   $language->default = TRUE;
   language_save($language);
 }

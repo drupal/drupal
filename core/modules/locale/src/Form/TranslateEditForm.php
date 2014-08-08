@@ -160,8 +160,8 @@ class TranslateEditForm extends TranslateFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $form_state['values']['langcode'];
-    foreach ($form_state['values']['strings'] as $lid => $translations) {
+    $langcode = $form_state->getValue('langcode');
+    foreach ($form_state->getValue('strings') as $lid => $translations) {
       foreach ($translations['translations'] as $key => $value) {
         if (!locale_string_is_safe($value)) {
           $form_state->setErrorByName("strings][$lid][translations][$key", $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
@@ -176,17 +176,17 @@ class TranslateEditForm extends TranslateFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $form_state['values']['langcode'];
+    $langcode = $form_state->getValue('langcode');
     $updated = array();
 
     // Preload all translations for strings in the form.
-    $lids = array_keys($form_state['values']['strings']);
+    $lids = array_keys($form_state->getValue('strings'));
     $existing_translation_objects = array();
     foreach ($this->localeStorage->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $existing_translation_object) {
       $existing_translation_objects[$existing_translation_object->lid] = $existing_translation_object;
     }
 
-    foreach ($form_state['values']['strings'] as $lid => $new_translation) {
+    foreach ($form_state->getValue('strings') as $lid => $new_translation) {
       $existing_translation = isset($existing_translation_objects[$lid]);
 
       // Plural translations are saved in a delimited string. To be able to

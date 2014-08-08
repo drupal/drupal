@@ -76,10 +76,10 @@ class RegisterForm extends AccountForm {
    * Overrides Drupal\Core\Entity\EntityForm::submit().
    */
   public function submit(array $form, FormStateInterface $form_state) {
-    $admin = $form_state['values']['administer_users'];
+    $admin = $form_state->getValue('administer_users');
 
     if (!\Drupal::config('user.settings')->get('verify_mail') || $admin) {
-      $pass = $form_state['values']['pass'];
+      $pass = $form_state->getValue('pass');
     }
     else {
       $pass = user_password();
@@ -88,8 +88,8 @@ class RegisterForm extends AccountForm {
     // Remove unneeded values.
     form_state_values_clean($form_state);
 
-    $form_state['values']['pass'] = $pass;
-    $form_state['values']['init'] = $form_state['values']['mail'];
+    $form_state->setValue('pass', $pass);
+    $form_state->setValue('init', $form_state->getValue('mail'));
 
     parent::submit($form, $form_state);
   }
@@ -100,17 +100,17 @@ class RegisterForm extends AccountForm {
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
     $pass = $account->getPassword();
-    $admin = $form_state['values']['administer_users'];
-    $notify = !empty($form_state['values']['notify']);
+    $admin = $form_state->getValue('administer_users');
+    $notify = !$form_state->isValueEmpty('notify');
 
     // Save has no return value so this cannot be tested.
     // Assume save has gone through correctly.
     $account->save();
 
     $form_state['user'] = $account;
-    $form_state['values']['uid'] = $account->id();
+    $form_state->setValue('uid', $account->id());
 
-    $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>', 'type' => l($this->t('Edit'), 'user/' . $account->id() . '/edit')));
+    $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state->getValue('name'), '%email' => '<' . $form_state->getValue('mail') . '>', 'type' => l($this->t('Edit'), 'user/' . $account->id() . '/edit')));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;

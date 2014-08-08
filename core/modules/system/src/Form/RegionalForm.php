@@ -144,12 +144,12 @@ class RegionalForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.date')
-      ->set('country.default', $form_state['values']['site_default_country'])
-      ->set('first_day', $form_state['values']['date_first_day'])
-      ->set('timezone.default', $form_state['values']['date_default_timezone'])
-      ->set('timezone.user.configurable', $form_state['values']['configurable_timezones'])
-      ->set('timezone.user.warn', $form_state['values']['empty_timezone_message'])
-      ->set('timezone.user.default', $form_state['values']['user_default_timezone'])
+      ->set('country.default', $form_state->getValue('site_default_country'))
+      ->set('first_day', $form_state->getValue('date_first_day'))
+      ->set('timezone.default', $form_state->getValue('date_default_timezone'))
+      ->set('timezone.user.configurable', $form_state->getValue('configurable_timezones'))
+      ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))
+      ->set('timezone.user.default', $form_state->getValue('user_default_timezone'))
       ->save();
 
     parent::submitForm($form, $form_state);

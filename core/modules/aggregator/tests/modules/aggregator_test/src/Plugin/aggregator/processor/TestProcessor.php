@@ -92,7 +92,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['items']['dummy_length'] = $form_state['values']['dummy_length'];
+    $this->configuration['items']['dummy_length'] = $form_state->getValue('dummy_length');
     $this->setConfiguration($this->configuration);
   }
 

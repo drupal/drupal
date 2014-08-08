@@ -46,7 +46,7 @@ class SessionTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message(String::format('Ok: @input', array('@input' => $form_state['values']['input'])));
+    drupal_set_message(String::format('Ok: @input', array('@input' => $form_state->getValue('input'))));
   }
 
 }

@@ -339,19 +339,20 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Remove the admin_label form item element value so it will not persist.
-    unset($form_state['values']['admin_label']);
+    $form_state->unsetValue('admin_label');
 
     // Transform the #type = checkboxes value to a numerically indexed array.
-    $form_state['values']['cache']['contexts'] = array_values(array_filter($form_state['values']['cache']['contexts']));
+    $contexts = $form_state->getValue(array('cache', 'contexts'));
+    $form_state->setValue(array('cache', 'contexts'), array_values(array_filter($contexts)));
 
     foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
       // Allow the condition to validate the form.
       $condition_values = new FormState(array(
-        'values' => $form_state['values']['visibility'][$condition_id],
+        'values' => $form_state->getValue(array('visibility', $condition_id)),
       ));
       $condition->validateConfigurationForm($form, $condition_values);
       // Update the original form values.
-      $form_state['values']['visibility'][$condition_id] = $condition_values['values'];
+      $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);
     }
 
     $this->blockValidate($form, $form_state);
@@ -373,18 +374,18 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Process the block's submission handling if no errors occurred only.
     if (!form_get_errors($form_state)) {
-      $this->configuration['label'] = $form_state['values']['label'];
-      $this->configuration['label_display'] = $form_state['values']['label_display'];
-      $this->configuration['provider'] = $form_state['values']['provider'];
-      $this->configuration['cache'] = $form_state['values']['cache'];
+      $this->configuration['label'] = $form_state->getValue('label');
+      $this->configuration['label_display'] = $form_state->getValue('label_display');
+      $this->configuration['provider'] = $form_state->getValue('provider');
+      $this->configuration['cache'] = $form_state->getValue('cache');
       foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
         // Allow the condition to submit the form.
         $condition_values = new FormState(array(
-          'values' => $form_state['values']['visibility'][$condition_id],
+          'values' => $form_state->getValue(array('visibility', $condition_id)),
         ));
         $condition->submitConfigurationForm($form, $condition_values);
         // Update the original form values.
-        $form_state['values']['visibility'][$condition_id] = $condition_values['values'];
+        $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);
       }
       $this->blockSubmit($form, $form_state);
     }

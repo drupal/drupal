@@ -158,10 +158,10 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
-    $new_definition['hidden'] = $form_state['values']['enabled'] ? 0 : 1;
-    $new_definition['weight'] = (int) $form_state['values']['weight'];
-    $new_definition['expanded'] = $form_state['values']['expanded'] ? 1 : 0;
-    list($menu_name, $parent) = explode(':', $form_state['values']['menu_parent'], 2);
+    $new_definition['hidden'] = $form_state->getValue('enabled') ? 0 : 1;
+    $new_definition['weight'] = (int) $form_state->getValue('weight');
+    $new_definition['expanded'] = $form_state->getValue('expanded') ? 1 : 0;
+    list($menu_name, $parent) = explode(':', $form_state->getValue('menu_parent'), 2);
     if (!empty($menu_name)) {
       $new_definition['menu_name'] = $menu_name;
     }

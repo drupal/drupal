@@ -265,24 +265,24 @@ class CommentForm extends ContentEntityForm {
 
     if (!$entity->isNew()) {
       // Verify the name in case it is being changed from being anonymous.
-      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state['values']['name']));
+      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state->getValue('name')));
       $account = reset($accounts);
-      $form_state['values']['uid'] = $account ? $account->id() : 0;
+      $form_state->setValue('uid', $account ? $account->id() : 0);
 
-      $date = $form_state['values']['date'];
+      $date = $form_state->getValue('date');
       if ($date instanceOf DrupalDateTime && $date->hasErrors()) {
         $form_state->setErrorByName('date', $this->t('You have to specify a valid date.'));
       }
-      if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
+      if ($form_state->getValue('name') && !$form_state->getValue('is_anonymous') && !$account) {
         $form_state->setErrorByName('name', $this->t('You have to specify a valid author.'));
       }
     }
-    elseif ($form_state['values']['is_anonymous']) {
+    elseif ($form_state->getValue('is_anonymous')) {
       // Validate anonymous comment author fields (if given). If the (original)
       // author of this comment was an anonymous user, verify that no registered
       // user with this name exists.
-      if ($form_state['values']['name']) {
-        $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state['values']['name']));
+      if ($form_state->getValue('name')) {
+        $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state->getValue('name')));
         if (!empty($accounts)) {
           $form_state->setErrorByName('name', $this->t('The name you used belongs to a registered user.'));
         }
@@ -295,8 +295,8 @@ class CommentForm extends ContentEntityForm {
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     $comment = parent::buildEntity($form, $form_state);
-    if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {
-      $comment->setCreatedTime($form_state['values']['date']->getTimestamp());
+    if (!$form_state->isValueEmpty('date') && $form_state->getValue('date') instanceOf DrupalDateTime) {
+      $comment->setCreatedTime($form_state->getValue('date')->getTimestamp());
     }
     else {
       $comment->setCreatedTime(REQUEST_TIME);
@@ -371,7 +371,7 @@ class CommentForm extends ContentEntityForm {
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
       $comment->save();
-      $form_state['values']['cid'] = $comment->id();
+      $form_state->setValue('cid', $comment->id());
 
       // Add a log entry.
       $logger->notice('Comment posted: %subject.', array('%subject' => $comment->getSubject(), 'link' => l(t('View'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id()))));

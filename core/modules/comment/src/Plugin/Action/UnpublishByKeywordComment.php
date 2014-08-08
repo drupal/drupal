@@ -64,7 +64,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['keywords'] = Tags::explode($form_state['values']['keywords']);
+    $this->configuration['keywords'] = Tags::explode($form_state->getValue('keywords'));
   }
 
 }

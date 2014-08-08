@@ -102,13 +102,13 @@ class ResponsiveImageMappingForm extends EntityForm {
     $responsive_image_mapping = $this->entity;
 
     // Only validate on edit.
-    if (isset($form_state['values']['mappings'])) {
-      $responsive_image_mapping->setMappings($form_state['values']['mappings']);
+    if ($form_state->hasValue('mappings')) {
+      $responsive_image_mapping->setMappings($form_state->getValue('mappings'));
 
       // Check if another breakpoint group is selected.
-      if ($form_state['values']['breakpointGroup'] != $form_state['complete_form']['breakpointGroup']['#default_value']) {
+      if ($form_state->getValue('breakpointGroup') != $form_state['complete_form']['breakpointGroup']['#default_value']) {
         // Remove the mappings.
-        unset($form_state['values']['mappings']);
+        $form_state->unsetValue('mappings');
       }
       // Make sure at least one mapping is defined.
       elseif (!$responsive_image_mapping->isNew() && !$responsive_image_mapping->hasMappings()) {

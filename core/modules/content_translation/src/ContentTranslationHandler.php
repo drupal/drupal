@@ -379,7 +379,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     if (!isset($entity->translation[$form_langcode])) {
       $entity->translation[$form_langcode] = array();
     }
-    $values = isset($form_state['values']['content_translation']) ? $form_state['values']['content_translation'] : array();
+    $values = $form_state->getValue('content_translation', array());
     $translation = &$entity->translation[$form_langcode];
 
     // @todo Use the entity setter when all entities support multilingual
@@ -412,8 +412,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * Validates the submitted content translation metadata.
    */
   function entityFormValidate($form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['content_translation'])) {
-      $translation = $form_state['values']['content_translation'];
+    if (!$form_state->isValueEmpty('content_translation')) {
+      $translation = $form_state->getValue('content_translation');
       // Validate the "authored by" field.
       if (!empty($translation['name']) && !($account = user_load_by_name($translation['name']))) {
         form_set_error('content_translation][name', $form_state, t('The translation authoring username %name does not exist.', array('%name' => $translation['name'])));
@@ -433,7 +433,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
   public function entityFormSourceChange($form, FormStateInterface $form_state) {
     $form_controller = content_translation_form_controller($form_state);
     $entity = $form_controller->getEntity();
-    $source = $form_state['values']['source_langcode']['source'];
+    $source = $form_state->getValue(array('source_langcode', 'source'));
 
     $entity_type_id = $entity->getEntityTypeId();
     $form_state->setRedirect('content_translation.translation_add_' . $entity_type_id, array(

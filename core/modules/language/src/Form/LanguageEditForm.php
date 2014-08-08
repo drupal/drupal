@@ -50,10 +50,10 @@ class LanguageEditForm extends LanguageFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Prepare a language object for saving.
     $languages = language_list();
-    $langcode = $form_state['values']['langcode'];
+    $langcode = $form_state->getValue('langcode');
     $language = $languages[$langcode];
-    $language->name = $form_state['values']['name'];
-    $language->direction = $form_state['values']['direction'];
+    $language->name = $form_state->getValue('name');
+    $language->direction = $form_state->getValue('direction');
     language_save($language);
 
     $form_state->setRedirect('language.admin_overview');

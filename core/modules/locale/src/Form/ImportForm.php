@@ -172,18 +172,18 @@ class ImportForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Add language, if not yet supported.
-    $language = $this->languageManager->getLanguage($form_state['values']['langcode']);
+    $language = $this->languageManager->getLanguage($form_state->getValue('langcode'));
     if (empty($language)) {
       $language = new Language(array(
-        'id' => $form_state['values']['langcode'],
+        'id' => $form_state->getValue('langcode'),
       ));
       $language = language_save($language);
       drupal_set_message($this->t('The language %language has been created.', array('%language' => $this->t($language->name))));
     }
     $options = array(
-      'langcode' => $form_state['values']['langcode'],
-      'overwrite_options' => $form_state['values']['overwrite_options'],
-      'customized' => $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
+      'langcode' => $form_state->getValue('langcode'),
+      'overwrite_options' => $form_state->getValue('overwrite_options'),
+      'customized' => $form_state->getValue('customized') ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
     );
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
     $file = locale_translate_file_attach_properties($this->file, $options);

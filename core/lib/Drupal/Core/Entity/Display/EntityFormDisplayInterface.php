@@ -24,14 +24,15 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * larger form.
    *
    * By default, submitted field values appear at the top-level of
-   * $form_state['values']. A different location within $form_state['values']
-   * can be specified by setting the '#parents' property on the incoming $form
-   * parameter. Because of name clashes, two instances of the same field cannot
-   * appear within the same $form element, or within the same '#parents' space.
+   * $form_state->getValues(). A different location within
+   * $form_state->getValues() can be specified by setting the '#parents'
+   * property on the incoming $form parameter. Because of name clashes, two
+   * instances of the same field cannot appear within the same $form element, or
+   * within the same '#parents' space.
    *
    * Sample resulting structure in $form:
    * @code
-   *   '#parents' => The location of field values in $form_state['values'],
+   *   '#parents' => The location of field values in $form_state->getValues(),
    *   '#entity_type' => The name of the entity type,
    *   '#bundle' => The name of the bundle,
    *   // One sub-array per field appearing in the entity, keyed by field name.
@@ -91,9 +92,9 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   The form structure to fill in. This can be a full form structure, or a
    *   sub-element of a larger form. The #parents property can be set to
    *   control the location of submitted field values within
-   *   $form_state['values']. If not specified, $form['#parents'] is set to an
-   *   empty array, which results in field values located at the top-level of
-   *   $form_state['values'].
+   *   $form_state->getValues(). If not specified, $form['#parents'] is set to
+   *   an empty array, which results in field values located at the top-level of
+   *   $form_state->getValues().
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
@@ -144,8 +145,8 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *
    * @return array
    *   An array whose keys and values are the keys of the top-level entries in
-   *   $form_state['values'] that have been processed. The remaining entries, if
-   *   any, do not correspond to widgets and should be extracted manually by
+   *   $form_state->getValues() that have been processed. The remaining entries,
+   *   if any, do not correspond to widgets and should be extracted manually by
    *   the caller if needed.
    */
   public function extractFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);

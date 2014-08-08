@@ -151,7 +151,7 @@ class ModulesUninstallForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Form submitted, but no modules selected.
-    if (!array_filter($form_state['values']['uninstall'])) {
+    if (!array_filter($form_state->getValue('uninstall'))) {
       drupal_set_message($this->t('No modules selected.'), 'error');
       $form_state->setRedirect('system.modules_uninstall');
     }
@@ -162,7 +162,7 @@ class ModulesUninstallForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save all the values in an expirable key value store.
-    $modules = $form_state['values']['uninstall'];
+    $modules = $form_state->getValue('uninstall');
     $uninstall = array_keys(array_filter($modules));
     $account = $this->currentUser()->id();
     $this->keyValueExpirable->setWithExpire($account, $uninstall, 60);

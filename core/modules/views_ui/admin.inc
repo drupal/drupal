@@ -69,7 +69,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     // triggering element only. We have to do this in #process since until the
     // form API has added the #parents property to the triggering element for
     // us, we don't have any (easy) way to find out where its submitted values
-    // will eventually appear in $form_state['values'].
+    // will eventually appear in $form_state->getValues().
     '#process' => array_merge(array('views_ui_add_limited_validation'), element_info_property('submit', '#process', array())),
     // Add an after-build function that inserts a wrapper around the region of
     // the form that needs to be refreshed by AJAX (so that the AJAX system can

@@ -106,7 +106,7 @@ class BookOutlineForm extends ContentEntityForm {
       'node.view',
       array('node' => $this->entity->id())
     );
-    $book_link = $form_state['values']['book'];
+    $book_link = $form_state->getValue('book');
     if (!$book_link['bid']) {
       drupal_set_message($this->t('No changes were made'));
       return;

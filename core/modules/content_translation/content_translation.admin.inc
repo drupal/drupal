@@ -256,7 +256,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
  * @see content_translation_admin_settings_form_submit()
  */
 function content_translation_form_language_content_settings_validate(array $form, FormStateInterface $form_state) {
-  $settings = &$form_state['values']['settings'];
+  $settings = &$form_state->getValue('settings');
   foreach ($settings as $entity_type => $entity_settings) {
     foreach ($entity_settings as $bundle => $bundle_settings) {
       if (!empty($bundle_settings['translatable'])) {
@@ -286,8 +286,8 @@ function content_translation_form_language_content_settings_validate(array $form
  * @see content_translation_admin_settings_form_validate()
  */
 function content_translation_form_language_content_settings_submit(array $form, FormStateInterface $form_state) {
-  $entity_types = $form_state['values']['entity_types'];
-  $settings = &$form_state['values']['settings'];
+  $entity_types = $form_state->getValue('entity_types');
+  $settings = &$form_state->getValue('settings');
 
   // If an entity type is not translatable all its bundles and fields must be
   // marked as non-translatable. Similarly, if a bundle is made non-translatable

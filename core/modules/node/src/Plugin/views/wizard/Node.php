@@ -160,17 +160,18 @@ class Node extends WizardPluginBase {
   protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = parent::defaultDisplayFiltersUser($form, $form_state);
 
-    if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
+    $tids = $form_state->getValue(array('show', 'tagged_with', 'tids'));
+    if (!empty($tids)) {
       $filters['tid'] = array(
         'id' => 'tid',
         'table' => 'taxonomy_index',
         'field' => 'tid',
-        'value' => $form_state['values']['show']['tagged_with']['tids'],
-        'vocabulary' => $form_state['values']['show']['tagged_with']['vocabulary'],
+        'value' => $tids,
+        'vocabulary' => $form_state->getValue(array('show', 'tagged_with', 'vocabulary')),
       );
       // If the user entered more than one valid term in the autocomplete
       // field, they probably intended both of them to be applied.
-      if (count($form_state['values']['show']['tagged_with']['tids']) > 1) {
+      if (count($tids) > 1) {
         $filters['tid']['operator'] = 'and';
         // Sort the terms so the filter will be displayed as it normally would
         // on the edit screen.
@@ -186,8 +187,8 @@ class Node extends WizardPluginBase {
    */
   protected function pageDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = parent::pageDisplayOptions($form, $form_state);
-    $row_plugin = isset($form_state['values']['page']['style']['row_plugin']) ? $form_state['values']['page']['style']['row_plugin'] : NULL;
-    $row_options = isset($form_state['values']['page']['style']['row_options']) ? $form_state['values']['page']['style']['row_options'] : array();
+    $row_plugin = $form_state->getValue(array('page', 'style', 'row_plugin'));
+    $row_options = $form_state->getValue(array('page', 'style', 'row_options'), array());
     $this->display_options_row($display_options, $row_plugin, $row_options);
     return $display_options;
   }
@@ -197,8 +198,8 @@ class Node extends WizardPluginBase {
    */
   protected function blockDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = parent::blockDisplayOptions($form, $form_state);
-    $row_plugin = isset($form_state['values']['block']['style']['row_plugin']) ? $form_state['values']['block']['style']['row_plugin'] : NULL;
-    $row_options = isset($form_state['values']['block']['style']['row_options']) ? $form_state['values']['block']['style']['row_options'] : array();
+    $row_plugin = $form_state->getValue(array('block', 'style', 'row_plugin'));
+    $row_options = $form_state->getValue(array('block', 'style', 'row_options'), array());
     $this->display_options_row($display_options, $row_plugin, $row_options);
     return $display_options;
   }

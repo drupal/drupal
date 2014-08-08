@@ -51,7 +51,7 @@ class ThemeAdminForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The configuration options have been saved.'));
-    $this->config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
+    $this->config('system.theme')->set('admin', $form_state->getValue('admin_theme'))->save();
   }
 
 }

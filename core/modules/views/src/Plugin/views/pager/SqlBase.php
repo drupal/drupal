@@ -181,7 +181,7 @@ abstract class SqlBase extends PagerPluginBase {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Only accept integer values.
     $error = FALSE;
-    $exposed_options = $form_state['values']['pager_options']['expose']['items_per_page_options'];
+    $exposed_options = $form_state->getValue(array('pager_options', 'expose', 'items_per_page_options'));
     if (strpos($exposed_options, '.') !== FALSE) {
       $error = TRUE;
     }
@@ -201,8 +201,8 @@ abstract class SqlBase extends PagerPluginBase {
     }
 
     // Make sure that the items_per_page is part of the expose settings.
-    if (!empty($form_state['values']['pager_options']['expose']['items_per_page']) && !empty($form_state['values']['pager_options']['items_per_page'])) {
-      $items_per_page = $form_state['values']['pager_options']['items_per_page'];
+    if (!$form_state->isValueEmpty(array('pager_options', 'expose', 'items_per_page')) && !$form_state->isValueEmpty(array('pager_options', 'items_per_page'))) {
+      $items_per_page = $form_state->getValue(array('pager_options', 'items_per_page'));
       if (array_search($items_per_page, $options) === FALSE) {
         form_set_error('pager_options][expose][items_per_page_options', $form_state, t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
           array('@items_per_page' => $items_per_page))
@@ -369,8 +369,8 @@ abstract class SqlBase extends PagerPluginBase {
   }
 
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['offset']) && trim($form_state['values']['offset'])) {
-      if (!is_numeric($form_state['values']['offset']) || $form_state['values']['offset'] < 0) {
+    if (!$form_state->isValueEmpty('offset') && trim($form_state->getValue('offset'))) {
+      if (!is_numeric($form_state->getValue('offset')) || $form_state->getValue('offset') < 0) {
         form_set_error('offset', $form_state, t('Offset must be an number greather or equal than 0.'));
       }
     }

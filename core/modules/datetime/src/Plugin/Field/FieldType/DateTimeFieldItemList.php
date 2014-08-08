@@ -55,8 +55,8 @@ class DateTimeFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['default_value_input']['default_date']) {
-      return array($form_state['values']['default_value_input']);
+    if ($form_state->getValue(array('default_value_input', 'default_date'))) {
+      return array($form_state->getValue('default_value_input'));
     }
     return array();
   }

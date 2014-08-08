@@ -252,13 +252,13 @@ class SimpletestResultsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $pass = $form_state['values']['filter_pass'] ? explode(',', $form_state['values']['filter_pass']) : array();
-    $fail = $form_state['values']['filter_fail'] ? explode(',', $form_state['values']['filter_fail']) : array();
+    $pass = $form_state->getValue('filter_pass') ? explode(',', $form_state->getValue('filter_pass')) : array();
+    $fail = $form_state->getValue('filter_fail') ? explode(',', $form_state->getValue('filter_fail')) : array();
 
-    if ($form_state['values']['filter'] == 'all') {
+    if ($form_state->getValue('filter') == 'all') {
       $classes = array_merge($pass, $fail);
     }
-    elseif ($form_state['values']['filter'] == 'pass') {
+    elseif ($form_state->getValue('filter') == 'pass') {
       $classes = $pass;
     }
     else {

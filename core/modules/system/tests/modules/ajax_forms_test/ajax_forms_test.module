@@ -191,7 +191,7 @@ function ajax_forms_test_advanced_commands_settings_with_merging_callback($form,
  */
 function ajax_forms_test_validation_form_callback($form, FormStateInterface $form_state) {
   drupal_set_message("ajax_forms_test_validation_form_callback invoked");
-  drupal_set_message(t("Callback: drivertext=%drivertext, spare_required_field=%spare_required_field", array('%drivertext' => $form_state['values']['drivertext'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
+  drupal_set_message(t("Callback: drivertext=%drivertext, spare_required_field=%spare_required_field", array('%drivertext' => $form_state->getValue('drivertext'), '%spare_required_field' => $form_state->getValue('spare_required_field'))));
   return '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>';
 }
 
@@ -200,7 +200,7 @@ function ajax_forms_test_validation_form_callback($form, FormStateInterface $for
  */
 function ajax_forms_test_validation_number_form_callback($form, FormStateInterface $form_state) {
   drupal_set_message("ajax_forms_test_validation_number_form_callback invoked");
-  drupal_set_message(t("Callback: drivernumber=%drivernumber, spare_required_field=%spare_required_field", array('%drivernumber' => $form_state['values']['drivernumber'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
+  drupal_set_message(t("Callback: drivernumber=%drivernumber, spare_required_field=%spare_required_field", array('%drivernumber' => $form_state->getValue('drivernumber'), '%spare_required_field' => $form_state->getValue('spare_required_field'))));
   return '<div id="message_area_number">ajax_forms_test_validation_number_form_callback at ' . date('c') . '</div>';
 }
 

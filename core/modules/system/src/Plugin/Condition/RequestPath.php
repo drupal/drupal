@@ -112,7 +112,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['pages'] = $form_state['values']['pages'];
+    $this->configuration['pages'] = $form_state->getValue('pages');
     parent::submitConfigurationForm($form, $form_state);
   }
 

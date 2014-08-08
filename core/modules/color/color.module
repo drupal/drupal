@@ -291,7 +291,7 @@ function template_preprocess_color_scheme_form(&$variables) {
  *   The current state of the form.
  *
  * @return string
- *   The data that will appear in the $form_state['values'] collection for this
+ *   The data that will appear in the $form_state->getValues() collection for this
  *   element. Return nothing to use the default.
  */
 function color_palette_color_value($element, $input = FALSE, FormStateInterface $form_state) {
@@ -302,7 +302,7 @@ function color_palette_color_value($element, $input = FALSE, FormStateInterface 
     // Start with the provided value for this textfield, and validate that if
     // necessary, falling back on the default value.
     $value = form_type_textfield_value($element, $input, $form_state);
-    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state['values']['form_token'], $form_state['complete form']['#token'])) {
+    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $form_state['complete form']['#token'])) {
       return $value;
     }
     else {
@@ -332,7 +332,7 @@ function color_valid_hexadecimal_string($color) {
  */
 function color_scheme_form_validate($form, FormStateInterface $form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
-  foreach ($form_state['values']['palette'] as $key => $color) {
+  foreach ($form_state->getValue('palette') as $key => $color) {
     if (!color_valid_hexadecimal_string($color)) {
       form_set_error('palette][' . $key, $form_state, t('You must enter a valid hexadecimal color value for %name.', array('%name' => $form['color']['palette'][$key]['#title'])));
     }
@@ -347,20 +347,20 @@ function color_scheme_form_validate($form, FormStateInterface $form_state) {
 function color_scheme_form_submit($form, FormStateInterface $form_state) {
 
   // Get theme coloring info.
-  if (!isset($form_state['values']['info'])) {
+  if (!$form_state->hasValue('info')) {
     return;
   }
-  $theme = $form_state['values']['theme'];
-  $info = $form_state['values']['info'];
+  $theme = $form_state->getValue('theme');
+  $info = $form_state->getValue('info');
 
   $config = \Drupal::config('color.theme.' . $theme);
 
   // Resolve palette.
-  $palette = $form_state['values']['palette'];
-  if ($form_state['values']['scheme'] != '') {
+  $palette = $form_state->getValue('palette');
+  if ($form_state->getValue('scheme') != '') {
     foreach ($palette as $key => $color) {
-      if (isset($info['schemes'][$form_state['values']['scheme']]['colors'][$key])) {
-        $palette[$key] = $info['schemes'][$form_state['values']['scheme']]['colors'][$key];
+      if (isset($info['schemes'][$form_state->getValue('scheme')]['colors'][$key])) {
+        $palette[$key] = $info['schemes'][$form_state->getValue('scheme')]['colors'][$key];
       }
     }
     $palette += $info['schemes']['default']['colors'];

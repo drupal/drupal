@@ -63,8 +63,8 @@ class MenuSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('menu_ui.settings')
-      ->set('main_links', $form_state['values']['menu_main_links_source'])
-      ->set('secondary_links', $form_state['values']['menu_secondary_links_source'])
+      ->set('main_links', $form_state->getValue('menu_main_links_source'))
+      ->set('secondary_links', $form_state->getValue('menu_secondary_links_source'))
       ->save();
 
     parent::submitForm($form, $form_state);

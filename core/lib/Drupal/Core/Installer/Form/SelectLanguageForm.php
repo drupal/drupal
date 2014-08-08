@@ -99,7 +99,7 @@ class SelectLanguageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $install_state = &$form_state['build_info']['args'][0];
-    $install_state['parameters']['langcode'] = $form_state['values']['langcode'];
+    $install_state['parameters']['langcode'] = $form_state->getValue('langcode');
   }
 
 }

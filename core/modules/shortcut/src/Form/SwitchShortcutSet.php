@@ -171,14 +171,14 @@ class SwitchShortcutSet extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['set'] == 'new') {
+    if ($form_state->getValue('set') == 'new') {
       // Check to prevent creating a shortcut set with an empty title.
-      if (trim($form_state['values']['label']) == '') {
+      if (trim($form_state->getValue('label')) == '') {
         $form_state->setErrorByName('new', $this->t('The new set label is required.'));
       }
       // Check to prevent a duplicate title.
-      if (shortcut_set_title_exists($form_state['values']['label'])) {
-        $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
+      if (shortcut_set_title_exists($form_state->getValue('label'))) {
+        $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state->getValue('label'))));
       }
     }
   }
@@ -190,12 +190,12 @@ class SwitchShortcutSet extends FormBase {
     $account = $this->currentUser();
 
     $account_is_user = $this->user->id() == $account->id();
-    if ($form_state['values']['set'] == 'new') {
+    if ($form_state->getValue('set') == 'new') {
       // Save a new shortcut set with links copied from the user's default set.
       /* @var \Drupal\shortcut\Entity\ShortcutSet $set */
       $set = $this->shortcutSetStorage->create(array(
-        'id' => $form_state['values']['id'],
-        'label' => $form_state['values']['label'],
+        'id' => $form_state->getValue('id'),
+        'label' => $form_state->getValue('label'),
       ));
       $set->save();
       $replacements = array(
@@ -219,7 +219,7 @@ class SwitchShortcutSet extends FormBase {
     else {
       // Switch to a different shortcut set.
       /* @var \Drupal\shortcut\Entity\ShortcutSet $set */
-      $set = $this->shortcutSetStorage->load($form_state['values']['set']);
+      $set = $this->shortcutSetStorage->load($form_state->getValue('set'));
       $replacements = array(
         '%user' => $this->user->label(),
         '%set_name' => $set->label(),

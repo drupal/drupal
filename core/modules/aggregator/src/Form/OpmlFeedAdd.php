@@ -105,7 +105,7 @@ class OpmlFeedAdd extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // If both fields are empty or filled, cancel.
     $file_upload = $this->getRequest()->files->get('files[upload]', NULL, TRUE);
-    if (empty($form_state['values']['remote']) == empty($file_upload)) {
+    if ($form_state->isValueEmpty('remote') == empty($file_upload)) {
       $form_state->setErrorByName('remote', $this->t('<em>Either</em> upload a file or enter a URL.'));
     }
   }
@@ -121,7 +121,7 @@ class OpmlFeedAdd extends FormBase {
     else {
       // @todo Move this to a fetcher implementation.
       try {
-        $response = $this->httpClient->get($form_state['values']['remote']);
+        $response = $this->httpClient->get($form_state->getValue('remote'));
         $data = $response->getBody(TRUE);
       }
       catch (RequestException $e) {
@@ -168,7 +168,7 @@ class OpmlFeedAdd extends FormBase {
       $new_feed = $this->feedStorage->create(array(
         'title' => $feed['title'],
         'url' => $feed['url'],
-        'refresh' => $form_state['values']['refresh'],
+        'refresh' => $form_state->getValue('refresh'),
       ));
       $new_feed->save();
     }

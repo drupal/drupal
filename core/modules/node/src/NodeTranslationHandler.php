@@ -75,14 +75,14 @@ class NodeTranslationHandler extends ContentTranslationHandler {
    * {@inheritdoc}
    */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    if (isset($form_state['values']['content_translation'])) {
+    if ($form_state->hasValue('content_translation')) {
       $form_controller = content_translation_form_controller($form_state);
-      $translation = &$form_state['values']['content_translation'];
+      $translation = &$form_state->getValue('content_translation');
       $translation['status'] = $form_controller->getEntity()->isPublished();
       // $form['content_translation']['name'] is the equivalent field
       // for translation author uid.
-      $translation['name'] = $form_state['values']['uid'];
-      $translation['created'] = $form_state['values']['created'];
+      $translation['name'] = $form_state->getValue('uid');
+      $translation['created'] = $form_state->getValue('created');
     }
     parent::entityFormEntityBuild($entity_type, $entity, $form, $form_state);
   }

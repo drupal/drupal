@@ -113,7 +113,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // Then extract the values of fields that are not rendered through widgets,
     // by simply copying from top-level form values. This leaves the fields
     // that are not being edited within this form untouched.
-    foreach ($form_state['values'] as $name => $values) {
+    foreach ($form_state->getValues() as $name => $values) {
       if ($entity->hasField($name) && !isset($extracted[$name])) {
         $entity->set($name, $values);
       }

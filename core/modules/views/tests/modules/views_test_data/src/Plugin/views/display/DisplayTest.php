@@ -96,10 +96,10 @@ class DisplayTest extends DisplayPluginBase {
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
-    watchdog('views', $form_state['values']['test_option']);
+    watchdog('views', $form_state->getValue('test_option'));
     switch ($form_state['section']) {
       case 'test_option':
-        if (!trim($form_state['values']['test_option'])) {
+        if (!trim($form_state->getValue('test_option'))) {
           form_error($form['test_option'], $form_state, t('You cannot have an empty option.'));
         }
         break;
@@ -113,7 +113,7 @@ class DisplayTest extends DisplayPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'test_option':
-        $this->setOption('test_option', $form_state['values']['test_option']);
+        $this->setOption('test_option', $form_state->getValue('test_option'));
         break;
     }
   }

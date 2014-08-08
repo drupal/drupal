@@ -75,8 +75,8 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $definition = parent::extractFormValues($form, $form_state);
-    $definition['title'] = $form_state['values']['title'];
-    $definition['description'] = $form_state['values']['description'];
+    $definition['title'] = $form_state->getValue('title');
+    $definition['description'] = $form_state->getValue('description');
 
     return $definition;
   }

@@ -71,7 +71,7 @@ class ViewDuplicateForm extends ViewFormBase {
   public function submit(array $form, FormStateInterface $form_state) {
     $original = parent::submit($form, $form_state);
     $this->entity = $original->createDuplicate();
-    $this->entity->set('id', $form_state['values']['id']);
+    $this->entity->set('id', $form_state->getValue('id'));
     $this->entity->save();
 
     // Redirect the user to the view admin form.

@@ -130,13 +130,13 @@ class ExportForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If template is required, language code is not given.
-    if ($form_state['values']['langcode'] != LanguageInterface::LANGCODE_SYSTEM) {
-      $language = $this->languageManager->getLanguage($form_state['values']['langcode']);
+    if ($form_state->getValue('langcode') != LanguageInterface::LANGCODE_SYSTEM) {
+      $language = $this->languageManager->getLanguage($form_state->getValue('langcode'));
     }
     else {
       $language = NULL;
     }
-    $content_options = isset($form_state['values']['content_options']) ? $form_state['values']['content_options'] : array();
+    $content_options = $form_state->getValue('content_options', array());
     $reader = new PoDatabaseReader();
     $language_name = '';
     if ($language != NULL) {

@@ -162,8 +162,9 @@ class FieldStorageEditForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Validate field cardinality.
-    $cardinality = $form_state['values']['field']['cardinality'];
-    $cardinality_number = $form_state['values']['field']['cardinality_number'];
+    $field_values = $form_state->getValue('field');
+    $cardinality = $field_values['cardinality'];
+    $cardinality_number = $field_values['cardinality_number'];
     if ($cardinality === 'number' && empty($cardinality_number)) {
       $form_state->setErrorByName('field][cardinality_number', $this->t('Number of values is required.'));
     }
@@ -173,7 +174,7 @@ class FieldStorageEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_values = $form_state['values'];
+    $form_values = $form_state->getValues();
     $field_values = $form_values['field'];
 
     // Save field cardinality.

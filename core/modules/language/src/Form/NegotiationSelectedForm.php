@@ -43,7 +43,7 @@ class NegotiationSelectedForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.negotiation')
-      ->set('selected_langcode', $form_state['values']['selected_langcode'])
+      ->set('selected_langcode', $form_state->getValue('selected_langcode'))
       ->save();
 
     parent::submitForm($form, $form_state);
