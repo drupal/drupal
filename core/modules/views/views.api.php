@@ -35,6 +35,7 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * @defgroup views_plugins Views plugins
+ * Overview of views plugins
  *
  * Views plugins are objects that are used to build and render the view.
  * See individual views plugin topics for more information about the

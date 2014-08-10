@@ -1186,6 +1186,8 @@ function template_preprocess_views_mini_pager(&$variables) {
 /**
  * @defgroup views_templates Views template files
  * @{
+ * Describes various views templates & overriding options.
+ *
  * All views templates can be overridden with a variety of names, using
  * the view, the display ID of the view, the display type of the view,
  * or some combination thereof.
