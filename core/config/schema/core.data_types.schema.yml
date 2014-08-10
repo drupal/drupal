@@ -203,7 +203,7 @@ route:
   label: 'Route'
   mapping:
     route_name:
-      type: text
+      type: string
       label: 'Route Name'
     route_params:
       type: sequence
