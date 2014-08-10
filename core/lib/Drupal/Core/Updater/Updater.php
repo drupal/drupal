@@ -8,6 +8,7 @@
 namespace Drupal\Core\Updater;
 
 use Drupal\Core\FileTransfer\FileTransferException;
+use Drupal\Core\FileTransfer\FileTransferInterface;
 
 /**
  * Defines the base class for Updaters used in Drupal.
@@ -184,7 +185,7 @@ class Updater {
 
       // Take a Backup.
       if ($args['make_backup']) {
-        $this->makeBackup($args['install_dir'], $args['backup_dir']);
+        $this->makeBackup($filetransfer, $args['install_dir'], $args['backup_dir']);
       }
 
       if (!$this->name) {
@@ -325,9 +326,16 @@ class Updater {
   /**
    * Performs a backup.
    *
+   * @param \Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
+   *   Object which is a child of FileTransfer.
+   * @param string $from
+   *   The file path to copy from.
+   * @param string $to
+   *   The file path to copy to.
+   *
    * @todo Not implemented.
    */
-  public function makeBackup(&$filetransfer, $from, $to) {
+  public function makeBackup(FileTransferInterface $filetransfer, $from, $to) {
   }
 
   /**
