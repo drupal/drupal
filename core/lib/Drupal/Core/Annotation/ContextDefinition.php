@@ -10,9 +10,10 @@ namespace Drupal\Core\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * @defgroup plugin_context context definition plugin metadata
- *
+ * @defgroup plugin_context Annotation for context definition
  * @{
+ * Describes how to use ContextDefinition annotation.
+ *
  * When providing plugin annotations, contexts can be defined to support UI
  * interactions through providing limits, and mapping contexts to appropriate
  * plugins. Context definitions can be provided as such:
@@ -47,6 +48,9 @@ use Drupal\Component\Annotation\Plugin;
  *     "album" = @ContextDefinition("entity:node", label = @Translation("Album"))
  *   }
  * @endcode
+ *
+ * @see annotation
+ *
  * @}
  */
 

@@ -11,9 +11,10 @@ use Drupal\Component\Annotation\AnnotationBase;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 
 /**
- * @defgroup plugin_translatable Translatable plugin metadata
- *
+ * @defgroup plugin_translatable Annotation for translatable text
  * @{
+ * Describes how to put translatable UI text into annotations.
+ *
  * When providing plugin annotation, properties whose values are displayed in
  * the user interface should be made translatable. Much the same as how user
  * interface text elsewhere is wrapped in t() to make it translatable, in plugin
@@ -38,6 +39,7 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
  * context is supported.
  *
  * @see i18n
+ * @see annotation
  * @}
  */
 
