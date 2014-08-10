@@ -12,7 +12,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\UserInterface;
 
@@ -198,32 +198,32 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['cid'] = FieldDefinition::create('integer')
+    $fields['cid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Comment ID'))
       ->setDescription(t('The comment ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['uuid'] = FieldDefinition::create('uuid')
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
       ->setDescription(t('The comment UUID.'))
       ->setReadOnly(TRUE);
 
-    $fields['pid'] = FieldDefinition::create('entity_reference')
+    $fields['pid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Parent ID'))
       ->setDescription(t('The parent comment ID if this is a reply to a comment.'))
       ->setSetting('target_type', 'comment');
 
-    $fields['entity_id'] = FieldDefinition::create('entity_reference')
+    $fields['entity_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the entity of which this comment is a reply.'))
       ->setRequired(TRUE);
 
-    $fields['langcode'] = FieldDefinition::create('language')
+    $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The comment language code.'));
 
-    $fields['subject'] = FieldDefinition::create('string')
+    $fields['subject'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Subject'))
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 64)
@@ -234,14 +234,14 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ))
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['uid'] = FieldDefinition::create('entity_reference')
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the comment author.'))
       ->setTranslatable(TRUE)
       ->setSetting('target_type', 'user')
       ->setDefaultValue(0);
 
-    $fields['name'] = FieldDefinition::create('string')
+    $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t("The comment author's name."))
       ->setTranslatable(TRUE)
@@ -249,12 +249,12 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDefaultValue('')
       ->addConstraint('CommentName', array());
 
-    $fields['mail'] = FieldDefinition::create('email')
+    $fields['mail'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Email'))
       ->setDescription(t("The comment author's email address."))
       ->setTranslatable(TRUE);
 
-    $fields['homepage'] = FieldDefinition::create('uri')
+    $fields['homepage'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('Homepage'))
       ->setDescription(t("The comment author's home page address."))
       ->setTranslatable(TRUE)
@@ -262,44 +262,44 @@ class Comment extends ContentEntityBase implements CommentInterface {
       // characters in our comment DB schema.
       ->setSetting('max_length', 255);
 
-    $fields['hostname'] = FieldDefinition::create('string')
+    $fields['hostname'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Hostname'))
       ->setDescription(t("The comment author's hostname."))
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 128);
 
-    $fields['created'] = FieldDefinition::create('created')
+    $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the comment was created.'))
       ->setTranslatable(TRUE);
 
-    $fields['changed'] = FieldDefinition::create('changed')
+    $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the comment was last edited.'))
       ->setTranslatable(TRUE);
 
-    $fields['status'] = FieldDefinition::create('boolean')
+    $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the comment is published.'))
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE);
 
-    $fields['thread'] = FieldDefinition::create('string')
+    $fields['thread'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Thread place'))
       ->setDescription(t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."))
       ->setSetting('max_length', 255);
 
-    $fields['entity_type'] = FieldDefinition::create('string')
+    $fields['entity_type'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this comment is attached.'))
       ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
 
-    $fields['comment_type'] = FieldDefinition::create('entity_reference')
+    $fields['comment_type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Comment Type'))
       ->setDescription(t('The comment type.'))
       ->setSetting('target_type', 'comment_type');
 
-    $fields['field_name'] = FieldDefinition::create('string')
+    $fields['field_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
       ->setDescription(t('The field name through which this comment was added.'))
       ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);

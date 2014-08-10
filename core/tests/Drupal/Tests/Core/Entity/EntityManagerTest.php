@@ -690,7 +690,7 @@ class EntityManagerTest extends UnitTestCase {
 
     // @todo Mock FieldDefinitionInterface once it exposes a proper provider
     //   setter. See https://drupal.org/node/2225961.
-    $field_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $field_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -722,7 +722,7 @@ class EntityManagerTest extends UnitTestCase {
    * @param string $field_definition_id
    *   (optional) The ID to use for the field definition. Defaults to 'id'.
    *
-   * @return \Drupal\Core\Field\FieldDefinition|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Field\BaseFieldDefinition|\PHPUnit_Framework_MockObject_MockObject
    *   A field definition object.
    */
   protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, $field_definition_id = 'id') {
@@ -742,7 +742,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('isSubclassOf')
       ->with($this->equalTo('\Drupal\Core\Entity\ContentEntityInterface'))
       ->will($this->returnValue(TRUE));
-    $field_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $field_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
     $entity_class::$baseFieldDefinitions = array(
@@ -1080,7 +1080,7 @@ class EntityManagerTest extends UnitTestCase {
 
 
     // Define an ID field definition as a base field.
-    $id_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $id_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
     $id_definition->expects($this->exactly(2))
@@ -1092,7 +1092,7 @@ class EntityManagerTest extends UnitTestCase {
     $entity_class::$baseFieldDefinitions = $base_field_definitions;
 
     // Set up a by bundle field definition that only exists on one bundle.
-    $bundle_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $bundle_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
     $bundle_definition->expects($this->once())
@@ -1210,7 +1210,7 @@ class EntityManagerTest extends UnitTestCase {
 
 
     // Define an ID field definition as a base field.
-    $id_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $id_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
     $id_definition->expects($this->exactly(2))
@@ -1222,7 +1222,7 @@ class EntityManagerTest extends UnitTestCase {
     $entity_class::$baseFieldDefinitions = $base_field_definitions;
 
     // Set up a by bundle field definition that only exists on one bundle.
-    $bundle_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+    $bundle_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
     $bundle_definition->expects($this->once())

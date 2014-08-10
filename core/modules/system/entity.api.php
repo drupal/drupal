@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
 
 /**
@@ -1621,7 +1621,7 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
 function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node') {
     $fields = array();
-    $fields['mymodule_text'] = FieldDefinition::create('string')
+    $fields['mymodule_text'] = BaseFieldDefinition::create('string')
       ->setLabel(t('The text'))
       ->setDescription(t('A text property added by mymodule.'))
       ->setComputed(TRUE)
@@ -1679,7 +1679,7 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
   // Add a property only to nodes of the 'article' bundle.
   if ($entity_type->id() == 'node' && $bundle == 'article') {
     $fields = array();
-    $fields['mymodule_text_more'] = FieldDefinition::create('string')
+    $fields['mymodule_text_more'] = BaseFieldDefinition::create('string')
         ->setLabel(t('More text'))
         ->setComputed(TRUE)
         ->setClass('\Drupal\mymodule\EntityComputedMoreText');

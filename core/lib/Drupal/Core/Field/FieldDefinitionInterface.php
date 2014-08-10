@@ -39,7 +39,7 @@ use Drupal\Core\TypedData\ListDataDefinitionInterface;
  * However, entity base fields, such as $node->title, are not managed by
  * field.module and its "field_storage_config"/"field_instance_config"
  * configuration entities. Therefore, their definitions are provided by
- * different objects based on the class \Drupal\Core\Field\FieldDefinition,
+ * different objects based on the class \Drupal\Core\Field\BaseFieldDefinition,
  * which implements this interface as well.
  *
  * Field definitions may fully define a concrete data object (e.g.,

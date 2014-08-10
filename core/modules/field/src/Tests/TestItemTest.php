@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -92,7 +92,7 @@ class TestItemTest extends FieldUnitTestBase {
       ),
       'foreign keys' => array(),
     );
-    $field_schema = FieldDefinition::create('test_field')->getSchema();
+    $field_schema = BaseFieldDefinition::create('test_field')->getSchema();
     $this->assertEqual($field_schema, $expected_schema);
   }
 

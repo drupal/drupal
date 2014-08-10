@@ -11,7 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -38,7 +38,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   /**
    * An array of field definitions used for this test, keyed by field name.
    *
-   * @var \Drupal\Core\Field\FieldDefinition[]|\PHPUnit_Framework_MockObject_MockObject[]
+   * @var \Drupal\Core\Field\BaseFieldDefinition[]|\PHPUnit_Framework_MockObject_MockObject[]
    */
   protected $fieldDefinitions = array();
 
@@ -972,9 +972,9 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getDefaultInstanceSettings')
       ->will($this->returnValue(array()));
 
-    $this->fieldDefinitions['id'] = FieldDefinition::create('string')
+    $this->fieldDefinitions['id'] = BaseFieldDefinition::create('string')
       ->setName('id');
-    $this->fieldDefinitions['revision'] = FieldDefinition::create('string')
+    $this->fieldDefinitions['revision'] = BaseFieldDefinition::create('string')
       ->setName('revision');
 
     $this->entityManager->expects($this->any())

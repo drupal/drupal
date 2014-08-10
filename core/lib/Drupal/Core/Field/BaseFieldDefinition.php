@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\FieldDefinition.
+ * Contains \Drupal\Core\Field\BaseFieldDefinition.
  */
 
 namespace Drupal\Core\Field;
@@ -15,7 +15,7 @@ use Drupal\field\FieldException;
 /**
  * A class for defining entity fields.
  */
-class FieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface {
+class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface {
 
   /**
    * The field type.

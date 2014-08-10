@@ -8,7 +8,7 @@
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
@@ -50,7 +50,7 @@ class EntityTestRev extends EntityTest {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['revision_id'] = FieldDefinition::create('integer')
+    $fields['revision_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Revision ID'))
       ->setDescription(t('The version id of the test entity.'))
       ->setReadOnly(TRUE)

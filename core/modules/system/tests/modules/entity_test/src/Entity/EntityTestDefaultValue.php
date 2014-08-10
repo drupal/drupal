@@ -8,7 +8,7 @@
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines a test entity class for testing default values.
@@ -33,7 +33,7 @@ class EntityTestDefaultValue extends EntityTest {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['description'] = FieldDefinition::create('string')
+    $fields['description'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Some custom description'))
       ->setDefaultValueCallback('entity_test_field_default_value');
 

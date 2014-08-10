@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -550,7 +550,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = $this->createTestEntity('entity_test');
     $entity->save();
     // Create a reference field item and let it reference the entity.
-    $definition = FieldDefinition::create('entity_reference')
+    $definition = BaseFieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSetting('target_type', 'entity_test');
     $reference_field = \Drupal::typedDataManager()->create($definition);
@@ -575,7 +575,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // Test bundle validation.
     NodeType::create(array('type' => 'article'))
       ->save();
-    $definition = FieldDefinition::create('entity_reference')
+    $definition = BaseFieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSettings(array(
         'target_type' => 'node',

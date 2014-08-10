@@ -78,7 +78,7 @@ class FieldItemDeriver implements ContainerDeriverInterface {
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->fieldTypePluginManager->getDefinitions() as $plugin_id => $definition) {
       $definition['definition_class'] = '\Drupal\Core\Field\TypedData\FieldItemDataDefinition';
-      $definition['list_definition_class'] = '\Drupal\Core\Field\FieldDefinition';
+      $definition['list_definition_class'] = '\Drupal\Core\Field\BaseFieldDefinition';
       $this->derivatives[$plugin_id] = $definition;
     }
     return $this->derivatives;

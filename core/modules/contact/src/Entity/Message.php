@@ -10,7 +10,7 @@ namespace Drupal\contact\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the contact message entity.
@@ -135,31 +135,31 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['category'] = FieldDefinition::create('entity_reference')
+    $fields['category'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Category ID'))
       ->setDescription(t('The ID of the associated category.'))
       ->setSetting('target_type', 'contact_category')
       ->setRequired(TRUE);
 
-    $fields['uuid'] = FieldDefinition::create('uuid')
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
       ->setDescription(t('The message UUID.'))
       ->setReadOnly(TRUE);
 
-    $fields['langcode'] = FieldDefinition::create('language')
+    $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The comment language code.'));
 
-    $fields['name'] = FieldDefinition::create('string')
+    $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t("The sender's name"))
       ->setDescription(t('The name of the person that is sending the contact message.'));
 
-    $fields['mail'] = FieldDefinition::create('email')
+    $fields['mail'] = BaseFieldDefinition::create('email')
       ->setLabel(t("The sender's email"))
       ->setDescription(t('The email of the person that is sending the contact message.'));
 
     // The subject of the contact message.
-    $fields['subject'] = FieldDefinition::create('string')
+    $fields['subject'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Subject'))
       ->setRequired(TRUE)
       ->setSetting('max_length', 100)
@@ -170,7 +170,7 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     // The text of the contact message.
-    $fields['message'] = FieldDefinition::create('string_long')
+    $fields['message'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Message'))
       ->setRequired(TRUE)
       ->setDisplayOptions('form', array(
@@ -188,11 +188,11 @@ class Message extends ContentEntityBase implements MessageInterface {
       ))
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['copy'] = FieldDefinition::create('boolean')
+    $fields['copy'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Copy'))
       ->setDescription(t('Whether to send a copy of the message to the sender.'));
 
-    $fields['recipient'] = FieldDefinition::create('entity_reference')
+    $fields['recipient'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Recipient ID'))
       ->setDescription(t('The ID of the recipient user for personal contact messages.'))
       ->setSetting('target_type', 'user');

@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\entity_test\Entity;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
@@ -44,7 +44,7 @@ class EntityTestStringId extends EntityTest {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields['id'] = FieldDefinition::create('string')
+    $fields['id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('ID'))
       ->setDescription(t('The ID of the test entity.'))
       ->setReadOnly(TRUE);

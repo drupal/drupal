@@ -1,26 +1,26 @@
 <?php
+
 /**
  * @file
- * Contains \Drupal\Tests\Core\Fied\FieldDefinitionTestBase.
+ * Contains \Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase.
  */
 
 namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypePluginManager;
-use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Provides a test base class for testing field definitions.
+ * Provides setup method for testing base field definitions.
  */
-abstract class FieldDefinitionTestBase extends UnitTestCase {
+abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
 
   /**
    * The field definition used in this test.
    *
-   * @var \Drupal\Core\Field\FieldDefinition
+   * @var \Drupal\Core\Field\BaseFieldDefinition
    */
   protected $definition;
 
@@ -52,7 +52,7 @@ abstract class FieldDefinitionTestBase extends UnitTestCase {
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
-    $this->definition = FieldDefinition::create($this->getPluginId());
+    $this->definition = BaseFieldDefinition::create($this->getPluginId());
   }
 
   /**

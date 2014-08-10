@@ -12,7 +12,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
 
 /**
@@ -49,43 +49,43 @@ class Item extends ContentEntityBase implements ItemInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['iid'] = FieldDefinition::create('integer')
+    $fields['iid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Aggregator item ID'))
       ->setDescription(t('The ID of the feed item.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['fid'] = FieldDefinition::create('entity_reference')
+    $fields['fid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Aggregator feed ID'))
       ->setDescription(t('The ID of the aggregator feed.'))
       ->setSetting('target_type', 'aggregator_feed');
 
-    $fields['title'] = FieldDefinition::create('string')
+    $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setDescription(t('The title of the feed item.'));
 
-    $fields['langcode'] = FieldDefinition::create('language')
+    $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The feed item language code.'));
 
-    $fields['link'] = FieldDefinition::create('uri')
+    $fields['link'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('Link'))
       ->setDescription(t('The link of the feed item.'));
 
-    $fields['author'] = FieldDefinition::create('string')
+    $fields['author'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Author'))
       ->setDescription(t('The author of the feed item.'));
 
-    $fields['description'] = FieldDefinition::create('string_long')
+    $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))
       ->setDescription(t('The body of the feed item.'));
 
-    $fields['timestamp'] = FieldDefinition::create('created')
+    $fields['timestamp'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Posted timestamp'))
       ->setDescription(t('Posted date of the feed item, as a Unix timestamp.'));
 
     // @todo Convert to a real UUID field in https://drupal.org/node/2149851.
-    $fields['guid'] = FieldDefinition::create('string_long')
+    $fields['guid'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('GUID'))
       ->setDescription(t('Unique identifier for the feed item.'));
 

@@ -8,7 +8,7 @@
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines a test entity class for base fields display.
@@ -44,10 +44,10 @@ class EntityTestBaseFieldDisplay extends EntityTest {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['test_no_display'] = FieldDefinition::create('text')
+    $fields['test_no_display'] = BaseFieldDefinition::create('text')
       ->setLabel(t('Field with no display'));
 
-    $fields['test_display_configurable'] = FieldDefinition::create('text')
+    $fields['test_display_configurable'] = BaseFieldDefinition::create('text')
       ->setLabel(t('Field with configurable display'))
       ->setDisplayOptions('view', array(
         'type' => 'text_default',
@@ -60,7 +60,7 @@ class EntityTestBaseFieldDisplay extends EntityTest {
       ))
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['test_display_non_configurable'] = FieldDefinition::create('text')
+    $fields['test_display_non_configurable'] = BaseFieldDefinition::create('text')
       ->setLabel(t('Field with non-configurable display'))
       ->setDisplayOptions('view', array(
         'type' => 'text_default',

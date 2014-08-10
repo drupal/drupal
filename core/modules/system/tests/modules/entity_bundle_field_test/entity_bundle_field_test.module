@@ -5,7 +5,7 @@
  * Test module for the entity API providing a bundle field.
  */
 
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Tracks whether the module is currently being uninstalled.
@@ -30,9 +30,9 @@ function entity_bundle_field_test_is_uninstalling($value = NULL) {
 function entity_bundle_field_test_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'entity_test' && !entity_bundle_field_test_is_uninstalling()) {
     // @todo: Make use of a FieldStorageDefinition class instead of
-    // FieldDefinition as this should not implement FieldDefinitionInterface.
+    // BaseFieldDefinition as this should not implement FieldDefinitionInterface.
     // See https://drupal.org/node/2280639.
-    $definitions['custom_field'] = FieldDefinition::create('string')
+    $definitions['custom_field'] = BaseFieldDefinition::create('string')
       ->setName('custom_field')
       ->setLabel(t('A custom field'))
       ->setTargetEntityTypeId($entity_type->id());
@@ -45,7 +45,7 @@ function entity_bundle_field_test_entity_field_storage_info(\Drupal\Core\Entity\
  */
 function entity_bundle_field_test_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   if ($entity_type->id() == 'entity_test' && $bundle == 'custom' && !entity_bundle_field_test_is_uninstalling()) {
-    $definitions['custom_field'] = FieldDefinition::create('string')
+    $definitions['custom_field'] = BaseFieldDefinition::create('string')
       ->setName('custom_field')
       ->setLabel(t('A custom field'));
     return $definitions;
@@ -58,7 +58,7 @@ function entity_bundle_field_test_entity_bundle_field_info(\Drupal\Core\Entity\E
 function entity_bundle_field_test_entity_bundle_delete($entity_type_id, $bundle) {
   if ($entity_type_id == 'entity_test' && $bundle == 'custom') {
     // Notify the entity storage that our field is gone.
-    $field_definition = FieldDefinition::create('string')
+    $field_definition = BaseFieldDefinition::create('string')
       ->setTargetEntityTypeId($entity_type_id)
       ->setBundle($bundle)
       ->setName('custom_field')

@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -76,7 +76,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * Static cache of field storage definitions per entity type.
    *
    * Elements of the array:
-   *  - $entity_type_id: \Drupal\Core\Field\FieldDefinition[]
+   *  - $entity_type_id: \Drupal\Core\Field\BaseFieldDefinition[]
    *
    * @var array
    */
@@ -382,7 +382,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     foreach ($base_field_definitions as $definition) {
       // @todo Remove this check once FieldDefinitionInterface exposes a proper
       //  provider setter. See https://drupal.org/node/2225961.
-      if ($definition instanceof FieldDefinition) {
+      if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
     }
@@ -396,7 +396,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
           //  proper provider setter. See https://drupal.org/node/2225961.
-          if ($definition instanceof FieldDefinition && $definition->getProvider() == NULL) {
+          if ($definition instanceof BaseFieldDefinition && $definition->getProvider() == NULL) {
             $definition->setProvider($module);
           }
           $base_field_definitions[$field_name] = $definition;
@@ -407,7 +407,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
     foreach ($base_field_definitions as $field_name => $base_field_definition) {
-      if ($base_field_definition instanceof FieldDefinition) {
+      if ($base_field_definition instanceof BaseFieldDefinition) {
         $base_field_definition->setName($field_name);
         $base_field_definition->setTargetEntityTypeId($entity_type_id);
         $base_field_definition->setBundle(NULL);
@@ -481,7 +481,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     foreach ($bundle_field_definitions as $definition) {
       // @todo Remove this check once FieldDefinitionInterface exposes a proper
       //  provider setter. See https://drupal.org/node/2225961.
-      if ($definition instanceof FieldDefinition) {
+      if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
     }
@@ -495,7 +495,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
           //  proper provider setter. See https://drupal.org/node/2225961.
-          if ($definition instanceof FieldDefinition) {
+          if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
           }
           $bundle_field_definitions[$field_name] = $definition;
@@ -506,7 +506,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
     foreach ($bundle_field_definitions as $field_name => $field_definition) {
-      if ($field_definition instanceof FieldDefinition) {
+      if ($field_definition instanceof BaseFieldDefinition) {
         $field_definition->setName($field_name);
         $field_definition->setTargetEntityTypeId($entity_type_id);
         $field_definition->setBundle($bundle);
@@ -617,7 +617,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
           //  proper provider setter. See https://drupal.org/node/2225961.
-          if ($definition instanceof FieldDefinition) {
+          if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
           }
           $field_definitions[$field_name] = $definition;

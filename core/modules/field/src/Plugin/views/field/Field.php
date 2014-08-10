@@ -13,7 +13,7 @@ use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormStateInterface;
@@ -48,7 +48,7 @@ class Field extends FieldPluginBase {
    *
    * A field storage definition turned into a field definition, so it can be
    * used with widgets and formatters. See
-   * FieldDefinition::createFromFieldStorageDefinition().
+   * BaseFieldDefinition::createFromFieldStorageDefinition().
    *
    * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
@@ -157,7 +157,7 @@ class Field extends FieldPluginBase {
   protected function getFieldDefinition() {
     if (!$this->fieldDefinition) {
       $field_storage_config = $this->getFieldStorageConfig();
-      $this->fieldDefinition = FieldDefinition::createFromFieldStorageDefinition($field_storage_config);
+      $this->fieldDefinition = BaseFieldDefinition::createFromFieldStorageDefinition($field_storage_config);
     }
     return $this->fieldDefinition;
   }

@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Entity\FieldDefinitionTest.
+ * Contains \Drupal\Tests\Core\Entity\BaseFieldDefinitionTest.
  */
 
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Unit test for FieldDefinition.
+ * Unit test for BaseFieldDefinition.
  *
  * @group Entity
  */
-class FieldDefinitionTest extends UnitTestCase {
+class BaseFieldDefinitionTest extends UnitTestCase {
 
   /**
    * A dummy field type name.
@@ -77,7 +77,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field name methods.
    */
   public function testFieldName() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $field_name = $this->randomMachineName();
     $definition->setName($field_name);
     $this->assertEquals($field_name, $definition->getName());
@@ -87,7 +87,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field label methods.
    */
   public function testFieldLabel() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $label = $this->randomMachineName();
     $definition->setLabel($label);
     $this->assertEquals($label, $definition->getLabel());
@@ -97,7 +97,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field description methods.
    */
   public function testFieldDescription() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $description = $this->randomMachineName();
     $definition->setDescription($description);
     $this->assertEquals($description, $definition->getDescription());
@@ -107,7 +107,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field type methods.
    */
   public function testFieldType() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertEquals($this->fieldType, $definition->getType());
   }
 
@@ -115,7 +115,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field settings methods.
    */
   public function testFieldSettings() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $setting = $this->randomMachineName();
     $value = $this->randomMachineName();
     $definition->setSetting($setting, $value);
@@ -128,7 +128,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests the initialization of default field settings.
    */
   public function testDefaultFieldSettings() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $expected_settings = $this->fieldTypeDefinition['settings'] + $this->fieldTypeDefinition['instance_settings'];
     $this->assertEquals($expected_settings, $definition->getSettings());
     foreach ($expected_settings as $setting => $value) {
@@ -140,7 +140,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field default value.
    */
   public function testFieldDefaultValue() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $value = $this->randomMachineName();
     $definition->setDefaultValue($value);
     $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
@@ -156,7 +156,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field translatable methods.
    */
   public function testFieldTranslatable() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertFalse($definition->isTranslatable());
     $definition->setTranslatable(TRUE);
     $this->assertTrue($definition->isTranslatable());
@@ -168,7 +168,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field revisionable methods.
    */
   public function testFieldRevisionable() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertFalse($definition->isRevisionable());
     $definition->setRevisionable(TRUE);
     $this->assertTrue($definition->isRevisionable());
@@ -180,7 +180,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field cardinality.
    */
   public function testFieldCardinality() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertEquals(1, $definition->getCardinality());
     $definition->setCardinality(2);
     $this->assertEquals(2, $definition->getCardinality());
@@ -192,7 +192,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests required.
    */
   public function testFieldRequired() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertFalse($definition->isRequired());
     $definition->setRequired(TRUE);
     $this->assertTrue($definition->isRequired());
@@ -204,7 +204,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests provider.
    */
   public function testFieldProvider() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $provider = $this->randomMachineName();
     $definition->setProvider($provider);
     $this->assertEquals($provider, $definition->getProvider());
@@ -214,7 +214,7 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests custom storage.
    */
   public function testCustomStorage() {
-    $definition = FieldDefinition::create($this->fieldType);
+    $definition = BaseFieldDefinition::create($this->fieldType);
     $this->assertFalse($definition->hasCustomStorage());
     $definition->setCustomStorage(TRUE);
     $this->assertTrue($definition->hasCustomStorage());

@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\field\FieldException;
 use Drupal\field\FieldStorageConfigInterface;
@@ -638,7 +638,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public static function createFromDataType($type) {
     // Forward to the field definition class for creating new data definitions
     // via the typed manager.
-    return FieldDefinition::createFromDataType($type);
+    return BaseFieldDefinition::createFromDataType($type);
   }
 
   /**
@@ -647,7 +647,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public static function createFromItemType($item_type) {
     // Forward to the field definition class for creating new data definitions
     // via the typed manager.
-    return FieldDefinition::createFromItemType($item_type);
+    return BaseFieldDefinition::createFromItemType($item_type);
   }
 
   public function getDataType() {

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\TypedData;
 
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
@@ -539,7 +539,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Test validating property containers and make sure the NotNull and Null
     // constraints work with typed data containers.
-    $definition = FieldDefinition::create('integer')
+    $definition = BaseFieldDefinition::create('integer')
       ->setConstraints(array('NotNull' => array()));
     $field_item = $this->typedDataManager->create($definition, array('value' => 10));
     $violations = $field_item->validate();
@@ -556,7 +556,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     $this->assertEqual($violations->count(), 1);
 
     // Test the Null constraint with typed data containers.
-    $definition = FieldDefinition::create('float')
+    $definition = BaseFieldDefinition::create('float')
       ->setConstraints(array('Null' => array()));
     $field_item = $this->typedDataManager->create($definition, array('value' => 11.5));
     $violations = $field_item->validate();
@@ -586,7 +586,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Test validating a list of a values and make sure property paths starting
     // with "0" are created.
-    $definition = FieldDefinition::create('integer');
+    $definition = BaseFieldDefinition::create('integer');
     $violations = $this->typedDataManager->create($definition, array(array('value' => 10)))->validate();
     $this->assertEqual($violations->count(), 0);
     $violations = $this->typedDataManager->create($definition, array(array('value' => 'string')))->validate();

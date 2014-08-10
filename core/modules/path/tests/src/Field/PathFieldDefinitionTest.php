@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\path\Tests\Plugin\Field\FieldType\PathFieldDefinitionTest
+ * Contains \Drupal\path\Tests\Plugin\Field\FieldType\PathFieldDefinitionTest.
  */
 
 namespace Drupal\path\Tests\Field;
 
-use Drupal\Tests\Core\Field\FieldDefinitionTestBase;
+use Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\FieldDefinition
+ * @coversDefaultClass \Drupal\Core\Field\BaseFieldDefinition
  * @group path
  */
-class PathFieldDefinitionTest extends FieldDefinitionTestBase {
+class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
 
   /**
    * {@inheritdoc}
@@ -30,9 +30,9 @@ class PathFieldDefinitionTest extends FieldDefinitionTestBase {
   }
 
   /**
-   * Tests FieldDefinition::getColumns().
+   * Tests BaseFieldDefinition::getColumns().
    *
-   * @covers \Drupal\Core\Field\FieldDefinition::getColumns
+   * @covers \Drupal\Core\Field\BaseFieldDefinition::getColumns
    * @covers \Drupal\path\Plugin\Field\FieldType\PathItem::schema
    */
   public function testGetColumns() {

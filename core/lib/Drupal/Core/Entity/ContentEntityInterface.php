@@ -44,11 +44,11 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
   /**
    * Provides base field definitions for an entity type.
    *
-   * Implementations typically use the class \Drupal\Core\Field\FieldDefinition
+   * Implementations typically use the class \Drupal\Core\Field\BaseFieldDefinition
    * for creating the field definitions; for example a 'name' field could be
    * defined as the following:
    * @code
-   * $fields['name'] = FieldDefinition::create('string')
+   * $fields['name'] = BaseFieldDefinition::create('string')
    *   ->setLabel(t('Name'));
    * @endcode
    *

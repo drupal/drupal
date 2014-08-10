@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
@@ -92,7 +92,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Field definitions.
    *
-   * @var \Drupal\Core\Field\FieldDefinition[]
+   * @var \Drupal\Core\Field\BaseFieldDefinition[]
    */
   protected $fieldDefinitions;
 
@@ -158,8 +158,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     $this->fieldDefinitions = array(
-      'id' => FieldDefinition::create('integer'),
-      'revision_id' => FieldDefinition::create('integer'),
+      'id' => BaseFieldDefinition::create('integer'),
+      'revision_id' => BaseFieldDefinition::create('integer'),
     );
 
     $this->entityManager->expects($this->any())

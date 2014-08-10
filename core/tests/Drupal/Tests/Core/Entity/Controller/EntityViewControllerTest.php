@@ -47,7 +47,7 @@ class EntityViewControllerTest extends UnitTestCase{
       ->will($this->returnValue('name'));
 
     // Mock the 'name' field's definition.
-    $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinition');
+    $field_definition = $this->getMock('Drupal\Core\Field\BaseFieldDefinition');
     $field_definition->expects($this->any())
       ->method('getDisplayOptions')
       ->with('view')

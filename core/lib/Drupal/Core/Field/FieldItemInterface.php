@@ -32,7 +32,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   An array of property definitions of contained properties, keyed by
    *   property name.
    *
-   * @see \Drupal\Core\Field\FieldDefinition
+   * @see \Drupal\Core\Field\BaseFieldDefinition
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition);
 
@@ -46,7 +46,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return string|null
    *   The name of the value property, or NULL if there is none.
    *
-   * @see \Drupal\Core\Field\FieldDefinition
+   * @see \Drupal\Core\Field\BaseFieldDefinition
    */
   public static function mainPropertyName();
 
