@@ -29,8 +29,10 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @defgroup content_flags Content markers
  * @{
- * Markers used by theme_mark() and node_mark() to designate content.
- * @see theme_mark(), node_mark()
+ * Markers used by mark.html.twig and node_mark() to designate content.
+ *
+ * @see mark.html.twig
+ * @see node_mark()
  */
 
 /**
