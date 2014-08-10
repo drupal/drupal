@@ -84,6 +84,7 @@ function views_ui_theme() {
     'views_ui_expose_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
+      'template' => 'views-ui-expose-filter-form',
     ),
 
     // list views
