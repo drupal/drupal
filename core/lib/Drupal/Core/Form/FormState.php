@@ -467,6 +467,8 @@ class FormState implements FormStateInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
    */
   public function offsetExists($offset) {
     return isset($this->{$offset}) || isset($this->internalStorage[$offset]);
@@ -474,6 +476,8 @@ class FormState implements FormStateInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
    */
   public function &offsetGet($offset) {
     $value = &$this->get($offset);
@@ -482,6 +486,8 @@ class FormState implements FormStateInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
    */
   public function offsetSet($offset, $value) {
     $this->set($offset, $value);
@@ -489,6 +495,8 @@ class FormState implements FormStateInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
    */
   public function offsetUnset($offset) {
     if (property_exists($this, $offset)) {
