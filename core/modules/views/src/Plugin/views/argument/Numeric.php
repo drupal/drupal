@@ -67,7 +67,9 @@ class Numeric extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      $this->breakPhrase($this->argument, $this);
+      $break = static::breakString($this->argument, TRUE);
+      $this->value = $break->value;
+      $this->operator = $break->operator;
     }
     else {
       $this->value = array($this->argument);
@@ -98,7 +100,9 @@ class Numeric extends ArgumentPluginBase {
     $this->ensureMyTable();
 
     if (!empty($this->options['break_phrase'])) {
-      $this->breakPhrase($this->argument, $this);
+      $break = static::breakString($this->argument, TRUE);
+      $this->value = $break->value;
+      $this->operator = $break->operator;
     }
     else {
       $this->value = array($this->argument);

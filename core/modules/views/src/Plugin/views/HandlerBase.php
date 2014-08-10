@@ -772,117 +772,42 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Breaks x,y,z and x+y+z into an array. Numeric only.
+   * Breaks x,y,z and x+y+z into an array.
    *
    * @param string $str
-   *   The string to parse.
-   * @param \Drupal\views\Plugin\views\HandlerBase|null $handler
-   *   The handler object to use as a base. If not specified one will
-   *   be created.
+   *   The string to split.
+   * @param bool $force_int
+   *   Enforce a numeric check.
    *
-   * @return \Drupal\views\Plugin\views\HandlerBase|stdClass $handler
-   *   The new handler object.
+   * @return \stdClass
+   *   A stdClass object containing value and operator properties.
    */
-  public static function breakPhrase($str, &$handler = NULL) {
-    if (!$handler) {
-      $handler = new \stdClass();
-    }
+  public static function breakString($str, $force_int = FALSE) {
+    $operator = NULL;
+    $value = array();
 
-    // Set up defaults:
-
-    if (!isset($handler->value)) {
-      $handler->value = array();
-    }
-
-    if (!isset($handler->operator)) {
-      $handler->operator = 'or';
-    }
-
-    if (empty($str)) {
-      return $handler;
-    }
-
-    if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str)) {
+    // Determine if the string has 'or' operators (plus signs) or 'and'
+    // operators (commas) and split the string accordingly.
+    if (preg_match('/^([\w0-9-_]+[+ ]+)+[\w0-9-_]+$/u', $str)) {
       // The '+' character in a query string may be parsed as ' '.
-      $handler->operator = 'or';
-      $handler->value = preg_split('/[+ ]/', $str);
+      $operator = 'or';
+      $value = preg_split('/[+ ]/', $str);
     }
-    elseif (preg_match('/^([0-9]+,)*[0-9]+$/', $str)) {
-      $handler->operator = 'and';
-      $handler->value = explode(',', $str);
-    }
-
-    // Keep an 'error' value if invalid strings were given.
-    if (!empty($str) && (empty($handler->value) || !is_array($handler->value))) {
-      $handler->value = array(-1);
-      return $handler;
+    elseif (preg_match('/^([\w0-9-_]+[, ]+)*[\w0-9-_]+$/u', $str)) {
+      $operator = 'and';
+      $value = explode(',', $str);
     }
 
-    // Doubly ensure that all values are numeric only.
-    foreach ($handler->value as $id => $value) {
-      $handler->value[$id] = intval($value);
+    // Filter any empty matches (Like from '++' in a string) and reset the
+    // array keys. 'strlen' is used as the filter callback so we do not lose
+    // 0 values (would otherwise evaluate == FALSE).
+    $value = array_values(array_filter($value, 'strlen'));
+
+    if ($force_int) {
+      $value = array_map('intval', $value);
     }
 
-    return $handler;
-  }
-
-  /**
-   * Breaks x,y,z and x+y+z into an array. Works for strings.
-   *
-   * @param string $str
-   *   The string to parse.
-   * @param \Drupal\views\Plugin\views\HandlerBase|null $handler
-   *   The object to use as a base. If not specified one will
-   *   be created.
-   *
-   * @return \Drupal\views\Plugin\views\HandlerBase|stdClass $handler
-   *   The new handler object.
-   */
-  public static function breakPhraseString($str, &$handler = NULL) {
-    if (!$handler) {
-      $handler = new \stdClass();
-    }
-
-    // Set up defaults:
-    if (!isset($handler->value)) {
-      $handler->value = array();
-    }
-
-    if (!isset($handler->operator)) {
-      $handler->operator = 'or';
-    }
-
-    if ($str == '') {
-      return $handler;
-    }
-
-    // Determine if the string has 'or' operators (plus signs) or 'and' operators
-    // (commas) and split the string accordingly. If we have an 'and' operator,
-    // spaces are treated as part of the word being split, but otherwise they are
-    // treated the same as a plus sign.
-    $or_wildcard = '[^\s+,]';
-    $and_wildcard = '[^+,]';
-    if (preg_match("/^({$or_wildcard}+[+ ])+{$or_wildcard}+$/", $str)) {
-      $handler->operator = 'or';
-      $handler->value = preg_split('/[+ ]/', $str);
-    }
-    elseif (preg_match("/^({$and_wildcard}+,)*{$and_wildcard}+$/", $str)) {
-      $handler->operator = 'and';
-      $handler->value = explode(',', $str);
-    }
-
-    // Keep an 'error' value if invalid strings were given.
-    if (!empty($str) && (empty($handler->value) || !is_array($handler->value))) {
-      $handler->value = array(-1);
-      return $handler;
-    }
-
-    // Doubly ensure that all values are strings only.
-    foreach ($handler->value as $id => $value) {
-      $handler->value[$id] = (string) $value;
-    }
-
-    return $handler;
+    return (object) array('value' => $value, 'operator' => $operator);
   }
 
   /**
@@ -966,5 +891,4 @@ abstract class HandlerBase extends PluginBase {
     // Write to cache
     $form_state['view']->cacheSet();
   }
-
 }

@@ -120,12 +120,8 @@ class ManyToOne extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      if (!empty($this->definition['numeric'])) {
-        $this->breakPhrase($this->argument, $this);
-      }
-      else {
-        $this->breakPhraseString($this->argument, $this);
-      }
+      $force_int = !empty($this->definition['numeric']);
+      $this->unpackArgumentValue($force_int);
     }
     else {
       $this->value = array($this->argument);
@@ -141,7 +137,8 @@ class ManyToOne extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      $this->breakPhrase($this->argument, $this);
+      $force_int = !empty($this->definition['numeric']);
+      $this->unpackArgumentValue($force_int);
     }
     else {
       $this->value = array($this->argument);

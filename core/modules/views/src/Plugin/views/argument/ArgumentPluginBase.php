@@ -1151,6 +1151,18 @@ abstract class ArgumentPluginBase extends HandlerBase {
   public static function decodeValidatorId($id) {
     return str_replace('---', ':', $id);
   }
+
+  /**
+   * Splits an argument into value and operator properties on this instance.
+   *
+   * @param bool $force_int
+   *   Enforce that values should be numeric.
+   */
+  protected function unpackArgumentValue($force_int = FALSE) {
+    $break = static::breakString($this->argument, $force_int);
+    $this->value = $break->value;
+    $this->operator = $break->operator;
+  }
 }
 
 /**

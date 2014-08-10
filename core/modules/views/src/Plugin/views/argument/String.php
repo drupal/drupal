@@ -189,7 +189,7 @@ class String extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      $this->breakPhraseString($argument, $this);
+      $this->unpackArgumentValue();
     }
     else {
       $this->value = array($argument);
@@ -263,7 +263,7 @@ class String extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      $this->breakPhraseString($this->argument, $this);
+      $this->unpackArgumentValue();
     }
     else {
       $this->value = array($this->argument);
