@@ -76,5 +76,6 @@ class UninstallTest extends WebTestBase {
     }
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
+    $this->assertNoRaw('&lt;label', 'The page does not have double escaped HTML tags.');
   }
 }

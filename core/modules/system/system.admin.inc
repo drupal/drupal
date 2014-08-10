@@ -309,15 +309,30 @@ function theme_system_modules_uninstall($variables) {
         'To uninstall @module, the following module must be uninstalled first: @required_modules',
         'To uninstall @module, the following modules must be uninstalled first: @required_modules',
         array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#required_by'])));
-      $disabled_message = '<div class="admin-requirements">' . $disabled_message . '</div>';
     }
     else {
       $disabled_message = '';
     }
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
-      '<label for="' . $form['uninstall'][$module]['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($form['modules'][$module]['name']) . '</label>',
-      array('data' => drupal_render($form['modules'][$module]['description']) . $disabled_message, 'class' => array('description')),
+      array(
+        'data' => array(
+          '#type' => 'inline_template',
+          '#template' => '<label for="{{ module_id }}" class="module-name table-filter-text-source">{{ module_name }}</label>',
+          '#context' => array('module_id' => $form['uninstall'][$module]['#id'], 'module_name' => drupal_render($form['modules'][$module]['name'])),
+        )
+      ),
+      array(
+        'data' => array(
+          '#type' => 'inline_template',
+          '#template' => '{{ module_description }} {% if disabled_message is not empty %} <div class="admin-requirements">{{ disabled_message }}</div> {% endif %}',
+          '#context' => array(
+            'module_description' => drupal_render($form['modules'][$module]['description']),
+            'disabled_message' => $disabled_message,
+          ),
+        ),
+        'class' => array('description'),
+      ),
     );
   }
 
