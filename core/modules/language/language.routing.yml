@@ -25,34 +25,34 @@ language.negotiation_selected:
 language.add:
   path: '/admin/config/regional/language/add'
   defaults:
-    _entity_form: 'language_entity.add'
+    _entity_form: 'configurable_language.add'
     _title: 'Add language'
   requirements:
-    _entity_create_access: 'language_entity'
+    _entity_create_access: 'configurable_language'
 
-entity.language_entity.edit_form:
-  path: '/admin/config/regional/language/edit/{language_entity}'
+entity.configurable_language.edit_form:
+  path: '/admin/config/regional/language/edit/{configurable_language}'
   defaults:
-    _entity_form: 'language_entity.edit'
+    _entity_form: 'configurable_language.edit'
     _title: 'Edit language'
   requirements:
-    _entity_access: 'language_entity.update'
+    _entity_access: 'configurable_language.update'
 
 language.admin_overview:
   path: '/admin/config/regional/language'
   defaults:
-    _entity_list: 'language_entity'
+    _entity_list: 'configurable_language'
     _title: 'Languages'
   requirements:
     _permission: 'administer languages'
 
-entity.language_entity.delete_form:
-  path: '/admin/config/regional/language/delete/{language_entity}'
+entity.configurable_language.delete_form:
+  path: '/admin/config/regional/language/delete/{configurable_language}'
   defaults:
-    _entity_form: 'language_entity.delete'
+    _entity_form: 'configurable_language.delete'
     _title: 'Delete language'
   requirements:
-    _entity_access: 'language_entity.delete'
+    _entity_access: 'configurable_language.delete'
 
 language.negotiation:
   path: '/admin/config/regional/language/detection'

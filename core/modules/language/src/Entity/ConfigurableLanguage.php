@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Entity\Language.
+ * Contains \Drupal\language\Entity\ConfigurableLanguage.
  */
 
 namespace Drupal\language\Entity;
@@ -12,13 +12,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
-use Drupal\language\LanguageInterface;
+use Drupal\language\ConfigurableLanguageInterface;
 
 /**
- * Defines the Language entity.
+ * Defines the ConfigurableLanguage entity.
  *
  * @ConfigEntityType(
- *   id = "language_entity",
+ *   id = "configurable_language",
  *   label = @Translation("Language"),
  *   controllers = {
  *     "list_builder" = "Drupal\language\LanguageListBuilder",
@@ -37,12 +37,12 @@ use Drupal\language\LanguageInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "delete-form" = "entity.language_entity.delete_form",
- *     "edit-form" = "entity.language_entity.edit_form"
+ *     "delete-form" = "entity.configurable_language.delete_form",
+ *     "edit-form" = "entity.configurable_language.edit_form"
  *   }
  * )
  */
-class Language extends ConfigEntityBase implements LanguageInterface {
+class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLanguageInterface {
 
   /**
    * The language ID (machine name).
@@ -87,9 +87,9 @@ class Language extends ConfigEntityBase implements LanguageInterface {
    * container using the language.default service in when the entity is saved.
    * The value is set correctly when a language entity is created or loaded.
    *
-   * @see \Drupal\language\Entity\Language::postSave()
-   * @see \Drupal\language\Entity\Language::isDefault()
-   * @see \Drupal\language\Entity\Language::setDefault()
+   * @see \Drupal\language\Entity\ConfigurableLanguage::postSave()
+   * @see \Drupal\language\Entity\ConfigurableLanguage::isDefault()
+   * @see \Drupal\language\Entity\ConfigurableLanguage::setDefault()
    *
    * @var bool
    */
@@ -101,8 +101,8 @@ class Language extends ConfigEntityBase implements LanguageInterface {
    * This property is not saved to the language entity, but is needed for
    * detecting when to rebuild the services.
    *
-   * @see \Drupal\language\Entity\Language::preSave()
-   * @see \Drupal\language\Entity\Language::postSave()
+   * @see \Drupal\language\Entity\ConfigurableLanguage::preSave()
+   * @see \Drupal\language\Entity\ConfigurableLanguage::postSave()
    *
    * @var bool
    */
@@ -137,7 +137,7 @@ class Language extends ConfigEntityBase implements LanguageInterface {
     parent::preSave($storage);
     // Store whether or not the site is already multilingual so that we can
     // rebuild services if necessary during
-    // \Drupal\language\Entity\Language::postSave().
+    // \Drupal\language\Entity\ConfigurableLanguage::postSave().
     $this->preSaveMultilingual = \Drupal::languageManager()->isMultilingual();
     // Languages are picked from a predefined list which is given in English.
     // For the uncommon case of custom languages the label should be given in
@@ -179,7 +179,7 @@ class Language extends ConfigEntityBase implements LanguageInterface {
   }
 
   /**
-   * Converts the Language entity to a Language value object.
+   * Converts the ConfigurableLanguage entity to a Core Language value object.
    *
    * @todo fix return type hint after https://drupal.org/node/2246665 and
    *   https://drupal.org/node/2246679.

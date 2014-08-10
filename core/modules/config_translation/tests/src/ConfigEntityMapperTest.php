@@ -56,16 +56,16 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->routeProvider
       ->expects($this->any())
       ->method('getRouteByName')
-      ->with('entity.language_entity.edit_form')
-      ->will($this->returnValue(new Route('/admin/config/regional/language/edit/{language_entity}')));
+      ->with('entity.configurable_language.edit_form')
+      ->will($this->returnValue(new Route('/admin/config/regional/language/edit/{configurable_language}')));
 
     $definition = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
-      'base_route_name' => 'entity.language_entity.edit_form',
+      'base_route_name' => 'entity.configurable_language.edit_form',
       'title' => '!label language',
       'names' => array(),
-      'entity_type' => 'language_entity',
-      'route_name' => 'config_translation.item.overview.entity.language_entity.edit_form',
+      'entity_type' => 'configurable_language',
+      'route_name' => 'config_translation.item.overview.entity.configurable_language.edit_form',
     );
 
     $typed_config_manager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
@@ -75,7 +75,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->getMock();
 
     $this->configEntityMapper = new ConfigEntityMapper(
-      'language_entity',
+      'configurable_language',
       $definition,
       $this->getConfigFactoryStub(),
       $typed_config_manager,
@@ -101,7 +101,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
-      ->with('language_entity')
+      ->with('configurable_language')
       ->will($this->returnValue($entity_type));
 
     $result = $this->configEntityMapper->setEntity($this->entity);
@@ -120,7 +120,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
-      ->with('language_entity')
+      ->with('configurable_language')
       ->will($this->returnValue($entity_type));
     $this->configEntityMapper->setEntity($this->entity);
 
@@ -132,7 +132,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
 
     $result = $this->configEntityMapper->getOverviewRouteParameters();
 
-    $this->assertSame(array('language_entity' => 'entity_id'), $result);
+    $this->assertSame(array('configurable_language' => 'entity_id'), $result);
   }
 
   /**
@@ -140,7 +140,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
    */
   public function testGetType() {
     $result = $this->configEntityMapper->getType();
-    $this->assertSame('language_entity', $result);
+    $this->assertSame('configurable_language', $result);
   }
 
   /**
@@ -154,7 +154,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
-      ->with('language_entity')
+      ->with('configurable_language')
       ->will($this->returnValue($entity_type));
 
     $result = $this->configEntityMapper->getTypeName();
@@ -172,7 +172,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
-      ->with('language_entity')
+      ->with('configurable_language')
       ->will($this->returnValue($entity_type));
 
     $result = $this->configEntityMapper->getTypeLabel();
@@ -188,7 +188,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $expected = array(
       'list' => array(
         'title' => 'List',
-        'href' => 'admin/config/regional/config-translation/language_entity',
+        'href' => 'admin/config/regional/config-translation/configurable_language',
       )
     );
 

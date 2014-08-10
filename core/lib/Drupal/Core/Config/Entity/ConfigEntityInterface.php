@@ -109,9 +109,10 @@ interface ConfigEntityInterface extends EntityInterface {
    * entity change is part of an uninstall process, and skip executing your code
    * if that is the case.
    *
-   * For example, \Drupal\language\Entity\Language::preDelete() prevents the API
-   * from deleting the default language. However during an uninstall of the
-   * language module it is expected that the default language should be deleted.
+   * For example, \Drupal\language\Entity\ConfigurableLanguage::preDelete()
+   * prevents the API from deleting the default language. However during an
+   * uninstall of the language module it is expected that the default language
+   * should be deleted.
    *
    * @return bool
    */

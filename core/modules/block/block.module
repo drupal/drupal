@@ -7,7 +7,7 @@
 
 use Drupal\block\BlockInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\language\Entity\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Entity\Menu;
 
 /**
@@ -328,11 +328,11 @@ function block_menu_delete(Menu $menu) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
+ * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
  *
  * Delete the potential block visibility settings of the deleted language.
  */
-function block_language_entity_delete(Language $language) {
+function block_configurable_language_delete(ConfigurableLanguage $language) {
   // Remove the block visibility settings for the deleted language.
   foreach (entity_load_multiple('block') as $block) {
     /** @var $block \Drupal\block\BlockInterface */

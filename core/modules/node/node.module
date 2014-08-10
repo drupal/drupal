@@ -28,7 +28,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
-use Drupal\language\Entity\Language as LanguageEntity;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 
@@ -1601,9 +1601,9 @@ function node_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
+ * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
  */
-function node_language_entity_delete(LanguageEntity $language) {
+function node_configurable_language_delete(ConfigurableLanguage $language) {
   // On nodes with this language, unset the language.
   \Drupal::entityManager()->getStorage('node')->clearRevisionsLanguage($language);
 }

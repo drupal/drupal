@@ -168,7 +168,7 @@ class LanguageConfigurationTest extends WebTestBase {
   protected function getHighestConfigurableLanguageWeight(){
     $max_weight = 0;
 
-    $languages = entity_load_multiple('language_entity', NULL, TRUE);
+    $languages = entity_load_multiple('configurable_language', NULL, TRUE);
     foreach ($languages as $language) {
       if (!$language->locked && $language->weight > $max_weight) {
         $max_weight = $language->weight;

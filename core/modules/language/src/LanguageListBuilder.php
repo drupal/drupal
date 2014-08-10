@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Defines a class to build a listing of language entities.
  *
- * @see \Drupal\language\Entity\Language
+ * @see \Drupal\language\Entity\ConfigurableLanguage
  */
 class LanguageListBuilder extends DraggableListBuilder {
 

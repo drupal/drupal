@@ -11,7 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
-use Drupal\language\Entity\Language as LanguageEntity;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
@@ -414,21 +414,21 @@ function language_get_default_langcode($entity_type, $bundle) {
  *   configuration properties.
  */
 function language_save($language) {
-  $language_entity = entity_load('language_entity', $language->id);
-  if (!$language_entity) {
-    $language_entity = entity_create('language_entity', array(
+  $configurable_language = entity_load('configurable_language', $language->id);
+  if (!$configurable_language) {
+    $configurable_language = entity_create('configurable_language', array(
       'id' => $language->id,
     ));
   }
-  $language->is_new = $language_entity->isNew();
+  $language->is_new = $configurable_language->isNew();
 
   // Assign language properties to language entity.
-  $language_entity->label = isset($language->name) ? $language->name : '';
-  $language_entity->direction = isset($language->direction) ? $language->direction : '0';
-  $language_entity->locked = !empty($language->locked);
-  $language_entity->weight = isset($language->weight) ? $language->weight : 0;
-  $language_entity->setDefault(!empty($language->default));
-  $language_entity->save();
+  $configurable_language->label = isset($language->name) ? $language->name : '';
+  $configurable_language->direction = isset($language->direction) ? $language->direction : '0';
+  $configurable_language->locked = !empty($language->locked);
+  $configurable_language->weight = isset($language->weight) ? $language->weight : 0;
+  $configurable_language->setDefault(!empty($language->default));
+  $configurable_language->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
     // Install any available language configuration overrides for the language.
@@ -457,7 +457,7 @@ function language_delete($langcode) {
     $language = $languages[$langcode];
 
     // Remove the language.
-    entity_delete_multiple('language_entity', array($language->id));
+    entity_delete_multiple('configurable_language', array($language->id));
 
     $language_manager = \Drupal::languageManager();
     $language_manager->reset();
@@ -581,9 +581,9 @@ function language_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for 'language_entity'.
+ * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
  */
-function language_language_entity_insert(LanguageEntity $language) {
+function language_configurable_language_insert(ConfigurableLanguage $language) {
   if (!empty($language->locked)) {
     return;
   }
@@ -595,9 +595,9 @@ function language_language_entity_insert(LanguageEntity $language) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
+ * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
  */
-function language_language_entity_delete(LanguageEntity $language) {
+function language_configurable_language_delete(ConfigurableLanguage $language) {
   // Remove language from language prefix list.
   $prefixes = language_negotiation_url_prefixes();
   unset($prefixes[$language->id()]);
