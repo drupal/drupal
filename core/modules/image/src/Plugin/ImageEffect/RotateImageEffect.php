@@ -128,7 +128,7 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    if (!Color::validateHex($form_state->getValue('bgcolor'))) {
+    if (!$form_state->isValueEmpty('bgcolor') && !Color::validateHex($form_state->getValue('bgcolor'))) {
       form_set_error('bgcolor', $form_state, $this->t('Background color must be a hexadecimal color value.'));
     }
   }

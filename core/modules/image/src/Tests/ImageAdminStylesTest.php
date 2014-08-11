@@ -237,6 +237,17 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
         '%style' => $style->label,
       )));
 
+    // Additional test on Rotate effect, for transparent background.
+    $edit = array(
+      'data[degrees]' => 5,
+      'data[random]' => 0,
+      'data[bgcolor]' => '',
+    );
+    $this->drupalPostForm($style_path, array('new' => 'image_rotate'), t('Add'));
+    $this->drupalPostForm(NULL, $edit, t('Add effect'));
+    $style = entity_load_unchanged('image_style', $style_name);
+    $this->assertEqual(count($style->getEffects()), 6, 'Rotate effect with transparent background was added.');
+
     // Style deletion form.
 
     // Delete the style.
