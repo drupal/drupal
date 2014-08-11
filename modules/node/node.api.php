@@ -198,7 +198,7 @@ function hook_node_grants($account, $op) {
   if (user_access('access private content', $account)) {
     $grants['example'] = array(1);
   }
-  $grants['example_owner'] = array($account->uid);
+  $grants['example_author'] = array($account->uid);
   return $grants;
 }
 
