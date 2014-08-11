@@ -82,7 +82,7 @@ function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
   if ($account->hasPermission('access private content')) {
     $grants['example'] = array(1);
   }
-  $grants['example_owner'] = array($account->id());
+  $grants['example_author'] = array($account->id());
   return $grants;
 }
 
