@@ -171,4 +171,39 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
 
         return $buffer;
     }
+
+    /**
+     * Safely opens a PHP stream resource using a filename.
+     *
+     * When fopen fails, PHP normally raises a warning. This function adds an
+     * error handler that checks for errors and throws an exception instead.
+     *
+     * @param string $filename File to open
+     * @param string $mode     Mode used to open the file
+     *
+     * @return resource
+     * @throws \RuntimeException if the file cannot be opened
+     */
+    function safe_open($filename, $mode)
+    {
+        $ex = null;
+        set_error_handler(function () use ($filename, $mode, &$ex) {
+            $ex = new \RuntimeException(sprintf(
+                'Unable to open %s using mode %s: %s',
+                $filename,
+                $mode,
+                func_get_args()[1]
+            ));
+        });
+
+        $handle = fopen($filename, $mode);
+        restore_error_handler();
+
+        if ($ex) {
+            /** @var $ex \RuntimeException */
+            throw $ex;
+        }
+
+        return $handle;
+    }
 }

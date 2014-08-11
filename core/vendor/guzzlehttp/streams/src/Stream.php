@@ -7,19 +7,12 @@ namespace GuzzleHttp\Stream;
  */
 class Stream implements MetadataStreamInterface
 {
-    /** @var resource Stream resource */
     private $stream;
-
-    /** @var int Size of the stream contents in bytes */
     private $size;
-
-    /** @var bool */
     private $seekable;
     private $readable;
     private $writable;
-
-    /** @var array Stream metadata */
-    private $meta = [];
+    private $uri;
 
     /** @var array Hash of readable and writable stream types */
     private static $readWriteHash = [
@@ -66,10 +59,11 @@ class Stream implements MetadataStreamInterface
 
         $this->size = $size;
         $this->stream = $stream;
-        $this->meta = stream_get_meta_data($this->stream);
-        $this->seekable = $this->meta['seekable'];
-        $this->readable = isset(self::$readWriteHash['read'][$this->meta['mode']]);
-        $this->writable = isset(self::$readWriteHash['write'][$this->meta['mode']]);
+        $meta = stream_get_meta_data($this->stream);
+        $this->seekable = $meta['seekable'];
+        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
+        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
+        $this->uri = isset($meta['uri']) ? $meta['uri'] : null;
     }
 
     /**
@@ -104,14 +98,13 @@ class Stream implements MetadataStreamInterface
             fclose($this->stream);
         }
 
-        $this->meta = [];
-        $this->stream = null;
+        $this->detach();
     }
 
     public function detach()
     {
         $result = $this->stream;
-        $this->stream = $this->size = null;
+        $this->stream = $this->size = $this->uri = null;
         $this->readable = $this->writable = $this->seekable = false;
 
         return $result;
@@ -121,13 +114,15 @@ class Stream implements MetadataStreamInterface
     {
         if ($this->size !== null) {
             return $this->size;
-        } elseif (!$this->stream) {
+        }
+
+        if (!$this->stream) {
             return null;
         }
 
-        // If the stream is a file based stream and local, then use fstat
-        if (isset($this->meta['uri'])) {
-            clearstatcache(true, $this->meta['uri']);
+        // Clear the stat cache if the stream has a URI
+        if ($this->uri) {
+            clearstatcache(true, $this->uri);
         }
 
         $stats = fstat($this->stream);
@@ -207,8 +202,8 @@ class Stream implements MetadataStreamInterface
      */
     public function getMetadata($key = null)
     {
-        return !$key
-            ? $this->meta
-            : (isset($this->meta[$key]) ? $this->meta[$key] : null);
+        $meta = $this->stream ? stream_get_meta_data($this->stream) : [];
+
+        return !$key ? $meta : (isset($meta[$key]) ? $meta[$key] : null);
     }
 }

@@ -151,6 +151,19 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->close();
     }
 
+    public function testCloseClearProperties()
+    {
+        $handle = fopen('php://temp', 'r+');
+        $stream = new Stream($handle);
+        $stream->close();
+
+        $this->assertEmpty($stream->getMetadata());
+        $this->assertFalse($stream->isSeekable());
+        $this->assertFalse($stream->isReadable());
+        $this->assertFalse($stream->isWritable());
+        $this->assertNull($stream->getSize());
+    }
+
     public function testCreatesWithFactory()
     {
         $stream = Stream::factory('foo');

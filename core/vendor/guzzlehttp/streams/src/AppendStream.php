@@ -86,7 +86,6 @@ class AppendStream implements StreamInterface
      */
     public function detach()
     {
-        $this->streams = [];
         $this->close();
     }
 
@@ -132,12 +131,8 @@ class AppendStream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if (!$this->seekable) {
+        if (!$this->seekable || $whence !== SEEK_SET) {
             return false;
-        } elseif ($whence !== SEEK_SET) {
-            throw new \InvalidArgumentException(
-                'AppendStream only supports SEEK_SET'
-            );
         }
 
         $success = true;
@@ -207,6 +202,6 @@ class AppendStream implements StreamInterface
 
     public function write($string)
     {
-        return 0;
+        return false;
     }
 }

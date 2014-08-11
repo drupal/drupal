@@ -54,7 +54,7 @@ trait StreamDecoratorTrait
 
     public function close()
     {
-        return $this->stream->close();
+        $this->stream->close();
     }
 
     public function getMetadata($key = null)
@@ -66,9 +66,7 @@ trait StreamDecoratorTrait
 
     public function detach()
     {
-        $this->stream->detach();
-
-        return $this;
+        return $this->stream->detach();
     }
 
     public function getSize()

@@ -7,6 +7,7 @@ use GuzzleHttp\Stream\NoSeekStream;
 
 /**
  * @covers GuzzleHttp\Stream\NoSeekStream
+ * @covers GuzzleHttp\Stream\StreamDecoratorTrait
  */
 class NoSeekStreamTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,5 +21,13 @@ class NoSeekStreamTest extends \PHPUnit_Framework_TestCase
         $wrapped = new NoSeekStream($s);
         $this->assertFalse($wrapped->isSeekable());
         $this->assertFalse($wrapped->seek(2));
+    }
+
+    public function testHandlesClose()
+    {
+        $s = Stream::factory('foo');
+        $wrapped = new NoSeekStream($s);
+        $wrapped->close();
+        $this->assertFalse($wrapped->write('foo'));
     }
 }

@@ -116,6 +116,22 @@ class functionsTest extends \PHPUnit_Framework_TestCase
     {
         Stream\create(new \stdClass());
     }
+
+    public function testOpensFilesSuccessfully()
+    {
+        $r = Stream\safe_open(__FILE__, 'r');
+        $this->assertInternalType('resource', $r);
+        fclose($r);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to open /path/to/does/not/exist using mode r
+     */
+    public function testThrowsExceptionNotWarning()
+    {
+        Stream\safe_open('/path/to/does/not/exist', 'r');
+    }
 }
 
 class HasToString

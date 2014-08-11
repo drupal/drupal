@@ -1,6 +1,49 @@
 CHANGELOG
 =========
 
+4.1.7 (2014-08-07)
+------------------
+
+* Fixed an error in the HistoryPlugin that caused the same request and response
+  to be logged multiple times when an HTTP protocol error occurs.
+* Ensuring that cURL does not add a default Content-Type when no Content-Type
+  has been supplied by the user. This prevents the adapter layer from modifying
+  the request that is sent over the wire after any listeners may have already
+  put the request in a desired state (e.g., signed the request).
+* Throwing an exception when you attempt to send requests that have the
+  "stream" set to true in parallel using the MultiAdapter.
+* Only calling curl_multi_select when there are active cURL handles. This was
+  previously changed and caused performance problems on some systems due to PHP
+  always selecting until the maximum select timeout.
+* Fixed a bug where multipart/form-data POST fields were not correctly
+  aggregated (e.g., values with "&").
+
+4.1.6 (2014-08-03)
+------------------
+
+* Added helper methods to make it easier to represent messages as strings,
+  including getting the start line and getting headers as a string.
+
+4.1.5 (2014-08-02)
+------------------
+
+* Automatically retrying cURL "Connection died, retrying a fresh connect"
+  errors when possible.
+* cURL implementation cleanup
+* Allowing multiple event subscriber listeners to be registered per event by
+  passing an array of arrays of listener configuration.
+
+4.1.4 (2014-07-22)
+------------------
+
+* Fixed a bug that caused multi-part POST requests with more than one field to
+  serialize incorrectly.
+* Paths can now be set to "0"
+* `ResponseInterface::xml` now accepts a `libxml_options` option and added a
+  missing default argument that was required when parsing XML response bodies.
+* A `save_to` stream is now created lazily, which means that files are not
+  created on disk unless a request succeeds.
+
 4.1.3 (2014-07-15)
 ------------------
 

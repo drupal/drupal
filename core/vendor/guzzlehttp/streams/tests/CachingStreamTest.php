@@ -44,13 +44,9 @@ class CachingStreamTest extends \PHPUnit_Framework_TestCase
         $this->body->seek(10);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage supports only SEEK_SET and SEEK_CUR
-     */
     public function testCannotUseSeekEnd()
     {
-        $this->body->seek(2, SEEK_END);
+        $this->assertFalse($this->body->seek(2, SEEK_END));
     }
 
     public function testRewindUsesSeek()

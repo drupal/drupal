@@ -150,7 +150,8 @@ class Response extends AbstractMessage implements ResponseInterface
             // Allow XML to be retrieved even if there is no response body
             $xml = new \SimpleXMLElement(
                 (string) $this->getBody() ?: '<root />',
-                LIBXML_NONET,
+                isset($config['libxml_options']) ? $config['libxml_options'] : LIBXML_NONET,
+                false,
                 isset($config['ns']) ? $config['ns'] : '',
                 isset($config['ns_is_prefix']) ? $config['ns_is_prefix'] : false
             );
@@ -192,11 +193,5 @@ class Response extends AbstractMessage implements ResponseInterface
         if (isset($options['reason_phrase'])) {
             $this->reasonPhrase = $options['reason_phrase'];
         }
-    }
-
-    protected function getStartLine()
-    {
-        return 'HTTP/' . $this->getProtocolVersion()
-            . " {$this->statusCode} {$this->reasonPhrase}";
     }
 }

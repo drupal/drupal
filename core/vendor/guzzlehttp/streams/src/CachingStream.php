@@ -47,8 +47,7 @@ class CachingStream implements StreamInterface, MetadataStreamInterface
         } elseif ($whence == SEEK_CUR) {
             $byte = $offset + $this->tell();
         } else {
-            throw new \RuntimeException(__CLASS__ . ' supports only SEEK_SET'
-                    .' and SEEK_CUR seek operations');
+            return false;
         }
 
         // You cannot skip ahead past where you've read from the remote stream

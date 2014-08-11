@@ -184,7 +184,7 @@ priority of the listener (as shown in the ``before`` listener in the example).
 
 .. code-block:: php
 
-    use GuzzleHttp\Event\EventEmitterInterface;
+    use GuzzleHttp\Event\EmitterInterface;
     use GuzzleHttp\Event\SubscriberInterface;
     use GuzzleHttp\Event\BeforeEvent;
     use GuzzleHttp\Event\CompleteEvent;
@@ -194,8 +194,11 @@ priority of the listener (as shown in the ``before`` listener in the example).
         public function getEvents()
         {
             return [
-                'before'   => ['onBefore', 100], // Provide name and optional priority
-                'complete' => ['onComplete']
+                // Provide name and optional priority
+                'before'   => ['onBefore', 100],
+                'complete' => ['onComplete'],
+                // You can pass a list of listeners with different priorities
+                'error'    => [['beforeError', 'first'], ['afterError', 'last]]
             ];
         }
 

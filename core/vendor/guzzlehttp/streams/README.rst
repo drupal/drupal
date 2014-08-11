@@ -17,7 +17,7 @@ Simply add the following to the composer.json file at the root of your project:
 
     {
       "require": {
-        "guzzlehttp/streams": "1.*"
+        "guzzlehttp/streams": "~1.0"
       }
     }
 
