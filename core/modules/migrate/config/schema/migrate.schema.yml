@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Migrate module.
 
 migrate.migration.*:
-  type: mapping
+  type: config_entity
   label: 'Migration'
   mapping:
     id:

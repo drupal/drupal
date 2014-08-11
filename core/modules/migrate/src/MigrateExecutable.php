@@ -21,7 +21,7 @@ class MigrateExecutable {
   /**
    * The configuration of the migration to do.
    *
-   * @var \Drupal\migrate\Entity\MigrationInterface
+   * @var \Drupal\migrate\Entity\Migration
    */
   protected $migration;
 
@@ -333,6 +333,7 @@ class MigrateExecutable {
      */
     #$this->progressMessage($return);
 
+    $this->migration->setMigrationResult($return);
     return $return;
   }
 

@@ -116,6 +116,11 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
     $migrations = entity_load_multiple('migration', array_keys($id_mappings));
     foreach ($id_mappings as $migration_id => $data) {
       $migration = $migrations[$migration_id];
+
+      // @TODO, rename prepareIdMappings() in https://drupal.org/node/2315489
+      // which will make the position of this more appropriate.
+      $migration->setMigrationResult(MigrationInterface::RESULT_COMPLETED);
+
       $id_map = $migration->getIdMap();
       $id_map->setMessage($this);
       $source_ids = $migration->getSourcePlugin()->getIds();

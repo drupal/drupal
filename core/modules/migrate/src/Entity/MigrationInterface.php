@@ -102,4 +102,28 @@ interface MigrationInterface extends ConfigEntityInterface {
    */
   public function saveHighwater($highwater);
 
+  /**
+   * Check if this migration is complete.
+   *
+   * @return bool
+   *   TRUE if this migration is complete otherwise FALSE.
+   */
+  public function isComplete();
+
+  /**
+   * Set the migration result.
+   *
+   * @param int $result
+   *   One of the RESULT_* constants.
+   */
+  public function setMigrationResult($result);
+
+  /**
+   * Get the current migration result.
+   *
+   * @return int
+   *   The current migration result. Defaults to RESULT_INCOMPLETE.
+   */
+  public function getMigrationResult();
+
 }
