@@ -2,24 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Mail\WrapMailUnitTest.
+ * Contains Drupal\Tests\Core\Mail\MailFormatHelperTest.
  */
 
-namespace Drupal\system\Tests\Mail;
+namespace Drupal\Tests\Core\Mail;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests drupal_wrap_mail().
- *
+ * @coversDefaultClass \Drupal\Core\Mail\MailFormatHelper
  * @group Mail
  */
-class WrapMailUnitTest extends UnitTestBase {
+class MailFormatHelperTest extends UnitTestCase {
 
   /**
    * Makes sure that drupal_wrap_mail() wraps the correct types of lines.
    */
-  function testDrupalWrapMail() {
+  public function testWrapMail() {
     $delimiter = "End of header\n";
     $long_file_name = $this->randomMachineName(64) . '.docx';
     $headers_in_body = 'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document; name="' . $long_file_name . "\"\n";
@@ -27,14 +27,14 @@ class WrapMailUnitTest extends UnitTestBase {
     $headers_in_body .= 'Content-Disposition: attachment; filename="' . $long_file_name . "\"\n";
     $headers_in_body .= 'Content-Description: ' . $this->randomMachineName(64);
     $body = $this->randomMachineName(76) . ' ' . $this->randomMachineName(6);
-    $wrapped_text = drupal_wrap_mail($headers_in_body . $delimiter . $body);
+    $wrapped_text = MailFormatHelper::wrapMail($headers_in_body . $delimiter . $body);
     list($processed_headers, $processed_body) = explode($delimiter, $wrapped_text);
 
     // Check that the body headers were not wrapped even though some exceeded
     // 77 characters.
-    $this->assertEqual($headers_in_body, $processed_headers, 'Headers in the body are not wrapped.');
+    $this->assertEquals($headers_in_body, $processed_headers, 'Headers in the body are not wrapped.');
     // Check that the body text is wrapped.
-    $this->assertEqual(wordwrap($body, 77, " \n"), $processed_body, 'Body text is wrapped.');
+    $this->assertEquals(wordwrap($body, 77, " \n"), $processed_body, 'Body text is wrapped.');
   }
-}
 
+}

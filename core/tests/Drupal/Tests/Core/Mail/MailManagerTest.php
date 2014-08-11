@@ -45,6 +45,13 @@ class MailManagerTest extends UnitTestCase {
   protected $discovery;
 
   /**
+   * The mail manager under test.
+   *
+   * @var \Drupal\Tests\Core\Mail\TestMailManager
+   */
+  protected $mailManager;
+
+  /**
    * A list of mail plugin definitions.
    *
    * @var array
@@ -82,11 +89,15 @@ class MailManagerTest extends UnitTestCase {
    */
   protected function setUpMailManager($interface = array()) {
     // Use the provided config for system.mail.interface settings.
-    $this->configFactory = $this->getConfigFactoryStub(array('system.mail' => array(
-      'interface' => $interface,
-    )));
+    $this->configFactory = $this->getConfigFactoryStub(array(
+      'system.mail' => array(
+        'interface' => $interface,
+      ),
+    ));
+    $logger_factory = $this->getMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
+    $string_translation = $this->getStringTranslationStub();
     // Construct the manager object and override its discovery.
-    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory);
+    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger_factory, $string_translation);
     $this->mailManager->setDiscovery($this->discovery);
   }
 

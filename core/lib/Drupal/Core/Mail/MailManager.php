@@ -7,12 +7,15 @@
 
 namespace Drupal\Core\Mail;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Provides a Mail plugin manager.
@@ -21,14 +24,23 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
  * @see \Drupal\Core\Mail\MailInterface
  * @see plugin_api
  */
-class MailManager extends DefaultPluginManager {
+class MailManager extends DefaultPluginManager implements MailManagerInterface {
+
+  use StringTranslationTrait;
 
   /**
-   * Config object for mail system configurations.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $mailConfig;
+  protected $configFactory;
+
+  /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
 
   /**
    * List of already instantiated mail plugins.
@@ -49,12 +61,18 @@ class MailManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger channel factory.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation service.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation) {
     parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Annotation\Mail');
     $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
-    $this->mailConfig = $config_factory->get('system.mail');
+    $this->configFactory = $config_factory;
+    $this->loggerFactory = $logger_factory;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -116,7 +134,7 @@ class MailManager extends DefaultPluginManager {
     $key = $options['key'];
     $message_id = $module . '_' . $key;
 
-    $configuration = $this->mailConfig->get('interface');
+    $configuration = $this->configFactory->get('system.mail')->get('interface');
 
     // Look for overrides for the default mail plugin, starting from the most
     // specific message_id, and falling back to the module name.
@@ -136,9 +154,100 @@ class MailManager extends DefaultPluginManager {
         $this->instances[$plugin_id] = $plugin;
       }
       else {
-        throw new InvalidPluginDefinitionException($plugin_id, String::format('Class %class does not implement interface %interface', array('%class' => get_class($plugin), '%interface' => 'Drupal\Core\Mail\MailInterface')));
+        throw new InvalidPluginDefinitionException($plugin_id, String::format('Class %class does not implement interface %interface', array(
+          '%class' => get_class($plugin),
+          '%interface' => 'Drupal\Core\Mail\MailInterface',
+        )));
       }
     }
     return $this->instances[$plugin_id];
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
+    $site_config = $this->configFactory->get('system.site');
+    $site_mail = $site_config->get('mail');
+    if (empty($site_mail)) {
+      $site_mail = ini_get('sendmail_from');
+    }
+
+    // Bundle up the variables into a structured array for altering.
+    $message = array(
+      'id' => $module . '_' . $key,
+      'module' => $module,
+      'key' => $key,
+      'to' => $to,
+      'from' => $site_mail,
+      'reply-to' => $reply,
+      'langcode' => $langcode,
+      'params' => $params,
+      'send' => TRUE,
+      'subject' => '',
+      'body' => array(),
+    );
+
+    // Build the default headers.
+    $headers = array(
+      'MIME-Version' => '1.0',
+      'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+      'Content-Transfer-Encoding' => '8Bit',
+      'X-Mailer' => 'Drupal',
+    );
+    // To prevent email from looking like spam, the addresses in the Sender and
+    // Return-Path headers should have a domain authorized to use the
+    // originating SMTP server.
+    $headers['Sender'] = $headers['Return-Path'] = $site_mail;
+    $headers['From'] = $site_config->get('name') . ' <' . $site_mail . '>';
+    if ($reply) {
+      $headers['Reply-to'] = $reply;
+    }
+    $message['headers'] = $headers;
+
+    // Build the email (get subject and body, allow additional headers) by
+    // invoking hook_mail() on this module. We cannot use
+    // moduleHandler()->invoke() as we need to have $message by reference in
+    // hook_mail().
+    if (function_exists($function = $module . '_mail')) {
+      $function($key, $message, $params);
+    }
+
+    // Invoke hook_mail_alter() to allow all modules to alter the resulting
+    // email.
+    $this->moduleHandler->alter('mail', $message);
+
+    // Retrieve the responsible implementation for this message.
+    $system = $this->getInstance(array('module' => $module, 'key' => $key));
+
+    // Format the message body.
+    $message = $system->format($message);
+
+    // Optionally send email.
+    if ($send) {
+      // The original caller requested sending. Sending was canceled by one or
+      // more hook_mail_alter() implementations. We set 'result' to NULL,
+      // because FALSE indicates an error in sending.
+      if (empty($message['send'])) {
+        $message['result'] = NULL;
+      }
+      // Sending was originally requested and was not canceled.
+      else {
+        $message['result'] = $system->mail($message);
+        // Log errors.
+        if (!$message['result']) {
+          $this->loggerFactory->get('mail')
+            ->error('Error sending email (from %from to %to with reply-to %reply).', array(
+            '%from' => $message['from'],
+            '%to' => $message['to'],
+            '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
+          ));
+          drupal_set_message($this->t('Unable to send email. Contact the site administrator if the problem persists.'), 'error');
+        }
+      }
+    }
+
+    return $message;
+  }
+
 }
