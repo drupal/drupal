@@ -21,6 +21,13 @@ class DisplayPageWebTest extends PluginTestBase {
    */
   public static $testViews = array('test_page_display_arguments', 'test_page_display_menu');
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['menu_ui', 'block'];
+
   protected function setUp() {
     parent::setUp();
 
@@ -73,6 +80,7 @@ class DisplayPageWebTest extends PluginTestBase {
    * Tests menu settings of page displays.
    */
   public function testPageDisplayMenu() {
+    // Check local tasks.
     $this->drupalGet('test_page_display_menu');
     $this->assertResponse(200);
     $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]', array(
@@ -93,6 +101,24 @@ class DisplayPageWebTest extends PluginTestBase {
     ));
     $this->assertEqual((string) $element[0], t('Test local tab'));
     $this->assertTitle(t('Test local page | Drupal'));
+
+    // Check an ordinary menu link.
+    $admin_user = $this->drupalCreateUser(['administer menu']);
+    $this->drupalLogin($admin_user);
+    $this->drupalPlaceBlock('system_menu_block:tools');
+    $this->drupalGet('<front>');
+
+    $menu_link = $this->cssSelect('div.block-menu ul.menu a');
+    $this->assertEqual((string) $menu_link[0], 'Test menu link');
+
+    // Update the menu link.
+    $this->drupalPostForm("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit", [
+      'title' => 'New title',
+    ], t('Save'));
+
+    $this->drupalGet('<front>');
+    $menu_link = $this->cssSelect('div.block-menu ul.menu a');
+    $this->assertEqual((string) $menu_link[0], 'New title');
   }
 
 }

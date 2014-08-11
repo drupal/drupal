@@ -880,14 +880,14 @@ display:
         type: 'default tab'
         title: List
         description: 'Find and manage people interacting with your site.'
-        name: admin
+        menu_name: admin
         weight: -10
         context: ''
       tab_options:
         type: normal
         title: People
         description: 'Manage user accounts, roles, and permissions.'
-        name: admin
+        menu_name: admin
         weight: 0
       defaults:
         show_admin_links: false

@@ -30,14 +30,14 @@ display:
         type: 'default tab'
         title: 'Test default tab'
         description: ''
-        name: tools
+        menu_name: tools
         weight: '-10'
         context: '0'
       tab_options:
         type: normal
         title: 'Test parent path'
         description: ''
-        name: tools
+        menu_name: tools
         weight: '0'
       defaults:
         title: '0'
@@ -53,7 +53,7 @@ display:
         type: tab
         title: 'Test local tab'
         description: ''
-        name: tools
+        menu_name: tools
         weight: '0'
         context: '0'
       defaults:
@@ -61,6 +61,23 @@ display:
     display_plugin: page
     display_title: Page
     id: page_2
+    position: 0
+  page_3:
+    display_options:
+      path: test_page_display_menu_link
+      title: 'Test menu link'
+      menu:
+        type: normal
+        title: 'Test menu link'
+        description: ''
+        menu_name: tools
+        weight: '0'
+        context: '0'
+      defaults:
+        title: '0'
+    display_plugin: page
+    display_title: Page
+    id: page_3
     position: 0
 label: 'Test page menu'
 id: test_page_display_menu

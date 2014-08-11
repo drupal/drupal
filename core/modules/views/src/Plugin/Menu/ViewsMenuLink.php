@@ -132,14 +132,16 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
    */
   public function updateLink(array $new_definition_values, $persist) {
     $overrides = array_intersect_key($new_definition_values, $this->overrideAllowed);
+    // Update the definition.
+    $this->pluginDefinition = $overrides + $this->pluginDefinition;
     if ($persist) {
       $view = $this->loadView();
       $display = &$view->storage->getDisplay($view->current_display);
       // Just save the title to the original view.
       $changed = FALSE;
-      foreach (array('title' => 'title', 'weight' => 'weight', 'menu' => 'name', 'description' => 'description') as $definition_key => $views_key) {
-        if ($display['display_options']['menu'][$views_key] != $new_definition_values[$definition_key]) {
-          $display['display_options']['menu'][$views_key] = $new_definition_values[$definition_key];
+      foreach ($new_definition_values as $key => $new_definition_value) {
+        if (isset($display['display_options']['menu'][$key]) && $display['display_options']['menu'][$key] != $new_definition_values[$key]) {
+          $display['display_options']['menu'][$key] = $new_definition_values[$key];
           $changed = TRUE;
         }
       }
@@ -149,8 +151,6 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
         $view->storage->save();
       }
     }
-    // Update the definition.
-    $this->pluginDefinition = $overrides + $this->pluginDefinition;
     return $this->pluginDefinition;
   }
 

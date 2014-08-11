@@ -669,7 +669,7 @@ display:
         type: tab
         title: Files
         description: ''
-        name: admin
+        menu_name: admin
         weight: 0
         context: ''
       display_description: ''

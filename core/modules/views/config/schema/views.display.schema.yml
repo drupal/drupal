@@ -34,7 +34,7 @@ views.display.page:
         weight:
           type: integer
           label: 'Weight'
-        name:
+        menu_name:
           type: string
           label: 'Menu name'
         context:
@@ -56,7 +56,7 @@ views.display.page:
         weight:
           type: integer
           label: 'Weight'
-        name:
+        menu_name:
           type: string
           label: 'Menu name'
 

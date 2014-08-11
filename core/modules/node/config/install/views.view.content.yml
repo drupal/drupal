@@ -549,14 +549,14 @@ display:
         type: 'default tab'
         title: Content
         description: ''
-        name: admin
+        menu_name: admin
         weight: -10
         context: ''
       tab_options:
         type: normal
         title: Content
         description: 'Find and manage content'
-        name: admin
+        menu_name: admin
         weight: -10
       field_langcode: '***CURRENT_LANGUAGE***'
       field_langcode_add_to_query: null

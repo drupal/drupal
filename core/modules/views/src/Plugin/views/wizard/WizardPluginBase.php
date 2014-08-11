@@ -1018,7 +1018,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     if (!empty($page['link'])) {
       $display_options['menu']['type'] = 'normal';
       $display_options['menu']['title'] = $page['link_properties']['title'];
-      $display_options['menu']['name'] = $page['link_properties']['menu_name'];
+      $display_options['menu']['menu_name'] = $page['link_properties']['menu_name'];
     }
     return $display_options;
   }

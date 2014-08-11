@@ -314,7 +314,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         }
 
         // Insert item into the proper menu.
-        $links[$menu_link_id]['menu_name'] = $menu['name'];
+        $links[$menu_link_id]['menu_name'] = $menu['menu_name'];
         // Keep track of where we came from.
         $links[$menu_link_id]['metadata'] = array(
           'view_id' => $view_id,
