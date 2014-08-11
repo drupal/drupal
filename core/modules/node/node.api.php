@@ -326,22 +326,19 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
 function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   $type = is_string($node) ? $node : $node->getType();
 
-  $configured_types = node_permissions_get_configured_types();
-  if (isset($configured_types[$type])) {
-    if ($op == 'create' && $account->hasPermission('create ' . $type . ' content')) {
+  if ($op == 'create' && $account->hasPermission('create ' . $type . ' content')) {
+    return NODE_ACCESS_ALLOW;
+  }
+
+  if ($op == 'update') {
+    if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
       return NODE_ACCESS_ALLOW;
     }
+  }
 
-    if ($op == 'update') {
-      if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
-        return NODE_ACCESS_ALLOW;
-      }
-    }
-
-    if ($op == 'delete') {
-      if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
-        return NODE_ACCESS_ALLOW;
-      }
+  if ($op == 'delete') {
+    if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
+      return NODE_ACCESS_ALLOW;
     }
   }
 

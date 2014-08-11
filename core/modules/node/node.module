@@ -716,8 +716,8 @@ function node_permission() {
     ),
   );
 
-  // Generate standard node permissions for all applicable node types.
-  foreach (node_permissions_get_configured_types() as $type) {
+  // Generate node permissions for all node types.
+  foreach (NodeType::loadMultiple() as $type) {
     $perms += node_list_permissions($type);
   }
 
@@ -1158,22 +1158,19 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
 function node_node_access(NodeInterface $node, $op, $account) {
   $type = $node->bundle();
 
-  $configured_types = node_permissions_get_configured_types();
-  if (isset($configured_types[$type])) {
-    if ($op == 'create' && $account->hasPermission('create ' . $type . ' content', $account)) {
+  if ($op == 'create' && $account->hasPermission('create ' . $type . ' content', $account)) {
+    return NODE_ACCESS_ALLOW;
+  }
+
+  if ($op == 'update') {
+    if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
       return NODE_ACCESS_ALLOW;
     }
+  }
 
-    if ($op == 'update') {
-      if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
-        return NODE_ACCESS_ALLOW;
-      }
-    }
-
-    if ($op == 'delete') {
-      if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
-        return NODE_ACCESS_ALLOW;
-      }
+  if ($op == 'delete') {
+    if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
+      return NODE_ACCESS_ALLOW;
     }
   }
 
@@ -1220,31 +1217,6 @@ function node_list_permissions($type) {
     ),
   );
   return $perms;
-}
-
-/**
- * Returns an array of node types that should be managed by permissions.
- *
- * By default, this will include all node types in the system. To exclude a
- * specific node from getting permissions defined for it, set the
- * node_permissions_$type variable to 0. Core does not provide an interface for
- * doing so. However, contrib modules may exclude their own nodes in
- * hook_install(). Alternatively, contrib modules may configure all node types
- * at once, or decide to apply some other hook_node_access() implementation to
- * some or all node types.
- *
- * @return
- *   An array of node types managed by this module.
- */
-function node_permissions_get_configured_types() {
-  $configured_types = array();
-  foreach (node_type_get_types() as $name => $type) {
-    $node_settings = $type->getModuleSettings('node');
-    if (!isset($node_settings['permissions']) || !empty($node_settings['permissions'])) {
-      $configured_types[$name] = $type;
-    }
-  }
-  return $configured_types;
 }
 
 /**

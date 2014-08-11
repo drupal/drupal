@@ -53,7 +53,7 @@ class NodeAddAccessCheck implements AccessInterface {
       return $access_control_handler->createAccess($node_type->id(), $account) ? static::ALLOW : static::DENY;
     }
     // If checking whether a node of any type may be created.
-    foreach (node_permissions_get_configured_types() as $node_type) {
+    foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $node_type) {
       if ($access_control_handler->createAccess($node_type->id(), $account)) {
         return static::ALLOW;
       }

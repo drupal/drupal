@@ -71,6 +71,15 @@ class EntityType implements EntityTypeInterface {
   protected $class;
 
   /**
+   * The name of the original entity type class.
+   *
+   * This is only set if the class name is changed.
+   *
+   * @var string
+   */
+  protected $originalClass;
+
+  /**
    * An array of controllers.
    *
    * @var array
@@ -311,7 +320,19 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getOriginalClass() {
+    return $this->originalClass ?: $this->class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setClass($class) {
+    if (!$this->originalClass && $this->class) {
+      // If the original class is currently not set, set it to the current
+      // class, assume that is the original class name.
+      $this->originalClass = $this->class;
+    }
     $this->class = $class;
     return $this;
   }

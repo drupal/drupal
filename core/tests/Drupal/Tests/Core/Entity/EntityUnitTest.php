@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Language\Language;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -234,16 +235,6 @@ class EntityUnitTest extends UnitTestCase {
    * Setup for the tests of the ::load() method.
    */
   function setupTestLoad() {
-    // Use an entity type object which has the methods enabled which are being
-    // called by the protected method Entity::getEntityTypeFromStaticClass().
-    $methods = get_class_methods('Drupal\Core\Entity\EntityType');
-    unset($methods[array_search('getClass', $methods)]);
-    unset($methods[array_search('setClass', $methods)]);
-    $this->entityType = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
-      ->disableOriginalConstructor()
-      ->setMethods($methods)
-      ->getMock();
-
     // Base our mocked entity on a real entity class so we can test if calling
     // Entity::load() on the base class will bubble up to an actual entity.
     $this->entityTypeId = 'entity_test_mul';
@@ -255,25 +246,23 @@ class EntityUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setMethods($methods)
       ->getMock();
-    $this->entityType->setClass(get_class($this->entity));
-
-    $this->entityManager->expects($this->once())
-      ->method('getDefinitions')
-      ->will($this->returnValue(array($this->entityTypeId => $this->entityType)));
-
-    $this->entityType->expects($this->any())
-      ->method('id')
-      ->will($this->returnValue($this->entityTypeId));
   }
 
   /**
    * @covers ::load
    * @covers ::getEntityTypeFromStaticClass
    *
-   * Tests Entity::load() when called statically on the Entity base class.
+   * Tests Entity::load() when called statically on a subclass of Entity.
    */
   public function testLoad() {
     $this->setupTestLoad();
+
+    $class_name = get_class($this->entity);
+
+    $this->entityManager->expects($this->once())
+      ->method('getEntityTypeFromClass')
+      ->with($class_name)
+      ->willReturn($this->entityTypeId);
 
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
@@ -286,155 +275,7 @@ class EntityUnitTest extends UnitTestCase {
       ->will($this->returnValue($storage));
 
     // Call Entity::load statically and check that it returns the mock entity.
-    $this->assertSame($this->entity, Entity::load(1));
-  }
-
-  /**
-   * @covers ::load
-   * @covers ::getEntityTypeFromStaticClass
-   *
-   * Tests if an assertion is thrown if Entity::load() is called on a base class
-   * which is subclassed multiple times.
-   *
-   * @expectedException \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
-   */
-  public function testLoadWithAmbiguousSubclasses() {
-    // Use an entity type object which has the methods enabled which are being
-    // called by the protected method Entity::getEntityTypeFromStaticClass().
-    $methods = get_class_methods('Drupal\Core\Entity\EntityType');
-    unset($methods[array_search('getClass', $methods)]);
-    unset($methods[array_search('setClass', $methods)]);
-
-    $first_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
-      ->disableOriginalConstructor()
-      ->setMethods($methods)
-      ->getMock();
-    $first_entity_type->setClass('Drupal\entity_test\Entity\EntityTestMul');
-
-    $second_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
-      ->disableOriginalConstructor()
-      ->setMethods($methods)
-      ->setMockClassName($this->randomMachineName())
-      ->getMock();
-    $second_entity_type->setClass('Drupal\entity_test\Entity\EntityTestMulRev');
-
-    $this->entityManager->expects($this->once())
-      ->method('getDefinitions')
-      ->will($this->returnValue(array(
-        'entity_test_mul' => $first_entity_type,
-        'entity_test_mul_rev' => $second_entity_type,
-      )));
-
-    // Call Entity::load statically and check that it throws an exception.
-    Entity::load(1);
-  }
-
-  /**
-   * @covers ::load
-   * @covers ::getEntityTypeFromStaticClass
-   *
-   * Tests if an assertion is thrown if Entity::load() is called on a class
-   * that matches multiple times.
-   *
-   * @expectedException \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
-   */
-  public function testLoadWithAmbiguousClasses() {
-    // Use an entity type object which has the methods enabled which are being
-    // called by the protected method Entity::getEntityTypeFromStaticClass().
-    $methods = get_class_methods('Drupal\Core\Entity\EntityType');
-    unset($methods[array_search('getClass', $methods)]);
-    unset($methods[array_search('setClass', $methods)]);
-
-    $first_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
-      ->disableOriginalConstructor()
-      ->setMethods($methods)
-      ->getMock();
-    $first_entity_type->setClass('Drupal\entity_test\Entity\EntityTest');
-
-    $second_entity_type = $this->getMockBuilder('\Drupal\Core\Entity\EntityType')
-      ->disableOriginalConstructor()
-      ->setMethods($methods)
-      ->setMockClassName($this->randomMachineName())
-      ->getMock();
-    $second_entity_type->setClass('Drupal\entity_test\Entity\EntityTest');
-
-    $this->entityManager->expects($this->once())
-      ->method('getDefinitions')
-      ->will($this->returnValue(array(
-        'entity_test_mul' => $first_entity_type,
-        'entity_test_mul_rev' => $second_entity_type,
-      )));
-
-    // Call EntityTest::load() statically and check that it throws an exception.
-    EntityTest::load(1);
-  }
-
-  /**
-   * @covers ::load
-   * @covers ::getEntityTypeFromStaticClass
-   *
-   * Tests if an assertion is thrown if Entity::load() is called and there are
-   * no subclasses defined that can return entities.
-   *
-   * @expectedException \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
-   */
-  public function testLoadWithNoCorrespondingSubclasses() {
-    $this->entityManager->expects($this->once())
-      ->method('getDefinitions')
-      ->will($this->returnValue(array()));
-
-    // Call Entity::load statically and check that it throws an exception.
-    Entity::load(1);
-  }
-
-  /**
-   * @covers ::load
-   * @covers ::getEntityTypeFromStaticClass
-   *
-   * Tests Entity::load() when called statically on a subclass of Entity.
-   */
-  public function testLoadSubClass() {
-    $this->setupTestLoad();
-
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $storage->expects($this->once())
-      ->method('load')
-      ->with(1)
-      ->will($this->returnValue($this->entity));
-    $this->entityManager->expects($this->once())
-      ->method('getStorage')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue($storage));
-
-    // Call Entity::load statically on the subclass and check that it returns
-    // the mock entity.
-    $class = get_class($this->entity);
-    $this->assertSame($this->entity, $class::load(1));
-  }
-
-  /**
-   * @covers ::loadMultiple
-   * @covers ::getEntityTypeFromStaticClass
-   *
-   * Tests Entity::loadMultiple() when called statically on the Entity base
-   * class.
-   */
-  public function testLoadMultiple() {
-    $this->setupTestLoad();
-
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $storage->expects($this->once())
-      ->method('loadMultiple')
-      ->with(array(1))
-      ->will($this->returnValue(array(1 => $this->entity)));
-    $this->entityManager->expects($this->once())
-      ->method('getStorage')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue($storage));
-
-    // Call Entity::loadMultiple statically and check that it returns the mock
-    // entity.
-    $this->assertSame(array(1 => $this->entity), Entity::loadMultiple(array(1)));
+    $this->assertSame($this->entity, $class_name::load(1));
   }
 
   /**
@@ -444,8 +285,15 @@ class EntityUnitTest extends UnitTestCase {
    * Tests Entity::loadMultiple() when called statically on a subclass of
    * Entity.
    */
-  public function testLoadMultipleSubClass() {
+  public function testLoadMultiple() {
     $this->setupTestLoad();
+
+    $class_name = get_class($this->entity);
+
+    $this->entityManager->expects($this->once())
+      ->method('getEntityTypeFromClass')
+      ->with($class_name)
+      ->willReturn($this->entityTypeId);
 
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
@@ -459,8 +307,7 @@ class EntityUnitTest extends UnitTestCase {
 
     // Call Entity::loadMultiple statically and check that it returns the mock
     // entity.
-    $class = get_class($this->entity);
-    $this->assertSame(array(1 => $this->entity), $class::loadMultiple(array(1)));
+    $this->assertSame(array(1 => $this->entity), $class_name::loadMultiple(array(1)));
   }
 
   /**
@@ -469,6 +316,12 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testCreate() {
     $this->setupTestLoad();
+
+    $class_name = get_class($this->entity);
+    $this->entityManager->expects($this->once())
+      ->method('getEntityTypeFromClass')
+      ->with($class_name)
+      ->willReturn($this->entityTypeId);
 
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
@@ -482,8 +335,7 @@ class EntityUnitTest extends UnitTestCase {
 
     // Call Entity::create() statically and check that it returns the mock
     // entity.
-    $class = get_class($this->entity);
-    $this->assertSame($this->entity, $class::create(array()));
+    $this->assertSame($this->entity, $class_name::create(array()));
   }
 
   /**

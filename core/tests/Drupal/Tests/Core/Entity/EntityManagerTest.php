@@ -1255,6 +1255,87 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getEntityTypeFromClass()
+   */
+  public function testGetEntityTypeFromClass() {
+    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $apple->expects($this->exactly(2))
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\apple\Entity\Apple'));
+    $banana = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $banana->expects($this->exactly(2))
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\banana\Entity\Banana'));
+    $banana->expects($this->once())
+      ->method('getClass')
+      ->will($this->returnValue('\Drupal\mango\Entity\Mango'));
+    $banana->expects($this->exactly(2))
+      ->method('id')
+      ->will($this->returnValue('banana'));
+    $this->setUpEntityManager(array(
+      'apple' => $apple,
+      'banana' => $banana,
+    ));
+
+    $entity_type_id = $this->entityManager->getEntityTypeFromClass('\Drupal\banana\Entity\Banana');
+    $this->assertSame('banana', $entity_type_id);
+    $entity_type_id = $this->entityManager->getEntityTypeFromClass('\Drupal\mango\Entity\Mango');
+    $this->assertSame('banana', $entity_type_id);
+  }
+
+  /**
+   * @covers ::getEntityTypeFromClass()
+   *
+   * @expectedException \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
+   * @expectedExceptionMessage The \Drupal\pear\Entity\Pear class does not correspond to an entity type.
+   */
+  public function testGetEntityTypeFromClassNoMatch() {
+    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $apple->expects($this->once())
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\apple\Entity\Apple'));
+    $banana = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $banana->expects($this->once())
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\banana\Entity\Banana'));
+    $this->setUpEntityManager(array(
+      'apple' => $apple,
+      'banana' => $banana,
+    ));
+
+    $this->entityManager->getEntityTypeFromClass('\Drupal\pear\Entity\Pear');
+  }
+
+  /**
+   * @covers ::getEntityTypeFromClass()
+   *
+   * @expectedException \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
+   * @expectedExceptionMessage Multiple entity types found for \Drupal\apple\Entity\Apple.
+   */
+  public function testGetEntityTypeFromClassAmbiguous() {
+    $boskoop = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $boskoop->expects($this->once())
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\apple\Entity\Apple'));
+    $boskoop->expects($this->once())
+      ->method('id')
+      ->will($this->returnValue('boskop'));
+    $gala = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $gala->expects($this->once())
+      ->method('getOriginalClass')
+      ->will($this->returnValue('\Drupal\apple\Entity\Apple'));
+    $gala->expects($this->once())
+      ->method('id')
+      ->will($this->returnValue('gala'));
+    $this->setUpEntityManager(array(
+      'boskoop' => $boskoop,
+      'gala' => $gala,
+    ));
+
+    $this->entityManager->getEntityTypeFromClass('\Drupal\apple\Entity\Apple');
+  }
+
+  /**
    * Gets a mock controller class name.
    *
    * @return string

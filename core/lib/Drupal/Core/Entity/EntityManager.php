@@ -14,6 +14,8 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
+use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -145,6 +147,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $fieldMapByFieldType = array();
 
   /**
+   * Contains cached mappings of class names to entity types.
+   *
+   * @var array
+   */
+  protected $classNameEntityTypeMap = array();
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -180,6 +189,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     parent::clearCachedDefinitions();
     $this->clearCachedBundles();
     $this->clearCachedFieldDefinitions();
+    $this->classNameEntityTypeMap = array();
   }
 
   /**
@@ -931,6 +941,36 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $entities = $this->getStorage($entity_type_id)->loadByProperties(array($uuid_key => $uuid));
 
     return reset($entities);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityTypeFromClass($class_name) {
+
+    // Check the already calculated classes first.
+    if (isset($this->classNameEntityTypeMap[$class_name])) {
+      return $this->classNameEntityTypeMap[$class_name];
+    }
+
+    $same_class = 0;
+    $entity_type_id = NULL;
+    foreach ($this->getDefinitions() as $entity_type) {
+      if ($entity_type->getOriginalClass() == $class_name  || $entity_type->getClass() == $class_name) {
+        $entity_type_id = $entity_type->id();
+        if ($same_class++) {
+          throw new AmbiguousEntityClassException($class_name);
+        }
+      }
+    }
+
+    // Return the matching entity type ID if there is one.
+    if ($entity_type_id) {
+      $this->classNameEntityTypeMap[$class_name] = $entity_type_id;
+      return $entity_type_id;
+    }
+
+    throw new NoCorrespondingEntityClassException($class_name);
   }
 
 }

@@ -75,6 +75,18 @@ interface EntityTypeInterface {
   public function getClass();
 
   /**
+   * Returns the name of the original entity type class.
+   *
+   * In case the class name was changed with setClass(), this will return
+   * the initial value. Useful when trying to identify the entity type ID based
+   * on the class.
+   *
+   * @return string
+   *   The name of the original entity type class.
+   */
+  public function getOriginalClass();
+
+  /**
    * Returns an array of entity keys.
    *
    * @return array
