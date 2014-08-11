@@ -264,8 +264,6 @@ function block_theme_suggestions_block(array $variables) {
  *     Properties used: #block, #configuration, #children, #plugin_id.
  */
 function template_preprocess_block(&$variables) {
-  $block_counter = &drupal_static(__FUNCTION__, array());
-
   $variables['configuration'] = $variables['elements']['#configuration'];
   $variables['plugin_id'] = $variables['elements']['#plugin_id'];
   $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
