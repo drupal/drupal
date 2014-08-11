@@ -111,10 +111,6 @@ function image_theme() {
     ),
 
     // Theme functions in image.admin.inc.
-    'image_style_effects' => array(
-      'render element' => 'form',
-      'file' => 'image.admin.inc',
-    ),
     'image_style_preview' => array(
       'variables' => array('style' => NULL),
       'file' => 'image.admin.inc',
