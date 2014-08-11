@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests for the administrative UI.
@@ -24,13 +25,13 @@ class EntityReferenceAdminTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference', 'path');
+  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy');
 
   public function setUp() {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer node fields'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer node fields', 'administer node display'));
     $this->drupalLogin($admin_user);
 
     // Create a content type, with underscores.
@@ -101,6 +102,97 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test label', 'Field was created and appears in the overview page.');
   }
 
+
+  /**
+   * Tests the formatters for the Entity References
+   */
+  public function testAvailableFormatters() {
+    // Create a new vocabulary.
+    Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
+
+    // Create entity reference field with taxonomy term as a target.
+    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', 'tags');
+
+    // Create entity reference field with node as a target.
+    $node_field_name = $this->createEntityReferenceField('node', $this->type);
+
+    // Create entity reference field with date format as a target.
+    $date_format_field_name = $this->createEntityReferenceField('date_format');
+
+    // Display all newly created Entity Reference configuration.
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+
+    // Check for Taxonomy Term select box values.
+    // Test if Taxonomy Term Entity Reference Field has the correct formatters.
+    $this->assertFieldSelectOptions('fields[field_' . $taxonomy_term_field_name . '][type]', array(
+      'entity_reference_label',
+      'entity_reference_entity_id',
+      'entity_reference_rss_category',
+      'entity_reference_entity_view',
+      'hidden',
+    ));
+
+    // Test if Node Entity Reference Field has the correct formatters.
+    // RSS Category should not be available for this field.
+    $this->assertFieldSelectOptions('fields[field_' . $node_field_name . '][type]', array(
+      'entity_reference_label',
+      'entity_reference_entity_id',
+      'entity_reference_entity_view',
+      'hidden',
+    ));
+
+    // Test if Date Format Reference Field has the correct formatters.
+    // RSS Category & Entity View should not be available for this field.
+    // This could be any field without a ViewBuilder.
+    $this->assertFieldSelectOptions('fields[field_' . $date_format_field_name . '][type]', array(
+      'entity_reference_label',
+      'entity_reference_entity_id',
+      'hidden',
+    ));
+  }
+
+  /**
+   * Creates a new Entity Reference fields with a given target type.
+   *
+   * @param $target_type
+   *   The name of the target type
+   * @param $bundle
+   *   Name of the bundle
+   *   Default = NULL
+   * @return string
+   *   Returns the generated field name
+   */
+  public function createEntityReferenceField($target_type, $bundle = NULL) {
+    // Generates a bundle path for the newly created content type.
+    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+
+    // Generate a random field name, must be only lowercase characters.
+    $field_name = strtolower($this->randomMachineName());
+
+    // Create the initial entity reference.
+    $this->drupalPostForm($bundle_path . '/fields', array(
+      'fields[_add_new_field][label]' => $this->randomMachineName(),
+      'fields[_add_new_field][field_name]' => $field_name,
+      'fields[_add_new_field][type]' => 'entity_reference',
+    ), t('Save'));
+
+    // Select the correct target type given in the parameters and save field settings.
+    $this->drupalPostForm(NULL, array('field[settings][target_type]' => $target_type), t('Save field settings'));
+
+    // Select required fields if there are any.
+    $edit = array();
+    if($bundle) {
+      $edit['instance[settings][handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
+    }
+
+    // Save settings.
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+
+    // Returns the generated field name.
+    return $field_name;
+  }
+
+
   /**
    * Checks if a select element contains the specified options.
    *
@@ -118,7 +210,11 @@ class EntityReferenceAdminTest extends WebTestBase {
     if ($fields) {
       $field = $fields[0];
       $options = $this->getAllOptionsList($field);
-      return $this->assertIdentical(sort($options), sort($expected_options));
+
+      sort($options);
+      sort($expected_options);
+
+      return $this->assertIdentical($options, $expected_options);
     }
     else {
       return $this->fail('Unable to find field ' . $name);
@@ -141,8 +237,9 @@ class EntityReferenceAdminTest extends WebTestBase {
       $options[] = (string) $option['value'];
     }
 
-    if (isset($element->optgroup)) {
-      $options += $this->getAllOptionsList($element->optgroup);
+    // Loops trough all the option groups
+    foreach ($element->optgroup as $optgroup) {
+      $options = array_merge($this->getAllOptionsList($optgroup), $options);
     }
 
     return $options;

@@ -87,4 +87,15 @@ interface FormatterInterface extends PluginSettingsInterface {
    */
   public function viewElements(FieldItemListInterface $items);
 
+  /**
+   * Returns if the formatter can be used for the provided field.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition that should be checked.
+   *
+   * @return bool
+   *   TRUE if the formatter can be used, FALSE otherwise.
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition);
+
 }

@@ -130,8 +130,8 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPluginOptions($field_type) {
-    return parent::getPluginOptions($field_type) + array('hidden' => '- ' . t('Hidden') . ' -');
+  protected function getPluginOptions(FieldDefinitionInterface $field_definition) {
+    return parent::getPluginOptions($field_definition) + array('hidden' => '- ' . t('Hidden') . ' -');
   }
 
   /**

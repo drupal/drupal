@@ -7,6 +7,7 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -94,6 +95,15 @@ class TestFieldWidgetMultiple extends WidgetBase {
       $items[] = array('value' => $value);
     }
     form_set_value($element, $items, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   * Used in \Drupal\entity_reference\Tests\EntityReferenceAdminTest::testAvailableFormatters().
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // Returns FALSE if machine name of the field equals field_onewidgetfield.
+    return $field_definition->getName() != "field_onewidgetfield";
   }
 
 }

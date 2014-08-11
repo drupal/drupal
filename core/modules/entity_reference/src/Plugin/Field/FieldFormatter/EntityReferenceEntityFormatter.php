@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
@@ -131,6 +132,16 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     }
 
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // This formatter is only available for entity types that have a view
+    // builder.
+    $target_type = $field_definition->getFieldStorageDefinition()->getSetting('target_type');
+    return \Drupal::entityManager()->getDefinition($target_type)->hasViewBuilderClass();
   }
 
 }

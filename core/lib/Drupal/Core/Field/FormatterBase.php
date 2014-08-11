@@ -147,4 +147,12 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
     return $this->fieldDefinition->getSetting($setting_name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // By default, formatters are available for all fields.
+    return TRUE;
+  }
+
 }

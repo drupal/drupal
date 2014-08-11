@@ -153,4 +153,15 @@ interface WidgetInterface extends WidgetBaseInterface {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state);
 
+  /**
+   * Returns if the widget can be used for the provided field.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition that should be checked.
+   *
+   * @return bool
+   *   TRUE if the widget can be used, FALSE otherwise.
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition);
+
 }

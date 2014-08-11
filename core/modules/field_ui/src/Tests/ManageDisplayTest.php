@@ -143,10 +143,13 @@ class ManageDisplayTest extends FieldUiTestBase {
    * Tests widget settings.
    */
   public function testWidgetUI() {
+    // Admin Manage Fields page.
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
+    // Admin Manage Display page.
     $manage_display = $manage_fields . '/form-display';
 
-    // Create a field, and a node with some data for the field.
+    // Creates a new field that can be used with multiple formatters.
+    // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
     $edit = array(
       'fields[_add_new_field][label]' => 'Test field',
       'fields[_add_new_field][field_name]' => 'test',
@@ -161,7 +164,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $setting_name = key($default_settings);
     $setting_value = $display_options['settings'][$setting_name];
 
-    // Display the "Manage form display" screen and check that the expected
+    // Display the "Manage form display" screen and check if the expected
     // widget is selected.
     $this->drupalGet($manage_display);
     $this->assertFieldByName('fields[field_test][type]', $widget_type, 'The expected widget is selected.');
@@ -222,6 +225,21 @@ class ManageDisplayTest extends FieldUiTestBase {
     // Confirm that the third party settings are not updated on the settings form.
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, '');
+
+    // Creates a new field that can not be used with the multiple formatter.
+    // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
+    $edit = array(
+      'fields[_add_new_field][label]' => 'One Widget Field',
+      'fields[_add_new_field][field_name]' => 'onewidgetfield',
+    );
+    $this->fieldUIAddNewField($manage_fields, $edit);
+
+    // Go to the Manage Form Display.
+    $this->drupalGet($manage_display);
+
+    // Checks if the select elements contain the specified options.
+    $this->assertFieldSelectOptions('fields[field_test][type]', array('test_field_widget', 'test_field_widget_multiple', 'hidden'));
+    $this->assertFieldSelectOptions('fields[field_onewidgetfield][type]', array('test_field_widget', 'hidden'));
   }
 
   /**
@@ -434,4 +452,57 @@ class ManageDisplayTest extends FieldUiTestBase {
 
     return $return;
   }
+
+  /**
+   * Checks if a select element contains the specified options.
+   *
+   * @param string $name
+   *   The field name.
+   * @param array $expected_options
+   *   An array of expected options.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertFieldSelectOptions($name, array $expected_options) {
+    $xpath = $this->buildXPathQuery('//select[@name=:name]', array(':name' => $name));
+    $fields = $this->xpath($xpath);
+    if ($fields) {
+      $field = $fields[0];
+      $options = $this->getAllOptionsList($field);
+
+      sort($options);
+      sort($expected_options);
+
+      return $this->assertIdentical($options, $expected_options);
+    }
+    else {
+      return $this->fail('Unable to find field ' . $name);
+    }
+  }
+
+  /**
+   * Extracts all options from a select element.
+   *
+   * @param \SimpleXMLElement $element
+   *   The select element field information.
+   *
+   * @return array
+   *   An array of option values as strings.
+   */
+  protected function getAllOptionsList(\SimpleXMLElement $element) {
+    $options = array();
+    // Add all options items.
+    foreach ($element->option as $option) {
+      $options[] = (string) $option['value'];
+    }
+
+    // Loops trough all the option groups
+    foreach ($element->optgroup as $optgroup) {
+      $options = array_merge($this->getAllOptionsList($optgroup), $options);
+    }
+
+    return $options;
+  }
+
 }

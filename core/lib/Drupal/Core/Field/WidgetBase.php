@@ -534,4 +534,13 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     return $definition['multiple_values'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // By default, widgets are available for all fields.
+    return TRUE;
+  }
+
+
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -308,7 +309,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
         '#type' => 'select',
         '#title' => $this->t('Plugin for @title', array('@title' => $label)),
         '#title_display' => 'invisible',
-        '#options' => $this->getPluginOptions($field_definition->getType()),
+        '#options' => $this->getPluginOptions($field_definition),
         '#default_value' => $display_options ? $display_options['type'] : 'hidden',
         '#parents' => array('fields', $field_name, 'type'),
         '#attributes' => array('class' => array('field-plugin-type')),
@@ -725,16 +726,24 @@ abstract class DisplayOverviewBase extends OverviewBase {
   abstract protected function getPlugin(FieldDefinitionInterface $field_definition, $configuration);
 
   /**
-   * Returns an array of widget or formatter options for a field type.
+   * Returns an array of widget or formatter options for a field.
    *
-   * @param string $field_type
-   *   The name of the field type.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
    *
    * @return array
    *   An array of widget or formatter options.
    */
-  protected function getPluginOptions($field_type) {
-    return $this->pluginManager->getOptions($field_type);
+  protected function getPluginOptions(FieldDefinitionInterface $field_definition) {
+    $options = $this->pluginManager->getOptions($field_definition->getType());
+    $applicable_options = array();
+    foreach ($options as $option => $label) {
+      $plugin_class = DefaultFactory::getPluginClass($option, $this->pluginManager->getDefinition($option));
+      if ($plugin_class::isApplicable($field_definition)) {
+        $applicable_options[$option] = $label;
+      }
+    }
+    return $applicable_options;
   }
 
   /**
