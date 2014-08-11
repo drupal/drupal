@@ -251,7 +251,8 @@ class FormValidator implements FormValidatorInterface {
       // #value data.
       elseif (isset($elements['#element_validate'])) {
         foreach ($elements['#element_validate'] as $callback) {
-          call_user_func_array($callback, array(&$elements, &$form_state, &$form_state['complete_form']));
+          $complete_form = &$form_state->getCompleteForm();
+          call_user_func_array($callback, array(&$elements, &$form_state, &$complete_form));
         }
       }
 

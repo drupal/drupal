@@ -106,7 +106,7 @@ class ResponsiveImageMappingForm extends EntityForm {
       $responsive_image_mapping->setMappings($form_state->getValue('mappings'));
 
       // Check if another breakpoint group is selected.
-      if ($form_state->getValue('breakpointGroup') != $form_state['complete_form']['breakpointGroup']['#default_value']) {
+      if ($form_state->getValue('breakpointGroup') != $form_state->getCompleteForm()['breakpointGroup']['#default_value']) {
         // Remove the mappings.
         $form_state->unsetValue('mappings');
       }

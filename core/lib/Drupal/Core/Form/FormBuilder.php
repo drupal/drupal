@@ -752,7 +752,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // checkboxes and files.
     if (isset($element['#process']) && !$element['#processed']) {
       foreach ($element['#process'] as $process) {
-        $element = call_user_func_array($process, array(&$element, &$form_state, &$form_state['complete_form']));
+        $complete_form = &$form_state->getCompleteForm();
+        $element = call_user_func_array($process, array(&$element, &$form_state, &$complete_form));
       }
       $element['#processed'] = TRUE;
     }
