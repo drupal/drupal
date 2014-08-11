@@ -284,6 +284,12 @@ class EntityAccessControlHandler extends EntityControllerBase implements EntityA
     // Get the default access restriction that lives within this field.
     $default = $items ? $items->defaultAccess($operation, $account) : TRUE;
 
+    // Get the default access restriction as specified by the access controller.
+    $entity_default = $this->checkFieldAccess($operation, $field_definition, $account, $items);
+
+    // Combine default access, denying access wins.
+    $default = $default && $entity_default;
+
     // Invoke hook and collect grants/denies for field access from other
     // modules. Our default access flag is masked under the ':default' key.
     $grants = array(':default' => $default);
@@ -311,6 +317,28 @@ class EntityAccessControlHandler extends EntityControllerBase implements EntityA
     }
     // All grants are NULL and have no opinion - deny access in that case.
     return FALSE;
+  }
+
+  /**
+   * Default field access as determined by this access controller.
+   *
+   * @param string $operation
+   *   The operation access should be checked for.
+   *   Usually one of "view" or "edit".
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user session for which to check access.
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   (optional) The field values for which to check access, or NULL if access
+   *   is checked for the field definition, without any specific value
+   *   available. Defaults to NULL.
+   *
+   * @return bool
+   *   TRUE if access is allowed, FALSE otherwise.
+   */
+  protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    return TRUE;
   }
 
 }
