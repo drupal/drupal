@@ -309,7 +309,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     $form['place_blocks']['title'] = array(
       '#type' => 'container',
-      '#children' => '<h3>' . t('Place blocks') . '</h3>',
+      '#markup' => '<h3>' . t('Place blocks') . '</h3>',
       '#attributes' => array(
         'class' => array(
           'entity-meta-header',
