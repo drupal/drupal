@@ -1755,8 +1755,6 @@ function template_preprocess_tablesort_indicator(&$variables) {
  * @see http://drupal.org/node/1842756
  */
 function template_preprocess_item_list(&$variables) {
-  $variables['title'] = (string) $variables['title'];
-
   foreach ($variables['items'] as &$item) {
     $attributes = array();
     // If the item value is an array, then it is a render array.
