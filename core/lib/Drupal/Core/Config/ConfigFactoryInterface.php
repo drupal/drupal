@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Language\LanguageDefault;
-
 /**
  * Defines the interface for a configuration object factory.
  */
@@ -82,26 +80,18 @@ interface ConfigFactoryInterface {
   public function rename($old_name, $new_name);
 
   /**
-   * Gets the cache key for a given config name.
+   * The cache keys associated with the state of the config factory.
    *
-   * @param string $name
-   *   The name of the configuration object.
-   *
-   * @return string
-   *   The cache key.
-   */
-  public function getCacheKey($name);
-
-  /**
-   * Gets all the cache keys that match the provided config name.
-   *
-   * @param string $name
-   *   The name of the configuration object.
+   * All state information that can influence the result of a get() should be
+   * included. Typically, this includes a key for each override added via
+   * addOverride(). This allows external code to maintain caches of
+   * configuration data in addition to or instead of caches maintained by the
+   * factory.
    *
    * @return array
-   *   An array of cache keys that match the provided config name.
+   *   An array of strings, used to generate a cache ID.
    */
-  public function getCacheKeys($name);
+  public function getCacheKeys();
 
   /**
    * Clears the config factory static cache.

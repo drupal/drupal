@@ -107,7 +107,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       return $config[$name];
     }
     else {
-      $cache_key = $this->getCacheKey($name);
+      $cache_key = $this->getConfigCacheKey($name);
       // If the config object has been deleted it will already exist in the
       // cache but self::loadMultiple does not return such objects.
       // @todo Explore making ConfigFactory a listener to the config.delete
@@ -143,7 +143,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     foreach ($names as $key => $name) {
       // @todo: Deleted configuration stays in $this->cache, only return
       //   configuration objects that are not new.
-      $cache_key = $this->getCacheKey($name);
+      $cache_key = $this->getConfigCacheKey($name);
       if (isset($this->cache[$cache_key]) && !$this->cache[$cache_key]->isNew()) {
         $list[$name] = $this->cache[$cache_key];
         unset($names[$key]);
@@ -162,7 +162,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       }
 
       foreach ($storage_data as $name => $data) {
-        $cache_key = $this->getCacheKey($name);
+        $cache_key = $this->getConfigCacheKey($name);
 
         $this->cache[$cache_key] = new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
         $this->cache[$cache_key]->initWithData($data);
@@ -206,7 +206,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   public function reset($name = NULL) {
     if ($name) {
       // Clear all cached configuration for this name.
-      foreach ($this->getCacheKeys($name) as $cache_key) {
+      foreach ($this->getConfigCacheKeys($name) as $cache_key) {
         unset($this->cache[$cache_key]);
       }
     }
@@ -226,7 +226,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   public function rename($old_name, $new_name) {
     $this->storage->rename($old_name, $new_name);
-    $old_cache_key = $this->getCacheKey($old_name);
+    $old_cache_key = $this->getConfigCacheKey($old_name);
     if (isset($this->cache[$old_cache_key])) {
       unset($this->cache[$old_cache_key]);
     }
@@ -240,23 +240,42 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
-  public function getCacheKey($name) {
+  public function getCacheKeys() {
+    $keys = array();
     if ($this->useOverrides) {
-      $cache_key = $name . ':overrides';
+      // Because get() adds overrides both from $GLOBALS and from
+      // $this->configFactoryOverrides, add cache keys for each.
+      $keys[] = 'global_overrides';
       foreach($this->configFactoryOverrides as $override) {
-        $cache_key =  $cache_key . ':' . $override->getCacheSuffix();
+        $keys[] =  $override->getCacheSuffix();
       }
     }
-    else {
-      $cache_key = $name . ':raw';
-    }
-    return $cache_key;
+    return $keys;
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the cache key for a given config name.
+   *
+   * @param string $name
+   *   The name of the configuration object.
+   *
+   * @return string
+   *   The cache key.
    */
-  public function getCacheKeys($name) {
+  protected function getConfigCacheKey($name) {
+    return $name . ':' . implode(':', $this->getCacheKeys());
+  }
+
+  /**
+   * Gets all the cache keys that match the provided config name.
+   *
+   * @param string $name
+   *   The name of the configuration object.
+   *
+   * @return array
+   *   An array of cache keys that match the provided config name.
+   */
+  protected function getConfigCacheKeys($name) {
     return array_filter(array_keys($this->cache), function($key) use ($name) {
       // Return TRUE if the key starts with the configuration name.
       return strpos($key, $name . ':') === 0;
@@ -289,7 +308,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     // replacing the data on any entries for the configuration object apart
     // from the one that references the actual config object being saved.
     $saved_config = $event->getConfig();
-    foreach ($this->getCacheKeys($saved_config->getName()) as $cache_key) {
+    foreach ($this->getConfigCacheKeys($saved_config->getName()) as $cache_key) {
       $cached_config = $this->cache[$cache_key];
       if ($cached_config !== $saved_config) {
         $this->cache[$cache_key]->setData($saved_config->getRawData());
