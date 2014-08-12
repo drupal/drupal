@@ -72,7 +72,7 @@ class FieldInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareRow(Row $row, $keep = TRUE) {
+  public function prepareRow(Row $row) {
     // Unserialize data.
     $widget_settings = unserialize($row->getSourceProperty('widget_settings'));
     $display_settings = unserialize($row->getSourceProperty('display_settings'));

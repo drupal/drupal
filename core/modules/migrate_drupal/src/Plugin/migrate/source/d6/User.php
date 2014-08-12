@@ -52,7 +52,7 @@ class User extends DrupalSqlBase implements SourceEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function prepareRow(Row $row, $keep = TRUE) {
+  public function prepareRow(Row $row) {
     // User roles.
     $roles = $this->select('users_roles', 'ur')
       ->fields('ur', array('rid'))

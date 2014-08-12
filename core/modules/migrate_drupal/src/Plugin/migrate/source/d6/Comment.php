@@ -37,7 +37,7 @@ class Comment extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareRow(Row $row, $keep = TRUE) {
+  public function prepareRow(Row $row) {
     if ($this->variableGet('comment_subject_field_' . $row->getSourceProperty('type'), 1)) {
       // Comment subject visible.
       $row->setSourceProperty('field_name', 'comment');
@@ -72,7 +72,7 @@ class Comment extends DrupalSqlBase {
       'name' => $this->t("The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form."),
       'mail' => $this->t("The comment author's email address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
       'homepage' => $this->t("The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
-      'type' => $this->t("The {node}.type to which this comment is a reply.")
+      'type' => $this->t("The {node}.type to which this comment is a reply."),
     );
   }
 

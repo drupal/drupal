@@ -68,7 +68,7 @@ class Field extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareRow(Row $row, $keep = TRUE) {
+  public function prepareRow(Row $row) {
     // Unserialize data.
     $global_settings = unserialize($row->getSourceProperty('global_settings'));
     $widget_settings = unserialize($row->getSourceProperty('widget_settings'));
