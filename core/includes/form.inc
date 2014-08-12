@@ -105,18 +105,6 @@ function drupal_form_submit($form_arg, FormStateInterface $form_state) {
 }
 
 /**
- * Retrieves the structured array that defines a given form.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->retrieveForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::retrieveForm().
- */
-function drupal_retrieve_form($form_id, FormStateInterface $form_state) {
-  return \Drupal::formBuilder()->retrieveForm($form_id, $form_state);
-
-}
-/**
  * Processes a form submission.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
