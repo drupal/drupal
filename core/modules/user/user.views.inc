@@ -267,6 +267,74 @@ function user_views_data() {
     ),
   );
 
+  $data['users']['changed'] = array(
+    'title' => t('Updated date'),
+    'help' => t('The date the user was last updated.'),
+    'field' => array(
+      'id' => 'date',
+    ),
+    'sort' => array(
+      'id' => 'date'
+    ),
+    'filter' => array(
+      'id' => 'date',
+    ),
+  );
+
+  $data['users']['changed_fulldate'] = array(
+    'title' => t('Updated date'),
+    'help' => t('Date in the form of CCYYMMDD.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_fulldate',
+    ),
+  );
+
+  $data['users']['changed_year_month'] = array(
+    'title' => t('Updated year + month'),
+    'help' => t('Date in the form of YYYYMM.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_year_month',
+    ),
+  );
+
+  $data['users']['changed_year'] = array(
+    'title' => t('Updated year'),
+    'help' => t('Date in the form of YYYY.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_year',
+    ),
+  );
+
+  $data['users']['changed_month'] = array(
+    'title' => t('Updated month'),
+    'help' => t('Date in the form of MM (01 - 12).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_month',
+    ),
+  );
+
+  $data['users']['changed_day'] = array(
+    'title' => t('Updated day'),
+    'help' => t('Date in the form of DD (01 - 31).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_day',
+    ),
+  );
+
+  $data['users']['changed_week'] = array(
+    'title' => t('Updated week'),
+    'help' => t('Date in the form of WW (01 - 53).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_week',
+    ),
+  );
+
   if (\Drupal::moduleHandler()->moduleExists('filter')) {
     $data['users']['signature'] = array(
       'title' => t('Signature'),

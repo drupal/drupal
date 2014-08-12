@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -15,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @ingroup user_api
  */
-interface UserInterface extends ContentEntityInterface, AccountInterface {
+interface UserInterface extends ContentEntityInterface, EntityChangedInterface, AccountInterface {
 
   /**
    * Whether a user has a certain role.

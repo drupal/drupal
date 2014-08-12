@@ -1,0 +1,46 @@
+base_table: users
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      row:
+        type: fields
+      style:
+        type: default
+      fields:
+        name:
+          id: uid
+          table: users
+          field: uid
+          provider: user
+        changed:
+          id: changed
+          table: users
+          field: changed
+          provider: user
+          date_format: html_date
+      filters: { }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_user_changed
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0
+label: ''
+id: test_user_changed
+tag: ''

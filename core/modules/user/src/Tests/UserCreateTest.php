@@ -31,6 +31,9 @@ class UserCreateTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($user);
 
+    $this->assertEqual($user->getCreatedTime(), REQUEST_TIME, 'Creating a user sets default "created" timestamp.');
+    $this->assertEqual($user->getChangedTime(), REQUEST_TIME, 'Creating a user sets default "changed" timestamp.');
+
     // Create a field and an instance.
     $field_name = 'test_field';
     entity_create('field_storage_config', array(
