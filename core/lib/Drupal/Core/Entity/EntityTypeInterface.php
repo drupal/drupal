@@ -387,12 +387,11 @@ interface EntityTypeInterface {
   /**
    * Returns the permission granularity level.
    *
-   * The allowed values are respectively "entity_type", "bundle" or FALSE.
+   * The allowed values are respectively "entity_type" or "bundle".
    *
-   * @return string|bool
+   * @return string
    *   Whether a module exposing permissions for the current entity type
-   *   should use entity-type level granularity, bundle level granularity or
-   *   just skip this entity.
+   *   should use entity-type level granularity or bundle level granularity.
    */
   public function getPermissionGranularity();
 
@@ -483,8 +482,8 @@ interface EntityTypeInterface {
    * \Drupal\Core\Entity\EntityInterface::label() method, which implements this
    * logic.
    *
-   * @return callable|bool
-   *   The callback, or FALSE if none exists.
+   * @return callable|null
+   *   The callback, or NULL if none exists.
    */
   public function getLabelCallback();
 
@@ -519,8 +518,8 @@ interface EntityTypeInterface {
    * the Field UI module uses it to add operation links to manage fields and
    * displays.
    *
-   * @return string|bool
-   *   The entity type for which this entity provides bundles, or FALSE if does
+   * @return string|null
+   *   The entity type for which this entity provides bundles, or NULL if does
    *   not provide bundles for another entity type.
    */
   public function getBundleOf();
@@ -528,8 +527,8 @@ interface EntityTypeInterface {
   /**
    * Returns the label for the bundle.
    *
-   * @return string|bool
-   *   The bundle label, or FALSE if none exists.
+   * @return string|null
+   *   The bundle label, or NULL if none exists.
    */
   public function getBundleLabel();
 
@@ -538,8 +537,8 @@ interface EntityTypeInterface {
    *
    * @todo Used by ContentEntityDatabaseStorage only.
    *
-   * @return string|bool
-   *   The name of the entity's base table, or FALSE if none exists.
+   * @return string|null
+   *   The name of the entity's base table, or NULL if none exists.
    */
   public function getBaseTable();
 
@@ -575,8 +574,9 @@ interface EntityTypeInterface {
    *
    * @todo Used by ContentEntityDatabaseStorage only.
    *
-   * @return string|bool
-   *   The name of the entity type's revision data table.
+   * @return string|null
+   *   The name of the entity type's revision data table, or NULL if none
+   *   exists.
    */
   public function getRevisionDataTable();
 
@@ -585,8 +585,8 @@ interface EntityTypeInterface {
    *
    * @todo Used by ContentEntityDatabaseStorage only.
    *
-   * @return string|bool
-   *   The name of the entity type's revision table.
+   * @return string|null
+   *   The name of the entity type's revision table, or NULL if none exists.
    */
   public function getRevisionTable();
 
@@ -595,8 +595,8 @@ interface EntityTypeInterface {
    *
    * @todo Used by ContentEntityDatabaseStorage only.
    *
-   * @return string|bool
-   *   The name of the entity type's data table.
+   * @return string|null
+   *   The name of the entity type's data table, or NULL if none exists.
    */
   public function getDataTable();
 
@@ -622,8 +622,8 @@ interface EntityTypeInterface {
    * This is only called if there is no matching link template for the link
    * relationship type, and there is no bundle-specific callback provided.
    *
-   * @return callable|bool
-   *   A valid callback that is passed the entity or FALSE if none is specified.
+   * @return callable|null
+   *   A valid callback that is passed the entity or NULL if none is specified.
    */
   public function getUriCallback();
 
