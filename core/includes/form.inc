@@ -2714,7 +2714,11 @@ function template_preprocess_form_element(&$variables) {
 
   $variables['description'] = NULL;
   if (!empty($element['#description'])) {
-    $description_attributes = array('class' => 'description');
+    $variables['description_display'] = $element['#description_display'];
+    $description_attributes = array('class' => array('description'));
+    if ($element['#description_display'] === 'invisible') {
+      $description_attributes['class'][] = 'visually-hidden';
+    }
     if (!empty($element['#id'])) {
       $description_attributes['id'] = $element['#id'] . '--description';
     }

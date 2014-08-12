@@ -378,6 +378,14 @@ form_test.button_class:
   requirements:
     _access: 'TRUE'
 
+form_test.description_display:
+  path: '/form_test/form-descriptions'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestDescriptionForm'
+    _title: 'Form description test'
+  requirements:
+    _access: 'TRUE'
+
 form_test.group_details:
   path: '/form-test/group-details'
   defaults:

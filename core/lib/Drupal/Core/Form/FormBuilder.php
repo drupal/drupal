@@ -703,6 +703,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       '#required' => FALSE,
       '#attributes' => array(),
       '#title_display' => 'before',
+      '#description_display' => 'after',
       '#errors' => NULL,
     );
 

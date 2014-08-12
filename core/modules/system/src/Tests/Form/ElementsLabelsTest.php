@@ -94,4 +94,32 @@ class ElementsLabelsTest extends WebTestBase {
     $elements = $this->xpath('//div[@id="edit-form-radios-title-attribute"]');
     $this->assertEqual($elements[0]['title'], 'Radios test' . ' (' . t('Required') . ')', 'Title attribute found.');
   }
+
+  /**
+   * Tests different display options for form element descriptions.
+   */
+  function testFormDescriptions() {
+    $this->drupalGet('form_test/form-descriptions');
+
+    // Check #description placement with #description_display='after'.
+    $field_id = 'edit-form-textfield-test-description-after';
+    $description_id = $field_id . '--description';
+    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[@id="' . $description_id . '"]');
+    $this->assertTrue(isset($elements[0]), t('Properly places the #description element after the form item.'));
+
+    // Check #description placement with #description_display='before'.
+    $field_id = 'edit-form-textfield-test-description-before';
+    $description_id = $field_id . '--description';
+    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/preceding-sibling::div[@id="' . $description_id . '"]');
+    $this->assertTrue(isset($elements[0]), t('Properly places the #description element before the form item.'));
+
+    // Check if the class is 'visually-hidden' on the form element description
+    // for the option with #description_display='invisible' and also check that
+    // the description is placed after the form element.
+    $field_id = 'edit-form-textfield-test-description-invisible';
+    $description_id = $field_id . '--description';
+    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
+    $this->assertTrue(isset($elements[0]), t('Properly renders the #description element visually-hidden.'));
+  }
+
 }
