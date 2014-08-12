@@ -82,6 +82,10 @@ class TwigExtension extends \Twig_Extension {
 
       // Array filters.
       new \Twig_SimpleFilter('without', 'twig_without'),
+
+      // CSS class and ID filters.
+      new \Twig_SimpleFilter('clean_class', 'drupal_html_class'),
+      new \Twig_SimpleFilter('clean_id', 'drupal_clean_id_identifier'),
     );
   }
 
