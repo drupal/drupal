@@ -59,7 +59,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Label');
+    $header['label'] = t('Name');
     return $header + parent::buildHeader();
   }
 
