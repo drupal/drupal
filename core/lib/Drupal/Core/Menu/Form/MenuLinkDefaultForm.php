@@ -124,7 +124,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#type' => 'checkbox',
       '#title' => $this->t('Enable menu link'),
       '#description' => $this->t('Menu links that are not enabled will not be listed in any menu.'),
-      '#default_value' => !$this->menuLink->isHidden(),
+      '#default_value' => $this->menuLink->isEnabled(),
     );
 
     $form['expanded'] = array(
@@ -158,7 +158,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
-    $new_definition['hidden'] = $form_state->getValue('enabled') ? 0 : 1;
+    $new_definition['enabled'] = $form_state->getValue('enabled') ? 1 : 0;
     $new_definition['weight'] = (int) $form_state->getValue('weight');
     $new_definition['expanded'] = $form_state->getValue('expanded') ? 1 : 0;
     list($menu_name, $parent) = explode(':', $form_state->getValue('menu_parent'), 2);

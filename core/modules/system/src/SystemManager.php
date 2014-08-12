@@ -217,7 +217,7 @@ class SystemManager {
     // Only find the children of this link.
     $link_id = $instance->getPluginId();
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->excludeHiddenLinks();
+    $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
     $tree = $this->menuTree->load(NULL, $parameters);
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),

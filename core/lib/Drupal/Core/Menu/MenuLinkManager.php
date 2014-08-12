@@ -58,7 +58,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     // The default link options.
     'options' => array(),
     'expanded' => 0,
-    'hidden' => 0,
+    'enabled' => 1,
     // The name of the module providing this link.
     'provider' => '',
     'metadata' => array(),

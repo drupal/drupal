@@ -32,7 +32,7 @@ interface StaticMenuLinkOverridesInterface {
    *     - weight
    *     - menu_name
    *     - expanded
-   *     - hidden
+   *     - enabled
    *   or NULL if there is no override for the given ID.
    */
   public function loadOverride($id);
@@ -77,7 +77,7 @@ interface StaticMenuLinkOverridesInterface {
    *   - parent
    *   - weight
    *   - expanded
-   *   - hidden
+   *   - enabled
    *
    * @return array
    *   A list of properties which got saved.

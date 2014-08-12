@@ -1448,7 +1448,7 @@ function system_get_module_admin_tasks($module, array $info) {
 
   if (!isset($tree)) {
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot('system.admin')->excludeRoot()->excludeHiddenLinks();
+    $parameters->setRoot('system.admin')->excludeRoot()->onlyEnabledLinks();
     $tree = $menu_tree->load('system.admin', $parameters);
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),

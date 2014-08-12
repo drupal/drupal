@@ -46,7 +46,7 @@ function standard_install() {
   // Enable the Contact link in the footer menu.
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  $menu_link_manager->updateDefinition('contact.site_page', array('hidden' => 0));
+  $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => 1));
 
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));

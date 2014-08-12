@@ -129,7 +129,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
       'parent' => 1,
       'weight' => 1,
       'expanded' => 1,
-      'hidden' => 1,
+      'enabled' => 1,
     );
     // Filter the overrides to only those that are expected.
     $definition = array_intersect_key($definition, $expected);

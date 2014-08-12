@@ -64,12 +64,12 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
   public function getParent();
 
   /**
-   * Returns whether the menu link is hidden.
+   * Returns whether the menu link is enabled (not hidden).
    *
    * @return bool
-   *   TRUE for hidden, FALSE otherwise.
+   *   TRUE for enabled, FALSE otherwise.
    */
-  public function isHidden();
+  public function isEnabled();
 
   /**
    * Returns whether the child menu links should always been shown.

@@ -68,6 +68,11 @@ abstract class MenuWebTestBase extends WebTestBase {
       unset($expected_item['langcode']);
     }
 
+    if (isset($expected_item['enabled']) && $entity) {
+      $this->assertEqual($entity->enabled->value, $expected_item['enabled']);
+      unset($expected_item['enabled']);
+    }
+
     foreach ($expected_item as $key => $value) {
       $this->assertTrue(isset($definition[$key]));
       $this->assertEqual($definition[$key], $value);

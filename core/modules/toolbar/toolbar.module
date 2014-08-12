@@ -417,7 +417,7 @@ function toolbar_prerender_toolbar_administration_tray(array $element) {
   $menu_tree = \Drupal::menuTree();
   // Render the top-level administration menu links.
   $parameters = new MenuTreeParameters();
-  $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->excludeHiddenLinks();
+  $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
   $tree = $menu_tree->load(NULL, $parameters);
   $manipulators = array(
     array('callable' => 'menu.default_tree_manipulators:checkAccess'),
@@ -475,7 +475,7 @@ function toolbar_menu_navigation_links(array $tree) {
 function toolbar_get_rendered_subtrees() {
   $menu_tree = \Drupal::menuTree();
   $parameters = new MenuTreeParameters();
-  $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->excludeHiddenLinks();
+  $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->onlyEnabledLinks();
   $tree = $menu_tree->load(NULL, $parameters);
   $manipulators = array(
     array('callable' => 'menu.default_tree_manipulators:checkAccess'),

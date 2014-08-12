@@ -28,7 +28,7 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
     'parent' => 1,
     'weight' => 1,
     'expanded' => 1,
-    'hidden' => 1,
+    'enabled' => 1,
     'title' => 1,
     'description' => 1,
     'metadata' => 1,

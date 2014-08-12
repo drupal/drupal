@@ -115,14 +115,14 @@ class MenuTreeParametersTest extends UnitTestCase {
   }
 
   /**
-   * Tests excludeHiddenLinks().
+   * Tests onlyEnabledLinks().
    *
-   * @covers ::excludeHiddenLinks
+   * @covers ::onlyEnabledLinks
    */
-  public function testExcludeHiddenLinks() {
+  public function testOnlyEnabledLinks() {
     $parameters = new MenuTreeParameters();
-    $parameters->excludeHiddenLinks();
-    $this->assertEquals(0, $parameters->conditions['hidden']);
+    $parameters->onlyEnabledLinks();
+    $this->assertEquals(1, $parameters->conditions['enabled']);
   }
 
   /**

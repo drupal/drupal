@@ -149,11 +149,11 @@ interface MenuTreeStorageInterface {
   public function loadTreeData($menu_name, MenuTreeParameters $parameters);
 
   /**
-   * Loads all the visible menu links that are below the given ID.
+   * Loads all the enabled menu links that are below the given ID.
    *
    * The returned links are not ordered, and visible children will be included
-   * even if they have a hidden parent or ancestor so would not normally appear
-   * in a rendered tree.
+   * even if they have parent that is not enabled or ancestor so would not
+   * normally appear in a rendered tree.
    *
    * @param string $id
    *   The parent menu link ID.
@@ -161,7 +161,7 @@ interface MenuTreeStorageInterface {
    *   The maximum relative depth of the children relative to the passed parent.
    *
    * @return array
-   *   An array of visible (not hidden) link definitions, keyed by ID.
+   *   An array of enabled link definitions, keyed by ID.
    */
   public function loadAllChildren($id, $max_relative_depth = NULL);
 

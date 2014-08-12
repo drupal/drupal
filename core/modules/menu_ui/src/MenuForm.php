@@ -265,9 +265,9 @@ class MenuForm extends EntityForm {
       if ($link) {
         $id = 'menu_plugin_id:' . $link->getPluginId();
         $form[$id]['#item'] = $element;
-        $form[$id]['#attributes'] = $link->isHidden() ? array('class' => array('menu-disabled')) : array('class' => array('menu-enabled'));
+        $form[$id]['#attributes'] = $link->isEnabled() ? array('class' => array('menu-enabled')) : array('class' => array('menu-disabled'));
         $form[$id]['title']['#markup'] = $this->linkGenerator->generateFromUrl($link->getTitle(), $link->getUrlObject(), $link->getOptions());
-        if ($link->isHidden()) {
+        if (!$link->isEnabled()) {
           $form[$id]['title']['#markup'] .= ' (' . $this->t('disabled') . ')';
         }
         elseif (($url = $link->getUrlObject()) && !$url->isExternal() && $url->getRouteName() == 'user.page') {
@@ -278,7 +278,7 @@ class MenuForm extends EntityForm {
           '#type' => 'checkbox',
           '#title' => $this->t('Enable @title menu link', array('@title' => $link->getTitle())),
           '#title_display' => 'invisible',
-          '#default_value' => !$link->isHidden(),
+          '#default_value' => $link->isEnabled(),
         );
         $form[$id]['weight'] = array(
           '#type' => 'weight',
@@ -378,13 +378,7 @@ class MenuForm extends EntityForm {
         // Update any fields that have changed in this menu item.
         foreach ($fields as $field) {
           if ($element[$field]['#value'] != $element[$field]['#default_value']) {
-            // Hidden is a special case, the form value needs to be reversed.
-            if ($field == 'enabled') {
-              $updated_values['hidden'] = $element['enabled']['#value'] ? 0 : 1;
-            }
-            else {
-              $updated_values[$field] = $element[$field]['#value'];
-            }
+            $updated_values[$field] = $element[$field]['#value'];
           }
         }
         if ($updated_values) {

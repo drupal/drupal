@@ -94,7 +94,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     'weight',
     'options',
     'expanded',
-    'hidden',
+    'enabled',
     'provider',
     'metadata',
     'class',
@@ -384,7 +384,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     // and fill parents based on the parent link.
     else {
       // @todo We want to also check $original['has_children'] here, but that
-      //   will be 0 even if there are children if those are hidden.
+      //   will be 0 even if there are children if those are not enabled.
       //   has_children is really just the rendering hint. So, we either need
       //   to define another column (has_any_children), or do the extra query.
       //   https://www.drupal.org/node/2302149
@@ -409,7 +409,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     unset($fields['mlid']);
 
     // Cast Booleans to int, if needed.
-    $fields['hidden'] = (int) $fields['hidden'];
+    $fields['enabled'] = (int) $fields['enabled'];
     $fields['expanded'] = (int) $fields['expanded'];
     return $fields;
   }
@@ -599,7 +599,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query
         ->condition('menu_name', $link['menu_name'])
         ->condition('parent', $link['parent'])
-        ->condition('hidden', 0);
+        ->condition('enabled', 1);
 
       $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
       $this->connection->update($this->table, $this->options)
@@ -781,7 +781,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('menu_name', $menu_name);
       $query->condition('expanded', 1);
       $query->condition('has_children', 1);
-      $query->condition('hidden', 0);
+      $query->condition('enabled', 1);
       $query->condition('parent', $parents, 'IN');
       $query->condition('id', $parents, 'NOT IN');
       $result = $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
@@ -997,7 +997,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       return $tree;
     }
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot($id)->excludeHiddenLinks();
+    $parameters->setRoot($id)->onlyEnabledLinks();
     return $this->loadTreeData($root['menu_name'], $parameters);
   }
 
@@ -1057,7 +1057,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   public function loadAllChildren($id, $max_relative_depth = NULL) {
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot($id)->excludeRoot()->setMaxDepth($max_relative_depth)->excludeHiddenLinks();
+    $parameters->setRoot($id)->excludeRoot()->setMaxDepth($max_relative_depth)->onlyEnabledLinks();
     $links = $this->loadLinks(NULL, $parameters);
     foreach ($links as $id => $link) {
       $links[$id] = $this->prepareLink($link);
@@ -1289,11 +1289,11 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'not null' => TRUE,
           'default' => 'system',
         ),
-        'hidden' => array(
-          'description' => 'A flag for whether the link should be rendered in menus. (1 = a disabled menu item that may be shown on admin screens, 0 = a normal, visible link)',
+        'enabled' => array(
+          'description' => 'A flag for whether the link should be rendered in menus. (0 = a disabled menu item that may be shown on admin screens, 1 = a normal, visible link)',
           'type' => 'int',
           'not null' => TRUE,
-          'default' => 0,
+          'default' => 1,
           'size' => 'small',
         ),
         'discovered' => array(
@@ -1324,7 +1324,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'serialize' => TRUE,
         ),
         'has_children' => array(
-          'description' => 'Flag indicating whether any non-hidden links have this link as a parent (1 = children exist, 0 = no children).',
+          'description' => 'Flag indicating whether any enabled links have this link as a parent (1 = enabled children exist, 0 = no enabled children).',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,

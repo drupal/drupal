@@ -128,7 +128,7 @@ class AdminTest extends WebTestBase {
 
     // The system.admin link is normally the parent of all top-level admin links.
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->excludeHiddenLinks();
+    $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
     $tree = $menu_tree->load(NULL, $parameters);
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),

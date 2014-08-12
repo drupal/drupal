@@ -170,7 +170,7 @@ class BreadcrumbTest extends MenuTestBase {
         'type' => $type,
         'title' => $title,
         'menu' => array(
-          'hidden' => 0,
+          'enabled' => 1,
           'title' => 'Parent ' . $title,
           'description' => '',
           'menu_name' => $menu,
@@ -243,6 +243,7 @@ class BreadcrumbTest extends MenuTestBase {
         'title[0][value]' => "$name link",
         'url' => "taxonomy/term/{$term->id()}",
         'menu_parent' => "$menu:{$parent_mlid}",
+        'enabled[value]' => 1,
       );
       $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
       $menu_links = entity_load_multiple_by_properties('menu_link_content', array('title' => $edit['title[0][value]'], 'route_name' => 'taxonomy.term_page', 'route_parameters' => serialize(array('taxonomy_term' => $term->id()))));

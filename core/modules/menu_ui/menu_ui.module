@@ -197,7 +197,7 @@ function menu_ui_node_save(EntityInterface $node) {
     if (trim($definition['title'])) {
       if (!empty($definition['entity_id'])) {
         $entity = entity_load('menu_link_content', $definition['entity_id']);
-        $entity->hidden->value = 0;
+        $entity->enabled->value = 1;
         $entity->title->value = trim($definition['title']);
         $entity->description->value = trim($definition['description']);
         $entity->menu_name->value = $definition['menu_name'];
@@ -214,7 +214,7 @@ function menu_ui_node_save(EntityInterface $node) {
           'menu_name' => $definition['menu_name'],
           'parent' => $definition['parent'],
           'weight' => isset($definition['weight']) ? $definition['weight'] : 0,
-          'hidden' => 0,
+          'enabled' => 1,
           'bundle' => 'menu_link_content',
           'langcode' => $node->getUntranslated()->language()->id,
         ));

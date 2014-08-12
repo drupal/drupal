@@ -6,4 +6,4 @@ book.admin:
 book.render:
   title: Books
   route_name: book.render
-  hidden: 1
+  enabled: 0

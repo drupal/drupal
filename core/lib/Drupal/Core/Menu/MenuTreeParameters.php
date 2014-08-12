@@ -184,12 +184,12 @@ class MenuTreeParameters {
   }
 
   /**
-   * Excludes hidden links.
+   * Excludes links that are not enabled.
    *
    * @return $this
    */
-  public function excludeHiddenLinks() {
-    $this->addCondition('hidden', 0);
+  public function onlyEnabledLinks() {
+    $this->addCondition('enabled', 1);
     return $this;
   }
 

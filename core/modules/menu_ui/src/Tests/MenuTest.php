@@ -400,7 +400,7 @@ class MenuTest extends MenuWebTestBase {
     $item5->save();
 
     // Verify in the database.
-    $this->assertMenuLink($item1->getPluginId(), array('hidden' => 0));
+    $this->assertMenuLink($item1->getPluginId(), array('enabled' => 1));
 
     // Add an external link.
     $item7 = $this->addMenuLink('', 'http://drupal.org', $menu_name);
@@ -529,7 +529,7 @@ class MenuTest extends MenuWebTestBase {
       'url' => $path,
       'title[0][value]' => $title,
       'description[0][value]' => '',
-      'enabled' => 1,
+      'enabled[value]' => 1,
       'expanded[value]' => $expanded,
       'menu_parent' =>  $menu_name . ':' . $parent,
       'weight[0][value]' => $weight,
@@ -711,12 +711,12 @@ class MenuTest extends MenuWebTestBase {
    */
   function disableMenuLink(MenuLinkContent $item) {
     $mlid = $item->id();
-    $edit['enabled'] = FALSE;
+    $edit['enabled[value]'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
-    $this->assertMenuLink($item->getPluginId(), array('hidden' => 1));
+    $this->assertMenuLink($item->getPluginId(), array('enabled' => 0));
   }
 
   /**
@@ -727,11 +727,11 @@ class MenuTest extends MenuWebTestBase {
    */
   function enableMenuLink(MenuLinkContent $item) {
     $mlid = $item->id();
-    $edit['enabled'] = TRUE;
+    $edit['enabled[value]'] = TRUE;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Verify in the database.
-    $this->assertMenuLink($item->getPluginId(), array('hidden' => 0));
+    $this->assertMenuLink($item->getPluginId(), array('enabled' => 1));
   }
 
   /**

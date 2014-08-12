@@ -120,7 +120,7 @@ class SystemController extends ControllerBase {
     }
     // Load all menu links below it.
     $parameters = new MenuTreeParameters();
-    $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->excludeHiddenLinks();
+    $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
     $tree = $this->menuLinkTree->load(NULL, $parameters);
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),

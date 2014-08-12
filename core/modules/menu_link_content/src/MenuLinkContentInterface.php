@@ -118,12 +118,12 @@ interface MenuLinkContentInterface extends ContentEntityInterface {
   public function getPluginId();
 
   /**
-   * Returns whether the menu link is marked as hidden.
+   * Returns whether the menu link is marked as enabled.
    *
    * @return bool
-   *   TRUE if is not enabled, otherwise FALSE.
+   *   TRUE if is enabled, otherwise FALSE.
    */
-  public function isHidden();
+  public function isEnabled();
 
   /**
    * Returns whether the menu link is marked as always expanded.

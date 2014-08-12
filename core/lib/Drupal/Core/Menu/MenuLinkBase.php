@@ -61,8 +61,8 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public function isHidden() {
-    return (bool) $this->pluginDefinition['hidden'];
+  public function isEnabled() {
+    return (bool) $this->pluginDefinition['enabled'];
   }
 
   /**

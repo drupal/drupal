@@ -213,7 +213,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
     $new_definition = array();
     $new_definition['expanded'] = !$form_state->isValueEmpty(array('expanded', 'value')) ? 1 : 0;
-    $new_definition['hidden'] = $form_state->isValueEmpty('enabled') ? 1 : 0;
+    $new_definition['enabled'] = !$form_state->isValueEmpty(array('enabled', 'value')) ? 1 : 0;
     list($menu_name, $parent) = explode(':', $form_state->getValue('menu_parent'), 2);
     if (!empty($menu_name)) {
       $new_definition['menu_name'] = $menu_name;
@@ -294,14 +294,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       '#access' => !empty($language_configuration['language_show']),
     );
 
-    $form['enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable menu link'),
-      '#description' => $this->t('Menu links that are not enabled will not be listed in any menu.'),
-      '#default_value' => !$this->entity->isHidden(),
-      '#weight' => 0,
-    );
-
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
     $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $this->entity->getPluginId());
     $form['menu_parent']['#weight'] = 10;
@@ -342,7 +334,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
 
     $entity->parent->value = $new_definition['parent'];
     $entity->menu_name->value = $new_definition['menu_name'];
-    $entity->hidden->value = (bool) $new_definition['hidden'];
+    $entity->enabled->value = (bool) $new_definition['enabled'];
     $entity->expanded->value = $new_definition['expanded'];
 
     $entity->url->value = $new_definition['url'];

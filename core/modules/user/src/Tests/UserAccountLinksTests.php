@@ -70,7 +70,7 @@ class UserAccountLinksTests extends WebTestBase {
     $tree = $menu_tree->transform($tree, $manipulators);
     $this->assertEqual(count($tree), 1, 'The secondary links menu contains only one menu link.');
     $element = reset($tree);
-    $this->assertTrue($element->link->isHidden(), 'The menu link is hidden.');
+    $this->assertFalse($element->link->isEnabled(), 'The menu link is disabled.');
   }
 
   /**

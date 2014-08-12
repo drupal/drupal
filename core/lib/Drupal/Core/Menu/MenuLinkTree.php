@@ -205,7 +205,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
       /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $link = $data->link;
       // Generally we only deal with visible links, but just in case.
-      if ($link->isHidden()) {
+      if (!$link->isEnabled()) {
         continue;
       }
       // Set a class for the <li>-tag. Only set 'expanded' class if the link

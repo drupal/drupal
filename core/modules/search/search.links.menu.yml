@@ -1,7 +1,7 @@
 search.view:
   title: Search
   route_name: search.view
-  hidden: 1
+  enabled: 0
 search.settings:
   title: 'Search pages'
   parent: system.admin_config_search

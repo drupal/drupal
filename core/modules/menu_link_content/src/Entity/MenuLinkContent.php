@@ -157,8 +157,8 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   /**
    * {@inheritdoc}
    */
-  public function isHidden() {
-    return (bool) $this->get('hidden')->value;
+  public function isEnabled() {
+    return (bool) $this->get('enabled')->value;
   }
 
   /**
@@ -204,7 +204,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $definition['id'] = $this->getPluginId();
     $definition['metadata'] = array('entity_id' => $this->id());
     $definition['form_class'] = '\Drupal\menu_link_content\Form\MenuLinkContentForm';
-    $definition['hidden'] = $this->isHidden() ? 1 : 0;
+    $definition['enabled'] = $this->isEnabled() ? 1 : 0;
     $definition['expanded'] = $this->isExpanded() ? 1 : 0;
     $definition['provider'] = 'menu_link_content';
     $definition['discovered'] = 0;
@@ -366,13 +366,19 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'weight' => 0,
       ));
 
-    // @todo We manually create a form element for this, since the form logic is
-    // is inverted to show enabled. Flip this to a status field and use the
-    // normal entity Boolean widget. https://www.drupal.org/node/2305707
-    $fields['hidden'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Hidden'))
-      ->setDescription(t('A flag for whether the link should be hidden in menus or rendered normally.'))
-      ->setSetting('default_value', FALSE);
+    $fields['enabled'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Enabled'))
+      ->setDescription(t('A flag for whether the link should be enabled in menus or hidden.'))
+      ->setSetting('default_value', TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'boolean',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'settings' => array('display_label' => TRUE),
+        'weight' => 0,
+      ));
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
