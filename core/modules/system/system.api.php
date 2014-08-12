@@ -193,11 +193,14 @@ function callback_queue_worker($queue_item_data) {
  * specify their default values. The values returned by this hook will be
  * merged with the elements returned by form constructor implementations and so
  * can return defaults for any Form APIs keys in addition to those explicitly
- * documented by \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ * documented by \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * @return array
  *   An associative array with structure identical to that of the return value
- *   of \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ *
+ * @deprecated Use an annotated class instead, see
+ *   \Drupal\Core\Render\Element\ElementInterface.
  *
  * @see hook_element_info_alter()
  * @see system_element_info()
@@ -217,7 +220,7 @@ function hook_element_info() {
  *
  * @param array $types
  *   An associative array with structure identical to that of the return value
- *   of \Drupal\Core\Render\ElementInfoInterface::getInfo().
+ *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * @see hook_element_info()
  */

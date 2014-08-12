@@ -749,6 +749,9 @@ services:
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     parent: default_plugin_manager
+  plugin.manager.element_info:
+    class: Drupal\Core\Render\ElementInfoManager
+    parent: default_plugin_manager
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:
@@ -907,8 +910,7 @@ services:
   info_parser:
     class: Drupal\Core\Extension\InfoParser
   element_info:
-    class: Drupal\Core\Render\ElementInfo
-    arguments: ['@module_handler']
+    alias: plugin.manager.element_info
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
     tags:

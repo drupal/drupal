@@ -163,11 +163,21 @@
  * requests and the CSS files used to style that markup. In order to ensure that
  * a theme can completely customize the markup, module developers should avoid
  * directly writing HTML markup for pages, blocks, and other user-visible output
- * in their modules, and instead return structured "render arrays" (described
- * below). Doing this also increases usability, by ensuring that the markup used
- * for similar functionality on different areas of the site is the same, which
- * gives users fewer user interface patterns to learn.
+ * in their modules, and instead return structured "render arrays" (see @ref
+ * arrays below). Doing this also increases usability, by ensuring that the
+ * markup used for similar functionality on different areas of the site is the
+ * same, which gives users fewer user interface patterns to learn.
  *
+ * For further information on the Theme and Render APIs, see:
+ * - https://drupal.org/documentation/theme
+ * - https://drupal.org/node/722174
+ * - https://drupal.org/node/933976
+ * - https://drupal.org/node/930760
+ *
+ * @todo Check these links. Some are for Drupal 7, and might need updates for
+ *   Drupal 8.
+ *
+ * @section arrays Render arrays
  * The core structure of the Render API is the render array, which is a
  * hierarchical associative array containing data to be rendered and properties
  * describing how the data should be rendered. A render array that is returned
@@ -194,11 +204,8 @@
  * - #type: Specifies that the array contains data and options for a particular
  *   type of "render element" (examples: 'form', for an HTML form; 'textfield',
  *   'submit', and other HTML form element types; 'table', for a table with
- *   rows, columns, and headers). Modules define render elements by implementing
- *   hook_element_info(), which specifies the properties that are used in render
- *   arrays to provide the data and options, and default values for these
- *   properties. Look through implementations of hook_element_info() to discover
- *   what render elements are available.
+ *   rows, columns, and headers). See @ref elements below for more on render
+ *   element types.
  * - #theme: Specifies that the array contains data to be themed by a particular
  *   theme hook. Modules define theme hooks by implementing hook_theme(), which
  *   specifies the input "variables" used to provide data and options; if a
@@ -214,15 +221,29 @@
  *   normally preferable to use #theme or #type instead, so that the theme can
  *   customize the markup.
  *
- * For further information on the Theme and Render APIs, see:
- * - https://drupal.org/documentation/theme
- * - https://drupal.org/developing/modules/8
- * - https://drupal.org/node/722174
- * - https://drupal.org/node/933976
- * - https://drupal.org/node/930760
+ * @section elements Render elements
+ * Render elements are defined by Drupal core and modules. The primary way to
+ * define a render element is to create a render element plugin. There are
+ * two types of render element plugins:
+ * - Generic elements: Generic render element plugins implement
+ *   \Drupal\Core\Render\Element\ElementInterface, are annotated with
+ *   \Drupal\Core\Render\Annotation\RenderElement annotation, go in plugin
+ *   namespace Element, and generally extend the
+ *   \Drupal\Core\Render\Element\RenderElement base class.
+ * - Form input elements: Render elements representing form input elements
+ *   implement \Drupal\Core\Render\Element\FormElementInterface, are annotated
+ *   with \Drupal\Core\Render\Annotation\FormElement annotation, go in plugin
+ *   namespace Element, and generally extend the
+ *   \Drupal\Core\Render\Element\FormElement base class.
+ * See the @link plugin_api Plugin API topic @endlink for general information
+ * on plugins, and look for classes with the RenderElement or FormElement
+ * annotation to discover what render elements are available.
  *
- * @todo Check these links. Some are for Drupal 7, and might need updates for
- *   Drupal 8.
+ * Modules can also currently define render elements by implementing
+ * hook_element_info(), although defining a plugin is preferred.
+ * properties. Look through implementations of hook_element_info() to discover
+ * elements defined this way.
+ *
  * @see themeable
  *
  * @}

@@ -10,7 +10,11 @@ namespace Drupal\Core\Render;
 use Drupal\Component\Utility\String;
 
 /**
- * Deals with drupal render elements.
+ * Provides helper methods for Drupal render elements.
+ *
+ * @see \Drupal\Core\Render\Element\ElementInterface
+ *
+ * @ingroup theme_render
  */
 class Element {
 
@@ -47,7 +51,7 @@ class Element {
    *   The key to check.
    *
    * @return bool
-   *    TRUE if the element is a child, FALSE otherwise.
+   *   TRUE if the element is a child, FALSE otherwise.
    */
   public static function child($key) {
     return !isset($key[0]) || $key[0] != '#';
@@ -143,11 +147,11 @@ class Element {
    * @param array $element
    *   The renderable element to process. Passed by reference.
    * @param array $map
-   *   An associative array whose keys are element property names and whose values
-   *   are the HTML attribute names to set for corresponding the property; e.g.,
-   *   array('#propertyname' => 'attributename'). If both names are identical
-   *   except for the leading '#', then an attribute name value is sufficient and
-   *   no property name needs to be specified.
+   *   An associative array whose keys are element property names and whose
+   *   values are the HTML attribute names to set on the corresponding
+   *   property; e.g., array('#propertyname' => 'attributename'). If both names
+   *   are identical except for the leading '#', then an attribute name value is
+   *   sufficient and no property name needs to be specified.
    */
   public static function setAttributes(array &$element, array $map) {
     foreach ($map as $property => $attribute) {

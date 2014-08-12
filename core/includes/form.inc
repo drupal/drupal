@@ -566,22 +566,10 @@ function form_type_select_value($element, $input = FALSE) {
 /**
  * Determines the value for a textfield form element.
  *
- * @param $element
- *   The form element whose value is being populated.
- * @param $input
- *   The incoming input to populate the form element. If this is FALSE,
- *   the element's default value should be returned.
- *
- * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ * @deprecated Use \Drupal\Core\Render\Element\Textfield::valueCallback().
  */
-function form_type_textfield_value($element, $input = FALSE) {
-  if ($input !== FALSE && $input !== NULL) {
-    // Equate $input to the form value to ensure it's marked for
-    // validation.
-    return str_replace(array("\r", "\n"), '', $input);
-  }
+function form_type_textfield_value(&$element, $input, &$form_state) {
+  return Element\Textfield::valueCallback($element, $input, $form_state);
 }
 
 /**
@@ -1306,24 +1294,10 @@ function form_pre_render_actions_dropbutton(array $element) {
 /**
  * #process callback for #pattern form element property.
  *
- * @param $element
- *   An associative array containing the properties and children of the
- *   generic input element.
- * @param $form_state
- *   The current state of the form for the form this element belongs to.
- *
- * @return
- *   The processed element.
- *
- * @see form_validate_pattern()
+ * @deprecated Use \Drupal\Core\Render\Element\FormElement::processPattern().
  */
-function form_process_pattern($element, FormStateInterface $form_state) {
-  if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
-    $element['#attributes']['pattern'] = $element['#pattern'];
-    $element['#element_validate'][] = 'form_validate_pattern';
-  }
-
-  return $element;
+function form_process_pattern($element, FormStateInterface $form_state, &$complete_form) {
+  return Element\FormElement::processPattern($element, $form_state, $complete_form);
 }
 
 /**
@@ -1922,61 +1896,10 @@ function form_pre_render_details($element) {
 /**
  * Adds members of this group as actual elements for rendering.
  *
- * @param $element
- *   An associative array containing the properties and children of the
- *   element.
- *
- * @return
- *   The modified element with all group members.
+ * @deprecated Use \Drupal\Core\Render\ElementElementBase::preRenderGroup().
  */
 function form_pre_render_group($element) {
-  // The element may be rendered outside of a Form API context.
-  if (!isset($element['#parents']) || !isset($element['#groups'])) {
-    return $element;
-  }
-
-  // Inject group member elements belonging to this group.
-  $parents = implode('][', $element['#parents']);
-  $children = Element::children($element['#groups'][$parents]);
-  if (!empty($children)) {
-    foreach ($children as $key) {
-      // Break references and indicate that the element should be rendered as
-      // group member.
-      $child = (array) $element['#groups'][$parents][$key];
-      $child['#group_details'] = TRUE;
-      // Inject the element as new child element.
-      $element[] = $child;
-
-      $sort = TRUE;
-    }
-    // Re-sort the element's children if we injected group member elements.
-    if (isset($sort)) {
-      $element['#sorted'] = FALSE;
-    }
-  }
-
-  if (isset($element['#group'])) {
-    // Contains form element summary functionalities.
-    $element['#attached']['library'][] = 'core/drupal.form';
-
-    $group = $element['#group'];
-    // If this element belongs to a group, but the group-holding element does
-    // not exist, we need to render it (at its original location).
-    if (!isset($element['#groups'][$group]['#group_exists'])) {
-      // Intentionally empty to clarify the flow; we simply return $element.
-    }
-    // If we injected this element into the group, then we want to render it.
-    elseif (!empty($element['#group_details'])) {
-      // Intentionally empty to clarify the flow; we simply return $element.
-    }
-    // Otherwise, this element belongs to a group and the group exists, so we do
-    // not render it.
-    elseif (Element::children($element['#groups'][$group])) {
-      $element['#printed'] = TRUE;
-    }
-  }
-
-  return $element;
+  return Element\RenderElement::preRenderGroup($element);
 }
 
 /**
@@ -2064,43 +1987,10 @@ function template_preprocess_vertical_tabs(&$variables) {
  * Adds autocomplete functionality to elements with a valid
  * #autocomplete_route_name.
  *
- * Suppose your autocomplete route name is 'mymodule.autocomplete' and its path
- * is: '/mymodule/autocomplete/{a}/{b}'
- * In your form you have:
- * @code
- * '#autocomplete_route_name' => 'mymodule.autocomplete',
- * '#autocomplete_route_parameters' => array('a' => $some_key, 'b' => $some_id),
- * @endcode
- * The user types in "keywords" so the full path called is:
- * 'mymodule_autocomplete/$some_key/$some_id?q=keywords'
- *
- * @param array $element
- *   The form element to process. Properties used:
- *   - #autocomplete_route_name: A route to be used as callback URL by the
- *     autocomplete JavaScript library.
- *   - #autocomplete_route_parameters: The parameters to be used in conjunction
- *     with the route name.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
- *
- * @return array
- *   The form element.
+ * @deprecated Use \Drupal\Core\Render\Element\FormElement::processAutocomplete().
  */
-function form_process_autocomplete($element, FormStateInterface $form_state) {
-  $access = FALSE;
-  if (!empty($element['#autocomplete_route_name'])) {
-    $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
-
-    $path = \Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
-    $access = \Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser());
-  }
-  if ($access) {
-    $element['#attributes']['class'][] = 'form-autocomplete';
-    $element['#attached']['library'][] = 'core/drupal.autocomplete';
-    // Provide a data attribute for the JavaScript behavior to bind to.
-    $element['#attributes']['data-autocomplete-path'] = $path;
-  }
-  return $element;
+function form_process_autocomplete($element, FormStateInterface $form_state, &$complete_form) {
+  return Element\FormElement::processAutocomplete($element, $form_state, $complete_form);
 }
 
 /**
@@ -2206,20 +2096,10 @@ function form_pre_render_hidden($element) {
 /**
  * Prepares a #type 'textfield' render element for theme_input().
  *
- * @param array $element
- *   An associative array containing the properties of the element.
- *   Properties used: #title, #value, #description, #size, #maxlength,
- *   #placeholder, #required, #attributes.
- *
- * @return array
- *   The $element with prepared variables ready for theme_input().
+ * @deprecated Use \Drupal\Core\Render\Element\Textfield::preRenderTextfield().
  */
 function form_pre_render_textfield($element) {
-  $element['#attributes']['type'] = 'text';
-  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_attributes($element, array('form-text'));
-
-  return $element;
+  return Element\Textfield::preRenderTextfield($element);
 }
 
 /**

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * @defgroup ajax Ajax API
@@ -162,20 +163,10 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form element processing handler for the #ajax form property.
  *
- * @param $element
- *   An associative array containing the properties of the element.
- *
- * @return
- *   The processed element.
- *
- * @see ajax_pre_render_element()
+ * @deprecated Use \Drupal\Core\Render\Element\FormElement::processAjaxForm().
  */
-function ajax_process_form($element, FormStateInterface $form_state) {
-  $element = ajax_pre_render_element($element);
-  if (!empty($element['#ajax_processed'])) {
-    $form_state['cache'] = TRUE;
-  }
-  return $element;
+function ajax_process_form($element, FormStateInterface $form_state, &$complete_form) {
+  return Element\FormElement::processAjaxForm($element, $form_state, $complete_form);
 }
 
 /**

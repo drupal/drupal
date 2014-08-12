@@ -368,16 +368,6 @@ function system_element_info() {
     '#pre_render' => array('form_pre_render_image_button'),
     '#theme_wrappers' => array('input__image_button'),
   );
-  $types['textfield'] = array(
-    '#input' => TRUE,
-    '#size' => 60,
-    '#maxlength' => 128,
-    '#autocomplete_route_name' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern', 'form_process_group'),
-    '#pre_render' => array('form_pre_render_textfield', 'form_pre_render_group'),
-    '#theme' => 'input__textfield',
-    '#theme_wrappers' => array('form_element'),
-  );
   $types['tel'] = array(
     '#input' => TRUE,
     '#size' => 30,
@@ -446,19 +436,6 @@ function system_element_info() {
     '#element_validate' => array('form_validate_color'),
     '#pre_render' => array('form_pre_render_color'),
     '#theme' => 'input__color',
-    '#theme_wrappers' => array('form_element'),
-  );
-  $types['machine_name'] = array(
-    '#input' => TRUE,
-    '#default_value' => NULL,
-    '#required' => TRUE,
-    '#maxlength' => 64,
-    '#size' => 60,
-    '#autocomplete_route_name' => FALSE,
-    '#process' => array('form_process_machine_name', 'form_process_autocomplete', 'ajax_process_form'),
-    '#element_validate' => array('form_validate_machine_name'),
-    '#pre_render' => array('form_pre_render_textfield'),
-    '#theme' => 'input__textfield',
     '#theme_wrappers' => array('form_element'),
   );
   $types['password'] = array(
@@ -585,9 +562,6 @@ function system_element_info() {
   );
   $types['value'] = array(
     '#input' => TRUE,
-  );
-  $types['link'] = array(
-    '#pre_render' => array('drupal_pre_render_link'),
   );
   $types['fieldset'] = array(
     '#value' => NULL,
