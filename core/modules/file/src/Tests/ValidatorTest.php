@@ -13,6 +13,17 @@ namespace Drupal\file\Tests;
  * @group file
  */
 class ValidatorTest extends FileManagedUnitTestBase {
+
+  /**
+   * @var \Drupal\file\Entity\File
+   */
+  protected $image;
+
+  /**
+   * @var \Drupal\file\Entity\File
+   */
+  protected $non_image;
+
   function setUp() {
     parent::setUp();
 

@@ -18,13 +18,6 @@ use Drupal\field\Tests\FieldUnitTestBase;
  */
 class EmailItemTest extends FieldUnitTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('email');
-
   public function setUp() {
     parent::setUp();
 

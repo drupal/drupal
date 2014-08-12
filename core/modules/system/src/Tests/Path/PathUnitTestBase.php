@@ -15,6 +15,11 @@ use Drupal\Core\Database\Database;
  */
 abstract class PathUnitTestBase extends DrupalUnitTestBase {
 
+  /**
+   * @var \Drupal\system\Tests\Path\UrlAliasFixtures
+   */
+  protected $fixtures;
+
   public function setUp() {
     parent::setUp();
     $this->fixtures = new UrlAliasFixtures();

@@ -13,6 +13,7 @@ use Drupal\Core\Cache\ApcuBackend;
  * Tests the APCu cache backend.
  *
  * @group Cache
+ * @requires extension apc
  */
 class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
 
@@ -33,14 +34,14 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
   }
 
   protected function createCacheBackend($bin) {
-    $this->backend = new ApcuBackend($bin, $this->databasePrefix);
-    return $this->backend;
+    return new ApcuBackend($bin, $this->databasePrefix);
   }
 
   public function tearDown() {
-    $this->backend->removeBin();
+    foreach ($this->cachebackends as $bin => $cachebackend) {
+      $this->cachebackends[$bin]->removeBin();
+    }
     parent::tearDown();
-    $this->backend = NULL;
   }
 
 }

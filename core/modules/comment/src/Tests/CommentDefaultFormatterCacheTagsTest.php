@@ -24,7 +24,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'comment', 'menu_link');
+  public static $modules = array('entity_test', 'comment');
 
   /**
    * {@inheritdoc}

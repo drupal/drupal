@@ -135,7 +135,6 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    */
   public function testCommentHooks() {
     $account = $this->createUser();
-    $this->enableModules(array('entity', 'filter'));
     entity_create('node_type', array(
       'type' => 'article',
       'name' => 'Article',

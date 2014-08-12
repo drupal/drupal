@@ -22,7 +22,7 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'editor', 'ckeditor');
+  public static $modules = array('system', 'user', 'filter', 'editor', 'ckeditor');
 
   /**
    * The manager for "CKEditor plugin" plugins.
@@ -36,7 +36,6 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
 
     // Install the Filter module.
     $this->installSchema('system', 'url_alias');
-    $this->enableModules(array('user', 'filter'));
 
     // Create text format, associate CKEditor.
     $filtered_html_format = entity_create('filter_format', array(

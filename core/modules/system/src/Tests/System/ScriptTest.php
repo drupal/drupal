@@ -16,6 +16,11 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class ScriptTest extends DrupalUnitTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+    require_once DRUPAL_ROOT . '/core/includes/install.inc';
+  }
+
   /**
    * Tests password-hash.sh.
    */

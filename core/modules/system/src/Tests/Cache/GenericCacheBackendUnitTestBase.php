@@ -94,7 +94,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   Cache backend to test.
    */
-  final function getCacheBackend($bin = null) {
+  protected function getCacheBackend($bin = null) {
     if (!isset($bin)) {
       $bin = $this->getTestBin();
     }

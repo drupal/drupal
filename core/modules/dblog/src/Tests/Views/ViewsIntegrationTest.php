@@ -32,7 +32,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog_test_views');
+  public static $modules = array('dblog', 'dblog_test_views');
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,6 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('system', 'dblog'));
     $this->installSchema('dblog', array('watchdog'));
 
     ViewTestData::createTestViews(get_class($this), array('dblog_test_views'));

@@ -29,6 +29,11 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
   protected $storage;
 
   /**
+   * @var \Drupal\Core\Config\StorageInterface;
+   */
+  protected $invalidStorage;
+
+  /**
    * Tests storage CRUD operations.
    *
    * @todo Coverage: Trigger PDOExceptions / Database exceptions.

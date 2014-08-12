@@ -37,6 +37,13 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
   protected $field_name;
 
   /**
+   * Test field instances, keyed by entity type.
+   *
+   * @var array
+   */
+  protected $instance;
+
+  /**
    * The untranslatable test field name.
    *
    * @var string

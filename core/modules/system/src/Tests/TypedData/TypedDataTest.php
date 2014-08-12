@@ -273,12 +273,12 @@ class TypedDataTest extends DrupalUnitTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by URI.
     $typed_data->setValue($files[1]->getFileUri());
-    $this->assertEqual(is_resource($typed_data->getValue()), fopen($files[1]->getFileUri(), 'r'), 'Binary value was changed.');
+    $this->assertEqual(fgets($typed_data->getValue()), fgets(fopen($files[1]->getFileUri(), 'r')), 'Binary value was changed.');
     $this->assertTrue(is_string($typed_data->getString()), 'Binary value was converted to string');
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by resource.
     $typed_data->setValue(fopen($files[2]->getFileUri(), 'r'));
-    $this->assertEqual(is_resource($typed_data->getValue()), fopen($files[2]->getFileUri(), 'r'), 'Binary value was changed.');
+    $this->assertEqual(fgets($typed_data->getValue()), fgets(fopen($files[2]->getFileUri(), 'r')), 'Binary value was changed.');
     $this->assertTrue(is_string($typed_data->getString()), 'Binary value was converted to string');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);

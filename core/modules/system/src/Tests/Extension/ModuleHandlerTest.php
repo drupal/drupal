@@ -21,6 +21,11 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = array('system');
+
+  /**
+   * {@inheritdoc}
+   */
   public function containerBuild(ContainerBuilder $container) {
     parent::containerBuild($container);
     // Put a fake route bumper on the container to be called during uninstall.

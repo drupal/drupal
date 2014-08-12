@@ -21,6 +21,11 @@ class ScanDirectoryTest extends FileTestBase {
    */
   public static $modules = array('file_test');
 
+  /**
+   * @var string
+   */
+  protected $path;
+
   function setUp() {
     parent::setUp();
     $this->path = drupal_get_path('module', 'simpletest') . '/files';

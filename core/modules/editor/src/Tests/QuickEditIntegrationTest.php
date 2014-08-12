@@ -25,6 +25,11 @@ use Symfony\Component\HttpFoundation\Request;
 class QuickEditIntegrationTest extends QuickEditTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('editor', 'editor_test');
+
+  /**
    * The manager for editor plug-ins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -64,9 +69,6 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
 
     // Install the Filter module.
     $this->installSchema('system', 'url_alias');
-
-    // Enable the Text Editor and Text Editor Test module.
-    $this->enableModules(array('editor', 'editor_test'));
 
     // Create a field.
     $this->field_name = 'field_textarea';

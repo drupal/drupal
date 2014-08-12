@@ -24,7 +24,7 @@ class SystemMenuBlockTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'menu_link', 'block');
+  public static $modules = array('system', 'block');
 
   /**
    * Tests calculation of a system menu block's configuration dependencies.

@@ -29,13 +29,6 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
   protected $database;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('menu_link');
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {

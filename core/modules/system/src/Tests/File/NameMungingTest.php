@@ -13,6 +13,22 @@ namespace Drupal\system\Tests\File;
  * @group File
  */
 class NameMungingTest extends FileTestBase {
+
+  /**
+   * @var string
+   */
+  protected $bad_extension;
+
+  /**
+   * @var string
+   */
+  protected $name;
+
+  /**
+   * @var string
+   */
+  protected $name_with_uc_ext;
+
   function setUp() {
     parent::setUp();
     $this->bad_extension = 'php';

@@ -25,7 +25,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'system', 'user');
+  public static $modules = array('language', 'system', 'user', 'views_ui');
 
   /**
    * Contains thw wizard plugin manager.
@@ -38,8 +38,6 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     parent::setUp();
 
     $this->installConfig(array('language'));
-
-    $this->enableModules(array('views_ui'));
 
     $this->wizard = $this->container->get('plugin.manager.views.wizard')->createInstance('standard:views_test_data', array());
   }

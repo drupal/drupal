@@ -21,6 +21,11 @@ use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
 class MetadataGeneratorTest extends QuickEditTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('quickedit_test');
+
+  /**
    * The manager for editor plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -124,8 +129,6 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   public function testEditorWithCustomMetadata() {
     $this->installSchema('system', 'url_alias');
 
-    // Enable edit_test module so that the WYSIWYG editor becomes available.
-    $this->enableModules(array('quickedit_test'));
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);

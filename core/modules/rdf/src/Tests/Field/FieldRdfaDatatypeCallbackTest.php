@@ -38,9 +38,9 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
     ))->save();
 
     // Set up test values.
-    $this->test_value = $this->randomMachineName();
+    $this->testValue = $this->randomMachineName();
     $this->entity = entity_create('entity_test');
-    $this->entity->{$this->fieldName}->value = $this->test_value;
+    $this->entity->{$this->fieldName}->value = $this->testValue;
     $this->entity->save();
 
     $this->uri = $this->getAbsoluteUri($this->entity);
@@ -51,7 +51,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
    */
   public function testDefaultFormatter() {
     // Expected value is the output of the datatype callback, not the raw value.
-    $this->assertFormatterRdfa(array('type'=>'text_default'), 'http://schema.org/interactionCount', array('value' => 'foo' . $this->test_value));
+    $this->assertFormatterRdfa(array('type'=>'text_default'), 'http://schema.org/interactionCount', array('value' => 'foo' . $this->testValue));
   }
 
 }

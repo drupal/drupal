@@ -22,7 +22,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'editor');
+  public static $modules = array('system', 'user', 'filter', 'editor');
 
   /**
    * The manager for text editor plugins.
@@ -36,7 +36,6 @@ class EditorManagerTest extends DrupalUnitTestBase {
 
     // Install the Filter module.
     $this->installSchema('system', 'url_alias');
-    $this->enableModules(array('user', 'filter'));
 
     // Add text formats.
     $filtered_html_format = entity_create('filter_format', array(

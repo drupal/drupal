@@ -23,7 +23,7 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('email', 'text');
+  public static $modules = array('text');
 
   public function setUp() {
     parent::setUp();

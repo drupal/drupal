@@ -16,7 +16,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class EntityFormDisplayTest extends DrupalUnitTestBase {
 
-  public static $modules = array('entity', 'field', 'entity_test', 'user', 'text');
+  public static $modules = array('entity', 'field', 'entity_test', 'field_test', 'user', 'text');
 
   protected function setUp() {
     parent::setUp();
@@ -47,8 +47,6 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
    * Tests the behavior of a field component within an EntityFormDisplay object.
    */
   public function testFieldComponent() {
-    $this->enableModules(array('field_test'));
-
     // Create a field storage and an instance.
     $field_name = 'test_field';
     $field_storage = entity_create('field_storage_config', array(
@@ -177,8 +175,6 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
    * Tests deleting field instance.
    */
   public function testDeleteFieldInstance() {
-    $this->enableModules(array('field_sql_storage', 'field_test'));
-
     $field_name = 'test_field';
     // Create a field storage and an instance.
     $field_storage = entity_create('field_storage_config', array(

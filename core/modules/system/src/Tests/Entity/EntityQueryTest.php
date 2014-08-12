@@ -373,7 +373,7 @@ class EntityQueryTest extends EntityUnitTestBase {
   /**
    * Test tablesort().
    */
-  protected function testTableSort() {
+  public function testTableSort() {
     // While ordering on bundles do not give us a definite order, we can still
     // assert that all entities from one bundle are after the other as the
     // order dictates.
@@ -422,7 +422,7 @@ class EntityQueryTest extends EntityUnitTestBase {
   /**
    * Test that count queries are separated across entity types.
    */
-  protected function testCount() {
+  public function testCount() {
     // Create a field with the same name in a different entity type.
     $field_name = $this->figures;
     $field_storage = entity_create('field_storage_config', array(

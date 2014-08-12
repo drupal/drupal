@@ -119,7 +119,6 @@ class TextFormatterTest extends EntityUnitTestBase {
 
       // Verify the unprocessed text field formatter's render array.
       $build = $entity->get('unprocessed_text')->view(array('type' => $formatter));
-      debug($build[0]);
       $this->assertEqual($build[0]['#markup'], 'Hello, world!');
       $this->assertTrue(!isset($build[0]['#cache']), format_string('The @formatter formatter has the expected cache tags when formatting an unprocessed text field.', array('@formatter' => $formatter)));
     }

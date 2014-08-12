@@ -119,7 +119,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
   /**
    * Tests hook invocations.
    */
-  protected function testHooks() {
+  public function testHooks() {
     $state = $this->container->get('state');
     $entity = entity_create('entity_test', array(
       'name' => 'test',

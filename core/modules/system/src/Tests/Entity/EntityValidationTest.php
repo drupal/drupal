@@ -22,6 +22,21 @@ class EntityValidationTest extends EntityUnitTestBase {
   public static $modules = array('filter', 'text');
 
   /**
+   * @var string
+   */
+  protected $entity_name;
+
+  /**
+   * @var \Drupal\user\Entity\User
+   */
+  protected $entity_user;
+
+  /**
+   * @var string
+   */
+  protected $entity_field_text;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {

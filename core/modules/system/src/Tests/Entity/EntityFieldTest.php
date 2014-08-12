@@ -34,6 +34,21 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   public static $modules = array('filter', 'text', 'node', 'user');
 
+  /**
+   * @var string
+   */
+  protected $entity_name;
+
+  /**
+   * @var \Drupal\user\Entity\User
+   */
+  protected $entity_user;
+
+  /**
+   * @var string
+   */
+  protected $entity_field_text;
+
   public function setUp() {
     parent::setUp();
 
@@ -230,9 +245,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Tests adding a value to a field item list.
     $entity->name[] = 'Another name';
-    $this->assertEqual($entity->name[1]->value == 'Another name', format_string('%entity_type: List item added via [].', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name[1]->value, 'Another name', format_string('%entity_type: List item added via [].', array('%entity_type' => $entity_type)));
     $entity->name[2]->value = 'Third name';
-    $this->assertEqual($entity->name[2]->value == 'Third name', format_string('%entity_type: List item added by a accessing not yet created item.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name[2]->value, 'Third name', format_string('%entity_type: List item added by a accessing not yet created item.', array('%entity_type' => $entity_type)));
 
     // Test removing and empty-ing list items.
     $this->assertEqual(count($entity->name), 3, format_string('%entity_type: List has 3 items.', array('%entity_type' => $entity_type)));
