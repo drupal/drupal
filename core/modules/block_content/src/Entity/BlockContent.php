@@ -38,10 +38,10 @@ use Drupal\block_content\BlockContentInterface;
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
  *   links = {
- *     "canonical" = "block_content.edit",
- *     "delete-form" = "block_content.delete",
- *     "edit-form" = "block_content.edit",
- *     "admin-form" = "block_content.type_edit"
+ *     "canonical" = "entity.block_content.canonical",
+ *     "delete-form" = "entity.block_content.delete_form",
+ *     "edit-form" = "entity.block_content.canonical",
+ *     "admin-form" = "entity.block_content_type.edit_form"
  *   },
  *   fieldable = TRUE,
  *   translatable = TRUE,

@@ -26,7 +26,7 @@ block_content.add_form:
   requirements:
     _permission: 'administer blocks'
 
-block_content.type_delete:
+entity.block_content_type.delete_form:
   path: '/admin/structure/block/block-content/manage/{block_content_type}/delete'
   defaults:
     _entity_form: 'block_content_type.delete'
@@ -36,7 +36,7 @@ block_content.type_delete:
   options:
     _admin_route: TRUE
 
-block_content.edit:
+entity.block_content.canonical:
   path: '/block/{block_content}'
   defaults:
     _entity_form: 'block_content.edit'
@@ -45,7 +45,7 @@ block_content.edit:
   requirements:
     _entity_access: 'block_content.update'
 
-block_content.delete:
+entity.block_content.delete_form:
   path: '/block/{block_content}/delete'
   defaults:
     _entity_form: 'block_content.delete'
@@ -63,7 +63,7 @@ block_content.type_add:
   requirements:
     _permission: 'administer blocks'
 
-block_content.type_edit:
+entity.block_content_type.edit_form:
   path: '/admin/structure/block/block-content/manage/{block_content_type}'
   defaults:
     _entity_form: 'block_content_type.edit'

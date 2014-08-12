@@ -35,8 +35,8 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "block_content.type_delete",
- *     "edit-form" = "block_content.type_edit"
+ *     "delete-form" = "entity.block_content_type.delete_form",
+ *     "edit-form" = "entity.block_content_type.edit_form"
  *   }
  * )
  */

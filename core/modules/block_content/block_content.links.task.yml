@@ -11,17 +11,17 @@ block_content.type_list:
   route_name: block_content.type_list
   parent_id: block_content.list
 
-block_content.edit:
+entity.block_content.canonical:
   title: Edit
-  route_name: block_content.edit
-  base_route: block_content.edit
-block_content.delete:
+  route_name: entity.block_content.canonical
+  base_route: entity.block_content.canonical
+entity.block_content.delete_form:
   title: Delete
-  route_name: block_content.delete
-  base_route: block_content.edit
+  route_name: entity.block_content.delete_form
+  base_route: entity.block_content.canonical
 
 # Default tab for custom block type editing.
-block_content.type_edit:
+entity.block_content_type.edit_form:
   title: 'Edit'
-  route_name: block_content.type_edit
-  base_route: block_content.type_edit
+  route_name: entity.block_content_type.edit_form
+  base_route: entity.block_content_type.edit_form
