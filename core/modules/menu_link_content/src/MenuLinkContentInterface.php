@@ -48,8 +48,8 @@ interface MenuLinkContentInterface extends ContentEntityInterface {
    *
    * @param array $route_parameters
    *   The route parameters, usually derived from the path entered by the
-   *   administrator. For example, for a link to a node with route 'node.view'
-   *   the route needs the node ID as a parameter:
+   *   administrator. For example, for a link to a node with route
+   *   'entity.node.canonical' the route needs the node ID as a parameter:
    *   @code
    *     array('node' => 2)
    *   @endcode

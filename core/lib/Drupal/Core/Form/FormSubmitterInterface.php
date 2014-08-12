@@ -59,7 +59,7 @@ interface FormSubmitterInterface {
    * @endcode
    * And here is an example of how to redirect to 'node/123?foo=bar#baz':
    * @code
-   * $form_state->setRedirect('node.view',
+   * $form_state->setRedirect('entity.node.canonical',
    *   array('node' => 123),
    *   array(
    *     'query' => array(

@@ -319,7 +319,7 @@ use Drupal\Core\Render\Element;
  *   entity interface you have defined as its parameter, and returns routing
  *   information for the entity page; see node_uri() for an example. You will
  *   also need to add a corresponding route to your module's routing.yml file;
- *   see the node.view route in node.routing.yml for an example, and see
+ *   see the entity.node.canonical route in node.routing.yml for an example, and see
  *   @ref sec_routes below for some notes.
  * - Define routing and links for the various URLs associated with the entity.
  *   These go into the 'links' annotation, with the link type as the key, and

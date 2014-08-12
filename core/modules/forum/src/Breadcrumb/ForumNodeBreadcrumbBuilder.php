@@ -18,7 +18,7 @@ class ForumNodeBreadcrumbBuilder extends ForumBreadcrumbBuilderBase {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    return $route_match->getRouteName() == 'node.view'
+    return $route_match->getRouteName() == 'entity.node.canonical'
       && $route_match->getParameter('node')
       && $this->forumManager->checkNodeType($route_match->getParameter('node'));
   }

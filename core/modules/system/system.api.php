@@ -411,9 +411,10 @@ function hook_page_build(&$page) {
  *   patten is the route name followed by a dot and a unique suffix. For
  *   example, an additional logout link might have a machine name of
  *   user.logout.navigation, and default links provided to edit the article and
- *   page content types could use machine names node.type_edit.article and
- *   node.type_edit.page. Since the machine name may be arbitrary, you should
- *   never write code that assumes it is identical to the route name.
+ *   page content types could use machine names
+ *   entity.node_type.edit_form.article and entity.node_type.edit_form.page.
+ *   Since the machine name may be arbitrary, you should never write code that
+ *   assumes it is identical to the route name.
  *
  *   The value corresponding to each machine name key is an associative array
  *   that may contain the following key-value pairs:

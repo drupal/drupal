@@ -94,7 +94,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('node.revision_overview', array('node' => $this->revision->id()));
+    return new Url('entity.node.version_history', array('node' => $this->revision->id()));
   }
 
   /**
@@ -124,12 +124,12 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();
     drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($this->revision->getRevisionCreationTime()), '@type' => $node_type, '%title' => $this->revision->label())));
     $form_state->setRedirect(
-      'node.view',
+      'entity.node.canonical',
       array('node' => $this->revision->id())
     );
     if ($this->connection->query('SELECT COUNT(DISTINCT vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $this->revision->id()))->fetchField() > 1) {
       $form_state->setRedirect(
-        'node.revision_overview',
+        'entity.node.version_history',
         array('node' => $this->revision->id())
       );
     }

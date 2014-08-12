@@ -87,7 +87,7 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       while (!empty($book['p' . ($depth + 1)])) {
         if (!empty($parent_books[$book['p' . $depth]]) && ($parent_book = $parent_books[$book['p' . $depth]])) {
           if ($parent_book->access('view', $this->account)) {
-            $links[] = $this->l($parent_book->label(), 'node.view', array('node' => $parent_book->id()));
+            $links[] = $this->l($parent_book->label(), 'entity.node.canonical', array('node' => $parent_book->id()));
           }
         }
         $depth++;

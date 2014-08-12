@@ -138,10 +138,10 @@ function node_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
         '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';
 
-    case 'node.revision_overview':
+    case 'entity.node.version_history':
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
 
-    case 'node.page_edit':
+    case 'entity.node.edit_form':
       $node = $route_match->getParameter('node');
       $type = $node->getType();
       return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
@@ -545,7 +545,7 @@ function node_revision_delete($revision_id) {
  */
 function node_is_page(NodeInterface $node) {
   $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() == 'node.view') {
+  if ($route_match->getRouteName() == 'entity.node.canonical') {
     $page_node = $route_match->getParameter('node');
   }
   return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);

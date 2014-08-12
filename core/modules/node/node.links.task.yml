@@ -1,25 +1,25 @@
-node.view:
-  route_name: node.view
-  base_route: node.view
+entity.node.canonical:
+  route_name: entity.node.canonical
+  base_route: entity.node.canonical
   title: 'View'
-node.page_edit:
-  route_name: node.page_edit
-  base_route: node.view
+entity.node.edit_form:
+  route_name: entity.node.edit_form
+  base_route: entity.node.canonical
   title: Edit
-node.delete_confirm:
-  route_name: node.delete_confirm
-  base_route: node.view
+entity.node.delete_form:
+  route_name: entity.node.delete_form
+  base_route: entity.node.canonical
   title: Delete
   weight: 10
-node.revision_overview:
-  route_name: node.revision_overview
-  base_route: node.view
+entity.node.version_history:
+  route_name: entity.node.version_history
+  base_route: entity.node.canonical
   title: 'Revisions'
   weight: 20
-node.type_edit:
+entity.node_type.edit_form:
   title: 'Edit'
-  route_name: node.type_edit
-  base_route: node.type_edit
+  route_name: entity.node_type.edit_form
+  base_route: entity.node_type.edit_form
 node.overview_types:
   title: List
   route_name: node.overview_types

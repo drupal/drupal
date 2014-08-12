@@ -318,7 +318,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertMenuLink($item6->getPluginId(), array(
       'children' => array(),
       'parents' => array($item6->getPluginId(), $item4->getPluginId()),
-      'route_name' => 'node.view',
+      'route_name' => 'entity.node.canonical',
       'route_parameters' => array('node' => $node5->id()),
       'url' => '',
       // See above.

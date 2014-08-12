@@ -450,7 +450,7 @@ class NodeForm extends ContentEntityForm {
       $form_state['nid'] = $node->id();
       if ($node->access('view')) {
         $form_state->setRedirect(
-          'node.view',
+          'entity.node.canonical',
           array('node' => $node->id())
         );
       }

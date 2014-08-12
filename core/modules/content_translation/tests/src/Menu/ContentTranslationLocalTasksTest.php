@@ -27,7 +27,7 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
     $entity_type->expects($this->any())
       ->method('getLinkTemplate')
       ->will($this->returnValueMap(array(
-        array('canonical', 'node.view'),
+        array('canonical', 'entity.node.canonical'),
         array('drupal:content-translation-overview', 'content_translation.translation_overview_node'),
       )));
     $content_translation_manager = $this->getMock('Drupal\content_translation\ContentTranslationManagerInterface');
@@ -53,19 +53,19 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function providerTestBlockAdminDisplay() {
     return array(
-      array('node.view', array(array(
+      array('entity.node.canonical', array(array(
         'content_translation.local_tasks:content_translation.translation_overview_node',
-        'node.view',
-        'node.page_edit',
-        'node.delete_confirm',
-        'node.revision_overview',
+        'entity.node.canonical',
+        'entity.node.edit_form',
+        'entity.node.delete_form',
+        'entity.node.version_history',
       ))),
       array('content_translation.translation_overview_node', array(array(
         'content_translation.local_tasks:content_translation.translation_overview_node',
-        'node.view',
-        'node.page_edit',
-        'node.delete_confirm',
-        'node.revision_overview',
+        'entity.node.canonical',
+        'entity.node.edit_form',
+        'entity.node.delete_form',
+        'entity.node.version_history',
       ))),
     );
   }

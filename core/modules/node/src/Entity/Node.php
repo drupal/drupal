@@ -51,11 +51,11 @@ use Drupal\user\UserInterface;
  *   bundle_entity_type = "node_type",
  *   permission_granularity = "bundle",
  *   links = {
- *     "canonical" = "node.view",
- *     "delete-form" = "node.delete_confirm",
- *     "edit-form" = "node.page_edit",
- *     "version-history" = "node.revision_overview",
- *     "admin-form" = "node.type_edit"
+ *     "canonical" = "entity.node.canonical",
+ *     "delete-form" = "entity.node.delete_form",
+ *     "edit-form" = "entity.node.edit_form",
+ *     "version-history" = "entity.node.version_history",
+ *     "admin-form" = "entity.node_type.edit_form"
  *   }
  * )
  */

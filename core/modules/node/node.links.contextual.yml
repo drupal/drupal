@@ -1,10 +1,10 @@
-node.page_edit:
-  route_name: node.page_edit
+entity.node.edit_form:
+  route_name: entity.node.edit_form
   group: node
   title: Edit
 
-node.delete_confirm:
-  route_name: node.delete_confirm
+entity.node.delete_form:
+  route_name: entity.node.delete_form
   group: node
   title: Delete
   weight: 10

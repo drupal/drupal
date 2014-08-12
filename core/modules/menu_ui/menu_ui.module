@@ -209,7 +209,7 @@ function menu_ui_node_save(EntityInterface $node) {
         $entity = entity_create('menu_link_content', array(
           'title' => trim($definition['title']),
           'description' => trim($definition['description']),
-          'route_name' => 'node.view',
+          'route_name' => 'entity.node.canonical',
           'route_parameters' => array('node' => $node->id()),
           'menu_name' => $definition['menu_name'],
           'parent' => $definition['parent'],
@@ -233,7 +233,7 @@ function menu_ui_node_predelete(EntityInterface $node) {
   // Delete all MenuLinkContent links that point to this node.
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  $result = $menu_link_manager->loadLinksByRoute('node.view', array('node' => $node->id()));
+  $result = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $node->id()));
 
   if (!empty($result)) {
     foreach ($result as $id => $instance) {
@@ -259,7 +259,7 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       $type_menus = $node_type_config->get('available_menus');
       if (in_array($menu_name, $type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
-          ->condition('route_name', 'node.view')
+          ->condition('route_name', 'entity.node.canonical')
           ->condition('route_parameters', serialize(array('node' => $node->id())))
           ->condition('menu_name', $menu_name)
           ->sort('id', 'ASC')
@@ -271,7 +271,7 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$id && !empty($type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
-          ->condition('route_name', 'node.view')
+          ->condition('route_name', 'entity.node.canonical')
           ->condition('route_parameters', serialize(array('node' => $node->id())))
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->sort('id', 'ASC')

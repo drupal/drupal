@@ -10,6 +10,6 @@ book.settings:
 
 book.outline:
   route_name: book.outline
-  base_route: node.view
+  base_route: entity.node.canonical
   title: Outline
   weight: 2

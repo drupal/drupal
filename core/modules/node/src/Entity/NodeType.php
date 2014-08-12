@@ -35,9 +35,8 @@ use Drupal\node\NodeTypeInterface;
  *     "label" = "name"
  *   },
  *   links = {
- *     "add-form" = "node.add",
- *     "edit-form" = "node.type_edit",
- *     "delete-form" = "node.type_delete_confirm"
+ *     "edit-form" = "entity.node_type.edit_form",
+ *     "delete-form" = "entity.node_type.delete_form"
  *   }
  * )
  */

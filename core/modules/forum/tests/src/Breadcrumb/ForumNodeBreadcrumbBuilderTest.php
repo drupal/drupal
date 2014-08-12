@@ -84,20 +84,20 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ),
       array(
         FALSE,
-        'NOT.node.view',
+        'NOT.entity.node.canonical',
       ),
       array(
         FALSE,
-        'node.view',
+        'entity.node.canonical',
       ),
       array(
         FALSE,
-        'node.view',
+        'entity.node.canonical',
         array(array('node', NULL)),
       ),
       array(
         TRUE,
-        'node.view',
+        'entity.node.canonical',
         array(array('node', $mock_node)),
       ),
     );

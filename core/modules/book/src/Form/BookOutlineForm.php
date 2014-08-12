@@ -103,7 +103,7 @@ class BookOutlineForm extends ContentEntityForm {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect(
-      'node.view',
+      'entity.node.canonical',
       array('node' => $this->entity->id())
     );
     $book_link = $form_state->getValue('book');
