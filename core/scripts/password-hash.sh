@@ -11,10 +11,7 @@
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
-// Check for $_SERVER['argv'] instead of PHP_SAPI === 'cli' to allow this script
-// to be tested with the Simpletest UI test runner.
-// @see \Drupal\system\Tests\System\ScriptTest
-if (!isset($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
+if (PHP_SAPI !== 'cli') {
   return;
 }
 
