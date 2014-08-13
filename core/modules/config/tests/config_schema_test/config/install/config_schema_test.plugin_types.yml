@@ -1,0 +1,30 @@
+tests:
+  -
+    plugin_id: boolean
+    value: TRUE
+  -
+    plugin_id: boolean:derivative
+    value: TRUE
+  -
+    plugin_id: string
+    value: 'Foo'
+  -
+    plugin_id: string:derivative
+    value: 'Foo'
+test_with_parents:
+  -
+    plugin_id: boolean
+    settings:
+      value: TRUE
+  -
+    plugin_id: boolean:derivative
+    settings:
+      value: TRUE
+  -
+    plugin_id: string
+    settings:
+      value: 'Foo'
+  -
+    plugin_id: string:derivative
+    settings:
+      value: 'Foo'

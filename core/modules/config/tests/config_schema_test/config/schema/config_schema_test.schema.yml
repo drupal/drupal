@@ -149,3 +149,61 @@ config_schema_test.ignore:
     weight:
       type: integer
       label: 'Weight'
+
+config_schema_test.plugin_types:
+  type: mapping
+  mapping:
+    tests:
+      type: sequence
+      sequence:
+        - type: test.plugin_types.[plugin_id]
+    test_with_parents:
+      type: sequence
+      sequence:
+        - type: mapping
+          mapping:
+            plugin_id:
+              type: string
+            settings:
+              type: test_with_parents.plugin_types.[%parent.plugin_id]
+
+test.plugin_types:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+
+test.plugin_types.boolean:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+    value:
+      type: boolean
+
+test.plugin_types.boolean:*:
+  type: test.plugin_types.boolean
+
+test_with_parents.plugin_types.boolean:
+  type: mapping
+  mapping:
+    value:
+      type: boolean
+
+test_with_parents.plugin_types.boolean:*:
+  type: test_with_parents.plugin_types.boolean
+
+test.plugin_types.*:
+  type: mapping
+  mapping:
+    plugin_id:
+      type: string
+    value:
+      type: string
+
+test_with_parents.plugin_types.*:
+  type: mapping
+  mapping:
+    value:
+      type: string
+

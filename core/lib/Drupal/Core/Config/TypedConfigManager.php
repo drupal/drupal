@@ -81,7 +81,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // Add default values for data type and replace variables.
     $definition += array('type' => 'undefined');
 
-    if (strpos($definition['type'], ']')) {
+    $type = $definition['type'];
+    if (strpos($type, ']')) {
       // Replace variable names in definition.
       $replace = is_array($value) ? $value : array();
       if (isset($parent)) {
@@ -90,10 +91,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       if (isset($name)) {
         $replace['%key'] = $name;
       }
-      $definition['type'] = $this->replaceName($definition['type'], $replace);
+      $type = $this->replaceName($type, $replace);
+      // Remove the type from the definition so that it is replaced with the
+      // concrete type from schema definitions.
+      unset($definition['type']);
     }
     // Add default values from type definition.
-    $definition += $this->getDefinition($definition['type']);
+    $definition += $this->getDefinition($type);
 
     $data_definition = $this->createDataDefinition($definition['type']);
 
@@ -147,15 +151,16 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
-   * Gets fallback metadata name.
+   * Gets fallback configuration schema name.
    *
    * @param string $name
    *   Configuration name or key.
    *
    * @return null|string
-   *   Same name with the last part(s) replaced by the filesystem marker.
-   *   for example, breakpoint.breakpoint.module.toolbar.narrow check for
-   *   definition in below order:
+   *   The resolved schema name for the given configuration name or key. Returns
+   *   null if there is no schema name to fallback to. For example,
+   *   breakpoint.breakpoint.module.toolbar.narrow will check for definitions in
+   *   the following order:
    *     breakpoint.breakpoint.module.toolbar.*
    *     breakpoint.breakpoint.module.*.*
    *     breakpoint.breakpoint.module.*
@@ -163,12 +168,19 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *     breakpoint.breakpoint.*
    *     breakpoint.*.*.*.*
    *     breakpoint.*
-   *   Returns null, if no matching element.
+   *   Colons are also used, for example,
+   *   block.settings.system_menu_block:footer will check for definitions in the
+   *   following order:
+   *     block.settings.system_menu_block:*
+   *     block.settings.*:*
+   *     block.settings.*
+   *     block.*.*:*
+   *     block.*
    */
   protected function getFallbackName($name) {
     // Check for definition of $name with filesystem marker.
-    $replaced = preg_replace('/(\.[^\.]+)([\.\*]*)$/', '.*\2', $name);
-    if ($replaced != $name ) {
+    $replaced = preg_replace('/([^\.:]+)([\.:\*]*)$/', '*\2', $name);
+    if ($replaced != $name) {
       if (isset($this->definitions[$replaced])) {
         return $replaced;
       }
@@ -177,7 +189,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         // wildcard to see if there is a greedy match. For example,
         // breakpoint.breakpoint.*.* becomes
         // breakpoint.breakpoint.*
-        $one_star = preg_replace('/\.([\.\*]*)$/', '.*', $replaced);
+        $one_star = preg_replace('/\.([:\.\*]*)$/', '.*', $replaced);
         if ($one_star != $replaced && isset($this->definitions[$one_star])) {
           return $one_star;
         }

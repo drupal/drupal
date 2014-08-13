@@ -397,4 +397,37 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $this->assertIdentical($definition, $definition2);
   }
 
+  /**
+   * Tests use of colons in schema type determination.
+   *
+   * @see \Drupal\Core\Config\TypedConfigManager::getFallbackName()
+   */
+  function testColonsInSchemaTypeDetermination() {
+    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('tests');
+    $definition = $tests[0]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test.plugin_types.boolean');
+
+    $definition = $tests[1]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test.plugin_types.boolean:*');
+
+    $definition = $tests[2]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test.plugin_types.*');
+
+    $definition = $tests[3]->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test.plugin_types.*');
+
+    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('test_with_parents');
+    $definition = $tests[0]['settings']->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.boolean');
+
+    $definition = $tests[1]['settings']->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.boolean:*');
+
+    $definition = $tests[2]['settings']->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.*');
+
+    $definition = $tests[3]['settings']->getDataDefinition()->toArray();
+    $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.*');
+  }
+
 }
