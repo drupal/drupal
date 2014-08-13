@@ -45,28 +45,24 @@ function tracker_page($account = NULL) {
 
   $rows = array();
   if (!empty($tracker_data)) {
-    $nids = array_keys($tracker_data);
-    $nodes = node_load_multiple($nids);
-    // @todo This should be actually filtering on the desired language and just
-    //   fall back to the default language.
-    $result = db_query("
-    SELECT
-      n.nid,
-      SUM(l.comment_count) AS comment_count
-    FROM {node_field_data} n
-      INNER JOIN {comment_entity_statistics} l
-        ON n.nid = l.entity_id AND l.entity_type = 'node'
-      INNER JOIN {users} u
-        ON n.uid = u.uid
-    WHERE n.nid IN (:nids)
-      AND n.default_langcode = 1
-    GROUP BY n.nid
-    ORDER BY n.changed DESC", array(
-      ':nids' => array_keys($nodes)
-    ), array('target' => 'replica'))->fetchAllKeyed();
-    foreach ($result as $nid => $comment_count) {
+    // Load nodes into an array with the same order as $tracker_data.
+    $nodes = entity_load_multiple('node', array_keys($tracker_data));
+
+    // Enrich the node data.
+    $result = \Drupal::service('comment.statistics')->read($nodes, 'node', FALSE);
+    foreach ($result as $statistics) {
+      // The node ID may not be unique; there can be multiple comment fields.
+      // Make comment_count the total of all comments.
+      $nid = $statistics->entity_id;
+      if (empty($nodes[$nid]->comment_count)
+          || !is_numeric($nodes[$nid]->comment_count)) {
+        $nodes[$nid]->comment_count = $statistics->comment_count;
+      }
+      else {
+        $nodes[$nid]->comment_count += $statistics->comment_count;
+      }
+
       $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
-      $nodes[$nid]->comment_count = $comment_count;
     }
 
     // Display the data.

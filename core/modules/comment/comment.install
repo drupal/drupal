@@ -27,7 +27,7 @@ function comment_uninstall() {
  */
 function comment_install() {
   // By default, maintain entity statistics for comments.
-  // @see \Drupal\comment\CommentStorage::updateEntityStatistics().
+  // @see \Drupal\comment\CommentStatisticsInterface
   \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
 }
 

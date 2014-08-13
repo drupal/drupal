@@ -26,13 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentStorage extends ContentEntityDatabaseStorage implements CommentStorageInterface {
 
   /**
-   * The comment statistics service.
-   *
-   * @var \Drupal\comment\CommentStatisticsInterface
-   */
-  protected $statistics;
-
-  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -50,14 +43,11 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    *   The entity manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\comment\CommentStatisticsInterface $comment_statistics
-   *   The comment statistics service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics, AccountInterface $current_user, CacheBackendInterface $cache) {
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, AccountInterface $current_user, CacheBackendInterface $cache) {
     parent::__construct($entity_info, $database, $entity_manager, $cache);
-    $this->statistics = $comment_statistics;
     $this->currentUser = $current_user;
   }
 
@@ -69,17 +59,9 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       $entity_info,
       $container->get('database'),
       $container->get('entity.manager'),
-      $container->get('comment.statistics'),
       $container->get('current_user'),
       $container->get('cache.entity')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateEntityStatistics(CommentInterface $comment) {
-    $this->statistics->update($comment);
   }
 
   /**

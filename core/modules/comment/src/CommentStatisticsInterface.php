@@ -32,11 +32,14 @@ interface CommentStatisticsInterface {
    *   Array of entities on which commenting is enabled, keyed by id
    * @param string $entity_type
    *   The entity type of the passed entities.
+   * @param boolean $accurate
+   *   (optional) Indicates if results must be completely up to date. If set to
+   *   FALSE, a replica database will used if available. Defaults to TRUE.
    *
    * @return object[]
    *   Array of statistics records.
    */
-  public function read($entities, $entity_type);
+  public function read($entities, $entity_type, $accurate = TRUE);
 
   /**
    * Delete comment statistics records for an entity.

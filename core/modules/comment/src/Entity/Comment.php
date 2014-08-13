@@ -76,9 +76,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
       $thread = $this->getThread();
       if (empty($thread)) {
         if ($this->threadLock) {
-          // As preSave() is protected, this can only happen when this class
-          // is extended in a faulty manner.
-          throw new \LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
+          // Thread lock was not released after being set previously.
+          // This suggests there's a bug in code using this class.
+          throw new \LogicException('preSave() is called again without calling postSave() or releaseThreadLock()');
         }
         if (!$this->hasParentComment()) {
           // This is a comment with no parent comment (depth 0): we start
@@ -146,7 +146,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $this->releaseThreadLock();
     // Update the {comment_entity_statistics} table prior to executing the hook.
-    $storage->updateEntityStatistics($this);
+    \Drupal::service('comment.statistics')->update($this);
   }
 
   /**
@@ -169,7 +169,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     entity_delete_multiple('comment', $child_cids);
 
     foreach ($entities as $id => $entity) {
-      $storage->updateEntityStatistics($entity);
+      \Drupal::service('comment.statistics')->update($entity);
     }
   }
 

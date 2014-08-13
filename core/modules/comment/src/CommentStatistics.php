@@ -68,8 +68,9 @@ class CommentStatistics implements CommentStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function read($entities, $entity_type) {
-    $stats = $this->database->select('comment_entity_statistics', 'ces')
+  public function read($entities, $entity_type, $accurate = TRUE) {
+    $options = $accurate ? array() : array('target' => 'replica');
+    $stats =  $this->database->select('comment_entity_statistics', 'ces', $options)
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities))
       ->condition('ces.entity_type', $entity_type)
