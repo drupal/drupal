@@ -337,7 +337,8 @@ th.views-ui-operations {
 }
 
 .form-item-page-create label,
-.form-item-block-create label {
+.form-item-block-create label,
+.form-item-rest-export-create label {
   font-weight: bold;
 }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Wizard;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 
@@ -39,6 +40,9 @@ class BasicTest extends WizardTestBase {
     $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id']));
     $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/delete'));
     $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/duplicate'));
+
+    // The view should not have a REST export display.
+    $this->assertNoText('REST export', 'When no options are enabled in the wizard, the resulting view does not have a REST export display.');
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
@@ -86,6 +90,9 @@ class BasicTest extends WizardTestBase {
     $this->assertText($view2['description']);
     $this->assertLinkByHref(url($view2['page[path]']));
 
+    // The view should not have a REST export display.
+    $this->assertNoText('REST export', 'If only the page option was enabled in the wizard, the resulting view does not have a REST export display.');
+
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
     $this->assertNoText('View: ' . $view2['label']);
@@ -118,6 +125,9 @@ class BasicTest extends WizardTestBase {
     $this->assertText($view3['description']);
     $this->assertLinkByHref(url($view3['page[path]']));
 
+    // The view should not have a REST export display.
+    $this->assertNoText('REST export', 'If only the page and block options were enabled in the wizard, the resulting view does not have a REST export display.');
+
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
     $this->assertText($view3['label']);
@@ -133,6 +143,25 @@ class BasicTest extends WizardTestBase {
 
     // Make sure the listing page doesn't show disabled default views.
     $this->assertNoText('tracker', 'Default tracker view does not show on the listing page.');
+
+    // Create a view with only a REST export.
+    $view4 = array();
+    $view4['label'] = $this->randomMachineName(16);
+    $view4['id'] = strtolower($this->randomMachineName(16));
+    $view4['description'] = $this->randomMachineName(16);
+    $view4['show[wizard_key]'] = 'node';
+    $view4['show[type]'] = 'page';
+    $view4['rest_export[create]'] = 1;
+    $view4['rest_export[path]'] = $this->randomMachineName(16);
+    $this->drupalPostForm('admin/structure/views/add', $view4, t('Save and edit'));
+
+    // Check that the REST export path works.
+    $this->drupalGet($view4['rest_export[path]']);
+    $this->assertResponse(200);
+    $data = Json::decode($this->content);
+    $this->assertEqual(count($data), 1, 'Only the node of type page is exported.');
+    $node = reset($data);
+    $this->assertEqual($node['nid'][0]['value'], $node1->id(), 'The node of type page is exported.');
   }
 
   /**

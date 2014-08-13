@@ -33,6 +33,8 @@ class WizardTest extends WizardTestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(255);
     $view['block[create]'] = TRUE;
     $view['block[title]'] = $this->randomMachineName(256);
+    $view['rest_export[create]'] = TRUE;
+    $view['rest_export[path]'] = $this->randomMachineName(255);
 
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
@@ -42,6 +44,7 @@ class WizardTest extends WizardTestBase {
     $this->assertText('View name cannot be longer than 255 characters but is currently 256 characters long.');
     $this->assertText('Feed path cannot be longer than 254 characters but is currently 255 characters long.');
     $this->assertText('Block title cannot be longer than 255 characters but is currently 256 characters long.');
+    $this->assertText('REST export path cannot be longer than 254 characters but is currently 255 characters long.');
 
     $view['label'] = $this->randomMachineName(255);
     $view['id'] = strtolower($this->randomMachineName(128));
@@ -52,6 +55,8 @@ class WizardTest extends WizardTestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(254);
     $view['block[create]'] = TRUE;
     $view['block[title]'] = $this->randomMachineName(255);
+    $view['rest_export[create]'] = TRUE;
+    $view['rest_export[path]'] = $this->randomMachineName(254);
 
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
