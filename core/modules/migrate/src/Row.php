@@ -224,7 +224,7 @@ class Row {
    * @code
    * $this->destination['foo']['bar'] = 'baz';
    * $this->rawDestination['foo/bar'] = 'baz';
-   * @encode
+   * @endcode
    *
    * @return array
    *   The raw destination values.
