@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2b2309c748ec92230880579aaedfa1e6",
+    "hash": "6a7a4ba69644c6cf110d03b1a5346e3e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1415,17 +1415,17 @@
         },
         {
             "name": "symfony-cmf/routing",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "target-dir": "Symfony/Cmf/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony-cmf/Routing.git",
-                "reference": "9f8607950cbf888ec678713a35f3d0088857c85f"
+                "reference": "c67258b875eef3cb08009bf1428499d0f01ce5e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/9f8607950cbf888ec678713a35f3d0088857c85f",
-                "reference": "9f8607950cbf888ec678713a35f3d0088857c85f",
+                "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/c67258b875eef3cb08009bf1428499d0f01ce5e7",
+                "reference": "c67258b875eef3cb08009bf1428499d0f01ce5e7",
                 "shasum": ""
             },
             "require": {
@@ -1445,7 +1445,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -1469,7 +1469,7 @@
                 "database",
                 "routing"
             ],
-            "time": "2013-10-14 15:32:46"
+            "time": "2014-05-08 19:37:14"
         },
         {
             "name": "symfony/class-loader",
@@ -2445,7 +2445,6 @@
         "doctrine/common": 20,
         "doctrine/annotations": 20,
         "kriswallsmith/assetic": 15,
-        "symfony-cmf/routing": 15,
         "phpunit/phpunit-mock-objects": 20
     },
     "prefer-stable": false,

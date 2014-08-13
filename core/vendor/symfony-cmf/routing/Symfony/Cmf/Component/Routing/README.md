@@ -1,6 +1,6 @@
 # Symfony CMF Routing Component
 
-[![Build Status](https://secure.travis-ci.org/symfony-cmf/Routing.png)](http://travis-ci.org/symfony-cmf/Routing)
+[![Build Status](https://secure.travis-ci.org/symfony-cmf/Routing.png?branch=master)](http://travis-ci.org/symfony-cmf/Routing)
 [![Latest Stable Version](https://poser.pugx.org/symfony-cmf/routing/version.png)](https://packagist.org/packages/symfony-cmf/routing)
 [![Total Downloads](https://poser.pugx.org/symfony-cmf/routing/d/total.png)](https://packagist.org/packages/symfony-cmf/routing)
 
@@ -32,7 +32,7 @@ and licensed under the [MIT License](LICENSE).
 
 For the install guide and reference, see:
 
-* [Routing component documentation](http://symfony.com/doc/master/cmf/components/routing.html)
+* [Routing component documentation](http://symfony.com/doc/master/cmf/components/routing/index.html)
 
 See also:
 

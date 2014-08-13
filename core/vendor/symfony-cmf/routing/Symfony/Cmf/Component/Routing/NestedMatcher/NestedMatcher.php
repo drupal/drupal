@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing\NestedMatcher;
 
@@ -66,7 +65,7 @@ class NestedMatcher implements RequestMatcherInterface
      *
      * @param RouteProviderInterface $provider The route provider this matcher
      *                                         should use
-     * @param FinalMatcherInterface $final The Final Matcher to match the
+     * @param FinalMatcherInterface  $final    The Final Matcher to match the
      *                                         routes
      */
     public function __construct(
@@ -84,8 +83,7 @@ class NestedMatcher implements RequestMatcherInterface
     /**
      * Sets the route provider for the matching plan.
      *
-     * @param RouteProviderInterface $provider A route provider. It is
-     *      responsible for its own configuration.
+     * @param RouteProviderInterface $provider A source of routes.
      *
      * @return NestedMatcher this object to have a fluent interface
      */
@@ -103,7 +101,8 @@ class NestedMatcher implements RequestMatcherInterface
      *
      * @param RouteFilterInterface $filter
      * @param int                  $priority (optional) The priority of the
-     *      filter. Higher number filters will be used first. Default to 0.
+     *                                       filter. Higher number filters will
+     *                                       be used first. Defaults to 0.
      *
      * @return NestedMatcher this object to have a fluent interface
      */
@@ -123,7 +122,7 @@ class NestedMatcher implements RequestMatcherInterface
      * Sets the final matcher for the matching plan.
      *
      * @param FinalMatcherInterface $final The final matcher that will have to
-     *      pick the route that will be used.
+     *                                     pick the route that will be used.
      *
      * @return NestedMatcher this object to have a fluent interface
      */

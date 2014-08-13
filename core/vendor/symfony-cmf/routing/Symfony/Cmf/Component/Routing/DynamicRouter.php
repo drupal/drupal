@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing;
 
@@ -77,36 +76,49 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
     protected $context;
 
     /**
+     * @var RouteCollection
+     */
+    private $routeCollection;
+
+    /**
      * @param RequestContext                              $context
      * @param RequestMatcherInterface|UrlMatcherInterface $matcher
      * @param UrlGeneratorInterface                       $generator
      * @param string                                      $uriFilterRegexp
      * @param EventDispatcherInterface|null               $eventDispatcher
+     * @param RouteProviderInterface                      $provider
      */
     public function __construct(RequestContext $context,
                                 $matcher,
                                 UrlGeneratorInterface $generator,
                                 $uriFilterRegexp = '',
-                                EventDispatcherInterface $eventDispatcher = null
+                                EventDispatcherInterface $eventDispatcher = null,
+                                RouteProviderInterface $provider = null
     ) {
         $this->context = $context;
         if (! $matcher instanceof RequestMatcherInterface && ! $matcher instanceof UrlMatcherInterface) {
-            throw new \InvalidArgumentException('Invalid $matcher');
+            throw new \InvalidArgumentException('Matcher must implement either Symfony\Component\Routing\Matcher\RequestMatcherInterface or Symfony\Component\Routing\Matcher\UrlMatcherInterface');
         }
         $this->matcher = $matcher;
         $this->generator = $generator;
         $this->eventDispatcher = $eventDispatcher;
         $this->uriFilterRegexp = $uriFilterRegexp;
+        $this->provider = $provider;
 
         $this->generator->setContext($context);
     }
 
     /**
-     * Not implemented.
+     * {@inheritDoc}
      */
     public function getRouteCollection()
     {
-        return new RouteCollection();
+        if (!$this->routeCollection instanceof RouteCollection) {
+            $this->routeCollection = $this->provider
+                ? new LazyRouteCollection($this->provider) : new RouteCollection();
+        }
+
+        return $this->routeCollection;
     }
 
     /**
@@ -178,13 +190,13 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      * exceptions documented below.
      *
      * @param string $pathinfo The path info to be parsed (raw format, i.e. not
-     *      urldecoded)
+     *                         urldecoded)
      *
      * @return array An array of parameters
      *
      * @throws ResourceNotFoundException If the resource could not be found
      * @throws MethodNotAllowedException If the resource was found but the
-     *      request method is not allowed
+     *                                   request method is not allowed
      *
      * @api
      */
@@ -223,7 +235,7 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      *
      * @throws ResourceNotFoundException If no matching resource could be found
      * @throws MethodNotAllowedException If a matching resource was found but
-     *      the request method is not allowed
+     *                                   the request method is not allowed
      */
     public function matchRequest(Request $request)
     {

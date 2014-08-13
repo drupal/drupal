@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
@@ -437,7 +436,7 @@ class ContentAwareGeneratorTest extends CmfUnitTestCase
  */
 class TestableContentAwareGenerator extends ContentAwareGenerator
 {
-    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $absolute, $hostTokens = null)
+    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
         return 'result_url';
     }

@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing;
 
@@ -58,10 +57,11 @@ class ContentAwareGenerator extends ProviderBasedGenerator
     /**
      * {@inheritDoc}
      *
-     * @param string $name       ignored
+     * @param string $name       ignored.
      * @param array  $parameters must either contain the field 'route' with a
-     *      RouteObjectInterface or the field 'content_id' with a document
-     *      id to get the route for (implementing RouteReferrersReadInterface)
+     *                           RouteObjectInterface or the field 'content_id'
+     *                           with the id of a document implementing
+     *                           RouteReferrersReadInterface.
      *
      * @throws RouteNotFoundException If there is no such route in the database
      */
@@ -97,7 +97,7 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      */
     protected function getRouteByName($name, array $parameters)
     {
-        $route = $this->provider->getRouteByName($name, $parameters);
+        $route = $this->provider->getRouteByName($name);
         if (empty($route)) {
             throw new RouteNotFoundException('No route found for name: ' . $name);
         }
@@ -152,7 +152,7 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      *
      * @param mixed $name
      * @param array $parameters which should contain a content field containing
-     *      a RouteReferrersReadInterface object
+     *                          a RouteReferrersReadInterface object
      *
      * @return SymfonyRoute the route instance
      *
@@ -225,8 +225,9 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * @param SymfonyRoute $route
      * @param string       $locale
      *
-     * @return bool TRUE if there is either no $locale, no _locale requirement
-     *      on the route or if the requirement and the passed $locale match.
+     * @return bool true if there is either no $locale, no _locale requirement
+     *              on the route or if the requirement and the passed $locale
+     *              match.
      */
     private function checkLocaleRequirement(SymfonyRoute $route, $locale)
     {
@@ -242,8 +243,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * @param array $parameters the parameters determined by the route
      *
      * @return string the locale following of the parameters or any other
-     *  information the router has available. defaultLocale if no other locale
-     *  can be determined.
+     *                information the router has available. defaultLocale if no
+     *                other locale can be determined.
      */
     protected function getLocale($parameters)
     {

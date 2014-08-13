@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing;
 
@@ -16,8 +15,6 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -35,6 +32,10 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
      */
     protected $provider;
 
+    /**
+     * @param RouteProviderInterface $provider
+     * @param LoggerInterface        $logger
+     */
     public function __construct(RouteProviderInterface $provider, LoggerInterface $logger = null)
     {
         $this->provider = $provider;

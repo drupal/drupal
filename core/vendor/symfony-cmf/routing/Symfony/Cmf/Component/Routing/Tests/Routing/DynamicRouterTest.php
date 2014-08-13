@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
@@ -58,11 +57,19 @@ class DynamicRouterTest extends CmfUnitTestCase
         $this->assertSame($this->context, $this->router->getContext());
     }
 
-    public function testRouteCollection()
+    public function testRouteCollectionEmpty()
     {
         $collection = $this->router->getRouteCollection();
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
-        // TODO: once this is implemented, check content of collection
+    }
+
+    public function testRouteCollectionLazy()
+    {
+        $provider = $this->getMock('Symfony\Cmf\Component\Routing\RouteProviderInterface');
+        $router = new DynamicRouter($this->context, $this->matcher, $this->generator, '', null, $provider);
+
+        $collection = $router->getRouteCollection();
+        $this->assertInstanceOf('Symfony\Cmf\Component\Routing\LazyRouteCollection', $collection);
     }
 
     /// generator tests ///
@@ -303,7 +310,7 @@ class DynamicRouterTest extends CmfUnitTestCase
         $that = $this;
         $eventDispatcher->expects($this->once())
             ->method('dispatch')
-            ->with(Events::PRE_DYNAMIC_MATCH_REQUEST, $this->callback(function($event) use ($that) {
+            ->with(Events::PRE_DYNAMIC_MATCH_REQUEST, $this->callback(function ($event) use ($that) {
                 $that->assertInstanceOf('Symfony\Cmf\Component\Routing\Event\RouterMatchEvent', $event);
                 $that->assertEquals($that->request, $event->getRequest());
 

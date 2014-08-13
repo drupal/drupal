@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing\Enhancer;
 
@@ -28,10 +27,11 @@ interface RouteEnhancerInterface
     /**
      * Update the defaults based on its own data and the request.
      *
-     * @param array $defaults the getRouteDefaults array.
+     * @param array   $defaults the getRouteDefaults array.
+     * @param Request $request  the Request instance.
      *
      * @return array the modified defaults. Each enhancer MUST return the
-     *      $defaults but may add or remove values.
+     *               $defaults but may add or remove values.
      */
     public function enhance(array $defaults, Request $request);
 }

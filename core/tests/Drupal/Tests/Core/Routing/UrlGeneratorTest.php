@@ -92,8 +92,8 @@ class UrlGeneratorTest extends UnitTestCase {
       ),
     );
     foreach ($return_map_values as $values) {
-      $route_name_return_map[] = array($values['route_name'], array(), $values['return']);
-      $routes_names_return_map[] = array(array($values['route_name']), array(), $values['return']);
+      $route_name_return_map[] = array($values['route_name'], $values['return']);
+      $routes_names_return_map[] = array(array($values['route_name']), $values['return']);
     }
     $provider->expects($this->any())
       ->method('getRouteByName')

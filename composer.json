@@ -21,7 +21,7 @@
     "doctrine/annotations": "dev-master#463d926a8dcc49271cb7db5a08364a70ed6e3cd3",
     "guzzlehttp/guzzle": "4.1.*",
     "kriswallsmith/assetic": "1.1.*@alpha",
-    "symfony-cmf/routing": "1.1.*@alpha",
+    "symfony-cmf/routing": "1.2.*",
     "easyrdf/easyrdf": "0.8.*",
     "phpunit/phpunit": "4.1.*",
     "phpunit/phpunit-mock-objects": "dev-master#e60bb929c50ae4237aaf680a4f6773f4ee17f0a2",

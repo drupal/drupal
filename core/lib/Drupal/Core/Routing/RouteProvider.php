@@ -134,9 +134,6 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The route name to fetch
-   * @param array $parameters
-   *   The parameters as they are passed to the UrlGeneratorInterface::generate
-   *   call.
    *
    * @return \Symfony\Component\Routing\Route
    *   The found route.
@@ -144,8 +141,8 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Thrown if there is no route with that name in this repository.
    */
-  public function getRouteByName($name, $parameters = array()) {
-    $routes = $this->getRoutesByNames(array($name), $parameters);
+  public function getRouteByName($name) {
+    $routes = $this->getRoutesByNames(array($name));
     if (empty($routes)) {
       throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
     }
@@ -165,14 +162,11 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    *
    * @param array $names
    *   The list of names to retrieve.
-   * @param array $parameters
-   *   The parameters as they are passed to the UrlGeneratorInterface::generate
-   *   call. (Only one array, not one for each entry in $names).
    *
    * @return \Symfony\Component\Routing\Route[]
    *   Iterable thing with the keys the names of the $names argument.
    */
-  public function getRoutesByNames($names, $parameters = array()) {
+  public function getRoutesByNames($names) {
 
     if (empty($names)) {
       throw new \InvalidArgumentException('You must specify the route names to load');

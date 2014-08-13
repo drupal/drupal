@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2013 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Component\Routing;
 
@@ -185,12 +184,12 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
                 return $router->match($url);
             } catch (ResourceNotFoundException $e) {
                 if ($this->logger) {
-                    $this->logger->info('Router '.get_class($router).' was not able to match, message "'.$e->getMessage().'"');
+                    $this->logger->debug('Router '.get_class($router).' was not able to match, message "'.$e->getMessage().'"');
                 }
                 // Needs special care
             } catch (MethodNotAllowedException $e) {
                 if ($this->logger) {
-                    $this->logger->info('Router '.get_class($router).' throws MethodNotAllowedException with message "'.$e->getMessage().'"');
+                    $this->logger->debug('Router '.get_class($router).' throws MethodNotAllowedException with message "'.$e->getMessage().'"');
                 }
                 $methodNotAllowed = $e;
             }
@@ -231,7 +230,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
                 $hint = $this->getErrorMessage($name, $router, $parameters);
                 $debug[] = $hint;
                 if ($this->logger) {
-                    $this->logger->info('Router '.get_class($router)." was unable to generate route. Reason: '$hint': ".$e->getMessage());
+                    $this->logger->debug('Router '.get_class($router)." was unable to generate route. Reason: '$hint': ".$e->getMessage());
                 }
             }
         }
@@ -296,7 +295,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
     public function getRouteCollection()
     {
         if (!$this->routeCollection instanceof RouteCollection) {
-            $this->routeCollection = new RouteCollection();
+            $this->routeCollection = new ChainRouteCollection();
             foreach ($this->all() as $router) {
                 $this->routeCollection->addCollection($router->getRouteCollection());
             }
