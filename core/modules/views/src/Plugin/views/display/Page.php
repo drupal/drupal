@@ -51,6 +51,7 @@ class Page extends PathPluginBase {
         'description' => array('default' => '', 'translatable' => FALSE),
         'weight' => array('default' => 0),
         'menu_name' => array('default' => 'navigation'),
+        'parent' => array('default' => ''),
         'context' => array('default' => ''),
       ),
     );
@@ -217,13 +218,14 @@ class Page extends PathPluginBase {
           ),
         );
 
-        // Only display the menu selector if Menu UI module is enabled.
+        // Only display the parent selector if Menu UI module is enabled.
+        $menu_parent = $menu['menu_name'] . ':' . $menu['parent'];
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $form['menu']['menu_name'] = array(
-            '#title' => t('Menu'),
-            '#type' => 'select',
-            '#options' => menu_ui_get_menus(),
-            '#default_value' => $menu['menu_name'],
+          $form['menu']['parent'] = \Drupal::service('menu.parent_form_selector')->parentSelectElement($menu_parent);
+          $form['menu']['parent'] += array(
+            '#title' => $this->t('Parent'),
+            '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
+            '#attributes' => array('class' => array('menu-title-select')),
             '#states' => array(
               'visible' => array(
                 array(
@@ -237,9 +239,9 @@ class Page extends PathPluginBase {
           );
         }
         else {
-          $form['menu']['menu_name'] = array(
+          $form['menu']['parent'] = array(
             '#type' => 'value',
-            '#value' => $menu['menu_name'],
+            '#value' => $menu_parent,
           );
           $form['menu']['markup'] = array(
             '#markup' => t('Menu selection requires the activation of Menu UI module.'),
@@ -410,7 +412,9 @@ class Page extends PathPluginBase {
 
     switch ($form_state['section']) {
       case 'menu':
-        $this->setOption('menu', $form_state->getValue('menu'));
+        $menu = $form_state->getValue('menu');
+        list($menu['menu_name'], $menu['parent']) = explode(':', $menu['parent'], 2);
+        $this->setOption('menu', $menu);
         // send ajax form to options page if we use it.
         if ($form_state->getValue(array('menu', 'type')) == 'default tab') {
           $form_state['view']->addFormToStack('display', $this->display['id'], 'tab_options');
