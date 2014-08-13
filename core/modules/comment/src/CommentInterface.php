@@ -213,6 +213,14 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   public function isPublished();
 
   /**
+   * Returns the comment's status.
+   *
+   * @return int
+   *   One of CommentInterface::PUBLISHED or CommentInterface::NOT_PUBLISHED
+   */
+  public function getStatus();
+
+  /**
    * Sets the published status of the comment entity.
    *
    * @param bool $status

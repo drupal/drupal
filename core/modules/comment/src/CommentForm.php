@@ -114,7 +114,7 @@ class CommentForm extends ContentEntityForm {
     // Prepare default values for form elements.
     if ($is_admin) {
       $author = $comment->getAuthorName();
-      $status = $comment->isPublished();
+      $status = $comment->getStatus();
       if (empty($form_state['comment_preview'])) {
         $form['#title'] = $this->t('Edit comment %title', array(
           '%title' => $comment->getSubject(),
