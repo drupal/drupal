@@ -1491,10 +1491,7 @@
  * passed to most methods, so they can use it to communicate with the form
  * system and each other. $form_state is an object that implements
  * \Drupal\Core\Form\FormStateInterface.
- */
-
-/**
- * @} End of "defgroup form_api".
+ * @}
  */
 
 /**
@@ -1546,32 +1543,7 @@
  * section, regardless of the queue being reliable or not, the processing code
  * should be aware that an item might be handed over for processing more than
  * once (because the processing code might time out before it finishes).
- */
-
-/**
- * @} End of "defgroup queue".
- */
-
-/**
- * @addtogroup hooks
- * @{
- */
-
-/**
- * Alter display variant plugin definitions.
- *
- * @param array $definitions
- *   The array of display variant definitions, keyed by plugin ID.
- *
- * @see \Drupal\Core\Display\VariantManager
- * @see \Drupal\Core\Display\Annotation\DisplayVariant
- */
-function hook_display_variant_plugin_alter(array &$definitions) {
-  $definitions['full_page']['admin_label'] = t('Block layout');
-}
-
-/**
- * @} End of "addtogroup hooks".
+ * @}
  */
 
 /**
@@ -1623,4 +1595,26 @@ function hook_display_variant_plugin_alter(array &$definitions) {
  * @see plugin_context
  *
  * @}
+ */
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Alter display variant plugin definitions.
+ *
+ * @param array $definitions
+ *   The array of display variant definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Display\VariantManager
+ * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ */
+function hook_display_variant_plugin_alter(array &$definitions) {
+  $definitions['full_page']['admin_label'] = t('Block layout');
+}
+
+/**
+ * @} End of "addtogroup hooks".
  */
