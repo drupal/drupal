@@ -7,11 +7,10 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for common theme functions.
@@ -206,6 +205,14 @@ class FunctionsTest extends WebTestBase {
         'route_name' => 'router_test.1',
         'route_parameters' => array(),
       ),
+      'query-test' => array(
+        'title' => 'Query test route',
+        'route_name' => 'router_test.1',
+        'route_parameters' => array(),
+        'query' => array(
+          'key' => 'value',
+        )
+      ),
     );
 
     $expected_links = '';
@@ -214,6 +221,8 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li class="plain-text">' . String::checkPlain('Plain "text"') . '</li>';
     $expected_links .= '<li class="front-page"><a href="' . url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
+    $query = array('key' => 'value');
+    $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
 
     // Verify that passing a string as heading works.
@@ -250,6 +259,8 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li class="plain-text"><span class="a/class">' . String::checkPlain('Plain "text"') . '</span></li>';
     $expected_links .= '<li class="front-page"><a href="' . url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
+    $query = array('key' => 'value');
+    $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
@@ -263,6 +274,9 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li class="plain-text"><span class="a/class">' . String::checkPlain('Plain "text"') . '</span></li>';
     $expected_links .= '<li class="front-page" data-drupal-link-system-path="&lt;front&gt;"><a href="' . url('<front>') . '" data-drupal-link-system-path="&lt;front&gt;">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" data-drupal-link-system-path="router_test/test1">' . String::checkPlain('Test route') . '</a></li>';
+    $query = array('key' => 'value');
+    $encoded_query = String::checkPlain(Json::encode($query));
+    $expected_links .= '<li class="query-test" data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1">' . String::checkPlain('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);

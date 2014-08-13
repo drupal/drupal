@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
