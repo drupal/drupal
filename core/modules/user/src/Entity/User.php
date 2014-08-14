@@ -28,6 +28,7 @@ use Drupal\user\UserInterface;
  *     "access" = "Drupal\user\UserAccessControlHandler",
  *     "list_builder" = "Drupal\user\UserListBuilder",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
+ *     "views_data" = "Drupal\user\UserViewsData",
  *     "form" = {
  *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",

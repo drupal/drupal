@@ -22,8 +22,13 @@ use Drupal\Core\Language\LanguageInterface;
  *   field). See the @link views_plugins Views plugins topic @endlink for
  *   more information.
  * - Provide data: Data types can be provided to Views by implementing
- *   hook_views_data(), and data types provided by other modules can be
- *   altered by implementing hook_views_data_alter().
+ *   hook_views_data(), and data types provided by other modules can be altered
+ *   by implementing hook_views_data_alter(). To provide views data for an
+ *   entity, create a class implementing
+ *   \Drupal\views\EntityViewsDataInterface and reference this in the
+ *   "views_data" annotation in the entity class. See the
+ *   @link entity_api Entity API topic @endlink for more information about
+ *   entities.
  * - Implement hooks: A few operations in Views can be influenced by hooks.
  *   See the @link Views hooks topic @endlink for a list.
  * - Theming: See the @link views_templates Views templates topic @endlink
@@ -87,6 +92,13 @@ function hook_views_analyze(Drupal\views\ViewExecutable $view) {
  *
  * The table and fields are processed in Views using various plugins. See
  * the @link views_plugins Views plugins topic @endlink for more information.
+ *
+ * To provide views data for an entity, instead of implementing this hook,
+ * create a class implementing \Drupal\views\EntityViewsDataInterface and
+ * reference this in the "views" annotation in the entity class. The return
+ * value of the getViewsData() method on the interface is the same as this hook.
+ * See the @link entity_api Entity API topic @endlink for more information about
+ * entities.
  *
  * The data described with this hook is fetched and retrieved by
  * \Drupal\views\Views::viewsData()->get().

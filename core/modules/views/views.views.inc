@@ -5,6 +5,7 @@
  * Provide views data that isn't tied to any other module.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\system\ActionConfigEntityInterface;
 
 /**
@@ -154,5 +155,15 @@ function views_views_data() {
       ),
     );
   }
+
+  // Registers views data for the entity itself.
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($entity_type->hasControllerClass('views_data')) {
+      /** @var \Drupal\views\EntityViewsDataInterface $views_data */
+      $views_data = \Drupal::entityManager()->getController($entity_type_id, 'views_data');
+      $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
+    }
+  }
+
   return $data;
 }

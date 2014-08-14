@@ -27,6 +27,7 @@ use Drupal\user\UserInterface;
  *     "storage" = "Drupal\comment\CommentStorage",
  *     "access" = "Drupal\comment\CommentAccessControlHandler",
  *     "view_builder" = "Drupal\comment\CommentViewBuilder",
+ *     "views_data" = "Drupal\comment\CommentViewsData",
  *     "form" = {
  *       "default" = "Drupal\comment\CommentForm",
  *       "delete" = "Drupal\comment\Form\DeleteForm"

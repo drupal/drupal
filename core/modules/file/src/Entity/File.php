@@ -24,7 +24,8 @@ use Drupal\user\UserInterface;
  *   controllers = {
  *     "storage" = "Drupal\file\FileStorage",
  *     "access" = "Drupal\file\FileAccessControlHandler",
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder"
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
+ *     "views_data" = "Drupal\file\FileViewsData",
  *   },
  *   base_table = "file_managed",
  *   entity_keys = {

@@ -24,6 +24,7 @@ use Drupal\taxonomy\TermInterface;
  *     "storage" = "Drupal\taxonomy\TermStorage",
  *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",
  *     "access" = "Drupal\taxonomy\TermAccessControlHandler",
+ *     "views_data" = "Drupal\taxonomy\TermViewsData",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\TermForm",
  *       "delete" = "Drupal\taxonomy\Form\TermDeleteForm"

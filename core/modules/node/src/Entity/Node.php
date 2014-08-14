@@ -27,6 +27,7 @@ use Drupal\user\UserInterface;
  *     "storage" = "Drupal\node\NodeStorage",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessControlHandler",
+ *     "views_data" = "Drupal\node\NodeViewsData",
  *     "form" = {
  *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
