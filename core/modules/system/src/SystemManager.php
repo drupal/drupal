@@ -140,21 +140,6 @@ class SystemManager {
   }
 
   /**
-   * Fixes anonymous user on MySQL.
-   *
-   * MySQL import might have set the uid of the anonymous user to autoincrement
-   * value. Let's try fixing it. See http://drupal.org/node/204411
-   */
-  public function fixAnonymousUid() {
-    $this->database->update('users')
-      ->expression('uid', 'uid - uid')
-      ->condition('name', '')
-      ->condition('pass', '')
-      ->condition('status', 0)
-      ->execute();
-  }
-
-  /**
    * Extracts the highest severity from the requirements array.
    *
    * @param $requirements

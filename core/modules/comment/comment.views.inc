@@ -654,7 +654,7 @@ function comment_views_data_alter(&$data) {
         'help' => t('Display nodes only if a user posted the @entity_type or commented on the @entity_type.', $args),
         'argument' => array(
           'field' => 'uid',
-          'name table' => 'users',
+          'name table' => 'users_field_data',
           'name field' => 'name',
           'id' => 'argument_comment_user_uid',
           'no group by' => TRUE,
@@ -663,7 +663,7 @@ function comment_views_data_alter(&$data) {
         ),
         'filter' => array(
           'field' => 'uid',
-          'name table' => 'users',
+          'name table' => 'users_field_data',
           'name field' => 'name',
           'id' => 'comment_user_uid',
           'entity_type' => $entity_type_id,

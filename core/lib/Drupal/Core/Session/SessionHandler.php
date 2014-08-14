@@ -87,14 +87,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // database.
     if ($this->requestStack->getCurrentRequest()->isSecure()) {
       // Try to load a session using the HTTPS-only secure session id.
-      $values = $this->connection->query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(
+      $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.ssid = :ssid", array(
         ':ssid' => Crypt::hashBase64($sid),
       ))->fetchAssoc();
       if (!$values) {
         // Fallback and try to load the anonymous non-HTTPS session. Use the
         // non-HTTPS session id as the key.
         if ($cookies->has($insecure_session_name)) {
-          $values = $this->connection->query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
+          $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.sid = :sid AND s.uid = 0", array(
             ':sid' => Crypt::hashBase64($cookies->get($insecure_session_name)),
           ))->fetchAssoc();
         }
@@ -102,7 +102,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     }
     else {
       // Try to load a session using the non-HTTPS session id.
-      $values = $this->connection->query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(
+      $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.sid = :sid", array(
         ':sid' => Crypt::hashBase64($sid),
       ))->fetchAssoc();
     }
@@ -183,12 +183,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
 
       // Likewise, do not update access time more than once per 180 seconds.
       if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
-        $this->connection->update('users')
-          ->fields(array(
-            'access' => REQUEST_TIME,
-          ))
-          ->condition('uid', $user->id())
-          ->execute();
+        /** @var \Drupal\user\UserStorageInterface $storage */
+        $storage = \Drupal::entityManager()->getStorage('user');
+        $storage->updateLastAccessTimestamp($user, REQUEST_TIME);
       }
       return TRUE;
     }

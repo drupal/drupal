@@ -195,10 +195,10 @@ class ForumManager implements ForumManagerInterface {
       $query->join('forum_index', 'f', 'f.nid = n.nid');
       $query->addField('f', 'tid', 'forum_tid');
 
-      $query->join('users', 'u', 'n.uid = u.uid');
+      $query->join('users_field_data', 'u', 'n.uid = u.uid AND u.default_langcode = 1');
       $query->addField('u', 'name');
 
-      $query->join('users', 'u2', 'ces.last_comment_uid = u2.uid');
+      $query->join('users_field_data', 'u2', 'ces.last_comment_uid = u2.uid AND u.default_langcode = 1');
 
       $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u2.name END', 'last_comment_name');
 
@@ -341,7 +341,7 @@ class ForumManager implements ForumManagerInterface {
     $query = $this->connection->select('node_field_data', 'n');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $tid));
     $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_name = 'comment_forum' AND ces.entity_type = 'node'");
-    $query->join('users', 'u', 'ces.last_comment_uid = u.uid');
+    $query->join('users_field_data', 'u', 'ces.last_comment_uid = u.uid AND u.default_langcode = 1');
     $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u.name END', 'last_comment_name');
 
     $topic = $query

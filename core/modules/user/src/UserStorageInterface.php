@@ -7,8 +7,7 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a common interface for user entity controller classes.
@@ -42,4 +41,15 @@ interface UserStorageInterface {
    * @param \Drupal\user\UserInterface $account
    */
   public function updateLastLoginTimestamp(UserInterface $account);
+
+  /**
+   * Update the last access timestamp of the user.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user object.
+   * @param int $timestamp
+   *   The last access timestamp.
+   */
+  public function updateLastAccessTimestamp(AccountInterface $account, $timestamp);
+
 }

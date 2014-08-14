@@ -33,21 +33,21 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $view->row_index = 0;
 
     $view->field['name']->options['link_to_user'] = TRUE;
-    $username = $view->result[0]->users_name = $this->randomMachineName();
-    $view->result[0]->uid = 1;
+    $username = $view->result[0]->users_field_data_name = $this->randomMachineName();
+    $view->result[0]->users_field_data_uid = 1;
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertTrue(strpos($render, $username) !== FALSE, 'If link to user is checked the username should be part of the output.');
     $this->assertTrue(strpos($render, 'user/1') !== FALSE, 'If link to user is checked the link to the user should appear as well.');
 
     $view->field['name']->options['link_to_user'] = FALSE;
-    $username = $view->result[0]->users_name = $this->randomMachineName();
-    $view->result[0]->uid = 1;
+    $username = $view->result[0]->users_field_data_name = $this->randomMachineName();
+    $view->result[0]->users_field_data_uid = 1;
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $username, 'If the user is not linked the username should be printed out for a normal user.');
 
-    $view->result[0]->uid = 0;
+    $view->result[0]->users_field_data_uid = 0;
     $anon_name = \Drupal::config('user.settings')->get('anonymous');
-    $view->result[0]->users_name = '';
+    $view->result[0]->users_field_data_name = '';
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $anon_name , 'For user0 it should use the default anonymous name by default.');
 

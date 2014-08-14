@@ -197,7 +197,7 @@ class SessionTest extends WebTestBase {
     $user = $this->drupalCreateUser(array());
     $this->drupalLogin($user);
 
-    $sql = 'SELECT u.access, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.uid = :uid';
+    $sql = 'SELECT u.access, s.timestamp FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.uid = :uid';
     $times1 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
 
     // Before every request we sleep one second to make sure that if the session

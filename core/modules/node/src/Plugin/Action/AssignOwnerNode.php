@@ -83,13 +83,13 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
     $count = $this->connection->query("SELECT COUNT(*) FROM {users}")->fetchField();
     $owner_name = '';
     if (is_numeric($this->configuration['owner_uid'])) {
-      $owner_name = $this->connection->query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $this->configuration['owner_uid']))->fetchField();
+      $owner_name = $this->connection->query("SELECT name FROM {users_field_data} WHERE uid = :uid AND default_langcode = 1", array(':uid' => $this->configuration['owner_uid']))->fetchField();
     }
 
     // Use dropdown for fewer than 200 users; textbox for more than that.
     if (intval($count) < 200) {
       $options = array();
-      $result = $this->connection->query("SELECT uid, name FROM {users} WHERE uid > 0 ORDER BY name");
+      $result = $this->connection->query("SELECT uid, name FROM {users_field_data} WHERE uid > 0 AND default_langcode = 1 ORDER BY name");
       foreach ($result as $data) {
         $options[$data->name] = $data->name;
       }
@@ -119,7 +119,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state->getValue('owner_name')))->fetchField();
+    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE name = :name AND default_langcode = 1', 0, 1, array(':name' => $form_state->getValue('owner_name')))->fetchField();
     if (!$exists) {
       form_set_error('owner_name', $form_state, t('Enter a valid username.'));
     }
@@ -129,7 +129,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users} WHERE name = :name', array(':name' => $form_state->getValue('owner_name')))->fetchField();
+    $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => $form_state->getValue('owner_name')))->fetchField();
   }
 
 }

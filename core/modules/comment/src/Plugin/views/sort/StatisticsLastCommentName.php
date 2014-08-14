@@ -22,7 +22,7 @@ class StatisticsLastCommentName extends SortPluginBase {
   public function query() {
     $this->ensureMyTable();
     $definition = array(
-      'table' => 'users',
+      'table' => 'users_field_data',
       'field' => 'uid',
       'left_table' => 'comment_entity_statistics',
       'left_field' => 'last_comment_uid',

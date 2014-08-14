@@ -113,9 +113,10 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
     // Replace wildcards with MySQL/PostgreSQL wildcards.
     $keys = preg_replace('!\*+!', '%', $keys);
     $query = $this->database
-      ->select('users')
+      ->select('users_field_data', 'users')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query->fields('users', array('uid'));
+    $query->condition('default_langcode', 1);
     if ($this->currentUser->hasPermission('administer users')) {
       // Administrators can also search in the otherwise private email field, and
       // they don't need to be restricted to only active users.

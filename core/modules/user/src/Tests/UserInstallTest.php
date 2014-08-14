@@ -38,8 +38,10 @@ class UserInstallTest extends DrupalUnitTestBase {
    * Test that the initial users have correct values.
    */
   public function testUserInstall() {
-    $anon = db_query('SELECT * FROM {users} WHERE uid = 0')->fetchObject();
-    $admin = db_query('SELECT * FROM {users} WHERE uid = 1')->fetchObject();
+    $result = db_query('SELECT u.uid, u.uuid, u.langcode, uf.status FROM {users} u INNER JOIN {users_field_data} uf ON u.uid=uf.uid ORDER BY u.uid')
+      ->fetchAllAssoc('uid');
+    $anon = $result[0];
+    $admin = $result[1];
     $this->assertFalse(empty($anon->uuid), 'Anon user has a UUID');
     $this->assertFalse(empty($admin->uuid), 'Admin user has a UUID');
 

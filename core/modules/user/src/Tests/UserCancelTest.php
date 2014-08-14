@@ -78,7 +78,7 @@ class UserCancelTest extends WebTestBase {
     );
     // We cannot use $account->save() here, because this would result in the
     // password being hashed again.
-    db_update('users')
+    db_update('users_field_data')
       ->fields($account)
       ->condition('uid', 1)
       ->execute();

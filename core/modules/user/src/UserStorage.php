@@ -7,15 +7,15 @@
 
 namespace Drupal\user;
 
-use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Password\PasswordInterface;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
  * Controller class for users.
@@ -146,8 +146,22 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    * {@inheritdoc}
    */
   public function updateLastLoginTimestamp(UserInterface $account) {
-    $this->database->update('users')
+    $this->database->update('users_field_data')
       ->fields(array('login' => $account->getLastLoginTime()))
+      ->condition('uid', $account->id())
+      ->execute();
+    // Ensure that the entity cache is cleared.
+    $this->resetCache(array($account->id()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateLastAccessTimestamp(AccountInterface $account, $timestamp) {
+    $this->database->update('users_field_data')
+      ->fields(array(
+        'access' => $timestamp,
+      ))
       ->condition('uid', $account->id())
       ->execute();
     // Ensure that the entity cache is cleared.
@@ -160,21 +174,22 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
   public function getSchema() {
     $schema = parent::getSchema();
 
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['users']['fields']['access']['not null'] = TRUE;
-    $schema['users']['fields']['created']['not null'] = TRUE;
-    $schema['users']['fields']['name']['not null'] = TRUE;
-
     // The "users" table does not use serial identifiers.
     $schema['users']['fields']['uid']['type'] = 'int';
-    $schema['users']['indexes'] += array(
+
+    // Marking the respective fields as NOT NULL makes the indexes more
+    // performant.
+    $schema['users_field_data']['fields']['access']['not null'] = TRUE;
+    $schema['users_field_data']['fields']['created']['not null'] = TRUE;
+    $schema['users_field_data']['fields']['name']['not null'] = TRUE;
+
+    $schema['users_field_data']['indexes'] += array(
       'user__access' => array('access'),
       'user__created' => array('created'),
       'user__mail' => array('mail'),
     );
-    $schema['users']['unique keys'] += array(
-      'user__name' => array('name'),
+    $schema['users_field_data']['unique keys'] += array(
+      'user__name' => array('name', 'langcode'),
     );
 
     $schema['users_roles'] = array(

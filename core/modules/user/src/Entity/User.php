@@ -37,6 +37,7 @@ use Drupal\user\UserInterface;
  *   },
  *   admin_permission = "administer user",
  *   base_table = "users",
+ *   data_table = "users_field_data",
  *   label_callback = "user_format_name",
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -488,7 +489,8 @@ class User extends ContentEntityBase implements UserInterface {
     // @todo Convert to a text field in https://drupal.org/node/1548204.
     $fields['signature'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Signature'))
-      ->setDescription(t('The signature of this user.'));
+      ->setDescription(t('The signature of this user.'))
+      ->setTranslatable(TRUE);
     $fields['signature_format'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Signature format'))
       ->setDescription(t('The signature format of this user.'));

@@ -25,7 +25,7 @@ class StatisticsLastCommentName extends FieldPluginBase {
     $this->ensureMyTable();
     // join 'users' to this table via vid
     $definition = array(
-      'table' => 'users',
+      'table' => 'users_field_data',
       'field' => 'uid',
       'left_table' => 'comment_entity_statistics',
       'left_field' => 'last_comment_uid',

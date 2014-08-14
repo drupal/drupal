@@ -25,6 +25,14 @@ function user_views_data() {
   $data['users']['table']['entity type'] = 'user';
   $data['users']['table']['wizard_id'] = 'user';
 
+  $data['users_field_data']['table']['group'] = t('User');
+  $data['users_field_data']['table']['entity type'] = 'user';
+  $data['users_field_data']['table']['join']['users'] = array(
+    'type' => 'INNER',
+    'left_field' => 'uid',
+    'field' => 'uid',
+  );
+
   $data['users']['uid'] = array(
     'title' => t('Uid'),
     'help' => t('The user ID'),
@@ -33,6 +41,7 @@ function user_views_data() {
     ),
     'argument' => array(
       'id' => 'user_uid',
+      'name table' => 'users_field_data',
       'name field' => 'name',
       'empty field name' => \Drupal::config('user.settings')->get('anonymous'),
     ),
@@ -89,7 +98,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['name'] = array(
+  $data['users_field_data']['name'] = array(
     'title' => t('Name'),
     'help' => t('The user or author name.'),
     'field' => array(
@@ -109,7 +118,7 @@ function user_views_data() {
   );
 
   // Note that this field implements field level access control.
-  $data['users']['mail'] = array(
+  $data['users_field_data']['mail'] = array(
     'title' => t('Email'),
     'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'),
     'field' => array(
@@ -152,7 +161,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created'] = array(
+  $data['users_field_data']['created'] = array(
     'title' => t('Created date'),
     'help' => t('The date the user was created.'),
     'field' => array(
@@ -166,7 +175,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_fulldate'] = array(
+  $data['users_field_data']['created_fulldate'] = array(
     'title' => t('Created date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -175,7 +184,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_year_month'] = array(
+  $data['users_field_data']['created_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -184,7 +193,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_year'] = array(
+  $data['users_field_data']['created_year'] = array(
     'title' => t('Created year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -193,7 +202,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_month'] = array(
+  $data['users_field_data']['created_month'] = array(
     'title' => t('Created month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -202,7 +211,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_day'] = array(
+  $data['users_field_data']['created_day'] = array(
     'title' => t('Created day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -211,7 +220,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['created_week'] = array(
+  $data['users_field_data']['created_week'] = array(
     'title' => t('Created week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -220,7 +229,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['access'] = array(
+  $data['users_field_data']['access'] = array(
     'title' => t('Last access'),
     'help' => t("The user's last access date."),
     'field' => array(
@@ -234,7 +243,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['login'] = array(
+  $data['users_field_data']['login'] = array(
     'title' => t('Last login'),
     'help' => t("The user's last login date."),
     'field' => array(
@@ -248,7 +257,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['status'] = array(
+  $data['users_field_data']['status'] = array(
     'title' => t('Status'),
     'help' => t('Whether a user is active or blocked.'),
     'field' => array(
@@ -267,7 +276,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed'] = array(
+  $data['users_field_data']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the user was last updated.'),
     'field' => array(
@@ -281,7 +290,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_fulldate'] = array(
+  $data['users_field_data']['changed_fulldate'] = array(
     'title' => t('Updated date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -290,7 +299,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_year_month'] = array(
+  $data['users_field_data']['changed_year_month'] = array(
     'title' => t('Updated year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -299,7 +308,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_year'] = array(
+  $data['users_field_data']['changed_year'] = array(
     'title' => t('Updated year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -308,7 +317,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_month'] = array(
+  $data['users_field_data']['changed_month'] = array(
     'title' => t('Updated month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -317,7 +326,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_day'] = array(
+  $data['users_field_data']['changed_day'] = array(
     'title' => t('Updated day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -326,7 +335,7 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['changed_week'] = array(
+  $data['users_field_data']['changed_week'] = array(
     'title' => t('Updated week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -336,7 +345,7 @@ function user_views_data() {
   );
 
   if (\Drupal::moduleHandler()->moduleExists('filter')) {
-    $data['users']['signature'] = array(
+    $data['users_field_data']['signature'] = array(
       'title' => t('Signature'),
       'help' => t("The user's signature."),
       'field' => array(

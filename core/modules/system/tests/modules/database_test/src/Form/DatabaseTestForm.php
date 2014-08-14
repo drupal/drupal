@@ -32,8 +32,9 @@ class DatabaseTestForm extends FormBase {
       'status' => array('data' => t('Status'), 'field' => 'u.status'),
     );
 
-    $query = db_select('users', 'u');
+    $query = db_select('users_field_data', 'u');
     $query->condition('u.uid', 0, '<>');
+    $query->condition('u.default_langcode', 1);
 
     $count_query = clone $query;
     $count_query->addExpression('COUNT(u.uid)');

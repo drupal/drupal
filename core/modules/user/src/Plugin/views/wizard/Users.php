@@ -50,7 +50,7 @@ class Users extends WizardPluginBase {
   protected $filters = array(
     'status' => array(
       'value' => TRUE,
-      'table' => 'users',
+      'table' => 'users_field_data',
       'field' => 'status',
       'provider' => 'user'
     )
@@ -72,7 +72,7 @@ class Users extends WizardPluginBase {
 
     /* Field: User: Name */
     $display_options['fields']['name']['id'] = 'name';
-    $display_options['fields']['name']['table'] = 'users';
+    $display_options['fields']['name']['table'] = 'users_field_data';
     $display_options['fields']['name']['field'] = 'name';
     $display_options['fields']['name']['provider'] = 'user';
     $display_options['fields']['name']['label'] = '';

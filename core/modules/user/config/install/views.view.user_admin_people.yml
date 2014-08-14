@@ -190,7 +190,7 @@ display:
           provider: user
         name:
           id: name
-          table: users
+          table: users_field_data
           field: name
           relationship: none
           group_type: group
@@ -244,7 +244,7 @@ display:
           provider: user
         status:
           id: status
-          table: users
+          table: users_field_data
           field: status
           relationship: none
           group_type: group
@@ -350,7 +350,7 @@ display:
           provider: user
         created:
           id: created
-          table: users
+          table: users_field_data
           field: created
           relationship: none
           group_type: group
@@ -403,7 +403,7 @@ display:
           provider: views
         access:
           id: access
-          table: users
+          table: users_field_data
           field: access
           relationship: none
           group_type: group
@@ -565,7 +565,7 @@ display:
           plugin_id: dropbutton
         mail:
           id: mail
-          table: users
+          table: users_field_data
           field: mail
           relationship: none
           group_type: group
@@ -739,7 +739,7 @@ display:
           provider: user
         status:
           id: status
-          table: users
+          table: users_field_data
           field: status
           relationship: none
           group_type: group
@@ -827,7 +827,7 @@ display:
       sorts:
         created:
           id: created
-          table: users
+          table: users_field_data
           field: created
           relationship: none
           group_type: group

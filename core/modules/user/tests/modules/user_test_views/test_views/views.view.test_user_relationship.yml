@@ -35,7 +35,7 @@ display:
           id: name
           link_to_user: '1'
           overwrite_anonymous: '0'
-          table: users
+          table: users_field_data
           plugin_id: user_name
           provider: user
         title:
