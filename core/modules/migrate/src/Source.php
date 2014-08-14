@@ -49,11 +49,11 @@ class Source implements \Iterator, \Countable {
   protected $numProcessed = 0;
 
   /**
-   * The highwater mark at the beginning of the import operation.
+   * The high water mark at the beginning of the import operation.
    *
    * @var
    */
-  protected $originalHighwater = '';
+  protected $originalHighWater = '';
 
   /**
    * List of source IDs to process.
@@ -119,7 +119,7 @@ class Source implements \Iterator, \Countable {
   /**
    * @var array
    */
-  protected $highwaterProperty;
+  protected $highWaterProperty;
 
   /**
    * Getter for currentIds data member.
@@ -286,8 +286,8 @@ class Source implements \Iterator, \Countable {
     $this->idMap = $this->migration->getIdMap();
     $this->numProcessed = 0;
     $this->numIgnored = 0;
-    $this->originalHighwater = $this->migration->getHighwater();
-    $this->highwaterProperty = $this->migration->get('highwaterProperty');
+    $this->originalHighWater = $this->migration->getHighWater();
+    $this->highWaterProperty = $this->migration->get('highWaterProperty');
     if ($id_list = $this->migration->get('idlist')) {
       $this->idList = $id_list;
     }
@@ -319,14 +319,14 @@ class Source implements \Iterator, \Countable {
       // First, determine if this row should be passed to prepareRow(), or
       // skipped entirely. The rules are:
       // 1. If there's an explicit idlist, that's all we care about (ignore
-      //    highwaters and map rows).
+      //    high waters and map rows).
       $prepared = FALSE;
       if (!empty($this->idList)) {
         if (in_array(reset($this->currentIds), $this->idList)) {
           // In the list, fall through.
         }
         else {
-          // Not in the list, skip it
+          // Not in the list, skip it.
           continue;
         }
       }
@@ -340,11 +340,11 @@ class Source implements \Iterator, \Countable {
         // Fall through.
       }
       // 4. At this point, we have a row which has previously been imported and
-      //    not marked for update. If we're not using highwater marks, then we
+      //    not marked for update. If we're not using high water marks, then we
       //    will not take this row. Except, if we're looking for changes in the
       //    data, we need to go through prepareRow() before we can decide to
       //    skip it.
-      elseif (!empty($highwater['field'])) {
+      elseif (!empty($this->highWaterProperty['field'])) {
         if ($this->trackChanges) {
           if ($this->prepareRow($row) !== FALSE) {
             if ($row->changed()) {
@@ -363,22 +363,22 @@ class Source implements \Iterator, \Countable {
           }
         }
         else {
-          // No highwater and not tracking changes, skip.
+          // No high water and not tracking changes, skip.
           continue;
         }
       }
-      // 5. The initial highwater mark, before anything is migrated, is ''. We
-      //    want to make sure we don't mistakenly skip rows with a highwater
+      // 5. The initial high water mark, before anything is migrated, is ''. We
+      //    want to make sure we don't mistakenly skip rows with a high water
       //    field value of 0, so explicitly handle '' here.
-      elseif ($this->originalHighwater === '') {
+      elseif ($this->originalHighWater === '') {
         // Fall through
       }
-      // 6. So, we are using highwater marks. Take the row if its highwater
+      // 6. So, we are using high water marks. Take the row if its high water
       //    field value is greater than the saved mark, otherwise skip it.
       else {
-        // Call prepareRow() here, in case the highwaterField needs preparation.
+        // Call prepareRow() here, in case the highWaterField needs preparation.
         if ($this->prepareRow($row) !== FALSE) {
-          if ($row->getSourceProperty($this->highwaterProperty['name']) > $this->originalHighwater) {
+          if ($row->getSourceProperty($this->highWaterProperty['name']) > $this->originalHighWater) {
             $this->currentRow = $row;
             break;
           }

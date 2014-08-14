@@ -93,7 +93,7 @@ abstract class SqlBase extends SourcePluginBase {
    */
   protected function runQuery() {
     $this->prepareQuery();
-    $highwaterProperty = $this->migration->get('highwaterProperty');
+    $high_water_property = $this->migration->get('highWaterProperty');
 
     // Get the key values, for potential use in joining to the map table, or
     // enforcing idlist.
@@ -109,12 +109,12 @@ abstract class SqlBase extends SourcePluginBase {
     else {
       // 2. If the map is joinable, join it. We will want to accept all rows
       //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
-      //    Note that if highwater fields are in play, we want to accept all rows
-      //    above the highwater mark in addition to those selected by the map
+      //    Note that if high water fields are in play, we want to accept all rows
+      //    above the high water mark in addition to those selected by the map
       //    conditions, so we need to OR them together (but AND with any existing
       //    conditions in the query). So, ultimately the SQL condition will look
       //    like (original conditions) AND (map IS NULL OR map needs update
-      //      OR above highwater).
+      //      OR above high water).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
       if ($this->mapJoinable()) {
@@ -149,16 +149,16 @@ abstract class SqlBase extends SourcePluginBase {
         }
         $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
       }
-      // 3. If we are using highwater marks, also include rows above the mark.
-      //    But, include all rows if the highwater mark is not set.
-      if (isset($highwaterProperty['name']) && ($highwater = $this->migration->getHighwater()) !== '') {
-        if (isset($highwaterProperty['alias'])) {
-          $highwater = $highwaterProperty['alias'] . '.' . $highwaterProperty['name'];
+      // 3. If we are using high water marks, also include rows above the mark.
+      //    But, include all rows if the high water mark is not set.
+      if (isset($high_water_property['name']) && ($high_water = $this->migration->getHighWater()) !== '') {
+        if (isset($high_water_property['alias'])) {
+          $high_water = $high_water_property['alias'] . '.' . $high_water_property['name'];
         }
         else {
-          $highwater = $highwaterProperty['name'];
+          $high_water = $high_water_property['name'];
         }
-        $conditions->condition($highwater, $highwater, '>');
+        $conditions->condition($high_water, $high_water, '>');
         $condition_added = TRUE;
       }
       if ($condition_added) {

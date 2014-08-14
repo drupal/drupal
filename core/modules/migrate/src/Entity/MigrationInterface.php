@@ -136,24 +136,24 @@ interface MigrationInterface extends ConfigEntityInterface {
   public function getIdMap();
 
   /**
-   * The current value of the highwater mark.
+   * The current value of the high water mark.
    *
-   * The highwater mark defines a timestamp stating the time the import was last
+   * The high water mark defines a timestamp stating the time the import was last
    * run. If the mark is set, only content with a higher timestamp will be
    * imported.
    *
    * @return int
-   *   A Unix timestamp representing the highwater mark.
+   *   A Unix timestamp representing the high water mark.
    */
-  public function getHighwater();
+  public function getHighWater();
 
   /**
-   * Save the new highwater mark.
+   * Save the new high water mark.
    *
-   * @param int $highwater
-   *   The highwater timestamp.
+   * @param int $high_water
+   *   The high water timestamp.
    */
-  public function saveHighwater($highwater);
+  public function saveHighWater($high_water);
 
   /**
    * Check if this migration is complete.

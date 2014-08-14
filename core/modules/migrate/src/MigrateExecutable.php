@@ -303,8 +303,8 @@ class MigrateExecutable {
       }
       $this->totalProcessed++;
       $this->processedSinceFeedback++;
-      if ($highwater_property = $this->migration->get('highwaterProperty')) {
-        $this->migration->saveHighwater($row->getSourceProperty($highwater_property['name']));
+      if ($high_water_property = $this->migration->get('highWaterProperty')) {
+        $this->migration->saveHighWater($row->getSourceProperty($high_water_property['name']));
       }
 
       // Reset row properties.

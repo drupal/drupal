@@ -45,14 +45,14 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   const PLUGIN_CLASS = '';
 
   /**
-   * The highwater mark at the beginning of the import operation.
+   * The high water mark at the beginning of the import operation.
    *
    * Once the migration is run, we save a mark of the migrated sources, so the
    * migration can run again and update only new sources or changed sources.
    *
    * @var string
    */
-  const ORIGINAL_HIGHWATER = '';
+  const ORIGINAL_HIGH_WATER = '';
 
   /**
    * Expected results after the source parsing.
@@ -76,8 +76,8 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
 
     $migration = $this->getMigration();
     $migration->expects($this->any())
-      ->method('getHighwater')
-      ->will($this->returnValue(static::ORIGINAL_HIGHWATER));
+      ->method('getHighWater')
+      ->will($this->returnValue(static::ORIGINAL_HIGH_WATER));
     // Need the test class, not the original because we need a setDatabase method. This is not pretty :/
     $plugin_class  = preg_replace('/^(Drupal\\\\\w+\\\\)Plugin\\\\migrate(\\\\source(\\\\.+)?\\\\)([^\\\\]+)$/', '\1Tests\2Test\4', static::PLUGIN_CLASS);
     $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], array(), $migration);

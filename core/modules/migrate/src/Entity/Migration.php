@@ -145,11 +145,11 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   public $destinationIds = FALSE;
 
   /**
-   * Information on the highwater mark.
+   * Information on the high water mark.
    *
    * @var array
    */
-  public $highwaterProperty;
+  public $highWaterProperty;
 
   /**
    * Indicate whether the primary system of record for this migration is the
@@ -174,7 +174,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected $highwaterStorage;
+  protected $highWaterStorage;
 
   /**
    * @var bool
@@ -282,30 +282,30 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   }
 
   /**
-   * Get the highwater storage object.
+   * Get the high water storage object.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    *   The storage object.
    */
   protected function getHighWaterStorage() {
-    if (!isset($this->highwaterStorage)) {
-      $this->highwaterStorage = \Drupal::keyValue('migrate:highwater');
+    if (!isset($this->highWaterStorage)) {
+      $this->highWaterStorage = \Drupal::keyValue('migrate:high_water');
     }
-    return $this->highwaterStorage;
+    return $this->highWaterStorage;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getHighwater() {
+  public function getHighWater() {
     return $this->getHighWaterStorage()->get($this->id());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function saveHighwater($highwater) {
-    $this->getHighWaterStorage()->set($this->id(), $highwater);
+  public function saveHighWater($high_water) {
+    $this->getHighWaterStorage()->set($this->id(), $high_water);
   }
 
   /**
