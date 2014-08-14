@@ -12,9 +12,14 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * In-place editor manager.
+ * Provides an in-place editor manager.
  *
  * The 'form' in-place editor must always be available.
+ *
+ * @see \Drupal\quickedit\Annotation\InPlaceEditor
+ * @see \Drupal\quickedit\Plugin\InPlaceEditorBase
+ * @see \Drupal\quickedit\Plugin\InPlaceEditorInterface
+ * @see plugin_api
  */
 class InPlaceEditorManager extends DefaultPluginManager {
 

@@ -12,6 +12,11 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Defines an interface for in-place editors plugins.
+ *
+ * @see \Drupal\quickedit\Annotation\InPlaceEditor
+ * @see \Drupal\quickedit\Plugin\InPlaceEditorBase
+ * @see \Drupal\quickedit\Plugin\InPlaceEditorManager
+ * @see plugin_api
  */
 interface InPlaceEditorInterface extends PluginInspectionInterface {
 
