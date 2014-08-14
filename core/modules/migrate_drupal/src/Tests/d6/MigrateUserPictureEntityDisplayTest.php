@@ -35,7 +35,7 @@ class MigrateUserPictureEntityDisplayTest extends MigrateDrupalTestBase {
         array(array(1), array('user', 'user', 'user_picture')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $migration = entity_load('migration', 'd6_user_picture_entity_display');
     $executable = new MigrateExecutable($migration, $this);

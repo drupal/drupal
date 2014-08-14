@@ -39,7 +39,7 @@ class MigrateUploadEntityFormDisplayTest extends MigrateDrupalTestBase {
         array(array(1), array('node', 'page', 'upload')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $migration = entity_load('migration', 'd6_upload_entity_form_display');
     $dumps = array(

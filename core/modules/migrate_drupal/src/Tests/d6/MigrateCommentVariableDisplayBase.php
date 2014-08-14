@@ -74,7 +74,7 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
         array(array('page'), array('node', 'comment', 'page')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', static::MIGRATION);
     $this->prepare($migration, $this->dumps);

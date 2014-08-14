@@ -60,7 +60,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
         array(array('test_page'), array('test_page')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
     entity_create('node_type', array('type' => 'test_page'))->save();

@@ -63,7 +63,7 @@ class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
         array(array(1), array(1)),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6NodeRevision.php',
     );

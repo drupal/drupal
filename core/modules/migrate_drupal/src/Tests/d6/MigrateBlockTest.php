@@ -46,7 +46,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
       $entity->enforceIsNew(TRUE);
       $entity->save();
     }
-    $this->prepareIdMappings(array(
+    $this->prepareMigrations(array(
       'd6_custom_block'  => array(
         array(array(10), array(1)),
         array(array(11), array(2)),

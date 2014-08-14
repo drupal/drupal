@@ -30,7 +30,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
         array(array(1), array('user', 'profile_color')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     $this->createFields();
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_user_profile_field_instance');

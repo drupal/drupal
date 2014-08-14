@@ -27,7 +27,7 @@ class MigrateBlockContentTest extends MigrateDrupalTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->prepareIdMappings(array(
+    $this->prepareMigrations(array(
       'd6_filter_format' => array(
         array(array(2), array('full_html'))
       )

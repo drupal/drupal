@@ -29,7 +29,7 @@ class MigrateTermNodeRevisionTest extends MigrateTermNodeTestBase {
         array(array(2), array(2)),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migrations = entity_load_multiple('migration', array('d6_term_node_revision:*'));
     foreach ($migrations as $migration) {

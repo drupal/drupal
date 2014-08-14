@@ -115,7 +115,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       ),
     );
 
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     // Migrate users.
     $migration = entity_load('migration', 'd6_user');

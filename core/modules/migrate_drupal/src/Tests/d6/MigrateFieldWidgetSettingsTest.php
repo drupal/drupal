@@ -60,7 +60,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
         array(array('field_test_datetime'), array('node', 'field_test_datetime')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     $migration = entity_load('migration', 'd6_field_instance_widget_settings');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6FieldInstance.php',

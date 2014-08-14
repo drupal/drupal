@@ -47,7 +47,7 @@ abstract class MigrateNodeTestBase extends MigrateDrupalTestBase {
         ),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $migration = entity_load('migration', 'd6_node_settings');
     $migration->setMigrationResult(MigrationInterface::RESULT_COMPLETED);

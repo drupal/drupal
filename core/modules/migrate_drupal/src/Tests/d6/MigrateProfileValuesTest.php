@@ -123,7 +123,7 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
         array(array(15), array(15)),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     // Load database dumps to provide source data.
     $dumps = array(

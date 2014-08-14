@@ -84,7 +84,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
         array(array(2), array(2)),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $migrations = entity_load_multiple('migration', array('d6_cck_field_values:*'));
     foreach ($migrations as $migration) {

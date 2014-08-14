@@ -53,7 +53,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
       'd6_comment_entity_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
       'd6_comment_entity_form_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     \Drupal::service('comment.manager')->addDefaultField('node', 'story');
     /** @var \Drupal\migrate\entity\Migration $migration */

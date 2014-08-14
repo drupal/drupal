@@ -36,7 +36,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupalTestBase {
         array(array(4), array('tags')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     entity_create('taxonomy_vocabulary', array(
       'name' => 'Test Vocabulary',

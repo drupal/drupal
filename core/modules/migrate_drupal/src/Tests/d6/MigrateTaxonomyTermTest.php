@@ -25,7 +25,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->prepareIdMappings(array(
+    $this->prepareMigrations(array(
       'd6_taxonomy_vocabulary' => array(
         array(array(1), array('vocabulary_1_i_0_')),
         array(array(2), array('vocabulary_2_i_1_')),

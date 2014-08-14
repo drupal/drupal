@@ -32,7 +32,7 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
         array(array(5), array(5)),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $entity = entity_create('aggregator_feed', array(
       'fid' => 5,

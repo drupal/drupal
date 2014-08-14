@@ -57,7 +57,7 @@ class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupalTestBase {
         array(array(4, 'page'), array('node', 'page', 'tags')),
       )
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     $migration = entity_load('migration', 'd6_vocabulary_entity_form_display');
     $dumps = array(

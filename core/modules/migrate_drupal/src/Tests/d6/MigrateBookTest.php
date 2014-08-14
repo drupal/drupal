@@ -35,7 +35,7 @@ class MigrateBookTest extends MigrateDrupalTestBase {
       $entity->save();
       $id_mappings['d6_node'][] = array(array($i), array($i));
     }
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
     // Load database dumps to provide source data.
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6Book.php',

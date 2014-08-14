@@ -39,7 +39,7 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
         array(array('story'), array('story')),
       ),
     );
-    $this->prepareIdMappings($id_mappings);
+    $this->prepareMigrations($id_mappings);
 
     foreach (array('page', 'story') as $type) {
       entity_create('node_type', array('type' => $type))->save();
