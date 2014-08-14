@@ -728,7 +728,7 @@ label {
   margin: 0 0.2em 0 0;
 }
 label.error {
-  color: #e62600;
+  color: #a51b00;
 }
 label[for] {
   cursor: pointer;
@@ -765,7 +765,7 @@ label[for] {
   border-color: #e62600;
   background-color: hsla(15, 75%, 97%, 1);
   box-shadow: inset 0 5px 5px -5px #b8b8b8;
-  color: #e62600;
+  color: #a51b00;
 }
 .form-item input.error:focus,
 .form-item textarea.error:focus,
@@ -795,7 +795,7 @@ div.description,
   font-size: 0.9em;
 }
 .form-item .description.error {
-  color: #e62600;
+  color: #a51b00;
 }
 
 ul.tips li {
