@@ -25,13 +25,15 @@
   display: inline;
 }
 .password-strength__meter {
-  background-color: #c4c4c4;
+  background-color: #ebeae4;
   height: 0.5em;
 }
 .password-strength__indicator {
   height: 100%;
   width: 0%;
-  background-color: #47c965;
+  background-color: #77b259;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
 }
 input.password-confirm,
 input.password-field,

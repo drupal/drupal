@@ -152,19 +152,19 @@
     // Based on the strength, work out what text should be shown by the password strength meter.
     if (strength < 60) {
       indicatorText = translate.weak;
-      indicatorColor = '#bb5555';
+      indicatorColor = '#e62600';
     }
     else if (strength < 70) {
       indicatorText = translate.fair;
-      indicatorColor = '#bbbb55';
+      indicatorColor = '#e09600';
     }
     else if (strength < 80) {
       indicatorText = translate.good;
-      indicatorColor = '#4863a0';
+      indicatorColor = '#0074bd';
     }
     else if (strength <= 100) {
       indicatorText = translate.strong;
-      indicatorColor = '#47c965';
+      indicatorColor = '#77b259';
     }
 
     // Assemble the final message.
