@@ -167,7 +167,6 @@ Theme system
 - Mark Carver 'Mark Carver' http://drupal.org/user/501638
 - Jen Lampton 'jenlampton' http://drupal.org/user/85586
 - Scott Reeves 'Cottser' http://drupal.org/user/1167326
-- Steve Oliver 'steveoliver' http://drupal.org/user/42327
 - Fabian Franz 'Fabianx' http://drupal.org/user/693738
 - Joël Pittet 'joelpittet' https://drupal.org/user/160302
 
