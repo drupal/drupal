@@ -95,11 +95,23 @@ class EditorImageDialog extends FormBase {
       $form['fid']['#required'] = FALSE;
     }
 
+    // The alt attribute is *required*, but we allow users to opt-in to empty
+    // alt attributes for the very rare edge cases where that is valid by
+    // specifying two double quotes as the alternative text in the dialog.
+    // However, that *is* stored as an empty alt attribute, so if we're editing
+    // an existing image (which means the src attribute is set) and its alt
+    // attribute is empty, then we show that as two double quotes in the dialog.
+    // @see https://www.drupal.org/node/2307647
+    $alt = isset($image_element['alt']) ? $image_element['alt'] : '';
+    if ($alt === '' && !empty($image_element['src'])) {
+      $alt = '""';
+    }
     $form['attributes']['alt'] = array(
       '#title' => $this->t('Alternative text'),
       '#type' => 'textfield',
       '#required' => TRUE,
-      '#default_value' => isset($image_element['alt']) ? $image_element['alt'] : '',
+      '#required_error' => $this->t('Alternative text is required.<br><em>(Only in rare cases should this be left empty. To create empty alternative text, enter <code>""</code> — two double quotes without any content).'),
+      '#default_value' => $alt,
       '#maxlength' => 2048,
     );
     $form['dimensions'] = array(
@@ -199,6 +211,12 @@ class EditorImageDialog extends FormBase {
       $file_url = file_url_transform_relative($file_url);
       $form_state->setValue(array('attributes', 'src'), $file_url);
       $form_state->setValue(array('attributes', 'data-editor-file-uuid'), $file->uuid());
+    }
+
+    // When the alt attribute is set to two double quotes, transform it to the
+    // empty string: two double quotes signify "empty alt attribute". See above.
+    if (trim($form_state->getValue(array('attributes', 'alt'))) === '""') {
+      $form_state->setValue(array('attributes', 'alt'), '');
     }
 
     if (form_get_errors($form_state)) {
