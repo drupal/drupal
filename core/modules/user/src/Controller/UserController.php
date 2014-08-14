@@ -82,7 +82,7 @@ class UserController extends ControllerBase {
     if ($account->isAuthenticated()) {
       // The current user is already logged in.
       if ($account->id() == $uid) {
-        drupal_set_message($this->t('You are logged in as %user. <a href="!user_edit">Change your password.</a>', array('%user' => $account->getUsername(), '!user_edit' => $this->url('user.edit', array('user' => $account->id())))));
+        drupal_set_message($this->t('You are logged in as %user. <a href="!user_edit">Change your password.</a>', array('%user' => $account->getUsername(), '!user_edit' => $this->url('entity.user.edit_form', array('user' => $account->id())))));
       }
       // A different user is already logged in on the computer.
       else {
@@ -142,7 +142,7 @@ class UserController extends ControllerBase {
   public function userPage(Request $request) {
     $user = $this->currentUser();
     if ($user->id()) {
-      $response = $this->redirect('user.view', array('user' => $user->id()));
+      $response = $this->redirect('entity.user.canonical', array('user' => $user->id()));
     }
     else {
       $form_builder = $this->formBuilder();

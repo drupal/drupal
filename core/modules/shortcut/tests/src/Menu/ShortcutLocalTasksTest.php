@@ -31,7 +31,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function testShortcutPageLocalTasks($route) {
     $tasks = array(
-      0 => array('shortcut.set_switch', 'user.view', 'user.edit',),
+      0 => array('shortcut.set_switch', 'entity.user.canonical', 'entity.user.edit_form',),
     );
     $this->assertLocalTasks($route, $tasks);
   }
@@ -41,8 +41,8 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getShortcutPageRoutes() {
     return array(
-      array('user.view'),
-      array('user.edit'),
+      array('entity.user.canonical'),
+      array('entity.user.edit_form'),
       array('shortcut.set_switch'),
     );
   }

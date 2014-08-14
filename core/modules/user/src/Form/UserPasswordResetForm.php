@@ -109,7 +109,7 @@ class UserPasswordResetForm extends FormBase {
     $token = Crypt::randomBytesBase64(55);
     $_SESSION['pass_reset_' . $user->id()] = $token;
     $form_state->setRedirect(
-      'user.edit',
+      'entity.user.edit_form',
       array('user' => $user->id()),
       array(
         'query' => array('pass-reset-token' => $token),

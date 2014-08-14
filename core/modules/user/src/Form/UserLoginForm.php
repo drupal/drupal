@@ -121,7 +121,7 @@ class UserLoginForm extends FormBase {
     // A destination was set, probably on an exception controller,
     if (!$this->getRequest()->request->has('destination')) {
       $form_state->setRedirect(
-        'user.view',
+        'entity.user.canonical',
         array('user' => $account->id())
       );
     }

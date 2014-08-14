@@ -22,9 +22,9 @@ user.admin_index:
   description: 'Configure user accounts.'
   position: left
   weight: -20
-user.account_settings:
+entity.user.admin_form:
   title: 'Account settings'
   parent: user.admin_index
   description: 'Configure default behavior of users, including registration requirements, emails, and fields.'
   weight: -10
-  route_name: user.account_settings
+  route_name: entity.user.admin_form

@@ -35,7 +35,7 @@ user.admin_index:
   requirements:
     _permission: 'access administration pages'
 
-user.account_settings:
+entity.user.admin_form:
   path: '/admin/config/people/accounts'
   defaults:
     _form: '\Drupal\user\AccountSettingsForm'
@@ -133,7 +133,7 @@ user.page:
   requirements:
     _access: 'TRUE'
 
-user.view:
+entity.user.canonical:
   path: '/user/{user}'
   defaults:
     _entity_view: 'user.full'
@@ -151,7 +151,7 @@ user.login:
   options:
     _maintenance_access: TRUE
 
-user.edit:
+entity.user.edit_form:
   path: '/user/{user}/edit'
   defaults:
     _entity_form: 'user.default'
@@ -161,7 +161,7 @@ user.edit:
   requirements:
     _entity_access: 'user.update'
 
-user.cancel:
+entity.user.cancel_form:
   path: '/user/{user}/cancel'
   defaults:
     _title: 'Cancel account'

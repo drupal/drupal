@@ -138,7 +138,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->logger('user')->notice('Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'));
 
       $form_state->setRedirect(
-        'user.view',
+        'entity.user.canonical',
         array('user' => $this->entity->id())
       );
     }

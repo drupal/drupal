@@ -45,10 +45,10 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "user.view",
- *     "edit-form" = "user.edit",
- *     "admin-form" = "user.account_settings",
- *     "cancel-form" = "user.cancel"
+ *     "canonical" = "entity.user.canonical",
+ *     "edit-form" = "entity.user.edit_form",
+ *     "admin-form" = "entity.user.admin_form",
+ *     "cancel-form" = "entity.user.cancel_form"
  *   }
  * )
  */

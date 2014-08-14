@@ -7,4 +7,4 @@ contact.personal_page:
   title: 'Contact'
   route_name: contact.personal_page
   weight: 2
-  base_route: user.view
+  base_route: entity.user.canonical

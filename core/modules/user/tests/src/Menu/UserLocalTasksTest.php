@@ -38,7 +38,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
       array('user.admin_account', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
       array('user.admin_permissions', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
       array('user.role_list', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
-      array('user.account_settings', array(array('user.account_settings_tab'))),
+      array('entity.user.admin_form', array(array('user.account_settings_tab'))),
     );
   }
 
@@ -76,7 +76,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function testUserPageLocalTasks($route, $subtask = array()) {
     $tasks = array(
-      0 => array('user.view', 'user.edit',),
+      0 => array('entity.user.canonical', 'entity.user.edit_form',),
     );
     if ($subtask) $tasks[] = $subtask;
     $this->assertLocalTasks($route, $tasks);
@@ -87,8 +87,8 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getUserPageRoutes() {
     return array(
-      array('user.view'),
-      array('user.edit'),
+      array('entity.user.canonical'),
+      array('entity.user.edit_form'),
     );
   }
 

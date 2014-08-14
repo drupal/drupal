@@ -5,9 +5,9 @@ entity.user_role.edit_form:
   base_route: entity.user_role.edit_form
 
 user.account_settings_tab:
-  route_name: user.account_settings
+  route_name: entity.user.admin_form
   title: 'Settings'
-  base_route: user.account_settings
+  base_route: entity.user.admin_form
 
 user.page:
   route_name: user.page
@@ -28,13 +28,13 @@ user.login:
   parent_id: user.page
   title: 'Username and password'
 
-user.view:
-  route_name: user.view
-  base_route: user.view
+entity.user.canonical:
+  route_name: entity.user.canonical
+  base_route: entity.user.canonical
   title: View
-user.edit:
-  route_name: user.edit
-  base_route: user.view
+entity.user.edit_form:
+  route_name: entity.user.edit_form
+  base_route: entity.user.canonical
   title: Edit
 
 user.admin_account:
