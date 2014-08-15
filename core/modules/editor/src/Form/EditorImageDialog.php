@@ -8,7 +8,6 @@
 namespace Drupal\editor\Form;
 
 use Drupal\Component\Utility\Bytes;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\Entity\FilterFormat;
@@ -115,10 +114,13 @@ class EditorImageDialog extends FormBase {
       '#maxlength' => 2048,
     );
     $form['dimensions'] = array(
-      '#type' => 'item',
+      '#type' => 'fieldset',
       '#title' => $this->t('Image size'),
-      '#field_prefix' => SafeMarkup::set('<div class="container-inline">'),
-      '#field_suffix' => SafeMarkup::set('</div>'),
+      '#attributes' => array('class' => array(
+        'container-inline',
+        'fieldgroup',
+        'form-composite',
+      )),
     );
     $form['dimensions']['width'] = array(
       '#title' => $this->t('Width'),
