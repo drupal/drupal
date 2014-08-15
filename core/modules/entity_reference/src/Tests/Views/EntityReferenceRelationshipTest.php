@@ -84,11 +84,13 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
     $entity = $entity_storage->create(array());
     $entity->field_test->target_id = $referenced_entity->id();
     $entity->save();
+    $this->assertEqual($entity->field_test[0]->entity->id(), $referenced_entity->id());
     $this->entities[$entity->id()] = $entity;
 
-    $entity = $entity_storage->create(array('field_test' => $entity->id()));
+    $entity = $entity_storage->create(array());
     $entity->field_test->target_id = $referenced_entity->id();
     $entity->save();
+    $this->assertEqual($entity->field_test[0]->entity->id(), $referenced_entity->id());
     $this->entities[$entity->id()] = $entity;
   }
 
