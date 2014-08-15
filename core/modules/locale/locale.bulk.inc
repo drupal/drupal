@@ -349,11 +349,11 @@ function locale_translate_batch_finished($success, $results) {
   if ($success) {
     $additions = $updates = $deletes = $skips = $config = 0;
     if (isset($results['failed_files'])) {
-      if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+      if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
         $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. <a href="@url">See the log</a> for details.', '@count translation files could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
       }
       else {
-        $message = format_plural(count($results['failed_files']), 'One translation files could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
+        $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
       }
       drupal_set_message($message, 'error');
     }
@@ -380,7 +380,7 @@ function locale_translate_batch_finished($success, $results) {
       $logger->notice('Translations imported: %number added, %update updated, %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
 
       if ($skips) {
-        if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+        if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
           $message = format_plural($skips, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
         }
         else {

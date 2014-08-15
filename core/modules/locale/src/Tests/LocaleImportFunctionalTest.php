@@ -26,8 +26,18 @@ class LocaleImportFunctionalTest extends WebTestBase {
 
   /**
    * A user able to create languages and import translations.
+   *
+   * @var \Drupal\user\Entity\User
    */
-  protected $adminUser = NULL;
+  protected $adminUser;
+
+  /**
+   * A user able to create languages, import translations and access site
+   * reports.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUserAccessSiteReports;
 
   /**
    * {@inheritdoc}
@@ -40,6 +50,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
 
     $this->adminUser = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->adminUserAccessSiteReports = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'access site reports'));
     $this->drupalLogin($this->adminUser);
 
     // Enable import of translations. By default this is disabled for automated
@@ -79,16 +90,39 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // The import should have created 1 string and rejected 2.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
 
-    $skip_message = format_plural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.', array('@url' => url('admin/reports/dblog')));
     $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
+    // Repeat the process with a user that can access site reports, and this
+    // time the different warnings must contain links to the log.
+    $this->drupalLogin($this->adminUserAccessSiteReports);
+
+    // Try importing a .po file with invalid tags.
+    $this->importPoFile($this->getBadPoFile(), array(
+      'langcode' => 'fr',
+    ));
+
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+    $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
+
+    // Check empty files import with a user that cannot access site reports..
+    $this->drupalLogin($this->adminUser);
     // Try importing a zero byte sized .po file.
     $this->importPoFile($this->getEmptyPoFile(), array(
       'langcode' => 'fr',
     ));
-
     // The import should have created 0 string and rejected 0.
-    $this->assertRaw(t('One translation file could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog'))), 'The empty translation file was successfully imported.');
+    $this->assertRaw(t('One translation file could not be imported. See the log for details.'), 'The empty translation file import reported no translations imported.');
+
+    // Repeat the process with a user that can access site reports, and this
+    // time the different warnings must contain links to the log.
+    $this->drupalLogin($this->adminUserAccessSiteReports);
+    // Try importing a zero byte sized .po file.
+    $this->importPoFile($this->getEmptyPoFile(), array(
+      'langcode' => 'fr',
+    ));
+    // The import should have created 0 string and rejected 0.
+    $this->assertRaw(t('One translation file could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog'))), 'The empty translation file import reported no translations imported.');
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomMachineName(16);
