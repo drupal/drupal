@@ -64,4 +64,15 @@ div.password-suggestions ul {
 [dir="rtl"] .password-parent {
   clear: right;
 }
-
+.password-strength__indicator.is-weak {
+  background-color: #e62600;
+}
+.password-strength__indicator.is-fair {
+  background-color: #e09600;
+}
+.password-strength__indicator.is-good {
+  background-color: #0074bd;
+}
+.password-strength__indicator.is-strong {
+  background-color: #77b259;
+}
