@@ -1348,18 +1348,19 @@ function form_process_container($element, FormStateInterface $form_state) {
 }
 
 /**
- * Returns HTML for a table with radio buttons or checkboxes.
+ * Prepares a 'tableselect' #type element for rendering.
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties and children of
- *     the tableselect element. Properties used: #header, #options, #empty,
- *     and #js_select. The #options property is an array of selection options;
- *     each array element of #options is an array of properties. These
- *     properties can include #attributes, which is added to the
- *     table row's HTML attributes; see theme_table(). An example of per-row
- *     options:
- *     @code
+ * Adds a column of radio buttons or checkboxes for each row of a table.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of
+ *   the tableselect element. Properties used: #header, #options, #empty,
+ *   and #js_select. The #options property is an array of selection options;
+ *   each array element of #options is an array of properties. These
+ *   properties can include #attributes, which is added to the
+ *   table row's HTML attributes; see table.html.twig. An example of per-row
+ *   options:
+ *   @code
  *     $options = array(
  *       array(
  *         'title' => 'How to Learn Drupal',
@@ -1385,15 +1386,12 @@ function form_process_container($element, FormStateInterface $form_state) {
  *       '#options' => $options,
  *       '#empty' => t('No content available.'),
  *     );
- *     @endcode
+ *   @endcode
  *
- * @ingroup themeable
+ * @return array
+ *   The processed element.
  */
-function theme_tableselect($variables) {
-  $element = $variables['element'];
-  $table = array(
-    '#type' => 'table',
-  );
+function form_pre_render_tableselect($element) {
   $rows = array();
   $header = $element['#header'];
   if (!empty($element['#options'])) {
@@ -1433,7 +1431,7 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      $table['#attached']['library'][] = 'core/drupal.tableselect';
+      $element['#attached']['library'][] = 'core/drupal.tableselect';
       array_unshift($header, array('class' => array('select-all')));
     }
     else {
@@ -1442,14 +1440,11 @@ function theme_tableselect($variables) {
       array_unshift($header, '');
     }
   }
-  $table += array(
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => $element['#empty'],
-    '#attributes' => $element['#attributes'],
-  );
 
-  return drupal_render($table);
+  $element['#header'] = $header;
+  $element['#rows'] = $rows;
+
+  return $element;
 }
 
 /**
@@ -1541,7 +1536,7 @@ function form_process_tableselect($element) {
  *   The processed element.
  *
  * @see form_process_tableselect()
- * @see theme_tableselect()
+ * @see form_pre_render_tableselect()
  */
 function form_process_table($element, FormStateInterface $form_state) {
   if ($element['#tableselect']) {

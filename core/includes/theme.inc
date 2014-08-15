@@ -2705,9 +2705,6 @@ function drupal_common_theme() {
       'render element' => 'element',
       'template' => 'textarea',
     ),
-    'tableselect' => array(
-      'render element' => 'element',
-    ),
     'form_element' => array(
       'render element' => 'element',
       'template' => 'form-element',
