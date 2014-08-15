@@ -8,7 +8,7 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,20 +19,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
 
   /**
-   * The database connection.
+   * The query factory to create entity queries.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Entity\Query\QueryFactory
    */
-  protected $database;
+  protected $queryFactory;
 
   /**
    * Constructs a new NodeTypeDeleteConfirm object.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
+   *   The entity query object.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(QueryFactory $query_factory) {
+    $this->queryFactory = $query_factory;
   }
 
   /**
@@ -40,7 +40,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('entity.query')
     );
   }
 
@@ -69,7 +69,10 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $num_nodes = $this->database->query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $this->entity->id()))->fetchField();
+    $num_nodes = $this->queryFactory->get('node')
+      ->condition('type', $this->entity->id())
+      ->count()
+      ->execute();
     if ($num_nodes) {
       $caption = '<p>' . format_plural($num_nodes, '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', '%type is used by @count pieces of content on your site. You may not remove %type until you have removed all of the %type content.', array('%type' => $this->entity->label())) . '</p>';
       $form['#title'] = $this->getQuestion();
