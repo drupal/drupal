@@ -168,7 +168,9 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
    */
   public static function getSubscribedEvents() {
     $events = parent::getSubscribedEvents();
-    $events[RoutingEvents::ALTER] = array('onAlterRoutes', -100);
+    // Should run after AdminRouteSubscriber so the routes can inherit admin
+    // status of the edit routes on entities. Therefore priority -210.
+    $events[RoutingEvents::ALTER] = array('onAlterRoutes', -210);
     return $events;
   }
 
