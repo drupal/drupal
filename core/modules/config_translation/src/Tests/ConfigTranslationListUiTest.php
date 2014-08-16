@@ -208,7 +208,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doContactFormsListTest() {
     // Create a test contact form to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $contact_form = entity_create('contact_category', array(
+    $contact_form = entity_create('contact_form', array(
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
     ));

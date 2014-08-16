@@ -87,7 +87,7 @@ class MessageForm extends ContentEntityForm {
       $form['preview']['message'] = $this->entityManager->getViewBuilder('contact_message')->view($message, 'full');
     }
 
-    $language_configuration = $this->moduleHandler->invoke('language', 'get_default_configuration', array('contact_message', $message->getCategory()->id()));
+    $language_configuration = $this->moduleHandler->invoke('language', 'get_default_configuration', array('contact_message', $message->getContactForm()->id()));
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
@@ -202,11 +202,11 @@ class MessageForm extends ContentEntityForm {
     $params['sender'] = $sender;
 
     if (!$message->isPersonal()) {
-      // Send to the category recipient(s), using the site's default language.
-      $category = $message->getCategory();
-      $params['contact_category'] = $category;
+      // Send to the form recipient(s), using the site's default language.
+      $contact_form = $message->getContactForm();
+      $params['contact_form'] = $contact_form;
 
-      $to = implode(', ', $category->recipients);
+      $to = implode(', ', $contact_form->recipients);
       $recipient_langcode = $this->languageManager->getDefaultLanguage()->getId();
     }
     elseif ($recipient = $message->getPersonalRecipient()) {
@@ -229,7 +229,7 @@ class MessageForm extends ContentEntityForm {
     }
 
     // If configured, send an auto-reply, using the current language.
-    if (!$message->isPersonal() && $category->reply) {
+    if (!$message->isPersonal() && $contact_form->reply) {
       // User contact forms do not support an auto-reply message, so this
       // message always originates from the site.
       drupal_mail('contact', 'page_autoreply', $sender->getEmail(), $language_interface->id, $params);
@@ -237,10 +237,10 @@ class MessageForm extends ContentEntityForm {
 
     $this->flood->register('contact', $this->config('contact.settings')->get('flood.interval'));
     if (!$message->isPersonal()) {
-      $this->logger('contact')->notice('%sender-name (@sender-from) sent an email regarding %category.', array(
+      $this->logger('contact')->notice('%sender-name (@sender-from) sent an email regarding %contact_form.', array(
         '%sender-name' => $sender->getUsername(),
         '@sender-from' => $sender->getEmail(),
-        '%category' => $category->label(),
+        '%contact_form' => $contact_form->label(),
       ));
     }
     else {

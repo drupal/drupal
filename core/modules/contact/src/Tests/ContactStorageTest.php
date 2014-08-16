@@ -47,24 +47,24 @@ class ContactStorageTest extends ContactSitewideTest {
       'administer contact_message fields',
     ));
     $this->drupalLogin($admin_user);
-    // Create first valid category.
+    // Create first valid contact form.
     $mail = 'simpletest@example.com';
-    $this->addCategory($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($mail)), '', TRUE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+    $this->addContactForm($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($mail)), '', TRUE);
+    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
     // Ensure that anonymous can submit site-wide contact form.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
-    $this->assertNoText(t('Category'));
+    $this->assertNoText(t('Form'));
     $this->submitContact($name = $this->randomMachineName(16), $mail, $subject = $this->randomMachineName(16), $id, $message = $this->randomMachineName(64));
     $this->assertText(t('Your message has been sent.'));
 
     $messages = Message::loadMultiple();
     /** @var \Drupal\contact\Entity\Message $message */
     $message = reset($messages);
-    $this->assertEqual($message->getCategory()->id(), $id);
+    $this->assertEqual($message->getContactForm()->id(), $id);
     $this->assertEqual($message->getSenderName(), $name);
     $this->assertEqual($message->getSubject(), $subject);
     $this->assertEqual($message->getSenderMail(), $mail);

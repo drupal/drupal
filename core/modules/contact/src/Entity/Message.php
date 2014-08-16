@@ -26,13 +26,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     }
  *   },
  *   entity_keys = {
- *     "bundle" = "category",
+ *     "bundle" = "contact_form",
  *     "uuid" = "uuid"
  *   },
- *   bundle_entity_type = "contact_category",
+ *   bundle_entity_type = "contact_form",
  *   fieldable = TRUE,
  *   links = {
- *     "admin-form" = "entity.contact_category.edit_form"
+ *     "admin-form" = "entity.contact_form.edit_form"
  *   }
  * )
  */
@@ -48,8 +48,8 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCategory() {
-    return $this->get('category')->entity;
+  public function getContactForm() {
+    return $this->get('contact_form')->entity;
   }
 
   /**
@@ -135,10 +135,10 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['category'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Category ID'))
-      ->setDescription(t('The ID of the associated category.'))
-      ->setSetting('target_type', 'contact_category')
+    $fields['contact_form'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Form ID'))
+      ->setDescription(t('The ID of the associated form.'))
+      ->setSetting('target_type', 'contact_form')
       ->setRequired(TRUE);
 
     $fields['uuid'] = BaseFieldDefinition::create('uuid')

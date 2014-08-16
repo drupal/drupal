@@ -52,9 +52,9 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('The configuration options have been saved.'));
 
     $this->drupalGet('admin/structure/contact');
-    // Default category exists.
+    // Default form exists.
     $this->assertLinkByHref('admin/structure/contact/manage/feedback/delete');
-    // User category could not be changed or deleted.
+    // User form could not be changed or deleted.
     // Cannot use ::assertNoLinkByHref as it does partial url matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://drupal.org/node/2031223 for the above
@@ -69,13 +69,13 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalGet('admin/structure/contact/manage/personal');
     $this->assertResponse(403);
 
-    // Delete old categories to ensure that new categories are used.
-    $this->deleteCategories();
+    // Delete old forms to ensure that new forms are used.
+    $this->deleteContactForms();
     $this->drupalGet('admin/structure/contact');
-    $this->assertText('Personal', 'Personal category was not deleted');
+    $this->assertText('Personal', 'Personal form was not deleted');
     $this->assertNoLinkByHref('admin/structure/contact/manage/feedback');
 
-    // Ensure that the contact form won't be shown without categories.
+    // Ensure that the contact form won't be shown without forms.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
@@ -85,20 +85,20 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalGet('contact');
     $this->assertResponse(200);
     $this->assertText(t('The contact form has not been configured.'));
-    // Test access personal category via site-wide contact page.
+    // Test access personal form via site-wide contact page.
     $this->drupalGet('contact/personal');
     $this->assertResponse(403);
 
-    // Add categories.
+    // Add forms.
     // Test invalid recipients.
     $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
-      $this->addCategory($this->randomMachineName(16), $this->randomMachineName(16), $invalid_recipient, '', FALSE);
+      $this->addContactForm($this->randomMachineName(16), $this->randomMachineName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid email address.', array('%recipient' => $invalid_recipient)));
     }
 
-    // Test validation of empty category and recipients fields.
-    $this->addCategory('', '', '', '', TRUE);
+    // Test validation of empty form and recipients fields.
+    $this->addContactForm('', '', '', '', TRUE);
     $this->assertText(t('Label field is required.'));
     $this->assertText(t('Machine-readable name field is required.'));
     $this->assertText(t('Recipients field is required.'));
@@ -107,56 +107,56 @@ class ContactSitewideTest extends WebTestBase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
     $max_length_exceeded = $max_length + 1;
-    $this->addCategory($id = drupal_strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
+    $this->addContactForm($id = drupal_strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
     $this->assertText(format_string('Machine-readable name cannot be longer than !max characters but is currently !exceeded characters long.', array('!max' => $max_length, '!exceeded' => $max_length_exceeded)));
-    $this->addCategory($id = drupal_strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+    $this->addContactForm($id = drupal_strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
+    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
-    // Create first valid category.
-    $this->addCategory($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+    // Create first valid form.
+    $this->addContactForm($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
+    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
-    // Check that the category was created in site default language.
-    $langcode = \Drupal::config('contact.category.' . $id)->get('langcode');
+    // Check that the form was created in site default language.
+    $langcode = \Drupal::config('contact.form.' . $id)->get('langcode');
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     $this->assertEqual($langcode, $default_langcode);
 
-    // Make sure the newly created category is included in the list of categories.
-    $this->assertNoUniqueText($label, 'New category included in categories list.');
+    // Make sure the newly created form is included in the list of forms.
+    $this->assertNoUniqueText($label, 'New form included in forms list.');
 
-    // Test update contact form category.
-    $this->updateCategory($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE);
-    $config = \Drupal::config('contact.category.' . $id)->get();
+    // Test update contact form.
+    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE);
+    $config = \Drupal::config('contact.form.' . $id)->get();
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
     $this->assertEqual($config['reply'], $reply);
-    $this->assertNotEqual($id, \Drupal::config('contact.settings')->get('default_category'));
-    $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)));
-    // Ensure the label is displayed on the contact page for this category.
+    $this->assertNotEqual($id, \Drupal::config('contact.settings')->get('default_form'));
+    $this->assertRaw(t('Contact form %label has been updated.', array('%label' => $label)));
+    // Ensure the label is displayed on the contact page for this form.
     $this->drupalGet('contact/' . $id);
     $this->assertText($label);
 
-    // Reset the category back to be the default category.
-    \Drupal::config('contact.settings')->set('default_category', $id)->save();
+    // Reset the form back to be the default form.
+    \Drupal::config('contact.settings')->set('default_form', $id)->save();
 
-    // Ensure that the contact form is shown without a category selection input.
+    // Ensure that the contact form is shown without a form selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
-    $this->assertNoText(t('Category'));
+    $this->assertNoText(t('Form'));
     $this->drupalLogin($admin_user);
 
-    // Add more categories.
-    $this->addCategory(drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+    // Add more forms.
+    $this->addContactForm(drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
+    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
-    $this->addCategory($name = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+    $this->addContactForm($name = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
+    $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
-    // Try adding a category that already exists.
-    $this->addCategory($name, $label, '', '', FALSE);
-    $this->assertNoRaw(t('Category %label has been saved.', array('%label' => $label)));
+    // Try adding a form that already exists.
+    $this->addContactForm($name, $label, '', '', FALSE);
+    $this->assertNoRaw(t('Contact form %label has been added.', array('%label' => $label)));
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
@@ -191,14 +191,14 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, '');
     $this->assertText(t('Message field is required.'));
 
-    // Test contact form with no default category selected.
+    // Test contact form with no default form selected.
     \Drupal::config('contact.settings')
-      ->set('default_category', '')
+      ->set('default_form', '')
       ->save();
     $this->drupalGet('contact');
     $this->assertResponse(404);
 
-    // Try to access contact form with non-existing category IDs.
+    // Try to access contact form with non-existing form IDs.
     $this->drupalGet('contact/0');
     $this->assertResponse(404);
     $this->drupalGet('contact/' . $this->randomMachineName());
@@ -217,12 +217,12 @@ class ContactSitewideTest extends WebTestBase {
     // Test listing controller.
     $this->drupalLogin($admin_user);
 
-    $this->deleteCategories();
+    $this->deleteContactForms();
 
     $label = $this->randomMachineName(16);
     $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
-    $category = drupal_strtolower($this->randomMachineName(16));
-    $this->addCategory($category, $label, $recipients, '', FALSE);
+    $contact_form = drupal_strtolower($this->randomMachineName(16));
+    $this->addContactForm($contact_form, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
     $this->clickLink(t('Edit'));
     $this->assertResponse(200);
@@ -231,7 +231,7 @@ class ContactSitewideTest extends WebTestBase {
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
 
-    // Find out in which row the category we want to add a field to is.
+    // Find out in which row the form we want to add a field to is.
     $i = 0;
     foreach($this->xpath('//table/tbody/tr') as $row) {
       if (((string)$row->td[0]) == $label) {
@@ -255,7 +255,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Save settings'));
 
     // Check that the field is displayed.
-    $this->drupalGet('contact/' . $category);
+    $this->drupalGet('contact/' . $contact_form);
     $this->assertText($field_label);
 
     // Submit the contact form and verify the content.
@@ -280,18 +280,18 @@ class ContactSitewideTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer contact forms', 'administer permissions', 'administer users'));
     $this->drupalLogin($admin_user);
 
-    // Set up three categories, 2 with an auto-reply and one without.
+    // Set up three forms, 2 with an auto-reply and one without.
     $foo_autoreply = $this->randomMachineName(40);
     $bar_autoreply = $this->randomMachineName(40);
-    $this->addCategory('foo', 'foo', 'foo@example.com', $foo_autoreply, FALSE);
-    $this->addCategory('bar', 'bar', 'bar@example.com', $bar_autoreply, FALSE);
-    $this->addCategory('no_autoreply', 'no_autoreply', 'bar@example.com', '', FALSE);
+    $this->addContactForm('foo', 'foo', 'foo@example.com', $foo_autoreply, FALSE);
+    $this->addContactForm('bar', 'bar', 'bar@example.com', $bar_autoreply, FALSE);
+    $this->addContactForm('no_autoreply', 'no_autoreply', 'bar@example.com', '', FALSE);
 
     // Log the current user out in order to test the name and email fields.
     $this->drupalLogout();
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
 
-    // Test the auto-reply for category 'foo'.
+    // Test the auto-reply for form 'foo'.
     $email = $this->randomMachineName(32) . '@example.com';
     $subject = $this->randomMachineName(64);
     $this->submitContact($this->randomMachineName(16), $email, $subject, 'foo', $this->randomString(128));
@@ -301,11 +301,11 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($foo_autoreply)));
 
-    // Test the auto-reply for category 'bar'.
+    // Test the auto-reply for form 'bar'.
     $email = $this->randomMachineName(32) . '@example.com';
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
-    // Auto-reply for category 'bar' should result in one auto-reply email to the sender.
+    // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($bar_autoreply)));
@@ -318,21 +318,21 @@ class ContactSitewideTest extends WebTestBase {
   }
 
   /**
-   * Adds a category.
+   * Adds a form.
    *
    * @param string $id
-   *   The category machine name.
+   *   The form machine name.
    * @param string $label
-   *   The category label.
+   *   The form label.
    * @param string $recipients
    *   The list of recipient email addresses.
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
    * @param boolean $selected
-   *   A Boolean indicating whether the category should be selected by default.
+   *   A Boolean indicating whether the form should be selected by default.
    */
-  function addCategory($id, $label, $recipients, $reply, $selected) {
+  function addContactForm($id, $label, $recipients, $reply, $selected) {
     $edit = array();
     $edit['label'] = $label;
     $edit['id'] = $id;
@@ -343,21 +343,21 @@ class ContactSitewideTest extends WebTestBase {
   }
 
   /**
-   * Updates a category.
+   * Updates a form.
    *
    * @param string $id
-   *   The category machine name.
+   *   The form machine name.
    * @param string $label
-   *   The category label.
+   *   The form label.
    * @param string $recipients
    *   The list of recipient email addresses.
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
    * @param boolean $selected
-   *   A Boolean indicating whether the category should be selected by default.
+   *   A Boolean indicating whether the form should be selected by default.
    */
-  function updateCategory($id, $label, $recipients, $reply, $selected) {
+  function updateContactForm($id, $label, $recipients, $reply, $selected) {
     $edit = array();
     $edit['label'] = $label;
     $edit['recipients'] = $recipients;
@@ -376,7 +376,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $subject
    *   The subject of the message.
    * @param string $id
-   *   The category ID of the message.
+   *   The form ID of the message.
    * @param string $message
    *   The message body.
    */
@@ -386,7 +386,7 @@ class ContactSitewideTest extends WebTestBase {
     $edit['mail'] = $mail;
     $edit['subject[0][value]'] = $subject;
     $edit['message[0][value]'] = $message;
-    if ($id == \Drupal::config('contact.settings')->get('default_category')) {
+    if ($id == \Drupal::config('contact.settings')->get('default_form')) {
       $this->drupalPostForm('contact', $edit, t('Send message'));
     }
     else {
@@ -395,20 +395,20 @@ class ContactSitewideTest extends WebTestBase {
   }
 
   /**
-   * Deletes all categories.
+   * Deletes all forms.
    */
-  function deleteCategories() {
-    $categories = entity_load_multiple('contact_category');
-    foreach ($categories as $id => $category) {
+  function deleteContactForms() {
+    $contact_forms = entity_load_multiple('contact_form');
+    foreach ($contact_forms as $id => $contact_form) {
       if ($id == 'personal') {
-        // Personal category could not be deleted.
+        // Personal form could not be deleted.
         $this->drupalGet("admin/structure/contact/manage/$id/delete");
         $this->assertResponse(403);
       }
       else {
         $this->drupalPostForm("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
-        $this->assertRaw(t('Category %label has been deleted.', array('%label' => $category->label())));
-        $this->assertFalse(entity_load('contact_category', $id), format_string('Category %category not found', array('%category' => $category->label())));
+        $this->assertRaw(t('Contact form %label has been deleted.', array('%label' => $contact_form->label())));
+        $this->assertFalse(entity_load('contact_form', $id), format_string('Form %contact_form not found', array('%contact_form' => $contact_form->label())));
       }
     }
   }

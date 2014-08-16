@@ -10,7 +10,7 @@ namespace Drupal\contact\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Flood\FloodInterface;
-use Drupal\contact\CategoryInterface;
+use Drupal\contact\ContactFormInterface;
 use Drupal\user\UserInterface;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,32 +62,32 @@ class ContactController extends ControllerBase {
   /**
    * Presents the site-wide contact form.
    *
-   * @param \Drupal\contact\CategoryInterface $contact_category
-   *   The contact category to use.
+   * @param \Drupal\contact\ContactFormInterface $contact_form
+   *   The contact form to use.
    *
    * @return array
    *   The form as render array as expected by drupal_render().
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Exception is thrown when user tries to access non existing default
-   *   contact category form.
+   *   contact form.
    */
-  public function contactSitePage(CategoryInterface $contact_category = NULL) {
+  public function contactSitePage(ContactFormInterface $contact_form = NULL) {
     // Check if flood control has been activated for sending emails.
     if (!$this->currentUser()->hasPermission('administer contact forms')) {
       $this->contactFloodControl();
     }
 
-    // Use the default category if no category has been passed.
-    if (empty($contact_category)) {
-      $contact_category = $this->entityManager()
-        ->getStorage('contact_category')
-        ->load($this->config('contact.settings')->get('default_category'));
-      // If there are no categories, do not display the form.
-      if (empty($contact_category)) {
+    // Use the default form if no form has been passed.
+    if (empty($contact_form)) {
+      $contact_form = $this->entityManager()
+        ->getStorage('contact_form')
+        ->load($this->config('contact.settings')->get('default_form'));
+      // If there are no forms, do not display the form.
+      if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
-          drupal_set_message($this->t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array(
-            '@add' => $this->url('contact.category_add'))), 'error');
+          drupal_set_message($this->t('The contact form has not been configured. <a href="@add">Add one or more forms</a> .', array(
+            '@add' => $this->url('contact.form_add'))), 'error');
           return array();
         }
         else {
@@ -99,11 +99,11 @@ class ContactController extends ControllerBase {
     $message = $this->entityManager()
       ->getStorage('contact_message')
       ->create(array(
-        'category' => $contact_category->id(),
+        'contact_form' => $contact_form->id(),
       ));
 
     $form = $this->entityFormBuilder()->getForm($message);
-    $form['#title'] = String::checkPlain($contact_category->label());
+    $form['#title'] = String::checkPlain($contact_form->label());
     return $form;
   }
 
@@ -123,7 +123,7 @@ class ContactController extends ControllerBase {
     }
 
     $message = $this->entityManager()->getStorage('contact_message')->create(array(
-      'category' => 'personal',
+      'contact_form' => 'personal',
       'recipient' => $user->id(),
     ));
 

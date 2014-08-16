@@ -58,7 +58,7 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
     $config = \Drupal::config('contact.settings');
     $this->assertIdentical($config->get('user_default_enabled'), true);
     $this->assertIdentical($config->get('flood.limit'), 3);
-    $this->assertIdentical($config->get('default_category'), 'some_other_category');
+    $this->assertIdentical($config->get('default_form'), 'some_other_category');
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'contact.settings', $config->get());
   }
 

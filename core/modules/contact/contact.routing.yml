@@ -1,51 +1,51 @@
-entity.contact_category.delete_form:
-  path: '/admin/structure/contact/manage/{contact_category}/delete'
+entity.contact_form.delete_form:
+  path: '/admin/structure/contact/manage/{contact_form}/delete'
   defaults:
-    _entity_form: 'contact_category.delete'
+    _entity_form: 'contact_form.delete'
     _title: 'Delete'
   requirements:
-    _entity_access: 'contact_category.delete'
+    _entity_access: 'contact_form.delete'
 
-contact.category_list:
+contact.form_list:
   path: '/admin/structure/contact'
   defaults:
-    _entity_list: 'contact_category'
-    _title: 'Contact form categories'
+    _entity_list: 'contact_form'
+    _title: 'Contact forms'
   requirements:
     _permission: 'administer contact forms'
 
-contact.category_add:
+contact.form_add:
   path: '/admin/structure/contact/add'
   defaults:
-    _entity_form: 'contact_category.add'
-    _title: 'Add category'
+    _entity_form: 'contact_form.add'
+    _title: 'Add contact form'
   requirements:
     _permission: 'administer contact forms'
 
-entity.contact_category.edit_form:
-  path: '/admin/structure/contact/manage/{contact_category}'
+entity.contact_form.edit_form:
+  path: '/admin/structure/contact/manage/{contact_form}'
   defaults:
-    _entity_form: 'contact_category.edit'
-    _title: 'Edit contact category'
+    _entity_form: 'contact_form.edit'
+    _title: 'Edit contact form'
   requirements:
-    _entity_access: 'contact_category.update'
+    _entity_access: 'contact_form.update'
 
 contact.site_page:
   path: '/contact'
   defaults:
     _title: 'Contact'
     _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
-    contact_category: NULL
+    contact_form: NULL
   requirements:
     _permission: 'access site-wide contact form'
 
-contact.site_page_category:
-  path: '/contact/{contact_category}'
+contact.site_page_form:
+  path: '/contact/{contact_form}'
   defaults:
-    _title: 'Contact category form'
+    _title: 'Contact'
     _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
   requirements:
-    _entity_access: 'contact_category.view'
+    _entity_access: 'contact_form.view'
 
 contact.personal_page:
   path: '/user/{user}/contact'

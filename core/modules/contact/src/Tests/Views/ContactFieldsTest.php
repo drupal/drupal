@@ -41,9 +41,9 @@ class ContactFieldsTest extends ViewTestBase {
     ));
     $this->field_storage->save();
 
-    entity_create('contact_category', array(
+    entity_create('contact_form', array(
       'id' => 'contact_message',
-      'label' => 'Test contact category',
+      'label' => 'Test contact form',
     ))->save();
 
     entity_create('field_instance_config', array(

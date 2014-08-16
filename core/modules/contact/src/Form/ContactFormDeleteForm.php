@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Form\CategoryDeleteForm.
+ * Contains \Drupal\contact\Form\ContactFormDeleteDeleteForm.
  */
 
 namespace Drupal\contact\Form;
@@ -12,9 +12,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete a contact category.
+ * Builds the form to delete a contact form.
  */
-class CategoryDeleteForm extends EntityConfirmFormBase {
+class ContactFormDeleteForm extends EntityConfirmFormBase {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('contact.category_list');
+    return new Url('contact.form_list');
   }
 
   /**
@@ -42,8 +42,8 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('Category %label has been deleted.', array('%label' => $this->entity->label())));
-    $this->logger('contact')->notice('Category %label has been deleted.', array('%label' => $this->entity->label()));
+    drupal_set_message($this->t('Contact form %label has been deleted.', array('%label' => $this->entity->label())));
+    $this->logger('contact')->notice('Contact form %label has been deleted.', array('%label' => $this->entity->label()));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

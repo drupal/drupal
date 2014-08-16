@@ -57,7 +57,7 @@ class DialogTest extends AjaxTestBase {
       'settings' => NULL,
       'dialogOptions' => array(
         'modal' => TRUE,
-        'title' => 'Add category',
+        'title' => 'Add contact form',
       ),
     );
     $normal_expected_response = array(
@@ -165,7 +165,7 @@ class DialogTest extends AjaxTestBase {
     $this->drupalGet('admin/structure/contact/add');
     // Check we get a chunk of the code, we can't test the whole form as form
     // build id and token with be different.
-    $form = $this->xpath("//form[@id='contact-category-add-form']");
+    $form = $this->xpath("//form[@id='contact-form-add-form']");
     $this->assertTrue(!empty($form), 'Non-JS entity form page present.');
 
     // Emulate going to the JS version of the form and check the JSON response.
@@ -173,7 +173,7 @@ class DialogTest extends AjaxTestBase {
     $this->drupalSetContent($ajax_result[1]['data']);
     // Remove the data, the form build id and token will never match.
     unset($ajax_result[1]['data']);
-    $form = $this->xpath("//form[@id='contact-category-add-form']");
+    $form = $this->xpath("//form[@id='contact-form-add-form']");
     $this->assertTrue(!empty($form), 'Modal dialog JSON contains entity form.');
     $this->assertEqual($entity_form_expected_response, $ajax_result[1]);
   }

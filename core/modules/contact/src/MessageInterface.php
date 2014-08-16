@@ -10,17 +10,17 @@ namespace Drupal\contact;
 use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
- * Provides an interface defining a contant message entity
+ * Provides an interface defining a contact message entity.
  */
 interface MessageInterface extends ContentEntityInterface {
 
   /**
-   * Returns the category this contact message belongs to.
+   * Returns the form this contact message belongs to.
    *
-   * @return \Drupal\contact\CategoryInterface
-   *   The contact category entity.
+   * @return \Drupal\contact\ContactFormInterface
+   *   The contact form entity.
    */
-  public function getCategory();
+  public function getContactForm();
 
   /**
    * Returns the name of the sender.

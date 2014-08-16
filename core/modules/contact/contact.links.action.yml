@@ -1,6 +1,6 @@
-contact.category_add:
-  route_name: contact.category_add
-  title: 'Add category'
+contact.form_add:
+  route_name: contact.form_add
+  title: 'Add contact form'
   weight: 1
   appears_on:
-    - contact.category_list
+    - contact.form_list

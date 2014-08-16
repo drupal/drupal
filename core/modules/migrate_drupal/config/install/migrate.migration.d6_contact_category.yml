@@ -19,4 +19,4 @@ process:
   reply: reply
   weight: weight
 destination:
-  plugin: entity:contact_category
+  plugin: entity:contact_form
