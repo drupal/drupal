@@ -196,7 +196,7 @@ function menu_ui_node_save(EntityInterface $node) {
     $definition = $node->menu;
     if (trim($definition['title'])) {
       if (!empty($definition['entity_id'])) {
-        $entity = entity_load('menu_link_content', $definition['entity_id']);
+        $entity = MenuLinkContent::load($definition['entity_id']);
         $entity->enabled->value = 1;
         $entity->title->value = trim($definition['title']);
         $entity->description->value = trim($definition['description']);
@@ -412,7 +412,7 @@ function menu_ui_node_submit(EntityInterface $node, $form, FormStateInterface $f
     $definition = $form_state->getValue('menu');
     if (empty($definition['enabled'])) {
       if ($definition['entity_id']) {
-        $entity = entity_load('menu_link_content', $definition['entity_id']);
+        $entity = MenuLinkContent::load($definition['entity_id']);
         $entity->delete();
       }
     }
