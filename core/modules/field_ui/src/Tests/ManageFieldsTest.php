@@ -144,6 +144,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array(
       'instance[settings][test_instance_setting]' => $string,
     );
+    $this->assertText(t('Default value'), 'Default value heading is shown');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
     // Assert the field settings are correct.

@@ -140,12 +140,12 @@ class FieldInstanceEditForm extends FormBase {
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
-      $element += array(
+      $element = array_merge($element , array(
         '#type' => 'details',
         '#title' => $this->t('Default value'),
         '#open' => TRUE,
         '#description' => $this->t('The default value for this field, used when creating new content.'),
-      );
+      ));
       $form['instance']['default_value'] = $element;
     }
 
