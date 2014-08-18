@@ -63,18 +63,22 @@ class ApiDataTest extends FieldTestBase {
     $this->assertTrue(isset($data[$revision_table]['table']['join']['node_revision']));
 
     $expected_join = array(
+      'left_table' => 'node_field_data',
       'left_field' => 'nid',
       'field' => 'entity_id',
       'extra' => array(
         array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+        array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
     $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node']);
     $expected_join = array(
+      'left_table' => 'node_field_revision',
       'left_field' => 'vid',
       'field' => 'revision_id',
       'extra' => array(
         array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+        array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);

@@ -217,6 +217,10 @@ class JoinPluginBase extends PluginBase {
       if (is_array($this->extra)) {
         $extras = array();
         foreach ($this->extra as $info) {
+          // Do not require 'value' to be set; allow for field syntax instead.
+          $info += array(
+            'value' => NULL,
+          );
           // Figure out the table name. Remember, only use aliases provided
           // if at all possible.
           $join_table = '';
@@ -260,8 +264,15 @@ class JoinPluginBase extends PluginBase {
           else {
             // With a single value, the '=' operator is implicit.
             $operator = !empty($info['operator']) ? $info['operator'] : '=';
-            $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder();
-            $arguments[$placeholder] = $info['value'];
+            // Allow the value to be set either with the 'value' element or
+            // with 'left_field'.
+            if (isset($info['left_field'])) {
+              $placeholder = "$left[alias].$info[left_field]";
+            }
+            else {
+              $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder();
+              $arguments[$placeholder] = $info['value'];
+            }
           }
 
           $extras[] = "$join_table$info[field] $operator $placeholder";

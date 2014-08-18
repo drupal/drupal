@@ -1,0 +1,407 @@
+uuid: bd845a9c-6c2e-4d53-965c-92b170bb79e4
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_field_filters
+label: 'Test field filters'
+module: views
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    provider: views
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+        provider: user
+        dependencies: {  }
+      cache:
+        type: none
+        options: {  }
+        provider: views
+        dependencies: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: false
+          query_tags: {  }
+        provider: views
+        dependencies: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+        provider: views
+        dependencies: {  }
+      pager:
+        type: none
+        options:
+          items_per_page: 0
+          offset: 0
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+        options:
+          build_mode: teaser
+          links: false
+          view_mode: teaser
+          rendering_language: translation_language_renderer
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          provider: node
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: 1
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies: {  }
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          provider: node
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+              - views
+              - views
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          provider: views
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          order: DESC
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies: {  }
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+      title: 'Test field filters'
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+  page_tf:
+    display_plugin: page
+    id: page_tf
+    display_title: 'Title filter page'
+    position: 1
+    provider: views
+    display_options:
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+      path: test-title-filter
+      display_description: ''
+      title: 'Test title filter'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          provider: node
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+              - views
+              - views
+              - views
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          provider: views
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  page_bf:
+    display_plugin: page
+    id: page_bf
+    display_title: 'Body filter page'
+    position: 1
+    provider: views
+    display_options:
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+      path: test-body-filter
+      display_description: ''
+      title: 'Test body filters'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          provider: node
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        body_value:
+          id: body_value
+          table: node__body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+              - views
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          provider: views
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  page_bfp:
+    display_plugin: page
+    id: page_bfp
+    display_title: 'Body filter page Paris'
+    position: 1
+    provider: views
+    display_options:
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+      path: test-body-paris
+      display_description: ''
+      title: 'Test body filters'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          provider: node
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        body_value:
+          id: body_value
+          table: node__body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+              - views
+              - views
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          provider: views
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  page_tfp:
+    display_plugin: page
+    id: page_tfp
+    display_title: 'Title filter page Paris'
+    position: 1
+    provider: views
+    display_options:
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+      path: test-title-paris
+      display_description: ''
+      title: 'Test title filter'
+      defaults:
+        title: false
