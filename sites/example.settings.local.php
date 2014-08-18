@@ -28,8 +28,12 @@ $config['system.performance']['css']['preprocess'] = FALSE;
 $config['system.performance']['js']['preprocess'] = FALSE;
 
 /**
- * Disable the render cache, by using the Null cache back-end defined by the
- * development.services.yml file above.
+ * Disable the render cache.
+ *
+ * This setting disables the render cache by using the Null cache back-end
+ * defined by the development.services.yml file above.
+ *
+ * Do not use this setting until after the site is installed.
  */
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 
