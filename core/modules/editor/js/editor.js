@@ -73,7 +73,10 @@
     // with it that supports content filtering, then first ask for
     // confirmation, because switching text formats might cause certain
     // markup to be stripped away.
-    if (drupalSettings.editor.formats[newFormatID] && drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering) {
+    var supportContentFiltering = drupalSettings.editor.formats[newFormatID] && drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
+    // If there is no content yet, it's always safe to change the text format.
+    var hasContent = findFieldForFormatSelector($select).value !== '';
+    if (hasContent && supportContentFiltering) {
       var message = Drupal.t('Changing the text format to %text_format will permanently remove content that is not allowed in that text format.<br><br>Save your changes before switching the text format to avoid losing data.', {
         '%text_format': $select.find('option:selected').text()
       });
