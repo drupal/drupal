@@ -38,11 +38,11 @@
 input.password-confirm,
 input.password-field,
 .password-strength {
-  width: 40%;
+  width: 55%;
 }
 div.password-confirm {
   visibility: hidden;
-  width: 40%;
+  width: 55%;
 }
 div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
