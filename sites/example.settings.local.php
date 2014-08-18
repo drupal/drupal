@@ -30,7 +30,7 @@ $config['system.performance']['js']['preprocess'] = FALSE;
 /**
  * Disable the render cache, by using the Null cache back-end defined by the
  * development.services.yml file above.
- * /
+ */
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 
 /**
