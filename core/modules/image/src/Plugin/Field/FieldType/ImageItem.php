@@ -350,6 +350,7 @@ class ImageItem extends FileItem {
       '#default_value' => empty($settings['default_image']['fid']) ? array() : array($settings['default_image']['fid']),
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
       '#element_validate' => array('file_managed_file_validate', array(get_class($this), 'validateDefaultImageForm')),
+      '#upload_validators' => $this->getUploadValidators(),
     );
     $element['default_image']['alt'] = array(
       '#type' => 'textfield',
