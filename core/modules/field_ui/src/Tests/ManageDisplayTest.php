@@ -66,6 +66,7 @@ class ManageDisplayTest extends FieldUiTestBase {
       'field_test_default',
       'field_test_multiple',
       'field_test_with_prepare_view',
+      'field_test_applicable',
       'hidden',
     );
     $this->assertEqual($options, $expected_options, 'The expected formatter ordering is respected.');
