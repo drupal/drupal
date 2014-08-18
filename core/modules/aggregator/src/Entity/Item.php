@@ -25,6 +25,7 @@ use Drupal\Core\Url;
  *     "storage" = "Drupal\aggregator\ItemStorage",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder",
  *     "access" = "Drupal\aggregator\FeedAccessControlHandler",
+ *     "views_data" = "Drupal\aggregator\AggregatorItemViewsData"
  *   },
  *   uri_callback = "Drupal\aggregator\Entity\Item::buildUri",
  *   base_table = "aggregator_item",

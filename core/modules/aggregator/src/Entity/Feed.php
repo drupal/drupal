@@ -24,6 +24,7 @@ use Drupal\aggregator\FeedInterface;
  *     "storage" = "Drupal\aggregator\FeedStorage",
  *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",
  *     "access" = "Drupal\aggregator\FeedAccessControlHandler",
+ *     "views_data" = "Drupal\aggregator\AggregatorFeedViewsData",
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedForm",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
