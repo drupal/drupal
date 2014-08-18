@@ -10,10 +10,10 @@ namespace Drupal\Core\Template;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
- * A class that can be used for collecting then rendering HTML attributtes.
+ * Collects, sanitizes, and renders HTML attributes.
  *
- * To use, one may both pass in an array of already defined attributes and
- * add attributes to it like using array syntax.
+ * To use, optionally pass in an associative array of defined attributes, or
+ * add attributes using array syntax. For example:
  * @code
  *  $attributes = new Attribute(array('id' => 'socks'));
  *  $attributes['class'] = array('black-cat', 'white-cat');
@@ -22,14 +22,25 @@ use Drupal\Component\Utility\SafeMarkup;
  *  // Produces <cat id="socks" class="black-cat white-cat black-white-cat">
  * @endcode
  *
- * individual parts of the attribute may be printed first.
+ * $attributes always prints out all the attributes. For example:
  * @code
  *  $attributes = new Attribute(array('id' => 'socks'));
  *  $attributes['class'] = array('black-cat', 'white-cat');
  *  $attributes['class'][] = 'black-white-cat';
  *  echo '<cat class="cat ' . $attributes['class'] . '"' . $attributes . '>';
- *  // Produces <cat class="cat black-cat white-cat black-white-cat" id="socks">
+ *  // Produces <cat class="cat black-cat white-cat black-white-cat" id="socks" class="cat black-cat white-cat black-white-cat">
  * @endcode
+ *
+ * When printing out individual attributes to customize them within a Twig
+ * template, use the "without" filter to prevent attributes that have already
+ * been printed from being printed again. For example:
+ * @code
+ *  <cat class="{{ attributes.class }} my-custom-class"{{ attributes|without('class') }}>
+ *  {# Produces <cat class="cat black-cat white-cat black-white-cat my-custom-class" id="socks"> #}
+ * @endcode
+ *
+ * The attribute keys and values are automatically sanitized for output with
+ * \Drupal\Component\Utility\String::checkPlain().
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate {
 
