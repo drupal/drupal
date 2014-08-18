@@ -49,9 +49,9 @@ use Drupal\user\UserInterface;
  *   links = {
  *     "canonical" = "entity.user.canonical",
  *     "edit-form" = "entity.user.edit_form",
- *     "admin-form" = "entity.user.admin_form",
- *     "cancel-form" = "entity.user.cancel_form"
- *   }
+ *     "cancel-form" = "entity.user.cancel_form",
+ *   },
+ *   field_ui_base_route = "entity.user.admin_form",
  * )
  */
 class User extends ContentEntityBase implements UserInterface {

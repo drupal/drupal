@@ -40,8 +40,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "canonical" = "entity_test.edit_entity_test_mul",
  *     "edit-form" = "entity_test.edit_entity_test_mul",
  *     "delete-form" = "entity_test.delete_entity_test_mul",
- *     "admin-form" = "entity_test.admin_entity_test_mul"
- *   }
+ *   },
+ *   field_ui_base_route = "entity_test.admin_entity_test_mul",
  * )
  */
 class EntityTestMul extends EntityTest {

@@ -117,22 +117,6 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getAccessControlHandler($entity_type);
 
   /**
-   * Returns the route information for an entity type's bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type.
-   * @param string $bundle
-   *   The name of the bundle.
-   *
-   * @return array
-   *   An associative array with the following keys:
-   *   - route_name: The name of the route.
-   *   - route_parameters: (optional) An associative array of parameter names
-   *     and values.
-   */
-  public function getAdminRouteInfo($entity_type_id, $bundle);
-
-  /**
    * Creates a new storage instance.
    *
    * @param string $entity_type

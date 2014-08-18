@@ -199,44 +199,6 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the url() method for "admin-form".
-   *
-   * @covers ::urlRouteParameters()
-   */
-  public function testUrlForAdminForm() {
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->exactly(2))
-      ->method('getLinkTemplates')
-      ->will($this->returnValue(array(
-        'admin-form' => 'test_entity_type.admin_form',
-      )));
-    $entity_type->expects($this->exactly(2))
-      ->method('getBundleEntityType')
-      ->will($this->returnValue('test_entity_type_bundle'));
-
-    $this->entityManager
-      ->expects($this->exactly(4))
-      ->method('getDefinition')
-      ->with('test_entity_type')
-      ->will($this->returnValue($entity_type));
-
-    $this->urlGenerator->expects($this->once())
-      ->method('generateFromRoute')
-      ->with('test_entity_type.admin_form', array(
-        'test_entity_type_bundle' => 'test_entity_bundle',
-        'test_entity_type' => 'test_entity_id',
-      ))
-      ->will($this->returnValue('entity/test_entity_type/test_entity_bundle/test_entity_id'));
-
-    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'), '', TRUE, TRUE, TRUE, array('bundle'));
-    $entity->expects($this->any())
-      ->method('bundle')
-      ->will($this->returnValue('test_entity_bundle'));
-
-    $this->assertSame('entity/test_entity_type/test_entity_bundle/test_entity_id', $entity->url('admin-form'));
-  }
-
-  /**
    * Tests the getPathByAlias() method.
    *
    * @covers ::getSystemPath()

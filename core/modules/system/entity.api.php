@@ -332,8 +332,12 @@ use Drupal\Core\Render\Element;
  *     own pages) or edit the entity.
  *   - delete-form: Confirmation form to delete the entity.
  *   - edit-form: Editing form.
- *   - admin-form: Form for editing bundle or entity type settings.
  *   - Other link types specific to your entity type can also be defined.
+ * - If your content entity is fieldable, provide 'field_ui_base_route'
+ *   annotation, giving the name of the route that the Manage Fields, Manage
+ *   Display, and Manage Form Display pages from the Field UI module will be
+ *   attached to. This is usually the bundle settings edit page, or an entity
+ *   type settings page if there are no bundles.
  * - If your content entity has bundles, you will also need to define a second
  *   plugin to handle the bundles. This plugin is itself a configuration entity
  *   type, so follow the steps here to define it. The machine name ('id'

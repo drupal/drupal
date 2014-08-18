@@ -32,8 +32,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   },
  *   links = {
  *     "edit-form" = "entity_test.edit_entity_test",
- *     "admin-form" = "entity_test.admin_entity_test"
- *   }
+ *   },
+ *   field_ui_base_route = "entity_test.admin_entity_test",
  * )
  */
 class EntityTestBaseFieldDisplay extends EntityTest {

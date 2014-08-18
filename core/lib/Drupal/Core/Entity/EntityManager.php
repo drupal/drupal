@@ -332,20 +332,6 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function getAdminRouteInfo($entity_type_id, $bundle) {
-    if (($entity_type = $this->getDefinition($entity_type_id, FALSE)) && $admin_form = $entity_type->getLinkTemplate('admin-form')) {
-      return array(
-        'route_name' => $admin_form,
-        'route_parameters' => array(
-          $entity_type->getBundleEntityType() => $bundle,
-        ),
-      );
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getBaseFieldDefinitions($entity_type_id) {
     // Check the static cache.
     if (!isset($this->baseFieldDefinitions[$entity_type_id])) {

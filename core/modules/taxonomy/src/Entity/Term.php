@@ -43,11 +43,11 @@ use Drupal\taxonomy\TermInterface;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
+ *   field_ui_base_route = "taxonomy.overview_terms",
  *   links = {
  *     "canonical" = "taxonomy.term_page",
  *     "delete-form" = "taxonomy.term_delete",
  *     "edit-form" = "taxonomy.term_edit",
- *     "admin-form" = "taxonomy.overview_terms"
  *   },
  *   permission_granularity = "bundle"
  * )

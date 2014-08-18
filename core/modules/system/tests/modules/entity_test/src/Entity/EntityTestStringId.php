@@ -33,8 +33,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   links = {
  *     "canonical" = "entity_test.render",
  *     "edit-form" = "entity_test.edit_entity_test_string_id",
- *     "admin-form" = "entity_test.admin_entity_test_string_id"
- *   }
+ *   },
+ *   field_ui_base_route = "entity_test.admin_entity_test_string_id",
  * )
  */
 class EntityTestStringId extends EntityTest {

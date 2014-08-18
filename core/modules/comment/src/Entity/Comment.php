@@ -49,9 +49,9 @@ use Drupal\user\UserInterface;
  *     "canonical" = "entity.comment.canonical",
  *     "delete-form" = "entity.comment.delete_form",
  *     "edit-form" = "entity.comment.edit_form",
- *     "admin-form" = "entity.comment_type.edit_form"
  *   },
- *   bundle_entity_type = "comment_type"
+ *   bundle_entity_type = "comment_type",
+ *   field_ui_base_route  = "entity.comment_type.edit_form",
  * )
  */
 class Comment extends ContentEntityBase implements CommentInterface {

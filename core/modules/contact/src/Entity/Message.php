@@ -30,10 +30,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "contact_form",
+ *   field_ui_base_route = "entity.contact_form.edit_form",
  *   fieldable = TRUE,
- *   links = {
- *     "admin-form" = "entity.contact_form.edit_form"
- *   }
  * )
  */
 class Message extends ContentEntityBase implements MessageInterface {

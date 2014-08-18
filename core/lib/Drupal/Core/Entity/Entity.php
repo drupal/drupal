@@ -254,11 +254,6 @@ abstract class Entity implements EntityInterface {
     // The entity ID is needed as a route parameter.
     $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
 
-    // The 'admin-form' link requires the bundle as a route parameter if the
-    // entity type uses bundles.
-    if ($rel == 'admin-form' && $this->getEntityType()->getBundleEntityType() != 'bundle') {
-      $uri_route_parameters[$this->getEntityType()->getBundleEntityType()] = $this->bundle();
-    }
     return $uri_route_parameters;
   }
 

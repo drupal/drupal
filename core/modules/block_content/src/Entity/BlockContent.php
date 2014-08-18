@@ -41,7 +41,6 @@ use Drupal\block_content\BlockContentInterface;
  *     "canonical" = "entity.block_content.canonical",
  *     "delete-form" = "entity.block_content.delete_form",
  *     "edit-form" = "entity.block_content.canonical",
- *     "admin-form" = "entity.block_content_type.edit_form"
  *   },
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -52,7 +51,8 @@ use Drupal\block_content\BlockContentInterface;
  *     "label" = "info",
  *     "uuid" = "uuid"
  *   },
- *   bundle_entity_type = "block_content_type"
+ *   bundle_entity_type = "block_content_type",
+ *   field_ui_base_route = "entity.block_content_type.edit_form",
  * )
  */
 class BlockContent extends ContentEntityBase implements BlockContentInterface {

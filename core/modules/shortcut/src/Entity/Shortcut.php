@@ -44,9 +44,9 @@ use Drupal\shortcut\ShortcutInterface;
  *     "canonical" = "entity.shortcut.canonical",
  *     "delete-form" = "entity.shortcut.delete_form",
  *     "edit-form" = "entity.shortcut.canonical",
- *     "admin-form" = "entity.shortcut.canonical"
  *   },
- *   bundle_entity_type = "shortcut_set"
+ *   bundle_entity_type = "shortcut_set",
+ *   field_ui_base_route = "entity.shortcut.canonical",
  * )
  */
 class Shortcut extends ContentEntityBase implements ShortcutInterface {

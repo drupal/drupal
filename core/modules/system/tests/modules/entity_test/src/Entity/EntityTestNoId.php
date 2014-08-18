@@ -20,9 +20,7 @@ namespace Drupal\entity_test\Entity;
  *   entity_keys = {
  *     "bundle" = "type",
  *   },
- *   links = {
- *     "admin-form" = "entity_test.admin_entity_test_no_id"
- *   }
+ *   field_ui_base_route = "entity_test.admin_entity_test_no_id",
  * )
  */
 class EntityTestNoId extends EntityTest {

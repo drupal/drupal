@@ -50,13 +50,13 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "node_type",
+ *   field_ui_base_route = "entity.node_type.edit_form",
  *   permission_granularity = "bundle",
  *   links = {
  *     "canonical" = "entity.node.canonical",
  *     "delete-form" = "entity.node.delete_form",
  *     "edit-form" = "entity.node.edit_form",
  *     "version-history" = "entity.node.version_history",
- *     "admin-form" = "entity.node_type.edit_form"
  *   }
  * )
  */

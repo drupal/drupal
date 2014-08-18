@@ -28,7 +28,7 @@ class FieldUI {
    */
   public static function getOverviewRouteInfo($entity_type_id, $bundle) {
     $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
-    if ($entity_type->hasLinkTemplate('admin-form')) {
+    if ($entity_type->get('field_ui_base_route')) {
       return new Url("field_ui.overview_$entity_type_id", array(
         $entity_type->getBundleEntityType() => $bundle,
       ));

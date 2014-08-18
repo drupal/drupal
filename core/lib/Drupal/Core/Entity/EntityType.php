@@ -204,6 +204,13 @@ class EntityType implements EntityTypeInterface {
   protected $group_label;
 
   /**
+   * The route name used by field UI to attach its management pages.
+   *
+   * @var string
+   */
+  protected $field_ui_base_route;
+
+  /**
    * Constructs a new EntityType.
    *
    * @param array $definition

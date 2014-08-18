@@ -437,36 +437,6 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAdminRouteInfo() method.
-   *
-   * @covers ::getAdminRouteInfo()
-   */
-  public function testGetAdminRouteInfo() {
-    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $banana = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $banana->expects($this->once())
-      ->method('getBundleEntityType')
-      ->will($this->returnValue('bundle'));
-    $banana->expects($this->once())
-      ->method('getLinkTemplate')
-      ->with('admin-form')
-      ->will($this->returnValue('entity.view'));
-    $this->setUpEntityManager(array(
-      'apple' => $apple,
-      'banana' => $banana,
-    ));
-
-    $expected = array(
-      'route_name' => 'entity.view',
-      'route_parameters' => array(
-        'bundle' => 'chiquita',
-      ),
-    );
-    $this->assertSame($expected, $this->entityManager->getAdminRouteInfo('banana', 'chiquita'));
-    $this->assertNull($this->entityManager->getAdminRouteInfo('apple', 'delicious'));
-  }
-
-  /**
    * Tests the getBaseFieldDefinitions() method.
    *
    * @covers ::getBaseFieldDefinitions()
