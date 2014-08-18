@@ -64,7 +64,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    */
   protected $field_name;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Install the Filter module.

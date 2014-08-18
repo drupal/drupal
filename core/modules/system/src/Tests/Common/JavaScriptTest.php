@@ -30,7 +30,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   protected $preprocess_js = NULL;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // There are dependencies in drupal_get_js() on the theme layer so we need
     // to initialize it.
@@ -46,7 +46,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     drupal_static_reset('_drupal_add_js');
   }
 
-  function tearDown() {
+  protected function tearDown() {
     // Restore configured value for JavaScript preprocessing.
     $config = \Drupal::config('system.performance');
     $config->set('js.preprocess', $this->preprocess_js);

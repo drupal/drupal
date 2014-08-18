@@ -43,7 +43,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   protected $image;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set the image factory service.

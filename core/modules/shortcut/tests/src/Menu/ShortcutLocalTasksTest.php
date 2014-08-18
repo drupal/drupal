@@ -16,7 +16,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  */
 class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
 
-  public function setUp() {
+  protected function setUp() {
     $this->directoryList = array(
       'shortcut' => 'core/modules/shortcut',
       'user' => 'core/modules/user',

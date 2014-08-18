@@ -45,7 +45,7 @@ class FilterEntityBundleTest extends ViewTestBase {
    */
   protected $entities = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'test_bundle'));

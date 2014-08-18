@@ -35,7 +35,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    */
   public $search_node;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Login as a user that can create and search content.

@@ -16,7 +16,7 @@ class PageEditTest extends NodeTestBase {
   protected $web_user;
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));

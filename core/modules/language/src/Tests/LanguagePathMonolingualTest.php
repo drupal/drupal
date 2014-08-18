@@ -23,7 +23,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
    */
   public static $modules = array('language', 'path');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

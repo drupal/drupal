@@ -30,7 +30,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    */
   protected $manager;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->manager = $this->container->get('plugin.manager.image.effect');
   }

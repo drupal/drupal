@@ -70,7 +70,7 @@ class TranslationTest extends FieldUnitTestBase {
    */
   protected $instance;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installConfig(array('language'));

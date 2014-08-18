@@ -24,7 +24,7 @@ class ThemeTest extends WebTestBase {
    */
   public static $modules = array('theme_test', 'node');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     theme_enable(array('test_theme'));
   }

@@ -14,7 +14,7 @@ namespace Drupal\taxonomy\Tests;
  */
 class LoadMultipleTest extends TaxonomyTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($this->taxonomy_admin);

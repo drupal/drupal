@@ -21,7 +21,7 @@ class NodeSyndicateBlockTest extends NodeTestBase {
    */
   public static $modules = array('block');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user and log in.

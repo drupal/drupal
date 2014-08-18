@@ -16,7 +16,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  */
 class FieldAttachStorageTest extends FieldUnitTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('entity_test_rev');
   }

@@ -24,7 +24,7 @@ class FieldUIRouteTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalLogin($this->root_user);

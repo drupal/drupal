@@ -16,7 +16,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  */
 class TaxonomyLocalTasksTest extends LocalTaskIntegrationTest {
 
-  public function setUp() {
+  protected function setUp() {
     $this->directoryList = array('taxonomy' => 'core/modules/taxonomy');
     parent::setUp();
   }

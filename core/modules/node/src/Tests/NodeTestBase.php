@@ -29,7 +29,7 @@ abstract class NodeTestBase extends WebTestBase {
    */
   protected $accessHandler;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.

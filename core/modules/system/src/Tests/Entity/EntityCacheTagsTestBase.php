@@ -50,7 +50,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Give anonymous users permission to view test entities, so that we can

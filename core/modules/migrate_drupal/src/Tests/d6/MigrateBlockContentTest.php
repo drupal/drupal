@@ -25,7 +25,7 @@ class MigrateBlockContentTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->prepareMigrations(array(
       'd6_filter_format' => array(

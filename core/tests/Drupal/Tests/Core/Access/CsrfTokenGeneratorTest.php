@@ -37,7 +37,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->key = Crypt::randomBytesBase64(55);
 

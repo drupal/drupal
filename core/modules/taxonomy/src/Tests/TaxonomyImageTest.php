@@ -28,7 +28,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    */
   public static $modules = array('image');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Remove access content permission from registered users.

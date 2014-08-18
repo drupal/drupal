@@ -27,7 +27,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
   protected $vocabulary1;
   protected $vocabulary2;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer taxonomy'));

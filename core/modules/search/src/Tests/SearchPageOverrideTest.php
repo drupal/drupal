@@ -26,7 +26,7 @@ class SearchPageOverrideTest extends SearchTestBase {
 
   public $search_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Login as a user that can create and search content.

@@ -22,7 +22,7 @@ class NextIdTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'sequences');
   }

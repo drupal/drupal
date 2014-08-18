@@ -22,7 +22,7 @@ abstract class SearchTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'search', 'dblog');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.

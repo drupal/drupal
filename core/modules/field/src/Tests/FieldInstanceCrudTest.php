@@ -40,7 +40,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    */
   protected $instanceDefinition;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->fieldStorageDefinition = array(

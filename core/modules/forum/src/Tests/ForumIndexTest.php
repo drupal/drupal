@@ -23,7 +23,7 @@ class ForumIndexTest extends WebTestBase {
    */
   public static $modules = array('taxonomy', 'comment', 'forum');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a test user.

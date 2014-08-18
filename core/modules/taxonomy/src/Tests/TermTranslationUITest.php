@@ -31,7 +31,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
    */
   public static $modules = array('language', 'content_translation', 'taxonomy');
 
-  function setUp() {
+  protected function setUp() {
     $this->entityTypeId = 'taxonomy_term';
     $this->bundle = 'tags';
     parent::setUp();

@@ -69,7 +69,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   protected $inline_css_group;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->optimizer = new CssOptimizer();

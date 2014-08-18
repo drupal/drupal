@@ -42,7 +42,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = array('taxonomy', 'options', 'text', 'filter');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('taxonomy_term');

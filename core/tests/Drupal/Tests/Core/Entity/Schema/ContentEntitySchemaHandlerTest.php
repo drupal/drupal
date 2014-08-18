@@ -56,7 +56,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
       ->disableOriginalConstructor()

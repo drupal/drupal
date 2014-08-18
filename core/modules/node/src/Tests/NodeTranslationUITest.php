@@ -31,7 +31,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    */
   protected $profile = 'standard';
 
-  function setUp() {
+  protected function setUp() {
     $this->entityTypeId = 'node';
     $this->bundle = 'article';
     parent::setUp();

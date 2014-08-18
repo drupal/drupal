@@ -19,7 +19,7 @@ use Drupal\Core\Entity\EntityAccessControlHandler;
  */
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'url_alias');
   }

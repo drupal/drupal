@@ -17,7 +17,7 @@ class NormalizeTest extends NormalizerTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     \Drupal::service('router.builder')->rebuild();

@@ -51,7 +51,7 @@ class ColorTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create user.

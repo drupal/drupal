@@ -16,7 +16,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  */
 class ConfigLocalTasksTest extends LocalTaskIntegrationTest {
 
-  public function setUp() {
+  protected function setUp() {
     $this->directoryList = array('config' => 'core/modules/config');
     parent::setUp();
   }

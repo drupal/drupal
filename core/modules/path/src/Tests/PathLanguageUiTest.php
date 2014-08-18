@@ -21,7 +21,7 @@ class PathLanguageUiTest extends PathTestBase {
    */
   public static $modules = array('path', 'locale');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

@@ -50,7 +50,7 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
    */
   public static $modules = array('entity_reference', 'entity_reference_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);

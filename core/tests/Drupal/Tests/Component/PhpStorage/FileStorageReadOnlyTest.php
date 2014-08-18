@@ -33,7 +33,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $dir_path = sys_get_temp_dir() . '/php';

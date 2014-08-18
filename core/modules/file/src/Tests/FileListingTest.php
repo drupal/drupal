@@ -21,7 +21,7 @@ class FileListingTest extends FileFieldTestBase {
    */
   public static $modules = array('views', 'file', 'image');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('access files overview', 'bypass node access'));

@@ -27,7 +27,7 @@ class NodeCreationTest extends NodeTestBase {
    */
   public static $modules = array('node_test_exception', 'dblog', 'test_page_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));

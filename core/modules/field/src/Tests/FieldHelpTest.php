@@ -31,7 +31,7 @@ class FieldHelpTest extends WebTestBase {
    */
   protected $adminUser;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create the admin user.

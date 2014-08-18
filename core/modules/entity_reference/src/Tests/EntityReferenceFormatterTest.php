@@ -51,7 +51,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    */
   public static $modules = array('entity_reference');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);

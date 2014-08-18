@@ -24,7 +24,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
    */
   protected $classloader;
 
-  function setUp() {
+  protected function setUp() {
     // DrupalKernel relies on global $config_directories and requires those
     // directories to exist. Therefore, create the directories, but do not
     // invoke KernelTestBase::setUp(), since that would set up further

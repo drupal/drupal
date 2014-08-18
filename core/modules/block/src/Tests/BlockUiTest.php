@@ -44,7 +44,7 @@ class BlockUiTest extends WebTestBase {
    */
   protected $adminUser;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create and log in an administrative user.
     $this->adminUser = $this->drupalCreateUser(array(

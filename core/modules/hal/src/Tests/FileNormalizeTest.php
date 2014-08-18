@@ -34,7 +34,7 @@ class FileNormalizeTest extends NormalizerTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('file');
 

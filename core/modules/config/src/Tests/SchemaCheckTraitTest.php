@@ -36,7 +36,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(array('config_test', 'config_schema_test'));
     $this->typedConfig = \Drupal::service('config.typed');

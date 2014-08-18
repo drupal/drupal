@@ -13,7 +13,7 @@ namespace Drupal\file\Tests;
  * @group file
  */
 class SpaceUsedTest extends FileManagedUnitTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create records for a couple of users with different sizes.

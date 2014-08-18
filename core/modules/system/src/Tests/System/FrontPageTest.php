@@ -23,7 +23,7 @@ class FrontPageTest extends WebTestBase {
    */
   public static $modules = array('node', 'system_test', 'views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create admin user, log in admin user, and create one node.

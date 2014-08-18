@@ -31,7 +31,7 @@ class LocaleExportTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));

@@ -38,7 +38,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer taxonomy'));

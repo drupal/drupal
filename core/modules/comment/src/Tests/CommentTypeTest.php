@@ -41,7 +41,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Sets the test up.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }

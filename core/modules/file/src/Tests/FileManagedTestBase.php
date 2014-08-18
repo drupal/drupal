@@ -23,7 +23,7 @@ abstract class FileManagedTestBase extends WebTestBase {
    */
   public static $modules = array('file_test', 'file');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();

@@ -25,7 +25,7 @@ class ThemeTest extends WebTestBase {
    */
   public static $modules = array('node', 'block', 'file');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

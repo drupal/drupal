@@ -45,7 +45,7 @@ class MatcherDumperTest extends UnitTestBase {
     $this->state = new State(new KeyValueMemoryFactory());
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 

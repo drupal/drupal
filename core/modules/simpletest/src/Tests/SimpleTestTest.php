@@ -37,7 +37,7 @@ class SimpleTestTest extends WebTestBase {
    */
   protected $test_ids = array();
 
-  function setUp() {
+  protected function setUp() {
     if (!$this->isInChildSite()) {
       $php = <<<'EOD'
 <?php

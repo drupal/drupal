@@ -26,7 +26,7 @@ class TermValidationTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('taxonomy_term');
   }

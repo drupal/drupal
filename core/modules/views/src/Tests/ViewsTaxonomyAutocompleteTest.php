@@ -47,7 +47,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
    */
   public static $modules = array('node', 'taxonomy');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create the vocabulary for the tag field.

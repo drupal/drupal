@@ -30,7 +30,7 @@ class PagePreviewTest extends NodeTestBase {
    */
   protected $field_name;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));

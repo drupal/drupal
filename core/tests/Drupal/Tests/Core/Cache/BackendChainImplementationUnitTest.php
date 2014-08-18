@@ -47,7 +47,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
    */
   protected $thirdBackend;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set up three memory backends to be used in the chain.

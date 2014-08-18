@@ -27,7 +27,7 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupalTe
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     foreach (['comment', 'comment_no_subject'] as $comment_type) {
       entity_create('comment_type', array(

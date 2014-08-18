@@ -23,7 +23,7 @@ class BlockRenderOrderTest extends WebTestBase {
    */
   public static $modules = array('node', 'block');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create a test user.
     $end_user = $this->drupalCreateUser(array(

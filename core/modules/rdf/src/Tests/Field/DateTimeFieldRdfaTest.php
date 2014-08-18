@@ -32,7 +32,7 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
   */
   public static $modules = array('datetime');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->createTestField();

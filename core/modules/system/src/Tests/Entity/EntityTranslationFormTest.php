@@ -28,7 +28,7 @@ class EntityTranslationFormTest extends WebTestBase {
 
   protected $langcodes;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Enable translations for the test entity type.
     \Drupal::state()->set('entity_test.translation', TRUE);

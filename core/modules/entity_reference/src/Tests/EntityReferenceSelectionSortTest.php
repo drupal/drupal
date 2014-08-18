@@ -19,7 +19,7 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
 
   public static $modules = array('node', 'entity_reference', 'entity_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an Article node type.

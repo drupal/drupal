@@ -24,7 +24,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   public static $modules = array('language', 'system');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Reset _drupal_add_css() before each test.
     drupal_static_reset('_drupal_add_css');

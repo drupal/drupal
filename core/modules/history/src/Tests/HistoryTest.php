@@ -38,7 +38,7 @@ class HistoryTest extends WebTestBase {
    */
   protected $test_node;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

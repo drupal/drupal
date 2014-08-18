@@ -27,7 +27,7 @@ class LanguageUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->language = new Language();
   }
 

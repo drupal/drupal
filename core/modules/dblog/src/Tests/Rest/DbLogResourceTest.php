@@ -24,7 +24,7 @@ class DbLogResourceTest extends RESTTestBase {
    */
   public static $modules = array('hal', 'dblog');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Enable REST API for the watchdog resource.
     $this->enableService('dblog');

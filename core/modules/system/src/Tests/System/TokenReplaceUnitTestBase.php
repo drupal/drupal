@@ -35,7 +35,7 @@ abstract class TokenReplaceUnitTestBase extends EntityUnitTestBase {
    */
   public static $modules = array('system');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Install default system configuration.
     $this->installConfig(array('system'));

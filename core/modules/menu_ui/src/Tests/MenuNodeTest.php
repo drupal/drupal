@@ -24,7 +24,7 @@ class MenuNodeTest extends WebTestBase {
    */
   public static $modules = array('menu_ui', 'test_page_test', 'node');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

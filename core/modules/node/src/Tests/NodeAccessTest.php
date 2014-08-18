@@ -16,7 +16,7 @@ namespace Drupal\node\Tests;
  * @todo Cover hook_node_access in a separate test class.
  */
 class NodeAccessTest extends NodeTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Clear permissions for authenticated users.
     $this->container->get('config.factory')->get('user.role.' . DRUPAL_AUTHENTICATED_RID)->set('permissions', array())->save();

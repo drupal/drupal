@@ -61,7 +61,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->userStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

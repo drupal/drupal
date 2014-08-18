@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
  * @group user
  */
 class UserAutocompleteTest extends WebTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set up two users with different permissions to test access.

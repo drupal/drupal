@@ -24,7 +24,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();

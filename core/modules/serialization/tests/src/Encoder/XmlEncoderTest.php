@@ -35,7 +35,7 @@ class XmlEncoderTest extends UnitTestCase {
    */
   protected $testArray = array('test' => 'test');
 
-  public function setUp() {
+  protected function setUp() {
     $this->baseEncoder = $this->getMock('Symfony\Component\Serializer\Encoder\XmlEncoder');
     $this->encoder = new XmlEncoder();
     $this->encoder->setBaseEncoder($this->baseEncoder);

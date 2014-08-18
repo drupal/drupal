@@ -22,7 +22,7 @@ abstract class MigrateUploadBase extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create new file entities.
     for ($i = 1; $i <= 3; $i++) {

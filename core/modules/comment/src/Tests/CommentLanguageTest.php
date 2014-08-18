@@ -30,7 +30,7 @@ class CommentLanguageTest extends WebTestBase {
    */
   public static $modules = array('node', 'language', 'language_test', 'comment_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));

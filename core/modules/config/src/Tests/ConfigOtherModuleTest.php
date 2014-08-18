@@ -24,7 +24,7 @@ class ConfigOtherModuleTest extends WebTestBase {
   /**
    * Sets up the module handler for enabling and disabling modules.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->moduleHandler = $this->container->get('module_handler');
   }

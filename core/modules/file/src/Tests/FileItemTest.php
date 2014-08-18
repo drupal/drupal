@@ -33,7 +33,7 @@ class FileItemTest extends FieldUnitTestBase {
    */
   protected $file;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('file');

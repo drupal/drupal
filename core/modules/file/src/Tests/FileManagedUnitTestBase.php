@@ -23,7 +23,7 @@ abstract class FileManagedUnitTestBase extends DrupalUnitTestBase {
    */
   public static $modules = array('file_test', 'file', 'system', 'field', 'user');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();

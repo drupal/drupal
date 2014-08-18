@@ -38,7 +38,7 @@ class ConfigTranslationFormTest extends WebTestBase {
    */
   protected $langcode;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $definitions = \Drupal::service('plugin.manager.config_translation.mapper')->getDefinitions();

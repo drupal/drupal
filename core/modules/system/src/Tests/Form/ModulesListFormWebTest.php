@@ -24,7 +24,7 @@ class ModulesListFormWebTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     \Drupal::state()->set('system_test.module_hidden', FALSE);
   }

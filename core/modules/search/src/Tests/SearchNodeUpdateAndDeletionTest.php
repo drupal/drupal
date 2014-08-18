@@ -22,7 +22,7 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
 
   public $test_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a test user and log in.

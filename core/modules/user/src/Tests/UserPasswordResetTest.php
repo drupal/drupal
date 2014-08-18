@@ -22,7 +22,7 @@ class UserPasswordResetTest extends WebTestBase {
    */
   protected $account;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user.

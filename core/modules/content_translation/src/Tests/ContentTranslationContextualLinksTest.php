@@ -53,7 +53,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
    */
   protected $profile = 'testing';
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a content type.

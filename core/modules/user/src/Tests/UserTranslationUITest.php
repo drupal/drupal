@@ -28,7 +28,7 @@ class UserTranslationUITest extends ContentTranslationUITest {
    */
   public static $modules = array('language', 'content_translation', 'user', 'views');
 
-  function setUp() {
+  protected function setUp() {
     $this->entityTypeId = 'user';
     $this->testLanguageSelector = FALSE;
     $this->name = $this->randomMachineName();

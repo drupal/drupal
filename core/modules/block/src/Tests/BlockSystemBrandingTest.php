@@ -24,7 +24,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Set a site slogan.
     \Drupal::config('system.site')

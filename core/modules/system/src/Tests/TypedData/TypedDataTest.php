@@ -35,7 +35,7 @@ class TypedDataTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system', 'entity', 'field', 'file', 'user');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setup();
 
     $this->installEntitySchema('file');

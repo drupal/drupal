@@ -24,7 +24,7 @@ class TrackerNodeAccessTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment', 'tracker', 'node_access_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     node_access_rebuild();
     $this->drupalCreateContentType(array('type' => 'page'));

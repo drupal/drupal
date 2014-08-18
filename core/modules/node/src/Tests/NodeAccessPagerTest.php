@@ -24,7 +24,7 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public static $modules = array('node_access_test', 'comment', 'forum');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();

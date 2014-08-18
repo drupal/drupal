@@ -31,7 +31,7 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
    */
   protected $manager;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Install the Filter module.

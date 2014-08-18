@@ -38,7 +38,7 @@ class AdminTest extends WebTestBase {
    */
   public static $modules = array('locale');
 
-  function setUp() {
+  protected function setUp() {
     // testAdminPages() requires Locale module.
     parent::setUp();
 

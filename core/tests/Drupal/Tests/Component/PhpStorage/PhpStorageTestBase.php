@@ -25,7 +25,7 @@ abstract class PhpStorageTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->storageFactory = new PhpStorageFactory();

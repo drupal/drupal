@@ -35,7 +35,7 @@ class FieldAccessTest extends FieldTestBase {
    */
   protected $test_view_field_value;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('view test_view_field content'));

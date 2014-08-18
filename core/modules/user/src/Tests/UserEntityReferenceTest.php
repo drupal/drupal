@@ -36,7 +36,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->role1 = entity_create('user_role', array(

@@ -23,7 +23,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
    */
   public static $modules = array('editor', 'editor_test', 'node', 'file');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installEntitySchema('file');

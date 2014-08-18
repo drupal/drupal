@@ -18,7 +18,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Enable test plugins.
     $this->enableTestPlugins();

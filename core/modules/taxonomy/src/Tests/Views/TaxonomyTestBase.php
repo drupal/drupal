@@ -45,7 +45,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
    */
   protected $term2;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->mockStandardInstall();
 

@@ -39,7 +39,7 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Page content type.

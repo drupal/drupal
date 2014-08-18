@@ -19,7 +19,7 @@ abstract class DatabaseTestBase extends DrupalUnitTestBase {
 
   public static $modules = array('database_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('database_test', array(
       'test',

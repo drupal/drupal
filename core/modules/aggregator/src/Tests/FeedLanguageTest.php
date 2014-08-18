@@ -30,7 +30,7 @@ class FeedLanguageTest extends AggregatorTestBase {
    */
   protected $langcodes = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test languages.

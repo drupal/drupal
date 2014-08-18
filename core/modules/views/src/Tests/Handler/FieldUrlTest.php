@@ -26,7 +26,7 @@ class FieldUrlTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'url_alias');
   }

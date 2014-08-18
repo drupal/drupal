@@ -134,7 +134,7 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected $httpKernel;
 
-  public function setUp() {
+  protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCache = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');

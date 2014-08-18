@@ -21,7 +21,7 @@ class SearchBlockTest extends SearchTestBase {
    */
   public static $modules = array('block');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

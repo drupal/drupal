@@ -42,7 +42,7 @@ class BooleanFieldTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array(

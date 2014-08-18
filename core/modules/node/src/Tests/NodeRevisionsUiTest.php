@@ -17,7 +17,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and log in user.

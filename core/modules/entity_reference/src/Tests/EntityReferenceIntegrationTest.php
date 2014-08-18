@@ -47,7 +47,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a test user.

@@ -46,7 +46,7 @@ class StatisticsAdminTest extends WebTestBase {
    */
   protected $client;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.

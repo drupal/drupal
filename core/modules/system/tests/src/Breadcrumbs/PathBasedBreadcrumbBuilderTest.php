@@ -85,7 +85,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @covers ::__construct()
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->requestMatcher = $this->getMock('\Symfony\Component\Routing\Matcher\RequestMatcherInterface');

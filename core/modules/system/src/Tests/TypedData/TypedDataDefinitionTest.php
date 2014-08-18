@@ -31,7 +31,7 @@ class TypedDataDefinitionTest extends DrupalUnitTestBase {
    */
   protected $typedDataManager;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setup();
     $this->typedDataManager = $this->container->get('typed_data_manager');
   }

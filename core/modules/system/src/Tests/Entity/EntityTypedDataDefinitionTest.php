@@ -38,7 +38,7 @@ class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
    */
   public static $modules = array('filter', 'text', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setup();
     $this->typedDataManager = $this->container->get('typed_data_manager');
   }

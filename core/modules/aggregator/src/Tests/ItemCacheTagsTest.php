@@ -31,7 +31,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Give anonymous users permission to access feeds, so that we can verify

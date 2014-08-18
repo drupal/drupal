@@ -75,7 +75,7 @@ class EditorSecurityTest extends WebTestBase {
    */
   protected $privileged_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create 5 text formats, to cover all potential use cases:

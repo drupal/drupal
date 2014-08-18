@@ -16,7 +16,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
  */
 class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->expectedDefinitions = array(
       'apple' => array(

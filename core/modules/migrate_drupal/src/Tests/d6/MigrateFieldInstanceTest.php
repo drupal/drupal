@@ -36,7 +36,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(

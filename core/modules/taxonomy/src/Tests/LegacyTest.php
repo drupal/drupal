@@ -24,7 +24,7 @@ class LegacyTest extends TaxonomyTestBase {
    */
   public static $modules = array('node', 'datetime');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a tags vocabulary for the 'article' content type.

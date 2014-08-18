@@ -42,7 +42,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Copy test po files to the translations directory.

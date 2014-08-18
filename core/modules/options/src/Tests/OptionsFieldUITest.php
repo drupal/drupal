@@ -31,7 +31,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected $type_name;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test user.

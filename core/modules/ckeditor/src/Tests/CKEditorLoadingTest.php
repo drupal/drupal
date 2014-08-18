@@ -23,7 +23,7 @@ class CKEditorLoadingTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'ckeditor', 'node');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create text format, associate CKEditor.

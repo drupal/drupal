@@ -25,7 +25,7 @@ class NumberItemTest extends FieldUnitTestBase {
    */
   public static $modules = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create number fields and instances for validation.

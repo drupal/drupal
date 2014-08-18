@@ -25,7 +25,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public static $modules = array('datetime');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a field with settings to validate.

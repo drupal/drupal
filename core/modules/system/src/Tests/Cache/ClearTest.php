@@ -16,7 +16,7 @@ use Drupal\Core\Cache\Cache;
 
 class ClearTest extends CacheTestBase {
 
-  function setUp() {
+  protected function setUp() {
     $this->default_bin = 'render';
     $this->default_value = $this->randomMachineName(10);
 

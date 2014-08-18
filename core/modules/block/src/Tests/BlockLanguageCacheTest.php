@@ -32,7 +32,7 @@ class BlockLanguageCacheTest extends WebTestBase {
    */
   protected $langcodes = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test languages.

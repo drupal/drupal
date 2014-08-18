@@ -31,7 +31,7 @@ class LockUnitTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->lock = new DatabaseLockBackend($this->container->get('database'));
     $this->installSchema('system', 'semaphore');

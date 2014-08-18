@@ -16,7 +16,7 @@ use Drupal\Component\Utility\Unicode;
  */
 class UnicodeTest extends UnitTestCase {
 
-  public function setUp() {
+  protected function setUp() {
     // Initialize unicode component.
     Unicode::check();
   }

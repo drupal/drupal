@@ -17,7 +17,7 @@ use Drupal\comment\Entity\Comment;
  */
 class CommentStatisticsTest extends CommentTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a second user to post comments.

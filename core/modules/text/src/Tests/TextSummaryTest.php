@@ -18,7 +18,7 @@ class TextSummaryTest extends DrupalUnitTestBase {
 
   public static $modules = array('system', 'user', 'filter', 'text');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installSchema('system', 'url_alias');

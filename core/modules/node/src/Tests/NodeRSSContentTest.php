@@ -25,7 +25,7 @@ class NodeRSSContentTest extends NodeTestBase {
    */
   public static $modules = array('node_test', 'views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Use bypass node access permission here, because the test class uses

@@ -38,7 +38,7 @@ class ImageItemTest extends FieldUnitTestBase {
    */
   protected $imageFactory;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('file');

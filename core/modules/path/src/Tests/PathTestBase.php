@@ -21,7 +21,7 @@ abstract class PathTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'path');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.

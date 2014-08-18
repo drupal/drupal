@@ -43,7 +43,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
   /**
    * Sets up the test.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('taxonomy_term');

@@ -49,7 +49,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 

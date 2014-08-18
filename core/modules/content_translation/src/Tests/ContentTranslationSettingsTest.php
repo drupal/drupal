@@ -26,7 +26,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    */
   public static $modules = array('language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set up two content types to test field instances shared between different

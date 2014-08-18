@@ -41,7 +41,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
    */
   protected $account;
 
-  public function setUp() {
+  protected function setUp() {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();

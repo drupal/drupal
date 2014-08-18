@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  * @group system
  */
 class IndexPhpTest extends WebTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 

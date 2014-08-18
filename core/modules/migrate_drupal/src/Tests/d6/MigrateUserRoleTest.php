@@ -27,7 +27,7 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // We need some sample data so we can use the Migration process plugin.
     $id_mappings = array(

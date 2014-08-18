@@ -47,7 +47,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
    */
   protected $adminUser;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $permissions = array(

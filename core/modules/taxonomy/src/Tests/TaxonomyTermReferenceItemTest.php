@@ -34,7 +34,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    */
   protected $term;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('taxonomy_term');
 

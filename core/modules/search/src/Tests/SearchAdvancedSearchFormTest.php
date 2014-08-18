@@ -15,7 +15,7 @@ namespace Drupal\search\Tests;
 class SearchAdvancedSearchFormTest extends SearchTestBase {
   protected $node;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes'));

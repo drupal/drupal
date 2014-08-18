@@ -27,7 +27,7 @@ class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Add some node mappings to get past checkRequirements().
     $id_mappings = array(

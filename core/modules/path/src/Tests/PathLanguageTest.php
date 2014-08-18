@@ -21,7 +21,7 @@ class PathLanguageTest extends PathTestBase {
    */
   public static $modules = array('path', 'locale', 'content_translation');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $permissions = array(

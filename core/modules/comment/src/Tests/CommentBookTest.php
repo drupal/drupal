@@ -24,7 +24,7 @@ class CommentBookTest extends WebTestBase {
    */
   public static $modules = array('book', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create comment field on book.

@@ -26,7 +26,7 @@ class MachineNameControllerTest extends UnitTestCase {
    */
   protected $machineNameController;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create the machine name controller.
     $this->machineNameController = new MachineNameController(new PHPTransliteration());

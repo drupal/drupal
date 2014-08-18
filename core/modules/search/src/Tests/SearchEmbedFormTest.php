@@ -31,7 +31,7 @@ class SearchEmbedFormTest extends SearchTestBase {
    */
   public $submit_count = 0;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user and a node, and update the search index.

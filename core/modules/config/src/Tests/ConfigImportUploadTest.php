@@ -18,7 +18,7 @@ class ConfigImportUploadTest extends WebTestBase {
 
   public static $modules = array('config');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('import configuration'));

@@ -18,7 +18,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
   public static $modules = array('language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.

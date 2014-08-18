@@ -67,7 +67,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   protected $revision_table;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');

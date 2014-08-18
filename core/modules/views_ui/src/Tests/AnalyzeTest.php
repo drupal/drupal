@@ -30,7 +30,7 @@ class AnalyzeTest extends ViewTestBase {
    */
   public static $testViews = array('test_view');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();

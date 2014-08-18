@@ -36,7 +36,7 @@ abstract class FileTestBase extends DrupalUnitTestBase {
    */
   protected $classname;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system'));
     $this->registerStreamWrapper('private', 'Drupal\Core\StreamWrapper\PrivateStream');

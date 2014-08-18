@@ -34,7 +34,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
   /**
    * Drupal\simpletest\WebTestBase\setUp().
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create user.

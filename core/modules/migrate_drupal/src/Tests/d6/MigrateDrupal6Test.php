@@ -141,7 +141,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $config = \Drupal::config('system.theme');
     $config->set('default', 'bartik');

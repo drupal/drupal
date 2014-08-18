@@ -32,7 +32,7 @@ class TestItemTest extends FieldUnitTestBase {
    */
   protected $field_name = 'field_test';
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an field field and instance for validation.

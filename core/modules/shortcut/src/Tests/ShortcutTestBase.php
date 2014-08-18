@@ -46,7 +46,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    */
   protected $set;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     if ($this->profile != 'standard') {

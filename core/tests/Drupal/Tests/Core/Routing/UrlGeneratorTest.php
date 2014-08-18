@@ -53,7 +53,7 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   protected $routeProcessorManager;
 
-  function setUp() {
+  protected function setUp() {
 
     $routes = new RouteCollection();
     $first_route = new Route('/test/one');

@@ -27,7 +27,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->storage = \Drupal::entityManager()->getStorage('entity_test');
   }

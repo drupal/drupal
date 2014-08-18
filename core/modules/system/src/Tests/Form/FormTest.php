@@ -28,7 +28,7 @@ class FormTest extends WebTestBase {
    */
   public static $modules = array('filter', 'form_test', 'file', 'datetime');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $filtered_html_format = entity_create('filter_format', array(

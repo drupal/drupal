@@ -29,7 +29,7 @@ class BreadcrumbTest extends MenuTestBase {
    */
   protected $profile = 'standard';
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $perms = array_keys(\Drupal::moduleHandler()->invokeAll('permission'));

@@ -30,7 +30,7 @@ class EntityViewControllerTest extends WebTestBase {
    */
   protected $entities = array();
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create some dummy entity_test entities.
     for ($i = 0; $i < 2; $i++) {

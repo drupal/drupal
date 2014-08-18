@@ -65,7 +65,7 @@ class ForumTest extends WebTestBase {
    */
   protected $nids;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create users.

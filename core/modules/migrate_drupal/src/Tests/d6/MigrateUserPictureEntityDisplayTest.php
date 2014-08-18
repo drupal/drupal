@@ -27,7 +27,7 @@ class MigrateUserPictureEntityDisplayTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $id_mappings = array(

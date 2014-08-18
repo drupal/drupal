@@ -38,7 +38,7 @@ class CrudTest extends DrupalUnitTestBase {
    */
   protected $bundle;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->prefix = 'rdf.mapping';
     $this->entity_type = $this->bundle = 'entity_test';

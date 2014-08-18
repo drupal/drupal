@@ -24,7 +24,7 @@ class DateTimeTest extends WebTestBase {
    */
   public static $modules = array('node', 'language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create admin user and log in admin user.

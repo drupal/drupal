@@ -22,7 +22,7 @@ class PathAliasTest extends PathTestBase {
    */
   public static $modules = array('path');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test user and login.

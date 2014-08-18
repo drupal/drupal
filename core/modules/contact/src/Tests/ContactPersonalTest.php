@@ -46,7 +46,7 @@ class ContactPersonalTest extends WebTestBase {
    */
   private $contact_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an admin user.

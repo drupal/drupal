@@ -34,7 +34,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
    */
   public static $modules = array('config_test', 'system', 'config_import_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installConfig(array('config_test'));

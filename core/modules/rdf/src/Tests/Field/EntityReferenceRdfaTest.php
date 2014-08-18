@@ -48,7 +48,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = array('entity', 'entity_reference', 'options', 'text', 'filter');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');

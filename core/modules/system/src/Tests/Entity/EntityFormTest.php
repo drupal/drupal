@@ -23,7 +23,7 @@ class EntityFormTest extends WebTestBase {
    */
   public static $modules = array('entity_test', 'language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $web_user = $this->drupalCreateUser(array('administer entity_test content'));
     $this->drupalLogin($web_user);

@@ -23,7 +23,7 @@ class ForumNodeAccessTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     node_access_rebuild();
     node_access_test_add_field(entity_load('node_type', 'forum'));

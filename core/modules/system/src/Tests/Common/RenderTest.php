@@ -26,7 +26,7 @@ class RenderTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system', 'common_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // There are dependencies in drupal_get_js() on the theme layer so we need
     // to initialize it.

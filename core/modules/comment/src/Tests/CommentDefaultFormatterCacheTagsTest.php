@@ -29,7 +29,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set the current user to one that can access comments. Specifically, this

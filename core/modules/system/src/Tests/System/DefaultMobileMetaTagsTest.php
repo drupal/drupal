@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
  * @group system
  */
 class DefaultMobileMetaTagsTest extends WebTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->default_metatags = array(
       'viewport' => '<meta name="viewport" content="width=device-width, initial-scale=1.0" />',

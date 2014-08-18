@@ -21,7 +21,7 @@ abstract class StatisticsTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'block', 'ban', 'statistics');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.

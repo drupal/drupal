@@ -31,7 +31,7 @@ class FieldValidationTest extends FieldUnitTestBase {
    */
   private $entity;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a field and instance of type 'test_field', on the 'entity_test'

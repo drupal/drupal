@@ -33,7 +33,7 @@ class FilterSecurityTest extends WebTestBase {
    */
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.

@@ -24,7 +24,7 @@ class BlockHookOperationTest extends WebTestBase {
    */
   public static $modules = array('block', 'entity_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $permissions = array(

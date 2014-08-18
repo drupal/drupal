@@ -26,7 +26,7 @@ class LinkItemTest extends FieldUnitTestBase {
    */
   public static $modules = array('link');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an link field and instance for validation.

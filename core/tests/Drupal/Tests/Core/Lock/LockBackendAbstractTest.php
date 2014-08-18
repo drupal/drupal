@@ -22,7 +22,7 @@ class LockBackendAbstractTest extends UnitTestCase {
    */
   protected $lock;
 
-  public function setUp() {
+  protected function setUp() {
     $this->lock = $this->getMockForAbstractClass('Drupal\Core\Lock\LockBackendAbstract');
   }
 

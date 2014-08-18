@@ -30,7 +30,7 @@ class TelephoneFieldTest extends WebTestBase {
   protected $instance;
   protected $web_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));

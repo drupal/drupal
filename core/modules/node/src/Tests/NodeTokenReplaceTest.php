@@ -28,7 +28,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installConfig(array('filter'));

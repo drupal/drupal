@@ -25,7 +25,7 @@ class TokenReplaceTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_tokens');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'url_alias');
   }

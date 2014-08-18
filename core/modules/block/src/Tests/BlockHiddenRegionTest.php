@@ -29,7 +29,7 @@ class BlockHiddenRegionTest extends WebTestBase {
    */
   public static $modules = array('block', 'block_test', 'search');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create administrative user.

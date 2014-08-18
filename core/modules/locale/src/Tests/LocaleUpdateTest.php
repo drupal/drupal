@@ -27,7 +27,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     module_load_include('compare.inc', 'locale');
     module_load_include('fetch.inc', 'locale');

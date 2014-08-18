@@ -20,7 +20,7 @@ class SizeUnitTest extends KernelTestBase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $kb = Bytes::KILOBYTE;
     $this->exact_test_cases = array(

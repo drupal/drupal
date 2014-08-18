@@ -25,7 +25,7 @@ class DrupalDateTimeTest extends WebTestBase {
   /**
    * Test setup.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
   }

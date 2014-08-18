@@ -20,7 +20,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
    */
   public static $modules = array('search_langcode_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array(

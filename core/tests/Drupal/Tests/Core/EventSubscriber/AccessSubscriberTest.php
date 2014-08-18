@@ -57,7 +57,7 @@ class AccessSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
       ->disableOriginalConstructor()
       ->getMock();

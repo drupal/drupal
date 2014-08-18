@@ -39,7 +39,7 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = array('text', 'filter');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->createTestField();

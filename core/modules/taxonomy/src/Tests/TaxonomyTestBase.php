@@ -23,7 +23,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
    */
   public static $modules = array('taxonomy');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.

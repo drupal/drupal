@@ -23,7 +23,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    */
   public static $modules = array('rdf');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->vocabulary = $this->createVocabulary();

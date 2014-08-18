@@ -59,7 +59,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    */
   public static $modules = array('locale', 'language_test', 'block', 'user');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));

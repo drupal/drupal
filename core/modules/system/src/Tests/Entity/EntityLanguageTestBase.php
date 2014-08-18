@@ -52,7 +52,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
   public static $modules = array('language', 'entity_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->languageManager = $this->container->get('language_manager');

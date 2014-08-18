@@ -27,7 +27,7 @@ class SearchCommentTest extends SearchTestBase {
 
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $full_html_format = entity_create('filter_format', array(

@@ -25,7 +25,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
    */
   public static $modules = array('comment', 'search_extra_type');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create searching user.

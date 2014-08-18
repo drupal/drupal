@@ -22,7 +22,7 @@ class ConfigImportUITest extends WebTestBase {
   // correctly.
   public static $modules = array('config', 'config_test', 'config_import_test', 'text', 'options');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));

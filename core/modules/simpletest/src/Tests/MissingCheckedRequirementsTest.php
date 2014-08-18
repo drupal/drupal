@@ -23,7 +23,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
    */
   public static $modules = array('simpletest');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer unit tests'));
     $this->drupalLogin($admin_user);

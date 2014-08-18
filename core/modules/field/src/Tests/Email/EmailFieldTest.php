@@ -37,7 +37,7 @@ class EmailFieldTest extends WebTestBase {
    */
   protected $instance;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array(

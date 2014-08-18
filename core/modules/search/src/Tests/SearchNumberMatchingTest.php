@@ -19,7 +19,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
   protected $numbers;
   protected $nodes;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));

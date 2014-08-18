@@ -29,7 +29,7 @@ class UserEntityCallbacksTest extends WebTestBase {
    */
   protected $account;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->account = $this->drupalCreateUser();

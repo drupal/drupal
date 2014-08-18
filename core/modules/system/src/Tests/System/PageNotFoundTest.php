@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
 class PageNotFoundTest extends WebTestBase {
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.

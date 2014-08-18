@@ -33,7 +33,7 @@ class TermFieldTest extends TaxonomyTestBase {
   protected $instance;
   protected $vocabulary;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array(

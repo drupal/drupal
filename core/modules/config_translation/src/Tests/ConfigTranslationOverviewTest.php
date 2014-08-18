@@ -39,7 +39,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
    */
   protected $localeStorage;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $permissions = array(
       'translate configuration',

@@ -31,7 +31,7 @@ class FormSubmitterTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
   }

@@ -23,7 +23,7 @@ class EditorLoadingTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Add text formats.

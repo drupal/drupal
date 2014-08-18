@@ -30,7 +30,7 @@ class StorageTest extends WebTestBase {
    */
   public static $modules = array('form_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser();

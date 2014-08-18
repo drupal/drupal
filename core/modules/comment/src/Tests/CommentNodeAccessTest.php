@@ -26,7 +26,7 @@ class CommentNodeAccessTest extends CommentTestBase {
    */
   public static $modules = array('node_access_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();

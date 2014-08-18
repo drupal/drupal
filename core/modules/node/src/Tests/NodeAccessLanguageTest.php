@@ -25,7 +25,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
    */
   public static $modules = array('language', 'node_access_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_test_add_field(entity_load('node_type', 'page'));

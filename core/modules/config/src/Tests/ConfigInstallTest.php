@@ -16,7 +16,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * @see \Drupal\Core\Config\ConfigInstaller
  */
 class ConfigInstallTest extends DrupalUnitTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Ensure the global variable being asserted by this test does not exist;

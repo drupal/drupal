@@ -30,7 +30,7 @@ class ConfigTranslationViewListUiTest extends UITestBase {
    */
   public static $modules = array('config_translation', 'views_ui');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $permissions = array(

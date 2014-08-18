@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @group file
  */
 class DownloadTest extends FileManagedTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();

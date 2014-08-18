@@ -17,7 +17,7 @@ use Drupal\breakpoint\Entity\Breakpoint;
  */
 class BreakpointThemeTest extends BreakpointGroupTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     theme_enable(array('breakpoint_test_theme'));
   }

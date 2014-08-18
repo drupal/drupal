@@ -23,7 +23,7 @@ class ArbitraryRebuildTest extends WebTestBase {
    */
   public static $modules = array('text', 'form_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Auto-create a field for testing.

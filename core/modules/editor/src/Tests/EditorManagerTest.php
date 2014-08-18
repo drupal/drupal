@@ -31,7 +31,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
    */
   protected $editorManager;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Install the Filter module.

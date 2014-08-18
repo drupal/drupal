@@ -42,7 +42,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   protected $field_name;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();

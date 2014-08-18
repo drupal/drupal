@@ -99,7 +99,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->id = 1;
     $values = array(
       'id' => $this->id,

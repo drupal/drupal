@@ -29,7 +29,7 @@ class BlockLanguageTest extends WebTestBase {
    */
   public static $modules = array('language', 'block');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a new user, allow him to manage the blocks and the languages.

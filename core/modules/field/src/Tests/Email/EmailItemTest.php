@@ -18,7 +18,7 @@ use Drupal\field\Tests\FieldUnitTestBase;
  */
 class EmailItemTest extends FieldUnitTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an email field and instance for validation.

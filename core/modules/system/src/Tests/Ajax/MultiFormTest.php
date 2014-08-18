@@ -24,7 +24,7 @@ class MultiFormTest extends AjaxTestBase {
    */
   public static $modules = array('form_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Page'));

@@ -22,7 +22,7 @@ abstract class FieldUiTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy', 'image');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test user.

@@ -33,7 +33,7 @@ class UuidResolverTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityManager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
       ->disableOriginalConstructor()
       ->getMock();

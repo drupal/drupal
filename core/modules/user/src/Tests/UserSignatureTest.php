@@ -23,7 +23,7 @@ class UserSignatureTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enable user signatures.

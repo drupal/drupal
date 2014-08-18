@@ -25,7 +25,7 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
    */
   protected $uuid;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Initiate the generator object.
     $this->uuid = $this->container->get('uuid');

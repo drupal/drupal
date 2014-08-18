@@ -27,7 +27,7 @@ class MigrateUserPictureFileTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6User.php',

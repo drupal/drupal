@@ -29,7 +29,7 @@ class MenuLanguageTest extends MenuWebTestBase {
   protected $admin_user;
   protected $menu;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create user.

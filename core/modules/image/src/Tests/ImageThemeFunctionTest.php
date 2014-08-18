@@ -36,7 +36,7 @@ class ImageThemeFunctionTest extends WebTestBase {
    */
   protected $imageFactory;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     entity_create('field_storage_config', array(

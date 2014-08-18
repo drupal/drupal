@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConfigTest extends WebTestBase {
 
-  function setUp(){
+  protected function setUp(){
     parent::setUp();
     $this->web_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($this->web_user);

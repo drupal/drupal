@@ -24,7 +24,7 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
    */
   public static $modules = array('config_test', 'system');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Update the config snapshot. This allows the parent::setUp() to write
     // configuration files.

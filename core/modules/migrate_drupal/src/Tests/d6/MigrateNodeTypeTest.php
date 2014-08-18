@@ -28,7 +28,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $migration = entity_load('migration', 'd6_node_type');
     $dumps = array(

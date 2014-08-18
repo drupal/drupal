@@ -50,13 +50,13 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected $state;
 
-  public function setUp() {
+  protected function setUp() {
     $this->fixtures = new RoutingFixtures();
     $this->routeBuilder = new NullRouteBuilder();
     $this->state = new State(new KeyValueMemoryFactory());
   }
 
-  public function tearDown() {
+  protected function tearDown() {
     $this->fixtures->dropTables(Database::getConnection());
 
     parent::tearDown();

@@ -15,7 +15,7 @@ namespace Drupal\node\Tests;
  */
 class NodePostSettingsTest extends NodeTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('create page content', 'administer content types', 'access user profiles'));

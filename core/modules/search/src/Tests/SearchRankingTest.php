@@ -30,7 +30,7 @@ class SearchRankingTest extends SearchTestBase {
    */
   public static $modules = array('statistics', 'comment');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a plugin instance.

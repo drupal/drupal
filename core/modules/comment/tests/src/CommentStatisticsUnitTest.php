@@ -54,7 +54,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
   /**
    * Sets up required mocks and the CommentStatistics service under test.
    */
-  public function setUp() {
+  protected function setUp() {
     $this->statement = $this->getMockBuilder('Drupal\Core\Database\Driver\fake\FakeStatement')
       ->disableOriginalConstructor()
       ->getMock();

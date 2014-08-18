@@ -28,7 +28,7 @@ class PageCacheTest extends WebTestBase {
    */
   public static $modules = array('test_page_test', 'system_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     \Drupal::config('system.site')

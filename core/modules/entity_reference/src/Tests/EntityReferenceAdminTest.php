@@ -27,7 +27,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    */
   public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create test user.

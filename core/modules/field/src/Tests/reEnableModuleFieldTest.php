@@ -29,7 +29,7 @@ class reEnableModuleFieldTest extends WebTestBase {
     'telephone'
   );
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));

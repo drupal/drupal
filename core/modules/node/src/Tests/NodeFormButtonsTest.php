@@ -18,7 +18,7 @@ class NodeFormButtonsTest extends NodeTestBase {
 
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user that has no access to change the state of the node.

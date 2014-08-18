@@ -24,7 +24,7 @@ class UserAccountLinksTests extends WebTestBase {
    */
   public static $modules = array('menu_ui', 'block', 'test_page_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Make test-page default.
     \Drupal::config('system.site')->set('page.front', 'test-page')->save();

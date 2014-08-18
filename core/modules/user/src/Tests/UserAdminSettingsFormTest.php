@@ -17,7 +17,7 @@ use Drupal\user\AccountSettingsForm;
  */
 class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->form = AccountSettingsForm::create($this->container);

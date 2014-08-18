@@ -23,7 +23,7 @@ class BlockHtmlTest extends WebTestBase {
    */
   public static $modules = array('block', 'block_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalLogin($this->root_user);

@@ -24,7 +24,7 @@ class RssTest extends TaxonomyTestBase {
    */
   public static $modules = array('node', 'field_ui', 'views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access', 'administer content types', 'administer node display'));

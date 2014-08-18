@@ -14,7 +14,7 @@ namespace Drupal\taxonomy\Tests;
  */
 class ThemeTest extends TaxonomyTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Make sure we are using distinct default and administrative themes for

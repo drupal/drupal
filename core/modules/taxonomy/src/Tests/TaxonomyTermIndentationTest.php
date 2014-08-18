@@ -21,7 +21,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    */
   public static $modules = array('taxonomy');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);

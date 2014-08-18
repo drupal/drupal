@@ -29,7 +29,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
    */
   protected $style;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->style = entity_create('image_style', array('name' => 'style_foo', 'label' => $this->randomString()));

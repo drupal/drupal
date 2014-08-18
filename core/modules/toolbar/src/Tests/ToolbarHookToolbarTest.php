@@ -23,7 +23,7 @@ class ToolbarHookToolbarTest extends WebTestBase {
    */
   public static $modules = array('toolbar', 'toolbar_test', 'test_page_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an administrative user and log it in.

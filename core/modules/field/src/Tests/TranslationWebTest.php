@@ -51,7 +51,7 @@ class TranslationWebTest extends FieldTestBase {
    */
   protected $instance;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->field_name = drupal_strtolower($this->randomMachineName() . '_field_name');

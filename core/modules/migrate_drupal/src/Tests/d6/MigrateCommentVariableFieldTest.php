@@ -22,7 +22,7 @@ class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     foreach (array('page', 'story', 'test') as $type) {
       entity_create('node_type', array('type' => $type))->save();

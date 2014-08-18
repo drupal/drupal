@@ -30,7 +30,7 @@ class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = array('telephone', 'text');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->createTestField();

@@ -30,7 +30,7 @@ class FormatDateTest extends WebTestBase {
    */
   const LANGCODE = 'xx';
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('language');
 
     \Drupal::config('system.date')

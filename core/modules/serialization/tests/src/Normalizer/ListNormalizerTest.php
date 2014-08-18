@@ -39,7 +39,7 @@ class ListNormalizerTest extends UnitTestCase {
    */
   protected $expectedListValues = array('test', 'test', 'test');
 
-  public function setUp() {
+  protected function setUp() {
     // Mock the TypedDataManager to return a TypedDataInterface mock.
     $typed_data = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
     $typed_data_manager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')

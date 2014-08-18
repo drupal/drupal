@@ -31,7 +31,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
    */
   protected static $basic_permissions = array('access content', 'create article content', 'use text format filtered_html', 'access contextual links');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a text format.

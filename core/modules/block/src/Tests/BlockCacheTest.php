@@ -35,7 +35,7 @@ class BlockCacheTest extends WebTestBase {
    */
   protected $block;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an admin user, log in and enable test blocks.

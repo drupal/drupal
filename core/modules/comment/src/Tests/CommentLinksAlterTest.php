@@ -16,7 +16,7 @@ class CommentLinksAlterTest extends CommentTestBase {
 
   public static $modules = array('comment_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enable comment_test.module's hook_comment_links_alter() implementation.

@@ -33,7 +33,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityTypeId = 'block_content';
     $this->bundle = 'basic';
     $this->testLanguageSelector = FALSE;

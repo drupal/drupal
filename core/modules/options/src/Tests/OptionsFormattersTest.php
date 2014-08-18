@@ -19,7 +19,7 @@ class OptionsFormattersTest extends OptionsFieldUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 

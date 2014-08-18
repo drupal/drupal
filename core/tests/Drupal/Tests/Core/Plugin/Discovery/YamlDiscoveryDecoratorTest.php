@@ -38,7 +38,7 @@ class YamlDiscoveryDecoratorTest extends UnitTestCase {
     'decorated_2' => 'decorated_test_2',
   );
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $base_path = __DIR__ . '/Fixtures';

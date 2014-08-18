@@ -25,7 +25,7 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public static $modules = array('views', 'node', 'comment', 'rdf');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enables anonymous user comments.

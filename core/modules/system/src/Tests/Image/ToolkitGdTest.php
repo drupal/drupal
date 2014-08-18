@@ -49,7 +49,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set the image factory service.

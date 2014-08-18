@@ -28,7 +28,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    */
   protected $entity;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->field_name = 'test_options';

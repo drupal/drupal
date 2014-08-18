@@ -30,7 +30,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     'delete' => 'delete page revisions',
   );
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $types = array('page', 'article');

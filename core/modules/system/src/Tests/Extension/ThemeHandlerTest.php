@@ -33,7 +33,7 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system'));
   }

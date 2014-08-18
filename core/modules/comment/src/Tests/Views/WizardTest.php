@@ -29,7 +29,7 @@ class WizardTest extends WizardTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     // Add comment field to page node type.

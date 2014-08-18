@@ -31,7 +31,7 @@ class ResultTest extends UnitTestCase {
    */
   protected $resultHandler;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $storage = $this->getMockBuilder('Drupal\views\Entity\View')

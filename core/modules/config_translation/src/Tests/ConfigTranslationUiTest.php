@@ -56,7 +56,7 @@ class ConfigTranslationUiTest extends WebTestBase {
    */
   protected $localeStorage;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $translator_permissions = array(
       'translate configuration',

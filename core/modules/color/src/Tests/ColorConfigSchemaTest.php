@@ -36,7 +36,7 @@ class ColorConfigSchemaTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     \Drupal::service('theme_handler')->enable(array('bartik'));
 

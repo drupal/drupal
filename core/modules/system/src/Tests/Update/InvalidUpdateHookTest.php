@@ -39,7 +39,7 @@ class InvalidUpdateHookTest extends WebTestBase {
    */
   private $update_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 

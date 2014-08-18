@@ -25,7 +25,7 @@ class PagerTest extends WebTestBase {
 
   protected $profile = 'testing';
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Insert 300 log messages.

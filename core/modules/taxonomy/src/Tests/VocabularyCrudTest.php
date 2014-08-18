@@ -23,7 +23,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    */
   public static $modules = array('field_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array('create article content', 'administer taxonomy'));

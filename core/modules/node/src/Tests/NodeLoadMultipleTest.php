@@ -21,7 +21,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
    */
   public static $modules = array('views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $web_user = $this->drupalCreateUser(array('create article content', 'create page content'));
     $this->drupalLogin($web_user);

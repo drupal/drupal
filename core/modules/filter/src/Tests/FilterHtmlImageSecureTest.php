@@ -24,7 +24,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
    */
   public static $modules = array('filter', 'node', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Setup Filtered HTML text format.

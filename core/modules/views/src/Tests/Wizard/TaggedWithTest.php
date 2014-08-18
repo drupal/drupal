@@ -33,7 +33,7 @@ class TaggedWithTest extends WizardTestBase {
 
   protected $tag_instance;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create two content types. One will have an autocomplete tagging field,

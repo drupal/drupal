@@ -29,7 +29,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
     $this->drupalLogin($this->web_user);

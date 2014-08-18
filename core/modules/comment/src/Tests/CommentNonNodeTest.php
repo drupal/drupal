@@ -30,7 +30,7 @@ class CommentNonNodeTest extends WebTestBase {
    */
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a bundle for entity_test.

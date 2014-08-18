@@ -42,7 +42,7 @@ class EntityQueryAggregateTest extends EntityUnitTestBase {
    */
   public $factory;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->entityStorage = $this->container->get('entity.manager')->getStorage('entity_test');

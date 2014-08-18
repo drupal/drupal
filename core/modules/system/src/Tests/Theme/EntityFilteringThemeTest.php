@@ -75,7 +75,7 @@ class EntityFilteringThemeTest extends WebTestBase {
    */
   protected $xss_label = "string with <em>HTML</em> and <script>alert('JS');</script>";
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enable all available non-testing themes.

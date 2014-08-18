@@ -54,7 +54,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityType = $this->randomMachineName();
 
     $this->entityInfo = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');

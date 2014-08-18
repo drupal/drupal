@@ -30,7 +30,7 @@ class UserBlocksTest extends WebTestBase {
    */
   protected $adminUser;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(array('administer blocks'));

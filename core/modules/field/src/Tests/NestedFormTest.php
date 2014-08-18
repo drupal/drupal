@@ -22,7 +22,7 @@ class NestedFormTest extends FieldTestBase {
    */
   public static $modules = array('field_test', 'entity_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));

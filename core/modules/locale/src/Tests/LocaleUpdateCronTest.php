@@ -26,7 +26,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface'));
     $this->drupalLogin($admin_user);

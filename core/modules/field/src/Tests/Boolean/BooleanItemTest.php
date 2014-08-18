@@ -21,7 +21,7 @@ class BooleanItemTest extends FieldUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an boolean field and instance for validation.

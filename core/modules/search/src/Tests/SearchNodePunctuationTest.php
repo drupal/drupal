@@ -16,7 +16,7 @@ class SearchNodePunctuationTest extends SearchTestBase {
 
   public $test_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     node_access_rebuild();
 

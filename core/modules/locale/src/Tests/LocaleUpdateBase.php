@@ -47,7 +47,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Setup timestamps to identify old and new translation sources.
     $this->timestampOld = REQUEST_TIME - 300;

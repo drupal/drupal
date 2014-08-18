@@ -24,7 +24,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 

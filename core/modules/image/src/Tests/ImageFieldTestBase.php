@@ -36,7 +36,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
 
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.

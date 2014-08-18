@@ -23,7 +23,7 @@ class EngineTwigTest extends WebTestBase {
    */
   public static $modules = array('theme_test', 'twig_theme_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     theme_enable(array('test_theme'));
   }

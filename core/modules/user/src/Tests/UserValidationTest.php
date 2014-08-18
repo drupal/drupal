@@ -28,7 +28,7 @@ class UserValidationTest extends DrupalUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installSchema('system', array('sequences'));

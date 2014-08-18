@@ -28,7 +28,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->discoveryMain = $discovery_main = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
   }
 

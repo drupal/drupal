@@ -23,7 +23,7 @@ class FastTest extends WebTestBase {
    */
   public static $modules = array('theme_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->account = $this->drupalCreateUser(array('access user profiles'));
   }

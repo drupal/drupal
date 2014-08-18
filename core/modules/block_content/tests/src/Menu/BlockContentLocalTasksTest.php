@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class BlockContentLocalTasksTest extends LocalTaskIntegrationTest {
 
-  public function setUp() {
+  protected function setUp() {
     $this->directoryList = array(
       'block' => 'core/modules/block',
       'block_content' => 'core/modules/block_content',

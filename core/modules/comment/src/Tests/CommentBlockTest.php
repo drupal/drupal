@@ -22,7 +22,7 @@ class CommentBlockTest extends CommentTestBase {
    */
   public static $modules = array('block', 'views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Update admin user to have the 'administer blocks' permission.
     $this->admin_user = $this->drupalCreateUser(array(

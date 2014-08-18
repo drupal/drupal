@@ -34,7 +34,7 @@ class UpdatesWith7xTest extends WebTestBase {
    */
   private $update_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
     $this->update_url = $GLOBALS['base_url'] . '/core/update.php';

@@ -26,7 +26,7 @@ class ComplexDataConstraintValidatorTest extends DrupalUnitTestBase {
    */
   protected $typedData;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->typedData = $this->container->get('typed_data_manager');
   }

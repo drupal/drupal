@@ -26,7 +26,7 @@ class SessionHttpsTest extends WebTestBase {
    */
   public static $modules = array('session_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->request = Request::createFromGlobals();
     $this->container->get('request_stack')->push($this->request);

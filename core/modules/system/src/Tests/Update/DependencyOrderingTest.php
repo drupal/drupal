@@ -23,7 +23,7 @@ class DependencyOrderingTest extends WebTestBase {
    */
   public static $modules = array('update_test_0', 'update_test_1', 'update_test_2', 'update_test_3');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }

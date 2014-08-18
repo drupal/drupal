@@ -45,7 +45,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
    */
   protected $admin_user;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_test_add_field(entity_load('node_type', 'page'));

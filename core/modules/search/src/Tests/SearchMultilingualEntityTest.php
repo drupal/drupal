@@ -33,7 +33,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
   public static $modules = array('language', 'locale', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user who can administer search, do searches, see the status

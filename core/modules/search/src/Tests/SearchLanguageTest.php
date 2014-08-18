@@ -24,7 +24,7 @@ class SearchLanguageTest extends SearchTestBase {
    */
   public static $modules = array('language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

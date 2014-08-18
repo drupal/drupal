@@ -18,7 +18,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
   protected $revisionLogs;
   protected $profile = "standard";
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and log in user.

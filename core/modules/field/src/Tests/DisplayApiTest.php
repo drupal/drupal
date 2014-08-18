@@ -58,7 +58,7 @@ class DisplayApiTest extends FieldUnitTestBase {
    */
   protected $values;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a field and instance.

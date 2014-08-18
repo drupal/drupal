@@ -15,7 +15,7 @@ use Drupal\Core\Entity\ContentEntityDatabaseStorage;
  */
 class ApiDataTest extends FieldTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $field_names = $this->setUpFields(1);

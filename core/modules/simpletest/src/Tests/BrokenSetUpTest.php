@@ -36,7 +36,7 @@ class BrokenSetUpTest extends WebTestBase {
    */
   protected $sharedTriggerFile;
 
-  function setUp() {
+  protected function setUp() {
     // If the test is being run from the main site, set up normally.
     if (!$this->isInChildSite()) {
       parent::setUp();
@@ -58,7 +58,7 @@ class BrokenSetUpTest extends WebTestBase {
     }
   }
 
-  function tearDown() {
+  protected function tearDown() {
     // If the test is being run from the main site, tear down normally.
     if (!$this->isInChildSite()) {
       unlink($this->sharedTriggerFile);

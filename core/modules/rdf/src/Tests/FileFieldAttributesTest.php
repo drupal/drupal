@@ -44,7 +44,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   protected $node;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->fieldName = strtolower($this->randomMachineName());
 

@@ -35,7 +35,7 @@ class LinksTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');

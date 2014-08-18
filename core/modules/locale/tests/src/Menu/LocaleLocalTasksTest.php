@@ -19,7 +19,7 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->directoryList = array(
       'locale' => 'core/modules/locale',
     );

@@ -23,7 +23,7 @@ class DrupalTest extends UnitTestCase {
    */
   protected $container;
 
-  public function setUp() {
+  protected function setUp() {
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(array('get'))
       ->getMock();

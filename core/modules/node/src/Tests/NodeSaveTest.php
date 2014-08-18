@@ -21,7 +21,7 @@ class NodeSaveTest extends NodeTestBase {
    */
   public static $modules = array('node_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a user that is allowed to post; we'll use this to test the submission.

@@ -19,7 +19,7 @@ class CachedStorageTest extends UnitTestCase {
    */
   protected $cacheFactory;
 
-  public function setUp() {
+  protected function setUp() {
     $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
   }
 

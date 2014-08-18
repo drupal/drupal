@@ -35,7 +35,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     entity_create('node_type', array('type' => 'test_page'))->save();

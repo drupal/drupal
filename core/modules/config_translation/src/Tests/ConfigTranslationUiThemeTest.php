@@ -38,7 +38,7 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
    */
   protected $admin_user;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $admin_permissions = array(

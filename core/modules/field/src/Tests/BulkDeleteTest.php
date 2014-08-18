@@ -92,7 +92,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     }
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->fieldStorages = array();

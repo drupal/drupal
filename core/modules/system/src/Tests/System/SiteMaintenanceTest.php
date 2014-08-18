@@ -25,7 +25,7 @@ class SiteMaintenanceTest extends WebTestBase {
 
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Configure 'node' as front page.

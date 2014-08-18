@@ -23,7 +23,7 @@ class EditorAdminTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Add text format.

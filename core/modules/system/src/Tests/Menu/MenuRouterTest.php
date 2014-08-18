@@ -37,7 +37,7 @@ class MenuRouterTest extends WebTestBase {
    */
   protected $default_theme;
 
-  function setUp() {
+  protected function setUp() {
     // Enable dummy module that implements hook_menu.
     parent::setUp();
 

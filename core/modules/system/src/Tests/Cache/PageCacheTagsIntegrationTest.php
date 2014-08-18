@@ -24,7 +24,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
   protected $dumpHeaders = TRUE;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $config = \Drupal::config('system.performance');

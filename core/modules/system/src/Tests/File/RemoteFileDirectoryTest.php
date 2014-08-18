@@ -35,7 +35,7 @@ class RemoteFileDirectoryTest extends DirectoryTest {
    */
   protected $classname = 'Drupal\file_test\DummyRemoteStreamWrapper';
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     \Drupal::config('system.file')->set('default_scheme', 'dummy-remote')->save();
   }

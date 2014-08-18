@@ -58,7 +58,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    */
   public static $modules = array('node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $perms = array(

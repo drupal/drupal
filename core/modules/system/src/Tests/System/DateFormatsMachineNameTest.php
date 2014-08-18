@@ -20,7 +20,7 @@ class DateFormatsMachineNameTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create a new administrator user for the test.
     $admin = $this->drupalCreateUser(array('administer site configuration'));

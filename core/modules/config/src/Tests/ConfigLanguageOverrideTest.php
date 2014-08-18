@@ -24,7 +24,7 @@ class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
    */
   public static $modules = array('user', 'language', 'config_test',  'system', 'field');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(array('config_test'));
   }

@@ -28,7 +28,7 @@ class UpdateScriptTest extends WebTestBase {
   private $update_url;
   private $update_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));

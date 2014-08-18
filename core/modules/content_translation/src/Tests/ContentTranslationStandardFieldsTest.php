@@ -38,7 +38,7 @@ class ContentTranslationStandardFieldsTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array(

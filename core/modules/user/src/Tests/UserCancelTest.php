@@ -25,7 +25,7 @@ class UserCancelTest extends WebTestBase {
    */
   public static $modules = array('node', 'comment');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

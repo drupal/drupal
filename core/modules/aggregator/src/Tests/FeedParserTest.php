@@ -15,7 +15,7 @@ use Zend\Feed\Reader\Reader;
  * @group aggregator
  */
 class FeedParserTest extends AggregatorTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test

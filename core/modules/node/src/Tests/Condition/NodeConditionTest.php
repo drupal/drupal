@@ -18,7 +18,7 @@ class NodeConditionTest extends EntityUnitTestBase {
 
   public static $modules = array('node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
 

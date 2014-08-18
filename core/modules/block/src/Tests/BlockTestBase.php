@@ -35,7 +35,7 @@ abstract class BlockTestBase extends WebTestBase {
    */
   protected $adminUser;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Use the test page as the front page.

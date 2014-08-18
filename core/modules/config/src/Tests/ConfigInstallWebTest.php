@@ -18,7 +18,7 @@ use Drupal\Core\Config\FileStorage;
  * @group config
  */
 class ConfigInstallWebTest extends WebTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Ensure the global variable being asserted by this test does not exist;

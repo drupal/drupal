@@ -72,7 +72,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   protected $routeProvider;
 
-  public function setUp() {
+  protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
     $this->pluginDefinition = array(

@@ -30,7 +30,7 @@ class NoHelpTest extends WebTestBase {
    */
   protected $adminUser;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(array('access administration pages'));
   }

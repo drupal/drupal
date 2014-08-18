@@ -25,7 +25,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    */
   public static $modules = array('language', 'language_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

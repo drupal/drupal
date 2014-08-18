@@ -15,7 +15,7 @@ namespace Drupal\search\Tests;
 class SearchPageTextTest extends SearchTestBase {
   protected $searching_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create user.

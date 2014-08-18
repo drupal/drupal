@@ -52,7 +52,7 @@ class BookTest extends WebTestBase {
    */
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // node_access_test requires a node_access_rebuild().

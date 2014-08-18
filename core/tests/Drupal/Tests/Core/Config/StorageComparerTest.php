@@ -46,7 +46,7 @@ class StorageComparerTest extends UnitTestCase {
    */
   protected $configData;
 
-  public function setUp() {
+  protected function setUp() {
     $this->sourceStorage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $this->targetStorage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $this->configManager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');

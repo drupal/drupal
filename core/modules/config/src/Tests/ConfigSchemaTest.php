@@ -27,7 +27,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
    */
   public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_schema_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system', 'image', 'config_schema_test'));
   }

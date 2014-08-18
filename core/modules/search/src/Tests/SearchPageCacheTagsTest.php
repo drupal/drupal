@@ -18,7 +18,7 @@ class SearchPageCacheTagsTest extends SearchTestBase {
 
   protected $searching_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create user.

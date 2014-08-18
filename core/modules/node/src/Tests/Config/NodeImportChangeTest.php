@@ -26,7 +26,7 @@ class NodeImportChangeTest extends DrupalUnitTestBase {
   /**
    * Set the default field storage backend for fields created during tests.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Set default storage backend.

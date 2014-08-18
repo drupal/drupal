@@ -93,7 +93,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->id = $this->randomMachineName();
     $values = array(
       'id' => $this->id,

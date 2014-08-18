@@ -23,7 +23,7 @@ class NodeAttributesTest extends NodeTestBase {
    */
   public static $modules = array('rdf');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     rdf_get_mapping('node', 'article')

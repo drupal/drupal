@@ -14,7 +14,7 @@ namespace Drupal\comment\Tests;
  */
 class CommentAnonymousTest extends CommentTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enable anonymous and authenticated user comments.

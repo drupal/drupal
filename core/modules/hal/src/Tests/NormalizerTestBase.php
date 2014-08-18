@@ -59,7 +59,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('system', array('url_alias', 'router'));
     $this->installEntitySchema('user');

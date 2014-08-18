@@ -31,7 +31,7 @@ class NodeQueryAlterTest extends NodeTestBase {
    */
   protected $noAccessUser;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();

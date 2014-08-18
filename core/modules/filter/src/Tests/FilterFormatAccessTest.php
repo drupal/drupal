@@ -65,7 +65,7 @@ class FilterFormatAccessTest extends WebTestBase {
    */
   protected $disallowed_format;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

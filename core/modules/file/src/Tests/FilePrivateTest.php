@@ -23,7 +23,7 @@ class FilePrivateTest extends FileFieldTestBase {
    */
   public static $modules = array('node_access_test', 'field_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     node_access_test_add_field(entity_load('node_type', 'article'));
     node_access_rebuild();

@@ -26,7 +26,7 @@ class NodeValidationTest extends EntityUnitTestBase {
   /**
    * Set the default field storage backend for fields created during tests.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
 

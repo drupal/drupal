@@ -23,7 +23,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    */
   protected $pager;
 
-  public function setUp() {
+  protected function setUp() {
     $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\PagerPluginBase')
       ->disableOriginalConstructor()
       ->getMockForAbstractClass();

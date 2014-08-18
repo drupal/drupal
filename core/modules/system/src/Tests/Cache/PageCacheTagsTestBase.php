@@ -18,7 +18,7 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Enable page caching.

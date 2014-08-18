@@ -20,7 +20,7 @@ abstract class PathUnitTestBase extends DrupalUnitTestBase {
    */
   protected $fixtures;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->fixtures = new UrlAliasFixtures();
     // The alias whitelist expects that the menu path roots are set by a
@@ -28,7 +28,7 @@ abstract class PathUnitTestBase extends DrupalUnitTestBase {
     \Drupal::state()->set('router.path_roots', array('user', 'admin'));
   }
 
-  public function tearDown() {
+  protected function tearDown() {
     $this->fixtures->dropTables(Database::getConnection());
 
     parent::tearDown();

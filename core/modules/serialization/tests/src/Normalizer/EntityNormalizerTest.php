@@ -40,7 +40,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->entityNormalizer = new EntityNormalizer($this->entityManager);
   }

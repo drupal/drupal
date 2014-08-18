@@ -40,7 +40,7 @@ class DbLogTest extends WebTestBase {
    */
   protected $any_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create users with specific permissions.

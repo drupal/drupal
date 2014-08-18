@@ -32,7 +32,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
    */
   protected $availableThemes;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Theme settings rely on System module's system.theme.global configuration.
     $this->installConfig(array('system'));

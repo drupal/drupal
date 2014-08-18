@@ -79,7 +79,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
    */
   protected $controller;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->setupLanguages();

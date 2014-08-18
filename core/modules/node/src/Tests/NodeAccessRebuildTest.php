@@ -13,7 +13,7 @@ namespace Drupal\node\Tests;
  * @group node
  */
 class NodeAccessRebuildTest extends NodeTestBase {
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));

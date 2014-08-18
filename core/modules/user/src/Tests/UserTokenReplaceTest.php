@@ -26,7 +26,7 @@ class UserTokenReplaceTest extends WebTestBase {
    */
   public static $modules = array('language');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $language = new Language(array(
       'id' => 'de',

@@ -27,7 +27,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTest {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->directoryList = array(

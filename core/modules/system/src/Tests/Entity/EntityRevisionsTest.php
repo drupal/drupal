@@ -24,7 +24,7 @@ class EntityRevisionsTest extends WebTestBase {
    */
   public static $modules = array('entity_test');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

@@ -38,7 +38,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
    */
   protected $web_user;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create the 'private' field, which allows the node to be marked as private

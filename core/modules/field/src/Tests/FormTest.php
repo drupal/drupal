@@ -53,7 +53,7 @@ class FormTest extends FieldTestBase {
    */
   protected $instance;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));

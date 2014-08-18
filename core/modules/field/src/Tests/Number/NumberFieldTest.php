@@ -30,7 +30,7 @@ class NumberFieldTest extends WebTestBase {
    */
   protected $web_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access'));

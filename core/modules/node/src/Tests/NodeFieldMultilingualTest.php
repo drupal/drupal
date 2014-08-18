@@ -27,7 +27,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
    */
   public static $modules = array('node', 'language');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.

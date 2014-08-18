@@ -27,7 +27,7 @@ class TextFieldTest extends WebTestBase {
   protected $admin_user;
   protected $web_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer filters'));

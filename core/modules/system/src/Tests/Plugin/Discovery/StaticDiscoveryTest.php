@@ -16,7 +16,7 @@ use Drupal\Component\Plugin\Discovery\StaticDiscovery;
  */
 class StaticDiscoveryTest extends DiscoveryTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->expectedDefinitions = array(
       'apple' => array(

@@ -49,7 +49,7 @@ class EntityQueryTest extends EntityUnitTestBase {
    */
   public $figures;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_mulrev');

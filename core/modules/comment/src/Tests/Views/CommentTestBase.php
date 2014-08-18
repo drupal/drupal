@@ -29,7 +29,7 @@ abstract class CommentTestBase extends ViewTestBase {
    */
   public $comment;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     ViewTestData::createTestViews(get_class($this), array('comment_test_views'));

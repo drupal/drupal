@@ -37,7 +37,7 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
     return new ApcuBackend($bin, $this->databasePrefix);
   }
 
-  public function tearDown() {
+  protected function tearDown() {
     foreach ($this->cachebackends as $bin => $cachebackend) {
       $this->cachebackends[$bin]->removeBin();
     }

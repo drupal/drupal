@@ -23,7 +23,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
    */
   public static $modules = array('toolbar', 'toolbar_test', 'locale');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an administrative user and log it in.

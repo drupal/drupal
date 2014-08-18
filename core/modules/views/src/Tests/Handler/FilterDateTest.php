@@ -30,7 +30,7 @@ class FilterDateTest extends HandlerTestBase {
    */
   public static $modules = array('node', 'views_ui');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Add some basic test nodes.
     $this->nodes = array();

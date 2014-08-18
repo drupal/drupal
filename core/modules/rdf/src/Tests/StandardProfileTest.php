@@ -101,7 +101,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected $commenterUri;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->base_uri = url('<front>', array('absolute' => TRUE));

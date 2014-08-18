@@ -23,7 +23,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
    */
   public static $modules = array('entity_reference', 'field_ui', 'node', 'options');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create default content type.

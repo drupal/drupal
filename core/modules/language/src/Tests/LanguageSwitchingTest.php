@@ -24,7 +24,7 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   public static $modules = array('language', 'block', 'language_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create and login user.

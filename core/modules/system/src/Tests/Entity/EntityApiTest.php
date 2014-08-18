@@ -17,7 +17,7 @@ use Drupal\user\UserInterface;
  */
 class EntityApiTest extends EntityUnitTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');

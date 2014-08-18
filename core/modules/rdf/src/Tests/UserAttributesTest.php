@@ -23,7 +23,7 @@ class UserAttributesTest extends WebTestBase {
    */
   public static $modules = array('rdf', 'node');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     rdf_get_mapping('user', 'user')
       ->setBundleMapping(array(

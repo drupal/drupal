@@ -27,7 +27,7 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
 
     // getModuleAndPath() returns an array of the module name and directory.
     list($module_name, $module_dir) = $this->getModuleAndPath();

@@ -34,7 +34,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $entities = array(
       entity_create('menu', array('id' => 'primary-links')),

@@ -28,7 +28,7 @@ class SaveUploadTest extends FileManagedTestBase {
    */
   protected $maxFidBefore;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);

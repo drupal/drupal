@@ -25,7 +25,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $GLOBALS['base_url'] = 'http://example.com/drupal';
   }
@@ -33,7 +33,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  protected function tearDown() {
     unset($GLOBALS['base_url']);
     parent::tearDown();
   }

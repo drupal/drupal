@@ -14,7 +14,7 @@ namespace Drupal\system\Tests\Entity;
  */
 class EntityUUIDTest extends EntityUnitTestBase {
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');

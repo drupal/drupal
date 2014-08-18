@@ -29,7 +29,7 @@ class ForumBlockTest extends WebTestBase {
    */
   protected $adminUser;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create users.

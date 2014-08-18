@@ -23,7 +23,7 @@ class SystemAuthorizeTest extends WebTestBase {
    */
   public static $modules = array('system_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an administrator user.

@@ -19,7 +19,7 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
 
   public static $modules = array('language', 'system');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
   }
 

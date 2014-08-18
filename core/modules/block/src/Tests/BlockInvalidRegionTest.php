@@ -24,7 +24,7 @@ class BlockInvalidRegionTest extends WebTestBase {
    */
   public static $modules = array('block', 'block_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     // Create an admin user.
     $admin_user = $this->drupalCreateUser(array(

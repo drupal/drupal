@@ -20,7 +20,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 class ManageFieldsTest extends FieldUiTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create random field name.

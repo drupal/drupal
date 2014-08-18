@@ -23,7 +23,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'aggregator', 'aggregator_test', 'views');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an Article node type.

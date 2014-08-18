@@ -46,7 +46,7 @@ abstract class CommentTestBase extends WebTestBase {
    */
   protected $node;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create an article content type only if it does not yet exist, so that

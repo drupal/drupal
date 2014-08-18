@@ -38,7 +38,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
   protected $ids = array();
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('node');

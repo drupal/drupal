@@ -33,7 +33,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
   protected $searching_user;
   protected $searchable_nodes;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create searching user.

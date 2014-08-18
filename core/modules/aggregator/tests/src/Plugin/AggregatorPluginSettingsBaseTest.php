@@ -39,7 +39,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    */
   protected $managers;
 
-  public function setUp() {
+  protected function setUp() {
     $this->configFactory = $this->getConfigFactoryStub(
       array(
         'aggregator.settings' => array(

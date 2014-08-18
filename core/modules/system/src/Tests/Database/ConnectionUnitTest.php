@@ -23,7 +23,7 @@ class ConnectionUnitTest extends UnitTestBase {
   protected $monitor;
   protected $originalCount;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->key = 'default';

@@ -34,7 +34,7 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  protected function tearDown() {
     // Move the results of every class under ours. This is solely for
     // reporting, the filename will guide developers.
     self::getDatabaseConnection()

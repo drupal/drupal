@@ -24,7 +24,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   public static $modules = array('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);

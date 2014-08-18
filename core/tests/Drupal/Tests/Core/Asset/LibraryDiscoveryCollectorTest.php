@@ -59,7 +59,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $this->libraryDiscoveryParser = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryParser')

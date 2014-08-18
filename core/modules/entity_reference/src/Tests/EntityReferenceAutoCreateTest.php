@@ -19,7 +19,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
   public static $modules = array('entity_reference', 'node');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create "referencing" and "referenced" node types.

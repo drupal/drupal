@@ -17,7 +17,7 @@ use Drupal\comment\CommentInterface;
  */
 class CommentCSSTest extends CommentTestBase {
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Allow anonymous users to see comments.

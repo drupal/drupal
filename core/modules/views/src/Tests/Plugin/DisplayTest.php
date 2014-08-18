@@ -31,7 +31,7 @@ class DisplayTest extends PluginTestBase {
    */
   public static $modules = array('views_ui', 'node', 'block');
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();

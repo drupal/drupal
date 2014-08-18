@@ -95,7 +95,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    */
   protected $langcode;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Configure the theme system.

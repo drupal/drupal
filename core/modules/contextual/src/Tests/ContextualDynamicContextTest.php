@@ -26,7 +26,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    */
   public static $modules = array('contextual', 'node', 'views', 'views_ui');
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

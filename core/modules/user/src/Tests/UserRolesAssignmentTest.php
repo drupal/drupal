@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
 class UserRolesAssignmentTest extends WebTestBase {
   protected $admin_user;
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'administer users'));
     $this->drupalLogin($this->admin_user);
