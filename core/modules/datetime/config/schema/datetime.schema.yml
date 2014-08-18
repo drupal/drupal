@@ -22,6 +22,8 @@ field.datetime.value:
       label: 'Default value'
       sequence:
         - type: string
+          label: 'Type'
+        - type: string
           label: 'Value'
 
 entity_view_display.field.datetime_default:
