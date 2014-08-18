@@ -117,18 +117,6 @@ function drupal_process_form($form_id, &$form, FormStateInterface $form_state) {
 }
 
 /**
- * Redirects the user to a URL after a form has been processed.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('form_submitter')->redirectForm().
- *
- * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm().
- */
-function drupal_redirect_form(FormStateInterface $form_state) {
-  return \Drupal::service('form_submitter')->redirectForm($form_state);
-}
-
-/**
  * Executes custom validation and submission handlers for a given form.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
