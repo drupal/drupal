@@ -12,6 +12,15 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an Editor annotation object.
  *
+ * Plugin Namespace: Plugin\Editor
+ *
+ * For a working example, see \Drupal\ckeditor\Plugin\Editor\CKEditor
+ *
+ * @see \Drupal\editor\Plugin\EditorPluginInterface
+ * @see \Drupal\editor\Plugin\EditorBase
+ * @see \Drupal\editor\Plugin\EditorManager
+ * @see plugin_api
+ *
  * @Annotation
  */
 class Editor extends Plugin {

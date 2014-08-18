@@ -42,6 +42,11 @@ use Drupal\editor\Plugin\EditorPluginInterface;
  *   is_xss_safe = FALSE
  * )
  * @endcode
+ *
+ * @see \Drupal\editor\Annotation\Editor
+ * @see \Drupal\editor\Plugin\EditorPluginInterface
+ * @see \Drupal\editor\Plugin\EditorManager
+ * @see plugin_api
  */
 abstract class EditorBase extends PluginBase implements EditorPluginInterface {
 

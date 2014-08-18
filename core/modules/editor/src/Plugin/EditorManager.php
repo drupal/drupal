@@ -13,6 +13,11 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Configurable text editor manager.
+ *
+ * @see \Drupal\editor\Annotation\Editor
+ * @see \Drupal\editor\Plugin\EditorPluginInterface
+ * @see \Drupal\editor\Plugin\EditorBase
+ * @see plugin_api
  */
 class EditorManager extends DefaultPluginManager {
 

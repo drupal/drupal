@@ -16,6 +16,11 @@ use Drupal\editor\Entity\Editor;
  *
  * Modules implementing this interface may want to extend the EditorBase class,
  * which provides default implementations of each method where appropriate.
+ *
+ * @see \Drupal\editor\Annotation\Editor
+ * @see \Drupal\editor\Plugin\EditorBase
+ * @see \Drupal\editor\Plugin\EditorManager
+ * @see plugin_api
  */
 interface EditorPluginInterface extends PluginInspectionInterface {
 
