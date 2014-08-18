@@ -170,11 +170,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       $this->revisionKey = $this->entityType->getKey('revision') ?: 'revision_id';
       $this->revisionTable = $this->entityType->getRevisionTable() ?: $this->entityTypeId . '_revision';
     }
-    // @todo Remove the data table check once all entity types are using
-    // entity query and we have a views data controller. See:
-    // - https://drupal.org/node/2068325
-    // - https://drupal.org/node/1740492
-    $translatable = $this->entityType->isTranslatable() && $this->entityType->getDataTable();
+    $translatable = $this->entityType->isTranslatable();
     if ($translatable) {
       $this->dataTable = $this->entityType->getDataTable() ?: $this->entityTypeId . '_field_data';
       $this->langcodeKey = $this->entityType->getKey('langcode') ?: 'langcode';

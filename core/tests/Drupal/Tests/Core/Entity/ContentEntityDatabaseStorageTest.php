@@ -202,7 +202,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->entityType->expects($this->once())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->exactly(1))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
 
@@ -232,7 +232,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->entityType->expects($this->once())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->exactly(1))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->once())
@@ -602,7 +602,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->entityType->expects($this->exactly(2))
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(3))
+    $this->entityType->expects($this->exactly(2))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -664,7 +664,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->entityType->expects($this->exactly(2))
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(3))
+    $this->entityType->expects($this->exactly(2))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -729,7 +729,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->entityType->expects($this->exactly(2))
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(3))
+    $this->entityType->expects($this->exactly(2))
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -861,7 +861,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       $this->entityType->expects($this->exactly(2))
         ->method('isTranslatable')
         ->will($this->returnValue(TRUE));
-      $this->entityType->expects($this->exactly(3))
+      $this->entityType->expects($this->exactly(2))
         ->method('getDataTable')
         ->will($this->returnValue('entity_test_field_data'));
       $this->entityType->expects($this->any())
