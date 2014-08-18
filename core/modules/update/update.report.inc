@@ -320,25 +320,25 @@ function template_preprocess_update_project_status(&$variables) {
 
   switch ($project['status']) {
     case UPDATE_CURRENT:
-      $uri = 'core/misc/icons/73b355/check.png';
+      $uri = 'core/misc/icons/73b355/check.svg';
       $text = t('Ok');
       break;
     case UPDATE_UNKNOWN:
     case UPDATE_FETCH_PENDING:
     case UPDATE_NOT_FETCHED:
-      $uri = 'core/misc/icons/e29700/warning.png';
+      $uri = 'core/misc/icons/e29700/warning.svg';
       $text = t('Warning');
       break;
     case UPDATE_NOT_SECURE:
     case UPDATE_REVOKED:
     case UPDATE_NOT_SUPPORTED:
-      $uri = 'core/misc/icons/ea2800/error.png';
+      $uri = 'core/misc/icons/ea2800/error.svg';
       $text = t('Error');
       break;
     case UPDATE_NOT_CHECKED:
     case UPDATE_NOT_CURRENT:
     default:
-      $uri = 'core/misc/icons/e29700/warning.png';
+      $uri = 'core/misc/icons/e29700/warning.svg';
       $text = t('Warning');
       break;
   }

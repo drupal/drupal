@@ -61,28 +61,28 @@ class SimpletestResultsForm extends FormBase {
     // Initialize image mapping property.
     $image_pass = array(
       '#theme' => 'image',
-      '#uri' => 'core/misc/icons/73b355/check.png',
+      '#uri' => 'core/misc/icons/73b355/check.svg',
       '#width' => 18,
       '#height' => 18,
       '#alt' => $this->t('Pass'),
     );
     $image_fail = array(
       '#theme' => 'image',
-      '#uri' => 'core/misc/icons/ea2800/error.png',
+      '#uri' => 'core/misc/icons/ea2800/error.svg',
       '#width' => 18,
       '#height' => 18,
       '#alt' => $this->t('Fail'),
     );
     $image_exception = array(
       '#theme' => 'image',
-      '#uri' => 'core/misc/icons/e29700/warning.png',
+      '#uri' => 'core/misc/icons/e29700/warning.svg',
       '#width' => 18,
       '#height' => 18,
       '#alt' => $this->t('Exception'),
     );
     $image_debug = array(
       '#theme' => 'image',
-      '#uri' => 'core/misc/icons/e29700/warning.png',
+      '#uri' => 'core/misc/icons/e29700/warning.svg',
       '#width' => 18,
       '#height' => 18,
       '#alt' => $this->t('Debug'),
