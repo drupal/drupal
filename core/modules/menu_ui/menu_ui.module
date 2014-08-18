@@ -534,7 +534,7 @@ function menu_ui_form_node_type_form_submit(&$form, FormStateInterface $form_sta
  *   titles as the values.
  */
 function menu_ui_get_menus($all = TRUE) {
-  if ($custom_menus = entity_load_multiple('menu')) {
+  if ($custom_menus = Menu::loadMultiple()) {
     if (!$all) {
       $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());
     }
@@ -565,7 +565,7 @@ function menu_ui_system_breadcrumb_alter(array &$breadcrumb, RouteMatchInterface
   if (($route_match->getRouteName() == 'menu_ui.link_edit') && $menu_link = $route_match->getParameter('menu_link_plugin')) {
     if (($menu_link instanceof MenuLinkInterface)) {
       // Add a link to the menu admin screen.
-      $menu = entity_load('menu', $menu_link->getMenuName());
+      $menu = Menu::load($menu_link->getMenuName());
       $breadcrumb[] = \Drupal::l($menu->label(), 'menu_ui.menu_edit', array('menu' => $menu->id()));
     }
   }

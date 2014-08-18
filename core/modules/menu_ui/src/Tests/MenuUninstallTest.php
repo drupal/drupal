@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Entity\Menu;
 
 /**
  * Tests that uninstalling menu does not remove custom menus.
@@ -29,7 +30,9 @@ class MenuUninstallTest extends WebTestBase {
   public function testMenuUninstall() {
     \Drupal::moduleHandler()->uninstall(array('menu_ui'));
 
-    $this->assertTrue(entity_load('menu', 'admin', TRUE), 'The \'admin\' menu still exists after uninstalling Menu UI module.');
+    \Drupal::entityManager()->getStorage('menu')->resetCache(array('admin'));
+
+    $this->assertTrue(Menu::load('admin'), 'The \'admin\' menu still exists after uninstalling Menu UI module.');
   }
 
 }
