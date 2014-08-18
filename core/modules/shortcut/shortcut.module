@@ -249,7 +249,7 @@ function shortcut_default_set($account = NULL) {
  *   TRUE if a shortcut set with that title exists; FALSE otherwise.
  */
 function shortcut_set_title_exists($title) {
-  $sets = entity_load_multiple('shortcut_set');
+  $sets = ShortcutSet::loadMultiple();
   foreach ($sets as $set) {
     if ($set->label == $title) {
       return TRUE;

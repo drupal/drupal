@@ -129,7 +129,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete', array(), t('Delete'));
-    $sets = entity_load_multiple('shortcut_set');
+    $sets = ShortcutSet::loadMultiple();
     $this->assertFalse(isset($sets[$new_set->id()]), 'Successfully deleted a shortcut set.');
   }
 
@@ -147,7 +147,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetCreateWithSetName() {
     $random_name = $this->randomMachineName();
     $new_set = $this->generateShortcutSet($random_name, $random_name);
-    $sets = entity_load_multiple('shortcut_set');
+    $sets = ShortcutSet::loadMultiple();
     $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
     $this->drupalGet('user/' . $this->admin_user->id() . '/shortcuts');
     $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
