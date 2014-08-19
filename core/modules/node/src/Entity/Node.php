@@ -381,7 +381,8 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the node is published.'))
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -399,7 +400,8 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Promote'))
       ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'))
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setDefaultValue(TRUE);
 
     $fields['sticky'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Sticky'))
@@ -425,39 +427,6 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('The log entry explaining the changes in this revision.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
-
-    return $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-    $node_type = node_type_load($bundle);
-    $fields = array();
-
-    // When deleting a node type the corresponding node displays are deleted as
-    // well. In order to be deleted, they need to be loaded first. Entity
-    // displays, however, fetch the field definitions of the respective entity
-    // type to fill in their defaults. Therefore this function ends up being
-    // called with a non-existing bundle.
-    // @todo Fix this in https://drupal.org/node/2248795
-    if (!$node_type) {
-      return $fields;
-    }
-
-    if (isset($node_type->title_label)) {
-      $fields['title'] = clone $base_field_definitions['title'];
-      $fields['title']->setLabel($node_type->title_label);
-    }
-
-    $options = $node_type->getModuleSettings('node')['options'];
-    $fields['status'] = clone $base_field_definitions['status'];
-    $fields['status']->setDefaultValue(!empty($options['status']) ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
-    $fields['promote'] = clone $base_field_definitions['promote'];
-    $fields['promote']->setDefaultValue(!empty($options['promote']) ? NODE_PROMOTED : NODE_NOT_PROMOTED);
-    $fields['sticky'] = clone $base_field_definitions['sticky'];
-    $fields['sticky']->setDefaultValue(!empty($options['sticky']) ? NODE_STICKY : NODE_NOT_STICKY);
 
     return $fields;
   }

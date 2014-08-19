@@ -102,10 +102,10 @@ class NodeFormButtonsTest extends NodeTestBase {
     // Set article content type default to unpublished. This will change the
     // the initial order of buttons and/or status of the node when creating
     // a node.
-    /** @var \Drupal\node\NodeTypeInterface $node_type */
-    $node_type = $this->container->get('entity.manager')->getStorage('node_type')->load('article');
-    $node_type->settings['node']['options']['status'] = FALSE;
-    $node_type->save();
+    $fields = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
+    $fields['status']->getConfig('article')
+      ->setDefaultValue(FALSE)
+      ->save();
 
     // Verify the buttons on a node add form for an administrator.
     $this->drupalLogin($this->admin_user);

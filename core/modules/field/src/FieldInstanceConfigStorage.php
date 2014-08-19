@@ -8,27 +8,20 @@
 namespace Drupal\field;
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldConfigStorageBase;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
- * Controller class for field instances.
- *
- * Note: the class take no special care about importing instances after their
- * field in importCreate(), since this is guaranteed by the alphabetical order
- * (field.field.* entries are processed before field.instance.* entries).
- * @todo Revisit after http://drupal.org/node/1944368.
+ * Storage class for field instances.
  */
-class FieldInstanceConfigStorage extends ConfigEntityStorage {
+class FieldInstanceConfigStorage extends FieldConfigStorageBase {
 
   /**
    * The entity manager.
@@ -45,13 +38,6 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
   protected $state;
 
   /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypeManager;
-
-  /**
    * Constructs a FieldInstanceConfigStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -66,7 +52,7 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
    *   The entity manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface\FieldTypePluginManagerInterface
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type plugin manager.
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, StateInterface $state, FieldTypePluginManagerInterface $field_type_manager) {
@@ -185,24 +171,4 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     return $matching_instances;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function mapFromStorageRecords(array $records) {
-    foreach ($records as &$record) {
-      $class = $this->fieldTypeManager->getPluginClass($record['field_type']);
-      $record['settings'] = $class::instanceSettingsFromConfigData($record['settings']);
-    }
-    return parent::mapFromStorageRecords($records);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function mapToStorageRecord(EntityInterface $entity) {
-    $record = parent::mapToStorageRecord($entity);
-    $class = $this->fieldTypeManager->getPluginClass($record['field_type']);
-    $record['settings'] = $class::instanceSettingsToConfigData($record['settings']);
-    return $record;
-  }
 }

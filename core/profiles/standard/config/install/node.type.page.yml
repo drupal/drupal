@@ -2,14 +2,10 @@ type: page
 name: 'Basic page'
 description: 'Use <em>basic pages</em> for your static content, such as an ''About us'' page.'
 help: ''
-title_label: Title
 settings:
   node:
     preview: 1
     options:
-      status: true
-      promote: false
-      sticky: false
       revision: false
     submitted: false
 status: true

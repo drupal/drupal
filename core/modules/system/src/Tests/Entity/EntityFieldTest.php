@@ -559,6 +559,58 @@ class EntityFieldTest extends EntityUnitTestBase  {
   }
 
   /**
+   * Tests a base field override on a non-existing base field.
+   *
+   * @see entity_test_entity_base_field_info_alter()
+   */
+  public function testBaseFieldNonExistingBaseField() {
+    $this->entityManager->getStorage('node_type')->create(array(
+      'type' => 'page',
+      'name' => 'page',
+    ))->save();
+    $this->entityManager->clearCachedFieldDefinitions();
+    $fields = $this->entityManager->getFieldDefinitions('node', 'page');
+    $override = $fields['status']->getConfig('page');
+    $override->setLabel($this->randomString())->save();
+    \Drupal::state()->set('entity_test.node_remove_status_field', TRUE);
+    $this->entityManager->clearCachedFieldDefinitions();
+    $fields = $this->entityManager->getFieldDefinitions('node', 'page');
+    // A base field override on a non-existing base field should not cause a
+    // field definition to come into existence.
+    $this->assertFalse(isset($fields['status']), 'Node\'s status base field does not exist.');
+  }
+
+  /**
+   * Tests creating a field override config for a bundle field.
+   *
+   * @see entity_test_entity_base_field_info_alter()
+   */
+  public function testFieldOverrideBundleField() {
+    // First make sure the bundle field override in code, which is provided by
+    // the test entity works.
+    entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
+    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
+    $this->assertEqual($field_definitions['name']->getDescription(), 'The default description.');
+    $this->assertNull($field_definitions['name']->getBundle());
+
+    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
+    $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
+    $this->assertEqual($field_definitions['name']->getBundle(), 'some_test_bundle');
+
+    // Now create a config override of the bundle field.
+    $field_config = $field_definitions['name']->getConfig('some_test_bundle');
+    $field_config->setTranslatable(FALSE);
+    $field_config->save();
+
+    // Make sure both overrides are present.
+    $this->entityManager->clearCachedFieldDefinitions();
+    $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
+    $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
+    $this->assertEqual($field_definitions['name']->getBundle(), 'some_test_bundle');
+    $this->assertFalse($field_definitions['name']->isTranslatable());
+  }
+
+  /**
    * Tests validation constraints provided by the Entity API.
    */
   public function testEntityConstraintValidation() {

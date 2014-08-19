@@ -44,16 +44,21 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
   /**
    * Provides base field definitions for an entity type.
    *
-   * Implementations typically use the class \Drupal\Core\Field\BaseFieldDefinition
-   * for creating the field definitions; for example a 'name' field could be
-   * defined as the following:
+   * Implementations typically use the class
+   * \Drupal\Core\Field\BaseFieldDefinition for creating the field definitions;
+   * for example a 'name' field could be defined as the following:
    * @code
    * $fields['name'] = BaseFieldDefinition::create('string')
    *   ->setLabel(t('Name'));
    * @endcode
    *
-   * If some elements in a field definition need to vary by bundle, use
+   * By definition, base fields are fields that exist for every bundle. To
+   * provide definitions for fields that should only exist on some bundles, use
    * \Drupal\Core\Entity\ContentEntityInterface::bundleFieldDefinitions().
+   *
+   * The definitions returned by this function can be overridden for all
+   * bundles by hook_entity_base_field_info_alter() or overridden on a
+   * per-bundle basis via 'base_field_override' configuration entities.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition. Useful when a single class is used for multiple,
@@ -69,14 +74,24 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type);
 
   /**
-   * Provides or alters field definitions for a specific bundle.
+   * Provides field definitions for a specific bundle.
    *
-   * The field definitions returned here for the bundle take precedence on the
-   * base field definitions specified by baseFieldDefinitions() for the entity
-   * type.
-   *
-   * @todo Provide a better DX for field overrides.
-   *   See https://drupal.org/node/2145115.
+   * This function can return definitions both for bundle fields (fields that
+   * are not defined in $base_field_definitions, and therefore might not exist
+   * on some bundles) as well as bundle-specific overrides of base fields
+   * (fields that are defined in $base_field_definitions, and therefore exist
+   * for all bundles). However, bundle-specific base field overrides can also
+   * be provided by 'base_field_override' configuration entities, and that is
+   * the recommended approach except in cases where an entity type needs to
+   * provide a bundle-specific base field override that is decoupled from
+   * configuration. Note that for most entity types, the bundles themselves are
+   * derived from configuration (e.g., 'node' bundles are managed via
+   * 'node_type' configuration entities), so decoupling bundle-specific base
+   * field overrides from configuration only makes sense for entity types that
+   * also decouple their bundles from configuration. In cases where both this
+   * function returns a bundle-specific override of a base field and a
+   * 'base_field_override' configuration entity exists, the latter takes
+   * precedence.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition. Useful when a single class is used for multiple,

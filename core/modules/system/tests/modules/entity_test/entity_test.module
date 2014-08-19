@@ -82,6 +82,9 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
       $fields[$name]->setTranslatable($value);
     }
   }
+  if ($entity_type->id() == 'node' && Drupal::state()->get('entity_test.node_remove_status_field')) {
+    unset($fields['status']);
+  }
 }
 
 /**

@@ -2,15 +2,10 @@ type: book
 name: 'Book page'
 description: '<em>Books</em> have a built-in hierarchical navigation. Use for handbooks or tutorials.'
 help: ''
-title_label: Title
 settings:
   node:
     preview: 1
     options:
-      status: true
-      # Not promoted to front page.
-      promote: false
-      sticky: false
       revision: false
     submitted: true
 status: true

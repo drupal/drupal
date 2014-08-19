@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
@@ -113,10 +114,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['subject'];
     $this->assertFalse($definition->isTranslatable(), 'Page comment subject is not translatable.');
 
-    $settings = content_translation_get_config('comment', 'comment_article', 'fields');
-    $this->assertFalse(isset($settings['comment_body']), 'Configurable fields are not saved to content_translation.settings.');
-    $this->assertTrue(isset($settings['subject']), 'Base fields are saved to content_translation.settings.');
-
     // Test that translation can be enabled for base fields.
     $edit = array(
       'entity_types[entity_test_mul]' => TRUE,
@@ -125,10 +122,10 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'settings[entity_test_mul][entity_test_mul][fields][user_id]' => FALSE,
     );
     $this->assertSettings('entity_test_mul', 'entity_test_mul', TRUE, $edit);
-    $settings = content_translation_get_config('entity_test_mul', 'entity_test_mul', 'fields');
-    $this->assertTrue($settings['name'] && !$settings['user_id'], 'Base fields are saved to content_translation.settings.');
+    $field_override = BaseFieldOverride::loadByName('entity_test_mul', 'entity_test_mul', 'name');
+    $this->assertTrue($field_override->isTranslatable(), 'Base fields can be overridden with a base field bundle override entity.');
     $definitions = $this->entityManager()->getFieldDefinitions('entity_test_mul', 'entity_test_mul');
-    $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Bundle field definitions were correctly altered.');
+    $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Base field bundle overrides were correctly altered.');
 
     // Test that language settings are correctly stored.
     $language_configuration = language_get_default_configuration('comment', 'comment_article');

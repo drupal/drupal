@@ -2,14 +2,10 @@ type: import
 name: Import
 description: 'Import description.'
 help: ''
-title_label: Title
 settings:
   node:
     preview: 1
     options:
-      status: status
-      promote: promote
-      sticky: false
       revision: false
     submitted: true
 status: true

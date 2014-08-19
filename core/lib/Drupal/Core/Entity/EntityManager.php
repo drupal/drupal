@@ -471,8 +471,22 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $entity_type = $this->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
 
-    // Allow the entity class to override the base fields.
+    // Allow the entity class to provide bundle fields and bundle-specific
+    // overrides of base fields.
     $bundle_field_definitions = $class::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+
+    // Load base field overrides from configuration. These take precedence over
+    // base field overrides returned above.
+    $base_field_override_ids = array_map(function($field_name) use ($entity_type_id, $bundle) {
+      return $entity_type_id . '.' . $bundle . '.' . $field_name;
+    }, array_keys($base_field_definitions));
+    $base_field_overrides = $this->getStorage('base_field_override')->loadMultiple($base_field_override_ids);
+    foreach ($base_field_overrides as $base_field_override) {
+      /** @var \Drupal\Core\Field\Entity\BaseFieldOverride $base_field_override */
+      $field_name = $base_field_override->getName();
+      $bundle_field_definitions[$field_name] = $base_field_override;
+    }
+
     $provider = $entity_type->getProvider();
     foreach ($bundle_field_definitions as $definition) {
       // @todo Remove this check once FieldDefinitionInterface exposes a proper
@@ -957,6 +971,30 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     }
 
     throw new NoCorrespondingEntityClassException($class_name);
+  }
+
+  /**
+   * Acts on entity bundle rename.
+   *
+   * @param string $entity_type_id
+   *   The entity type to which the bundle is bound.
+   * @param string $bundle_old
+   *   The previous name of the bundle.
+   * @param string $bundle_new
+   *   The new name of the bundle.
+   *
+   * @see entity_invoke_bundle_hook()
+   * @see entity_crud
+   */
+  public function onBundleRename($entity_type_id, $bundle_old, $bundle_new) {
+    // Rename existing base field bundle overrides.
+    $overrides = $this->getStorage('base_field_override')->loadByProperties(array('entity_type' => $entity_type_id, 'bundle' => $bundle_old));
+    foreach ($overrides as $override) {
+      $override->set('id', $entity_type_id . '.' . $bundle_new . '.' . $override->field_name);
+      $override->bundle = $bundle_new;
+      $override->allowBundleRename();
+      $override->save();
+    }
   }
 
 }

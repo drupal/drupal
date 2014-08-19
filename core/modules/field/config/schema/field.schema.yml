@@ -49,43 +49,8 @@ field.storage.*.*:
               label: 'Index'
 
 field.instance.*.*.*:
-  type: config_entity
+  type: field_config_base
   label: 'Field instance'
-  mapping:
-    id:
-      type: string
-      label: 'ID'
-    label:
-      type: label
-      label: 'Label'
-    field_name:
-      type: string
-      label: 'Field name'
-    entity_type:
-      type: string
-      label: 'Entity type'
-    bundle:
-      type: string
-      label: 'Bundle'
-    description:
-      type: text
-      label: 'Help text'
-    required:
-      type: boolean
-      label: 'Required field'
-    translatable:
-      type: boolean
-      label: 'Translatable'
-    default_value:
-      type: field.[%parent.field_type].value
-    default_value_function:
-      type: string
-      label: 'Default value function'
-    settings:
-      type: field.[%parent.field_type].instance_settings
-    field_type:
-      type: string
-      label: 'Field type'
 
 entity_form_display.field.hidden:
   type: entity_field_form_display_base
@@ -96,6 +61,26 @@ entity_form_display.field.hidden:
       label: 'Settings'
       sequence:
         - type: string
+
+# Schema for the String field type.
+
+field.string.instance_settings:
+  type: sequence
+  label: 'String settings'
+  sequence:
+    - type: string
+      label: 'Setting'
+
+field.string.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: string
+          label: 'Value'
 
 # Schema for the configuration files of the Boolean field type.
 field.boolean.settings:

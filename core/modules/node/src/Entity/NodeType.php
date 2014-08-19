@@ -75,15 +75,6 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
   public $help;
 
   /**
-   * The label to use for the title of a Node of this type in the user interface.
-   *
-   * @var string
-   *
-   * @todo Rename to $node_title_label.
-   */
-  public $title_label = 'Title';
-
-  /**
    * Indicates whether a Body field should be created for this node type.
    *
    * This property affects entity creation only. It allows default configuration
@@ -194,9 +185,6 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
     }
     $values['settings']['node'] = NestedArray::mergeDeep(array(
       'options' => array(
-        'status' => TRUE,
-        'promote' => TRUE,
-        'sticky' => FALSE,
         'revision' => FALSE,
       ),
       'preview' => DRUPAL_OPTIONAL,

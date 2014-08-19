@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Entity {
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -729,7 +730,17 @@ class EntityManagerTest extends UnitTestCase {
         ->will($this->returnValue(array()));
     }
 
-    $this->setUpEntityManager(array('test_entity_type' => $entity_type));
+    // Mock the base field definition override.
+    $override_entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $override_entity_type->expects($this->any())
+       ->method('getClass')
+       ->will($this->returnValue(get_class($entity)));
+
+    $override_entity_type->expects($this->any())
+      ->method('getStorageClass')
+      ->will($this->returnValue('\Drupal\Tests\Core\Entity\TestConfigEntityStorage'));
+
+    $this->setUpEntityManager(array('test_entity_type' => $entity_type, 'base_field_override' => $override_entity_type));
 
     return $field_definition;
   }
@@ -1084,9 +1095,21 @@ class EntityManagerTest extends UnitTestCase {
       ->with('\Drupal\Core\Entity\ContentEntityInterface')
       ->will($this->returnValue(FALSE));
 
+    // Mock the base field definition override.
+    $override_entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $override_entity_class = get_class($entity);
+    $override_entity_type->expects($this->any())
+      ->method('getClass')
+      ->will($this->returnValue($override_entity_class));
+
+    $override_entity_type->expects($this->any())
+      ->method('getStorageClass')
+      ->will($this->returnValue('\Drupal\Tests\Core\Entity\TestConfigEntityStorage'));
+
     $this->setUpEntityManager(array(
       'test_entity_type' => $entity_type,
       'non_fieldable' => $non_content_entity_type,
+      'base_field_override' => $override_entity_type,
     ));
 
     $expected = array(
@@ -1207,8 +1230,19 @@ class EntityManagerTest extends UnitTestCase {
       ),
     );
 
+    // Mock the base field definition override.
+    $override_entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $override_entity_type->expects($this->any())
+      ->method('getClass')
+      ->will($this->returnValue(get_class($entity)));
+
+    $override_entity_type->expects($this->any())
+      ->method('getStorageClass')
+      ->will($this->returnValue('\Drupal\Tests\Core\Entity\TestConfigEntityStorage'));
+
     $this->setUpEntityManager(array(
       'test_entity_type' => $entity_type,
+      'base_field_override' => $override_entity_type,
     ));
 
     $integerFields = $this->entityManager->getFieldMapByFieldType('integer');
@@ -1483,6 +1517,25 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
     return new static('yellow');
   }
 
+}
+
+/**
+ * Provides a test config entity storage for base field overrides.
+ */
+class TestConfigEntityStorage extends ConfigEntityStorage {
+
+  public function __construct($entity_type) {
+  }
+
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type
+    );
+  }
+
+  public function loadMultiple(array $ids = NULL) {
+    return array();
+  }
 }
 
 if (!defined('DRUPAL_ROOT')) {

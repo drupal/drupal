@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\field\FieldException;
@@ -630,6 +631,17 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    */
   public function getUniqueStorageIdentifier() {
     return $this->getTargetEntityTypeId() . '-' . $this->getName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfig($bundle) {
+    $override = BaseFieldOverride::loadByName($this->getTargetEntityTypeId(), $bundle, $this->getName());
+    if ($override) {
+      return $override;
+    }
+    return BaseFieldOverride::createFromBaseFieldDefinition($this, $bundle);
   }
 
 }

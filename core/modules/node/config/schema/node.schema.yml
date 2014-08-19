@@ -27,9 +27,6 @@ node.type.*:
     help:
       type: text
       label: 'Explanation or submission guidelines'
-    title_label:
-      type: label
-      label: 'Title field label'
     settings:
       type: mapping
       label: 'Settings'

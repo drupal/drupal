@@ -339,3 +339,45 @@ base_entity_reference_field_settings:
     target_bundle:
       type: string
       label: 'Bundle of item to reference'
+
+field_config_base:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    field_name:
+      type: string
+      label: 'Field name'
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Help text'
+    required:
+      type: boolean
+      label: 'Required field'
+    translatable:
+      type: boolean
+      label: 'Translatable'
+    default_value:
+      type: field.[%parent.field_type].value
+    default_value_function:
+      type: string
+      label: 'Default value function'
+    settings:
+      type: field.[%parent.field_type].instance_settings
+    field_type:
+      type: string
+      label: 'Field type'
+
+core.base_field_override.*.*.*:
+  type: field_config_base
+  label: 'Base field bundle override'

@@ -1033,7 +1033,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (!isset($this->entityKeys[$key]) || !array_key_exists($key, $this->entityKeys)) {
       if ($this->getEntityType()->hasKey($key)) {
         $field_name = $this->getEntityType()->getKey($key);
-        $property = $this->getFieldDefinition($field_name)->getMainPropertyName();
+        $property = $this->getFieldDefinition($field_name)->getFieldStorageDefinition()->getMainPropertyName();
         $this->entityKeys[$key] = $this->get($field_name)->$property;
       }
       else {

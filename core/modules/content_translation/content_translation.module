@@ -8,12 +8,10 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
-use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -138,34 +136,6 @@ function content_translation_entity_bundle_info_alter(&$bundles) {
     foreach ($info as $bundle => &$bundle_info) {
       $enabled = content_translation_get_config($entity_type, $bundle, 'enabled');
       $bundle_info['translatable'] = !empty($enabled);
-    }
-  }
-}
-
-/**
- * Implements hook_entity_bundle_field_info_alter().
- *
- * @todo Remove this when any field supports per-bundle configurable overrides.
- *   See https://drupal.org/node/2224761.
- */
-function content_translation_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
-  $settings = content_translation_get_config($entity_type->id(), $bundle, 'fields');
-  if (!empty($settings)) {
-    $base_field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type->id());
-    foreach ($settings as $name => $translatable) {
-      // Skip storable field definitions as those are supposed to have already
-      // been changed.
-      if (!isset($fields[$name]) || !$fields[$name] instanceof FieldInstanceConfigInterface) {
-        // If we do not have a bundle definition for the current field and we
-        // have to override its translatability, we need to instantiate a new
-        // bundle field definition from the base one.
-        if (!isset($fields[$name]) && isset($base_field_definitions[$name]) && $base_field_definitions[$name]->isTranslatable() != $translatable) {
-          $fields[$name] = clone $base_field_definitions[$name];
-        }
-        if (isset($fields[$name])) {
-          $fields[$name]->setTranslatable((bool) $translatable);
-        }
-      }
     }
   }
 }
@@ -829,10 +799,6 @@ function content_translation_preprocess_language_content_settings_table(&$variab
  *   An associative array of settings keyed by entity type and bundle. At bundle
  *   level the following keys are available:
  *   - translatable: The bundle translatability status, which is a bool.
- *   - settings: An array of language configuration settings as defined by
- *     language_save_default_configuration().
- *   - fields: An associative array with field names as keys and a boolean as
- *     value, indicating field translatability.
  *   - columns: An associative array of translation synchronization settings
  *     keyed by field names.
  */
@@ -844,12 +810,7 @@ function content_translation_save_settings($settings) {
         // Store whether a bundle has translation enabled or not.
         content_translation_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
 
-        // Store whether fields are translatable or not.
-        if (!empty($bundle_settings['fields'])) {
-          content_translation_set_config($entity_type, $bundle, 'fields', $bundle_settings['fields']);
-        }
-
-        // Store whether fields have translation enabled or not.
+        // Save translation_sync settings.
         if (!empty($bundle_settings['columns'])) {
           foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
             $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);

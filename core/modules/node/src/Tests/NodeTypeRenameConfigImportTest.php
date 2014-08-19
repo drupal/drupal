@@ -45,6 +45,15 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     ));
     $content_type->save();
     $staged_type = $content_type->type;
+
+    // Check the default status value for a node of this type.
+    $node = entity_create('node', array('type' => $staged_type));
+    $this->assertTrue($node->status->value, 'Node status defaults to TRUE.');
+
+    // Override a core base field.
+    $fields = \Drupal::entityManager()->getFieldDefinitions($content_type->getEntityType()->getBundleOf(), $content_type->id());
+    $fields['status']->getConfig($content_type->id())->setDefaultValue(FALSE)->save();
+
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 
@@ -56,6 +65,11 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $content_type->type = Unicode::strtolower($this->randomMachineName(8));
     $content_type->save();
     $active_type = $content_type->type;
+
+    // Ensure the base field override has been renamed and the value is correct.
+    $node = entity_create('node', array('type' => $active_type));
+    $this->assertFalse($node->status->value, 'Node status defaults to FALSE.');
+
     $renamed_config_name = $content_type->getEntityType()->getConfigPrefix() . '.' . $content_type->id();
     $this->assertTrue($active->exists($renamed_config_name), 'The content type has the new name in the active store.');
     $this->assertFalse($active->exists($config_name), "The content type's old name does not exist active store.");
@@ -71,6 +85,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     // @see \Drupal\node\Entity\NodeType::postSave()
     $expected = array(
       'node.type.' . $active_type . '::node.type.' . $staged_type,
+      'core.base_field_override.node.' . $active_type . '.status::core.base_field_override.node.' . $staged_type . '.status',
       'entity.form_display.node.' . $active_type . '.default::entity.form_display.node.' . $staged_type . '.default',
       'entity.view_display.node.' . $active_type . '.default::entity.view_display.node.' . $staged_type . '.default',
       'entity.view_display.node.' . $active_type . '.teaser::entity.view_display.node.' . $staged_type . '.teaser',
@@ -114,6 +129,10 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->assertFalse(entity_load('node_type', $active_type), 'The content no longer exists with the old name.');
     $content_type = entity_load('node_type', $staged_type);
     $this->assertIdentical($staged_type, $content_type->type);
+
+    // Ensure the base field override has been renamed and the value is correct.
+    $node = entity_create('node', array('type' => $staged_type));
+    $this->assertFALSE($node->status->value, 'Node status defaults to FALSE.');
   }
 
 }

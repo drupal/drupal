@@ -18,10 +18,10 @@
       });
       $context.find('#edit-workflow').drupalSetSummary(function (context) {
         var vals = [];
-        $(context).find("input[name^='settings[node][options']:checked").parent().each(function () {
+        $(context).find("input[name^='options']:checked").parent().each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
-        if (!$(context).find('#edit-settings-node-options-status').is(':checked')) {
+        if (!$(context).find('#edit-options-status').is(':checked')) {
           vals.unshift(Drupal.t('Not published'));
         }
         return vals.join(', ');

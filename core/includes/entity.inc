@@ -67,6 +67,12 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
   if (method_exists($storage, $method)) {
     $storage->$method($bundle, $bundle_new);
   }
+
+  // Notify the entity manager.
+  if (method_exists($entity_manager, $method)) {
+    $entity_manager->$method($entity_type, $bundle, $bundle_new);
+  }
+
   // Invoke hook_entity_bundle_*() hooks.
   \Drupal::moduleHandler()->invokeAll('entity_bundle_' . $hook, array($entity_type, $bundle, $bundle_new));
   // Clear the cached field definitions (not needed in case of 'create').

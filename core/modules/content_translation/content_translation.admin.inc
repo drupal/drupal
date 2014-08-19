@@ -99,7 +99,6 @@ function _content_translation_form_language_content_settings_form_alter(array &$
             '#default_value' => content_translation_enabled($entity_type_id, $bundle),
           );
 
-          $field_settings = content_translation_get_config($entity_type_id, $bundle, 'fields');
           foreach ($fields as $field_name => $definition) {
             // Allow to configure only fields supporting multilingual storage.
             if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable()) {
@@ -294,11 +293,11 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // all of its fields will be not translatable.
   foreach ($settings as $entity_type_id => &$entity_settings) {
     foreach ($entity_settings as $bundle => &$bundle_settings) {
+      $fields = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle);
       if (!empty($bundle_settings['translatable'])) {
         $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type_id];
       }
       if (!empty($bundle_settings['fields'])) {
-        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle);
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
           $translatable = $translatable && $bundle_settings['translatable'];
           // If we have column settings and no column is translatable, no point
@@ -306,20 +305,11 @@ function content_translation_form_language_content_settings_submit(array $form, 
           if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
             $translatable = FALSE;
           }
-          // If we have a storable field definition we directly persist any
-          // change to translatability, otherwise we store changes in our config
-          // so we can properly alter field definitions later.
-          // @todo Remove this special casing when any field definition can have
-          //   a configurable bundle override. See
-          //   https://drupal.org/node/2224761.
-          $definition = $definitions[$field_name];
-          if ($definition instanceof FieldInstanceConfigInterface) {
-            if ($definition->isTranslatable() != $translatable) {
-              $definition->setTranslatable($translatable);
-              $definition->save();
-            }
-            // Do not save configurable fields unnecessarily.
-            unset($bundle_settings['fields'][$field_name]);
+          $field_config = $fields[$field_name]->getConfig($bundle);
+          if ($field_config->isTranslatable() != $translatable) {
+            $field_config
+              ->setTranslatable($translatable)
+              ->save();
           }
         }
       }
