@@ -205,7 +205,9 @@ function simpletest_process_phpunit_results($phpunit_results) {
   // Insert the results of the PHPUnit test run into the database so the results
   // are displayed along with Simpletest's results.
   if (!empty($phpunit_results)) {
-    $query = db_insert('simpletest')->fields(array_keys($phpunit_results[0]));
+    $query = TestBase::getDatabaseConnection()
+      ->insert('simpletest')
+      ->fields(array_keys($phpunit_results[0]));
     foreach ($phpunit_results as $result) {
       $query->values($result);
     }
