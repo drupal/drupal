@@ -27,4 +27,14 @@ interface CommentItemInterface {
    */
   const OPEN = 2;
 
+  /**
+   * Comment form should be displayed on a separate page.
+   */
+  const FORM_SEPARATE_PAGE = 0;
+
+  /**
+   * Comment form should be shown below post or list of comments.
+   */
+  const FORM_BELOW = 1;
+
 }

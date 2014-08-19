@@ -44,7 +44,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
     return array(
       'default_mode' => CommentManagerInterface::COMMENT_MODE_THREADED,
       'per_page' => 50,
-      'form_location' => COMMENT_FORM_BELOW,
+      'form_location' => CommentItemInterface::FORM_BELOW,
       'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
       'preview' => DRUPAL_OPTIONAL,
     ) + parent::defaultInstanceSettings();
