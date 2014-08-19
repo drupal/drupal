@@ -21,7 +21,7 @@ classList:
     url: https://github.com/eligrey/classList.js/blob/master/LICENSE.md
     gpl-compatible: true
   js:
-    assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false } }
+    assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
@@ -31,7 +31,7 @@ ckeditor:
     url: https://github.com/ckeditor/ckeditor-dev/blob/887d81ac1824008b690e439a1b29eb4f13b51212/LICENSE.md
     gpl-compatible: true
   js:
-    assets/vendor/ckeditor/ckeditor.js: { preprocess: false }
+    assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
 
 domready:
   remote: https://github.com/ded/domready
@@ -41,7 +41,7 @@ domready:
     url: https://github.com/ded/domready/blob/v1.0.6/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/domready/ready.min.js: { weight: -21 }
+    assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
 
 drupal:
   version: VERSION
@@ -299,7 +299,7 @@ html5shiv:
     url: http://www.gnu.org/licenses/gpl-2.0.html
     gpl-compatible: true
   js:
-    assets/vendor/html5shiv/html5.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false } }
+    assets/vendor/html5shiv/html5.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -332,7 +332,7 @@ jquery.farbtastic:
     url: https://github.com/mattfarina/farbtastic/blob/master/LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/farbtastic/farbtastic.js: {}
+    assets/vendor/farbtastic/farbtastic.js: { minified: true }
   css:
     component:
       assets/vendor/farbtastic/farbtastic.css: {}
@@ -761,7 +761,7 @@ modernizr:
     gpl-compatible: true
   version: v2.6.2
   js:
-    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, scope: header, weight: -21 }
+    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, scope: header, weight: -21, minified: true }
 
 normalize:
   remote: https://github.com/necolas/normalize.css

@@ -112,7 +112,13 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
               // Concatenate each asset within the group.
               $data = '';
               foreach ($js_group['items'] as $js_asset) {
-                $data .= $this->optimizer->optimize($js_asset);
+                // Optimize this JS file, but only if it's not yet minified.
+                if (isset($js_asset['minified']) && $js_asset['minified']) {
+                  $data .= file_get_contents($js_asset['data']);
+                }
+                else {
+                  $data .= $this->optimizer->optimize($js_asset);
+                }
                 // Append a ';' and a newline after each JS file to prevent them
                 // from running together.
                 $data .= ";\n";

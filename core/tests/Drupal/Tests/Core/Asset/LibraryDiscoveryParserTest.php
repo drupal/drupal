@@ -347,6 +347,28 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
+   * Tests a library with JavaScript-specific flags.
+   *
+   * @covers ::buildByExtension()
+   */
+  public function testLibraryWithJavaScript() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('js')
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', 'js', $path);
+
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('js');
+    $library = $libraries['example'];
+
+    $this->assertCount(2, $library['js']);
+    $this->assertEquals(FALSE, $library['js'][0]['minified']);
+    $this->assertEquals(TRUE, $library['js'][1]['minified']);
+  }
+  /**
    * Tests that an exception is thrown when license is missing when 3rd party.
    *
    * @expectedException \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
