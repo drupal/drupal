@@ -58,7 +58,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     $this->assertNoText('No strings available.', 'Search found the menu item as untranslated.');
 
     // Check that the class is on the item before we translate it.
-    $xpath = $this->xpath('//a[contains(@class, "icon-structure")]');
+    $xpath = $this->xpath('//a[contains(@class, "icon-system-admin-structure")]');
     $this->assertEqual(count($xpath), 1, 'The menu item class ok before translation.');
 
     // Translate the menu item.
@@ -87,7 +87,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
 
     // Toolbar icons are included based on the presence of a specific class on
     // the menu item. Ensure that class also exists for a translated menu item.
-    $xpath = $this->xpath('//a[contains(@class, "icon-structure")]');
+    $xpath = $this->xpath('//a[contains(@class, "icon-system-admin-structure")]');
     $this->assertEqual(count($xpath), 1, 'The menu item class is the same.');
   }
 

@@ -461,9 +461,7 @@ function toolbar_menu_navigation_links(array $tree) {
 
     $element->options['attributes']['id'] = 'toolbar-link-' . $id;
     $element->options['attributes']['class'][] = 'toolbar-icon';
-    // @todo Change to use the plugin ID as class since titles might change.
-    //   https://www.drupal.org/node/2310365
-    $element->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(' ', '-', $definition['title']));
+    $element->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(array('.', ' ', '_'), array('-', '-', '-'), $definition['id']));
     $element->options['attributes']['title'] = String::checkPlain($link->getDescription());
   }
   return $tree;
