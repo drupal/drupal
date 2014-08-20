@@ -57,18 +57,19 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   /**
    * Adds a provider to the array of registered providers.
    *
-   * @param string $provider_id
-   *   Identifier of the provider.
    * @param \Drupal\Core\Authentication\AuthenticationProviderInterface $provider
    *   The provider object.
+   * @param string $id
+   *   Identifier of the provider.
    * @param int $priority
    *   The providers priority.
    */
-  public function addProvider($provider_id, AuthenticationProviderInterface $provider, $priority = 0) {
-    $provider_id = substr($provider_id, strlen('authentication.'));
+  public function addProvider(AuthenticationProviderInterface $provider, $id, $priority = 0) {
+    // Remove the 'authentication.' prefix from the provider ID.
+    $id = substr($id, 15);
 
-    $this->providers[$provider_id] = $provider;
-    $this->providerOrders[$priority][$provider_id] = $provider;
+    $this->providers[$id] = $provider;
+    $this->providerOrders[$priority][$id] = $provider;
     // Force the builders to be re-sorted.
     $this->sortedProviders = NULL;
   }

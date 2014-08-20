@@ -856,6 +856,8 @@ services:
       - { name: needs_destruction }
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
+    tags:
+      - { name: service_collector, tag: authentication_provider, call: addProvider }
   authentication_subscriber:
     class: Drupal\Core\EventSubscriber\AuthenticationSubscriber
     tags:
