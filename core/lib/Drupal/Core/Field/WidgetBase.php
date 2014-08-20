@@ -406,10 +406,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           // Separate violations by delta.
           $property_path = explode('.', $violation->getPropertyPath());
           $delta = array_shift($property_path);
-          // Violations at the ItemList level are not associated to any delta,
-          // we file them under $delta NULL.
-          $delta = is_numeric($delta) ? $delta : NULL;
-
           $violations_by_delta[$delta][] = $violation;
           $violation->arrayPropertyPath = $property_path;
         }
@@ -419,7 +415,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           // Pass violations to the main element:
           // - if this is a multiple-value widget,
           // - or if the violations are at the ItemList level.
-          if ($handles_multiple || $delta === NULL) {
+          if ($handles_multiple || !is_numeric($delta)) {
             $delta_element = $element;
           }
           // Otherwise, pass errors by delta to the corresponding sub-element.
