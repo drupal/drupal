@@ -46,7 +46,7 @@ class ContentTranslationOverviewAccess implements AccessInterface {
    *   A \Drupal\Core\Access\AccessInterface constant value.
    */
   public function access(Request $request, AccountInterface $account) {
-    $entity_type = $request->attributes->get('_entity_type_id');
+    $entity_type = $request->attributes->get('entity_type_id');
     if ($entity = $request->attributes->get($entity_type)) {
       // Get entity base info.
       $bundle = $entity->bundle();

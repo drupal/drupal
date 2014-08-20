@@ -201,8 +201,12 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
         // A new translation is not available in the translation metadata, hence
         // it should count as one more.
         $published = $new_translation;
-        foreach ($entity->translation as $translation) {
-          $published += $translation['status'];
+        // When creating a brand new translation, $entity->translation is not
+        // set.
+        if (!$new_translation) {
+          foreach ($entity->translation as $translation) {
+            $published += $translation['status'];
+          }
         }
         $enabled = $published > 1;
       }
@@ -467,7 +471,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     $form_controller = content_translation_form_controller($form_state);
     $entity = $form_controller->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
-    $form_state->setRedirect('content_translation.delete_' . $entity_type_id, array(
+    $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, array(
       $entity_type_id => $entity->id(),
       'language' => $form_controller->getFormLangcode($form_state),
     ));

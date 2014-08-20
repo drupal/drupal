@@ -40,8 +40,8 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $_entity_type_id = NULL, $language = NULL) {
-    $this->entity = $this->getRequest()->attributes->get($_entity_type_id);
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $language = NULL) {
+    $this->entity = $this->getRequest()->attributes->get($entity_type_id);
     $this->language = language_load($language);
     return parent::buildForm($form, $form_state);
   }

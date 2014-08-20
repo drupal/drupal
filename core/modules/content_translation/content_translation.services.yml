@@ -17,7 +17,7 @@ services:
 
   content_translation.manage_access:
     class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@language_manager']
     tags:
       - { name: access_check, applies_to: _access_content_translation_manage }
 

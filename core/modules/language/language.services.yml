@@ -17,3 +17,8 @@ services:
     tags:
       - { name: config.factory.override, priority: -254 }
       - { name: event_subscriber }
+  language_converter:
+    class: Drupal\language\LanguageConverter
+    arguments: ['@language_manager']
+    tags:
+      - { name: paramconverter }
