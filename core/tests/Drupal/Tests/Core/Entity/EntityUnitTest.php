@@ -250,7 +250,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * @covers ::load
-   * @covers ::getEntityTypeFromStaticClass
    *
    * Tests Entity::load() when called statically on a subclass of Entity.
    */
@@ -280,7 +279,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * @covers ::loadMultiple
-   * @covers ::getEntityTypeFromStaticClass
    *
    * Tests Entity::loadMultiple() when called statically on a subclass of
    * Entity.
@@ -312,7 +310,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * @covers ::create
-   * @covers ::getEntityTypeFromStaticClass
    */
   public function testCreate() {
     $this->setupTestLoad();

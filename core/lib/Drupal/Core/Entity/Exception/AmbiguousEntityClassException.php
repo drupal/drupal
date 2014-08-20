@@ -11,7 +11,6 @@ namespace Drupal\Core\Entity\Exception;
  * Exception thrown if multiple entity types exist for an entity class.
  *
  * @see hook_entity_info_alter()
- * @see \Drupal\Core\Entity\Entity::getEntityTypeFromStaticClass()
  */
 class AmbiguousEntityClassException extends \Exception {
 
