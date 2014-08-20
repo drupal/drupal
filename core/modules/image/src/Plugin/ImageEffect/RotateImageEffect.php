@@ -7,9 +7,9 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
+use Drupal\Component\Utility\Color;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\Core\Utility\Color;
 use Drupal\image\ConfigurableImageEffectBase;
 
 /**

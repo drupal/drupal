@@ -2,12 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Utility\Color.
+ * Definition of Drupal\Component\Utility\Color.
  */
 
-namespace Drupal\Core\Utility;
-
-use Drupal\Component\Utility\Unicode;
+namespace Drupal\Component\Utility;
 
 /**
  * Performs color conversions.
@@ -15,7 +13,7 @@ use Drupal\Component\Utility\Unicode;
 class Color {
 
   /**
-   * Validates whether a hexadecimal color value is syntatically correct.
+   * Validates whether a hexadecimal color value is syntactically correct.
    *
    * @param $hex
    *   The hexadecimal string to validate. May contain a leading '#'. May use
@@ -56,7 +54,7 @@ class Color {
     // Ignore '#' prefixes.
     $hex = ltrim($hex, '#');
 
-    // Convert shorhands like '#abc' to '#aabbcc'.
+    // Convert shorthands like '#abc' to '#aabbcc'.
     if (strlen($hex) == 3) {
       $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
     }

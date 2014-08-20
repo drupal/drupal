@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Utility\ColorTest.
+ * Contains \Drupal\Tests\Component\Utility\ColorTest.
  */
 
-namespace Drupal\Tests\Core\Utility;
+namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Core\Utility\Color;
+use Drupal\Component\Utility\Color;
 use Drupal\Tests\UnitTestCase;
 
 /**

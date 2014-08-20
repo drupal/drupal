@@ -5,6 +5,7 @@
  * Functions for form and batch generation and processing.
  */
 
+use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\SafeMarkup;
@@ -16,7 +17,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Utility\Color;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
