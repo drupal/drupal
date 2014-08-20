@@ -25,11 +25,11 @@ class CronAccessCheck implements AccessInterface {
    */
   public function access($key) {
     if ($key != \Drupal::state()->get('system.cron_key')) {
-      watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
+      \Drupal::logger('cron')->notice('Cron could not run because an invalid key was used.');
       return static::KILL;
     }
     elseif (\Drupal::state()->get('system.maintenance_mode')) {
-      watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
+      \Drupal::logger('cron')->notice('Cron could not run because the site is in maintenance mode.');
       return static::KILL;
     }
     return static::ALLOW;

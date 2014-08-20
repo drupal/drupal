@@ -35,7 +35,7 @@ class DbLogResourceTest extends RESTTestBase {
    */
   public function testWatchdog() {
     // Write a log message to the DB.
-    watchdog('rest', 'Test message');
+    $this->container->get('logger.channel.rest')->notice('Test message');
     // Get the ID of the written message.
     $id = db_query_range("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, array(':type' => 'rest'))
       ->fetchField();

@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -35,16 +36,26 @@ class ResourceRoutes extends RouteSubscriberBase{
   protected $config;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $manager
    *   The resource plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The configuration factory holding resource settings.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(ResourcePluginManager $manager, ConfigFactoryInterface $config) {
+  public function __construct(ResourcePluginManager $manager, ConfigFactoryInterface $config, LoggerInterface $logger) {
     $this->manager = $manager;
     $this->config = $config;
+    $this->logger = $logger;
   }
 
   /**
@@ -70,13 +81,13 @@ class ResourceRoutes extends RouteSubscriberBase{
 
           // Check that authentication providers are defined.
           if (empty($enabled_methods[$method]['supported_auth']) || !is_array($enabled_methods[$method]['supported_auth'])) {
-            watchdog('rest', 'At least one authentication provider must be defined for resource @id', array(':id' => $id), WATCHDOG_ERROR);
+            $this->logger->error('At least one authentication provider must be defined for resource @id', array(':id' => $id));
             continue;
           }
 
           // Check that formats are defined.
           if (empty($enabled_methods[$method]['supported_formats']) || !is_array($enabled_methods[$method]['supported_formats'])) {
-            watchdog('rest', 'At least one format must be defined for resource @id', array(':id' => $id), WATCHDOG_ERROR);
+            $this->logger->error('At least one format must be defined for resource @id', array(':id' => $id));
             continue;
           }
 

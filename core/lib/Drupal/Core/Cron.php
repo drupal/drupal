@@ -15,6 +15,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\SessionManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
+use Psr\Log\LoggerInterface;
 
 /**
  * The Drupal core Cron service.
@@ -64,6 +65,13 @@ class Cron implements CronInterface {
   protected $sessionManager;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -78,14 +86,17 @@ class Cron implements CronInterface {
    *    The current user.
    * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
    *   The session manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user, SessionManagerInterface $session_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user, SessionManagerInterface $session_manager, LoggerInterface $logger) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
     $this->state = $state;
     $this->currentUser = $current_user;
     $this->sessionManager = $session_manager;
+    $this->logger = $logger;
   }
 
   /**
@@ -112,7 +123,7 @@ class Cron implements CronInterface {
     // Try to acquire cron lock.
     if (!$this->lock->acquire('cron', 240.0)) {
       // Cron is still running normally.
-      watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
+      $this->logger->warning('Attempting to re-run cron while it is already running.');
     }
     else {
       $this->invokeCronHandlers();
@@ -143,7 +154,7 @@ class Cron implements CronInterface {
   protected function setCronLastTime() {
     // Record cron time.
     $this->state->set('system.cron_last', REQUEST_TIME);
-    watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
+    $this->logger->notice('Cron run completed.');
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Page\HtmlFragmentRendererInterface;
 use Drupal\Core\Page\HtmlPageRendererInterface;
@@ -60,6 +61,13 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
   protected $fragmentRenderer;
 
   /**
+   * The logger factory service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\ContentNegotiation $negotiation
@@ -74,13 +82,17 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The url generator.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The URL generator.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, HtmlFragmentRendererInterface $fragment_renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
+  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, HtmlFragmentRendererInterface $fragment_renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($title_resolver, $url_generator);
     $this->negotiation = $negotiation;
     $this->htmlPageRenderer = $renderer;
     $this->fragmentRenderer = $fragment_renderer;
     $this->stringTranslation = $string_translation;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -146,7 +158,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
     // @todo Remove dependency on the internal _system_path attribute:
     //   https://www.drupal.org/node/2293523.
     $system_path = $request->attributes->get('_system_path');
-    watchdog('access denied', $system_path, array(), WATCHDOG_WARNING);
+    $this->loggerFactory->get('access denied')->warning($system_path);
 
     $system_config = $this->container->get('config.factory')->get('system.site');
     $path = $this->container->get('path.alias_manager')->getPathByAlias($system_config->get('page.403'));
@@ -188,7 +200,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *   A response object.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', String::checkPlain($request->attributes->get('_system_path')), array(), WATCHDOG_WARNING);
+    $this->loggerFactory->get('page not found')->warning(String::checkPlain($request->attributes->get('_system_path')));
 
     // Check for and return a fast 404 page if configured.
     $config = \Drupal::config('system.performance');
@@ -276,7 +288,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       $number++;
     }
 
-    watchdog('php', '%type: !message in %function (line %line of %file).', $error, $error['severity_level']);
+    $this->loggerFactory->get('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionnaly in update.php.

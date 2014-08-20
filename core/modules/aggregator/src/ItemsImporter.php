@@ -10,6 +10,7 @@ namespace Drupal\aggregator;
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Defines an importer of aggregator items.
@@ -45,6 +46,13 @@ class ItemsImporter implements ItemsImporterInterface {
   protected $config;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs an Importer object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -55,12 +63,15 @@ class ItemsImporter implements ItemsImporterInterface {
    *   The aggregator parser plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $processor_manager
    *   The aggregator processor plugin manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, LoggerInterface $logger) {
     $this->fetcherManager = $fetcher_manager;
     $this->processorManager = $processor_manager;
     $this->parserManager = $parser_manager;
     $this->config = $config_factory->get('aggregator.settings');
+    $this->logger = $logger;
   }
 
   /**
@@ -118,10 +129,10 @@ class ItemsImporter implements ItemsImporterInterface {
 
           // Log if feed URL has changed.
           if ($feed->getUrl() != $feed_url) {
-            watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->getUrl()));
+            $this->logger->notice('Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->getUrl()));
           }
 
-          watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
+          $this->logger->notice('There is new syndicated content from %site.', array('%site' => $feed->label()));
 
           // If there are items on the feed, let enabled processors process them.
           if (!empty($feed->items)) {

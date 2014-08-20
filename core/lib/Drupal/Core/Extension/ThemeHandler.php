@@ -14,6 +14,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteBuilder;
+use Psr\Log\LoggerInterface;
 
 /**
  * Default theme handler using the config system for enabled/disabled themes.
@@ -80,6 +81,13 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $infoParser;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * The route builder to rebuild the routes if a theme is enabled.
    *
    * @var \Drupal\Core\Routing\RouteBuilder
@@ -113,6 +121,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   The info parser to parse the theme.info.yml files.
    * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
    *   The CSS asset collection optimizer service.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
    *   (optional) The config installer to install configuration. This optional
    *   to allow the theme handler to work before Drupal is installed and has a
@@ -122,11 +132,12 @@ class ThemeHandler implements ThemeHandlerInterface {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
     $this->infoParser = $info_parser;
+    $this->logger = $logger;
     $this->cssCollectionOptimizer = $css_collection_optimizer;
     $this->configInstaller = $config_installer;
     $this->routeBuilder = $route_builder;
@@ -268,7 +279,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       $themes_enabled[] = $key;
 
       // Record the fact that it was enabled.
-      watchdog('system', '%theme theme enabled.', array('%theme' => $key), WATCHDOG_INFO);
+      $this->logger->info('%theme theme enabled.', array('%theme' => $key));
     }
 
     $this->cssCollectionOptimizer->deleteAll();

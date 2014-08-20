@@ -110,7 +110,8 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->cssCollectionOptimizer = $this->getMockBuilder('\Drupal\Core\Asset\CssCollectionOptimizer') //\Drupal\Core\Asset\AssetCollectionOptimizerInterface');
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $this->cssCollectionOptimizer, $this->configInstaller, $this->routeBuilder, $this->extensionDiscovery);
+    $logger = $this->getMock('Psr\Log\LoggerInterface');
+    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->routeBuilder, $this->extensionDiscovery);
 
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheBins($cache_backend);

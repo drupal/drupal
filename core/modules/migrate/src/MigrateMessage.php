@@ -26,7 +26,8 @@ class MigrateMessage implements MigrateMessageInterface {
    * {@inheritdoc}
    */
   public function display($message, $type = 'status') {
-    watchdog('migrate', $message, array(), isset($this->map[$type]) ? $this->map[$type] : WATCHDOG_NOTICE);
+    $type = isset($this->map[$type]) ? $this->map[$type] : WATCHDOG_NOTICE;
+    \Drupal::logger('migrate')->log($type, $message);
   }
 
 }

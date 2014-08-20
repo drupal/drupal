@@ -134,6 +134,11 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected $httpKernel;
 
+  /**
+   * @var \PHPUnit_Framework_MockObject_MockObject|\Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
   protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
@@ -162,8 +167,9 @@ abstract class FormTestBase extends UnitTestCase {
     $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->requestStack = new RequestStack();
     $this->requestStack->push($this->request);
+    $this->logger = $this->getMock('Drupal\Core\Logger\LoggerChannelInterface');
     $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
-      ->setConstructorArgs(array($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken))
+      ->setConstructorArgs(array($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger))
       ->setMethods(array('drupalSetMessage'))
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')

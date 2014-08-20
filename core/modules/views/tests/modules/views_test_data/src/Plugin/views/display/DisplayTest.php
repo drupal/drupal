@@ -96,7 +96,7 @@ class DisplayTest extends DisplayPluginBase {
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
-    watchdog('views', $form_state->getValue('test_option'));
+    \Drupal::logger('views')->notice($form_state->getValue('test_option'));
     switch ($form_state['section']) {
       case 'test_option':
         if (!trim($form_state->getValue('test_option'))) {

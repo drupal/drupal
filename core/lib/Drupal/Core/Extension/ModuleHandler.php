@@ -901,7 +901,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         $this->invoke($module, 'install');
 
         // Record the fact that it was installed.
-        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
+        \Drupal::logger('system')->info('%module module installed.', array('%module' => $module));
       }
     }
 
@@ -1028,7 +1028,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // @see https://drupal.org/node/2208429
       \Drupal::service('theme_handler')->refreshInfo();
 
-      watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
+      \Drupal::logger('system')->info('%module module uninstalled.', array('%module' => $module));
 
       $schema_store->delete($module);
     }

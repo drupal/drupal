@@ -29,13 +29,14 @@ class ExceptionControllerTest extends UnitTestCase {
     $title_resolver = $this->getMock('Drupal\Core\Controller\TitleResolverInterface');
     $translation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
     $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $logger_factory = $this->getMock('Drupal\Core\Logger\LoggerChannelFactoryInterface');
 
     $content_negotiation = $this->getMock('Drupal\Core\ContentNegotiation');
     $content_negotiation->expects($this->any())
       ->method('getContentType')
       ->will($this->returnValue('html'));
 
-    $exception_controller = new ExceptionController($content_negotiation, $title_resolver, $html_page_renderer, $html_fragment_renderer, $translation, $url_generator);
+    $exception_controller = new ExceptionController($content_negotiation, $title_resolver, $html_page_renderer, $html_fragment_renderer, $translation, $url_generator, $logger_factory);
     $response = $exception_controller->execute($flat_exception, new Request());
     $this->assertEquals($response->getStatusCode(), 405, 'HTTP status of response is correct.');
     $this->assertEquals($response->getContent(), 'Method Not Allowed', 'HTTP response body is correct.');

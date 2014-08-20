@@ -404,7 +404,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function getContainer() {
     if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
-      watchdog('DrupalKernel', 'Container cannot be written to disk');
+      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be written to disk');
     }
     return $this->container;
   }

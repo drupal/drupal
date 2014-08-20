@@ -13,6 +13,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -37,6 +38,13 @@ class FormValidator implements FormValidatorInterface {
   protected $requestStack;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new FormValidator.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -45,11 +53,14 @@ class FormValidator implements FormValidatorInterface {
    *   The string translation service.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token) {
+  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger) {
     $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
     $this->csrfToken = $csrf_token;
+    $this->logger = $logger;
   }
 
   /**
@@ -319,7 +330,7 @@ class FormValidator implements FormValidatorInterface {
         foreach ($value as $v) {
           if (!isset($options[$v])) {
             $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
-            $this->watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
+            $this->logger->error('Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']));
           }
         }
       }
@@ -338,7 +349,7 @@ class FormValidator implements FormValidatorInterface {
       }
       elseif (!isset($options[$elements['#value']])) {
         $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
-        $this->watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
+        $this->logger->error('Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']));
       }
     }
   }
@@ -407,13 +418,6 @@ class FormValidator implements FormValidatorInterface {
     }
     // Store the errors for this element on the element directly.
     $elements['#errors'] = $form_state->getError($elements);
-  }
-
-  /**
-   * Wraps watchdog().
-   */
-  protected function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
-    watchdog($type, $message, $variables, $severity, $link);
   }
 
 }

@@ -29,8 +29,9 @@ class PagerTest extends WebTestBase {
     parent::setUp();
 
     // Insert 300 log messages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
     for ($i = 0; $i < 300; $i++) {
-      watchdog('pager_test', $this->randomString(), array(), WATCHDOG_DEBUG);
+      $logger->debug($this->randomString());
     }
 
     $this->admin_user = $this->drupalCreateUser(array(

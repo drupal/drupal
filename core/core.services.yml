@@ -136,7 +136,7 @@ services:
     arguments: ['@typed_data_manager']
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager', '@logger.channel.cron']
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
     arguments: ['@config.factory']
@@ -150,7 +150,7 @@ services:
     arguments: ['@form_validator', '@form_submitter', '@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@request_stack', '@class_resolver', '@?csrf_token', '@?http_kernel']
   form_validator:
     class: Drupal\Core\Form\FormValidator
-    arguments: ['@request_stack', '@string_translation', '@csrf_token']
+    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form']
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter
     arguments: ['@request_stack', '@url_generator']
@@ -183,6 +183,16 @@ services:
     factory_method: get
     factory_service: logger.factory
     arguments: ['image']
+  logger.channel.cron:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['cron']
+  logger.channel.form:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['form']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
 
@@ -254,7 +264,7 @@ services:
     arguments: ['%container.modules%', '@cache.bootstrap']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@asset.css.collection_optimizer', '@config.installer', '@router.builder']
+    arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager']
@@ -698,7 +708,7 @@ services:
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
-    arguments: ['@content_negotiation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer', '@string_translation', '@url_generator']
+    arguments: ['@content_negotiation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer', '@string_translation', '@url_generator', '@logger.factory']
     calls:
       - [setContainer, ['@service_container']]
   exception_listener:

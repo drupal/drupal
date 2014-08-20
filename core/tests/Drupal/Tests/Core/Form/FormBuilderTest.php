@@ -454,8 +454,4 @@ namespace {
 
   function test_form_id_custom_submit(array &$form, FormStateInterface $form_state) {
   }
-  // @todo Remove once watchdog() is removed.
-  if (!defined('WATCHDOG_ERROR')) {
-    define('WATCHDOG_ERROR', 3);
-  }
 }
