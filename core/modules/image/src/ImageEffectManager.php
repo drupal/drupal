@@ -13,6 +13,14 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages image effect plugins.
+ *
+ * @see hook_image_effect_info_alter()
+ * @see \Drupal\image\Annotation\ImageEffect
+ * @see \Drupal\image\ConfigurableImageEffectInterface
+ * @see \Drupal\image\ConfigurableImageEffectBase
+ * @see \Drupal\image\ImageEffectInterface
+ * @see \Drupal\image\ImageEffectBase
+ * @see plugin_api
  */
 class ImageEffectManager extends DefaultPluginManager {
 

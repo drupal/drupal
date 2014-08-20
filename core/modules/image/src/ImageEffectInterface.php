@@ -13,6 +13,13 @@ use Drupal\Core\Image\ImageInterface;
 
 /**
  * Defines the interface for image effects.
+ *
+ * @see \Drupal\image\Annotation\ImageEffect
+ * @see \Drupal\image\ImageEffectBase
+ * @see \Drupal\image\ConfigurableImageEffectInterface
+ * @see \Drupal\image\ConfigurableImageEffectBase
+ * @see \Drupal\image\ImageEffectManager
+ * @see plugin_api
  */
 interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
 

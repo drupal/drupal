@@ -15,6 +15,11 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * An image toolkit operation plugin provides a self-contained image
  * manipulation routine, for a specific image toolkit. Examples of image
  * toolkit operations are scaling, cropping, rotating, etc.
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationBase
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationManager
+ * @see plugin_api
  */
 interface ImageToolkitOperationInterface extends PluginInspectionInterface {
 

@@ -12,6 +12,14 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Provides a base class for image toolkit operation plugins.
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationManager
+ * @see plugin_api
+ */
 abstract class ImageToolkitOperationBase extends PluginBase implements ImageToolkitOperationInterface {
 
   /**

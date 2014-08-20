@@ -12,6 +12,14 @@ use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Provides a base class for image toolkit plugins.
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkit
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitManager
+ * @see plugin_api
+ */
 abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterface {
 
   /**

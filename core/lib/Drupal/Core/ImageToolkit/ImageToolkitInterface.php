@@ -43,6 +43,11 @@ use Drupal\Core\Image\ImageInterface;
  *
  * An image toolkit provides common image file manipulations like scaling,
  * cropping, and rotating.
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkit
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitBase
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitManager
+ * @see plugin_api
  */
 interface ImageToolkitInterface extends PluginInspectionInterface {
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\image\Annotation\ImageEffectBase.
+ * Contains \Drupal\image\ImageEffectBase.
  */
 
 namespace Drupal\image;
@@ -14,6 +14,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for image effects.
+ *
+ * @see \Drupal\image\Annotation\ImageEffect
+ * @see \Drupal\image\ImageEffectInterface
+ * @see \Drupal\image\ConfigurableImageEffectInterface
+ * @see \Drupal\image\ConfigurableImageEffectBase
+ * @see \Drupal\image\ImageEffectManager
+ * @see plugin_api
  */
 abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
 

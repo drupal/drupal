@@ -12,9 +12,23 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Plugin annotation object for the image toolkit operation plugin.
  *
- * @Annotation
+ * An image toolkit operation plugin provides a self-contained image
+ * manipulation routine, for a specific image toolkit. Examples of image
+ * toolkit operations are scaling, cropping, rotating, etc.
  *
+ * Plugin namespace: Plugin\ImageToolkit\Operation
+ *
+ * For a working example, see
+ * \Drupal\system\Plugin\ImageToolkit\Operation\gd\Crop
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkit
+ * @see \Drupal\image\Annotation\ImageEffect
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationBase
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationManager
+ * @see plugin_api
+ *
+ * @Annotation
  */
 class ImageToolkitOperation extends Plugin {
 

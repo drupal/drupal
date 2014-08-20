@@ -15,7 +15,12 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Psr\Log\LoggerInterface;
 
 /**
- * Manages toolkit plugins.
+ * Manages image toolkit plugins.
+ *
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkit
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitBase
+ * @see plugin_api
  */
 class ImageToolkitManager extends DefaultPluginManager {
 

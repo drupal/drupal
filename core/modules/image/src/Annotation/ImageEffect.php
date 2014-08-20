@@ -12,7 +12,19 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an image effect annotation object.
  *
+ * Plugin Namespace: Plugin\ImageEffect
+ *
+ * For a working example, see
+ * \Drupal\image\Plugin\ImageEffect\ResizeImageEffect
+ *
  * @see hook_image_effect_info_alter()
+ * @see \Drupal\image\ConfigurableImageEffectInterface
+ * @see \Drupal\image\ConfigurableImageEffectBase
+ * @see \Drupal\image\ImageEffectInterface
+ * @see \Drupal\image\ImageEffectBase
+ * @see \Drupal\image\ImageEffectManager
+ * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation
+ * @see plugin_api
  *
  * @Annotation
  */
