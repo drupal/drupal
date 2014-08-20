@@ -346,9 +346,9 @@ class ExtensionDiscovery {
       $type = FALSE;
       $file = $fileinfo->openFile('r');
       while (!$type && !$file->eof()) {
-        preg_match('@^type:\s*(\w+)\s*$@', $file->fgets(), $matches);
-        if (isset($matches[1])) {
-          $type = $matches[1];
+        preg_match('@^type:\s*(\'|")?(\w+)\1?\s*$@', $file->fgets(), $matches);
+        if (isset($matches[2])) {
+          $type = $matches[2];
         }
       }
       if (empty($type)) {
