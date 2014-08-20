@@ -301,21 +301,32 @@ class FormTest extends WebTestBase {
 
     // Posting without any values should throw validation errors.
     $this->drupalPostForm(NULL, array(), 'Submit');
-    $this->assertNoText(t($error, array('!name' => $form['select']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['select_required']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['select_optional']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['empty_value']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['empty_value_one']['#title'])));
-    $this->assertText(t($error, array('!name' => $form['no_default']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['no_default_optional']['#title'])));
-    $this->assertText(t($error, array('!name' => $form['no_default_empty_option']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['no_default_empty_option_optional']['#title'])));
-    $this->assertText(t($error, array('!name' => $form['no_default_empty_value']['#title'])));
-    $this->assertText(t($error, array('!name' => $form['no_default_empty_value_one']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['no_default_empty_value_optional']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['multiple']['#title'])));
-    $this->assertNoText(t($error, array('!name' => $form['multiple_no_default']['#title'])));
-    $this->assertText(t($error, array('!name' => $form['multiple_no_default_required']['#title'])));
+    $no_errors = array(
+        'select',
+        'select_required',
+        'select_optional',
+        'empty_value',
+        'empty_value_one',
+        'no_default_optional',
+        'no_default_empty_option_optional',
+        'no_default_empty_value_optional',
+        'multiple',
+        'multiple_no_default',
+    );
+    foreach ($no_errors as $key) {
+      $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+    }
+
+    $expected_errors = array(
+        'no_default',
+        'no_default_empty_option',
+        'no_default_empty_value',
+        'no_default_empty_value_one',
+        'multiple_no_default_required',
+    );
+    foreach ($expected_errors as $key) {
+      $this->assertText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+    }
 
     // Post values for required fields.
     $edit = array(

@@ -182,7 +182,7 @@ function template_preprocess_file_upload_help(&$variables) {
     $descriptions[] = t('!size limit.', array('!size' => format_size($upload_validators['file_validate_size'][0])));
   }
   if (isset($upload_validators['file_validate_extensions'])) {
-    $descriptions[] = t('Allowed types: !extensions.', array('!extensions' => String::checkPlain($upload_validators['file_validate_extensions'][0])));
+    $descriptions[] = t('Allowed types: @extensions.', array('@extensions' => $upload_validators['file_validate_extensions'][0]));
   }
 
   if (isset($upload_validators['file_validate_image_resolution'])) {

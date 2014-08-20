@@ -118,14 +118,11 @@ class Tasks extends InstallTasks {
         $this->pass(t('Database is encoded in UTF-8'));
       }
       else {
-        $replacements = array(
+        $this->fail(t('The %driver database must use %encoding encoding to work with Drupal. Recreate the database with %encoding encoding. See !link for more details.', array(
           '%encoding' => 'UTF8',
           '%driver' => $this->name(),
           '!link' => '<a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a>'
-        );
-        $text  = 'The %driver database must use %encoding encoding to work with Drupal.';
-        $text .= 'Recreate the database with %encoding encoding. See !link for more details.';
-        $this->fail(t($text, $replacements));
+        )));
       }
     }
     catch (\Exception $e) {

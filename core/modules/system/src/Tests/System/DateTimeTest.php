@@ -112,7 +112,7 @@ class DateTimeTest extends WebTestBase {
     $this->clickLink(t('Delete'));
     $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', array(), t('Remove'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), 'Correct page redirection.');
-    $this->assertText(t('Removed date format ' . $name), 'Custom date format removed.');
+    $this->assertRaw(t('Removed date format %format.', array('%format' => $name)), 'Custom date format removed.');
 
     // Make sure the date does not exist in config.
     $date_format = entity_load('date_format', $date_format_id);
