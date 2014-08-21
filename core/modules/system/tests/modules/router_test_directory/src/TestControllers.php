@@ -56,7 +56,7 @@ class TestControllers {
   public function test9($uid) {
     $text = 'Route not matched.';
     try {
-      $match = \Drupal::service('router')->match('/user/' . $uid);
+      $match = \Drupal::service('router.no_access_checks')->match('/user/' . $uid);
       if (isset($match['user']) && $match['user'] instanceof UserInterface) {
         $text = sprintf('User route "%s" was matched.', $match[RouteObjectInterface::ROUTE_NAME]);
       }

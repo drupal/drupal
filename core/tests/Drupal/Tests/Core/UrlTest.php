@@ -61,7 +61,7 @@ class UrlTest extends UnitTestCase {
 
     $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $container = new ContainerBuilder();
-    $container->set('router', $this->router);
+    $container->set('router.no_access_checks', $this->router);
     $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);
   }

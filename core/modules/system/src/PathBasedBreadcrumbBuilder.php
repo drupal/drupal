@@ -20,6 +20,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -207,6 +208,9 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       return NULL;
     }
     catch (MethodNotAllowedException $e) {
+      return NULL;
+    }
+    catch (AccessDeniedHttpException $e) {
       return NULL;
     }
   }

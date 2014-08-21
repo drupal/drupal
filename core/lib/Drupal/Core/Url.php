@@ -103,7 +103,8 @@ class Url {
    *   A path (e.g. 'node/1', 'http://drupal.org').
    *
    * @return static
-   *   An Url object.
+   *   An Url object. Warning: the object is created even if the current user
+   *   can not access the path.
    *
    * @throws \Drupal\Core\Routing\MatchingRouteNotFoundException
    *   Thrown when the path cannot be matched.
@@ -123,7 +124,9 @@ class Url {
     else {
       // Look up the route name and parameters used for the given path.
       try {
-        $result = \Drupal::service('router')->match('/' . $path);
+        // We use the router without access checks because URL objects might be
+        // created and stored for different users.
+        $result = \Drupal::service('router.no_access_checks')->match('/' . $path);
       }
       catch (ResourceNotFoundException $e) {
         throw new MatchingRouteNotFoundException(sprintf('No matching route could be found for the path "%s"', $path), 0, $e);
@@ -141,14 +144,18 @@ class Url {
    *   A request object.
    *
    * @return static
-   *   A Url object.
+   *   A Url object. Warning: the object is created even if the current user
+   *   would get an access denied running the same request via the normal page
+   *   flow.
    *
    * @throws \Drupal\Core\Routing\MatchingRouteNotFoundException
    *   Thrown when the request cannot be matched.
    */
   public static function createFromRequest(Request $request) {
     try {
-      $result = \Drupal::service('router')->matchRequest($request);
+      // We use the router without access checks because URL objects might be
+      // created and stored for different users.
+      $result = \Drupal::service('router.no_access_checks')->matchRequest($request);
     }
     catch (ResourceNotFoundException $e) {
       throw new MatchingRouteNotFoundException(sprintf('No matching route could be found for the request: %s', $request), 0, $e);

@@ -14,6 +14,7 @@ use Drupal\language\LanguageNegotiationMethodBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
@@ -110,7 +111,7 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
    * @return bool
    *   TRUE if the path is administrative, FALSE otherwise.
    */
-  public function isAdminPath(Request $request) {
+  protected function isAdminPath(Request $request) {
     $result = FALSE;
     if ($request && $this->adminContext) {
       // If called from an event subscriber, the request may not have the route
@@ -125,6 +126,9 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
           $attributes = $this->router->match('/' . $path);
         }
         catch (ResourceNotFoundException $e) {
+          return FALSE;
+        }
+        catch (AccessDeniedHttpException $e) {
           return FALSE;
         }
         $route_object = $attributes[RouteObjectInterface::ROUTE_OBJECT];

@@ -431,12 +431,15 @@ services:
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler']
+  router:
+    class: Drupal\Core\Routing\AccessAwareRouter
+    arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
   router.dynamic:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']
     tags:
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer }
-  router:
+  router.no_access_checks:
     class: Symfony\Cmf\Component\Routing\ChainRouter
     calls:
       - [setContext, ['@router.request_context']]
@@ -490,7 +493,7 @@ services:
     arguments: ['@config.factory']
   path.validator:
     class: Drupal\Core\Path\PathValidator
-    arguments: ['@router', '@router.route_provider', '@request_stack', '@access_manager', '@current_user']
+    arguments: ['@router', '@router.route_provider', '@request_stack']
 
 # The argument to the hashing service defined in services.yml, to the
 # constructor of PhpassHashedPassword is the log2 number of iterations for
@@ -633,13 +636,6 @@ services:
     arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver', '@request_stack']
     calls:
       - [setContainer, ['@service_container']]
-  access_subscriber:
-    class: Drupal\Core\EventSubscriber\AccessSubscriber
-    arguments: ['@access_manager', '@current_user']
-    calls:
-      - [setCurrentUser, ['@?current_user']]
-    tags:
-      - { name: event_subscriber }
   access_route_subscriber:
     class: Drupal\Core\EventSubscriber\AccessRouteSubscriber
     tags:

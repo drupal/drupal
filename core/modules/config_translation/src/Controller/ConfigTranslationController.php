@@ -12,13 +12,10 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
@@ -167,15 +164,7 @@ class ConfigTranslationController extends ControllerBase {
 
         // Check access for the path/route for editing, so we can decide to
         // include a link to edit or not.
-        $route_request = $this->getRequestForPath($request, $mapper->getBasePath());
-        $edit_access = FALSE;
-        if (!empty($route_request)) {
-          $route_name = $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-          // Note that the parameters don't really matter here since we're
-          // passing in the request which already has the upcast attributes.
-          $parameters = array();
-          $edit_access = $this->accessManager->checkNamedRoute($route_name, $parameters, $this->account, $route_request);
-        }
+        $edit_access = $this->accessManager->checkNamedRoute($mapper->getBaseRouteName(), $request->attributes->get('_raw_variables')->all(), $this->account);
 
         // Build list of operations.
         $operations = array();
@@ -226,37 +215,6 @@ class ConfigTranslationController extends ControllerBase {
       );
     }
     return $page;
-  }
-
-  /**
-   * Matches a path in the router.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   Page request object.
-   * @param string $path
-   *   Path to look up.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request|null
-   *   A populated request object or NULL if the patch could not be matched.
-   */
-  protected function getRequestForPath(Request $request, $path) {
-    // @todo Use RequestHelper::duplicate once https://drupal.org/node/2090293
-    //   is fixed.
-    $route_request = Request::create($request->getBaseUrl() . '/' . $path);
-    // Find the system path by resolving aliases, language prefix, etc.
-    $processed = $this->pathProcessor->processInbound($path, $route_request);
-    $route_request->attributes->set('_system_path', $processed);
-    // Attempt to match this path to provide a fully built request.
-    try {
-      $route_request->attributes->add($this->router->matchRequest($route_request));
-      return $route_request;
-    }
-    catch (ParamNotConvertedException $e) {
-      return NULL;
-    }
-    catch (ResourceNotFoundException $e) {
-      return NULL;
-    }
   }
 
 }
