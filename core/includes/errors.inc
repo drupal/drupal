@@ -157,7 +157,12 @@ function _drupal_log_error($error, $fatal = FALSE) {
     $number++;
   }
 
-  \Drupal::logger('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+  // Only call the logger if there is a logger factory available. This can occur
+  // if there is an error while rebuilding the container or during the
+  // installer.
+  if (\Drupal::hasService('logger.factory')) {
+    \Drupal::logger('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+  }
 
   if (PHP_SAPI === 'cli') {
     if ($fatal) {
