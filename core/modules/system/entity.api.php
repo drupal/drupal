@@ -564,8 +564,12 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *
  * @param \Drupal\Core\Session\AccountInterface $account
  *    The account trying to access the entity.
- * @param string $langcode
- *    The code of the language $entity is accessed in.
+ * @param array $context
+ *    An associative array of additional context values. By default it contains
+ *    language:
+ *    - langcode - the current language code.
+ * @param string $entity_bundle
+ *    The entity bundle name.
  *
  * @return bool|null
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
@@ -577,7 +581,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *
  * @ingroup entity_api
  */
-function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
+function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   return NULL;
 }
 
@@ -586,8 +590,12 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *
  * @param \Drupal\Core\Session\AccountInterface $account
  *    The account trying to access the entity.
- * @param string $langcode
- *    The code of the language $entity is accessed in.
+ * @param array $context
+ *    An associative array of additional context values. By default it contains
+ *    language:
+ *    - langcode - the current language code.
+ * @param string $entity_bundle
+ *    The entity bundle name.
  *
  * @return bool|null
  *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
@@ -599,7 +607,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
+function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   return NULL;
 }
 

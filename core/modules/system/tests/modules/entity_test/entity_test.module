@@ -487,13 +487,13 @@ function entity_test_entity_test_access(EntityInterface $entity, $operation, Acc
 /**
  * Implements hook_entity_create_access().
  */
-function entity_test_entity_create_access(AccountInterface $account, $langcode) {
+function entity_test_entity_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_create_access', TRUE);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_create_access().
  */
-function entity_test_entity_test_create_access(AccountInterface $account, $langcode) {
+function entity_test_entity_test_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);
 }

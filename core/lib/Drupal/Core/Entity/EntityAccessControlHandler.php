@@ -220,8 +220,8 @@ class EntityAccessControlHandler extends EntityControllerBase implements EntityA
     // - No modules say to deny access.
     // - At least one module says to grant access.
     $access = array_merge(
-      $this->moduleHandler()->invokeAll('entity_create_access', array($account, $context['langcode'])),
-      $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', array($account, $context['langcode']))
+      $this->moduleHandler()->invokeAll('entity_create_access', array($account, $context, $entity_bundle)),
+      $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', array($account, $context, $entity_bundle))
     );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
