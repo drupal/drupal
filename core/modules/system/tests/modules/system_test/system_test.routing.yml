@@ -75,5 +75,7 @@ system_test.shutdown_functions:
 
 system_test.configure:
   path: '/system-test/configure/{foo}'
+  defaults:
+    _title_callback: '\Drupal\system_test\Controller\SystemTestController::configureTitle'
   requirements:
     _access: 'TRUE'

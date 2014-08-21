@@ -38,6 +38,6 @@ class ModulesListFormWebTest extends WebTestBase {
     $this->assertResponse('200');
 
     // Check that system_test's configure link was rendered correctly.
-    $this->assertLinkByHref('configure/bar');
+    $this->assertFieldByXPath("//a[contains(@href, '/system-test/configure/bar') and @title='Bar.bar']");
   }
 }

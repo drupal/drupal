@@ -91,4 +91,16 @@ class SystemTestController extends ControllerBase {
     }
   }
 
+  /**
+   * Returns the title for system_test.info.yml's configure route.
+   *
+   * @param string $foo
+   *   Any string for the {foo} slug.
+   *
+   * @return string
+   */
+  public function configureTitle($foo) {
+    return 'Bar.' . $foo;
+  }
+
 }

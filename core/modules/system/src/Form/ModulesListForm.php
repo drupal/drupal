@@ -288,6 +288,7 @@ class ModulesListForm extends FormBase {
           $request->attributes->set('_route_name', $module->info['configure']);
           $route_object = $this->routeProvider->getRouteByName($module->info['configure']);
           $request->attributes->set('_route', $route_object);
+          $request->attributes->add($route_parameters);
           $description = $this->titleResolver->getTitle($request, $route_object);
         }
 
