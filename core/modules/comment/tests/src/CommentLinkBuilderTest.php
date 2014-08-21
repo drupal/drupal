@@ -62,7 +62,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Prepares mocks for the test.
    */
-  public function setUp() {
+  protected function setUp() {
     $this->commentManager = $this->getMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
