@@ -8,7 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;

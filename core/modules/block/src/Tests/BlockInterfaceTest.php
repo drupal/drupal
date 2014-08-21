@@ -51,7 +51,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
       'display_message' => 'no message set',
     );
     // Initial configuration of the block at construction time.
-    /** @var $display_block \Drupal\block\BlockPluginInterface */
+    /** @var $display_block \Drupal\Core\Block\BlockPluginInterface */
     $display_block = $manager->createInstance('test_block_instantiation', $configuration);
     $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block was configured correctly.');
 

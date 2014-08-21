@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\block\Tests\Plugin\views\display\BlockTest.
+ * Contains \Drupal\views\Tests\Plugin\views\display\BlockTest.
  */
 
-namespace Drupal\block\Tests\Plugin\views\display;
+namespace Drupal\views\Tests\Plugin\views\display;
 
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\views\display\Block
+ * @coversDefaultClass \Drupal\views\Plugin\views\display\Block
  * @group block
  */
 class BlockTest extends UnitTestCase {
@@ -32,7 +32,7 @@ class BlockTest extends UnitTestCase {
   /**
    * The tested block display plugin.
    *
-   * @var \Drupal\block\Plugin\views\display\Block|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\views\display\Block|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $blockDisplay;
 
@@ -51,7 +51,7 @@ class BlockTest extends UnitTestCase {
       ->with('block_1')
       ->will($this->returnValue(TRUE));
 
-    $this->blockDisplay = $this->executable->display_handler = $this->getMockBuilder('Drupal\block\Plugin\views\display\Block')
+    $this->blockDisplay = $this->executable->display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\Block')
       ->disableOriginalConstructor()
       ->setMethods(NULL)
       ->getMock();

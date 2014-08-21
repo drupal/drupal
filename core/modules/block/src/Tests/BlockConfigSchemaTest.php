@@ -47,7 +47,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
   /**
    * The block manager.
    *
-   * @var \Drupal\block\BlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 

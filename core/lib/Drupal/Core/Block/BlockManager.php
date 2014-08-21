@@ -2,16 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockManager.
+ * Contains \Drupal\Core\Block\BlockManager.
  */
 
-namespace Drupal\block;
+namespace Drupal\Core\Block;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -19,7 +18,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @todo Add documentation to this class.
  *
- * @see \Drupal\block\BlockPluginInterface
+ * @see \Drupal\Core\Block\BlockPluginInterface
  */
 class BlockManager extends DefaultPluginManager implements BlockManagerInterface {
 
@@ -34,7 +33,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   protected $moduleData;
 
   /**
-   * Constructs a new \Drupal\block\BlockManager object.
+   * Constructs a new \Drupal\Core\Block\BlockManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -43,15 +42,12 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The translation manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation) {
-    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\block\Annotation\Block');
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\Annotation\Block');
 
     $this->alterInfo('block');
     $this->setCacheBackend($cache_backend, 'block_plugins');
-    $this->stringTranslation = $string_translation;
   }
 
   /**

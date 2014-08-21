@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockPluginInterface.
+ * Contains \Drupal\Core\Block\BlockPluginInterface.
  */
 
-namespace Drupal\block;
+namespace Drupal\Core\Block;
 
 use Drupal\Component\Plugin\Context\ContextInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
@@ -109,8 +109,8 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @see \Drupal\block\BlockPluginInterface::blockForm()
-   * @see \Drupal\block\BlockPluginInterface::blockSubmit()
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockForm()
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockSubmit()
    */
   public function blockValidate($form, FormStateInterface $form_state);
 
@@ -126,8 +126,8 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @see \Drupal\block\BlockPluginInterface::blockForm()
-   * @see \Drupal\block\BlockPluginInterface::blockValidate()
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockForm()
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockValidate()
    */
   public function blockSubmit($form, FormStateInterface $form_state);
 

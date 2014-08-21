@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\Annotation\Block.
+ * Contains \Drupal\Core\Block\Annotation\Block.
  */
 
-namespace Drupal\block\Annotation;
+namespace Drupal\Core\Block\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 

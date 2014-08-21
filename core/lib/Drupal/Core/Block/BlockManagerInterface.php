@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockManagerInterface.
+ * Contains \Drupal\Core\Block\BlockManagerInterface.
  */
 
-namespace Drupal\block;
+namespace Drupal\Core\Block;
 
 use Drupal\Core\Plugin\Context\ContextAwarePluginManagerInterface;
 

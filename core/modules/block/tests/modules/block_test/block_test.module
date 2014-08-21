@@ -5,7 +5,7 @@
  *   Provide test blocks.
  */
 
-use Drupal\block\BlockPluginInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 
 /**
  * Implements hook_block_alter().

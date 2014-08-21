@@ -7,7 +7,7 @@
 
 namespace Drupal\block;
 
-use Drupal\block\BlockManagerInterface;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
@@ -50,7 +50,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   /**
    * The block manager.
    *
-   * @var \Drupal\block\BlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 
@@ -61,7 +61,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, BlockManagerInterface $block_manager) {

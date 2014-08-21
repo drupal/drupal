@@ -2,17 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display\Block.
- * Definition of Drupal\block\Plugin\views\display\Block.
+ * Contains \Drupal\views\Plugin\views\display\Block.
  */
 
-namespace Drupal\block\Plugin\views\display;
+namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\Block\ViewsBlock;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Views;
 
 /**
  * The plugin that handles a block.

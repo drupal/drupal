@@ -7,7 +7,7 @@
 
 namespace Drupal\shortcut\Plugin\Block;
 
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 
 /**
  * Provides a 'Shortcut' block.

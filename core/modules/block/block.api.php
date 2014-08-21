@@ -17,14 +17,14 @@
  *
  * To define a block in a module you need to:
  * - Define a Block plugin by creating a new class that implements the
- *   \Drupal\block\BlockPluginInterface, in namespace Plugin\Block under your
+ *   \Drupal\Core\Block\BlockPluginInterface, in namespace Plugin\Block under your
  *   module namespace. For more information about creating plugins, see the
  *   @link plugin_api Plugin API topic. @endlink
- * - Usually you will want to extend the \Drupal\block\BlockBase class, which
+ * - Usually you will want to extend the \Drupal\Core\Block\BlockBase class, which
  *   provides a common configuration form and utility methods for getting and
  *   setting configuration in the block configuration entity.
  * - Block plugins use the annotations defined by
- *   \Drupal\block\Annotation\Block. See the
+ *   \Drupal\Core\Block\Annotation\Block. See the
  *   @link annotation Annotations topic @endlink for more information about
  *   annotations.
  *
@@ -61,7 +61,7 @@
  */
 
 /**
- * Alter the result of \Drupal\block\BlockBase::build().
+ * Alter the result of \Drupal\Core\Block\BlockBase::build().
  *
  * This hook is called after the content has been assembled in a structured
  * array and may be used for doing processing which requires that the complete
@@ -81,7 +81,7 @@
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.
- * @param \Drupal\block\BlockPluginInterface $block
+ * @param \Drupal\Core\Block\BlockPluginInterface $block
  *   The block plugin instance.
  *
  * @see hook_block_view_BASE_BLOCK_ID_alter()
@@ -89,7 +89,7 @@
  *
  * @ingroup block_api
  */
-function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
+function hook_block_view_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
   // Remove the contextual links on all blocks that provide them.
   if (isset($build['#contextual_links'])) {
     unset($build['#contextual_links']);
@@ -111,7 +111,7 @@ function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.
- * @param \Drupal\block\BlockPluginInterface $block
+ * @param \Drupal\Core\Block\BlockPluginInterface $block
  *   The block plugin instance.
  *
  * @see hook_block_view_alter()
@@ -119,7 +119,7 @@ function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface
  *
  * @ingroup block_api
  */
-function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
+function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
   // Change the title of the specific block.
   $build['#title'] = t('New title of the block');
 }

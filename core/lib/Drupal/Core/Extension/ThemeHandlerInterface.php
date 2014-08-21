@@ -131,4 +131,12 @@ interface ThemeHandlerInterface {
    */
   public function getName($theme);
 
+  /**
+   * Returns the default theme.
+   *
+   * @return string
+   *   The default theme.
+   */
+  public function getDefault();
+
 }

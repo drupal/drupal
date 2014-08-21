@@ -7,8 +7,8 @@
 
 namespace Drupal\block_content\Plugin\Block;
 
-use Drupal\block\BlockBase;
-use Drupal\block\BlockManagerInterface;
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -32,7 +32,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * The Plugin Block Manager.
    *
-   * @var \Drupal\block\BlockManagerInterface.
+   * @var \Drupal\Core\Block\BlockManagerInterface.
    */
   protected $blockManager;
 
@@ -66,7 +66,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\block\BlockManagerInterface
+   * @param \Drupal\Core\Block\BlockManagerInterface
    *   The Plugin Block Manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
@@ -117,7 +117,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm().
+   * Overrides \Drupal\Core\Block\BlockBase::blockForm().
    *
    * Adds body and description fields to the block configuration form.
    */

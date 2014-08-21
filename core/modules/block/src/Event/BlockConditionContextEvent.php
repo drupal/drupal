@@ -30,7 +30,7 @@ class BlockConditionContextEvent extends Event {
   }
 
   /**
-   * @return \Drupal\block\BlockPluginInterface
+   * @return \Drupal\Core\Block\BlockPluginInterface
    */
   public function getConditions() {
     return $this->conditions;

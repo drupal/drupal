@@ -7,7 +7,7 @@
 
 namespace Drupal\block\Controller;
 
-use Drupal\block\BlockManagerInterface;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,14 +22,14 @@ class CategoryAutocompleteController implements ContainerInjectionInterface {
   /**
    * The block manager.
    *
-   * @var \Drupal\block\BlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 
   /**
    * Constructs a new CategoryAutocompleteController.
    *
-   * @param \Drupal\block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
    */
   public function __construct(BlockManagerInterface $block_manager) {

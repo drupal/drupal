@@ -27,7 +27,7 @@ interface BlockInterface extends ConfigEntityInterface {
   /**
    * Returns the plugin instance.
    *
-   * @return \Drupal\block\BlockPluginInterface
+   * @return \Drupal\Core\Block\BlockPluginInterface
    *   The plugin instance for this block.
    */
   public function getPlugin();

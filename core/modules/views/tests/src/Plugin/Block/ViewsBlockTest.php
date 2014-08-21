@@ -10,7 +10,6 @@ namespace Drupal\views\Tests\Plugin\Block {
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Block\ViewsBlock;
-use Drupal\block\Plugin\views\display\Block;
 
 // @todo Remove this once the constant got converted.
 if (!defined('BLOCK_LABEL_VISIBLE')) {
@@ -80,7 +79,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->with('block_1')
       ->will($this->returnValue(TRUE));
 
-    $this->executable->display_handler = $this->getMockBuilder('Drupal\block\Plugin\views\display\Block')
+    $this->executable->display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\Block')
       ->disableOriginalConstructor()
       ->setMethods(NULL)
       ->getMock();

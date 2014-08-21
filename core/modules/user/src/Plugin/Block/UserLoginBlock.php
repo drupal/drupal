@@ -8,7 +8,7 @@
 namespace Drupal\user\Plugin\Block;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**

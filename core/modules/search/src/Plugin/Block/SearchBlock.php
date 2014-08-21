@@ -8,7 +8,7 @@
 namespace Drupal\search\Plugin\Block;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 

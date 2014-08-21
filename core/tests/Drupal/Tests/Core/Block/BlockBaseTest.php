@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\block\Tests\BlockBaseTest.
+ * Contains \Drupal\Tests\Core\Block\BlockBaseTest.
  */
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\Core\Block;
 
 use Drupal\block_test\Plugin\Block\TestBlockInstantiation;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\BlockBase
+ * @coversDefaultClass \Drupal\Core\Block\BlockBase
  * @group block
  */
 class BlockBaseTest extends UnitTestCase {
@@ -20,7 +20,7 @@ class BlockBaseTest extends UnitTestCase {
   /**
    * Tests the machine name suggestion.
    *
-   * @see \Drupal\block\BlockBase::getMachineNameSuggestion().
+   * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion().
    */
   public function testGetMachineNameSuggestion() {
     $transliteraton = $this->getMockBuilder('Drupal\Core\Transliteration\PHPTransliteration')

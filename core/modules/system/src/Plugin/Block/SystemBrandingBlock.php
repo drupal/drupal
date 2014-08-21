@@ -8,7 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

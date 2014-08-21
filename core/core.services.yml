@@ -274,6 +274,9 @@ services:
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']
+  plugin.manager.block:
+    class: Drupal\Core\Block\BlockManager
+    parent: default_plugin_manager
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']

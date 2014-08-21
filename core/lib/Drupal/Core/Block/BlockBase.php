@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockBase.
+ * Contains \Drupal\Core\Block\BlockBase.
  */
 
-namespace Drupal\block;
+namespace Drupal\Core\Block;
 
+use Drupal\block\BlockInterface;
 use Drupal\block\Event\BlockConditionContextEvent;
 use Drupal\block\Event\BlockEvents;
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
@@ -198,7 +199,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * BlockBase::blockForm(). Most block plugins should not override this
    * method unless they need to alter the generic form elements.
    *
-   * @see \Drupal\block\BlockBase::blockForm()
+   * @see \Drupal\Core\Block\BlockBase::blockForm()
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $definition = $this->getPluginDefinition();
@@ -335,7 +336,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * Most block plugins should not override this method. To add validation
    * for a specific block type, override BlockBase::blockValdiate().
    *
-   * @see \Drupal\block\BlockBase::blockValidate()
+   * @see \Drupal\Core\Block\BlockBase::blockValidate()
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Remove the admin_label form item element value so it will not persist.
@@ -369,7 +370,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * Most block plugins should not override this method. To add submission
    * handling for a specific block type, override BlockBase::blockSubmit().
    *
-   * @see \Drupal\block\BlockBase::blockSubmit()
+   * @see \Drupal\Core\Block\BlockBase::blockSubmit()
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Process the block's submission handling if no errors occurred only.

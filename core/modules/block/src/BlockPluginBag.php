@@ -45,7 +45,7 @@ class BlockPluginBag extends DefaultSinglePluginBag {
   /**
    * {@inheritdoc}
    *
-   * @return \Drupal\block\BlockPluginInterface
+   * @return \Drupal\Core\Block\BlockPluginInterface
    */
   public function &get($instance_id) {
     return parent::get($instance_id);

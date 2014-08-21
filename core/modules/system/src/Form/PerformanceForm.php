@@ -116,7 +116,7 @@ class PerformanceForm extends ConfigFormBase {
       '#open' => TRUE,
     );
     // Identical options to the ones for block caching.
-    // @see \Drupal\block\BlockBase::buildConfigurationForm()
+    // @see \Drupal\Core\Block\BlockBase::buildConfigurationForm()
     $period = array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
     $period = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($period, $period));
     $period[0] = '<' . t('no caching') . '>';
