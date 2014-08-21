@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\test_theme\ThemeClass;
 
@@ -124,6 +125,15 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
+   * Ensures that non-HTML requests never initialize themes.
+   */
+  public function testThemeOnNonHtmlRequest() {
+    $this->drupalGet('theme-test/non-html');
+    $json = Json::decode($this->getRawContent());
+    $this->assertFalse($json['theme_initialized']);
+  }
+
+  /**
    * Ensure page-front template suggestion is added when on front page.
    */
   function testFrontPageThemeSuggestion() {
@@ -136,14 +146,6 @@ class ThemeTest extends WebTestBase {
     // Set it back to not annoy the batch runner.
     _current_path($original_path);
     $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
-  }
-
-  /**
-   * Ensures theme hook_*_alter() implementations can run before anything is rendered.
-   */
-  function testAlter() {
-    $this->drupalGet('theme-test/alter');
-    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', 'The theme was able to implement an alter hook during page building before anything was rendered.');
   }
 
   /**
@@ -220,7 +222,7 @@ class ThemeTest extends WebTestBase {
    */
   function testThemeGetSetting() {
     $this->container->get('theme_handler')->enable(array('test_subtheme'));
-    $GLOBALS['theme_key'] = 'test_theme';
+    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('test_theme'));
     $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
     $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
     $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', 'Base theme\'s default settings values are inherited by subtheme.');

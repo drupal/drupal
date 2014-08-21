@@ -162,7 +162,7 @@ function _batch_test_theme_callback() {
   // theme is being used on the batch processing page by viewing that page
   // directly. Instead, we save the theme being used in a variable here, so
   // that it can be loaded and inspected in the thread running the test.
-  global $theme;
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
   batch_test_stack($theme);
 }
 

@@ -10,7 +10,6 @@ namespace Drupal\Core\Theme;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Utility\ThemeRegistry;
@@ -34,7 +33,7 @@ class Registry implements DestructableInterface {
    *
    * @var array
    */
-  protected $baseThemes;
+  protected $baseThemes = array();
 
   /**
    * The name of the theme engine of $theme.
@@ -60,10 +59,11 @@ class Registry implements DestructableInterface {
    *     from; e.g., 'module' for theme hook 'node' of Node module.
    *   - name: The name of the extension the original theme hook originates
    *     from; e.g., 'node' for theme hook 'node' of Node module.
-   *   - theme path: The effective path_to_theme() during _theme(), available as
-   *     'directory' variable in templates.
-   *       functions, it should point to the respective theme. For templates,
-   *       it should point to the directory that contains the template.
+   *   - theme path: The effective \Drupal\Core\Theme\ActiveTheme::getPath()
+   *      during _theme(), available as
+   *      'directory' variable in templates. For functions, it should point to
+   *      the respective theme.For templates, it should point to the directory
+   *      that contains the template.
    *   - includes: (optional) An array of include files to load when the theme
    *     hook is executed by _theme().
    *   - file: (optional) A filename to add to 'includes', either prefixed with
@@ -116,6 +116,20 @@ class Registry implements DestructableInterface {
   protected $runtimeRegistry;
 
   /**
+   * Stores whether the registry was already initialized.
+   *
+   * @var bool
+   */
+  protected $initialized = FALSE;
+
+  /**
+   * The name of the theme for which to construct the registry, if given.
+   *
+   * @var string|null
+   */
+  protected $themeName;
+
+  /**
    * Constructs a \Drupal\Core\\Theme\Registry object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -131,7 +145,7 @@ class Registry implements DestructableInterface {
     $this->cache = $cache;
     $this->lock = $lock;
     $this->moduleHandler = $module_handler;
-    $this->init($theme_name);
+    $this->themeName = $theme_name;
   }
 
   /**
@@ -144,23 +158,18 @@ class Registry implements DestructableInterface {
    *   (optional) The name of the theme for which to construct the registry.+
    */
   protected function init($theme_name = NULL) {
+    if ($this->initialized) {
+      return;
+    }
     // Unless instantiated for a specific theme, use globals.
     if (!isset($theme_name)) {
-      if (isset($GLOBALS['theme']) && isset($GLOBALS['theme_info'])) {
-        $this->theme = $GLOBALS['theme_info'];
-        $this->baseThemes = $GLOBALS['base_theme_info'];
-        $this->engine = $GLOBALS['theme_engine'];
-      }
-      else {
-        // @see drupal_theme_initialize()
-        $this->theme = new Extension('theme', 'core/core.info.yml');
-        $this->baseThemes = array();
-        $this->engine = 'twig';
-      }
+      $active_theme = \Drupal::theme()->getActiveTheme();
+      $this->theme = $active_theme;
+      $this->baseThemes = $active_theme->getBaseThemes();
+      $this->engine = $active_theme->getEngine();
     }
-    // Instead of the global theme, a specific theme was requested.
+    // Instead of the active theme, a specific theme was requested.
     else {
-      // @see drupal_theme_initialize()
       $themes = $this->listThemes();
       $this->theme = $themes[$theme_name];
 
@@ -176,7 +185,6 @@ class Registry implements DestructableInterface {
       }
       $this->baseThemes = array_reverse($this->baseThemes);
 
-      // @see _drupal_theme_initialize()
       if (isset($this->theme->engine)) {
         $this->engine = $this->theme->engine;
         include_once DRUPAL_ROOT . '/' . $this->theme->owner;
@@ -199,6 +207,7 @@ class Registry implements DestructableInterface {
    * @see Registry::$registry
    */
   public function get() {
+    $this->init($this->themeName);
     if (isset($this->registry)) {
       return $this->registry;
     }
@@ -224,6 +233,7 @@ class Registry implements DestructableInterface {
    *   lightweight than the full registry.
    */
   public function getRuntime() {
+    $this->init($this->themeName);
     if (!isset($this->runtimeRegistry)) {
       $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry' => TRUE), $this->moduleHandler->isLoaded());
     }
@@ -247,6 +257,7 @@ class Registry implements DestructableInterface {
    *   The name of the base hook or FALSE.
    */
   public function getBaseHook($hook) {
+    $this->init($this->themeName);
     $base_hook = $hook;
     // Iteratively strip everything after the last '__' delimiter, until a
     // base hook definition is found. Recursive base hooks of base hooks are
@@ -331,6 +342,7 @@ class Registry implements DestructableInterface {
 
     // Let modules alter the registry.
     $this->moduleHandler->alter('theme_registry', $cache);
+    // @todo Do we want to allow themes to take part?
 
     // @todo Implement more reduction of the theme registry entry.
     // Optimize the registry to not have empty arrays for functions.
@@ -538,7 +550,6 @@ class Registry implements DestructableInterface {
    * To be called when the list of enabled extensions is changed.
    */
   public function reset() {
-
     // Reset the runtime registry.
     if (isset($this->runtimeRegistry) && $this->runtimeRegistry instanceof ThemeRegistry) {
       $this->runtimeRegistry->clear();
@@ -578,13 +589,6 @@ class Registry implements DestructableInterface {
    */
   protected function listThemes() {
     return list_themes();
-  }
-
-  /**
-   * Wraps drupal_theme_initialize().
-   */
-  protected function initializeTheme() {
-    drupal_theme_initialize();
   }
 
 }

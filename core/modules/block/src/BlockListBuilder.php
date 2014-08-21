@@ -87,7 +87,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   public function load() {
     // If no theme was specified, use the current theme.
     if (!$this->theme) {
-      $this->theme = $GLOBALS['theme'];
+      $this->theme = \Drupal::theme()->getActiveTheme()->getName();
     }
 
     // Store the region list.
@@ -117,7 +117,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   public function render($theme = NULL, Request $request = NULL) {
     $this->request = $request;
     // If no theme was specified, use the current theme.
-    $this->theme = $theme ?: $GLOBALS['theme_key'];
+    $this->theme = $theme ?: \Drupal::theme()->getActiveTheme()->getName();
 
     return \Drupal::formBuilder()->getForm($this);
   }

@@ -78,10 +78,7 @@ function block_permission() {
  * Renders blocks into their regions.
  */
 function block_page_build(&$page) {
-  global $theme;
-
-  // The theme system might not yet be initialized. We need $theme.
-  drupal_theme_initialize();
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
 
   // Fetch a list of regions for the current theme.
   $all_regions = system_region_list($theme);

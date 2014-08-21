@@ -327,7 +327,7 @@ abstract class CachePluginBase extends PluginBase {
         'result' => $this->view->result,
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
-        'theme' => $GLOBALS['theme'],
+        'theme' => \Drupal::theme()->getActiveTheme()->getName(),
         'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
         'base_url' => $GLOBALS['base_url'],
       );

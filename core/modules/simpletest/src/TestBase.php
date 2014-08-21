@@ -1080,12 +1080,6 @@ abstract class TestBase {
     unset($GLOBALS['config_directories']);
     unset($GLOBALS['config']);
     unset($GLOBALS['conf']);
-    unset($GLOBALS['theme_key']);
-    unset($GLOBALS['theme']);
-    unset($GLOBALS['theme_info']);
-    unset($GLOBALS['base_theme_info']);
-    unset($GLOBALS['theme_engine']);
-    unset($GLOBALS['theme_path']);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1185,14 +1179,6 @@ abstract class TestBase {
     // All destructors of statically cached objects have been invoked above;
     // this second reset is guaranteed to reset everything to nothing.
     drupal_static_reset();
-
-    // Reset global theme variables.
-    unset($GLOBALS['theme_key']);
-    unset($GLOBALS['theme']);
-    unset($GLOBALS['theme_info']);
-    unset($GLOBALS['base_theme_info']);
-    unset($GLOBALS['theme_engine']);
-    unset($GLOBALS['theme_path']);
 
     // Restore original in-memory configuration.
     $GLOBALS['config'] = $this->originalConfig;

@@ -19,7 +19,7 @@ class RegionContentTest extends WebTestBase {
    * Tests setting and retrieving content for theme regions.
    */
   function testRegions() {
-    global $theme_key;
+    $theme_key = \Drupal::theme()->getActiveTheme()->getName();
 
     $block_regions = array_keys(system_region_list($theme_key));
     $delimiter = $this->randomMachineName(32);

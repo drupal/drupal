@@ -18,10 +18,8 @@ use Drupal\Core\Site\Settings;
  * setting a "maintenance_theme" key in the $settings variable in settings.php.
  */
 function _drupal_maintenance_theme() {
-  global $theme, $theme_key;
-
-  // If $theme is already set, assume the others are set too, and do nothing.
-  if (isset($theme)) {
+  // If the theme is already set, assume the others are set too, and do nothing.
+  if (\Drupal::theme()->hasActiveTheme()) {
     return;
   }
 
@@ -76,20 +74,20 @@ function _drupal_maintenance_theme() {
 
   // If no themes are installed yet, or if the requested custom theme is not
   // installed, retrieve all available themes.
+  /** @var \Drupal\Core\Theme\ThemeInitialization $theme_init */
+  $theme_init = \Drupal::service('theme.initialization');
   if (empty($themes) || !isset($themes[$custom_theme])) {
     $theme_handler = \Drupal::service('theme_handler');
     $themes = $theme_handler->rebuildThemeData();
     $theme_handler->addTheme($themes[$custom_theme]);
+    \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], array()));
   }
 
   // list_themes() triggers a \Drupal\Core\Extension\ModuleHandler::alter() in
   // maintenance mode, but we can't let themes alter the .info.yml data until
-  // we know a theme's base themes. So don't set global $theme until after
+  // we know a theme's base themes. So don't set active theme until after
   // list_themes() builds its cache.
   $theme = $custom_theme;
-
-  // Store the identifier for retrieving theme settings with.
-  $theme_key = $theme;
 
   // Find all our ancestor themes and put them in an array.
   $base_theme = array();
@@ -98,9 +96,10 @@ function _drupal_maintenance_theme() {
     $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
   }
-  _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
+  // @todo This is just a workaround. Find a better way how to handle themes
+  //   on maintenance pages, see https://www.drupal.org/node/2322619.
+  \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], array_reverse($base_theme)));
   // Prime the theme registry.
-  // @todo Remove global theme variables.
   Drupal::service('theme.registry');
 }
 

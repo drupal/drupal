@@ -32,9 +32,6 @@ class JavaScriptTest extends DrupalUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    // There are dependencies in drupal_get_js() on the theme layer so we need
-    // to initialize it.
-    drupal_theme_initialize();
 
     // Disable preprocessing
     $config = \Drupal::config('system.performance');

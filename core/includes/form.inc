@@ -2915,8 +2915,6 @@ function batch_set($batch_definition) {
 function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NULL) {
   $batch =& batch_get();
 
-  drupal_theme_initialize();
-
   if (isset($batch)) {
     // Add process information
     $process_info = array(
@@ -2926,7 +2924,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
       'url_options' => array(),
       'source_url' => current_path(),
       'batch_redirect' => $redirect,
-      'theme' => $GLOBALS['theme_key'],
+      'theme' => \Drupal::theme()->getActiveTheme()->getName(),
       'redirect_callback' => $redirect_callback,
     );
     $batch += $process_info;

@@ -139,6 +139,13 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected $logger;
 
+  /**
+   * The mocked theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeManager;
+
   protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
@@ -163,6 +170,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->request = new Request();
     $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->requestStack = new RequestStack();
@@ -177,7 +185,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->setMethods(array('batchGet', 'drupalInstallationAttempted'))
       ->getMock();
 
-    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->csrfToken, $this->httpKernel);
+    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->themeManager, $this->csrfToken, $this->httpKernel);
     $this->formBuilder->setCurrentUser($this->account);
   }
 

@@ -482,30 +482,6 @@ class ModuleHandler implements ModuleHandlerInterface {
           }
         }
       }
-      // Allow the theme to alter variables after the theme system has been
-      // initialized.
-      global $theme, $base_theme_info;
-      if (isset($theme)) {
-        $theme_keys = array();
-        foreach ($base_theme_info as $base) {
-          $theme_keys[] = $base->getName();
-        }
-        $theme_keys[] = $theme;
-        foreach ($theme_keys as $theme_key) {
-          $function = $theme_key . '_' . $hook;
-          if (function_exists($function)) {
-            $this->alterFunctions[$cid][] = $function;
-          }
-          if (isset($extra_types)) {
-            foreach ($extra_types as $extra_type) {
-              $function = $theme_key . '_' . $extra_type . '_alter';
-              if (function_exists($function)) {
-                $this->alterFunctions[$cid][] = $function;
-              }
-            }
-          }
-        }
-      }
     }
 
     foreach ($this->alterFunctions[$cid] as $function) {

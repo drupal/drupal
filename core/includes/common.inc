@@ -1164,8 +1164,22 @@ function _drupal_add_css($data = NULL, $options = NULL) {
  *
  * @see _drupal_add_css()
  */
-function drupal_get_css($css = NULL, $skip_alter = FALSE) {
-  global $theme_info;
+function drupal_get_css($css = NULL, $skip_alter = FALSE, $theme_add_css = TRUE) {
+  $theme_info = \Drupal::theme()->getActiveTheme();
+
+  // @todo There is probably a better place to add the CSS from themes,
+  //   see https://www.drupal.org/node/2322617.
+  if ($theme_add_css) {
+    foreach ($theme_info->getStyleSheets() as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        _drupal_add_css($stylesheet, array(
+          'group' => CSS_AGGREGATE_THEME,
+          'every_page' => TRUE,
+          'media' => $media
+        ));
+      }
+    }
+  }
 
   if (!isset($css)) {
     $css = _drupal_add_css();
@@ -1174,24 +1188,25 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   // Allow modules and themes to alter the CSS items.
   if (!$skip_alter) {
     \Drupal::moduleHandler()->alter('css', $css);
+    \Drupal::theme()->alter('css', $css);
   }
 
   // Sort CSS items, so that they appear in the correct order.
   uasort($css, 'drupal_sort_css_js');
 
   // Allow themes to remove CSS files by basename.
-  if (!empty($theme_info->stylesheets_remove)) {
+  if ($stylesheet_remove = $theme_info->getStyleSheetsRemove()) {
     foreach ($css as $key => $options) {
-      if (isset($options['basename']) && isset($theme_info->stylesheets_remove[$options['basename']])) {
+      if (isset($options['basename']) && isset($stylesheet_remove[$options['basename']])) {
         unset($css[$key]);
       }
     }
   }
   // Allow themes to conditionally override CSS files by basename.
-  if (!empty($theme_info->stylesheets_override)) {
+  if ($stylesheet_override = $theme_info->getStyleSheetsOverride()) {
     foreach ($css as $key => $options) {
-      if (isset($options['basename']) && isset($theme_info->stylesheets_override[$options['basename']])) {
-        $css[$key]['data'] = $theme_info->stylesheets_override[$options['basename']];
+      if (isset($options['basename']) && isset($stylesheet_override[$options['basename']])) {
+        $css[$key]['data'] = $stylesheet_override[$options['basename']];
       }
     }
   }
@@ -1812,7 +1827,17 @@ function drupal_js_defaults($data = NULL) {
  * @see locale_js_alter()
  * @see drupal_js_defaults()
  */
-function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE, $is_ajax = FALSE) {
+function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE, $is_ajax = FALSE, $theme_add_js = TRUE) {
+  // @todo There is probably a better place to add the JS from themes,
+  //   see https://www.drupal.org/node/2322617.
+  $active_theme = \Drupal::theme()->getActiveTheme();
+  if ($theme_add_js) {
+    // Add libraries used by this theme.
+    foreach ($active_theme->getLibraries() as $library) {
+      _drupal_add_library($library);
+    }
+  }
+
   if (!isset($javascript)) {
     $javascript = _drupal_add_js();
   }
@@ -1823,6 +1848,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
   // Allow modules to alter the JavaScript.
   if (!$skip_alter) {
     \Drupal::moduleHandler()->alter('js', $javascript);
+    \Drupal::theme()->alter('js', $javascript);
   }
 
   // Filter out elements of the given scope.
@@ -1839,7 +1865,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     // Don't add settings if there is no other JavaScript on the page, unless
     // this is an AJAX request.
     if (!empty($items['settings']) || $is_ajax) {
-      global $theme_key;
+      $theme_key = $active_theme->getName();
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.
       // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
@@ -2832,6 +2858,7 @@ function drupal_prepare_page($page) {
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'sidebar_first', 'footer', etc.
   \Drupal::moduleHandler()->alter('page', $page);
+  \Drupal::theme()->alter('page', $page);
 
   // The "main" and "secondary" menus are never part of the page-level render
   // array and therefore their cache tags will never bubble up into the page
@@ -3945,7 +3972,7 @@ function drupal_flush_all_caches() {
   // use it. Unlike regular usages of this function, the installer and update
   // scripts need to flush all caches during GET requests/page building.
   if (function_exists('_drupal_maintenance_theme')) {
-    unset($GLOBALS['theme']);
+    \Drupal::theme()->resetActiveTheme();
     drupal_maintenance_theme();
   }
 }

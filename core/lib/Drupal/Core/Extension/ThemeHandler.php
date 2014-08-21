@@ -358,6 +358,13 @@ class ThemeHandler implements ThemeHandlerInterface {
     if (!isset($this->list)) {
       $this->list = array();
       $themes = $this->systemThemeList();
+      // @todo Ensure that systemThemeList() does not contain an empty list
+      //   during the batch installer, see https://www.drupal.org/node/2322619.
+      if (empty($themes)) {
+        $this->refreshInfo();
+        $this->list = $this->list ?: array();
+        $themes = \Drupal::state()->get('system.theme.data', array());
+      }
       foreach ($themes as $theme) {
         $this->addTheme($theme);
       }
@@ -393,7 +400,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function refreshInfo() {
     $this->reset();
     $extension_config = $this->configFactory->get('core.extension');
-    $enabled = $extension_config->get('theme') ?: array();
+    $enabled = $extension_config->get('theme');
 
     // @todo Avoid re-scanning all themes by retaining the original (unaltered)
     //   theme info somewhere.

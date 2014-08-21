@@ -18,6 +18,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,6 +91,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected $currentUser;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * @var \Drupal\Core\Form\FormValidatorInterface
    */
   protected $formValidator;
@@ -116,12 +124,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The request stack.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    * @param \Drupal\Core\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->moduleHandler = $module_handler;
@@ -131,6 +141,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $this->classResolver = $class_resolver;
     $this->csrfToken = $csrf_token;
     $this->httpKernel = $http_kernel;
+    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -648,6 +659,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
     $hooks[] = 'form_' . $form_id;
     $this->moduleHandler->alter($hooks, $form, $form_state, $form_id);
+    $this->themeManager->alter($hooks, $form, $form_state, $form_id);
   }
 
   /**

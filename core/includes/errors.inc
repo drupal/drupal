@@ -119,17 +119,18 @@ function error_displayable($error = NULL) {
 function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = drupal_installation_attempted();
   // Initialize a maintenance theme if the bootstrap was not complete.
-  // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
+  // Do it early because drupal_set_message() triggers a
+  // \Drupal\Core\Theme\ThemeManager::initTheme().
   if ($fatal && drupal_get_bootstrap_phase() < DRUPAL_BOOTSTRAP_CODE) {
     // The installer initializes a maintenance theme at the earliest possible
     // point in time already. Do not unset that.
     if (!$is_installer) {
-      unset($GLOBALS['theme']);
+      \Drupal::theme()->setActiveTheme(NULL);
     }
     if (!defined('MAINTENANCE_MODE')) {
       define('MAINTENANCE_MODE', 'error');
     }
-    // No-op if $GLOBALS['theme'] is set already.
+    // No-op if the active theme is set already.
     drupal_maintenance_theme();
   }
 

@@ -67,7 +67,7 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
  * Replaces style sheets with color-altered style sheets.
  */
 function color_css_alter(&$css) {
-  global $theme_key;
+  $theme_key = \Drupal::theme()->getActiveTheme()->getName();
   $themes = list_themes();
 
   // Override stylesheets.
@@ -97,7 +97,7 @@ function color_css_alter(&$css) {
  * Replace the logo with the colored version if available.
  */
 function color_preprocess_page(&$variables) {
-  global $theme_key;
+  $theme_key = \Drupal::theme()->getActiveTheme()->getName();
 
   // Override logo.
   $logo = \Drupal::config('color.theme.' . $theme_key)->get('logo');

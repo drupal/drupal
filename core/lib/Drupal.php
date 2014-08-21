@@ -624,6 +624,15 @@ class Drupal {
   }
 
   /**
+   * Gets the theme service.
+   *
+   * @return \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  public static function theme() {
+    return static::$container->get('theme.manager');
+  }
+
+  /**
    * Gets the syncing state.
    *
    * @return bool

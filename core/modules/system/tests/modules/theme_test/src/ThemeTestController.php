@@ -8,6 +8,7 @@
 namespace Drupal\theme_test;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Controller routines for theme test routes.
@@ -68,20 +69,6 @@ class ThemeTestController extends ControllerBase {
     return _theme(array('theme_test__suggestion', 'theme_test'), array());
   }
 
-/**
- * This is for testing that the theme can have hook_*_alter() implementations
- * that run during page callback execution, even before _theme() is called for
- * the first time.
- *
- * @return string
- *   A string containing the altered data.
- */
-  public function testAlter() {
-    $data = 'foo';
-    $this->moduleHandler()->alter('theme_test_alter', $data);
-    return "The altered data is $data.";
-  }
-
   /**
    * Tests themed output generated in a request listener.
    *
@@ -133,6 +120,17 @@ class ThemeTestController extends ControllerBase {
    */
   function suggestionAlterInclude() {
     return array('#theme' => 'theme_test_suggestions_include');
+  }
+
+  /**
+   * Controller to ensure that no theme is initialized.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The json response with the theme initialized information.
+   */
+  public function nonHtml() {
+    $theme_initialized = \Drupal::theme()->hasActiveTheme();
+    return new JsonResponse(['theme_initialized' => $theme_initialized]);
   }
 
 }

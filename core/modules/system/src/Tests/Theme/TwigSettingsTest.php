@@ -76,8 +76,7 @@ class TwigSettingsTest extends WebTestBase {
     $theme_handler->setDefault('test_theme');
 
     // The registry still works on theme globals, so set them here.
-    $GLOBALS['theme'] = 'test_theme';
-    $GLOBALS['theme_info'] = $theme_handler->listInfo()['test_theme'];
+    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->getActiveThemeByName('test_theme'));
 
     // Reset the theme registry, so that the new theme is used.
     $this->container->set('theme.registry', NULL);

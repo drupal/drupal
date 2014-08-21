@@ -43,7 +43,10 @@ class DefaultNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    return $this->config->get('default');
+    // @todo Find a proper way to work at the beginning of the installer when
+    //   there is no configuration available yet. One proper way could be to
+    //   provider a custom negotiator during the installer.
+    return $this->config->get('default') ?: 'stark';
   }
 
 }

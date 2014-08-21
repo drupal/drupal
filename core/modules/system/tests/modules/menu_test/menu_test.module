@@ -110,9 +110,7 @@ function menu_test_callback() {
  * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::themePage()
  */
 function menu_test_theme_page_callback($inherited = FALSE) {
-  global $theme_key;
-  // Initialize the theme system so that $theme_key will be populated.
-  drupal_theme_initialize();
+  $theme_key = \Drupal::theme()->getActiveTheme()->getName();
   // Now we check what the theme negotiator service returns.
   $active_theme = \Drupal::service('theme.negotiator')->determineActiveTheme(\Drupal::routeMatch());
   $output = "Active theme: $active_theme. Actual theme: $theme_key.";
