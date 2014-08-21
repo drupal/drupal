@@ -815,14 +815,6 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
 }
 
 /**
- * Implements hook_module_preinstall().
- */
-function search_module_preinstall() {
-  // @todo Remove in https://drupal.org/node/2155635.
-  \Drupal::service('plugin.manager.search')->clearCachedDefinitions();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for the search_block_form form.
  *
  * Since the exposed form is a GET form, we don't want it to send the form
