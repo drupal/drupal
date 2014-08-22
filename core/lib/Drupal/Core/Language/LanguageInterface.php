@@ -123,16 +123,6 @@ interface LanguageInterface {
   public function getId();
 
   /**
-   * Sets the ID (language code).
-   *
-   * @param string $id
-   *   The language code.
-   *
-   * @return $this
-   */
-  public function setId($id);
-
-  /**
    * Gets the text direction (left-to-right or right-to-left).
    *
    * @return int

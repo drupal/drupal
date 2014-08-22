@@ -47,12 +47,11 @@ class LanguageUnitTest extends UnitTestCase {
    * Tests langcode ID getter and setter methods.
    *
    * @covers ::getId()
-   * @covers ::setId()
    */
   public function testGetLangcode() {
     $language_code = $this->randomMachineName(2);
-    $this->assertSame($this->language, $this->language->setId($language_code));
-    $this->assertSame($language_code, $this->language->getId());
+    $language = new Language(array('id' => $language_code));
+    $this->assertSame($language_code, $language->getId());
   }
 
   /**
@@ -115,20 +114,17 @@ class LanguageUnitTest extends UnitTestCase {
    *   An array of test data.
    */
   public function providerTestSortArrayOfLanguages() {
-    $language9A = new Language();
+    $language9A = new Language(array('id' => 'dd'));
     $language9A->setName('A');
     $language9A->setWeight(9);
-    $language9A->setId('dd');
 
-    $language10A = new Language();
+    $language10A = new Language(array('id' => 'ee'));
     $language10A->setName('A');
     $language10A->setWeight(10);
-    $language10A->setId('ee');
 
-    $language10B = new Language();
+    $language10B = new Language(array('id' => 'ff'));
     $language10B->setName('B');
     $language10B->setWeight(10);
-    $language10B->setId('ff');
 
     return array(
       // Set up data set #0, already ordered by weight.
