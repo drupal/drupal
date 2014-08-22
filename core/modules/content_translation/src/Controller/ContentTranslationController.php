@@ -48,7 +48,7 @@ class ContentTranslationController extends ControllerBase {
   public function overview(Request $request, $entity_type_id = NULL) {
     $entity = $request->attributes->get($entity_type_id);
     $account = $this->currentUser();
-    $handler = $this->entityManager()->getController($entity_type_id, 'translation');
+    $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
 
     $languages = $this->languageManager()->getLanguages();
     $original = $entity->getUntranslated()->language()->getId();

@@ -845,8 +845,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * Implements the magic method for getting object properties.
    *
-   * @todo: A lot of code still uses non-fields (e.g. $entity->content in render
-   *   controllers) by reference. Clean that up.
+   * @todo: A lot of code still uses non-fields (e.g. $entity->content in view
+   *   builders) by reference. Clean that up.
    */
   public function &__get($name) {
     // If this is an entity field, handle it accordingly. We first check whether

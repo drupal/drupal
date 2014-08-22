@@ -20,7 +20,7 @@ use Drupal\block_content\BlockContentInterface;
  *   id = "block_content",
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\block_content\BlockContentStorage",
  *     "access" = "Drupal\block_content\BlockContentAccessControlHandler",
  *     "list_builder" = "Drupal\block_content\BlockContentListBuilder",

@@ -554,7 +554,7 @@ class LinkFieldTest extends WebTestBase {
    * @param string $view_mode
    *   (optional) The view mode to use for rendering.
    * @param bool $reset
-   *   (optional) Whether to reset the test_entity controller cache. Defaults to
+   *   (optional) Whether to reset the entity_test storage cache. Defaults to
    *   TRUE to simplify testing.
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {

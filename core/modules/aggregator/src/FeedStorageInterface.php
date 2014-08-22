@@ -11,7 +11,7 @@ use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for aggregator feed entity controller classes.
+ * Defines an interface for aggregator feed entity storage classes.
  */
 interface FeedStorageInterface extends EntityStorageInterface {
 

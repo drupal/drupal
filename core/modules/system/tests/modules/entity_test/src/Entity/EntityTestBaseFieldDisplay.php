@@ -16,7 +16,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @ContentEntityType(
  *   id = "entity_test_base_field_display",
  *   label = @Translation("Test entity - base field display"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm"

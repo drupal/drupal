@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * @ContentEntityType(
  *   id = "entity_test_constraint_violation",
  *   label = @Translation("Test entity constraint violation"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm"
  *     }

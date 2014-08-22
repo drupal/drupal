@@ -20,7 +20,7 @@ use Drupal\filter\Plugin\FilterInterface;
  * @ConfigEntityType(
  *   id = "filter_format",
  *   label = @Translation("Text format"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\filter\FilterFormatAddForm",
  *       "edit" = "Drupal\filter\FilterFormatEditForm",

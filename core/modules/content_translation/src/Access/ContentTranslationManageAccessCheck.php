@@ -76,7 +76,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
       $operation = $route->getRequirement('_access_content_translation_manage');
 
       /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
-      $handler = $this->entityManager->getController($entity->getEntityTypeId(), 'translation');
+      $handler = $this->entityManager->getHandler($entity->getEntityTypeId(), 'translation');
 
       // Load translation.
       $translations = $entity->getTranslationLanguages();

@@ -14,7 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a common interface for entity access control handlers.
+ * Defines an interface for entity access control handlers.
  */
 interface EntityAccessControlHandlerInterface {
 

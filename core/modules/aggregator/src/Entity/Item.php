@@ -21,7 +21,7 @@ use Drupal\Core\Url;
  * @ContentEntityType(
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\aggregator\ItemStorage",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder",
  *     "access" = "Drupal\aggregator\FeedAccessControlHandler",

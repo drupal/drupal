@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
- * Defines a common interface for entity form classes.
+ * Defines an interface for entity form classes.
  */
 interface EntityFormInterface extends BaseFormIdInterface {
 

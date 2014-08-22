@@ -17,7 +17,7 @@ use Drupal\entity_test\Entity\EntityTestRev;
  * @ContentEntityType(
  *   id = "entity_test_mulrev",
  *   label = @Translation("Test entity - revisions and data table"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",

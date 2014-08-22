@@ -17,7 +17,7 @@ use Drupal\user\RoleInterface;
  * @ConfigEntityType(
  *   id = "user_role",
  *   label = @Translation("Role"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\user\RoleStorage",
  *     "access" = "Drupal\user\RoleAccessControlHandler",
  *     "list_builder" = "Drupal\user\RoleListBuilder",

@@ -8,7 +8,7 @@ namespace Drupal\menu_link_content;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
-use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the access control handler for the user entity type.
  */
-class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler implements EntityControllerInterface {
+class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
   /**
    * The access manager to check routes by name.

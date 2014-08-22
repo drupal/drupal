@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 /**
- * Defines a common interface for entity change timestamp tracking.
+ * Defines an interface for entity change timestamp tracking.
  *
  * This data may be useful for more precise cache invalidation (especially
  * on the client side) and concurrent editing locking.

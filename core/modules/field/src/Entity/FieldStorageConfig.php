@@ -21,7 +21,7 @@ use Drupal\field\FieldStorageConfigInterface;
  * @ConfigEntityType(
  *   id = "field_storage_config",
  *   label = @Translation("Field"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\field\FieldStorageConfigStorage"
  *   },
  *   config_prefix = "storage",
@@ -353,7 +353,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       // Invalidate the render cache for all affected entities.
       $entity_manager = \Drupal::entityManager();
       $entity_type = $this->getTargetEntityTypeId();
-      if ($entity_manager->hasController($entity_type, 'view_builder')) {
+      if ($entity_manager->hasHandler($entity_type, 'view_builder')) {
         $entity_manager->getViewBuilder($entity_type)->resetCache();
       }
     }

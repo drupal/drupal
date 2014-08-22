@@ -21,14 +21,14 @@ use Drupal\entity\Entity\EntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base class for entity view controllers.
+ * Base class for entity view builders.
  *
  * @ingroup entity_api
  */
-class EntityViewBuilder extends EntityControllerBase implements EntityControllerInterface, EntityViewBuilderInterface {
+class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface {
 
   /**
-   * The type of entities for which this controller is instantiated.
+   * The type of entities for which this view builder is instantiated.
    *
    * @var string
    */

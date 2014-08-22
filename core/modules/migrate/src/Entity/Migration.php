@@ -22,7 +22,7 @@ use Drupal\migrate\Plugin\RequirementsInterface;
  *   id = "migration",
  *   label = @Translation("Migration"),
  *   module = "migrate",
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\migrate\MigrationStorage"
  *   },
  *   entity_keys = {

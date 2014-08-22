@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for taxonomy term entity controller classes.
+ * Defines an interface for taxonomy_term entity storage classes.
  */
 interface TermStorageInterface extends EntityStorageInterface {
 

@@ -13,7 +13,7 @@ namespace Drupal\entity_test\Entity;
  * @ContentEntityType(
  *   id = "entity_test_label",
  *   label = @Translation("Entity Test label"),
- *   controllers = {
+ *   handlers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder"
  *   },
  *   base_table = "entity_test",

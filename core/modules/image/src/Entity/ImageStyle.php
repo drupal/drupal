@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * @ConfigEntityType(
  *   id = "image_style",
  *   label = @Translation("Image style"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\image\Form\ImageStyleAddForm",
  *       "edit" = "Drupal\image\Form\ImageStyleEditForm",

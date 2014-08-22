@@ -18,7 +18,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  * @ConfigEntityType(
  *   id = "block_content_type",
  *   label = @Translation("Custom block type"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\block_content\BlockContentTypeForm",
  *       "add" = "Drupal\block_content\BlockContentTypeForm",

@@ -208,7 +208,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         ),
       ),
     ))->save();
-    if (!$this->entity->getEntityType()->hasControllerClass('view_builder')) {
+    if (!$this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       entity_get_display($entity_type, $bundle, 'full')
         ->setComponent($field_name, array(
           'type' => 'entity_reference_label',
@@ -270,7 +270,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $theme_cache_tags = array('theme:stark', 'theme_global_settings:1');
 
     $view_cache_tag = array();
-    if ($this->entity->getEntityType()->hasControllerClass('view_builder')) {
+    if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)
         ->getCacheTag();
     }
@@ -362,7 +362,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_path, 'HIT');
 
 
-    if ($this->entity->getEntityType()->hasControllerClass('view_builder')) {
+    if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       // Verify that after modifying the entity's display, there is a cache miss
       // for both the referencing entity, and the listing of referencing
       // entities, but not for the non-referencing entity.

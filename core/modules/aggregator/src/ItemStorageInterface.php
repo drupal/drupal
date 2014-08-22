@@ -11,7 +11,7 @@ use Drupal\aggregator\Entity\Item;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for aggregator item entity controller classes.
+ * Defines an interface for aggregator item entity storage classes.
  */
 interface ItemStorageInterface extends EntityStorageInterface {
 

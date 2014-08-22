@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 function entity_render_cache_clear() {
   $entity_manager = Drupal::entityManager();
   foreach ($entity_manager->getDefinitions() as $entity_type => $info) {
-    if ($entity_manager->hasController($entity_type, 'view_builder')) {
+    if ($entity_manager->hasHandler($entity_type, 'view_builder')) {
       $entity_manager->getViewBuilder($entity_type)->resetCache();
     }
   }
@@ -280,21 +280,6 @@ function entity_create($entity_type, array $values = array()) {
   return \Drupal::entityManager()
     ->getStorage($entity_type)
     ->create($values);
-}
-
-/**
- * Gets the entity controller class for an entity type.
- *
- * @return \Drupal\Core\Entity\EntityStorageInterface
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getStorage()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::entityManager()->getStorage().
- */
-function entity_get_controller($entity_type) {
-  return \Drupal::entityManager()
-    ->getStorage($entity_type);
 }
 
 /**

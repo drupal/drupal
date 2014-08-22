@@ -20,7 +20,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  * @ConfigEntityType(
  *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\field\FieldInstanceConfigAccessControlHandler",
  *     "storage" = "Drupal\field\FieldInstanceConfigStorage"
  *   },

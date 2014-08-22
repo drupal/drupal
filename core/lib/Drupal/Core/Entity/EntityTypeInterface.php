@@ -178,41 +178,41 @@ interface EntityTypeInterface {
   public function setClass($class);
 
   /**
-   * Determines if there is a controller for a given type.
+   * Determines if there is a handler for a given type.
    *
-   * @param string $controller_type
-   *   The type of controller to check.
+   * @param string $handler_type
+   *   The type of handler to check.
    * @param bool $nested
-   *   (optional) If this controller has a nested definition. Defaults to FALSE.
+   *   (optional) If this handler has a nested definition. Defaults to FALSE.
    *
    * @return bool
-   *   TRUE if a controller of this type exists, FALSE otherwise.
+   *   TRUE if a handler of this type exists, FALSE otherwise.
    */
-  public function hasControllerClass($controller_type, $nested = FALSE);
+  public function hasHandlerClass($handler_type, $nested = FALSE);
 
   /**
-   * @param string $controller_type
-   *   The controller type to get.
+   * @param string $handler_type
+   *   The handler type to get.
    *
    * @return array|string|null
-   *   The controllers for a given type, or NULL if none exist.
+   *   The handlers for a given type, or NULL if none exist.
    */
-  public function getControllerClass($controller_type);
+  public function getHandlerClass($handler_type);
 
   /**
-   * Returns an array of controllers.
+   * Returns an array of handlers.
    *
    * @return array
-   *   An associative array where the keys are the names of different controller
+   *   An associative array where the keys are the names of different handler
    *   types (listed below) and the values are the names of the classes that
-   *   implement that controller:
+   *   implement that handler:
    *   - storage: The name of the class used to load the objects. The class must
    *     implement \Drupal\Core\Entity\EntityStorageInterface.
    *   - form: An associative array where the keys are the names of the
    *     different form operations (such as 'create', 'edit', or 'delete') and
-   *     the values are the names of the controller classes for those
+   *     the values are the names of the handler classes for those
    *     operations. The name of the operation is passed also to the form
-   *     controller's constructor, so that one class can be used for multiple
+   *     handler's constructor, so that one class can be used for multiple
    *     entity forms when the forms are similar. The classes must implement
    *     \Drupal\Core\Entity\EntityFormInterface.
    *   - list: The name of the class that provides listings of the entities. The
@@ -223,7 +223,7 @@ interface EntityTypeInterface {
    *     must implement \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
    *     Defaults to \Drupal\Core\Entity\EntityAccessControlHandler.
    */
-  public function getControllerClasses();
+  public function getHandlerClasses();
 
   /**
    * Returns the storage class.
@@ -361,16 +361,16 @@ interface EntityTypeInterface {
   public function isSubclassOf($class);
 
   /**
-   * Sets the controllers for a given type.
+   * Sets the handlers for a given type.
    *
-   * @param string $controller_type
-   *   The type of controller to set.
+   * @param string $handler_type
+   *   The type of handler to set.
    * @param array|string $value
-   *   The value for a controller type.
+   *   The value for a handler type.
    *
    * @return static
    */
-  public function setControllerClass($controller_type, $value);
+  public function setHandlerClass($handler_type, $value);
 
   /**
    * Returns the name of the default administrative permission.

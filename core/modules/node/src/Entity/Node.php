@@ -23,7 +23,7 @@ use Drupal\user\UserInterface;
  *   id = "node",
  *   label = @Translation("Content"),
  *   bundle_label = @Translation("Content type"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\node\NodeStorage",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessControlHandler",

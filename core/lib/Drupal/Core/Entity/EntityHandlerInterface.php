@@ -2,27 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityHandlerInterface.
  */
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a common interface for entity controllers.
+ * Defines an interface for entity handlers.
  *
- * This interface can be implemented by entity controllers that require
- * dependency injection. These are not controllers in the routing sense of the
- * word, but instead are handlers that perform a specific function for an entity
- * type.
+ * This interface can be implemented by entity handlers that require
+ * dependency injection.
  */
-interface EntityControllerInterface {
+interface EntityHandlerInterface {
 
   /**
-   * Instantiates a new instance of this entity controller.
+   * Instantiates a new instance of this entity handler.
    *
    * This is a factory method that returns a new instance of this object. The
    * factory should pass any needed dependencies into the constructor of this
@@ -35,7 +31,7 @@ interface EntityControllerInterface {
    *   The entity type definition.
    *
    * @return static
-   *   A new instance of the entity controller.
+   *   A new instance of the entity handler.
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type);
 

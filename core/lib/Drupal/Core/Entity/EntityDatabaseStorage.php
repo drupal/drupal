@@ -12,7 +12,7 @@ use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a base entity controller class.
+ * Defines a base entity storage class.
  *
  * This class only supports bare, non-content entities.
  */

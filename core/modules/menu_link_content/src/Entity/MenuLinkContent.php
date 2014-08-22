@@ -20,7 +20,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  * @ContentEntityType(
  *   id = "menu_link_content",
  *   label = @Translation("Custom menu link"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\Core\Entity\ContentEntityDatabaseStorage",
  *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
  *     "form" = {

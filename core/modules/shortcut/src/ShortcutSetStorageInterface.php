@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a common interface for shortcut entity controller classes.
+ * Defines an interface for shortcut_set entity storage classes.
  */
 interface ShortcutSetStorageInterface extends ConfigEntityStorageInterface {
 

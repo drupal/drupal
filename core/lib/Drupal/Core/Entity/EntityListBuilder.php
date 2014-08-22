@@ -16,7 +16,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup entity_api
  */
-class EntityListBuilder extends EntityControllerBase implements EntityListBuilderInterface, EntityControllerInterface {
+class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderInterface, EntityHandlerInterface {
 
   /**
    * The entity storage class.

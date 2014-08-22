@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
 
 /**
- * A common interface for SQL-based storage controllers.
+ * A common interface for SQL-based entity storage implementations.
  */
 interface SqlEntityStorageInterface extends EntityStorageInterface, EntitySchemaProviderInterface {
 

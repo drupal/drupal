@@ -10,7 +10,7 @@ namespace Drupal\taxonomy;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 
 /**
- * Defines a common interface for taxonomy vocabulary entity controller classes.
+ * Defines an interface for vocabulary entity storage classes.
  */
 interface VocabularyStorageInterface extends ConfigEntityStorageInterface {
 

@@ -10,7 +10,7 @@ namespace Drupal\user;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a common interface for user entity controller classes.
+ * Defines an interface for user entity storage classes.
  */
 interface UserStorageInterface {
 

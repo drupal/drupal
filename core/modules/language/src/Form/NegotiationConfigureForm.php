@@ -98,7 +98,7 @@ class NegotiationConfigureForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     $entity_manager = $container->get('entity.manager');
-    $block_storage = $entity_manager->hasController('block', 'storage') ? $entity_manager->getStorage('block') : NULL;
+    $block_storage = $entity_manager->hasHandler('block', 'storage') ? $entity_manager->getStorage('block') : NULL;
     return new static(
       $container->get('config.factory'),
       $container->get('language_manager'),

@@ -85,14 +85,14 @@ function content_translation_language_types_info_alter(array &$language_types) {
  * in the 'links' entity info property must be defined.
  *
  * Every entity type needs a translation controller to be translated. This can
- * be specified through the 'translation' key in the 'controllers' entity info
- * property. If an entity type is translatable and no translation controller is
- * defined, \Drupal\content_translation\ContentTranslationHandler will be
- * assumed. Every translation controller class must implement
+ * be specified through the 'translation' key in the 'handlers' entity
+ * annotation property. If an entity type is translatable and no translation
+ * handler is defined, \Drupal\content_translation\ContentTranslationHandler
+ * will be assumed. Every translation handler must implement
  * \Drupal\content_translation\ContentTranslationHandlerInterface.
  *
  * If the entity paths match the default pattern above and there is no need for
- * an entity-specific translation controller class, Content Translation will
+ * an entity-specific translation handler, Content Translation will
  * provide built-in support for the entity. However enabling translation for
  * each translatable bundle will be required.
  *
@@ -103,8 +103,8 @@ function content_translation_entity_type_alter(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach ($entity_types as $entity_type) {
     if ($entity_type->isTranslatable()) {
-      if (!$entity_type->hasControllerClass('translation')) {
-        $entity_type->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationHandler');
+      if (!$entity_type->hasHandlerClass('translation')) {
+        $entity_type->setHandlerClass('translation', 'Drupal\content_translation\ContentTranslationHandler');
       }
 
       $translation = $entity_type->get('translation');
@@ -330,7 +330,7 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
 function content_translation_controller($entity_type_id) {
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   // @todo Throw an exception if the key is missing.
-  $class = $entity_type->getControllerClass('translation');
+  $class = $entity_type->getHandlerClass('translation');
   return new $class($entity_type);
 }
 

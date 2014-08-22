@@ -17,7 +17,7 @@ use Drupal\comment\CommentTypeInterface;
  * @ConfigEntityType(
  *   id = "comment_type",
  *   label = @Translation("Comment type"),
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\comment\CommentTypeForm",
  *       "add" = "Drupal\comment\CommentTypeForm",

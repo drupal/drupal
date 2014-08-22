@@ -15,7 +15,7 @@ use Drupal\Core\Entity\Entity;
  * @EntityType(
  *   id = "entity_cache_test",
  *   label = @Translation("Entity cache test"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\Core\Entity\EntityDatabaseStorage",
  *   }
  * )

@@ -480,7 +480,7 @@ class DateTimeFieldTest extends WebTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      entity_get_controller('entity_test')->resetCache(array($id));
+      \Drupal::entityManager()->getStorage('entity_test')->resetCache(array($id));
     }
     $entity = entity_load('entity_test', $id);
     $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);

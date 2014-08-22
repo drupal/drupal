@@ -7,9 +7,7 @@
 
 namespace Drupal\contact\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\contact\ContactFormInterface;
 
 /**
@@ -18,7 +16,7 @@ use Drupal\contact\ContactFormInterface;
  * @ConfigEntityType(
  *   id = "contact_form",
  *   label = @Translation("Contact form"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\contact\ContactFormAccessControlHandler",
  *     "list_builder" = "Drupal\contact\ContactFormListBuilder",
  *     "form" = {

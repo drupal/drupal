@@ -10,7 +10,7 @@ namespace Drupal\file;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for file entity controller classes.
+ * Defines an interface for file entity storage classes.
  */
 interface FileStorageInterface extends EntityStorageInterface {
 

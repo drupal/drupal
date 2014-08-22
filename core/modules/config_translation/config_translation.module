@@ -100,7 +100,7 @@ function config_translation_entity_type_alter(array &$entity_types) {
       else {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListBuilder';
       }
-      $entity_type->setControllerClass('config_translation_list', $class);
+      $entity_type->setHandlerClass('config_translation_list', $class);
 
       if ($entity_type->hasLinkTemplate('edit-form')) {
         $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.' . $entity_type->getLinkTemplate('edit-form'));

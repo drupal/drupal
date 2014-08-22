@@ -23,7 +23,7 @@ use Drupal\user\UserInterface;
  *   id = "comment",
  *   label = @Translation("Comment"),
  *   bundle_label = @Translation("Content type"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\comment\CommentStorage",
  *     "access" = "Drupal\comment\CommentAccessControlHandler",
  *     "view_builder" = "Drupal\comment\CommentViewBuilder",

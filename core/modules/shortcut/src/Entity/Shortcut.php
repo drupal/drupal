@@ -21,7 +21,7 @@ use Drupal\shortcut\ShortcutInterface;
  * @ContentEntityType(
  *   id = "shortcut",
  *   label = @Translation("Shortcut link"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\shortcut\ShortcutAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutForm",

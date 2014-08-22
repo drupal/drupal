@@ -34,7 +34,7 @@ class UserTranslationUITest extends ContentTranslationUITest {
     $this->name = $this->randomMachineName();
     parent::setUp();
 
-    entity_get_controller('user')->resetCache();
+    \Drupal::entityManager()->getStorage('user')->resetCache();
   }
 
   /**

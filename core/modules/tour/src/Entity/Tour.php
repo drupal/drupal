@@ -18,7 +18,7 @@ use Drupal\tour\TourInterface;
  * @ConfigEntityType(
  *   id = "tour",
  *   label = @Translation("Tour"),
- *   controllers = {
+ *   handlers = {
  *     "view_builder" = "Drupal\tour\TourViewBuilder"
  *   },
  *   entity_keys = {

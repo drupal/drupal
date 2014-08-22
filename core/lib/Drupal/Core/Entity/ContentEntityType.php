@@ -17,7 +17,7 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
    */
   public function __construct($definition) {
     parent::__construct($definition);
-    $this->controllers += array(
+    $this->handlers += array(
       'storage' => 'Drupal\Core\Entity\ContentEntityDatabaseStorage',
     );
   }

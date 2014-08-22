@@ -18,7 +18,7 @@ use Drupal\system\DateFormatInterface;
  * @ConfigEntityType(
  *   id = "date_format",
  *   label = @Translation("Date format"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\system\DateFormatAccessControlHandler",
  *     "list_builder" = "Drupal\system\DateFormatListBuilder",
  *     "form" = {

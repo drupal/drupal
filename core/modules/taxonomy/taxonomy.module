@@ -350,7 +350,7 @@ function taxonomy_terms_static_reset() {
  * Clear all static cache variables for vocabularies.
  *
  * @param $ids
- *   An array of ids to reset in entity controller cache.
+ *   An array of ids to reset in the entity cache.
  */
 function taxonomy_vocabulary_static_reset(array $ids = NULL) {
   \Drupal::entityManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
@@ -487,8 +487,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
     }
   }
 
-  // Load full entities, if necessary. The entity controller statically
-  // caches the results.
+  // Load full entities, if necessary. The entity storage caches the results.
   if ($load_entities) {
     $term_entities = entity_load_multiple('taxonomy_term', array_keys($terms[$vid]));
   }

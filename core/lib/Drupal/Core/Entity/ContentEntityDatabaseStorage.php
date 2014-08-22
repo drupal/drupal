@@ -23,11 +23,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a base entity controller class.
+ * A content entity database storage implementation.
  *
- * Default implementation of Drupal\Core\Entity\EntityStorageInterface.
- *
- * This class can be used as-is by most simple entity types. Entity types
+ * This class can be used as-is by most content entity types. Entity types
  * requiring special handling can extend the class.
  *
  * The class uses \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler
@@ -229,7 +227,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * Gets the schema handler for this storage controller.
+   * Gets the schema handler for this entity storage.
    *
    * @return \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler
    *   The schema handler.
@@ -275,7 +273,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
 
       $revisionable = $this->entityType->isRevisionable();
       // @todo Remove the data table check once all entity types are using
-      // entity query and we have a views data controller. See:
+      // entity query and we have a views data handler. See:
       // - https://drupal.org/node/2068325
       // - https://drupal.org/node/1740492
       $translatable = $this->entityType->getDataTable() && $this->entityType->isTranslatable();

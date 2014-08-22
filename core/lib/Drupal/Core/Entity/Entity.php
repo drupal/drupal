@@ -453,7 +453,7 @@ abstract class Entity implements EntityInterface {
     }
 
     foreach ($referenced_entities as $entity_type => $entities) {
-      if ($this->entityManager()->hasController($entity_type, 'view_builder')) {
+      if ($this->entityManager()->hasHandler($entity_type, 'view_builder')) {
         $this->entityManager()->getViewBuilder($entity_type)->resetCache($entities);
       }
     }
@@ -510,7 +510,7 @@ abstract class Entity implements EntityInterface {
       // builder class, then invalidate the render cache of entities for which
       // this entity is a bundle.
       $entity_manager = $this->entityManager();
-      if ($entity_manager->hasController($bundle_of, 'view_builder')) {
+      if ($entity_manager->hasHandler($bundle_of, 'view_builder')) {
         $entity_manager->getViewBuilder($bundle_of)->resetCache();
       }
       // Entity bundle field definitions may depend on bundle settings.

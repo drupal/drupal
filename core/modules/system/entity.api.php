@@ -379,7 +379,7 @@ use Drupal\Core\Render\Element;
  *   block.default refers to the 'default' form controller on the block entity
  *   type, whose annotation contains:
  *   @code
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\block\BlockForm",
  *   @endcode

@@ -36,7 +36,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->once())
-      ->method('getController')
+      ->method('getHandler')
       ->withAnyParameters()
       ->will($this->returnValue($translation_handler));
 

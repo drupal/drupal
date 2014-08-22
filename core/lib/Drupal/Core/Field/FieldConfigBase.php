@@ -245,7 +245,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
 
     // Invalidate the render cache for all affected entities.
     $entity_type = $this->getFieldStorageDefinition()->getTargetEntityTypeId();
-    if ($this->entityManager()->hasController($entity_type, 'view_builder')) {
+    if ($this->entityManager()->hasHandler($entity_type, 'view_builder')) {
       $this->entityManager()->getViewBuilder($entity_type)->resetCache();
     }
   }

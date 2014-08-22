@@ -20,7 +20,7 @@ use Drupal\language\ConfigurableLanguageInterface;
  * @ConfigEntityType(
  *   id = "configurable_language",
  *   label = @Translation("Language"),
- *   controllers = {
+ *   handlers = {
  *     "list_builder" = "Drupal\language\LanguageListBuilder",
  *     "access" = "Drupal\language\LanguageAccessControlHandler",
  *     "form" = {

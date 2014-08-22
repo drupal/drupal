@@ -15,7 +15,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines a default implementation for entity access control handler.
  */
-class EntityAccessControlHandler extends EntityControllerBase implements EntityAccessControlHandlerInterface {
+class EntityAccessControlHandler extends EntityHandlerBase implements EntityAccessControlHandlerInterface {
 
   /**
    * Stores calculated access check results.
@@ -284,7 +284,8 @@ class EntityAccessControlHandler extends EntityControllerBase implements EntityA
     // Get the default access restriction that lives within this field.
     $default = $items ? $items->defaultAccess($operation, $account) : TRUE;
 
-    // Get the default access restriction as specified by the access controller.
+    // Get the default access restriction as specified by the access control
+    // handler.
     $entity_default = $this->checkFieldAccess($operation, $field_definition, $account, $items);
 
     // Combine default access, denying access wins.
@@ -320,7 +321,7 @@ class EntityAccessControlHandler extends EntityControllerBase implements EntityA
   }
 
   /**
-   * Default field access as determined by this access controller.
+   * Default field access as determined by this access control handler.
    *
    * @param string $operation
    *   The operation access should be checked for.

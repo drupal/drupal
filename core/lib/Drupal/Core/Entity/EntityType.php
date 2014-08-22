@@ -80,11 +80,11 @@ class EntityType implements EntityTypeInterface {
   protected $originalClass;
 
   /**
-   * An array of controllers.
+   * An array of handlers.
    *
    * @var array
    */
-  protected $controllers = array();
+  protected $handlers = array();
 
   /**
    * The name of the default administrative permission.
@@ -239,7 +239,7 @@ class EntityType implements EntityTypeInterface {
       'revision' => '',
       'bundle' => ''
     );
-    $this->controllers += array(
+    $this->handlers += array(
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',
     );
   }
@@ -354,69 +354,69 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getControllerClasses() {
-    return $this->controllers;
+  public function getHandlerClasses() {
+    return $this->handlers;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getControllerClass($controller_type, $nested = FALSE) {
-    if ($this->hasControllerClass($controller_type, $nested)) {
-      $controllers = $this->getControllerClasses();
-      return $nested ? $controllers[$controller_type][$nested] : $controllers[$controller_type];
+  public function getHandlerClass($handler_type, $nested = FALSE) {
+    if ($this->hasHandlerClass($handler_type, $nested)) {
+      $handlers = $this->getHandlerClasses();
+      return $nested ? $handlers[$handler_type][$nested] : $handlers[$handler_type];
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setControllerClass($controller_type, $value) {
-    $this->controllers[$controller_type] = $value;
+  public function setHandlerClass($handler_type, $value) {
+    $this->handlers[$handler_type] = $value;
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasControllerClass($controller_type, $nested = FALSE) {
-    $controllers = $this->getControllerClasses();
-    if (!isset($controllers[$controller_type]) || ($nested && !isset($controllers[$controller_type][$nested]))) {
+  public function hasHandlerClass($handler_type, $nested = FALSE) {
+    $handlers = $this->getHandlerClasses();
+    if (!isset($handlers[$handler_type]) || ($nested && !isset($handlers[$handler_type][$nested]))) {
       return FALSE;
     }
-    $controller = $controllers[$controller_type];
+    $handler = $handlers[$handler_type];
     if ($nested) {
-      $controller = $controller[$nested];
+      $handler = $handler[$nested];
     }
-    return class_exists($controller);
+    return class_exists($handler);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getStorageClass() {
-    return $this->getControllerClass('storage');
+    return $this->getHandlerClass('storage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setStorageClass($class) {
-    $this->controllers['storage'] = $class;
+    $this->handlers['storage'] = $class;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormClass($operation) {
-    return $this->getControllerClass('form', $operation);
+    return $this->getHandlerClass('form', $operation);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setFormClass($operation, $class) {
-    $this->controllers['form'][$operation] = $class;
+    $this->handlers['form'][$operation] = $class;
     return $this;
   }
 
@@ -424,21 +424,21 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function hasFormClasses() {
-    return !empty($this->controllers['form']);
+    return !empty($this->handlers['form']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getListBuilderClass() {
-    return $this->getControllerClass('list_builder');
+    return $this->getHandlerClass('list_builder');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setListBuilderClass($class) {
-    $this->controllers['list_builder'] = $class;
+    $this->handlers['list_builder'] = $class;
     return $this;
   }
 
@@ -446,21 +446,21 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function hasListBuilderClass() {
-    return $this->hasControllerClass('list_builder');
+    return $this->hasHandlerClass('list_builder');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getViewBuilderClass() {
-    return $this->getControllerClass('view_builder');
+    return $this->getHandlerClass('view_builder');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setViewBuilderClass($class) {
-    $this->controllers['view_builder'] = $class;
+    $this->handlers['view_builder'] = $class;
     return $this;
   }
 
@@ -468,21 +468,21 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function hasViewBuilderClass() {
-    return $this->hasControllerClass('view_builder');
+    return $this->hasHandlerClass('view_builder');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAccessControlClass() {
-    return $this->getControllerClass('access');
+    return $this->getHandlerClass('access');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setAccessClass($class) {
-    $this->controllers['access'] = $class;
+    $this->handlers['access'] = $class;
     return $this;
   }
 

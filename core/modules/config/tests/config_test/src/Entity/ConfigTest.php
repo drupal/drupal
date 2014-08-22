@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * @ConfigEntityType(
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorage",
  *     "list_builder" = "Drupal\config_test\ConfigTestListBuilder",
  *     "form" = {

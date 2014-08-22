@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
- * Defines a common interface for entity view controller classes.
+ * Defines an interface for entity view builders.
  *
  * @ingroup entity_api
  */

@@ -157,7 +157,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *   The entity type for this view builder.
    *
    * @return \Drupal\Core\Entity\EntityViewBuilderInterface.
-   *   A render controller instance.
+   *   A view builder instance.
    */
   public function getViewBuilder($entity_type);
 
@@ -186,32 +186,32 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getFormObject($entity_type, $operation);
 
   /**
-   * Checks whether a certain entity type has a certain controller.
+   * Checks whether a certain entity type has a certain handler.
    *
    * @param string $entity_type
    *   The name of the entity type.
-   * @param string $controller_type
-   *   The name of the controller.
+   * @param string $handler_type
+   *   The name of the handler.
    *
    * @return bool
-   *   Returns TRUE if the entity type has the controller, else FALSE.
+   *   Returns TRUE if the entity type has the handler, else FALSE.
    */
-  public function hasController($entity_type, $controller_type);
+  public function hasHandler($entity_type, $handler_type);
 
   /**
-   * Creates a new controller instance.
+   * Creates a new handler instance.
    *
    * @param string $entity_type
    *   The entity type for this controller.
-   * @param string $controller_type
+   * @param string $handler_type
    *   The controller type to create an instance for.
    *
    * @return mixed
-   *   A controller instance.
+   *   A handler instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function getController($entity_type, $controller_type);
+  public function getHandler($entity_type, $handler_type);
 
   /**
    * Get the bundle info of an entity type.

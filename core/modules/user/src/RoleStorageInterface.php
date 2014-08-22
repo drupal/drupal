@@ -10,7 +10,7 @@ namespace Drupal\user;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 
 /**
- * Defines a common interface for roel entity controller classes.
+ * Defines an interface for role entity storage classes.
  */
 interface RoleStorageInterface extends ConfigEntityStorageInterface {
 

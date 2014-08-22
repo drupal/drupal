@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
- * Defines a common interface for comment entity controller classes.
+ * Defines an interface for comment entity storage classes.
  */
 interface CommentStorageInterface extends EntityStorageInterface {
 

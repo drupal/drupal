@@ -89,7 +89,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // During the initial form build, add this controller to the form state and
+    // During the initial form build, add this form object to the form state and
     // allow for initial preparation before form building and processing.
     if (!isset($form_state['controller'])) {
       $this->init($form_state);
@@ -117,7 +117,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * Initialize the form state and the entity before the first form build.
    */
   protected function init(FormStateInterface $form_state) {
-    // Add the controller to the form state so it can be easily accessed by
+    // Add the form object to the form state so it can be easily accessed by
     // module-provided form handlers there.
     $form_state['controller'] = $this;
 
@@ -318,8 +318,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
   public function buildEntity(array $form, FormStateInterface $form_state) {
     $entity = clone $this->entity;
     // If you submit a form, the form state comes from caching, which forces
-    // the controller to be the one before caching. Ensure to have the
-    // controller of the current request.
+    // the form object to be the one before caching. Ensure to have the
+    // form object of the current request.
     $form_state['controller'] = $this;
 
     $this->copyFormValuesToEntity($entity, $form, $form_state);

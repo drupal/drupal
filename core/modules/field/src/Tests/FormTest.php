@@ -627,7 +627,7 @@ class FormTest extends FieldTestBase {
     $edit = array("{$field_name}[0][value]" => $value);
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test_rev @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    entity_get_controller($entity_type)->resetCache(array($id));
+    \Drupal::entityManager()->getStorage($entity_type)->resetCache(array($id));
     $entity = entity_load($entity_type, $id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
@@ -641,7 +641,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm($entity_type . '/manage/' . $id, $edit, t('Save'));
 
     // Check that the expected value has been carried over to the new revision.
-    entity_get_controller($entity_type)->resetCache(array($id));
+    \Drupal::entityManager()->getStorage($entity_type)->resetCache(array($id));
     $entity = entity_load($entity_type, $id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'New revision has the expected value for the field with the Hidden widget');
   }

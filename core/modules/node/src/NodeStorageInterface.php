@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a common interface for node entity controller classes.
+ * Defines an interface for node entity storage classes.
  */
 interface NodeStorageInterface extends EntityStorageInterface {
 

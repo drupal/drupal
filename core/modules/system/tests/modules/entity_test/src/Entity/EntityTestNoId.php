@@ -13,7 +13,7 @@ namespace Drupal\entity_test\Entity;
  * @ContentEntityType(
  *   id = "entity_test_no_id",
  *   label = @Translation("Entity Test without id"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\Core\Entity\ContentEntityNullStorage",
  *   },
  *   fieldable = TRUE,

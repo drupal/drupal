@@ -13,7 +13,7 @@ namespace Drupal\config_test\Entity;
  * @ConfigEntityType(
  *   id = "config_query_test",
  *   label = @Translation("Test configuration for query"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorage",
  *     "list_builder" = "Drupal\Core\Config\Entity\ConfigEntityListBuilder",
  *     "form" = {

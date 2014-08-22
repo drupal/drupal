@@ -19,7 +19,7 @@ use Drupal\views\ViewStorageInterface;
  * @ConfigEntityType(
  *   id = "view",
  *   label = @Translation("View"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\views\ViewAccessControlHandler"
  *   },
  *   admin_permission = "administer views",

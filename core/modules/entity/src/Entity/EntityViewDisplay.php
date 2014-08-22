@@ -19,7 +19,7 @@ use Drupal\entity\EntityDisplayBase;
  * @ConfigEntityType(
  *   id = "entity_view_display",
  *   label = @Translation("Entity view display"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage"
  *   },
  *   config_prefix = "view_display",

@@ -17,7 +17,7 @@ use Drupal\entity_test\Entity\EntityTest;
  * @ContentEntityType(
  *   id = "entity_test_mul",
  *   label = @Translation("Test entity - data table"),
- *   controllers = {
+ *   handlers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "form" = {

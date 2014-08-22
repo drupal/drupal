@@ -8,7 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\EntityAccessControlHandler;
-use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\shortcut\Entity\Shortcut
  */
-class ShortcutAccessControlHandler extends EntityAccessControlHandler implements EntityControllerInterface {
+class ShortcutAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
   /**
    * The shortcut_set storage.

@@ -23,7 +23,7 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "user",
  *   label = @Translation("User"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\user\UserStorage",
  *     "access" = "Drupal\user\UserAccessControlHandler",
  *     "list_builder" = "Drupal\user\UserListBuilder",
