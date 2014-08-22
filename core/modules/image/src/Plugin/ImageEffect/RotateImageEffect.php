@@ -104,7 +104,7 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
       '#default_value' => $this->configuration['degrees'],
       '#title' => t('Rotation angle'),
       '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
-      '#field_suffix' => '&deg;',
+      '#field_suffix' => '°',
       '#required' => TRUE,
     );
     $form['bgcolor'] = array(

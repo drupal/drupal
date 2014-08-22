@@ -20,8 +20,8 @@
 #}
 {% if data.random %}
   {% trans %}
-    random between -{{ data.degrees|abs }}&deg; and {{ data.degrees|abs }}&deg;
+    random between -{{ data.degrees|abs }}° and {{ data.degrees|abs }}°
   {% endtrans %}
 {% else %}
-  {{ data.degrees }}&deg;
+  {{ data.degrees }}°
 {% endif %}
