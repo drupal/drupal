@@ -6,7 +6,7 @@ taxonomy.vocabulary_list:
   requirements:
     _permission: 'administer taxonomy'
 
-taxonomy.term_add:
+entity.taxonomy_term.add_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
@@ -14,7 +14,7 @@ taxonomy.term_add:
   requirements:
     _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
 
-taxonomy.term_edit:
+entity.taxonomy_term.edit_form:
   path: '/taxonomy/term/{taxonomy_term}/edit'
   defaults:
     _entity_form: 'taxonomy_term.default'
@@ -24,7 +24,7 @@ taxonomy.term_edit:
   requirements:
     _entity_access: 'taxonomy_term.update'
 
-taxonomy.term_delete:
+entity.taxonomy_term.delete_form:
   path: '/taxonomy/term/{taxonomy_term}/delete'
   defaults:
     _entity_form: 'taxonomy_term.delete'
@@ -34,7 +34,7 @@ taxonomy.term_delete:
   requirements:
     _entity_access: 'taxonomy_term.delete'
 
-taxonomy.vocabulary_add:
+entity.taxonomy_vocabulary.add_form:
   path: '/admin/structure/taxonomy/add'
   defaults:
     _entity_form: 'taxonomy_vocabulary'
@@ -42,7 +42,7 @@ taxonomy.vocabulary_add:
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
-taxonomy.vocabulary_edit:
+entity.taxonomy_vocabulary.edit_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:
     _entity_form: 'taxonomy_vocabulary.default'
@@ -50,7 +50,7 @@ taxonomy.vocabulary_edit:
   requirements:
     _entity_access: 'taxonomy_vocabulary.update'
 
-taxonomy.vocabulary_delete:
+entity.taxonomy_vocabulary.delete_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:
     _entity_form: 'taxonomy_vocabulary.delete'
@@ -58,7 +58,7 @@ taxonomy.vocabulary_delete:
   requirements:
     _entity_access: 'taxonomy_vocabulary.delete'
 
-taxonomy.vocabulary_reset:
+entity.taxonomy_vocabulary.reset_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
   defaults:
     _entity_form: 'taxonomy_vocabulary.reset'
@@ -80,7 +80,7 @@ taxonomy.autocomplete_vid:
   requirements:
     _permission: 'access content'
 
-taxonomy.overview_terms:
+entity.taxonomy_vocabulary.overview_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview'
   defaults:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'
@@ -88,7 +88,7 @@ taxonomy.overview_terms:
   requirements:
     _entity_access: 'taxonomy_vocabulary.view'
 
-taxonomy.term_page:
+entity.taxonomy_term.canonical:
   path: '/taxonomy/term/{taxonomy_term}'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::termPage'

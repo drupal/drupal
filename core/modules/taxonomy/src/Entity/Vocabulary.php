@@ -35,11 +35,11 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "add-form" = "taxonomy.term_add",
- *     "delete-form" = "taxonomy.vocabulary_delete",
- *     "reset" = "taxonomy.vocabulary_reset",
- *     "overview-form" = "taxonomy.overview_terms",
- *     "edit-form" = "taxonomy.vocabulary_edit"
+ *     "add-form" = "entity.taxonomy_term.add_form",
+ *     "delete-form" = "entity.taxonomy_vocabulary.delete_form",
+ *     "reset-form" = "entity.taxonomy_vocabulary.reset_form",
+ *     "overview-form" = "entity.taxonomy_vocabulary.overview_form",
+ *     "edit-form" = "entity.taxonomy_vocabulary.edit_form"
  *   }
  * )
  */

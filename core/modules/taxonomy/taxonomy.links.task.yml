@@ -1,18 +1,19 @@
-taxonomy.term_page:
+entity.taxonomy_term.canonical:
   title: 'View'
-  route_name: taxonomy.term_page
-  base_route: taxonomy.term_page
+  route_name: entity.taxonomy_term.canonical
+  base_route: entity.taxonomy_term.canonical
 
-taxonomy.term_edit:
+entity.taxonomy_term.edit_form:
   title: 'Edit'
-  route_name: taxonomy.term_edit
-  base_route: taxonomy.term_page
+  route_name: entity.taxonomy_term.edit_form
+  base_route: entity.taxonomy_term.canonical
 
-taxonomy.overview_terms:
+entity.taxonomy_vocabulary.overview_form:
   title: 'List'
-  route_name: taxonomy.overview_terms
-  base_route: taxonomy.overview_terms
-taxonomy.vocabulary_edit:
+  route_name: entity.taxonomy_vocabulary.overview_form
+  base_route: entity.taxonomy_vocabulary.overview_form
+
+entity.taxonomy_vocabulary.edit_form:
   title: 'Edit'
-  route_name: taxonomy.vocabulary_edit
-  base_route: taxonomy.overview_terms
+  route_name: entity.taxonomy_vocabulary.edit_form
+  base_route: entity.taxonomy_vocabulary.overview_form

@@ -1,11 +1,11 @@
-taxonomy_add_vocabulary_local_action:
-  route_name: taxonomy.vocabulary_add
+entity.taxonomy_vocabulary.add_form:
+  route_name: entity.taxonomy_vocabulary.add_form
   title: 'Add vocabulary'
   appears_on:
     - taxonomy.vocabulary_list
 
-taxonomy.term_add:
-  route_name: taxonomy.term_add
+entity.taxonomy_term.add_form:
+  route_name: entity.taxonomy_term.add_form
   title: 'Add term'
   appears_on:
-    - taxonomy.overview_terms
+    - entity.taxonomy_vocabulary.overview_form

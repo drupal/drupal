@@ -246,7 +246,11 @@ class BreadcrumbTest extends MenuTestBase {
         'enabled[value]' => 1,
       );
       $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-      $menu_links = entity_load_multiple_by_properties('menu_link_content', array('title' => $edit['title[0][value]'], 'route_name' => 'taxonomy.term_page', 'route_parameters' => serialize(array('taxonomy_term' => $term->id()))));
+      $menu_links = entity_load_multiple_by_properties('menu_link_content', array(
+        'title' => $edit['title[0][value]'],
+        'route_name' => 'entity.taxonomy_term.canonical',
+        'route_parameters' => serialize(array('taxonomy_term' => $term->id())),
+      ));
       $tags[$name]['link'] = reset($menu_links);
       $parent_mlid = $tags[$name]['link']->getPluginId();
     }

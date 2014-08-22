@@ -470,6 +470,8 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', array(), t('Reset to alphabetical'));
     // Submit confirmation form.
     $this->drupalPostForm(NULL, array(), t('Reset to alphabetical'));
+    // Ensure form redirected back to overview.
+    $this->assertUrl('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
     drupal_static_reset('taxonomy_get_tree');
     drupal_static_reset('taxonomy_get_treeparent');

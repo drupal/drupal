@@ -28,7 +28,7 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function testTaxonomyPageLocalTasks($route, $subtask = array()) {
     $tasks = array(
-      0 => array('taxonomy.term_page', 'taxonomy.term_edit'),
+      0 => array('entity.taxonomy_term.canonical', 'entity.taxonomy_term.edit_form'),
     );
     if ($subtask) $tasks[] = $subtask;
     $this->assertLocalTasks($route, $tasks);
@@ -39,8 +39,8 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getTaxonomyPageRoutes() {
     return array(
-      array('taxonomy.term_page'),
-      array('taxonomy.term_edit'),
+      array('entity.taxonomy_term.canonical'),
+      array('entity.taxonomy_term.edit_form'),
     );
   }
 
