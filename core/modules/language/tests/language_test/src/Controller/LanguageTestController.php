@@ -8,7 +8,7 @@
 namespace Drupal\language_test\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -28,7 +28,7 @@ class LanguageTestController implements ContainerInjectionInterface {
   /**
    * The language manager service.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -38,7 +38,7 @@ class LanguageTestController implements ContainerInjectionInterface {
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   An HTTP kernel.
    */
-  public function __construct(HttpKernelInterface $httpKernel, LanguageManager $language_manager) {
+  public function __construct(HttpKernelInterface $httpKernel, LanguageManagerInterface $language_manager) {
     $this->httpKernel = $httpKernel;
     $this->languageManager = $language_manager;
   }

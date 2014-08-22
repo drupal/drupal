@@ -26,7 +26,7 @@ class DateTest extends UnitTestCase {
   /**
    * The mocked language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $languageManager;
 

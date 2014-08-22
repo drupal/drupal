@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\TypedData;
 
-use Drupal\Core\Language\LanguageManager;
-
 /**
  * Interface for translatable data.
  */

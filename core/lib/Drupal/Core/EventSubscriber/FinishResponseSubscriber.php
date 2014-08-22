@@ -10,7 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +27,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The LanguageManager object for retrieving the correct language code.
+   * The language manager object for retrieving the correct language code.
    *
-   * @var LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -43,12 +43,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a FinishResponseSubscriber object.
    *
-   * @param LanguageManager $language_manager
-   *  The LanguageManager object for retrieving the correct language code.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager object for retrieving the correct language code.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   A config factory for retrieving required config objects.
    */
-  public function __construct(LanguageManager $language_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
   }

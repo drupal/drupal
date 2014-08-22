@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,7 +30,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -41,10 +41,10 @@ class BlockContentForm extends ContentEntityForm {
    *   The entity manager.
    * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_storage
    *   The custom block storage.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $block_content_storage, LanguageManager $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $block_content_storage, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_manager);
     $this->blockContentStorage = $block_content_storage;
     $this->languageManager = $language_manager;

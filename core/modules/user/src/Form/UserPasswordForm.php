@@ -10,7 +10,7 @@ namespace Drupal\user\Form;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,7 +30,7 @@ class UserPasswordForm extends FormBase {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -39,10 +39,10 @@ class UserPasswordForm extends FormBase {
    *
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(UserStorageInterface $user_storage, LanguageManager $language_manager) {
+  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
   }

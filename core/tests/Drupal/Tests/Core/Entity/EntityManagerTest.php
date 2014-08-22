@@ -68,7 +68,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $languageManager;
 
@@ -108,6 +108,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
 
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue((object) array('id' => 'en')));

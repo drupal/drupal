@@ -11,7 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -41,7 +41,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -65,10 +65,10 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The CKEditor plugin manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;

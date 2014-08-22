@@ -10,7 +10,6 @@ namespace Drupal\Core\Path;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\CacheDecorator\CacheDecoratorInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
@@ -46,7 +45,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   /**
    * Language manager for retrieving the default langcode when none is specified.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 

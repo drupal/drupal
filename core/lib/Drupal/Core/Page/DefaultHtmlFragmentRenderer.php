@@ -8,7 +8,7 @@
 namespace Drupal\Core\Page;
 
 use Drupal\Core\Cache\CacheableInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Default page rendering engine.
@@ -18,17 +18,17 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
   /**
    * Constructs a new DefaultHtmlPageRenderer.
    *
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager service.
    */
-  public function __construct(LanguageManager $language_manager) {
+  public function __construct(LanguageManagerInterface $language_manager) {
     $this->languageManager = $language_manager;
   }
 

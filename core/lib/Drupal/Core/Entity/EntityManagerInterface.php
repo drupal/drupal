@@ -272,7 +272,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    *   An entity object for the translated data.
    *
-   * @see \Drupal\Core\Language\LanguageManager::getFallbackCandidates()
+   * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array());
 

@@ -57,7 +57,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -246,7 +246,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   /**
    * Returns the language manager service.
    *
-   * @return \Drupal\Core\Language\LanguageManager
+   * @return \Drupal\Core\Language\LanguageManagerInterface
    *   The language manager.
    */
   protected function languageManager() {
