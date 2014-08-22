@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
@@ -1090,8 +1091,10 @@ function system_preprocess_block(&$variables) {
  *
  * @param $form_element
  *   The form element containing the name of the directory to check.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  */
-function system_check_directory($form_element) {
+function system_check_directory($form_element, FormStateInterface $form_state) {
   $directory = $form_element['#value'];
   if (strlen($directory) == 0) {
     return $form_element;
@@ -1100,13 +1103,13 @@ function system_check_directory($form_element) {
   $logger = \Drupal::logger('file system');
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
-    form_set_error($form_element['#parents'][0], $form_state, t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
+    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
     $logger->error('The directory %directory does not exist and could not be created.', array('%directory' => $directory));
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
     // If the directory is not writable and cannot be made so.
-    form_set_error($form_element['#parents'][0], $form_state, t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
+    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
     $logger->error('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory));
   }
   elseif (is_dir($directory)) {

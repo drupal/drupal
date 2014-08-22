@@ -159,7 +159,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     if (!valid_email_address($form_state->getValue('recipient')) && strpos($form_state->getValue('recipient'), ':mail') === FALSE) {
       // We want the literal %author placeholder to be emphasized in the error message.
-      form_set_error('recipient', $form_state, t('Enter a valid email address or use a token email address such as %author.', array('%author' => '[node:author:mail]')));
+      $form_state->setErrorByName('recipient', t('Enter a valid email address or use a token email address such as %author.', array('%author' => '[node:author:mail]')));
     }
   }
 

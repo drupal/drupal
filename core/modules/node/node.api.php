@@ -405,7 +405,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
  * finished editing the node and is previewing or submitting it. It is invoked
  * at the end of all the standard validation steps.
  *
- * To indicate a validation error, use form_set_error().
+ * To indicate a validation error, use $form_state->setErrorByName().
  *
  * Note: Changes made to the $node object within your hook implementation will
  * have no effect.  The preferred method to change a node's content is to use
@@ -424,7 +424,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
 function hook_node_validate(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
-      form_set_error('time', $form_state, t('An event may not end before it starts.'));
+      $form_state->setErrorByName('time', t('An event may not end before it starts.'));
     }
   }
 }

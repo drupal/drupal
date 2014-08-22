@@ -165,7 +165,7 @@ class BooleanOperator extends FilterPluginBase {
 
   protected function valueValidate($form, FormStateInterface $form_state) {
     if ($form_state->getValue(array('options', 'value')) == 'All' && !$form_state->isValueEmpty(array('options', 'expose', 'required'))) {
-      form_set_error('value', $form_state, t('You must select a value unless this is an non-required exposed filter.'));
+      $form_state->setErrorByName('value', t('You must select a value unless this is an non-required exposed filter.'));
     }
   }
 

@@ -294,7 +294,7 @@ class BulkForm extends FieldPluginBase {
   public function viewsFormValidate(&$form, FormStateInterface $form_state) {
     $selected = array_filter($form_state->getValue($this->options['id']));
     if (empty($selected)) {
-      form_set_error('', $form_state, $this->emptySelectedMessage());
+      $form_state->setErrorByName('', $this->emptySelectedMessage());
     }
   }
 

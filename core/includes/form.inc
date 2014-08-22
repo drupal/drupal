@@ -136,18 +136,6 @@ function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
 }
 
 /**
- * Files an error against a form element.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use $form_state->setErrorByName().
- *
- * @see \Drupal\Core\Form\FormStateInterface::setErrorByName().
- */
-function form_set_error($name, FormStateInterface $form_state, $message = '') {
-  $form_state->setErrorByName($name, $message);
-}
-
-/**
  * Returns an associative array of all errors.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

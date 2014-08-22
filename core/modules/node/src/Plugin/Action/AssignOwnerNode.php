@@ -121,7 +121,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE name = :name AND default_langcode = 1', 0, 1, array(':name' => $form_state->getValue('owner_name')))->fetchField();
     if (!$exists) {
-      form_set_error('owner_name', $form_state, t('Enter a valid username.'));
+      $form_state->setErrorByName('owner_name', t('Enter a valid username.'));
     }
   }
 

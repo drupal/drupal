@@ -264,7 +264,7 @@ function content_translation_form_language_content_settings_validate(array $form
         $translatable_fields = isset($settings[$entity_type][$bundle]['fields']) ? array_filter($settings[$entity_type][$bundle]['fields']) : FALSE;
         if (empty($translatable_fields)) {
           $t_args = array('%bundle' => $form['settings'][$entity_type][$bundle]['settings']['#label']);
-          form_set_error($name, $form_state, t('At least one field needs to be translatable to enable %bundle for translation.', $t_args));
+          $form_state->setErrorByName($name, t('At least one field needs to be translatable to enable %bundle for translation.', $t_args));
         }
 
         $values = $bundle_settings['settings']['language'];
@@ -272,7 +272,7 @@ function content_translation_form_language_content_settings_validate(array $form
           foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->name;
           }
-          form_set_error($name, $form_state, t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(', ', $locked_languages))));
+          $form_state->setErrorByName($name, t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(', ', $locked_languages))));
         }
       }
     }

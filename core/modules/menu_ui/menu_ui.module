@@ -501,7 +501,7 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
   if (count($available_menus)) {
     $menu_item_id_parts = explode(':', $form_state->getValue('menu_parent'));
     if (!in_array($menu_item_id_parts[0], $available_menus)) {
-      form_set_error('menu_parent', $form_state, t('The selected menu item is not under one of the selected menus.'));
+      $form_state->setErrorByName('menu_parent', t('The selected menu item is not under one of the selected menus.'));
     }
   }
   else {

@@ -197,14 +197,14 @@ abstract class SqlBase extends PagerPluginBase {
       $error = TRUE;
     }
     if ($error) {
-      form_set_error('pager_options][expose][items_per_page_options', $form_state, t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
+      $form_state->setErrorByName('pager_options][expose][items_per_page_options', t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
     }
 
     // Make sure that the items_per_page is part of the expose settings.
     if (!$form_state->isValueEmpty(array('pager_options', 'expose', 'items_per_page')) && !$form_state->isValueEmpty(array('pager_options', 'items_per_page'))) {
       $items_per_page = $form_state->getValue(array('pager_options', 'items_per_page'));
       if (array_search($items_per_page, $options) === FALSE) {
-        form_set_error('pager_options][expose][items_per_page_options', $form_state, t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
+        $form_state->setErrorByName('pager_options][expose][items_per_page_options', t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
           array('@items_per_page' => $items_per_page))
         );
       }
@@ -371,7 +371,7 @@ abstract class SqlBase extends PagerPluginBase {
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('offset') && trim($form_state->getValue('offset'))) {
       if (!is_numeric($form_state->getValue('offset')) || $form_state->getValue('offset') < 0) {
-        form_set_error('offset', $form_state, t('Offset must be an number greather or equal than 0.'));
+        $form_state->setErrorByName('offset', t('Offset must be an number greather or equal than 0.'));
       }
     }
   }

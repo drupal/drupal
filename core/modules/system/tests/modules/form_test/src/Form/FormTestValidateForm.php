@@ -69,7 +69,7 @@ class FormTestValidateForm extends FormBase {
       drupal_set_message(t('@label value: @value', array('@label' => $form['name']['#title'], '@value' => $form_state->getValue('name'))));
 
       // Trigger a form validation error to see our changes.
-      form_set_error('', $form_state);
+      $form_state->setErrorByName('');
     }
   }
 

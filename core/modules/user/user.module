@@ -507,8 +507,8 @@ function user_validate_current_pass(&$form, FormStateInterface $form_state) {
     if ((strlen(trim($form_state->getValue($key))) > 0) && ($form_state->getValue($key) != $current_value)) {
       $current_pass_failed = $form_state->isValueEmpty('current_pass') || !\Drupal::service('password')->check($form_state->getValue('current_pass'), $account);
       if ($current_pass_failed) {
-        form_set_error('current_pass', $form_state, t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
-        form_set_error($key, $form_state);
+        $form_state->setErrorByName('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
+        $form_state->setErrorByName($key);
       }
       // We only need to check the password once.
       break;

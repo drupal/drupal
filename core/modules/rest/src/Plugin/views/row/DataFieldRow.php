@@ -128,7 +128,7 @@ class DataFieldRow extends RowPluginBase {
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.
     if (($filtered = array_filter($aliases)) && (array_unique($filtered) !== $filtered)) {
-      form_set_error('aliases', $form_state, t('All field aliases must be unique'));
+      $form_state->setErrorByName('aliases', t('All field aliases must be unique'));
     }
   }
 
