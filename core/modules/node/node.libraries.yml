@@ -10,12 +10,16 @@ drupal.node:
 
 drupal.node.preview:
   version: VERSION
+  css:
+    theme:
+      css/node.preview.css: {}
   js:
     node.preview.js: {}
   dependencies:
     - core/jquery
     - core/jquery.once
     - core/drupal
+    - core/drupal.form
 
 drupal.content_types:
   version: VERSION

@@ -1,4 +1,3 @@
-
 node.multiple_delete_confirm:
   path: '/admin/content/node/delete'
   defaults:
@@ -36,6 +35,18 @@ node.add:
     _node_add_access: 'node:{node_type}'
   options:
     _node_operation_route: TRUE
+
+entity.node.preview:
+  path: '/node/preview/{node_preview}/{view_mode_id}'
+  defaults:
+    _content: '\Drupal\node\Controller\NodePreviewController::view'
+    _title_callback: '\Drupal\node\Controller\NodePreviewController::title'
+  requirements:
+    _node_preview_access: '{node_preview}'
+  options:
+    parameters:
+      node_preview:
+        type: 'node_preview'
 
 entity.node.canonical:
   path: '/node/{node}'

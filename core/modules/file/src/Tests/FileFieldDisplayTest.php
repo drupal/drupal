@@ -87,6 +87,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
     $this->drupalPostForm("node/$nid/edit", $edit, t('Preview'));
+    $this->clickLink(t('Back to content editing'));
     $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
     $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
   }

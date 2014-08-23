@@ -234,7 +234,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertText($edit[$body_value_key], 'Old body found in preview.');
 
     // Save and verify that only the title was changed.
-    $this->drupalPostForm(NULL, $new_edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $new_edit, t('Save'));
     $this->assertNoText($edit['title[0][value]'], 'Old title not found.');
     $this->assertText($new_edit['title[0][value]'], 'New title found.');
     $this->assertText($edit[$body_value_key], 'Old body found.');

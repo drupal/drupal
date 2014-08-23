@@ -116,13 +116,31 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertTitle(t('Preview | Drupal'), 'Basic page title is preview.');
+    $this->assertTitle(t('@title | Drupal', array('@title' => $edit[$title_key])), 'Basic page title is preview.');
     $this->assertText($edit[$title_key], 'Title displayed.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertLink(t('Back to content editing'));
+
+    // Get the UUID.
+    $url = parse_url($this->getUrl());
+    $paths = explode('/', $url['path']);
+    $view_mode = array_pop($paths);
+    $uuid = array_pop($paths);
+
+    // Switch view mode. We'll remove the body from the teaser view mode.
+    entity_get_display('node', 'page', 'teaser')
+      ->removeComponent('body')
+      ->save();
+
+    $view_mode_edit = array('view_mode' => 'teaser');
+    $this->drupalPostForm('node/preview/' . $uuid . '/default', $view_mode_edit, t('Switch'));
+    $this->assertRaw('view-mode-teaser', 'View mode teaser class found.');
+    $this->assertNoText($edit[$body_key], 'Body not displayed.');
 
     // Check that the title, body and term fields are displayed with the
-    // correct values.
+    // values after going back to the content edit page.
+    $this->clickLink(t('Back to content editing'));
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
@@ -153,7 +171,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertNoLink($newterm1);
     $this->assertNoLink($newterm2);
 
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check with one more new term, keeping old terms, removing the existing
     // one.
@@ -168,7 +186,6 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertLink($newterm1);
     $this->assertLink($newterm2);
     $this->assertNoLink($newterm3);
-    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 
   /**
@@ -190,13 +207,14 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertTitle(t('Preview | Drupal'), 'Basic page title is preview.');
+    $this->assertTitle(t('@title | Drupal', array('@title' => $edit[$title_key])), 'Basic page title is preview.');
     $this->assertText($edit[$title_key], 'Title displayed.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
 
-    // Check that the title, body and term fields are displayed with the correct values.
-    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    // Check that the title and body fields are displayed with the correct
+    // values after going back to the content edit page.
+    $this->clickLink(t('Back to content editing'));    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
 

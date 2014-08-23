@@ -13,6 +13,9 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\user\TempStoreFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the node edit forms.
@@ -25,6 +28,36 @@ class NodeForm extends ContentEntityForm {
    * @var array
    */
   protected $settings;
+
+  /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\user\TempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
+   * Constructs a ContentEntityForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   *   The factory for the temp store object.
+   */
+  public function __construct(EntityManagerInterface $entity_manager, TempStoreFactory $temp_store_factory) {
+    parent::__construct($entity_manager);
+    $this->tempStoreFactory = $temp_store_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.manager'),
+      $container->get('user.tempstore')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -47,6 +80,28 @@ class NodeForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+
+    // Try to restore from temp store.
+    $uuid = $this->entity->uuid();
+    $store = $this->tempStoreFactory->get('node_preview');
+
+    // If the user is creating a new node, the UUID is passed in the request.
+    if ($request_uuid = \Drupal::request()->query->get('uuid')) {
+      $uuid = $request_uuid;
+    }
+
+    if ($preview = $store->get($uuid)) {
+      $form_state = $preview;
+
+      // Rebuild the form.
+      $form_state['rebuild'] = TRUE;
+      $this->entity = $preview['controller']->getEntity();
+      unset($this->entity->in_preview);
+
+      // Remove the entry from the temp store.
+      $store->delete($uuid);
+    }
+
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
 
@@ -56,15 +111,6 @@ class NodeForm extends ContentEntityForm {
 
     $current_user = \Drupal::currentUser();
     $user_config = \Drupal::config('user.settings');
-    // Some special stuff when previewing a node.
-    if (isset($form_state['node_preview'])) {
-      $form['#prefix'] = $form_state['node_preview'];
-      $node->in_preview = TRUE;
-      $form['#title'] = $this->t('Preview');
-    }
-    else {
-      unset($node->in_preview);
-    }
 
     // Override the default CSS class name, since the user-defined node type
     // name in 'TYPE-node-form' potentially clashes with third-party class
@@ -366,11 +412,13 @@ class NodeForm extends ContentEntityForm {
    *   The current state of the form.
    */
   public function preview(array $form, FormStateInterface $form_state) {
-    // @todo Remove this: we should not have explicit includes in autoloaded
-    //   classes.
-    module_load_include('inc', 'node', 'node.pages');
-    $form_state['node_preview'] = node_preview($this->entity, $form_state);
-    $form_state['rebuild'] = TRUE;
+    $store = $this->tempStoreFactory->get('node_preview');
+    $this->entity->in_preview = TRUE;
+    $store->set($this->entity->uuid(), $form_state);
+    $form_state->setRedirect('entity.node.preview', array(
+      'node_preview' => $this->entity->uuid(),
+      'view_mode_id' => 'default',
+    ));
   }
 
   /**

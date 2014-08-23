@@ -184,9 +184,9 @@ class TermTest extends TaxonomyTestBase {
 
     // Preview the node.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
-    $this->assertNoUniqueText($term2->getName(), 'Term is displayed when previewing the node.');
-    $this->drupalPostForm(NULL, NULL, t('Preview'));
-    $this->assertNoUniqueText($term2->getName(), 'Term is displayed when previewing the node again.');
+    $this->assertUniqueText($term2->getName(), 'Term is displayed when previewing the node.');
+    $this->drupalPostForm('node/' . $node->id() . '/edit', NULL, t('Preview'));
+    $this->assertUniqueText($term2->getName(), 'Term is displayed when previewing the node again.');
   }
 
   /**

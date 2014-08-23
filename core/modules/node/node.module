@@ -169,11 +169,6 @@ function node_theme() {
       'file' => 'node.pages.inc',
       'template' => 'node-add-list',
     ),
-    'node_preview' => array(
-      'variables' => array('node' => NULL),
-      'file' => 'node.pages.inc',
-      'template' => 'node-preview',
-    ),
     'node_edit_form' => array(
       'render element' => 'form',
       'template' => 'node-edit-form',
@@ -627,7 +622,10 @@ function template_preprocess_node(&$variables) {
   ));
   $variables['label'] = $variables['elements']['title'];
   unset($variables['elements']['title']);
-  $variables['page'] = $variables['view_mode'] == 'full' && node_is_page($node);
+  // The 'page' variable is set to TRUE in two occasions:
+  //   - The view mode is 'full' and we are on the 'node.view' route.
+  //   - The node is in preview and view mode is either 'full' or 'default'.
+  $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, array('full', 'default'))));
 
   // Helpful $content variable for templates.
   $variables += array('content' => array());
@@ -669,7 +667,7 @@ function template_preprocess_node(&$variables) {
   if ($variables['view_mode']) {
     $variables['attributes']['class'][] = drupal_html_class('node--view-mode-' . $variables['view_mode']);
   }
-  if (isset($variables['preview'])) {
+  if (isset($node->preview)) {
     $variables['attributes']['class'][] = 'node--preview';
   }
 }
@@ -1042,6 +1040,25 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
   return entity_view_multiple($nodes, $view_mode, $langcode);
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function node_page_build(&$page) {
+  // Add 'Back to content editing' link on preview page.
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'entity.node.preview') {
+    $page['page_top']['node_preview'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('node-preview-container', 'container-inline')
+      ),
+    );
+
+    $form = \Drupal::formBuilder()->getForm('\Drupal\node\Form\NodePreviewForm', $route_match->getParameter('node_preview'));
+    $page['page_top']['node_preview']['view_mode'] = $form;
+  }
 }
 
 /**
