@@ -249,7 +249,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected function simulateFormSubmission($form_id, FormInterface $form_arg, FormStateInterface $form_state, $programmed = TRUE) {
     $form_state['build_info']['callback_object'] = $form_arg;
     $form_state['build_info']['args'] = array();
-    $form_state['input']['op'] = 'Submit';
+
+    $input = $form_state->getUserInput();
+    $input['op'] = 'Submit';
+    $form_state->setUserInput($input);
+
     $form_state['programmed'] = $programmed;
     $form_state['submitted'] = TRUE;
     return $this->formBuilder->buildForm($form_arg, $form_state);

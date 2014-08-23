@@ -76,9 +76,10 @@ class FormTestProgrammaticForm extends FormBase {
       // #limit_validation_errors property.)
       '#submit' => array(array($this, 'submitForm')),
     );
-    if (!empty($form_state['input']['field_to_validate']) && $form_state['input']['field_to_validate'] != 'all') {
+    $user_input = $form_state->getUserInput();
+    if (!empty($user_input['field_to_validate']) && $user_input['field_to_validate'] != 'all') {
       $form['submit_limit_validation']['#limit_validation_errors'] = array(
-        array($form_state['input']['field_to_validate']),
+        array($user_input['field_to_validate']),
       );
     }
 

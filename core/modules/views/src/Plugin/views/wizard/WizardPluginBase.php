@@ -494,7 +494,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * value of the requested #select element.
    *
    * By necessity, this function sometimes uses non-validated user input from
-   * $form_state['input'] in making its determination. Although it performs some
+   * FormState::$input in making its determination. Although it performs some
    * minor validation of its own, it is not complete. The intention is that the
    * return value of this function should only be used to help decide how to
    * build the current form the next time it is reloaded, not to be saved as if
@@ -532,16 +532,17 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // If there is a user-submitted value for this element that matches one of
     // the currently available options attached to it, use that. We need to check
-    // $form_state['input'] rather than $form_state->getValues() here because the
+    // FormState::$input rather than $form_state->getValues() here because the
     // triggering element often has the #limit_validation_errors property set to
     // prevent unwanted errors elsewhere on the form. This means that the
     // $form_state->getValues() array won't be complete. We could make it complete
     // by adding each required part of the form to the #limit_validation_errors
     // property individually as the form is being built, but this is difficult to
     // do for a highly dynamic and extensible form. This method is much simpler.
-    if (!empty($form_state['input'])) {
+    $user_input = &$form_state->getUserInput();
+    if (!empty($user_input)) {
       $key_exists = NULL;
-      $submitted = NestedArray::getValue($form_state['input'], $parents, $key_exists);
+      $submitted = NestedArray::getValue($user_input, $parents, $key_exists);
       // Check that the user-submitted value is one of the allowed options before
       // returning it. This is not a substitute for actual form validation;
       // rather it is necessary because, for example, the same select element

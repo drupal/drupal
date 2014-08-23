@@ -224,17 +224,19 @@ abstract class ExposedFormPluginBase extends PluginBase {
         'ASC' => $this->options['sort_asc_label'],
         'DESC' => $this->options['sort_desc_label'],
       );
-      if (isset($form_state['input']['sort_by']) && isset($this->view->sort[$form_state['input']['sort_by']])) {
-        $default_sort_order = $this->view->sort[$form_state['input']['sort_by']]->options['order'];
+      $user_input = $form_state->getUserInput();
+      if (isset($user_input['sort_by']) && isset($this->view->sort[$user_input['sort_by']])) {
+        $default_sort_order = $this->view->sort[$user_input['sort_by']]->options['order'];
       }
       else {
         $first_sort = reset($this->view->sort);
         $default_sort_order = $first_sort->options['order'];
       }
 
-      if (!isset($form_state['input']['sort_by'])) {
+      if (!isset($user_input['sort_by'])) {
         $keys = array_keys($exposed_sorts);
-        $form_state['input']['sort_by'] = array_shift($keys);
+        $user_input['sort_by'] = array_shift($keys);
+        $form_state->setUserInput($user_input);
       }
 
       if ($this->options['expose_sort_order']) {

@@ -357,7 +357,7 @@ class MenuForm extends EntityForm {
     // equally separated yet. Therefore, we use a $form_state key to point to
     // the parents of the form section.
     $parents = $form_state['menu_overview_form_parents'];
-    $input = NestedArray::getValue($form_state['input'], $parents);
+    $input = NestedArray::getValue($form_state->getUserInput(), $parents);
     $form = &NestedArray::getValue($complete_form, $parents);
 
     // When dealing with saving menu items, the order in which these items are

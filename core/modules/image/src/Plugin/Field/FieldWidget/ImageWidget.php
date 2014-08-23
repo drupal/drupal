@@ -235,7 +235,7 @@ class ImageWidget extends FileWidget {
       // If the image is not there, we do not check for empty values.
       $parents = $element['#parents'];
       $field = array_pop($parents);
-      $image_field = NestedArray::getValue($form_state['input'], $parents);
+      $image_field = NestedArray::getValue($form_state->getUserInput(), $parents);
       // We check for the array key, so that it can be NULL (like if the user
       // submits the form without using the "upload" button).
       if (!array_key_exists($field, $image_field)) {

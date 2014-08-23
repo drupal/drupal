@@ -187,9 +187,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Ensure the form ID is prepared.
     $form_id = $this->getFormId($form_id, $form_state);
 
-    if (!isset($form_state['input'])) {
+    $input = $form_state->getUserInput();
+    if (!isset($input)) {
       $request = $this->requestStack->getCurrentRequest();
-      $form_state->set('input', $form_state['method'] == 'get' ? $request->query->all() : $request->request->all());
+      $input = $form_state['method'] == 'get' ? $request->query->all() : $request->request->all();
+      $form_state->setUserInput($input);
     }
 
     if (isset($_SESSION['batch_form_state'])) {
@@ -205,9 +207,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // the form to proceed. In addition, if there is stored form_state data from
     // a previous step, we'll retrieve it so it can be passed on to the form
     // processing code.
-    $check_cache = isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id']);
+    $check_cache = isset($input['form_id']) && $input['form_id'] == $form_id && !empty($input['form_build_id']);
     if ($check_cache) {
-      $form = $this->getCache($form_state['input']['form_build_id'], $form_state);
+      $form = $this->getCache($input['form_build_id'], $form_state);
     }
 
     // If the previous bit of code didn't result in a populated $form object, we
@@ -393,11 +395,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form_state->addBuildInfo('args', array_values($args));
     }
 
-    // Populate $form_state['input'] with the submitted values before retrieving
+    // Populate FormState::$input with the submitted values before retrieving
     // the form, to be consistent with what self::buildForm() does for
     // non-programmatic submissions (form builder functions may expect it to be
     // there).
-    $form_state->set('input', $form_state->getValues());
+    $form_state->setUserInput($form_state->getValues());
 
     $form_state->set('programmed', TRUE);
 
@@ -462,7 +464,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // With GET, these forms are always submitted if requested.
     if ($form_state['method'] == 'get' && !empty($form_state['always_process'])) {
-      $input = $form_state->get('input');
+      $input = $form_state->getUserInput();
       if (!isset($input['form_build_id'])) {
         $input['form_build_id'] = $form['#build_id'];
       }
@@ -472,7 +474,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       if (!isset($input['form_token']) && isset($form['#token'])) {
         $input['form_token'] = $this->csrfToken->get($form['#token']);
       }
-      $form_state->set('input', $input);
+      $form_state->setUserInput($input);
     }
 
     // self::doBuildForm() finishes building the form by calling element
@@ -737,7 +739,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // Set a flag if we have a correct form submission. This is always TRUE
       // for programmed forms coming from self::submitForm(), or if the form_id
       // coming from the POST data is set and matches the current form_id.
-      if ($form_state['programmed'] || (!empty($form_state['input']) && (isset($form_state['input']['form_id']) && ($form_state['input']['form_id'] == $form_id)))) {
+      $input = $form_state->getUserInput();
+      if ($form_state['programmed'] || (!empty($input) && (isset($input['form_id']) && ($input['form_id'] == $form_id)))) {
         $form_state->set('process_input', TRUE);
       }
       else {
@@ -962,20 +965,20 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // Get the input for the current element. NULL values in the input need
         // to be explicitly distinguished from missing input. (see below)
         $input_exists = NULL;
-        $input = NestedArray::getValue($form_state['input'], $element['#parents'], $input_exists);
+        $input = NestedArray::getValue($form_state->getUserInput(), $element['#parents'], $input_exists);
         // For browser-submitted forms, the submitted values do not contain
         // values for certain elements (empty multiple select, unchecked
         // checkbox). During initial form processing, we add explicit NULL
-        // values for such elements in $form_state['input']. When rebuilding the
+        // values for such elements in FormState::$input. When rebuilding the
         // form, we can distinguish elements having NULL input from elements
         // that were not part of the initially submitted form and can therefore
         // use default values for the latter, if required. Programmatically
         // submitted forms can submit explicit NULL values when calling
-        // self::submitForm() so we do not modify $form_state['input'] for them.
+        // self::submitForm() so we do not modify FormState::$input for them.
         if (!$input_exists && !$form_state['rebuild'] && !$form_state['programmed']) {
-          // Add the necessary parent keys to $form_state['input'] and sets the
+          // Add the necessary parent keys to FormState::$input and sets the
           // element's input value to NULL.
-          NestedArray::setValue($form_state['input'], $element['#parents'], NULL);
+          NestedArray::setValue($form_state->getUserInput(), $element['#parents'], NULL);
           $input_exists = TRUE;
         }
         // If we have input for the current element, assign it to the #value
@@ -1054,8 +1057,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * // buttons all named 'op', and only differing in their value.
    */
   protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
-    if (!empty($form_state['input']['_triggering_element_name']) && $element['#name'] == $form_state['input']['_triggering_element_name']) {
-      if (empty($form_state['input']['_triggering_element_value']) || $form_state['input']['_triggering_element_value'] == $element['#value']) {
+    $input = $form_state->getUserInput();
+    if (!empty($input['_triggering_element_name']) && $element['#name'] == $input['_triggering_element_name']) {
+      if (empty($input['_triggering_element_value']) || $input['_triggering_element_value'] == $element['#value']) {
         return TRUE;
       }
     }
@@ -1088,7 +1092,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // return value is used to determine which was clicked. This ONLY works as
     // long as $form['#name'] puts the value at the top level of the tree of
     // \Drupal::request()->request data.
-    if (isset($form_state['input'][$element['#name']]) && $form_state['input'][$element['#name']] == $element['#value']) {
+    $input = $form_state->getUserInput();
+    if (isset($input[$element['#name']]) && $input[$element['#name']] == $element['#value']) {
       return TRUE;
     }
     // When image buttons are clicked, browsers do NOT pass the form element

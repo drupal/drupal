@@ -38,7 +38,8 @@ class SimpletestTestForm extends FormBase {
 
     // Do not needlessly re-execute a full test discovery if the user input
     // already contains an explicit list of test classes to run.
-    if (!empty($form_state['input']['tests'])) {
+    $user_input = $form_state->getUserInput();
+    if (!empty($user_input['tests'])) {
       return $form;
     }
 
@@ -197,8 +198,9 @@ class SimpletestTestForm extends FormBase {
     //   entire form more easily, BUT retaining routing access security and
     //   retaining Form API CSRF #token security validation, and without having
     //   to rely on form caching.
-    if ($form_state->isValueEmpty('tests') && !empty($form_state['input']['tests'])) {
-      $form_state->setValue('tests', $form_state['input']['tests']);
+    $user_input = $form_state->getUserInput();
+    if ($form_state->isValueEmpty('tests') && !empty($user_input['tests'])) {
+      $form_state->setValue('tests', $user_input['tests']);
     }
 
     $tests_list = array();

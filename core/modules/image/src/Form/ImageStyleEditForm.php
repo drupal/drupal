@@ -54,6 +54,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    $user_input = $form_state->getUserInput();
     $form['#title'] = $this->t('Edit style %name', array('%name' => $this->entity->label()));
     $form['#tree'] = TRUE;
     $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
@@ -93,7 +94,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     foreach ($this->entity->getEffects() as $effect) {
       $key = $effect->getUuid();
       $form['effects'][$key]['#attributes']['class'][] = 'draggable';
-      $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
+      $form['effects'][$key]['#weight'] = isset($user_input['effects']) ? $user_input['effects'][$key]['weight'] : NULL;
       $form['effects'][$key]['effect'] = array(
         '#tree' => FALSE,
         'data' => array(
@@ -149,7 +150,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     }
     $form['effects']['new'] = array(
       '#tree' => FALSE,
-      '#weight' => isset($form_state['input']['weight']) ? $form_state['input']['weight'] : NULL,
+      '#weight' => isset($user_input['weight']) ? $user_input['weight'] : NULL,
       '#attributes' => array('class' => array('draggable')),
     );
     $form['effects']['new']['effect'] = array(

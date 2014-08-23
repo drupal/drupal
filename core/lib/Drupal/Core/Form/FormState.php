@@ -567,6 +567,21 @@ class FormState implements FormStateInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    */
+  public function &getUserInput() {
+    return $this->input;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUserInput(array $user_input) {
+    $this->input = $user_input;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function &getValues() {
     return $this->values;
   }

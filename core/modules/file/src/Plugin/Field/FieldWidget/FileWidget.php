@@ -487,12 +487,12 @@ class FileWidget extends WidgetBase {
    */
   public static function submit($form, FormStateInterface $form_state) {
     // During the form rebuild, formElement() will create field item widget
-    // elements using re-indexed deltas, so clear out $form_state['input'] to
+    // elements using re-indexed deltas, so clear out FormState::$input to
     // avoid a mismatch between old and new deltas. The rebuilt elements will
     // have #default_value set appropriately for the current state of the field,
     // so nothing is lost in doing this.
     $parents = array_slice($form_state['triggering_element']['#parents'], 0, -2);
-    NestedArray::setValue($form_state['input'], $parents, NULL);
+    NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
 
     $button = $form_state['triggering_element'];
 

@@ -171,16 +171,17 @@ class OverviewTerms extends FormBase {
     // If this form was already submitted once, it's probably hit a validation
     // error. Ensure the form is rebuilt in the same order as the user
     // submitted.
-    if (!empty($form_state['input'])) {
+    $user_input = $form_state->getUserInput();
+    if (!empty($user_input)) {
       // Get the POST order.
-      $order = array_flip(array_keys($form_state['input']['terms']));
+      $order = array_flip(array_keys($user_input['terms']));
       // Update our form with the new order.
       $current_page = array_merge($order, $current_page);
       foreach ($current_page as $key => $term) {
         // Verify this is a term for the current page and set at the current
         // depth.
-        if (is_array($form_state['input']['terms'][$key]) && is_numeric($form_state['input']['terms'][$key]['term']['tid'])) {
-          $current_page[$key]->depth = $form_state['input']['terms'][$key]['term']['depth'];
+        if (is_array($user_input['terms'][$key]) && is_numeric($user_input['terms'][$key]['term']['tid'])) {
+          $current_page[$key]->depth = $user_input['terms'][$key]['term']['depth'];
         }
         else {
           unset($current_page[$key]);

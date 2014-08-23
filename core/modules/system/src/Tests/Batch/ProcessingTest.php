@@ -105,7 +105,7 @@ class ProcessingTest extends WebTestBase {
     // Check that result messages are present and in the correct order.
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit
-    // hanlders and logging of corresponding $form_state[{values'].
+    // handlers and logging of corresponding $form_state->getValues().
     $this->assertEqual(batch_test_stack(), $this->_resultStack('chained', $value), 'Execution order was correct, and $form_state is correctly persisted.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
   }
@@ -123,7 +123,7 @@ class ProcessingTest extends WebTestBase {
     // Check that result messages are present and in the correct order.
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit
-    // hanlders and logging of corresponding $form_state[{values'].
+    // handlers and logging of corresponding $form_state->getValues().
     $this->assertEqual(batch_test_stack(), $this->_resultStack('chained', $value), 'Execution order was correct, and $form_state is correctly persisted.');
     $this->assertText('Got out of a programmatic batched form.', 'Page execution continues normally.');
   }

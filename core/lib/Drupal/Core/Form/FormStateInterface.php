@@ -176,6 +176,28 @@ interface FormStateInterface {
   public function addBuildInfo($property, $value);
 
   /**
+   * Returns the form values as they were submitted by the user.
+   *
+   * These are raw and unvalidated, so should not be used without a thorough
+   * understanding of security implications. In almost all cases, code should
+   * use self::getValues() and self::getValue() exclusively.
+   *
+   * @return array
+   *   An associative array of values submitted to the form.
+   */
+  public function &getUserInput();
+
+  /**
+   * Sets the form values as though they were submitted by a user.
+   *
+   * @param array $user_input
+   *   An associative array of raw and unvalidated values.
+   *
+   * @return $this
+   */
+  public function setUserInput(array $user_input);
+
+  /**
    * Returns the submitted and sanitized form values.
    *
    * @return array

@@ -108,8 +108,9 @@ class FormTest extends WebTestBase {
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
           $form[$element]['#required'] = $required;
-          $form_state['input'][$element] = $empty;
-          $form_state['input']['form_id'] = $form_id;
+          $user_input[$element] = $empty;
+          $user_input['form_id'] = $form_id;
+          $form_state->setUserInput($user_input);
           $form_state['build_info']['callback_object'] = new StubForm($form_id, $form);
           $form_state['method'] = 'post';
           // The form token CSRF protection should not interfere with this test,

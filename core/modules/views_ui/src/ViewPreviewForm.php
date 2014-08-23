@@ -83,7 +83,8 @@ class ViewPreviewForm extends ViewFormBase {
       $args = explode('/', $form_state->getValue('view_args'));
     }
 
-    if (!empty($form_state['show_preview']) || !empty($form_state['input']['js'])) {
+    $user_input = $form_state->getUserInput();
+    if (!empty($form_state['show_preview']) || !empty($user_input['js'])) {
       $form['preview'] = array(
         '#weight' => 110,
         '#theme_wrappers' => array('container'),

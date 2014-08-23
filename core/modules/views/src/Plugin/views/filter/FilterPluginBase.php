@@ -775,8 +775,10 @@ abstract class FilterPluginBase extends HandlerBase {
           $form[$value]['#multiple'] = TRUE;
         }
         unset($form[$value]['#default_value']);
-        if (empty($form_state['input'])) {
-          $form_state['input'][$value] = $this->group_info;
+        $user_input = $form_state->getUserInput();
+        if (empty($user_input)) {
+          $user_input[$value] = $this->group_info;
+          $form_state->setUserInput($user_input);
         }
       }
 

@@ -164,6 +164,7 @@ class Numeric extends FilterPluginBase {
       }
     }
 
+    $user_input = $form_state->getUserInput();
     if ($which == 'all') {
       $form['value']['value'] = array(
         '#type' => 'textfield',
@@ -177,8 +178,9 @@ class Numeric extends FilterPluginBase {
           $source => array('value' => $operator),
         );
       }
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier]['value'])) {
-        $form_state['input'][$identifier]['value'] = $this->value['value'];
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier]['value'])) {
+        $user_input[$identifier]['value'] = $this->value['value'];
+        $form_state->setUserInput($user_input);
       }
     }
     elseif ($which == 'value') {
@@ -190,8 +192,9 @@ class Numeric extends FilterPluginBase {
         '#size' => 30,
         '#default_value' => $this->value['value'],
       );
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
-        $form_state['input'][$identifier] = $this->value['value'];
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier])) {
+        $user_input[$identifier] = $this->value['value'];
+        $form_state->setUserInput($user_input);
       }
     }
 
@@ -219,11 +222,11 @@ class Numeric extends FilterPluginBase {
         $form['value']['min'] += $states;
         $form['value']['max'] += $states;
       }
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier]['min'])) {
-        $form_state['input'][$identifier]['min'] = $this->value['min'];
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier]['min'])) {
+        $user_input[$identifier]['min'] = $this->value['min'];
       }
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier]['max'])) {
-        $form_state['input'][$identifier]['max'] = $this->value['max'];
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier]['max'])) {
+        $user_input[$identifier]['max'] = $this->value['max'];
       }
 
       if (!isset($form['value'])) {

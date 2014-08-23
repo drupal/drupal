@@ -36,7 +36,8 @@ class EditorLinkDialog extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, FilterFormat $filter_format = NULL) {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
-    $input = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
+    $user_input = $form_state->getUserInput();
+    $input = isset($user_input['editor_object']) ? $user_input['editor_object'] : array();
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'editor/drupal.editor.dialog';

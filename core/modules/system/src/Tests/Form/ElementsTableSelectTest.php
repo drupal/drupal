@@ -215,8 +215,8 @@ class ElementsTableSelectTest extends WebTestBase {
     // bypass it by setting the token to FALSE.
     $form['#token'] = FALSE;
 
-    $form_state['input'] = $edit;
-    $form_state['input']['form_id'] = $form_id;
+    $edit['form_id'] = $form_id;
+    $form_state->setUserInput($edit);
     $form_state['build_info']['callback_object'] = new StubForm($form_id, $form);
 
     \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);

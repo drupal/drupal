@@ -123,12 +123,13 @@ class FormBuilderTest extends FormTestBase {
     $form_arg->expects($this->any())
       ->method('submitForm')
       ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $form_state_key) {
-        $form_state[$form_state_key] = $response;
+        $form_state->set($form_state_key, $response);
       }));
 
     $form_state = new FormState();
     try {
-      $form_state['input']['form_id'] = $form_id;
+      $input['form_id'] = $form_id;
+      $form_state->setUserInput($input);
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
       $this->fail('TestFormBuilder::sendResponse() was not triggered.');
     }
@@ -181,7 +182,8 @@ class FormBuilderTest extends FormTestBase {
 
     $form_state = new FormState();
     try {
-      $form_state['input']['form_id'] = $form_id;
+      $input['form_id'] = $form_id;
+      $form_state->setUserInput($input);
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
       $this->fail('TestFormBuilder::sendResponse() was not triggered.');
     }
@@ -304,7 +306,8 @@ class FormBuilderTest extends FormTestBase {
 
     // Rebuild the form, and assert that the build ID has not changed.
     $form_state['rebuild'] = TRUE;
-    $form_state['input']['form_id'] = $form_id;
+    $input['form_id'] = $form_id;
+    $form_state->setUserInput($input);
     $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
     $this->formBuilder->processForm($form_id, $form, $form_state);
     $this->assertSame($original_build_id, $form['#build_id']);
@@ -371,8 +374,9 @@ class FormBuilderTest extends FormTestBase {
     // The final form build will not trigger any actual form building, but will
     // use the form cache.
     $form_state['executed'] = TRUE;
-    $form_state['input']['form_id'] = $form_id;
-    $form_state['input']['form_build_id'] = $form['#build_id'];
+    $input['form_id'] = $form_id;
+    $input['form_build_id'] = $form['#build_id'];
+    $form_state->setUserInput($input);
     $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertEmpty($form_state['errors']);
   }

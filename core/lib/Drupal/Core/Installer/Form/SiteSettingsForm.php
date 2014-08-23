@@ -43,22 +43,23 @@ class SiteSettingsForm extends FormBase {
     // Note: The installer even executes this form if there is a valid database
     // connection already, since the submit handler of this form is responsible
     // for writing all $settings to settings.php (not limited to $databases).
-    if (!isset($form_state['input']['driver']) && $database = Database::getConnectionInfo()) {
-      $form_state['input']['driver'] = $database['default']['driver'];
-      $form_state['input'][$database['default']['driver']] = $database['default'];
+    $input = &$form_state->getUserInput();
+    if (!isset($input['driver']) && $database = Database::getConnectionInfo()) {
+      $input['driver'] = $database['default']['driver'];
+      $input[$database['default']['driver']] = $database['default'];
     }
 
-    if (isset($form_state['input']['driver'])) {
-      $default_driver = $form_state['input']['driver'];
+    if (isset($input['driver'])) {
+      $default_driver = $input['driver'];
       // In case of database connection info from settings.php, as well as for a
       // programmed form submission (non-interactive installer), the table prefix
       // information is usually normalized into an array already, but the form
       // element only allows to configure one default prefix for all tables.
-      $prefix = &$form_state['input'][$default_driver]['prefix'];
+      $prefix = &$input[$default_driver]['prefix'];
       if (isset($prefix) && is_array($prefix)) {
         $prefix = $prefix['default'];
       }
-      $default_options = $form_state['input'][$default_driver];
+      $default_options = $input[$default_driver];
     }
     // If there is no database information yet, suggest the first available driver
     // as default value, so that its settings form is made visible via #states

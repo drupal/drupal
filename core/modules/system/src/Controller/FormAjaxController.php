@@ -126,7 +126,7 @@ class FormAjaxController implements ContainerInjectionInterface {
 
     // The form needs to be processed; prepare for that by setting a few internal
     // variables.
-    $form_state['input'] = $request->request->all();
+    $form_state->setUserInput($request->request->all());
     $form_id = $form['#form_id'];
 
     return array($form, $form_state, $form_id, $form_build_id);

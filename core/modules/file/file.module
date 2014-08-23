@@ -1404,15 +1404,15 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
         $element['#files'][$fid]->delete();
       }
     }
-    // Update both $form_state->getValues() and $form_state['input'] to reflect
+    // Update both $form_state->getValues() and FormState::$input to reflect
     // that the file has been removed, so that the form is rebuilt correctly.
     // $form_state->getValues() must be updated in case additional submit
     // handlers run, and for form building functions that run during the
     // rebuild, such as when the managed_file element is part of a field widget.
-    // $form_state['input'] must be updated so that file_managed_file_value()
+    // FormState::$input must be updated so that file_managed_file_value()
     // has correct information during the rebuild.
     form_set_value($element['fids'], implode(' ', $fids), $form_state);
-    NestedArray::setValue($form_state['input'], $element['fids']['#parents'], implode(' ', $fids));
+    NestedArray::setValue($form_state->getUserInput(), $element['fids']['#parents'], implode(' ', $fids));
   }
 
   // Set the form to rebuild so that $form is correctly updated in response to

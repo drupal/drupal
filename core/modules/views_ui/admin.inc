@@ -328,7 +328,9 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 function views_ui_build_form_path(FormStateInterface $form_state) {
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
   $name = $form_state['view']->id();
-  $path = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
+  $form_key = $form_state->get('form_key');
+  $display_id = $form_state->get('display_id');
+  $path = "admin/structure/views/$ajax/$form_key/$name/$display_id";
   if (isset($form_state['type'])) {
     $path .= '/' . $form_state['type'];
   }
@@ -354,8 +356,9 @@ function views_ui_build_form_path(FormStateInterface $form_state) {
  * @see _form_button_was_clicked()
  */
 function views_ui_form_button_was_clicked($element, FormStateInterface $form_state) {
+  $user_input = $form_state->getUserInput();
   $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
-  if ($process_input && !isset($form_state['triggering_element']) && !empty($element['#is_button']) && isset($form_state['input'][$element['#name']]) && isset($element['#values']) && in_array($form_state['input'][$element['#name']], $element['#values'], TRUE)) {
+  if ($process_input && !isset($form_state['triggering_element']) && !empty($element['#is_button']) && isset($user_input[$element['#name']]) && isset($element['#values']) && in_array($user_input[$element['#name']], $element['#values'], TRUE)) {
     $form_state['triggering_element'] = $element;
   }
   return $element;

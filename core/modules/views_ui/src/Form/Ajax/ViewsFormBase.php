@@ -146,10 +146,11 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
       // Build the new form state for the next form in the stack.
       $reflection = new \ReflectionClass($view::$forms[$top[1]]);
+      /** @var $form_state \Drupal\Core\Form\FormStateInterface */
       $form_state = $reflection->newInstanceArgs(array_slice($top, 3, 2))->getFormState($view, $top[2], $form_state['ajax']);
       $form_class = get_class($form_state['build_info']['callback_object']);
 
-      $form_state['input'] = array();
+      $form_state->setUserInput(array());
       $form_path = views_ui_build_form_path($form_state);
       if (!$form_state['ajax']) {
         return new RedirectResponse(url($form_path, array('absolute' => TRUE)));
@@ -159,7 +160,8 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     }
     elseif (!$form_state['ajax']) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
-      return new RedirectResponse(url("admin/structure/views/view/{$view->id()}/edit/$form_state[display_id]", array('absolute' => TRUE)));
+      $display_id = $form_state->get('display_id');
+      return new RedirectResponse(url("admin/structure/views/view/{$view->id()}/edit/$display_id", array('absolute' => TRUE)));
     }
     else {
       $response = new AjaxResponse();

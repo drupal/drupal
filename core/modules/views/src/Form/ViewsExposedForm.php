@@ -68,7 +68,7 @@ class ViewsExposedForm extends FormBase {
     $view = $form_state['view'];
     $display = &$form_state['display'];
 
-    $form_state['input'] = $view->getExposedInput();
+    $form_state->setUserInput($view->getExposedInput());
 
     // Let form plugins know this is for exposed widgets.
     $form_state['exposed'] = TRUE;

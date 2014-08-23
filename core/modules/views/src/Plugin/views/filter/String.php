@@ -212,8 +212,10 @@ class String extends FilterPluginBase {
         '#size' => 30,
         '#default_value' => $this->value,
       );
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
-        $form_state['input'][$identifier] = $this->value;
+      $user_input = $form_state->getUserInput();
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier])) {
+        $user_input[$identifier] = $this->value;
+        $form_state->setUserInput($user_input);
       }
 
       if ($which == 'all') {

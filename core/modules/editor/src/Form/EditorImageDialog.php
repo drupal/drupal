@@ -38,7 +38,8 @@ class EditorImageDialog extends FormBase {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
     if (!isset($form_state['image_element'])) {
-      $form_state['image_element'] = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
+      $user_input = $form_state->getUserInput();
+      $form_state['image_element'] = isset($user_input['editor_object']) ? $user_input['editor_object'] : array();
     }
     $image_element = $form_state['image_element'];
 

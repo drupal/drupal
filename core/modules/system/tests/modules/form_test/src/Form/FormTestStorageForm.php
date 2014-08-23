@@ -33,11 +33,12 @@ class FormTestStorageForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     if ($form_state['rebuild']) {
-      $form_state['input'] = array();
+      $form_state->setUserInput(array());
     }
     // Initialize
     if (empty($form_state['storage'])) {
-      if (empty($form_state['input'])) {
+      $user_input = $form_state->getUserInput();
+      if (empty($user_input)) {
         $_SESSION['constructions'] = 0;
       }
       // Put the initial thing into the storage

@@ -46,8 +46,10 @@ class Name extends InOperator {
       '#autocomplete_route_name' => 'user.autocomplete_anonymous',
     );
 
-    if (!empty($form_state['exposed']) && !isset($form_state['input'][$this->options['expose']['identifier']])) {
-      $form_state['input'][$this->options['expose']['identifier']] = $default_value;
+    $user_input = $form_state->getUserInput();
+    if (!empty($form_state['exposed']) && !isset($user_input[$this->options['expose']['identifier']])) {
+      $user_input[$this->options['expose']['identifier']] = $default_value;
+      $form_state->setUserInput($user_input);
     }
   }
 

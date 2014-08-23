@@ -154,7 +154,8 @@ class ReorderDisplays extends ViewsFormBase {
     $view = $form_state['view'];
     $order = array();
 
-    foreach ($form_state['input']['displays'] as $display => $info) {
+    $user_input = $form_state->getUserInput();
+    foreach ($user_input['displays'] as $display => $info) {
       // Add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
       if (is_array($info) && isset($info['weight']) && empty($info['removed']['checkbox'])) {

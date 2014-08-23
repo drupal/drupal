@@ -153,8 +153,10 @@ class BooleanOperator extends FilterPluginBase {
     );
     if (!empty($this->options['exposed'])) {
       $identifier = $this->options['expose']['identifier'];
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
-        $form_state['input'][$identifier] = $this->value;
+      $user_input = $form_state->getUserInput();
+      if (!empty($form_state['exposed']) && !isset($user_input[$identifier])) {
+        $user_input[$identifier] = $this->value;
+        $form_state->setUserInput($user_input);
       }
       // If we're configuring an exposed filter, add an - Any - option.
       if (empty($form_state['exposed']) || empty($this->options['expose']['required'])) {

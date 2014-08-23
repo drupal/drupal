@@ -269,7 +269,7 @@ function form_type_image_button_value($form, $input, FormStateInterface $form_st
       // X and one for the Y coordinates on which the user clicked the
       // button. We'll find this element in the #post data, and search
       // in the same spot for its name, with '_x'.
-      $input = $form_state['input'];
+      $input = $form_state->getUserInput();
       foreach (explode('[', $form['#name']) as $element_name) {
         // chop off the ] that may exist.
         if (substr($element_name, -1) == ']') {

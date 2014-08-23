@@ -84,7 +84,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $edit = $form_state['input'];
+    $edit = $form_state->getUserInput();
 
     $form['comments'] = array(
       '#prefix' => '<ul>',

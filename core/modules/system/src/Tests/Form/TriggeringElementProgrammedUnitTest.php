@@ -44,11 +44,12 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
       '#required' => TRUE,
     );
     $form['actions'] = array('#type' => 'actions');
+    $user_input = $form_state->getUserInput();
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Save',
       '#limit_validation_errors' => array(
-        array($form_state['input']['section']),
+        array($user_input['section']),
       ),
       // Required for #limit_validation_errors.
       '#submit' => array(array($this, 'submitForm')),
