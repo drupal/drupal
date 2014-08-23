@@ -99,7 +99,7 @@ class Overview extends OverviewTerms {
 
     // The form needs to have submit and validate handlers set explicitly.
     // Use the existing taxonomy overview submit handler.
-    $form['#submit'] = array(array($this, 'submitForm'));
+    $form['#submit'] = array('::submitForm');
     $form['terms']['#empty'] = $this->t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array(
       '@container' => $this->url('forum.add_container'),
       '@forum' => $this->url('forum.add_forum')

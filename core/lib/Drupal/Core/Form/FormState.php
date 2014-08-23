@@ -796,6 +796,17 @@ class FormState implements FormStateInterface, \ArrayAccess {
     return $this;
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareCallback($callback) {
+    if (is_string($callback) && substr($callback, 0, 2) == '::') {
+      $callback = array($this->get('build_info')['callback_object'], substr($callback, 2));
+    }
+    return $callback;
+  }
+
   /**
    * Wraps drupal_set_message().
    *

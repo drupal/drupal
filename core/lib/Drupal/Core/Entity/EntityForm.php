@@ -138,7 +138,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     $entity = $this->entity;
 
     // Add a process callback.
-    $form['#process'][] = array($this, 'processForm');
+    $form['#process'][] = '::processForm';
 
     if (!isset($form['langcode'])) {
       // If the form did not specify otherwise, default to keeping the existing
@@ -210,13 +210,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save'),
-      '#validate' => array(
-        array($this, 'validate'),
-      ),
-      '#submit' => array(
-        array($this, 'submit'),
-        array($this, 'save'),
-      ),
+      '#validate' => array('::validate'),
+      '#submit' => array('::submit', '::save'),
     );
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('delete-form')) {
@@ -317,11 +312,6 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     $entity = clone $this->entity;
-    // If you submit a form, the form state comes from caching, which forces
-    // the form object to be the one before caching. Ensure to have the
-    // form object of the current request.
-    $form_state['controller'] = $this;
-
     $this->copyFormValuesToEntity($entity, $form, $form_state);
 
     // Invoke all specified builders for copying form values to entity

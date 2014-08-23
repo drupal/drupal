@@ -288,7 +288,7 @@ class NodeForm extends ContentEntityForm {
         $element['publish']['#value'] = $node->isPublished() ? t('Save and keep published') : t('Save and publish');
       }
       $element['publish']['#weight'] = 0;
-      array_unshift($element['publish']['#submit'], array($this, 'publish'));
+      array_unshift($element['publish']['#submit'], '::publish');
 
       // Add a "Unpublish" button.
       $element['unpublish'] = $element['submit'];
@@ -300,7 +300,7 @@ class NodeForm extends ContentEntityForm {
         $element['unpublish']['#value'] = !$node->isPublished() ? t('Save and keep unpublished') : t('Save and unpublish');
       }
       $element['unpublish']['#weight'] = 10;
-      array_unshift($element['unpublish']['#submit'], array($this, 'unpublish'));
+      array_unshift($element['unpublish']['#submit'], '::unpublish');
 
       // If already published, the 'publish' button is primary.
       if ($node->isPublished()) {
@@ -321,13 +321,8 @@ class NodeForm extends ContentEntityForm {
       '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => t('Preview'),
       '#weight' => 20,
-      '#validate' => array(
-        array($this, 'validate'),
-      ),
-      '#submit' => array(
-        array($this, 'submit'),
-        array($this, 'preview'),
-      ),
+      '#validate' => array('::validate'),
+      '#submit' => array('::submit', '::preview'),
     );
 
     $element['delete']['#access'] = $node->access('delete');

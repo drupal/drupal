@@ -38,8 +38,8 @@ class LanguageEditForm extends LanguageFormBase {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save language'),
-      '#validate' => array(array($this, 'validateCommon')),
-      '#submit' => array(array($this, 'submitForm')),
+      '#validate' => array('::validateCommon'),
+      '#submit' => array('::submitForm'),
     );
     return $actions;
   }

@@ -105,9 +105,9 @@ class UserLoginForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Log in'));
 
-    $form['#validate'][] = array($this, 'validateName');
-    $form['#validate'][] = array($this, 'validateAuthentication');
-    $form['#validate'][] = array($this, 'validateFinal');
+    $form['#validate'][] = '::validateName';
+    $form['#validate'][] = '::validateAuthentication';
+    $form['#validate'][] = '::validateFinal';
 
     return $form;
   }

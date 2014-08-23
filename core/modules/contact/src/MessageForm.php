@@ -156,13 +156,8 @@ class MessageForm extends ContentEntityForm {
     $elements['submit']['#value'] = $this->t('Send message');
     $elements['preview'] = array(
       '#value' => $this->t('Preview'),
-      '#validate' => array(
-        array($this, 'validate'),
-      ),
-      '#submit' => array(
-        array($this, 'submit'),
-        array($this, 'preview'),
-      ),
+      '#validate' => array('::validate'),
+      '#submit' => array('::submit', '::preview'),
     );
     return $elements;
   }

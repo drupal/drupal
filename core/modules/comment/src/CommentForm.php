@@ -244,13 +244,8 @@ class CommentForm extends ContentEntityForm {
       '#type' => 'submit',
       '#value' => $this->t('Preview'),
       '#access' => $preview_mode != DRUPAL_DISABLED,
-      '#validate' => array(
-        array($this, 'validate'),
-      ),
-      '#submit' => array(
-        array($this, 'submit'),
-        array($this, 'preview'),
-      ),
+      '#validate' => array('::validate'),
+      '#submit' => array('::submit', '::preview'),
     );
 
     return $element;

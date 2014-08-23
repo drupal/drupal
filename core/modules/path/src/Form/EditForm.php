@@ -44,7 +44,7 @@ class EditForm extends PathFormBase {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Delete'),
-      '#submit' => array(array($this, 'deleteSubmit')),
+      '#submit' => array('::deleteSubmit'),
     );
     return $form;
   }

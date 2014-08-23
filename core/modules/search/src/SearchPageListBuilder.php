@@ -185,7 +185,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     $form['status']['wipe'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Re-index site'),
-      '#submit' => array(array($this, 'searchAdminReindexSubmit')),
+      '#submit' => array('::searchAdminReindexSubmit'),
     );
 
     $items = array(10, 20, 50, 100, 200, 500);
@@ -271,8 +271,8 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     $form['search_pages']['add_page']['add_search_submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add new page'),
-      '#validate' => array(array($this, 'validateAddSearchPage')),
-      '#submit' => array(array($this, 'submitAddSearchPage')),
+      '#validate' => array('::validateAddSearchPage'),
+      '#submit' => array('::submitAddSearchPage'),
       '#limit_validation_errors' => array(array('search_type')),
     );
 

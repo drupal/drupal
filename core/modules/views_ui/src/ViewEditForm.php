@@ -240,9 +240,7 @@ class ViewEditForm extends ViewFormBase {
     $actions['cancel'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
-      '#submit' => array(
-        array($this, 'cancel'),
-      ),
+      '#submit' => array('::cancel'),
     );
     if ($this->entity->isLocked()) {
       $actions['submit']['#access'] = FALSE;
@@ -418,7 +416,7 @@ class ViewEditForm extends ViewFormBase {
             '#type' => 'submit',
             '#value' => $this->t('Enable !display_title', array('!display_title' => $display_title)),
             '#limit_validation_errors' => array(),
-            '#submit' => array(array($this, 'submitDisplayEnable'), array($this, 'submitDelayDestination')),
+            '#submit' => array('::submitDisplayEnable', '::submitDelayDestination'),
             '#prefix' => '<li class="enable">',
             "#suffix" => '</li>',
           );
@@ -443,7 +441,7 @@ class ViewEditForm extends ViewFormBase {
             '#type' => 'submit',
             '#value' => $this->t('Duplicate !display_title', array('!display_title' => $display_title)),
             '#limit_validation_errors' => array(),
-            '#submit' => array(array($this, 'submitDisplayDuplicate'), array($this, 'submitDelayDestination')),
+            '#submit' => array('::submitDisplayDuplicate', '::submitDelayDestination'),
             '#prefix' => '<li class="duplicate">',
             "#suffix" => '</li>',
           );
@@ -453,7 +451,7 @@ class ViewEditForm extends ViewFormBase {
           '#type' => 'submit',
           '#value' => $this->t('Delete !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
-          '#submit' => array(array($this, 'submitDisplayDelete'), array($this, 'submitDelayDestination')),
+          '#submit' => array('::submitDisplayDelete', '::submitDelayDestination'),
           '#prefix' => '<li class="delete">',
           "#suffix" => '</li>',
         );
@@ -467,7 +465,7 @@ class ViewEditForm extends ViewFormBase {
             '#type' => 'submit',
             '#value' => $this->t('Duplicate as !type', array('!type' => $label)),
             '#limit_validation_errors' => array(),
-            '#submit' => array(array($this, 'submitDuplicateDisplayAsType'), array($this, 'submitDelayDestination')),
+            '#submit' => array('::submitDuplicateDisplayAsType', '::submitDelayDestination'),
             '#prefix' => '<li class="duplicate">',
             '#suffix' => '</li>',
           );
@@ -478,7 +476,7 @@ class ViewEditForm extends ViewFormBase {
           '#type' => 'submit',
           '#value' => $this->t('Undo delete of !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
-          '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
+          '#submit' => array('::submitDisplayUndoDelete', '::submitDelayDestination'),
           '#prefix' => '<li class="undo-delete">',
           "#suffix" => '</li>',
         );
@@ -488,7 +486,7 @@ class ViewEditForm extends ViewFormBase {
           '#type' => 'submit',
           '#value' => $this->t('Disable !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
-          '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
+          '#submit' => array('::submitDisplayDisable', '::submitDelayDestination'),
           '#prefix' => '<li class="disable">',
           "#suffix" => '</li>',
         );
@@ -760,7 +758,7 @@ class ViewEditForm extends ViewFormBase {
         '#type' => 'submit',
         '#value' => $this->t('Add !display', array('!display' => $label)),
         '#limit_validation_errors' => array(),
-        '#submit' => array(array($this, 'submitDisplayAdd'), array($this, 'submitDelayDestination')),
+        '#submit' => array('::submitDisplayAdd', '::submitDelayDestination'),
         '#attributes' => array('class' => array('add-display')),
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
         // placing the button in a "Add" dropdown menu.

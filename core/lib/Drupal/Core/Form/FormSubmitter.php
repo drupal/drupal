@@ -105,7 +105,7 @@ class FormSubmitter implements FormSubmitterInterface {
       $handlers = array();
     }
 
-    foreach ($handlers as $function) {
+    foreach ($handlers as $callback) {
       // Check if a previous _submit handler has set a batch, but make sure we
       // do not react to a batch that is already being processed (for instance
       // if a batch operation performs a
@@ -114,11 +114,11 @@ class FormSubmitter implements FormSubmitterInterface {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.
         // See _batch_next_set().
-        $batch['sets'][] = array('form_submit' => $function);
+        $batch['sets'][] = array('form_submit' => $callback);
         $batch['has_form_submits'] = TRUE;
       }
       else {
-        call_user_func_array($function, array(&$form, &$form_state));
+        call_user_func_array($form_state->prepareCallback($callback), array(&$form, &$form_state));
       }
     }
   }

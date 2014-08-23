@@ -35,7 +35,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     $form['test'] = array(
       '#title' => 'Test',
       '#type' => 'textfield',
-      '#element_validate' => array(array($this, 'elementValidateLimitValidationErrors')),
+      '#element_validate' => array('::elementValidateLimitValidationErrors'),
     );
     $form['test_numeric_index'] = array(
       '#tree' => TRUE,
@@ -43,7 +43,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     $form['test_numeric_index'][0] = array(
       '#title' => 'Test (numeric index)',
       '#type' => 'textfield',
-      '#element_validate' => array(array($this, 'elementValidateLimitValidationErrors')),
+      '#element_validate' => array('::elementValidateLimitValidationErrors'),
     );
 
     $form['test_substring'] = array(
@@ -52,30 +52,30 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     $form['test_substring']['foo'] = array(
       '#title' => 'Test (substring) foo',
       '#type' => 'textfield',
-      '#element_validate' => array(array($this, 'elementValidateLimitValidationErrors')),
+      '#element_validate' => array('::elementValidateLimitValidationErrors'),
     );
     $form['test_substring']['foobar'] = array(
       '#title' => 'Test (substring) foobar',
       '#type' => 'textfield',
-      '#element_validate' => array(array($this, 'elementValidateLimitValidationErrors')),
+      '#element_validate' => array('::elementValidateLimitValidationErrors'),
     );
 
     $form['actions']['partial'] = array(
       '#type' => 'submit',
       '#limit_validation_errors' => array(array('test')),
-      '#submit' => array(array($this, 'partialSubmitForm')),
+      '#submit' => array('::partialSubmitForm'),
       '#value' => t('Partial validate'),
     );
     $form['actions']['partial_numeric_index'] = array(
       '#type' => 'submit',
       '#limit_validation_errors' => array(array('test_numeric_index', 0)),
-      '#submit' => array(array($this, 'partialSubmitForm')),
+      '#submit' => array('::partialSubmitForm'),
       '#value' => t('Partial validate (numeric index)'),
     );
     $form['actions']['substring'] = array(
       '#type' => 'submit',
       '#limit_validation_errors' => array(array('test_substring', 'foo')),
-      '#submit' => array(array($this, 'partialSubmitForm')),
+      '#submit' => array('::partialSubmitForm'),
       '#value' => t('Partial validate (substring)'),
     );
     $form['actions']['full'] = array(

@@ -37,7 +37,7 @@ class ProfileForm extends AccountForm {
     $user = $this->currentUser();
     $element['delete']['#type'] = 'submit';
     $element['delete']['#value'] = $this->t('Cancel account');
-    $element['delete']['#submit'] = array(array($this, 'editCancelSubmit'));
+    $element['delete']['#submit'] = array('::editCancelSubmit');
     $element['delete']['#access'] = $account->id() > 1 && (($account->id() == $user->id() && $user->hasPermission('cancel account')) || $user->hasPermission('administer users'));
 
     return $element;

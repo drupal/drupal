@@ -7,7 +7,9 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -218,6 +220,38 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($expected, $form_state->getValues());
   }
 
+  /**
+   * @covers ::prepareCallback()
+   */
+  public function testPrepareCallbackValidMethod() {
+    $form_state = new FormState();
+    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
+    $processed_callback = $form_state->prepareCallback('::buildForm');
+    $this->assertEquals(array($form_state['build_info']['callback_object'], 'buildForm'), $processed_callback);
+  }
+
+  /**
+   * @covers ::prepareCallback()
+   */
+  public function testPrepareCallbackInValidMethod() {
+    $form_state = new FormState();
+    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
+    $processed_callback = $form_state->prepareCallback('not_a_method');
+    // The callback was not changed as no such method exists.
+    $this->assertEquals('not_a_method', $processed_callback);
+  }
+
+  /**
+   * @covers ::prepareCallback()
+   */
+  public function testPrepareCallbackArray() {
+    $form_state = new FormState();
+    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
+    $callback = array($form_state['build_info']['callback_object'], 'buildForm');
+    $processed_callback = $form_state->prepareCallback($callback);
+    $this->assertEquals($callback, $processed_callback);
+  }
+
   public function providerTestSetValue() {
     $data = array();
     $data[] = array(
@@ -314,4 +348,17 @@ class FormStateTest extends UnitTestCase {
     return $data;
   }
 
+}
+
+/**
+ * A test form used for the prepareCallback() tests.
+ */
+class PrepareCallbackTestForm implements FormInterface {
+  public function getFormId() {
+    return 'test_form';
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state) { }
+  public function submitForm(array &$form, FormStateInterface $form_state) { }
 }

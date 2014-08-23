@@ -49,8 +49,8 @@ class LanguageAddForm extends LanguageFormBase {
           'select#edit-predefined-langcode' => array('value' => 'custom'),
         ),
       ),
-      '#validate' => array(array($this, 'validatePredefined')),
-      '#submit' => array(array($this, 'submitForm')),
+      '#validate' => array('::validatePredefined'),
+      '#submit' => array('::submitForm'),
     );
 
     $custom_language_states_conditions = array(
@@ -72,8 +72,8 @@ class LanguageAddForm extends LanguageFormBase {
     $form['custom_language']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add custom language'),
-      '#validate' => array(array($this, 'validateCustom')),
-      '#submit' => array(array($this, 'submitForm')),
+      '#validate' => array('::validateCustom'),
+      '#submit' => array('::submitForm'),
     );
 
     return $form;

@@ -456,4 +456,18 @@ interface FormStateInterface {
    */
   public function setRebuild($rebuild = TRUE);
 
+  /**
+   * Converts support notations for a form callback to a valid callable.
+   *
+   * Specifically, supports methods on the form/callback object as strings when
+   * they start with ::, for example "::submitForm()".
+   *
+   * @param string|array $callback
+   *   The callback.
+   *
+   * @return array|string
+   *   A valid callable.
+   */
+  public function prepareCallback($callback);
+
 }

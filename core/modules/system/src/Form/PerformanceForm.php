@@ -107,7 +107,7 @@ class PerformanceForm extends ConfigFormBase {
     $form['clear_cache']['clear'] = array(
       '#type' => 'submit',
       '#value' => t('Clear all caches'),
-      '#submit' => array(array($this, 'submitCacheClear')),
+      '#submit' => array('::submitCacheClear'),
     );
 
     $form['caching'] = array(

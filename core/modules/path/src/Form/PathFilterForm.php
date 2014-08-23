@@ -50,7 +50,7 @@ class PathFilterForm extends FormBase {
       $form['basic']['reset'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Reset'),
-        '#submit' => array(array($this, 'resetForm')),
+        '#submit' => array('::resetForm'),
       );
     }
     return $form;

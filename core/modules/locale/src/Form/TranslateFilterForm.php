@@ -74,7 +74,7 @@ class TranslateFilterForm extends TranslateFormBase {
       $form['filters']['actions']['reset'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Reset'),
-        '#submit' => array(array($this, 'resetForm')),
+        '#submit' => array('::resetForm'),
       );
     }
 

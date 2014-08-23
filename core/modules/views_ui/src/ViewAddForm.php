@@ -153,9 +153,7 @@ class ViewAddForm extends ViewFormBase {
     $actions['cancel'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
-      '#submit' => array(
-        array($this, 'cancel'),
-      ),
+      '#submit' => array('::cancel'),
       '#limit_validation_errors' => array(),
     );
     return $actions;

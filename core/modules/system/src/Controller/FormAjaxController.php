@@ -72,9 +72,11 @@ class FormAjaxController implements ContainerInjectionInterface {
     // up to the #ajax['callback'] function of the element (may or may not be a
     // button) that triggered the Ajax request to determine what needs to be
     // rendered.
+    $callback = NULL;
     if (!empty($form_state['triggering_element'])) {
       $callback = $form_state['triggering_element']['#ajax']['callback'];
     }
+    $callback = $form_state->prepareCallback($callback);
     if (empty($callback) || !is_callable($callback)) {
       throw new HttpException(500, t('Internal Server Error'));
     }

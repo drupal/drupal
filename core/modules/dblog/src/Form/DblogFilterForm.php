@@ -59,7 +59,7 @@ class DblogFilterForm extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Reset'),
         '#limit_validation_errors' => array(),
-        '#submit' => array(array($this, 'resetForm')),
+        '#submit' => array('::resetForm'),
       );
     }
     return $form;

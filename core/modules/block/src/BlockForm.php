@@ -101,7 +101,7 @@ class BlockForm extends EntityForm {
         '#title' => t('Theme'),
         '#default_value' => $theme,
         '#ajax' => array(
-          'callback' => array($this, 'themeSwitch'),
+          'callback' => '::themeSwitch',
           'wrapper' => 'edit-block-region-wrapper',
         ),
       );

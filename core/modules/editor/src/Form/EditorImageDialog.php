@@ -189,7 +189,7 @@ class EditorImageDialog extends FormBase {
       // No regular submit-handler. This form only works via JavaScript.
       '#submit' => array(),
       '#ajax' => array(
-        'callback' => array($this, 'submitForm'),
+        'callback' => '::submitForm',
         'event' => 'click',
       ),
     );

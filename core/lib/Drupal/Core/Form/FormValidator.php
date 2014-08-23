@@ -79,8 +79,8 @@ class FormValidator implements FormValidatorInterface {
       $handlers = array();
     }
 
-    foreach ($handlers as $function) {
-      call_user_func_array($function, array(&$form, &$form_state));
+    foreach ($handlers as $callback) {
+      call_user_func_array($form_state->prepareCallback($callback), array(&$form, &$form_state));
     }
   }
 
@@ -263,7 +263,7 @@ class FormValidator implements FormValidatorInterface {
       elseif (isset($elements['#element_validate'])) {
         foreach ($elements['#element_validate'] as $callback) {
           $complete_form = &$form_state->getCompleteForm();
-          call_user_func_array($callback, array(&$elements, &$form_state, &$complete_form));
+          call_user_func_array($form_state->prepareCallback($callback), array(&$elements, &$form_state, &$complete_form));
         }
       }
 

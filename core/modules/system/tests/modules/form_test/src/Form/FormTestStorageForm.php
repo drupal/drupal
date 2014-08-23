@@ -63,7 +63,7 @@ class FormTestStorageForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Value',
       '#default_value' => $form_state['storage']['thing']['value'],
-      '#element_validate' => array(array($this, 'elementValidateValueCached')),
+      '#element_validate' => array('::elementValidateValueCached'),
     );
     $form['continue_button'] = array(
       '#type' => 'button',
@@ -73,7 +73,7 @@ class FormTestStorageForm extends FormBase {
     $form['continue_submit'] = array(
       '#type' => 'submit',
       '#value' => 'Continue submit',
-      '#submit' => array(array($this, 'continueSubmitForm')),
+      '#submit' => array('::continueSubmitForm'),
     );
     $form['submit'] = array(
       '#type' => 'submit',

@@ -639,8 +639,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     $form += $this->getElementInfo('form');
     $form += array('#tree' => FALSE, '#parents' => array());
-    $form['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
-    $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submitForm');
+    $form['#validate'][] = '::validateForm';
+    $form['#submit'][] = '::submitForm';
 
     // If no #theme has been set, automatically apply theme suggestions.
     // theme_form() itself is in #theme_wrappers and not #theme. Therefore, the
@@ -767,9 +767,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Allow for elements to expand to multiple elements, e.g., radios,
     // checkboxes and files.
     if (isset($element['#process']) && !$element['#processed']) {
-      foreach ($element['#process'] as $process) {
+      foreach ($element['#process'] as $callback) {
         $complete_form = &$form_state->getCompleteForm();
-        $element = call_user_func_array($process, array(&$element, &$form_state, &$complete_form));
+        $element = call_user_func_array($form_state->prepareCallback($callback), array(&$element, &$form_state, &$complete_form));
       }
       $element['#processed'] = TRUE;
     }

@@ -112,7 +112,7 @@ class ViewPreviewForm extends ViewFormBase {
         '#type' => 'submit',
         '#value' => $this->t('Update preview'),
         '#attributes' => array('class' => array('arguments-preview')),
-        '#submit' => array(array($this, 'submitPreview')),
+        '#submit' => array('::submitPreview'),
         '#id' => 'preview-submit',
         '#ajax' => array(
           'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $this->displayID,

@@ -135,7 +135,7 @@ abstract class DateFormatFormBase extends EntityForm {
       '#default_value' => '',
       '#field_suffix' => ' <small id="edit-date-format-suffix"></small>',
       '#ajax' => array(
-        'callback' => array($this, 'dateTimeLookup'),
+        'callback' => '::dateTimeLookup',
         'event' => 'keyup',
         'progress' => array('type' => 'throbber', 'message' => NULL),
       ),

@@ -74,7 +74,7 @@ class FormTestProgrammaticForm extends FormBase {
       // Use the same submit handler for this button as for the form itself.
       // (This must be set explicitly or otherwise the form API will ignore the
       // #limit_validation_errors property.)
-      '#submit' => array(array($this, 'submitForm')),
+      '#submit' => array('::submitForm'),
     );
     $user_input = $form_state->getUserInput();
     if (!empty($user_input['field_to_validate']) && $user_input['field_to_validate'] != 'all') {

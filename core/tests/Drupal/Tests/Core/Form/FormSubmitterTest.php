@@ -202,12 +202,15 @@ class FormSubmitterTest extends UnitTestCase {
    */
   public function testExecuteSubmitHandlers() {
     $form_submitter = $this->getFormSubmitter();
-    $mock = $this->getMock('stdClass', array('submit_handler', 'hash_submit'));
+    $mock = $this->getMock('stdClass', array('submit_handler', 'hash_submit', 'simple_string_submit'));
     $mock->expects($this->once())
       ->method('submit_handler')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
     $mock->expects($this->once())
       ->method('hash_submit')
+      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
+    $mock->expects($this->once())
+      ->method('simple_string_submit')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
 
     $form = array();
@@ -219,6 +222,12 @@ class FormSubmitterTest extends UnitTestCase {
 
     // $form_state submit handlers will supersede $form handlers.
     $form_state['submit_handlers'][] = array($mock, 'submit_handler');
+    $form_submitter->executeSubmitHandlers($form, $form_state);
+
+    // Methods directly on the form object can be specified as a string.
+    $form_state = new FormState();
+    $form_state['build_info']['callback_object'] = $mock;
+    $form_state['submit_handlers'][] = '::simple_string_submit';
     $form_submitter->executeSubmitHandlers($form, $form_state);
   }
 

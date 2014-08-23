@@ -92,7 +92,7 @@ class CronForm extends ConfigFormBase {
     $form['run'] = array(
       '#type' => 'submit',
       '#value' => t('Run cron'),
-      '#submit' => array(array($this, 'submitCron')),
+      '#submit' => array('::submitCron'),
     );
 
     $status = '<p>' . t('Last run: %cron-last ago.', array('%cron-last' => $this->dateFormatter->formatInterval(REQUEST_TIME - $this->state->get('system.cron_last')))) . '</p>';
