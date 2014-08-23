@@ -73,11 +73,9 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * {@inheritdoc}
    */
   public function getFormId() {
-    $entity_type = $this->entity->getEntityTypeId();
-    $bundle = $this->entity->bundle();
-    $form_id = $entity_type;
-    if ($bundle != $entity_type) {
-      $form_id = $bundle . '_' . $form_id;
+    $form_id = $this->entity->getEntityTypeId();
+    if ($this->entity->getEntityType()->hasKey('bundle')) {
+      $form_id = $this->entity->bundle() . '_' . $form_id;
     }
     if ($this->operation != 'default') {
       $form_id = $form_id . '_' . $this->operation;
