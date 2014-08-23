@@ -8,9 +8,11 @@
 namespace Drupal\simpletest;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
@@ -812,6 +814,7 @@ abstract class WebTestBase extends TestBase {
     // Not using File API; a potential error must trigger a PHP warning.
     $directory = DRUPAL_ROOT . '/' . $this->siteDirectory;
     copy(DRUPAL_ROOT . '/sites/default/default.settings.php', $directory . '/settings.php');
+    copy(DRUPAL_ROOT . '/sites/default/default.services.yml', $directory . '/services.yml');
 
     // All file system paths are created by System module during installation.
     // @see system_requirements()
@@ -1016,6 +1019,26 @@ abstract class WebTestBase extends TestBase {
     // Not using File API; a potential error must trigger a PHP warning.
     chmod($filename, 0666);
     drupal_rewrite_settings($settings, $filename);
+  }
+
+  /**
+   * Changes parameters in the services.yml file.
+   *
+   * @param $name
+   *   The name of the parameter.
+   * @param $value
+   *   The value of the parameter.
+   */
+  protected function setContainerParameter($name, $value) {
+    $filename = $this->siteDirectory . '/services.yml';
+    chmod($filename, 0666);
+
+    $services = Yaml::decode(file_get_contents($filename));
+    $services['parameters'][$name] = $value;
+    file_put_contents($filename, Yaml::encode($services));
+
+    // Clear the YML file cache.
+    YamlFileLoader::reset();
   }
 
   /**

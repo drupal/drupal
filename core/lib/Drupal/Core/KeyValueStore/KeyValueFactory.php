@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\KeyValueStore;
 
-use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,7 +28,7 @@ class KeyValueFactory implements KeyValueFactoryInterface {
    * This is a setting name that will be used if the specific setting does not
    * exist. The setting value will be the id of a service.
    */
-  const DEFAULT_SETTING = 'keyvalue_default';
+  const DEFAULT_SETTING = 'default';
 
   /**
    * The default service id.
@@ -51,21 +50,14 @@ class KeyValueFactory implements KeyValueFactoryInterface {
   protected $container;
 
   /**
-   * The read-only settings container.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
-   * @param \Drupal\Core\Site\Settings $settings
-   *  The read-only settings container.
+   * @param array $options
+   *   (optional) Collection-specific storage override options.
    */
-  function __construct(ContainerInterface $container, Settings $settings) {
+  function __construct(ContainerInterface $container, array $options = array()) {
     $this->container = $container;
-    $this->settings = $settings;
+    $this->options = $options;
   }
 
   /**
@@ -73,14 +65,16 @@ class KeyValueFactory implements KeyValueFactoryInterface {
    */
   public function get($collection) {
     if (!isset($this->stores[$collection])) {
-      if ($service_name = $this->settings->get(static::SPECIFIC_PREFIX . $collection)) {
+      if (isset($this->options[$collection])) {
+        $service_id = $this->options[$collection];
       }
-      elseif ($service_name = $this->settings->get(static::DEFAULT_SETTING)) {
+      elseif (isset($this->options[static::DEFAULT_SETTING])) {
+        $service_id = $this->options[static::DEFAULT_SETTING];
       }
       else {
-        $service_name = static::DEFAULT_SERVICE;
+        $service_id = static::DEFAULT_SERVICE;
       }
-      $this->stores[$collection] = $this->container->get($service_name)->get($collection);
+      $this->stores[$collection] = $this->container->get($service_id)->get($collection);
     }
     return $this->stores[$collection];
   }

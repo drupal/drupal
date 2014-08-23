@@ -1,3 +1,9 @@
+parameters:
+  twig.config: {}
+  factory.keyvalue:
+    default: keyvalue.database
+  factory.keyvalue.expirable:
+    default: keyvalue.expirable.database
 services:
   cache_factory:
     class: Drupal\Core\Cache\CacheFactory
@@ -156,13 +162,13 @@ services:
     arguments: ['@request_stack', '@url_generator']
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
-    arguments: ['@service_container', '@settings']
+    arguments: ['@service_container', '%factory.keyvalue%']
   keyvalue.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
     arguments: ['@serialization.phpserialize', '@database']
   keyvalue.expirable:
     class: Drupal\Core\KeyValueStore\KeyValueExpirableFactory
-    arguments: ['@service_container', '@settings']
+    arguments: ['@service_container', '%factory.keyvalue.expirable%']
   keyvalue.expirable.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
     arguments: ['@serialization.phpserialize', '@database']
@@ -922,6 +928,28 @@ services:
     arguments: ['@module_handler']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
+  twig:
+    class: Drupal\Core\Template\TwigEnvironment
+    arguments: ['@twig.loader', '@module_handler', '@theme_handler', '%twig.config%']
+    tags:
+      - { name: service_collector, tag: 'twig.extension', call: addExtension }
+  twig.extension:
+    class: Drupal\Core\Template\TwigExtension
+    tags:
+      - { name: twig.extension, priority: 100 }
+    calls:
+      - [setGenerators, ['@url_generator']]
+  # @todo Figure out what to do about debugging functions.
+  # @see http://drupal.org/node/1804998
+  twig.extension.debug:
+    class: Twig_Extension_Debug
+    tags:
+      - { name: twig.extension }
+  twig.loader:
+    alias: twig.loader.filesystem
+  twig.loader.filesystem:
+    class: Twig_Loader_Filesystem
+    arguments: ['%app.root%']
   element_info:
     alias: plugin.manager.element_info
   file.mime_type.guesser:

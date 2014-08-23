@@ -53,6 +53,14 @@ class YamlFileLoader
     }
 
     /**
+     * Resets the internal cache. This method is mostly useful for tests.
+     */
+    public static function reset()
+    {
+        static::$yaml = array();
+    }
+
+    /**
      * Loads a Yaml file.
      *
      * @param mixed  $file The resource

@@ -60,6 +60,11 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
+    // Disable Twig cache (php storage does not exist yet).
+    $twig_config = $container->getParameter('twig.config');
+    $twig_config['cache'] = FALSE;
+    $container->setParameter('twig.config', $twig_config);
+
     // Disable configuration overrides.
     // ConfigFactory would to try to load language overrides and InstallStorage
     // throws an exception upon trying to load a non-existing file.

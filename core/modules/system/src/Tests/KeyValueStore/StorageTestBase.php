@@ -58,11 +58,11 @@ abstract class StorageTestBase extends UnitTestBase {
     $this->container
       ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
       ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
+      ->addArgument('%factory.keyvalue%');
     $this->container
       ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
       ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
+      ->addArgument('%factory.keyvalue.expirable%');
     // Define two data collections,
     $this->collections = array(0 => 'zero', 1 => 'one');
 

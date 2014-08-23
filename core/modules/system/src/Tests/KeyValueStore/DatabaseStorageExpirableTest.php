@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -33,7 +34,9 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
       ->addArgument(new Reference('database'));
     $this->container
       ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
-    $this->settingsSet('keyvalue_expirable_default', 'keyvalue.expirable.database');
+    $parameter = array();
+    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.expirable.database';
+    $this->container->setParameter('factory.keyvalue.expirable', $parameter);
   }
 
   protected function tearDown() {

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -32,7 +33,9 @@ class DatabaseStorageTest extends StorageTestBase {
       ->addArgument(new Reference('database'));
     $this->container
       ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
-    $this->settingsSet('keyvalue_default', 'keyvalue.database');
+    $parameter = array();
+    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.database';
+    $this->container->setParameter('factory.keyvalue', $parameter);
   }
 
   protected function tearDown() {

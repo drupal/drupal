@@ -29,14 +29,18 @@ class TwigSettingsTest extends WebTestBase {
    */
   function testTwigAutoReloadOverride() {
     // Enable auto reload and rebuild the service container.
-    $this->settingsSet('twig_auto_reload', TRUE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['auto_reload'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
 
     // Check isAutoReload() via the Twig service container.
     $this->assertTrue($this->container->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates enabled.');
 
     // Disable auto reload and check the service container again.
-    $this->settingsSet('twig_auto_reload', FALSE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['auto_reload'] = FALSE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
 
     $this->assertFalse($this->container->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates disabled.');
@@ -47,7 +51,9 @@ class TwigSettingsTest extends WebTestBase {
    */
   function testTwigDebugOverride() {
     // Enable debug and rebuild the service container.
-    $this->settingsSet('twig_debug', TRUE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
 
     // Check isDebug() via the Twig service container.
@@ -55,12 +61,16 @@ class TwigSettingsTest extends WebTestBase {
     $this->assertTrue($this->container->get('twig')->isAutoReload(), 'Twig automatic reloading is enabled when debug is enabled.');
 
     // Override auto reload when debug is enabled.
-    $this->settingsSet('twig_auto_reload', FALSE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['auto_reload'] = FALSE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->assertFalse($this->container->get('twig')->isAutoReload(), 'Twig automatic reloading can be disabled when debug is enabled.');
 
     // Disable debug and check the service container again.
-    $this->settingsSet('twig_debug', FALSE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = FALSE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
 
     $this->assertFalse($this->container->get('twig')->isDebug(), 'Twig debug disabled.');
@@ -98,7 +108,9 @@ class TwigSettingsTest extends WebTestBase {
     $this->assertTrue(PhpStorageFactory::get('twig')->exists($cache_filename), 'Cached Twig template found.');
 
     // Disable the Twig cache and rebuild the service container.
-    $this->settingsSet('twig_cache', FALSE);
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['cache'] = FALSE;
+    $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
 
     // This should return false after rebuilding the service container.

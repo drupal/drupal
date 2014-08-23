@@ -41,7 +41,7 @@ class TwigEnvironment extends \Twig_Environment {
    * Constructs a TwigEnvironment object and stores cache and storage
    * internally.
    */
-  public function __construct(\Twig_LoaderInterface $loader = NULL, $options = array(), ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct(\Twig_LoaderInterface $loader = NULL, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $options = array()) {
     // @todo Pass as arguments from the DIC.
     $this->cache_object = \Drupal::cache();
 
@@ -67,6 +67,16 @@ class TwigEnvironment extends \Twig_Environment {
 
     $this->templateClasses = array();
     $this->stringLoader = new \Twig_Loader_String();
+
+    $options += array(
+      // @todo Ensure garbage collection of expired files.
+      'cache' => TRUE,
+      // @todo Remove this.
+      // @see http://drupal.org/node/1712444
+      'autoescape' => FALSE,
+      'debug' => FALSE,
+      'auto_reload' => NULL,
+    );
 
     parent::__construct($loader, $options);
   }

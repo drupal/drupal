@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\system\Tests\KeyValueStore;
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 
 /**
  * Tests the key-value memory storage.
@@ -25,7 +26,9 @@ class MemoryStorageTest extends StorageTestBase {
     parent::setUp();
     $this->container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-    $this->settingsSet('keyvalue_default', 'keyvalue.memory');
+    $parameter = array();
+    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.memory';
+    $this->container->setParameter('factory.keyvalue', $parameter);
   }
 
 }

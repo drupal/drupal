@@ -15,6 +15,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -260,7 +261,9 @@ abstract class KernelTestBase extends UnitTestBase {
       ->addArgument(Database::getConnection())
       ->addArgument('config');
 
-    $this->settingsSet('keyvalue_default', 'keyvalue.memory');
+    $keyvalue_options = $container->getParameter('factory.keyvalue') ?: array();
+    $keyvalue_options['default'] = 'keyvalue.memory';
+    $container->setParameter('factory.keyvalue', $keyvalue_options);
     $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
       // TestBase::setUp puts a completely empty container in
@@ -280,7 +283,7 @@ abstract class KernelTestBase extends UnitTestBase {
       $container
         ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
         ->addArgument(new Reference('service_container'))
-        ->addArgument(new Reference('settings'));
+        ->addArgument(new Parameter('factory.keyvalue'));
 
       $container->register('state', 'Drupal\Core\State\State')
         ->addArgument(new Reference('keyvalue'));

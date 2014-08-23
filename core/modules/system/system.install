@@ -219,7 +219,7 @@ function system_requirements($phase) {
     if (!drupal_verify_install_file($conf_path, FILE_NOT_WRITABLE, 'dir')) {
       $conf_errors[] = t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $conf_path));
     }
-    foreach (array('settings.php', 'settings.local.php') as $conf_file) {
+    foreach (array('settings.php', 'settings.local.php', 'services.yml') as $conf_file) {
       $full_path = $conf_path . '/' . $conf_file;
       if (file_exists($full_path) && !drupal_verify_install_file($full_path, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
         $conf_errors[] = t("The file %file is not protected from modifications and poses a security risk. You must change the file's permissions to be non-writable.", array('%file' => $full_path));
@@ -236,18 +236,18 @@ function system_requirements($phase) {
         );
         $description = drupal_render($item_list);
       }
-      $requirements['settings.php'] = array(
+      $requirements['configuration_files'] = array(
         'value' => t('Not protected'),
         'severity' => REQUIREMENT_ERROR,
         'description' => $description,
       );
     }
     else {
-      $requirements['settings.php'] = array(
+      $requirements['configuration_files'] = array(
         'value' => t('Protected'),
       );
     }
-    $requirements['settings.php']['title'] = t('Configuration files');
+    $requirements['configuration_files']['title'] = t('Configuration files');
   }
 
   // Test the contents of the .htaccess files.
