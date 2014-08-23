@@ -132,22 +132,27 @@ interface LanguageManagerInterface {
   /**
    * Returns the language fallback candidates for a given context.
    *
-   * @param string $langcode
-   *   (optional) The language of the current context. Defaults to NULL.
    * @param array $context
    *   (optional) An associative array of data that can be useful to determine
    *   the fallback sequence. The following keys are used in core:
-   *   - langcode: The desired language.
+   *   - langcode: Language code of the desired language.
    *   - operation: The name of the operation indicating the context where
-   *     language fallback is being applied, e.g. 'entity_view'.
-   *   - data: An arbitrary data structure that makes sense in the provided
-   *     context, e.g. an entity.
+   *     language fallback is being applied. The following operations are
+   *     defined in core, but more may be defined in contributed modules:
+   *       - entity_view: Invoked when an entity is about to be displayed.
+   *         The data key contains the loaded entity.
+   *       - views_query: Invoked when a field based views query is performed.
+   *         The data key contains a reference to the field object.
+   *       - locale_lookup: Invoked when a string translation was not found.
+   *         The data key contains the source string.
+   *   - data: A data structure that makes sense in the provided
+   *     context, see above.
    *
    * @return array
    *   An array of language codes sorted by priority: first values should be
    *   tried first.
    */
-  public function getFallbackCandidates($langcode = NULL, array $context = array());
+  public function getFallbackCandidates(array $context = array());
 
   /**
    * Returns the language switch links for the given language type.

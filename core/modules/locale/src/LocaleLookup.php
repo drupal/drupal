@@ -127,7 +127,7 @@ class LocaleLookup extends CacheCollector {
     // If there is no translation available for the current language then use
     // language fallback to try other translations.
     if ($value === TRUE) {
-      $fallbacks = $this->languageManager->getFallbackCandidates($this->langcode, array('operation' => 'locale_lookup', 'data' => $offset));
+      $fallbacks = $this->languageManager->getFallbackCandidates(array('langcode' => $this->langcode, 'operation' => 'locale_lookup', 'data' => $offset));
       if (!empty($fallbacks)) {
         foreach ($fallbacks as $langcode) {
           $translation = $this->stringStorage->findTranslation(array(

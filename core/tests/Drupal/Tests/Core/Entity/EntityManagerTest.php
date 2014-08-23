@@ -925,10 +925,10 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->languageManager->expects($this->exactly(2))
       ->method('getFallbackCandidates')
-      ->will($this->returnCallback(function ($langcode = NULL, array $context = array()) {
+      ->will($this->returnCallback(function (array $context = array()) {
         $candidates = array();
-        if ($langcode) {
-          $candidates[$langcode] = $langcode;
+        if (!empty($context['langcode'])) {
+          $candidates[$context['langcode']] = $context['langcode'];
         }
         return $candidates;
       }));

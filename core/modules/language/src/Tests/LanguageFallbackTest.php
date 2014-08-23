@@ -56,7 +56,7 @@ class LanguageFallbackTest extends LanguageTestBase {
     $this->state->set('language_test.fallback_operation_alter.candidates', TRUE);
     $expected[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     $expected[] = LanguageInterface::LANGCODE_NOT_APPLICABLE;
-    $candidates = $this->languageManager->getFallbackCandidates(NULL, array('operation' => 'test'));
+    $candidates = $this->languageManager->getFallbackCandidates(array('operation' => 'test'));
     $this->assertEqual(array_values($candidates), $expected, 'Language fallback candidates are alterable for specific operations.');
 
     // Check that when the site is monolingual no language fallback is applied.

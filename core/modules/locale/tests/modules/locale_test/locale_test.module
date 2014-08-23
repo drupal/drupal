@@ -129,3 +129,11 @@ function locale_test_locale_translation_projects_alter(&$projects) {
     );
   }
 }
+
+/**
+ * Implements hook_language_fallback_candidates_OPERATION_alter().
+ */
+function locale_test_language_fallback_candidates_locale_lookup_alter(array &$candidates, array $context) {
+  \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_candidates', $candidates);
+  \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_context', $context);
+}

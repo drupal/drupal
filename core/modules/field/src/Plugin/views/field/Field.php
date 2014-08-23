@@ -305,7 +305,7 @@ class Field extends FieldPluginBase {
           $this->view->display_handler->options['field_langcode']
         );
         $placeholder = $this->placeholder();
-        $langcode_fallback_candidates = $this->languageManager->getFallbackCandidates($langcode, array('operation' => 'views_query', 'data' => $this));
+        $langcode_fallback_candidates = $this->languageManager->getFallbackCandidates(array('langcode' => $langcode, 'operation' => 'views_query', 'data' => $this));
         $this->query->addWhereExpression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
     }

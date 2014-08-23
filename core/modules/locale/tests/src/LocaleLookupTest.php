@@ -158,8 +158,8 @@ class LocaleLookupTest extends UnitTestCase {
 
     $this->languageManager->expects($this->any())
       ->method('getFallbackCandidates')
-      ->will($this->returnCallback(function ($langcode) {
-        switch ($langcode) {
+      ->will($this->returnCallback(function (array $context = array()) {
+        switch ($context['langcode']) {
           case 'pl':
             return array('cs', 'en');
 

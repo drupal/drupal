@@ -194,7 +194,7 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFallbackCandidates($langcode = NULL, array $context = array()) {
+  public function getFallbackCandidates(array $context = array()) {
     return array(LanguageInterface::LANGCODE_DEFAULT);
   }
 

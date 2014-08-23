@@ -326,17 +326,24 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
-  public function getFallbackCandidates($langcode = NULL, array $context = array()) {
+  public function getFallbackCandidates(array $context = array()) {
     if ($this->isMultilingual()) {
-      // Get languages ordered by weight, add BaseLanguageInterface::LANGCODE_NOT_SPECIFIED
-      // at the end.
-      $candidates = array_keys($this->getLanguages());
-      $candidates[] = BaseLanguageInterface::LANGCODE_NOT_SPECIFIED;
-      $candidates = array_combine($candidates, $candidates);
+      $candidates = array();
+      if (empty($context['operation']) || $context['operation'] != 'locale_lookup') {
+        // If the fallback context is not locale_lookup, initialize the
+        // candidates with languages ordered by weight and add
+        // BaseLanguageInterface::LANGCODE_NOT_SPECIFIED at the end. Interface
+        // translation fallback should only be based on explicit configuration
+        // gathered via the alter hooks below.
+        $candidates = array_keys($this->getLanguages());
+        $candidates[] = BaseLanguageInterface::LANGCODE_NOT_SPECIFIED;
+        $candidates = array_combine($candidates, $candidates);
 
-      // The first candidate should always be the desired language if specified.
-      if (!empty($langcode)) {
-        $candidates = array($langcode => $langcode) + $candidates;
+        // The first candidate should always be the desired language if
+        // specified.
+        if (!empty($context['langcode'])) {
+          $candidates = array($context['langcode'] => $context['langcode']) + $candidates;
+        }
       }
 
       // Let other modules hook in and add/change candidates.
@@ -349,7 +356,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       $this->moduleHandler->alter($types, $candidates, $context);
     }
     else {
-      $candidates = parent::getFallbackCandidates($langcode, $context);
+      $candidates = parent::getFallbackCandidates($context);
     }
 
     return $candidates;
