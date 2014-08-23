@@ -19,10 +19,6 @@ class CachedStorageTest extends UnitTestCase {
    */
   protected $cacheFactory;
 
-  protected function setUp() {
-    $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
-  }
-
   /**
    * Test listAll static cache.
    */
@@ -37,11 +33,8 @@ class CachedStorageTest extends UnitTestCase {
       ->will($this->returnValue($response));
 
     $cache = new NullBackend(__FUNCTION__);
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+
+    $cachedStorage = new CachedStorage($storage, $cache);
     $this->assertEquals($response, $cachedStorage->listAll($prefix));
     $this->assertEquals($response, $cachedStorage->listAll($prefix));
   }
@@ -57,11 +50,8 @@ class CachedStorageTest extends UnitTestCase {
     $response = array("$prefix." . $this->randomMachineName(), "$prefix." . $this->randomMachineName());
     $cache = new MemoryBackend(__FUNCTION__);
     $cache->set('find:' . $prefix, $response);
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+
+    $cachedStorage = new CachedStorage($storage, $cache);
     $this->assertEquals($response, $cachedStorage->listAll($prefix));
   }
 
@@ -87,11 +77,8 @@ class CachedStorageTest extends UnitTestCase {
     foreach ($configCacheValues as $key => $value) {
       $cache->set($key, $value);
     }
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+
+    $cachedStorage = new CachedStorage($storage, $cache);
     $this->assertEquals($configCacheValues, $cachedStorage->readMultiple($configNames));
   }
 
@@ -128,14 +115,10 @@ class CachedStorageTest extends UnitTestCase {
     $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $storage->expects($this->once())
       ->method('readMultiple')
-      ->with(array(2 => $configNames[2], 4 => $configNames[4]))
+      ->with(array($configNames[2], $configNames[4]))
       ->will($this->returnValue($response));
 
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+    $cachedStorage = new CachedStorage($storage, $cache);
     $expected_data = $configCacheValues + array($configNames[2] => $config_exists_not_cached_data);
     $this->assertEquals($expected_data, $cachedStorage->readMultiple($configNames));
 
@@ -159,11 +142,8 @@ class CachedStorageTest extends UnitTestCase {
             ->method('read')
             ->with($name)
             ->will($this->returnValue(FALSE));
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+
+    $cachedStorage = new CachedStorage($storage, $cache);
 
     $this->assertFalse($cachedStorage->read($name));
 
@@ -183,11 +163,8 @@ class CachedStorageTest extends UnitTestCase {
     $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $storage->expects($this->never())
             ->method('read');
-    $this->cacheFactory->expects($this->once())
-      ->method('get')
-      ->with('config')
-      ->will($this->returnValue($cache));
-    $cachedStorage = new CachedStorage($storage, $this->cacheFactory);
+
+    $cachedStorage = new CachedStorage($storage, $cache);
     $this->assertFalse($cachedStorage->read($name));
   }
 
