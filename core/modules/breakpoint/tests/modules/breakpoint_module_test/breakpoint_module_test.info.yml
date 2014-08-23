@@ -1,0 +1,6 @@
+name: 'Breakpoint test module'
+type: module
+description: 'Test module for breakpoint.'
+version: VERSION
+core: 8.x
+

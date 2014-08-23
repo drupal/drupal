@@ -346,4 +346,15 @@ interface ModuleHandlerInterface {
    */
   public function getModuleDirectories();
 
+  /**
+   * Gets the human readable name of a given module.
+   *
+   * @param string $module
+   *   The machine name of the module which title should be shown.
+   *
+   * @return string
+   *   Returns the human readable name of the module.
+   */
+  public function getName($theme);
+
 }

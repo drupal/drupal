@@ -1068,4 +1068,11 @@ class ModuleHandler implements ModuleHandlerInterface {
     return $dirs;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getName($module) {
+    $module_data = system_rebuild_module_data();
+    return $module_data[$module]->info['name'];
+  }
 }

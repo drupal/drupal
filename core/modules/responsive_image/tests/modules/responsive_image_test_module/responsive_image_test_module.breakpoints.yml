@@ -1,0 +1,21 @@
+responsive_image_test_module.mobile:
+  label: mobile
+  mediaQuery: '(min-width: 0px)'
+  weight: 0
+  multipliers:
+    - 1x
+    - 2x
+responsive_image_test_module.narrow:
+  label: narrow
+  mediaQuery: '(min-width: 560px)'
+  weight: 1
+  multipliers:
+    - 1x
+    - 2x
+responsive_image_test_module.wide:
+  label: wide
+  mediaQuery: '(min-width: 851px)'
+  weight: 2
+  multipliers:
+    - 1x
+    - 2x

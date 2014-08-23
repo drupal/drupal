@@ -7,7 +7,6 @@
 
 namespace Drupal\responsive_image\Tests;
 
-use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**
@@ -24,7 +23,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_ui', 'responsive_image');
+  public static $modules = array('field_ui', 'responsive_image', 'responsive_image_test_module');
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().
@@ -47,45 +46,17 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'administer image styles'
     ));
     $this->drupalLogin($this->admin_user);
-
-    // Add breakpoint_group and breakpoints.
-    $breakpoint_group = entity_create('breakpoint_group', array(
-      'name' => 'atestset',
-      'label' => 'A test set',
-      'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
-    ));
-
-    $breakpoint_names = array('small', 'medium', 'large');
-    for ($i = 0; $i < 3; $i++) {
-      $width = ($i + 1) * 200;
-      $breakpoint = entity_create('breakpoint', array(
-        'name' => $breakpoint_names[$i],
-        'mediaQuery' => "(min-width: {$width}px)",
-        'source' => 'user',
-        'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
-        'multipliers' => array(
-          '1.5x' => 0,
-          '2x' => '2x',
-        ),
-      ));
-      $breakpoint->save();
-      $breakpoint_group->addBreakpoints(array($breakpoint));
-    }
-    $breakpoint_group->save();
-
     // Add responsive image mapping.
     $responsive_image_mapping = entity_create('responsive_image_mapping', array(
       'id' => 'mapping_one',
       'label' => 'Mapping One',
-      'breakpointGroup' => $breakpoint_group->id(),
+      'breakpointGroup' => 'responsive_image_test_module',
     ));
-    $responsive_image_mapping->save();
-    $mappings = array();
-    $mappings['custom.user.small']['1x'] = 'thumbnail';
-    $mappings['custom.user.medium']['1x'] = 'medium';
-    $mappings['custom.user.large']['1x'] = 'large';
-    $responsive_image_mapping->setMappings($mappings);
-    $responsive_image_mapping->save();
+    $responsive_image_mapping
+      ->addMapping('responsive_image_test_module.mobile', '1x', 'thumbnail')
+      ->addMapping('responsive_image_test_module.narrow', '1x', 'medium')
+      ->addMapping('responsive_image_test_module.wide', '1x', 'large')
+      ->save();
   }
 
   /**
@@ -130,7 +101,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $display_options = array(
       'type' => 'responsive_image',
       'module' => 'responsive_image',
-      'settings' => array('image_link' => 'file'),
+      'settings' => array(
+        'image_link' => 'file'
+      ),
     );
     $display = entity_get_display('node', 'article', 'default');
     $display->setComponent($field_name, $display_options)
@@ -178,9 +151,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw('/styles/thumbnail/');
     $this->assertRaw('/styles/medium/');
     $this->assertRaw('/styles/large/');
-    $this->assertRaw('media="(min-width: 200px)"');
-    $this->assertRaw('media="(min-width: 400px)"');
-    $this->assertRaw('media="(min-width: 600px)"');
+    $this->assertRaw('media="(min-width: 0px)"');
+    $this->assertRaw('media="(min-width: 560px)"');
+    $this->assertRaw('media="(min-width: 851px)"');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
     $this->assertTrue(in_array('responsive_image_mapping:mapping_one', $cache_tags));
     $this->assertTrue(in_array('image_style:thumbnail', $cache_tags));

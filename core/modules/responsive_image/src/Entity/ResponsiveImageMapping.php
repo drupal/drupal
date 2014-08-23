@@ -7,7 +7,6 @@
 
 namespace Drupal\responsive_image\Entity;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\responsive_image\ResponsiveImageMappingInterface;
 
@@ -46,153 +45,93 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The responsive image label.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The responsive image mappings.
+   *
+   * Each responsive mapping array contains the following keys:
+   * - breakpoint_id
+   * - multiplier
+   * - image_style
    *
    * @var array
    */
   protected $mappings = array();
 
   /**
+   * @var array
+   */
+  protected $keyedMappings;
+
+  /**
    * The responsive image breakpoint group.
    *
-   * @var Drupal\breakpoint\Entity\BreakpointGroup
+   * @var string
    */
   protected $breakpointGroup = '';
 
   /**
-   * Overrides Drupal\config\ConfigEntityBase::__construct().
+   * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
-    $this->loadBreakpointGroup();
-    $this->loadAllMappings();
+  public function __construct(array $values, $entity_type_id = 'responsive_image_mapping') {
+    parent::__construct($values, $entity_type_id);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    parent::calculateDependencies();
-    if (isset($this->breakpointGroup)) {
-      // @todo Implement toArray() so we do not have reload the
-      //   entity since this property is changed in
-      //   \Drupal\responsive_image\Entity\ResponsiveImageMapping::save().
-      $breakpoint_group = \Drupal::entityManager()->getStorage('breakpoint_group')->load($this->breakpointGroup);
-      $this->addDependency('entity', $breakpoint_group->getConfigDependencyName());
-    }
-    return $this->dependencies;
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity::save().
-   */
-  public function save() {
-    // Only save the keys, but return the full objects.
-    $breakpoint_group = $this->getBreakpointGroup();
-    if ($breakpoint_group && is_object($breakpoint_group)) {
-      $this->setBreakpointGroup($breakpoint_group->id());
-    }
-
-    // Split the breakpoint ids into their different parts, as dots as
-    // identifiers are not possible.
-    $loaded_mappings = $this->mappings;
-    $this->mappings = array();
-    foreach ($loaded_mappings as $breakpoint_id => $mapping) {
-      list($source_type, $source, $name) = explode('.', $breakpoint_id);
-      $this->mappings[$source_type][$source][$name] = $mapping;
-    }
-
-    parent::save();
-    $this->loadBreakpointGroup();
-    $this->loadAllMappings();
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
-   */
-  public function createDuplicate() {
-    return entity_create('responsive_image_mapping', array(
-      'id' => '',
-      'label' => t('Clone of !label', array('!label' => String::checkPlain($this->label()))),
-      'mappings' => $this->getMappings(),
-    ));
-  }
-
-  /**
-   * Loads the breakpoint group.
-   */
-  protected function loadBreakpointGroup() {
-    if ($this->getBreakpointGroup()) {
-      $breakpoint_group = entity_load('breakpoint_group', $this->getBreakpointGroup());
-      $this->setBreakpointGroup($breakpoint_group);
-    }
-  }
-
-  /**
-   * Loads all mappings and removes non-existing ones.
-   */
-  protected function loadAllMappings() {
-    $loaded_mappings = $this->getMappings();
-    $all_mappings = array();
-    if ($breakpoint_group = $this->getBreakpointGroup()) {
-      foreach ($breakpoint_group->getBreakpoints() as $breakpoint_id => $breakpoint) {
-        // Get the components of the breakpoint ID to match the format of the
-        // configuration file.
-        list($source_type, $source, $name) = explode('.', $breakpoint_id);
-
-        // Get the mapping for the default multiplier.
-        $all_mappings[$breakpoint_id]['1x'] = '';
-        if (isset($loaded_mappings[$source_type][$source][$name]['1x'])) {
-          $all_mappings[$breakpoint_id]['1x'] = $loaded_mappings[$source_type][$source][$name]['1x'];
-        }
-
-        // Get the mapping for the other multipliers.
-        if (isset($breakpoint->multipliers) && !empty($breakpoint->multipliers)) {
-          foreach ($breakpoint->multipliers as $multiplier => $status) {
-            if ($status) {
-              $all_mappings[$breakpoint_id][$multiplier] = '';
-              if (isset($loaded_mappings[$source_type][$source][$name][$multiplier])) {
-                $all_mappings[$breakpoint_id][$multiplier] = $loaded_mappings[$source_type][$source][$name][$multiplier];
-              }
-            }
-          }
-        }
+  public function addMapping($breakpoint_id, $multiplier, $image_style) {
+    foreach ($this->mappings as &$mapping) {
+      if ($mapping['breakpoint_id'] === $breakpoint_id && $mapping['multiplier'] === $multiplier) {
+        $mapping['image_style'] = $image_style;
+        return $this;
       }
     }
-    $this->setMappings($all_mappings);
+    $this->mappings[] = array(
+      'breakpoint_id' => $breakpoint_id,
+      'multiplier' => $multiplier,
+      'image_style' => $image_style,
+    );
+    $this->keyedMappings = NULL;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasMappings() {
-    $mapping_found = FALSE;
-    foreach ($this->getMappings() as $multipliers) {
-      $filtered_array = array_filter($multipliers);
-      if (!empty($filtered_array)) {
-        $mapping_found = TRUE;
-        break;
-      }
-    }
-    return $mapping_found;
+    return !empty($this->mappings);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMappings(array $mappings) {
-    $this->set('mappings', $mappings);
-    return $this;
+  public function getKeyedMappings() {
+    if (!$this->keyedMappings) {
+      $this->keyedMappings = array();
+      foreach($this->mappings as $mapping) {
+        $this->keyedMappings[$mapping['breakpoint_id']][$mapping['multiplier']] = $mapping['image_style'];
+      }
+    }
+    return $this->keyedMappings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getImageStyle($breakpoint_id, $multiplier) {
+    $map = $this->getKeyedMappings();
+    if (isset($map[$breakpoint_id][$multiplier])) {
+      return $map[$breakpoint_id][$multiplier];
+    }
   }
 
   /**
@@ -206,6 +145,10 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    * {@inheritdoc}
    */
   public function setBreakpointGroup($breakpoint_group) {
+    // If the breakpoint group is changed then the mappings are invalid.
+    if ($breakpoint_group !== $this->breakpointGroup) {
+      $this->removeMappings();
+    }
     $this->set('breakpointGroup', $breakpoint_group);
     return $this;
   }
@@ -216,4 +159,26 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
   public function getBreakpointGroup() {
     return $this->get('breakpointGroup');
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeMappings() {
+    $this->mappings = array();
+    $this->keyedMappings = NULL;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $providers = \Drupal::service('breakpoint.manager')->getGroupProviders($this->breakpointGroup);
+    foreach ($providers as $provider => $type) {
+      $this->addDependency($type, $provider);
+    }
+    return $this->dependencies;
+  }
+
 }

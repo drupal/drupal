@@ -682,4 +682,34 @@ class ThemeHandler implements ThemeHandlerInterface {
     return system_list('theme');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getThemeDirectories() {
+    $dirs = array();
+    foreach ($this->listInfo() as $name => $theme) {
+      $dirs[$name] = DRUPAL_ROOT . '/' . $theme->getPath();
+    }
+    return $dirs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function themeExists($theme) {
+    $themes = $this->listInfo();
+    return isset($themes[$theme]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTheme($name) {
+    $themes = $this->listInfo();
+    if (isset($themes[$name])) {
+      return $themes[$name];
+    }
+    throw new \InvalidArgumentException(sprintf('The theme %s does not exist.', $name));
+  }
+
 }

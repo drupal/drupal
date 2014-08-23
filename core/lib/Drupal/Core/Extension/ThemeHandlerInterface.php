@@ -139,4 +139,39 @@ interface ThemeHandlerInterface {
    */
   public function getDefault();
 
+  /**
+   * Returns an array of directories for all enabled themes.
+   *
+   * Useful for tasks such as finding a file that exists in all theme
+   * directories.
+   *
+   * @return array
+   */
+  public function getThemeDirectories();
+
+  /**
+   * Determines whether a given theme is enabled.
+   *
+   * @param string $theme
+   *   The name of the theme (without the .theme extension).
+   *
+   * @return bool
+   *   TRUE if the theme is both installed and enabled.
+   */
+  public function themeExists($theme);
+
+  /**
+   * Returns a theme extension object from the currently active theme list.
+   *
+   * @param string $name
+   *   The name of the theme to return.
+   *
+   * @return \Drupal\Core\Extension\Extension
+   *   An extension object.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the requested theme does not exist.
+   */
+  public function getTheme($name);
+
 }

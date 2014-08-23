@@ -8,7 +8,6 @@
 namespace Drupal\responsive_image\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
  * Thoroughly test the administrative interface of the Responsive Image module.
@@ -18,18 +17,11 @@ use Drupal\breakpoint\Entity\Breakpoint;
 class ResponsiveImageAdminUITest extends WebTestBase {
 
   /**
-   * The breakpoint group for testing.
-   *
-   * @var \Drupal\breakpoint\Entity\BreakpointGroupInterface
-   */
-  protected $breakpointGroup;
-
-  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('responsive_image');
+  public static $modules = array('responsive_image', 'responsive_image_test_module');
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().
@@ -43,32 +35,6 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     ));
 
     $this->drupalLogin($this->admin_user);
-
-    // Add breakpoint_group and breakpoints.
-    $this->breakpointGroup = entity_create('breakpoint_group', array(
-      'name' => 'atestset',
-      'label' => 'A test set',
-      'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
-    ));
-
-    $breakpoint_names = array('small', 'medium', 'large');
-    for ($i = 0; $i < 3; $i++) {
-      $width = ($i + 1) * 200;
-      $breakpoint = entity_create('breakpoint', array(
-        'name' => $breakpoint_names[$i],
-        'mediaQuery' => "(min-width: {$width}px)",
-        'source' => 'user',
-        'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
-        'multipliers' => array(
-          '1.5x' => 0,
-          '2x' => '2x',
-        ),
-      ));
-      $breakpoint->save();
-      $this->breakpointGroup->addBreakpoints(array($breakpoint));
-    }
-    $this->breakpointGroup->save();
-
   }
 
   /**
@@ -81,13 +47,13 @@ class ResponsiveImageAdminUITest extends WebTestBase {
 
     // Add a new responsive image mapping, our breakpoint set should be selected.
     $this->drupalGet('admin/config/media/responsive-image-mapping/add');
-    $this->assertFieldByName('breakpointGroup', $this->breakpointGroup->id());
+    $this->assertFieldByName('breakpointGroup', 'responsive_image_test_module');
 
     // Create a new group.
     $edit = array(
       'label' => 'Mapping One',
       'id' => 'mapping_one',
-      'breakpointGroup' => $this->breakpointGroup->id(),
+      'breakpointGroup' => 'responsive_image_test_module',
     );
     $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
 
@@ -101,32 +67,32 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one');
     $this->assertFieldByName('label', 'Mapping One');
-    $this->assertFieldByName('breakpointGroup', $this->breakpointGroup->id());
+    $this->assertFieldByName('breakpointGroup', 'responsive_image_test_module');
 
-    // Check if the dropdows are present for the mappings.
-    $this->assertFieldByName('mappings[custom.user.small][1x]', '');
-    $this->assertFieldByName('mappings[custom.user.small][2x]', '');
-    $this->assertFieldByName('mappings[custom.user.medium][1x]', '');
-    $this->assertFieldByName('mappings[custom.user.medium][2x]', '');
-    $this->assertFieldByName('mappings[custom.user.large][1x]', '');
-    $this->assertFieldByName('mappings[custom.user.large][2x]', '');
+    // Check if the dropdowns are present for the mappings.
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.mobile][1x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.mobile][2x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.narrow][1x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.narrow][2x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.wide][1x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.wide][2x]', '');
 
     // Save mappings for 1x variant only.
     $edit = array(
       'label' => 'Mapping One',
-      'breakpointGroup' => $this->breakpointGroup->id(),
-      'mappings[custom.user.small][1x]' => 'thumbnail',
-      'mappings[custom.user.medium][1x]' => 'medium',
-      'mappings[custom.user.large][1x]' => 'large',
+      'breakpointGroup' => 'responsive_image_test_module',
+      'keyed_mappings[responsive_image_test_module.mobile][1x]' => 'thumbnail',
+      'keyed_mappings[responsive_image_test_module.narrow][1x]' => 'medium',
+      'keyed_mappings[responsive_image_test_module.wide][1x]' => 'large',
     );
     $this->drupalPostForm('admin/config/media/responsive-image-mapping/mapping_one', $edit, t('Save'));
     $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one');
-    $this->assertFieldByName('mappings[custom.user.small][1x]', 'thumbnail');
-    $this->assertFieldByName('mappings[custom.user.small][2x]', '');
-    $this->assertFieldByName('mappings[custom.user.medium][1x]', 'medium');
-    $this->assertFieldByName('mappings[custom.user.medium][2x]', '');
-    $this->assertFieldByName('mappings[custom.user.large][1x]', 'large');
-    $this->assertFieldByName('mappings[custom.user.large][2x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.mobile][1x]', 'thumbnail');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.mobile][2x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.narrow][1x]', 'medium');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.narrow][2x]', '');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.wide][1x]', 'large');
+    $this->assertFieldByName('keyed_mappings[responsive_image_test_module.wide][2x]', '');
 
     // Delete the mapping.
     $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one/delete');

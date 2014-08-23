@@ -18,47 +18,81 @@ interface ResponsiveImageMappingInterface extends ConfigEntityInterface {
    * Checks if there is at least one mapping defined.
    *
    * return bool
-   *   Whether the entity has any responsive_image mappings.
+   *   Whether the entity has any responsive image mappings.
    */
   public function hasMappings();
 
   /**
-   * Sets the mappings for the responsive_image mapping.
-   *
-   * The array is keyed by the Breakpoint Group Id and then then by each
-   * Breakpoints multipliers within the Breakpoint Group.
-   *
-   * @param array[] $mappings
-   *   The mappings the responsive_image mapping will be set with.
-   *
-   * @return $this
-   */
-  public function setMappings(array $mappings);
-
-  /**
-   * Returns the mappings for the responsive_image mapping.
+   * Returns the mappings of breakpoint ID and multiplier to image style.
    *
    * @return array[]
-   *   The responsive_imagemappings.
+   *   The responsive image mappings. Keyed by breakpoint ID then multiplier.
+   *   The value is the image style ID.
+   */
+  public function getKeyedMappings();
+
+  /**
+   * Returns the mappings for the responsive image mapping.
+   *
+   * @return array[]
+   *   An array responsive image mappings. Each responsive mapping array
+   *   contains the following keys:
+   *   - breakpoint_id
+   *   - multiplier
+   *   - image_style
    */
   public function getMappings();
 
   /**
    * Sets the breakpoint group for the responsive_image mapping.
    *
-   * @param \Drupal\breakpoint\Entity\BreakpointGroup $breakpoint_group
-   *   The responsive_image mappings breakpoint group.
+   * @param string $breakpoint_group
+   *   The responsive image mapping breakpoint group.
    *
    * @return $this
    */
   public function setBreakpointGroup($breakpoint_group);
 
   /**
-   * Returns the breakpoint group for the responsive_image mapping.
+   * Returns the breakpoint group for the responsive image mapping.
    *
-   * @return \Drupal\breakpoint\Entity\BreakpointGroup
-   *   The responsive_image mappings breakpoint group.
+   * @return string
+   *   The breakpoint group.
    */
   public function getBreakpointGroup();
+
+  /**
+   * Gets the image style ID for a breakpoint ID and multiplier.
+   *
+   * @param string $breakpoint_id
+   *   The breakpoint ID.
+   * @param string $multiplier
+   *   The multiplier.
+   *
+   * @return string|null
+   *   The image style ID. Null if the mapping does not exist.
+   */
+  public function getImageStyle($breakpoint_id, $multiplier);
+
+  /**
+   * Adds a mapping to the responsive image configuration entity.
+   *
+   * @param string $breakpoint_id
+   *   The breakpoint ID.
+   * @param string $multiplier
+   *   The multiplier.
+   * @param string $image_style
+   *   The image style ID.
+   *
+   * @return $this
+   */
+  public function addMapping($breakpoint_id, $multiplier, $image_style);
+
+  /**
+   * Removes all mappings from the responsive image configuration entity.
+   *
+   * @return $this
+   */
+  public function removeMappings();
 
 }

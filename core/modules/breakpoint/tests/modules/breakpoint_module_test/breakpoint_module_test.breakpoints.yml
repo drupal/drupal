@@ -1,0 +1,21 @@
+breakpoint_module_test.mobile:
+  label: mobile
+  mediaQuery: '(min-width: 0px)'
+  weight: 0
+  # Don't include multipliers. A 1x multiplier this will be enforced by default.
+breakpoint_module_test.standard:
+  label: standard
+  mediaQuery: '(min-width: 560px)'
+  weight: 1
+  # Don't include a 1x multiplier this will be enforced by default.
+  multipliers:
+    - 2x
+# Test providing a breakpoint for group matching the group provided by
+# breakpoint_test_theme.
+breakpoint_module_test.breakpoint_theme_test.group2.tv:
+  label: tv
+  mediaQuery: '(min-width: 6000px)'
+  weight: 3
+  multipliers:
+    - 1x
+  group: breakpoint_theme_test.group2

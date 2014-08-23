@@ -17,17 +17,18 @@ responsive_image.mappings.*:
       type: sequence
       label: 'Mappings'
       sequence:
-        - type: sequence
-          label: 'Source type'
-          sequence:
-            - type: sequence
-              label: 'Source'
-              sequence:
-                - type: sequence
-                  label: 'Machine name'
-                  sequence:
-                    - type: string
-                      label: 'Image style'
+        - type: mapping
+          label: 'Mapping'
+          mapping:
+            breakpoint_id:
+              type: string
+              label: 'Breakpoint ID'
+            multiplier:
+              type: string
+              label: 'Multiplier'
+            image_style:
+              type: string
+              label: 'Image style'
     breakpointGroup:
       type: string
       label: 'Breakpoint group'

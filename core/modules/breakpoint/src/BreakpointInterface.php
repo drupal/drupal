@@ -2,42 +2,62 @@
 
 /**
  * @file
- * Contains \Drupal\breakpoint\Entity\BreakpointInterface.
+ * Contains \Drupal\breakpoint\BreakpointInterface.
  */
 
 namespace Drupal\breakpoint;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-
 /**
- * Provides an interface defining a breakpoint entity.
+ * Interface for Breakpoint plugins.
  */
-interface BreakpointInterface extends ConfigEntityInterface {
+interface BreakpointInterface {
 
   /**
-   * Checks if the breakpoint is valid.
+   * Returns the translated label.
    *
-   * @throws \Drupal\breakpoint\InvalidBreakpointSourceTypeException
-   * @throws \Drupal\breakpoint\InvalidBreakpointSourceException
-   * @throws \Drupal\breakpoint\InvalidBreakpointNameException
-   * @throws \Drupal\breakpoint\InvalidBreakpointMediaQueryException
-   *
-   * @see isValidMediaQuery()
+   * @return string
+   *   The translated label.
    */
-  public function isValid();
+  public function getLabel();
 
   /**
-   * Checks if a mediaQuery is valid.
+   * Returns the weight.
    *
-   * @throws \Drupal\breakpoint\InvalidBreakpointMediaQueryException
-   *
-   * @return bool
-   *   Returns TRUE if the media query is valid.
-   *
-   * @see http://www.w3.org/TR/css3-mediaqueries/
-   * @see http://www.w3.org/Style/CSS/Test/MediaQueries/20120229/reports/implement-report.html
-   * @see https://github.com/adobe/webkit/blob/master/Source/WebCore/css/
+   * @return int
+   *   The weight.
    */
-  public static function isValidMediaQuery($media_query);
+  public function getWeight();
+
+  /**
+   * Returns the media query.
+   *
+   * @return string
+   *   The media query.
+   */
+  public function getMediaQuery();
+
+  /**
+   * Returns the multipliers.
+   *
+   * @return array
+   *   The multipliers.
+   */
+  public function getMultipliers();
+
+  /**
+   * Returns the provider.
+   *
+   * @return string
+   *   The provider.
+   */
+  public function getProvider();
+
+  /**
+   * Returns the breakpoint group.
+   *
+   * @return string
+   *   The breakpoint group.
+   */
+  public function getGroup();
 
 }

@@ -5,9 +5,6 @@
  * Manage breakpoints and breakpoint groups for responsive designs.
  */
 
-use Drupal\breakpoint\Entity\Breakpoint;
-use Drupal\breakpoint\Entity\BreakpointGroup;
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -40,33 +37,15 @@ function breakpoint_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Load all breakpoint groups as select options.
- *
- * @return array
- *   An array containing breakpoint group labels indexed by their ids.
+ * Implements hook_themes_enabled()
  */
-function breakpoint_group_select_options() {
-  $options = array();
-  $breakpoint_groups = BreakpointGroup::loadMultiple();
-  foreach ($breakpoint_groups as $breakpoint_group) {
-    $options[$breakpoint_group->id()] = $breakpoint_group->label();
-  }
-  asort($options);
-  return $options;
+function breakpoint_themes_enabled($theme_list) {
+  \Drupal::service('breakpoint.manager')->clearCachedDefinitions();
 }
 
 /**
- * Load all breakpoints as select options.
- *
- * @return array
- *   An array containing breakpoints indexed by their ids.
+ * Implements hook_themes_disabled()
  */
-function breakpoint_select_options() {
-  $options = array();
-  $breakpoints = Breakpoint::loadMultiple();
-  foreach ($breakpoints as $breakpoint) {
-    $options[$breakpoint->id()] = $breakpoint->label() . ' (' . $breakpoint->source . ' - ' . $breakpoint->sourceType . ') [' . $breakpoint->mediaQuery . ']';
-  }
-  asort($options);
-  return $options;
+function breakpoint_themes_disabled($theme_list) {
+  \Drupal::service('breakpoint.manager')->clearCachedDefinitions();
 }

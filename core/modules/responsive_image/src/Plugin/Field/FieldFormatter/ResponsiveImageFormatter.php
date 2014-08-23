@@ -132,38 +132,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       $link_file = TRUE;
     }
 
-    $breakpoint_styles = array();
     $fallback_image_style = '';
-
-    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
-    if ($responsive_image_mapping) {
-      foreach ($responsive_image_mapping->getMappings() as $breakpoint_name => $multipliers) {
-        // Make sure there are multipliers.
-        if (!empty($multipliers)) {
-          // Make sure that the breakpoint exists and is enabled.
-          // @todo add the following when breakpoint->status is added again:
-          // $responsive_image_mapping->breakpointGroup->breakpoints[$breakpoint_name]->status
-          $breakpoint = $responsive_image_mapping->getBreakpointGroup()->getBreakpointById($breakpoint_name);
-          if ($breakpoint) {
-            // Determine the enabled multipliers.
-            $multipliers = array_intersect_key($multipliers, $breakpoint->multipliers);
-            foreach ($multipliers as $multiplier => $image_style) {
-              // Make sure the multiplier still exists.
-              if (!empty($image_style)) {
-                // First mapping found is used as fallback.
-                if (empty($fallback_image_style)) {
-                  $fallback_image_style = $image_style;
-                }
-                if (!isset($breakpoint_styles[$breakpoint_name])) {
-                  $breakpoint_styles[$breakpoint_name] = array();
-                }
-                $breakpoint_styles[$breakpoint_name][$multiplier] = $image_style;
-              }
-            }
-          }
-        }
-      }
-    }
 
     // Check if the user defined a custom fallback image style.
     if ($this->getSetting('fallback_image_style')) {
@@ -171,20 +140,27 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     }
 
     // Collect cache tags to be added for each item in the field.
+    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
+    $image_styles_to_load = array();
+    if ($fallback_image_style) {
+      $image_styles_to_load[] = $fallback_image_style;
+    }
     $all_cache_tags = array();
     if ($responsive_image_mapping) {
       $all_cache_tags[] = $responsive_image_mapping->getCacheTag();
-      foreach ($breakpoint_styles as $breakpoint_name => $style_per_multiplier) {
-        foreach ($style_per_multiplier as $multiplier => $image_style_name) {
-          $image_style = entity_load('image_style', $image_style_name);
-          $all_cache_tags[] = $image_style->getCacheTag();
+      foreach ($responsive_image_mapping->getMappings() as $mapping) {
+        // First mapping found is used as fallback.
+        if (empty($fallback_image_style)) {
+          $fallback_image_style = $mapping['image_style'];
         }
+        $image_styles_to_load[] = $mapping['image_style'];
       }
     }
-    if ($fallback_image_style) {
-      $image_style = entity_load('image_style', $fallback_image_style);
+    $image_styles = entity_load_multiple('image_style', $image_styles_to_load);
+    foreach ($image_styles as $image_style) {
       $all_cache_tags[] = $image_style->getCacheTag();
     }
+
     $cache_tags = NestedArray::mergeDeepArray($all_cache_tags);
 
     foreach ($items as $delta => $item) {
@@ -203,7 +179,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         ),
         '#item' => $item,
         '#image_style' => $fallback_image_style,
-        '#breakpoints' => $breakpoint_styles,
+        '#mapping_id' => $responsive_image_mapping ? $responsive_image_mapping->id() : '',
         '#path' => isset($uri) ? $uri : '',
         '#cache' => array(
           'tags' => $cache_tags,

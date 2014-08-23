@@ -11,9 +11,9 @@
   var options = $.extend(
     {
       breakpoints: {
-        'module.toolbar.narrow': '',
-        'module.toolbar.standard': '',
-        'module.toolbar.wide': ''
+        'toolbar.narrow': '',
+        'toolbar.standard': '',
+        'toolbar.wide': ''
       }
     },
     drupalSettings.toolbar,
@@ -156,7 +156,7 @@
      */
     mediaQueryChangeHandler: function (model, label, mql) {
       switch (label) {
-        case 'module.toolbar.narrow':
+        case 'toolbar.narrow':
           model.set({
             'isOriented': mql.matches,
             'isTrayToggleVisible': false
@@ -168,12 +168,12 @@
             model.set({'orientation': 'vertical'}, {validate: true});
           }
           break;
-        case 'module.toolbar.standard':
+        case 'toolbar.standard':
           model.set({
             'isFixed': mql.matches
           });
           break;
-        case 'module.toolbar.wide':
+        case 'toolbar.wide':
           model.set({
             'orientation': ((mql.matches) ? 'horizontal' : 'vertical')
           }, {validate: true});
