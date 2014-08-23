@@ -124,6 +124,8 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
    *   A storage instance.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function getStorage($entity_type);
 

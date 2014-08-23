@@ -7,7 +7,6 @@
 
 namespace Drupal\quickedit\Tests\Access;
 
-use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
@@ -29,29 +28,10 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
   protected $editAccessCheck;
 
   /**
-   * The mocked entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * {@inheritdoc}
    */
-  protected $entityManager;
-
-  /**
-   * The mocked entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityStorage;
-
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
-    $this->entityStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
-
-    $this->entityManager->expects($this->any())
-      ->method('getStorage')
-      ->will($this->returnValue($this->entityStorage));
-
-    $this->editAccessCheck = new EditEntityFieldAccessCheck($this->entityManager);
+    $this->editAccessCheck = new EditEntityFieldAccessCheck();
   }
 
   /**
@@ -105,8 +85,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccess
    */
   public function testAccess(EntityInterface $entity, FieldStorageConfigInterface $field_storage = NULL, $expected_result) {
-    $request = new Request();
-
     $field_name = 'valid';
     $entity_with_field = clone $entity;
     $entity_with_field->expects($this->any())
@@ -118,124 +96,54 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->will($this->returnValue(TRUE));
 
-    // Prepare the request to be valid.
-    $request->attributes->set('entity_type', 'test_entity');
-    $request->attributes->set('entity', $entity_with_field);
-    $request->attributes->set('field_name', $field_name);
-    $request->attributes->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
-
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $access = $this->editAccessCheck->access($request, $field_name, $account);
+    $access = $this->editAccessCheck->access($entity_with_field, $field_name, LanguageInterface::LANGCODE_NOT_SPECIFIED, $account);
     $this->assertSame($expected_result, $access);
   }
 
   /**
-   * Tests the access method with an undefined entity type.
+   * Tests checking access to routes that result in AccessCheckInterface::KILL.
+   *
+   * @dataProvider providerTestAccessKill
    */
-  public function testAccessWithUndefinedEntityType() {
-    $request = new Request();
-    $request->attributes->set('entity_type', 'non_valid');
-
-    $this->entityManager->expects($this->once())
-      ->method('getDefinition')
-      ->with('non_valid')
-      ->will($this->returnValue(NULL));
-
+  public function testAccessKill($field_name, $langcode) {
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
-  }
-
-  /**
-   * Tests the access method with a non existing entity.
-   */
-  public function testAccessWithNotExistingEntity() {
-    $request = new Request();
-    $request->attributes->set('entity_type', 'entity_test');
-    $request->attributes->set('entity', 1);
-
-    $this->entityManager->expects($this->once())
-      ->method('getDefinition')
-      ->with('entity_test')
-      ->will($this->returnValue(array('id' => 'entity_test')));
-
-    $this->entityStorage->expects($this->once())
-      ->method('load')
-      ->with(1)
-      ->will($this->returnValue(NULL));
-
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
-  }
-
-  /**
-   * Tests the access method with a forgotten passed field_name.
-   */
-  public function testAccessWithNotPassedFieldName() {
-    $request = new Request();
-    $request->attributes->set('entity_type', 'entity_test');
-    $request->attributes->set('entity', $this->createMockEntity());
-
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
-  }
-
-  /**
-   * Tests the access method with a non existing field.
-   */
-  public function testAccessWithNonExistingField() {
-    $request = new Request();
-    $field_name = 'not_valid';
-    $request->attributes->set('entity_type', 'entity_test');
-    $request->attributes->set('entity', $this->createMockEntity());
-    $request->attributes->set('field_name', $field_name);
-
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
-  }
-
-  /**
-   * Tests the access method with a forgotten passed language.
-   */
-  public function testAccessWithNotPassedLanguage() {
-    $request = new Request();
-    $field_name = 'valid';
-    $request->attributes->set('entity_type', 'entity_test');
-    $request->attributes->set('entity', $this->createMockEntity());
-    $request->attributes->set('field_name', $field_name);
-
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
-  }
-
-  /**
-   * Tests the access method with an invalid language.
-   */
-  public function testAccessWithInvalidLanguage() {
     $entity = $this->createMockEntity();
-    $entity->expects($this->once())
-      ->method('hasTranslation')
-      ->with('xx-lolspeak')
-      ->will($this->returnValue(FALSE));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($entity, $field_name, $langcode, $account));
+  }
 
-    $request = new Request();
-    $field_name = 'valid';
-    $request->attributes->set('entity_type', 'entity_test');
-    $request->attributes->set('entity', $entity);
-    $request->attributes->set('field_name', $field_name);
-    $request->attributes->set('langcode', 'xx-lolspeak');
-
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
+  /**
+   * Provides test data for testAccessKill.
+   */
+  public function providerTestAccessKill() {
+    $data = array();
+    // Tests the access method without a field_name.
+    $data[] = array(NULL, LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    // Tests the access method with a non-existent field.
+    $data[] = array('not_valid', LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    // Tests the access method without a langcode.
+    $data[] = array('valid', NULL);
+    // Tests the access method with an invalid langcode.
+    $data[] = array('valid', 'xx-lolspeak');
+    return $data;
   }
 
   /**
    * Returns a mock entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function createMockEntity() {
     $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
       ->disableOriginalConstructor()
       ->getMock();
 
+    $entity->expects($this->any())
+      ->method('hasTranslation')
+      ->will($this->returnValueMap(array(
+        array(LanguageInterface::LANGCODE_NOT_SPECIFIED, TRUE),
+        array('xx-lolspeak', FALSE),
+      )));
     $entity->expects($this->any())
       ->method('hasField')
       ->will($this->returnValueMap(array(

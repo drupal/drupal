@@ -11,6 +11,9 @@ editor.field_untransformed_text:
     _controller: '\Drupal\editor\EditorController::getUntransformedText'
   options:
     _theme: ajax_base_page
+    parameters:
+      entity:
+        type: entity:{entity_type}
   requirements:
     _permission: 'access in-place editing'
     _access_quickedit_entity_field: 'TRUE'

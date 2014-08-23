@@ -64,8 +64,18 @@ class AdminPathConfigEntityConverter extends EntityConverter {
    * {@inheritdoc}
    */
   public function convert($value, $definition, $name, array $defaults, Request $request) {
-    $entity_type = substr($definition['type'], strlen('entity:'));
-    if ($storage = $this->entityManager->getStorage($entity_type)) {
+    $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
+
+    // If the entity type is dynamic, confirm it to be a config entity. Static
+    // entity types will have performed this check in self::applies().
+    if (strpos($definition['type'], 'entity:{') === 0) {
+      $entity_type = $this->entityManager->getDefinition($entity_type_id);
+      if (!$entity_type->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+        return parent::convert($value, $definition, $name, $defaults, $request);
+      }
+    }
+
+    if ($storage = $this->entityManager->getStorage($entity_type_id)) {
       // Make sure no overrides are loaded.
       $old_state = $this->configFactory->getOverrideState();
       $this->configFactory->setOverrideState(FALSE);
@@ -80,9 +90,13 @@ class AdminPathConfigEntityConverter extends EntityConverter {
    */
   public function applies($definition, $name, Route $route) {
     if (parent::applies($definition, $name, $route)) {
+      $entity_type_id = substr($definition['type'], strlen('entity:'));
+      // If the entity type is dynamic, defer checking to self::convert().
+      if (strpos($entity_type_id, '{') === 0) {
+        return TRUE;
+      }
       // As we only want to override EntityConverter for ConfigEntities, find
       // out whether the current entity is a ConfigEntity.
-      $entity_type_id = substr($definition['type'], strlen('entity:'));
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
       if ($entity_type->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         return $this->adminContext->isAdminRoute($route);
