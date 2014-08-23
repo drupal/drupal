@@ -36,10 +36,6 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system'));
-
-    // Reset the available themes to test the case of no themes.
-    $this->extensionConfig()->set('theme', array());
-    $this->extensionConfig()->set('disabled.theme', array());
   }
 
   /**
@@ -55,17 +51,8 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     // Rebuilding available themes should always yield results though.
     $this->assertTrue($this->themeHandler()->rebuildThemeData()['stark'], 'ThemeHandler::rebuildThemeData() yields all available themes.');
 
-    try {
-      // theme_get_setting() should fail, as no theme is available.
-      $this->assertIdentical(theme_get_setting('features.favicon'), TRUE);
-      $this->fail('No theme should lead to an exception');
-    }
-    catch (\RuntimeException $e) {
-      $this->assertEqual($e->getMessage(), 'No theme is enabled.');
-    }
-    catch (\Exception $e) {
-      $this->fail('The runtime exception should be thrown.');
-    }
+    // theme_get_setting() should return global default theme settings.
+    $this->assertIdentical(theme_get_setting('features.favicon'), TRUE);
   }
 
   /**

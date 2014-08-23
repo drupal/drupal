@@ -281,6 +281,20 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests that there is no theme by default.
+   */
+  function testNoThemeByDefault() {
+    $themes = $this->container->get('config.factory')->get('core.extension')->get('theme');
+    $this->assertEqual($themes, array());
+
+    $extensions = $this->container->get('config.storage')->read('core.extension');
+    $this->assertEqual($extensions['theme'], array());
+
+    $active_theme = $this->container->get('theme.manager')->getActiveTheme();
+    $this->assertEqual($active_theme->getName(), 'core');
+  }
+
+  /**
    * Tests that drupal_get_profile() returns NULL.
    *
    * As the currently active installation profile is used when installing

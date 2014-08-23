@@ -60,6 +60,6 @@ interface ThemeInitializationInterface {
    * @return \Drupal\Core\Theme\ActiveTheme
    *   The active theme instance for the passed in $theme.
    */
-  public function getActiveTheme(Extension $theme, array $base_themes);
+  public function getActiveTheme(Extension $theme, array $base_themes = []);
 
 }

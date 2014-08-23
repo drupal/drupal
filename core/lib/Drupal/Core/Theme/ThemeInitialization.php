@@ -61,29 +61,41 @@ class ThemeInitialization implements ThemeInitializationInterface {
     if ($active_theme = $this->state->get('theme.active_theme.' . $theme_name)) {
       return $active_theme;
     }
-    else {
-      $themes = $this->themeHandler->listInfo();
+    $themes = $this->themeHandler->listInfo();
 
-      if (empty($themes)) {
-        throw new \RuntimeException('No theme is enabled.');
-      }
-      if (!isset($themes[$theme_name])) {
-        throw new \InvalidArgumentException(String::format('Theme %theme is not enabled/does not exist.', array('theme' => $theme_name)));
-      }
+    // If no theme could be negotiated, or if the negotiated theme is not within
+    // the list of enabled themes, fall back to the default theme output of core
+    // and modules (like Stark, but without a theme extension at all). This is
+    // possible, because loadActiveTheme() always loads the Twig theme engine.
+    // This is desired, because missing or malformed theme configuration should
+    // not leave the application in a broken state. By falling back to default
+    // output, the user is able to reconfigure the theme through the UI.
+    // Lastly, tests are expected to operate with no theme by default, so as to
+    // only assert the original theme output of modules (unless a test manually
+    // enables a specific theme).
+    if (empty($themes) || !$theme_name || !isset($themes[$theme_name])) {
+      $theme_name = 'core';
+      // /core/core.info.yml does not actually exist, but is required because
+      // Extension expects a pathname.
+      $active_theme = $this->getActiveTheme(new Extension('theme', 'core/core.info.yml'));
 
-      // Find all our ancestor themes and put them in an array.
-      $base_themes = array();
-      $ancestor = $theme_name;
-      while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-        $ancestor = $themes[$ancestor]->base_theme;
-        $base_themes[] = $themes[$ancestor];
-      }
-
-      $active_theme = $this->getActiveTheme($themes[$theme_name], $base_themes);
-
-      $this->state->set('theme.active_theme.' . $theme_name, $active_theme);
+      // Early-return and do not set state, because the initialized $theme_name
+      // differs from the original $theme_name.
       return $active_theme;
     }
+
+    // Find all our ancestor themes and put them in an array.
+    $base_themes = array();
+    $ancestor = $theme_name;
+    while ($ancestor && isset($themes[$ancestor]->base_theme)) {
+      $ancestor = $themes[$ancestor]->base_theme;
+      $base_themes[] = $themes[$ancestor];
+    }
+
+    $active_theme = $this->getActiveTheme($themes[$theme_name], $base_themes);
+
+    $this->state->set('theme.active_theme.' . $theme_name, $active_theme);
+    return $active_theme;
   }
 
   /**
@@ -123,7 +135,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getActiveTheme(Extension $theme, array $base_themes) {
+  public function getActiveTheme(Extension $theme, array $base_themes = []) {
     $theme_path = $theme->getPath();
 
     $values['path'] = $theme_path;

@@ -124,7 +124,7 @@ class ThemeManager implements ThemeManagerInterface {
     if (!$route_match) {
       $route_match = \Drupal::routeMatch();
     }
-    $theme = $this->themeNegotiator->determineActiveTheme($route_match) ?: 'stark';
+    $theme = $this->themeNegotiator->determineActiveTheme($route_match);
     $this->activeTheme = $this->themeInitialization->initTheme($theme);
   }
 
