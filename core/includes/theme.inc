@@ -1964,7 +1964,7 @@ function template_preprocess_page(&$variables) {
   if (!defined('MAINTENANCE_MODE')) {
     $variables['breadcrumb'] = array(
       '#theme' => 'breadcrumb',
-      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::routeMatch()),
+      '#links' => \Drupal::service('breadcrumb')->build(\Drupal::routeMatch()),
     );
   }
 }
@@ -2305,6 +2305,23 @@ function template_preprocess_field_multiple_value_form(&$variables) {
 }
 
 /**
+ * Prepares variables for breadcrumb templates.
+ *
+ * Default template: breadcrumb.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - links: A list of \Drupal\Core\Link objects which should be rendered.
+ */
+function template_preprocess_breadcrumb(&$variables) {
+  /** @var \Drupal\Core\Link[] $links */
+  $links = $variables['links'];
+  foreach ($links as $key => $link) {
+    $variables['breadcrumb'][$key] = array('text' => $link->getText(), 'url' => $link->getUrl()->toString());
+  }
+}
+
+/**
  * Callback for usort() within template_preprocess_field_multiple_value_form().
  *
  * Sorts using ['_weight']['#value']
@@ -2366,7 +2383,7 @@ function drupal_common_theme() {
       'template' => 'image',
     ),
     'breadcrumb' => array(
-      'variables' => array('breadcrumb' => NULL),
+      'variables' => array('links' => array(), 'breadcrumb' => array()),
       'template' => 'breadcrumb',
     ),
     'table' => array(

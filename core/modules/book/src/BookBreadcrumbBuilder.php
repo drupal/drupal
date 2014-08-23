@@ -10,7 +10,7 @@ namespace Drupal\book;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -21,7 +21,6 @@ use Drupal\node\NodeInterface;
  */
 class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use LinkGeneratorTrait;
 
   /**
    * The node storage.
@@ -73,7 +72,7 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $book_nids = array();
-    $links = array($this->l($this->t('Home'), '<front>'));
+    $links = array(Link::createFromRoute($this->t('Home'), '<front>'));
     $book = $route_match->getParameter('node')->book;
     $depth = 1;
     // We skip the current node.
@@ -87,7 +86,7 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       while (!empty($book['p' . ($depth + 1)])) {
         if (!empty($parent_books[$book['p' . $depth]]) && ($parent_book = $parent_books[$book['p' . $depth]])) {
           if ($parent_book->access('view', $this->account)) {
-            $links[] = $this->l($parent_book->label(), 'entity.node.canonical', array('node' => $parent_book->id()));
+            $links[] = Link::createFromRoute($parent_book->label(), 'entity.node.canonical', array('node' => $parent_book->id()));
           }
         }
         $depth++;

@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests\Breadcrumb;
 
+use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -172,20 +173,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
 
     // Add a translation manager for t().
     $translation_manager = $this->getStringTranslationStub();
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'stringTranslation');
-    $property->setAccessible(TRUE);
-    $property->setValue($breadcrumb_builder, $translation_manager);
-
-    // Add a link generator for l().
-    $link_generator = $this->getMockBuilder('Drupal\Core\Utility\LinkGeneratorInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $link_generator->expects($this->any())
-      ->method('generate')
-      ->will($this->returnArgument(0));
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'linkGenerator');
-    $property->setAccessible(TRUE);
-    $property->setValue($breadcrumb_builder, $link_generator);
+    $breadcrumb_builder->setStringTranslation($translation_manager);
 
     // The forum listing we need a breadcrumb back from.
     $forum_listing = $this->getMockBuilder('Drupal\taxonomy\Entity\Term')
@@ -205,20 +193,20 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
 
     // First test.
     $expected1 = array(
-      'Home',
-      'Fora_is_the_plural_of_forum',
-      'Something',
+      Link::createFromRoute('Home', '<front>'),
+      Link::createFromRoute('Fora_is_the_plural_of_forum', 'forum.index'),
+      Link::createFromRoute('Something', 'forum.page', array('taxonomy_term' => 1)),
     );
-    $this->assertSame($expected1, $breadcrumb_builder->build($route_match));
+    $this->assertEquals($expected1, $breadcrumb_builder->build($route_match));
 
     // Second test.
     $expected2 = array(
-      'Home',
-      'Fora_is_the_plural_of_forum',
-      'Something else',
-      'Something',
+      Link::createFromRoute('Home', '<front>'),
+      Link::createFromRoute('Fora_is_the_plural_of_forum', 'forum.index'),
+      Link::createFromRoute('Something else', 'forum.page', array('taxonomy_term' => 2)),
+      Link::createFromRoute('Something', 'forum.page', array('taxonomy_term' => 1)),
     );
-    $this->assertSame($expected2, $breadcrumb_builder->build($route_match));
+    $this->assertEquals($expected2, $breadcrumb_builder->build($route_match));
   }
 
 }

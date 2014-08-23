@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Breadcrumb;
 
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -33,7 +34,7 @@ class ForumNodeBreadcrumbBuilder extends ForumBreadcrumbBuilderBase {
     if ($parents) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = $this->l($parent->label(), 'forum.page',
+        $breadcrumb[] = Link::createFromRoute($parent->label(), 'forum.page',
           array(
             'taxonomy_term' => $parent->id(),
           )

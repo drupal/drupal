@@ -79,7 +79,7 @@ class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginI
       // $breadcrumb is expected to be an array of rendered breadcrumb links.
       return array(
         '#theme' => 'breadcrumb',
-        '#breadcrumb' => $breadcrumb,
+        '#links' => $breadcrumb,
       );
     }
   }

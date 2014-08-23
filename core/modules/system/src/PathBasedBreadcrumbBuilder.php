@@ -11,10 +11,10 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Link;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Component\Utility\Unicode;
@@ -31,7 +31,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use LinkGeneratorTrait;
 
   /**
    * The router request context.
@@ -154,16 +153,14 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             // route is missing a _title or _title_callback attribute.
             $title = str_replace(array('-', '_'), ' ', Unicode::ucfirst(end($path_elements)));
           }
-          // @todo Replace with a #type => link render element so that the alter
-          // hook can work with the actual data.
-          $links[] = $this->l($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all(), array('html' => TRUE));
+          $links[] = Link::createFromRoute($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all());
         }
       }
 
     }
     if ($path && $path != $front) {
       // Add the Home link, except for the front page.
-      $links[] = $this->l($this->t('Home'), '<front>');
+      $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     }
     return array_reverse($links);
   }

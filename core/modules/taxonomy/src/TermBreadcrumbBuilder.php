@@ -8,8 +8,8 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -17,7 +17,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use LinkGeneratorTrait;
 
   /**
    * {@inheritdoc}
@@ -38,9 +37,9 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb = array();
     while ($parents = taxonomy_term_load_parents($term->id())) {
       $term = array_shift($parents);
-      $breadcrumb[] = $this->l($term->getName(), 'entity.taxonomy_term.canonical', array('taxonomy_term' => $term->id()));
+      $breadcrumb[] = Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', array('taxonomy_term' => $term->id()));
     }
-    $breadcrumb[] = $this->l($this->t('Home'), '<front>');
+    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
     $breadcrumb = array_reverse($breadcrumb);
 
     return $breadcrumb;

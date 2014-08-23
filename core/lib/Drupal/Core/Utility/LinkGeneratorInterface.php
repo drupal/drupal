@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -91,5 +92,16 @@ interface LinkGeneratorInterface {
    *   An HTML string containing a link to the given route and parameters.
    */
   public function generateFromUrl($text, Url $url);
+
+  /**
+   * Renders a link from a link object.
+   *
+   * @param \Drupal\Core\Link $link
+   *   A link object to convert to a string.
+   *
+   * @return string
+   *   An HTML string containing a link to the given link.
+   */
+  public function generateFromLink(Link $link);
 
 }

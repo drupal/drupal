@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Template\Attribute;
@@ -46,6 +47,13 @@ class LinkGenerator implements LinkGeneratorInterface {
   public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function generateFromLink(Link $link) {
+    return $this->generateFromUrl($link->getText(), $link->getUrl());
   }
 
   /**

@@ -7,8 +7,10 @@
 
 namespace Drupal\system\Tests\Breadcrumbs;
 
+use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\system\PathBasedBreadcrumbBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -60,13 +62,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected $context;
 
   /**
-   * The mocked link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $linkGenerator;
-
-  /**
    * The mocked current user.
    *
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -109,9 +104,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     );
 
     $this->builder->setStringTranslation($this->getStringTranslationStub());
-
-    $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
-    $this->builder->setLinkGenerator($this->linkGenerator);
   }
 
   /**
@@ -138,10 +130,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->method('getPathInfo')
       ->will($this->returnValue('/example'));
 
-    $this->setupLinkGeneratorWithFrontpage();
-
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
-    $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
+    $this->assertEquals(array(0 => new Link('Home', new Url('<front>'))), $links);
   }
 
   /**
@@ -170,20 +160,10 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $link_example = '<a href="/example">Example</a>';
-    $link_front = '<a href="/">Home</a>';
-    $this->linkGenerator->expects($this->at(0))
-      ->method('generate')
-      ->with('Example', 'example', array(), array('html' => TRUE))
-      ->will($this->returnValue($link_example));
-    $this->linkGenerator->expects($this->at(1))
-      ->method('generate')
-      ->with('Home', '<front>', array(), array())
-      ->will($this->returnValue($link_front));
     $this->setupAccessManagerWithTrue();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
-    $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_example), $links);
+    $this->assertEquals(array(0 => new Link('Home', new Url('<front>')), 1 => new Link('Example', new Url('example'))), $links);
   }
 
   /**
@@ -220,26 +200,14 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $link_example_bar = '<a href="/example/bar">Bar</a>';
-    $link_example = '<a href="/example">Example</a>';
-    $link_front = '<a href="/">Home</a>';
-    $this->linkGenerator->expects($this->at(0))
-      ->method('generate')
-      ->with('Bar', 'example_bar', array(), array('html' => TRUE))
-      ->will($this->returnValue($link_example_bar));
-
-    $this->linkGenerator->expects($this->at(1))
-      ->method('generate')
-      ->with('Example', 'example', array(), array('html' => TRUE))
-      ->will($this->returnValue($link_example));
-    $this->linkGenerator->expects($this->at(2))
-      ->method('generate')
-      ->with('Home', '<front>', array(), array())
-      ->will($this->returnValue($link_front));
     $this->setupAccessManagerWithTrue();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
-    $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_example, 2 => $link_example_bar), $links);
+    $this->assertEquals(array(
+      new Link('Home', new Url('<front>')),
+      new Link('Example', new Url('example')),
+      new Link('Bar', new Url('example_bar')),
+    ), $links);
   }
 
   /**
@@ -259,12 +227,11 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->requestMatcher->expects($this->any())
       ->method('matchRequest')
       ->will($this->throwException(new $exception_class($exception_argument)));
-    $this->setupLinkGeneratorWithFrontpage();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
 
     // No path matched, though at least the frontpage is displayed.
-    $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
+    $this->assertEquals(array(0 => new Link('Home', new Url('<front>'))), $links);
   }
 
   /**
@@ -301,12 +268,11 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->requestMatcher->expects($this->any())
       ->method('matchRequest')
       ->will($this->returnValue(array()));
-    $this->setupLinkGeneratorWithFrontpage();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
 
     // No path matched, though at least the frontpage is displayed.
-    $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
+    $this->assertEquals(array(0 => new Link('Home', new Url('<front>'))), $links);
   }
 
   /**
@@ -344,17 +310,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $link_user = '<a href="/user/1">Admin</a>';
-    $link_front = '<a href="/">Home</a>';
-    $this->linkGenerator->expects($this->at(0))
-      ->method('generate')
-      ->with('Admin', 'user_page', array(), array('html' => TRUE))
-      ->will($this->returnValue($link_user));
-
-    $this->linkGenerator->expects($this->at(1))
-      ->method('generate')
-      ->with('Home', '<front>', array(), array())
-      ->will($this->returnValue($link_front));
     $this->setupAccessManagerWithTrue();
     $this->titleResolver->expects($this->once())
       ->method('getTitle')
@@ -362,19 +317,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->will($this->returnValue('Admin'));
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
-    $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_user), $links);
-  }
-
-  /**
-   * Setup the link generator with a frontpage route.
-   */
-  public function setupLinkGeneratorWithFrontpage() {
-    $this->linkGenerator->expects($this->once())
-      ->method('generate')
-      ->with($this->anything(), '<front>', array())
-      ->will($this->returnCallback(function($title) {
-        return '<a href="/">' . $title . '</a>';
-      }));
+    $this->assertEquals(array(0 => new Link('Home', new Url('<front>')), 1 => new Link('Admin', new Url('user_page'))), $links);
   }
 
   /**

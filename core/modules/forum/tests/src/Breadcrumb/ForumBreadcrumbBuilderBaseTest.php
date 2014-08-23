@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests\Breadcrumb;
 
+use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -115,32 +116,19 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
 
     // Add a translation manager for t().
     $translation_manager = $this->getStringTranslationStub();
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'stringTranslation');
-    $property->setAccessible(TRUE);
-    $property->setValue($breadcrumb_builder, $translation_manager);
-
-    // Add a link generator for l().
-    $link_generator = $this->getMockBuilder('Drupal\Core\Utility\LinkGeneratorInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $link_generator->expects($this->any())
-      ->method('generate')
-      ->will($this->returnArgument(0));
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'linkGenerator');
-    $property->setAccessible(TRUE);
-    $property->setValue($breadcrumb_builder, $link_generator);
+    $breadcrumb_builder->setStringTranslation($translation_manager);
 
     // Our empty data set.
     $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     // Expected result set.
     $expected = array(
-      'Home',
-      'Fora_is_the_plural_of_forum',
+      Link::createFromRoute('Home', '<front>'),
+      Link::createFromRoute('Fora_is_the_plural_of_forum', 'forum.index'),
     );
 
     // And finally, the test.
-    $this->assertSame($expected, $breadcrumb_builder->build($route_match));
+    $this->assertEquals($expected, $breadcrumb_builder->build($route_match));
   }
 
 }

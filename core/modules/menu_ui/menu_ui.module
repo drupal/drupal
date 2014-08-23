@@ -10,6 +10,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -566,7 +567,7 @@ function menu_ui_system_breadcrumb_alter(array &$breadcrumb, RouteMatchInterface
     if (($menu_link instanceof MenuLinkInterface)) {
       // Add a link to the menu admin screen.
       $menu = Menu::load($menu_link->getMenuName());
-      $breadcrumb[] = \Drupal::l($menu->label(), 'menu_ui.menu_edit', array('menu' => $menu->id()));
+      $breadcrumb[] = Link::createFromRoute($menu->label(), 'menu_ui.menu_edit', array('menu' => $menu->id()));
     }
   }
 }

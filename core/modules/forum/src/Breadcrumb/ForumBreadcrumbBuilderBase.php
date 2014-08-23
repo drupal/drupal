@@ -10,8 +10,8 @@ namespace Drupal\forum\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\forum\ForumManagerInterface;
 
@@ -23,7 +23,6 @@ use Drupal\forum\ForumManagerInterface;
  */
 abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use LinkGeneratorTrait;
 
   /**
    * Configuration object for this builder.
@@ -66,12 +65,12 @@ abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-    $breadcrumb[] = $this->l($this->t('Home'), '<front>');
+    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
 
     $vocabulary = $this->entityManager
       ->getStorage('taxonomy_vocabulary')
       ->load($this->config->get('vocabulary'));
-    $breadcrumb[] = $this->l($vocabulary->label(), 'forum.index');
+    $breadcrumb[] = Link::createFromRoute($vocabulary->label(), 'forum.index');
 
     return $breadcrumb;
   }

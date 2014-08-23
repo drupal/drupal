@@ -32,8 +32,8 @@ interface BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    *
-   * @return array
-   *   An array of HTML links for the breadcrumb. Returning an empty array will
+   * @return \Drupal\Core\Link[]
+   *   An array of links for the breadcrumb. Returning an empty array will
    *   suppress all breadcrumbs.
    */
   public function build(RouteMatchInterface $route_match);
