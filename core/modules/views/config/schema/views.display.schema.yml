@@ -60,6 +60,27 @@ views.display.page:
           type: string
           label: 'Menu name'
 
+views.display.block:
+  type: views_display
+  label: 'Block display options'
+  mapping:
+    block_description:
+      type: label
+      label: 'Block name'
+    block_category:
+      type: text
+      label: 'Block category'
+    block_hide_empty:
+      type: boolean
+      label: 'Hide block if no result/empty text'
+    allow:
+      type: mapping
+      label: 'Allow'
+      mapping:
+        items_per_page:
+         type: boolean
+         label: 'Items per page'
+
 views.display.feed:
   type: views_display_path
   label: 'Feed display options'

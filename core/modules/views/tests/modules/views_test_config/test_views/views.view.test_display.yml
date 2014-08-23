@@ -32,7 +32,7 @@ display:
     display_title: Block
     id: block_1
     position: 2
-    provider: block
+    provider: views
   default:
     display_options:
       access:
@@ -92,6 +92,3 @@ display:
 label: ''
 id: test_display
 tag: ''
-dependencies:
-  module:
-    - block

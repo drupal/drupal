@@ -460,7 +460,7 @@ display:
     display_options:
       link_url: admin/content
       block_category: 'Lists (Views)'
-    provider: block
+    provider: views
 label: 'Recent content'
 module: node
 id: content_recent
@@ -470,5 +470,4 @@ dependencies:
   module:
     - node
     - user
-    - block
 
