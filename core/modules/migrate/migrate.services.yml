@@ -18,9 +18,6 @@ services:
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.migrate.entity_field:
-    class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [entity_field, '@container.namespaces', '@cache.discovery', '@module_handler']
   password_migrate:
     class: Drupal\migrate\MigratePassword
     arguments: ['@password_original']

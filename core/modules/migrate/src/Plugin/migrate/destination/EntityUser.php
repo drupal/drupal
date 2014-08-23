@@ -53,8 +53,8 @@ class EntityUser extends EntityContentBase {
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, EntityManagerInterface $entity_manager, PasswordInterface $password) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $entity_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, PasswordInterface $password) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager);
     if (isset($configuration['md5_passwords'])) {
       $this->password = $password;
     }
@@ -72,7 +72,6 @@ class EntityUser extends EntityContentBase {
       $migration,
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
-      $container->get('plugin.manager.migrate.entity_field'),
       $container->get('entity.manager'),
       $container->get('password')
     );

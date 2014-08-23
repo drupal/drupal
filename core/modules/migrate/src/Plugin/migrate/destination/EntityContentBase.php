@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,9 +48,8 @@ class EntityContentBase extends Entity {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
-    $this->migrateEntityFieldPluginManager = $plugin_manager;
     $this->entityManager = $entity_manager;
   }
 
@@ -67,7 +65,6 @@ class EntityContentBase extends Entity {
       $migration,
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
-      $container->get('plugin.manager.migrate.entity_field'),
       $container->get('entity.manager')
     );
   }
@@ -76,27 +73,6 @@ class EntityContentBase extends Entity {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if ($bundle_key = $this->getKey('bundle')) {
-      $bundle = $row->getDestinationProperty($bundle_key);
-    }
-    else {
-      $bundle = $this->storage->getEntityTypeId();
-    }
-    // Some migrations save additional data of an existing entity and only
-    // provide the reference to the entity, in those cases, we can not run the
-    // processing below. Migrations that need that need to provide the bundle.
-    if ($bundle) {
-      $field_definitions = $this->entityManager->getFieldDefinitions($this->storage->getEntityTypeId(), $bundle);
-      foreach ($field_definitions as $field_name => $field_definition) {
-        $field_type = $field_definition->getType();
-        if ($this->migrateEntityFieldPluginManager->getDefinition($field_type, FALSE)) {
-          $destination_value = $this->migrateEntityFieldPluginManager->createInstance($field_type)->import($field_definition, $row->getDestinationProperty($field_name));
-          // @TODO: check for NULL return? Add an unset to $row? Maybe needed in
-          // exception handling? Propagate exception?
-          $row->setDestinationProperty($field_name, $destination_value);
-        }
-      }
-    }
     $entity = $this->getEntity($row, $old_destination_id_values);
     return $this->save($entity, $old_destination_id_values);
   }
