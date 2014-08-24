@@ -394,11 +394,18 @@
       var metadata = Drupal.quickedit.metadata.get(fieldModel.get('fieldID'));
       if (metadata.access && _.indexOf(loadedEditors, metadata.editor) === -1) {
         missingEditors.push(metadata.editor);
+        // Set a stub, to prevent subsequent calls to loadMissingEditors() from
+        // loading the same in-place editor again. Loading an in-place editor
+        // requires talking to a server, to download its JavaScript, then
+        // executing its JavaScript, and only then its Drupal.quickedit.editors
+        // entry will be set.
+        Drupal.quickedit.editors[metadata.editor] = false;
       }
     });
     missingEditors = _.uniq(missingEditors);
     if (missingEditors.length === 0) {
       callback();
+      return;
     }
 
     // @todo Simplify this once https://drupal.org/node/1533366 lands.
