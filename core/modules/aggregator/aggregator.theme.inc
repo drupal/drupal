@@ -116,7 +116,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
     ),
   ));
   $variables['age'] = array(
-    '#theme' => 'datetime',
+    '#theme' => 'time',
     '#attributes' => array(
       'datetime' => format_date($item->getPostedTime(), 'html_datetime', '', 'UTC'),
       'class' => array('feed-item-age',),

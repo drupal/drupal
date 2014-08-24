@@ -127,7 +127,7 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
 
       // Display the date using theme datetime.
       $elements[$delta] = array(
-        '#theme' => 'datetime',
+        '#theme' => 'time',
         '#text' => $formatted_date,
         '#html' => FALSE,
         '#attributes' => array(

@@ -826,7 +826,9 @@ function drupal_render_inline_template(&$element) {
  */
 
 /**
- * Preprocess variables for theme_datetime().
+ * Prepares variables for time templates.
+ *
+ * Default template: time.html.twig.
  *
  * @param array $variables
  *   An associative array possibly containing:
@@ -834,7 +836,7 @@ function drupal_render_inline_template(&$element) {
  *   - timestamp:
  *   - text:
  */
-function template_preprocess_datetime(&$variables) {
+function template_preprocess_time(&$variables) {
   // Format the 'datetime' attribute based on the timestamp.
   // @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
   if (!isset($variables['attributes']['datetime']) && isset($variables['timestamp'])) {
@@ -2350,9 +2352,9 @@ function drupal_common_theme() {
       'render element' => 'elements',
       'template' => 'region',
     ),
-    'datetime' => array(
+    'time' => array(
       'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
-      'template' => 'datetime',
+      'template' => 'time',
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
