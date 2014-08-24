@@ -253,6 +253,9 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalGet('admin/structure/menu');
     $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button url is correct");
 
+    // Verify form defaults.
+    $this->doMenuLinkFormDefaultsTest();
+
     // Add menu links.
     $item1 = $this->addMenuLink('', 'node/' . $node1->id(), $menu_name, TRUE);
     $item2 = $this->addMenuLink($item1->getPluginId(), 'node/' . $node2->id(), $menu_name, FALSE);
@@ -418,6 +421,23 @@ class MenuTest extends MenuWebTestBase {
     // Save menu links for later tests.
     $this->items[] = $item1;
     $this->items[] = $item2;
+  }
+
+  /**
+   * Ensures that the proper default values are set when adding a menu link
+   */
+  protected function doMenuLinkFormDefaultsTest() {
+    $this->drupalGet("admin/structure/menu/manage/tools/add");
+    $this->assertResponse(200);
+
+    $this->assertFieldByName('title[0][value]', '');
+    $this->assertFieldByName('url', '');
+
+    $this->assertNoFieldChecked('edit-expanded-value');
+    $this->assertFieldChecked('edit-enabled-value');
+
+    $this->assertFieldByName('description[0][value]', '');
+    $this->assertFieldByName('weight[0][value]', 0);
   }
 
   /**

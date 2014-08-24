@@ -278,7 +278,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setSettings(array(
-        'default_value' => '',
         'max_length' => 255,
       ))
       ->setDisplayOptions('view', array(
@@ -297,7 +296,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('Shown when hovering over the menu link.'))
       ->setTranslatable(TRUE)
       ->setSettings(array(
-        'default_value' => '',
         'max_length' => 255,
       ))
       ->setDisplayOptions('view', array(
@@ -341,7 +339,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))
       ->setDescription(t('Link weight among links in the same menu at the same depth. In the menu, the links with high weight will sink and links with a low weight will be positioned nearer the top.'))
-      ->setSetting('default_value', 0)
+      ->setDefaultValue(0)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'integer',
@@ -355,7 +353,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['expanded'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Show as expanded'))
       ->setDescription(t('If selected and this menu link has children, the menu will always appear expanded.'))
-      ->setSetting('default_value', FALSE)
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'boolean',
@@ -369,7 +367,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['enabled'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Enabled'))
       ->setDescription(t('A flag for whether the link should be enabled in menus or hidden.'))
-      ->setSetting('default_value', TRUE)
+      ->setDefaultValue(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'boolean',
