@@ -68,7 +68,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   protected function getImage() {
     $image = $this->imageFactory->get($this->file, 'test');
-    $this->assertTrue($image->isValid(), 'Image was loaded.');
+    $this->assertTrue($image->isValid(), 'Image file was parsed.');
     return $image;
   }
 

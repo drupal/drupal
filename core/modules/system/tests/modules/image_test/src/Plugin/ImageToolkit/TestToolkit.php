@@ -70,6 +70,13 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
+  public function isValid() {
+    return isset($this->type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function parseFile() {
     $this->logCall('parseFile', func_get_args());
     $data = @getimagesize($this->getImage()->getSource());

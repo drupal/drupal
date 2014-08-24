@@ -41,13 +41,6 @@ class Image implements ImageInterface {
   protected $fileSize;
 
   /**
-   * If this image object is valid.
-   *
-   * @var bool
-   */
-  protected $valid = FALSE;
-
-  /**
    * Constructs a new Image object.
    *
    * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
@@ -61,7 +54,10 @@ class Image implements ImageInterface {
     $this->getToolkit()->setImage($this);
     if ($source) {
       $this->source = $source;
-      $this->parseFile();
+      // Defer image file validity check to the toolkit.
+      if ($this->getToolkit()->parseFile()) {
+        $this->fileSize = filesize($this->source);
+      }
     }
   }
 
@@ -69,7 +65,7 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function isValid() {
-    return $this->valid;
+    return $this->getToolkit()->isValid();
   }
 
   /**
@@ -143,24 +139,6 @@ class Image implements ImageInterface {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * Determines if a file contains a valid image.
-   *
-   * Drupal supports GIF, JPG and PNG file formats when used with the GD
-   * toolkit, and may support others, depending on which toolkits are
-   * installed.
-   *
-   * @return bool
-   *   FALSE, if the file could not be found or is not an image. Otherwise, the
-   *   image information is populated.
-   */
-  protected function parseFile() {
-    if ($this->valid = $this->getToolkit()->parseFile()) {
-      $this->fileSize = filesize($this->source);
-    }
-    return $this->valid;
   }
 
   /**

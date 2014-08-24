@@ -64,7 +64,7 @@ class ImageTest extends UnitTestCase {
    */
   protected function getToolkitMock(array $stubs = array()) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit');
-    $stubs += array('getPluginId', 'save');
+    $stubs = array_merge(array('getPluginId', 'save'), $stubs);
     return $mock_builder
       ->disableOriginalConstructor()
       ->setMethods($stubs)
@@ -93,18 +93,30 @@ class ImageTest extends UnitTestCase {
   /**
    * Get an image with a mocked toolkit, for testing.
    *
+   * @param bool $load_expected
+   *   (optional) Whether the load() method is expected to be called. Defaults
+   *   to TRUE.
    * @param array $stubs
    *   (optional) Array containing toolkit methods to be replaced with stubs.
    *
    * @return \Drupal\Core\Image\Image
    *   An image object.
    */
-  protected function getTestImage(array $stubs = array()) {
+  protected function getTestImage($load_expected = TRUE, array $stubs = array()) {
+    if (!$load_expected && !in_array('load', $stubs)) {
+      $stubs = array_merge(array('load'), $stubs);
+    }
+
     $this->toolkit = $this->getToolkitMock($stubs);
 
     $this->toolkit->expects($this->any())
       ->method('getPluginId')
       ->will($this->returnValue('gd'));
+
+    if (!$load_expected) {
+      $this->toolkit->expects($this->never())
+        ->method('load');
+    }
 
     $this->image = new Image($this->toolkit, $this->source);
   }
@@ -119,7 +131,7 @@ class ImageTest extends UnitTestCase {
    *   An image object.
    */
   protected function getTestImageForOperation($class_name) {
-    $this->toolkit = $this->getToolkitMock(array('getToolkitOperation', 'getPluginId'));
+    $this->toolkit = $this->getToolkitMock(array('getToolkitOperation'));
     $this->toolkitOperation = $this->getToolkitOperationMock($class_name, $this->toolkit);
 
     $this->toolkit->expects($this->any())
@@ -137,7 +149,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getHeight().
    */
   public function testGetHeight() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals(100, $this->image->getHeight());
   }
 
@@ -145,7 +157,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getWidth().
    */
   public function testGetWidth() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals(88, $this->image->getWidth());
   }
 
@@ -153,7 +165,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getFileSize
    */
   public function testGetFileSize() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals(3905, $this->image->getFileSize());
   }
 
@@ -161,7 +173,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getToolkit()->getType().
    */
   public function testGetType() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals(IMAGETYPE_PNG, $this->image->getToolkit()->getType());
   }
 
@@ -169,7 +181,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getMimeType().
    */
   public function testGetMimeType() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals('image/png', $this->image->getMimeType());
   }
 
@@ -177,7 +189,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::isValid().
    */
   public function testIsValid() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertTrue($this->image->isValid());
     $this->assertTrue(is_readable($this->image->getSource()));
   }
@@ -186,7 +198,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::getToolkitId().
    */
   public function testGetToolkitId() {
-    $this->getTestImage();
+    $this->getTestImage(FALSE);
     $this->assertEquals('gd', $this->image->getToolkitId());
   }
 

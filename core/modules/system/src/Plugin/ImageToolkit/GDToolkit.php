@@ -24,9 +24,9 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * A GD image resource.
    *
-   * @var resource
+   * @var resource|null
    */
-  protected $resource;
+  protected $resource = NULL;
 
   /**
    * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
@@ -34,6 +34,21 @@ class GDToolkit extends ImageToolkitBase {
    * @var int
    */
   protected $type;
+
+  /**
+   * Image information from a file, available prior to loading the GD resource.
+   *
+   * This contains a copy of the array returned by executing getimagesize()
+   * on the image file when the image object is instantiated. It gets reset
+   * to NULL as soon as the GD resource is loaded.
+   *
+   * @var array|null
+   *
+   * @see \Drupal\system\Plugin\ImageToolkit\GDToolkit::parseFile()
+   * @see \Drupal\system\Plugin\ImageToolkit\GDToolkit::setResource()
+   * @see http://php.net/manual/en/function.getimagesize.php
+   */
+  protected $preLoadInfo = NULL;
 
   /**
    * Sets the GD image resource.
@@ -44,6 +59,7 @@ class GDToolkit extends ImageToolkitBase {
    * @return $this
    */
   public function setResource($resource) {
+    $this->preLoadInfo = NULL;
     $this->resource = $resource;
     return $this;
   }
@@ -51,10 +67,13 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * Retrieves the GD image resource.
    *
-   * @return resource
-   *   The GD image resource.
+   * @return resource|null
+   *   The GD image resource, or NULL if not available.
    */
   public function getResource() {
+    if (!$this->resource) {
+      $this->load();
+    }
     return $this->resource;
   }
 
@@ -90,20 +109,37 @@ class GDToolkit extends ImageToolkitBase {
    *   TRUE or FALSE, based on success.
    */
   protected function load() {
+    // Return immediately if the image file is not valid.
+    if (!$this->isValid()) {
+      return FALSE;
+    }
+
     $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
     if (function_exists($function) && $resource = $function($this->getImage()->getSource())) {
       $this->setResource($resource);
-      if (!imageistruecolor($resource)) {
+      if (imageistruecolor($resource)) {
+        return TRUE;
+      }
+      else {
         // Convert indexed images to true color, so that filters work
         // correctly and don't result in unnecessary dither.
         $new_image = $this->createTmp($this->getType(), imagesx($resource), imagesy($resource));
-        imagecopy($new_image, $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
-        imagedestroy($resource);
-        $this->setResource($new_image);
+        if ($ret = (bool) $new_image) {
+          imagecopy($new_image, $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+          imagedestroy($resource);
+          $this->setResource($new_image);
+        }
+        return $ret;
       }
-      return (bool) $this->getResource();
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValid() {
+    return ((bool) $this->preLoadInfo || (bool) $this->resource);
   }
 
   /**
@@ -152,8 +188,8 @@ class GDToolkit extends ImageToolkitBase {
     $data = @getimagesize($this->getImage()->getSource());
     if ($data && in_array($data[2], static::supportedTypes())) {
       $this->setType($data[2]);
-      $this->load();
-      return (bool) $this->getResource();
+      $this->preLoadInfo = $data;
+      return TRUE;
     }
     return FALSE;
   }
@@ -216,14 +252,30 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function getWidth() {
-    return $this->getResource() ? imagesx($this->getResource()) : NULL;
+    if ($this->preLoadInfo) {
+      return $this->preLoadInfo[0];
+    }
+    elseif ($res = $this->getResource()) {
+      return imagesx($res);
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getHeight() {
-    return $this->getResource() ? imagesy($this->getResource()) : NULL;
+    if ($this->preLoadInfo) {
+      return $this->preLoadInfo[1];
+    }
+    elseif ($res = $this->getResource()) {
+      return imagesy($res);
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**

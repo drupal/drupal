@@ -85,6 +85,15 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function getImage();
 
   /**
+   * Checks if the image is valid.
+   *
+   * @return bool
+   *   TRUE if the image toolkit is currently handling a valid image, FALSE
+   *   otherwise.
+   */
+  public function isValid();
+
+  /**
    * Writes an image resource to a destination file.
    *
    * @param string $destination
@@ -97,6 +106,10 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
 
   /**
    * Determines if a file contains a valid image.
+   *
+   * Drupal supports GIF, JPG and PNG file formats when used with the GD
+   * toolkit, and may support others, depending on which toolkits are
+   * installed.
    *
    * @return bool
    *   TRUE if the file could be found and is an image, FALSE otherwise.
