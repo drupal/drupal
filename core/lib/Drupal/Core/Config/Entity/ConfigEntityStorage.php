@@ -82,6 +82,17 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $languageManager;
 
   /**
+   * Static cache of entities, keyed first by entity ID, then by an extra key.
+   *
+   * The additional cache key is to maintain separate caches for different
+   * states of config overrides.
+   *
+   * @var array
+   * @see \Drupal\Core\Config\ConfigFactoryInterface::getCacheKeys().
+   */
+  protected $entities = array();
+
+  /**
    * Constructs a ConfigEntityStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -268,6 +279,46 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $prefix = $this->getPrefix();
     $config = $this->configFactory->get($prefix . $id);
     return !$config->isNew();
+  }
+
+  /**
+   * Gets entities from the static cache.
+   *
+   * @param array $ids
+   *   If not empty, return entities that match these IDs.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   Array of entities from the entity cache.
+   */
+  protected function getFromStaticCache(array $ids) {
+    $entities = array();
+    // Load any available entities from the internal cache.
+    if ($this->entityType->isStaticallyCacheable() && !empty($this->entities)) {
+      $config_overrides_key = implode(':', $this->configFactory->getCacheKeys());
+      foreach ($ids as $id) {
+        if (!empty($this->entities[$id])) {
+          if (isset($this->entities[$id][$config_overrides_key])) {
+            $entities[$id] = $this->entities[$id][$config_overrides_key];
+          }
+        }
+      }
+    }
+    return $entities;
+  }
+
+  /**
+   * Stores entities in the static entity cache.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   Entities to store in the cache.
+   */
+  protected function setStaticCache(array $entities) {
+    if ($this->entityType->isStaticallyCacheable()) {
+      $config_overrides_key = implode(':', $this->configFactory->getCacheKeys());
+      foreach ($entities as $id => $entity) {
+        $this->entities[$id][$config_overrides_key] = $entity;
+      }
+    }
   }
 
   /**

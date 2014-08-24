@@ -804,9 +804,6 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       $this->invokeFieldMethod('delete', $entity);
       $this->deleteFieldItems($entity);
     }
-
-    // Reset the cache as soon as the changes have been applied.
-    $this->resetCache($ids);
   }
 
   /**
@@ -865,7 +862,6 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       if ($this->revisionTable) {
         $entity->setNewRevision(FALSE);
       }
-      $cache_ids = array($entity->id());
     }
     else {
       // Ensure the entity is still seen as new after assigning it an id,
@@ -898,12 +894,9 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       if ($this->revisionTable) {
         $entity->setNewRevision(FALSE);
       }
-      // Reset general caches, but keep caches specific to certain entities.
-      $cache_ids = array();
     }
     $this->invokeFieldMethod($is_new ? 'insert' : 'update', $entity);
     $this->saveFieldItems($entity, !$is_new);
-    $this->resetCache($cache_ids);
 
     if (!$is_new && $this->dataTable) {
       $this->invokeTranslationHooks($entity);
