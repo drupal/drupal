@@ -125,9 +125,13 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       ->method('getConfigDependencyName')
       ->will($this->returnValue('field.storage.test_entity_type.test_field'));
 
-    $values = array('field_name' => $this->fieldStorage->getName(), 'entity_type' => 'test_entity_type', 'bundle' => 'test_bundle');
-    $entity = new FieldInstanceConfig($values, $this->entityTypeId);
-    $dependencies = $entity->calculateDependencies();
+    $instance = new FieldInstanceConfig(array(
+      'field_name' => $this->fieldStorage->getName(),
+      'entity_type' => 'test_entity_type',
+      'bundle' => 'test_bundle',
+      'field_type' => 'test_field',
+    ), $this->entityTypeId);
+    $dependencies = $instance->calculateDependencies();
     $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['entity']);
     $this->assertContains('test.test_entity_type.id', $dependencies['entity']);
   }
@@ -136,8 +140,12 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    * @covers ::toArray()
    */
   public function testToArray() {
-    $values = array('field_name' => $this->fieldStorage->getName(), 'entity_type' => 'test_entity_type', 'bundle' => 'test_bundle');
-    $instance = new FieldInstanceConfig($values, $this->entityTypeId);
+    $instance = new FieldInstanceConfig(array(
+      'field_name' => $this->fieldStorage->getName(),
+      'entity_type' => 'test_entity_type',
+      'bundle' => 'test_bundle',
+      'field_type' => 'test_field',
+    ), $this->entityTypeId);
 
     $expected = array(
       'id' => 'test_entity_type.test_bundle.field_test',
@@ -171,4 +179,26 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
     $export = $instance->toArray();
     $this->assertEquals($expected, $export);
   }
+
+  /**
+   * @covers ::getType
+   */
+  public function testGetType() {
+    // Ensure that FieldInstanceConfig::getType() is not delegated to
+    // FieldStorage.
+    $this->entityManager->expects($this->never())
+      ->method('getFieldStorageDefinitions');
+    $this->fieldStorage->expects($this->never())
+      ->method('getType');
+
+    $instance = new FieldInstanceConfig(array(
+      'field_name' => $this->fieldStorage->getName(),
+      'entity_type' => 'test_entity_type',
+      'bundle' => 'test_bundle',
+      'field_type' => 'test_field',
+    ), $this->entityTypeId);
+
+    $this->assertEquals('test_field', $instance->getType());
+  }
+
 }

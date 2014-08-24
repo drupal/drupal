@@ -36,6 +36,19 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   public $field_name;
 
   /**
+   * The field type.
+   *
+   * This property is denormalized from the field storage for optimization of
+   * the "entity and render cache hits" critical paths. If not present in the
+   * $values passed to create(), it is populated from the field storage in
+   * postCreate(), and saved in config records so that it is present on
+   * subsequent loads.
+   *
+   * @var string
+   */
+  public $field_type;
+
+  /**
    * The name of the entity type the instance is attached to.
    *
    * @var string
@@ -190,7 +203,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function getType() {
-    return $this->getFieldStorageDefinition()->getType();
+    return $this->field_type;
   }
 
   /**
@@ -210,20 +223,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $properties = parent::toArray();
-    // Additionally, include the field type, that is needed to be able to
-    // generate the field-type-dependant parts of the config schema and to
-    // allow for mapping settings from storage by field type.
-    // @see \Drupal\field\FieldInstanceConfigStorage::mapFromStorageRecords().
-    $properties['field_type'] = $this->getType();
-
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function calculateDependencies() {
     parent::calculateDependencies();
     $bundle_entity_type_id = $this->entityManager()->getDefinition($this->entity_type)->getBundleEntityType();
@@ -234,6 +233,19 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
       $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
     }
     return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageInterface $storage) {
+    parent::postCreate($storage);
+    // If it was not present in the $values passed to create(), (e.g. for
+    // programmatic creation), populate the denormalized field_type property
+    // from the field storage, so that it gets saved in the config record.
+    if (empty($this->field_type)) {
+      $this->field_type = $this->getFieldStorageDefinition()->getType();
+    }
   }
 
   /**

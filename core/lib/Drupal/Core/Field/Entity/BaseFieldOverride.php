@@ -95,10 +95,6 @@ class BaseFieldOverride extends FieldConfigBase {
       throw new FieldException(String::format('Attempt to create a base field bundle override of field @field_name without a bundle', array('@field_name' => $values['field_name'])));
     }
 
-    // Discard the 'field_type' entry that is added in config records to ease
-    // schema generation. See self::toArray().
-    unset($values['field_type']);
-
     parent::__construct($values, $entity_type);
   }
 

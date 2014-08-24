@@ -87,7 +87,9 @@ class FieldInstanceConfig extends FieldConfigBase implements FieldInstanceConfig
       $field_storage = $values['field_storage'];
       $values['field_name'] = $field_storage->getName();
       $values['entity_type'] = $field_storage->getTargetEntityTypeId();
-      $this->fieldStorage = $field_storage;
+      // The internal property is fieldStorage, not field_storage.
+      unset($values['field_storage']);
+      $values['fieldStorage'] = $field_storage;
     }
     else {
       if (empty($values['field_name'])) {
@@ -102,11 +104,6 @@ class FieldInstanceConfig extends FieldConfigBase implements FieldInstanceConfig
       throw new FieldException(String::format('Attempt to create a field instance @field_name without a bundle.', array('@field_name' => $values['field_name'])));
     }
 
-    // Discard the 'field_type' entry that is added in config records to ease
-    // schema generation and mapping settings from storage.
-    // @see \Drupal\Core\Field\FieldConfigBase::toArray().
-    unset($values['field_type']);
-
     parent::__construct($values, $entity_type);
   }
 
@@ -114,6 +111,8 @@ class FieldInstanceConfig extends FieldConfigBase implements FieldInstanceConfig
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageInterface $storage) {
+    parent::postCreate($storage);
+
     // Validate that we have a valid storage for this instance. This throws an
     // exception if the storage is invalid.
     $this->getFieldStorageDefinition();
