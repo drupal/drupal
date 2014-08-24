@@ -140,7 +140,7 @@ function simpletest_run_tests($test_list) {
     ->execute();
 
   if (!empty($test_list['phpunit'])) {
-    $phpunit_results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
+    $phpunit_results = simpletest_run_phpunit_tests($test_id, $test_list['phpunit']);
     simpletest_process_phpunit_results($phpunit_results);
   }
 

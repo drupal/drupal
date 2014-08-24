@@ -7,12 +7,13 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests SimpleTest's web interface: check that the intended tests were run and
  * ensure that test reports display the intended results. Also test SimpleTest's
- * internal browser and APIs both explicitly and implicitly.
+ * internal browser and APIs implicitly.
  *
  * @group simpletest
  */
@@ -27,6 +28,8 @@ class SimpleTestTest extends WebTestBase {
 
   /**
    * The results array that has been parsed by getTestResults().
+   *
+   * @var array
    */
   protected $childTestResults;
 
@@ -36,6 +39,19 @@ class SimpleTestTest extends WebTestBase {
    * Used to ensure they are incrementing.
    */
   protected $test_ids = array();
+
+  /**
+   * Translated fail message.
+   *
+   * @var string
+   */
+  private $failMessage = '';
+
+  /**
+   * Translated pass message.
+   * @var string
+   */
+  private $passMessage = '';
 
   protected function setUp() {
     if (!$this->isInChildSite()) {
@@ -82,101 +98,11 @@ EOD;
   }
 
   /**
-   * Test the internal browsers functionality.
-   */
-  function testInternalBrowser() {
-    if (!$this->isInChildSite()) {
-      // Retrieve the test page and check its title and headers.
-      $this->drupalGet('test-page');
-      $this->assertTrue($this->drupalGetHeader('Date'), 'An HTTP header was received.');
-      $this->assertTitle(t('Test page | @site-name', array(
-        '@site-name' => \Drupal::config('system.site')->get('name'),
-      )));
-      $this->assertNoTitle('Foo');
-
-      $old_user_id = $this->container->get('current_user')->id();
-      $user = $this->drupalCreateUser();
-      $this->drupalLogin($user);
-      // Check that current user service updated.
-      $this->assertNotEqual($old_user_id, $this->container->get('current_user')->id(), 'Current user service updated.');
-      $headers = $this->drupalGetHeaders(TRUE);
-      $this->assertEqual(count($headers), 2, 'There was one intermediate request.');
-      $this->assertTrue(strpos($headers[0][':status'], '303') !== FALSE, 'Intermediate response code was 303.');
-      $this->assertFalse(empty($headers[0]['location']), 'Intermediate request contained a Location header.');
-      $this->assertEqual($this->getUrl(), $headers[0]['location'], 'HTTP redirect was followed');
-      $this->assertFalse($this->drupalGetHeader('Location'), 'Headers from intermediate request were reset.');
-      $this->assertResponse(200, 'Response code from intermediate request was reset.');
-
-      // Test the maximum redirection option.
-      $this->drupalLogout();
-      // Check that current user service updated to anonymous user.
-      $this->assertEqual(0, $this->container->get('current_user')->id(), 'Current user service updated.');
-      $edit = array(
-        'name' => $user->getUsername(),
-        'pass' => $user->pass_raw
-      );
-      $this->maximumRedirects = 1;
-      $this->drupalPostForm('user', $edit, t('Log in'), array(
-        'query' => array('destination' => 'user/logout'),
-      ));
-      $headers = $this->drupalGetHeaders(TRUE);
-      $this->assertEqual(count($headers), 2, 'Simpletest stopped following redirects after the first one.');
-
-      // Remove the Simpletest private key file so we can test the protection
-      // against requests that forge a valid testing user agent to gain access
-      // to the installer.
-      // @see drupal_valid_test_ua()
-      // Not using File API; a potential error must trigger a PHP warning.
-      unlink($this->siteDirectory . '/.htkey');
-      global $base_url;
-      $this->drupalGet(url($base_url . '/core/install.php', array('external' => TRUE, 'absolute' => TRUE)));
-      $this->assertResponse(403, 'Cannot access install.php.');
-    }
-  }
-
-  /**
-   * Test validation of the User-Agent header we use to perform test requests.
-   */
-  function testUserAgentValidation() {
-    if (!$this->isInChildSite()) {
-      global $base_url;
-      $system_path = $base_url . '/' . drupal_get_path('module', 'system');
-      $HTTP_path = $system_path .'/tests/http.php?q=node';
-      $https_path = $system_path .'/tests/https.php?q=node';
-      // Generate a valid simpletest User-Agent to pass validation.
-      $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), 'Database prefix contains simpletest prefix.');
-      $test_ua = drupal_generate_test_ua($matches[0]);
-      $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua);
-
-      // Test pages only available for testing.
-      $this->drupalGet($HTTP_path);
-      $this->assertResponse(200, 'Requesting http.php with a legitimate simpletest User-Agent returns OK.');
-      $this->drupalGet($https_path);
-      $this->assertResponse(200, 'Requesting https.php with a legitimate simpletest User-Agent returns OK.');
-
-      // Now slightly modify the HMAC on the header, which should not validate.
-      $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua . 'X');
-      $this->drupalGet($HTTP_path);
-      $this->assertResponse(403, 'Requesting http.php with a bad simpletest User-Agent fails.');
-      $this->drupalGet($https_path);
-      $this->assertResponse(403, 'Requesting https.php with a bad simpletest User-Agent fails.');
-
-      // Use a real User-Agent and verify that the special files http.php and
-      // https.php can't be accessed.
-      $this->additionalCurlOptions = array(CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
-      $this->drupalGet($HTTP_path);
-      $this->assertResponse(403, 'Requesting http.php with a normal User-Agent fails.');
-      $this->drupalGet($https_path);
-      $this->assertResponse(403, 'Requesting https.php with a normal User-Agent fails.');
-    }
-  }
-
-  /**
    * Ensures the tests selected through the web interface are run and displayed.
    */
   function testWebTestRunner() {
-    $this->pass = t('SimpleTest pass.');
-    $this->fail = t('SimpleTest fail.');
+    $this->passMessage = t('SimpleTest pass.');
+    $this->failMessage = t('SimpleTest fail.');
     $this->valid_permission = 'access administration pages';
     $this->invalid_permission = 'invalid permission';
 
@@ -186,7 +112,6 @@ EOD;
       $this->stubTest();
     }
     else {
-
       // Run twice so test_ids can be accumulated.
       for ($i = 0; $i < 2; $i++) {
         // Run this test from web interface.
@@ -209,25 +134,49 @@ EOD;
 
   /**
    * Test to be run and the results confirmed.
+   *
+   * Here we force test results which must match the expected results from
+   * confirmStubResults().
    */
   function stubTest() {
-    // This causes the first of the ten passes asserted in confirmStubResults().
-    $this->pass($this->pass);
-    // The first three fails are caused by enabling a non-existent module in
-    // setUp(). This causes the fourth of the five fails asserted in
-    // confirmStubResults().
-    $this->fail($this->fail);
+    // Ensure the .htkey file exists since this is only created just before a
+    // request. This allows the stub test to make requests. The event does not
+    // fire here and drupal_generate_test_ua() can not generate a key for a
+    // test in a test since the prefix has changed.
+    // @see \Drupal\Core\Test\EventSubscriber\HttpRequestSubscriber::onBeforeSendRequest()
+    // @see drupal_generate_test_ua();
+    $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($this->databasePrefix, 10) . '/.htkey';
+    $private_key = Crypt::randomBytesBase64(55);
+    file_put_contents($key_file, $private_key);
 
-    // This causes the second to fourth of the ten passes asserted in
+    // This causes the first of the fifteen passes asserted in
     // confirmStubResults().
-    $this->drupalCreateUser(array($this->valid_permission));
+    $this->pass($this->passMessage);
+
+    // The first three fails are caused by enabling a non-existent module in
+    // setUp().
+
+    // This causes the fourth of the five fails asserted in
+    // confirmStubResults().
+    $this->fail($this->failMessage);
+
+    // This causes the second to fourth of the fifteen passes asserted in
+    // confirmStubResults().
+    $user = $this->drupalCreateUser(array($this->valid_permission), 'SimpleTestTest');
+
     // This causes the fifth of the five fails asserted in confirmStubResults().
     $this->drupalCreateUser(array($this->invalid_permission));
 
-    // This causes the fifth of the ten passes asserted in confirmStubResults().
+    // Test logging in as a user.
+    // This causes the fifth to ninth of the fifteen passes asserted in
+    // confirmStubResults().
+    $this->drupalLogin($user);
+
+    // This causes the tenth of the fifteen passes asserted in
+    // confirmStubResults().
     $this->pass(t('Test ID is @id.', array('@id' => $this->testId)));
 
-    // These cause the sixth to ninth of the ten passes asserted in
+    // These cause the eleventh to fourteenth of the fifteen passes asserted in
     // confirmStubResults().
     $this->assertTrue(file_exists(conf_path() . '/settings.testing.php'));
     // Check the settings.testing.php file got included.
@@ -242,7 +191,7 @@ EOD;
     // Generates a warning inside a PHP function.
     array_key_exists(NULL, NULL);
 
-    // This causes the tenth of the ten passes asserted in
+    // This causes the fifteenth of the fifteen passes asserted in
     // confirmStubResults().
     $this->assertNothing();
 
@@ -263,11 +212,14 @@ EOD;
   function confirmStubTestResults() {
     $this->assertAssertion(t('Enabled modules: %modules', array('%modules' => 'non_existent_module')), 'Other', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->setUp()');
 
-    $this->assertAssertion($this->pass, 'Other', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
-    $this->assertAssertion($this->fail, 'Other', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+    $this->assertAssertion($this->passMessage, 'Other', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+    $this->assertAssertion($this->failMessage, 'Other', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
     $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
     $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+
+    // Check that the user was logged in successfully.
+    $this->assertAssertion('User SimpleTestTest successfully logged in.', 'User login', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
     // Check that a warning is caught by simpletest. The exact error message
     // differs between PHP versions so only the function name is checked.
@@ -283,7 +235,7 @@ EOD;
 
     $this->assertAssertion("Debug: 'Foo'", 'Debug', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
-    $this->assertEqual('10 passes, 5 fails, 2 exceptions, 1 debug message', $this->childTestResults['summary']);
+    $this->assertEqual('15 passes, 3 fails, 2 exceptions, 3 debug messages', $this->childTestResults['summary']);
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, 'Found test ID in results.');
