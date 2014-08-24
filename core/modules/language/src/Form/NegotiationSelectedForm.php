@@ -30,7 +30,7 @@ class NegotiationSelectedForm extends ConfigFormBase {
     $config = $this->config('language.negotiation');
     $form['selected_langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('Language'),
+      '#title' => $this->t('Language'),
       '#languages' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT,
       '#default_value' => $config->get('selected_langcode'),
     );

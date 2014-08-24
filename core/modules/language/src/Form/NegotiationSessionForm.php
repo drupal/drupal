@@ -28,10 +28,10 @@ class NegotiationSessionForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('language.negotiation');
     $form['language_negotiation_session_param'] = array(
-      '#title' => t('Request/session parameter'),
+      '#title' => $this->t('Request/session parameter'),
       '#type' => 'textfield',
       '#default_value' => $config->get('session.parameter'),
-      '#description' => t('Name of the request/session parameter used to determine the desired language.'),
+      '#description' => $this->t('Name of the request/session parameter used to determine the desired language.'),
     );
 
     $form_state->setRedirect('language.negotiation');
