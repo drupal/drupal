@@ -2223,10 +2223,14 @@ function template_preprocess_field_multiple_value_form(&$variables) {
   if ($variables['multiple']) {
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
+    $header_attributes = new Attribute(array('class' => array('label')));
+    if (!empty($element['#required'])) {
+      $header_attributes['class'][] = 'form-required';
+    }
     $header = array(
       array(
         'data' => array(
-          '#prefix' => '<h4 class="label">',
+          '#prefix' => '<h4' . $header_attributes . '>',
           'title' => array(
             '#markup' => t($element['#title']),
           ),
@@ -2237,12 +2241,6 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       ),
       t('Order', array(), array('context' => 'Sort order')),
     );
-    if (!empty($element['#required'])) {
-      $header[0]['data']['required'] = array(
-        '#theme' => 'form_required_marker',
-        '#element' => $element,
-      );
-    }
     $rows = array();
 
     // Sort items according to '_weight' (needed when the form comes back after
