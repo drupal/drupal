@@ -20,7 +20,7 @@ class LoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAw
   /**
    * Array of all instantiated logger channels keyed by channel name.
    *
-   * @var Drupal\Core\Logger\LoggerChannelInterface[]
+   * @var \Drupal\Core\Logger\LoggerChannelInterface[]
    */
   protected $channels = array();
 
