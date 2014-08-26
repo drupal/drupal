@@ -28,17 +28,16 @@ class InstallerTranslationTest extends InstallerTestBase {
    * Overrides InstallerTest::setUpLanguage().
    */
   protected function setUpLanguage() {
+    // Place a custom local translation in the translations directory.
+    mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue German\"");
+
     parent::setUpLanguage();
     // After selecting a different language than English, all following screens
     // should be translated already.
-    // @todo Instead of actually downloading random translations that cannot be
-    //   asserted, write and supply a German translation file. Until then, take
-    //   over whichever string happens to be there, but ensure that the English
-    //   string no longer appears.
     $elements = $this->xpath('//input[@type="submit"]/@value');
-    $string = (string) current($elements);
-    $this->assertNotEqual($string, 'Save and continue');
-    $this->translations['Save and continue'] = $string;
+    $this->assertEqual((string) current($elements), 'Save and continue German');
+    $this->translations['Save and continue'] = 'Save and continue German';
 
     // Check the language direction.
     $direction = (string) current($this->xpath('/html/@dir'));
