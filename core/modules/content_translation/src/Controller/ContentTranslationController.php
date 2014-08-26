@@ -147,9 +147,14 @@ class ContentTranslationController extends ControllerBase {
             $links['edit']['title'] = $this->t('Edit');
           }
           $translation = $entity->translation[$langcode];
-          $status = !empty($translation['status']) ? $this->t('Published') : $this->t('Not published');
-          // @todo Remove as part of https://drupal.org/node/2250841.
-          $status = '<span class="status">' . $status . '</span>' . (!empty($translation['outdated']) ? ' <span class="marker">' . $this->t('outdated') . '</span>' : '');
+          $status = array('data' => array(
+            '#type' => 'inline_template',
+            '#template' => '<span class="status">{% if status %}{{ "Published"|t }}{% else %}{{ "Not published"|t }}{% endif %}</span>{% if outdated %} <span class="marker">{{ "outdated"|t }}</span>{% endif %}',
+            '#context' => array(
+              'status' => $translation['status'],
+              'outdated' => $translation['outdated'],
+            ),
+          ));
 
           if ($is_original) {
             $language_name = $this->t('<strong>@language_name (Original language)</strong>', array('@language_name' => $language_name));
