@@ -9,6 +9,7 @@ namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -119,7 +120,13 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
 
     foreach ($this->langcodes as $langcode) {
       if ($entity->hasTranslation($langcode)) {
-        $this->assertText($entity->getTranslation($langcode)->label(), format_string('Label correctly shown for %language translation', array('%language' => $langcode)));
+        $language = new Language(array('id' => $langcode));
+        $view_path = \Drupal::urlGenerator()->generateFromPath($entity->getSystemPath(), array('language' => $language));
+        $elements = $this->xpath('//table//a[@href=:href]', array(':href' => $view_path));
+        $this->assertEqual((string) $elements[0], $entity->getTranslation($langcode)->label(), format_string('Label correctly shown for %language translation.', array('%language' => $langcode)));
+        $edit_path = \Drupal::urlGenerator()->generateFromPath($entity->getSystemPath('edit-form'), array('language' => $language));
+        $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a[@href=:href]', array(':href' => $edit_path));
+        $this->assertEqual((string) $elements[0], t('Edit'), format_string('Edit link correct for %language translation.', array('%language' => $langcode)));
       }
     }
   }

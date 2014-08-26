@@ -84,6 +84,9 @@ class ContentTranslationController extends ControllerBase {
             'source' => $original,
             'target' => $language->getId(),
             $entity_type_id => $entity->id(),
+          ),
+          array(
+            'language' => $language,
           )
         );
         $edit_url = new Url(
@@ -91,6 +94,9 @@ class ContentTranslationController extends ControllerBase {
           array(
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),
+          ),
+          array(
+            'language' => $language,
           )
         );
         $delete_url = new Url(
@@ -98,6 +104,9 @@ class ContentTranslationController extends ControllerBase {
           array(
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),
+          ),
+          array(
+            'language' => $language,
           )
         );
         $operations = array(
@@ -114,6 +123,7 @@ class ContentTranslationController extends ControllerBase {
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
           $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $entity->getSystemPath());
+          $link += array('language' => $language);
           $row_title = l($label, $link['href'], $link);
 
           if (empty($link['href'])) {
@@ -126,6 +136,7 @@ class ContentTranslationController extends ControllerBase {
           if ($entity->access('update')) {
             $links['edit'] = array(
               'href' => $entity->getSystemPath('edit-form'),
+              'language' => $language,
             );
           }
           elseif (!$is_original && $handler->getTranslationAccess($entity, 'update')) {
