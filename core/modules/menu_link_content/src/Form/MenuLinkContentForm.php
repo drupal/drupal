@@ -260,16 +260,18 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       // which need a replacement since it is deprecated.
       // https://www.drupal.org/node/2307061
       $default_value = $url->getInternalPath();
-      // @todo Add a helper method to Url to render just the query string and
-      // fragment. https://www.drupal.org/node/2305013
-      $options = $url->getOptions();
-      if (isset($options['query'])) {
-        $default_value .= $options['query'] ? ('?' . UrlHelper::buildQuery($options['query'])) : '';
-      }
-      if (isset($options['fragment']) && $options['fragment'] !== '') {
-        $default_value .= '#' . $options['fragment'];
-      }
     }
+
+    // @todo Add a helper method to Url to render just the query string and
+    // fragment. https://www.drupal.org/node/2305013
+    $options = $url->getOptions();
+    if (isset($options['query'])) {
+      $default_value .= $options['query'] ? ('?' . UrlHelper::buildQuery($options['query'])) : '';
+    }
+    if (isset($options['fragment']) && $options['fragment'] !== '') {
+      $default_value .= '#' . $options['fragment'];
+    }
+
     $form['url'] = array(
       '#title' => $this->t('Link path'),
       '#type' => 'textfield',

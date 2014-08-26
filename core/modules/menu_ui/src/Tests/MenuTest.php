@@ -458,6 +458,19 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array('url' => $path), t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
     $this->assertFieldByName('url', $path, 'Path no longer has query or fragment.');
+
+    // Use <front>#fragment and ensure that saving it does not loose its
+    // content.
+    $path = '<front>?arg1=value#fragment';
+    $item = $this->addMenuLink('', $path);
+
+    $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
+    $this->assertFieldByName('url', $path, 'Path is found with both query and fragment.');
+
+    $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array(), t('Save'));
+
+    $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
+    $this->assertFieldByName('url', $path, 'Path is found with both query and fragment.');
   }
 
   /**
