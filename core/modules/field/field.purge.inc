@@ -5,9 +5,9 @@
  * Provides support for field data purge after mass deletion.
  */
 
+use Drupal\Core\Field\FieldException;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\FieldException;
 
 /**
  * @defgroup field_purge Field API bulk data deletion

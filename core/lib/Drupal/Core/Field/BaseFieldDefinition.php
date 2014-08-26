@@ -11,7 +11,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
-use Drupal\field\FieldException;
 
 /**
  * A class for defining entity fields.

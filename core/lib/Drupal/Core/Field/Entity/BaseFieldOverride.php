@@ -9,9 +9,9 @@ namespace Drupal\Core\Field\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\field\FieldException;
+use Drupal\Core\Field\FieldConfigBase;
+use Drupal\Core\Field\FieldException;
 
 /**
  * Defines the base field override entity.
@@ -80,7 +80,7 @@ class BaseFieldOverride extends FieldConfigBase {
    *
    * @see entity_create()
    *
-   * @throws \Drupal\field\FieldException
+   * @throws \Drupal\Core\Field\FieldException
    *   Exception thrown if $values does not contain a field_name, entity_type or
    *   bundle value.
    */
@@ -149,7 +149,7 @@ class BaseFieldOverride extends FieldConfigBase {
   /**
    * {@inheritdoc}
    *
-   * @throws \Drupal\field\FieldException
+   * @throws \Drupal\Core\Field\FieldException
    *   If the bundle is being changed and
    *   BaseFieldOverride::allowBundleRename() has not been called.
    */

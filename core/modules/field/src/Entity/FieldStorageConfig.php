@@ -11,8 +11,8 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\FieldException;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -227,7 +227,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * Overrides \Drupal\Core\Entity\Entity::preSave().
    *
-   * @throws \Drupal\field\FieldException
+   * @throws \Drupal\Core\Field\FieldException
    *   If the field definition is invalid.
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures at the configuration storage level.
@@ -254,7 +254,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage.
    *
-   * @throws \Drupal\field\FieldException If the field definition is invalid.
+   * @throws \Drupal\Core\Field\FieldException If the field definition is invalid.
    */
    protected function preSaveNew(EntityStorageInterface $storage) {
     $entity_manager = \Drupal::entityManager();

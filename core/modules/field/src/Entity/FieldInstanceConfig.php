@@ -10,7 +10,7 @@ namespace Drupal\field\Entity;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldConfigBase;
-use Drupal\field\FieldException;
+use Drupal\Core\Field\FieldException;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
 
@@ -127,7 +127,7 @@ class FieldInstanceConfig extends FieldConfigBase implements FieldInstanceConfig
   /**
    * Overrides \Drupal\Core\Entity\Entity::preSave().
    *
-   * @throws \Drupal\field\FieldException
+   * @throws \Drupal\Core\Field\FieldException
    *   If the field instance definition is invalid.
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures at the configuration storage level.
