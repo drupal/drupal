@@ -8,7 +8,6 @@
 namespace Drupal\entity_test;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
@@ -17,15 +16,6 @@ use Drupal\Core\Entity\EntityViewBuilder;
  * @see \Drupal\entity_test\Entity\EntityTestRender
  */
 class EntityTestViewBuilder extends EntityViewBuilder {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
-    unset($build['#theme']);
-    return $build;
-  }
 
   /**
    * {@inheritdoc}

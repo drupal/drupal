@@ -64,6 +64,7 @@ class FunctionsTest extends WebTestBase {
     // Verify that title set to a render array is output.
     $variables = array();
     $variables['title'] = array(
+      '#theme' => 'markup',
       '#markup' => '<span>Render array</span>',
     );
     $variables['empty'] = 'No items found.';

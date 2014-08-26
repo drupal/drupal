@@ -19,17 +19,6 @@ class BlockContentViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
-    // The custom block will be rendered in the wrapped block template already
-    // and thus has no entity template itself.
-    unset($build['#theme']);
-    return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
     // Add contextual links for this custom block.
