@@ -9,6 +9,8 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\contact\ContactFormInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\contact\CategoryInterface;
 
 /**
  * Defines the contact form entity.
@@ -45,34 +47,79 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
-   * The form label.
+   * The human-readable label of the category.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * List of recipient email addresses.
    *
    * @var array
    */
-  public $recipients = array();
+  protected $recipients = array();
 
   /**
-   * An auto-reply message to send to the message author.
+   * An auto-reply message.
    *
    * @var string
    */
-  public $reply = '';
+  protected $reply = '';
 
   /**
-   * Weight of this form (used for sorting).
+   * The weight of the category.
    *
    * @var int
    */
-  public $weight = 0;
+  protected $weight = 0;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRecipients() {
+    return $this->get('recipients');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRecipients($recipients) {
+    $this->set('recipients', $recipients);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReply() {
+    return $this->get('reply');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReply($reply) {
+    $this->set('reply', $reply);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->get('weight');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->set('weight', $weight);
+    return $this;
+  }
 
 }

@@ -45,22 +45,22 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
   public function testContactCategory() {
     /** @var \Drupal\contact\Entity\ContactForm $contact_form */
     $contact_form = entity_load('contact_form', 'website_feedback');
-    $this->assertEqual($contact_form->label, 'Website feedback');
-    $this->assertEqual($contact_form->recipients, array('admin@example.com'));
-    $this->assertEqual($contact_form->reply, '');
-    $this->assertEqual($contact_form->weight, 0);
+    $this->assertEqual($contact_form->label(), 'Website feedback');
+    $this->assertEqual($contact_form->getRecipients(), array('admin@example.com'));
+    $this->assertEqual($contact_form->getReply(), '');
+    $this->assertEqual($contact_form->getWeight(), 0);
 
     $contact_form = entity_load('contact_form', 'some_other_category');
-    $this->assertEqual($contact_form->label, 'Some other category');
-    $this->assertEqual($contact_form->recipients, array('test@example.com'));
-    $this->assertEqual($contact_form->reply, 'Thanks for contacting us, we will reply ASAP!');
-    $this->assertEqual($contact_form->weight, 1);
+    $this->assertEqual($contact_form->label(), 'Some other category');
+    $this->assertEqual($contact_form->getRecipients(), array('test@example.com'));
+    $this->assertEqual($contact_form->getReply(), 'Thanks for contacting us, we will reply ASAP!');
+    $this->assertEqual($contact_form->getWeight(), 1);
 
     $contact_form = entity_load('contact_form', 'a_category_much_longer_than_thir');
-    $this->assertEqual($contact_form->label, 'A category much longer than thirty two characters');
-    $this->assertEqual($contact_form->recipients, array('fortyninechars@example.com'));
-    $this->assertEqual($contact_form->reply, '');
-    $this->assertEqual($contact_form->weight, 2);
+    $this->assertEqual($contact_form->label(), 'A category much longer than thirty two characters');
+    $this->assertEqual($contact_form->getRecipients(), array('fortyninechars@example.com'));
+    $this->assertEqual($contact_form->getReply(), '');
+    $this->assertEqual($contact_form->getWeight(), 2);
   }
 
 }

@@ -137,7 +137,7 @@ function contact_mail($key, &$message, $params) {
 
     case 'page_autoreply':
       $message['subject'] .= t('[!form] !subject', $variables, $options);
-      $message['body'][] = $params['contact_form']->reply;
+      $message['body'][] = $params['contact_form']->getReply();
       break;
 
     case 'user_mail':

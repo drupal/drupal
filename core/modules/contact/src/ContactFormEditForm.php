@@ -45,20 +45,20 @@ class ContactFormEditForm extends EntityForm {
     $form['recipients'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Recipients'),
-      '#default_value' => implode(', ', $contact_form->recipients),
+      '#default_value' => implode(', ', $contact_form->getRecipients()),
       '#description' => $this->t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
       '#required' => TRUE,
     );
     $form['reply'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Auto-reply'),
-      '#default_value' => $contact_form->reply,
+      '#default_value' => $contact_form->getReply(),
       '#description' => $this->t('Optional auto-reply. Leave empty if you do not want to send the user an auto-reply message.'),
     );
     $form['weight'] = array(
       '#type' => 'weight',
       '#title' => $this->t('Weight'),
-      '#default_value' => $contact_form->weight,
+      '#default_value' => $contact_form->getWeight(),
       '#description' => $this->t('When listing forms, those with lighter (smaller) weights get listed before forms with heavier (larger) weights. Forms with equal weights are sorted alphabetically.'),
     );
     $form['selected'] = array(

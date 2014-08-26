@@ -200,8 +200,7 @@ class MessageForm extends ContentEntityForm {
       // Send to the form recipient(s), using the site's default language.
       $contact_form = $message->getContactForm();
       $params['contact_form'] = $contact_form;
-
-      $to = implode(', ', $contact_form->recipients);
+      $to = implode(', ', $contact_form->getRecipients());
       $recipient_langcode = $this->languageManager->getDefaultLanguage()->getId();
     }
     elseif ($recipient = $message->getPersonalRecipient()) {
@@ -224,7 +223,7 @@ class MessageForm extends ContentEntityForm {
     }
 
     // If configured, send an auto-reply, using the current language.
-    if (!$message->isPersonal() && $contact_form->reply) {
+    if (!$message->isPersonal() && $contact_form->getReply()) {
       // User contact forms do not support an auto-reply message, so this
       // message always originates from the site.
       drupal_mail('contact', 'page_autoreply', $sender->getEmail(), $language_interface->id, $params);
