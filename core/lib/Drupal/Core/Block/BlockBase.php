@@ -21,6 +21,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Transliteration\TransliterationInterface;
 
 /**
  * Defines a base block implementation that most blocks plugins will extend.
@@ -48,6 +49,13 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * @var \Drupal\Core\Executable\ExecutableManagerInterface
    */
   protected $conditionPluginManager;
+
+  /**
+   * The transliteration service.
+   *
+   * @var \Drupal\Component\Transliteration\TransliterationInterface
+   */
+  protected $transliteration;
 
   /**
    * {@inheritdoc}
@@ -407,8 +415,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     // @todo This is basically the same as what is done in
     //   \Drupal\system\MachineNameController::transliterate(), so it might make
     //   sense to provide a common service for the two.
-    $transliteration_service = \Drupal::transliteration();
-    $transliterated = $transliteration_service->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
+    $transliterated = $this->transliteration()->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
 
     $replace_pattern = '[^a-z0-9_.]+';
 
@@ -419,6 +426,28 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     }
 
     return $transliterated;
+  }
+
+  /**
+   * Wraps the transliteration service.
+   *
+   * @return \Drupal\Component\Transliteration\TransliterationInterface
+   */
+  protected function transliteration() {
+    if (!$this->transliteration) {
+      $this->transliteration = \Drupal::transliteration();
+    }
+    return $this->transliteration;
+  }
+
+  /**
+   * Sets the transliteration service.
+   *
+   * @param \Drupal\Component\Transliteration\TransliterationInterface $transliteration
+   *   The transliteration service.
+   */
+  public function setTransliteration(TransliterationInterface $transliteration) {
+    $this->transliteration = $transliteration;
   }
 
   /**

@@ -34,7 +34,6 @@ class BlockBaseTest extends UnitTestCase {
       ->will($this->returnValue(array()));
     $container = new ContainerBuilder();
     $container->set('plugin.manager.condition', $condition_plugin_manager);
-    $container->set('transliteration', $transliteraton);
     \Drupal::setContainer($container);
 
     $config = array();
@@ -43,6 +42,7 @@ class BlockBaseTest extends UnitTestCase {
       'provider' => 'block_test',
     );
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
+    $block_base->setTransliteration($transliteraton);
     $this->assertEquals('adminlabel', $block_base->getMachineNameSuggestion());
 
     // Test with more unicodes.
@@ -51,6 +51,7 @@ class BlockBaseTest extends UnitTestCase {
       'provider' => 'block_test',
     );
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
+    $block_base->setTransliteration($transliteraton);
     $this->assertEquals('uberawesome', $block_base->getMachineNameSuggestion());
   }
 
