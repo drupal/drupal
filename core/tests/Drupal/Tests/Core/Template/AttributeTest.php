@@ -178,6 +178,8 @@ class AttributeTest extends UnitTestCase {
         'himalchuli annapurna-ii',
         array('class' => array('himalchuli', 'nuptse')),
       ),
+      // Test for the removal of an empty class name.
+      array("{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'),
     );
   }
 
