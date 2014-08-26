@@ -24,13 +24,9 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Manages discovery and instantiation of menu local task plugins.
- *
- * This manager finds plugins that are rendered as local tasks (usually tabs).
- * Derivatives are supported for modules that wish to generate multiple tabs on
- * behalf of something else.
+ * Provides the default local task manager using YML as primary definition.
  */
-class LocalTaskManager extends DefaultPluginManager {
+class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -154,13 +150,7 @@ class LocalTaskManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the title for a local task.
-   *
-   * @param \Drupal\Core\Menu\LocalTaskInterface $local_task
-   *   A local task plugin instance to get the title for.
-   *
-   * @return string
-   *   The localized title.
+   * {@inheritdoc}
    */
   public function getTitle(LocalTaskInterface $local_task) {
     $controller = array($local_task, 'getTitle');
@@ -187,16 +177,7 @@ class LocalTaskManager extends DefaultPluginManager {
   }
 
   /**
-   * Find all local tasks that appear on a named route.
-   *
-   * @param string $route_name
-   *   The route for which to find local tasks.
-   *
-   * @return array
-   *   Returns an array of task levels. Each task level contains instances
-   *   of local tasks (LocalTaskInterface) which appear on the tab route.
-   *   The array keys are the depths and the values are arrays of plugin
-   *   instances.
+   * {@inheritdoc}
    */
   public function getLocalTasksForRoute($route_name) {
     if (!isset($this->instances[$route_name])) {
@@ -290,13 +271,7 @@ class LocalTaskManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the render array for all local tasks.
-   *
-   * @param string $current_route_name
-   *   The route for which to make renderable local tasks.
-   *
-   * @return array
-   *   A render array as expected by theme_menu_local_tasks.
+   * {@inheritdoc}
    */
   public function getTasksBuild($current_route_name) {
     $tree = $this->getLocalTasksForRoute($current_route_name);
