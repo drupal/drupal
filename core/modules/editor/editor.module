@@ -52,7 +52,7 @@ function editor_menu_links_discovered_alter(array &$links) {
 }
 
 /**
- * Implements hook_element_info().
+ * Implements hook_element_info_alter().
  *
  * Extends the functionality of text_format elements (provided by Filter
  * module), so that selecting a text format notifies a client-side text editor
@@ -60,11 +60,8 @@ function editor_menu_links_discovered_alter(array &$links) {
  *
  * @see filter_element_info()
  */
-function editor_element_info() {
-  $type['text_format'] = array(
-    '#pre_render' => array('element.editor:preRenderTextFormat'),
-  );
-  return $type;
+function editor_element_info_alter(&$types) {
+  $types['text_format']['#pre_render'][] = 'element.editor:preRenderTextFormat';
 }
 
 /**
