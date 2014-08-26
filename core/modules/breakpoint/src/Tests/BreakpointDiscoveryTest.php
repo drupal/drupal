@@ -16,7 +16,7 @@ use Drupal\simpletest\KernelTestBase;
 class BreakpointDiscoveryTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
