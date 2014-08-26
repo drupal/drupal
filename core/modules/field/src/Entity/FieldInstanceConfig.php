@@ -160,10 +160,8 @@ class FieldInstanceConfig extends FieldConfigBase implements FieldInstanceConfig
       // Notify the entity storage.
       $entity_manager->getStorage($this->entity_type)->onFieldDefinitionUpdate($this, $this->original);
     }
-    if (!$this->isSyncing()) {
-      // Ensure the correct dependencies are present.
-      $this->calculateDependencies();
-    }
+
+    parent::preSave($storage);
   }
 
   /**

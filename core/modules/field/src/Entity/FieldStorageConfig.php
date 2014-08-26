@@ -242,10 +242,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     else {
       $this->preSaveUpdated($storage);
     }
-    if (!$this->isSyncing()) {
-      // Ensure the correct dependencies are present.
-      $this->calculateDependencies();
-    }
+
+    parent::preSave($storage);
   }
 
   /**
