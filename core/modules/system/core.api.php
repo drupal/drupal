@@ -700,9 +700,9 @@
  *   generic method to access any service. Examples:
  *   @code
  *   // Retrieve the entity.manager service object (special method exists).
- *   $manager = \Drupal->entityManager();
+ *   $manager = \Drupal::entityManager();
  *   // Retrieve the service object for machine name 'foo.bar'.
- *   $foobar = \Drupal->service('foo.bar');
+ *   $foobar = \Drupal::service('foo.bar');
  *   @endcode
  *
  * As a note, you should always use dependency injection (via service arguments
