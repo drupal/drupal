@@ -2316,9 +2316,9 @@ function template_preprocess_field_multiple_value_form(&$variables) {
  *   - links: A list of \Drupal\Core\Link objects which should be rendered.
  */
 function template_preprocess_breadcrumb(&$variables) {
-  /** @var \Drupal\Core\Link[] $links */
-  $links = $variables['links'];
-  foreach ($links as $key => $link) {
+  $variables['breadcrumb'] = array();
+  /** @var \Drupal\Core\Link $link */
+  foreach ($variables['links'] as $key => $link) {
     $variables['breadcrumb'][$key] = array('text' => $link->getText(), 'url' => $link->getUrl()->toString());
   }
 }
@@ -2385,7 +2385,7 @@ function drupal_common_theme() {
       'template' => 'image',
     ),
     'breadcrumb' => array(
-      'variables' => array('links' => array(), 'breadcrumb' => array()),
+      'variables' => array('links' => array()),
       'template' => 'breadcrumb',
     ),
     'table' => array(
