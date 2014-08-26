@@ -41,11 +41,11 @@ use Drupal\user\UserInterface;
  *     "label" = "name"
  *   },
  *   links = {
- *     "canonical" = "entity_test.render",
- *     "edit-form" = "entity_test.edit_entity_test",
- *     "delete-form" = "entity_test.delete_entity_test",
+ *     "canonical" = "entity.entity_test.canonical",
+ *     "edit-form" = "entity.entity_test.edit_form",
+ *     "delete-form" = "entity.entity_test.delete_form",
  *   },
- *   field_ui_base_route = "entity_test.admin_entity_test",
+ *   field_ui_base_route = "entity.entity_test.admin_form",
  * )
  */
 class EntityTest extends ContentEntityBase implements EntityOwnerInterface {

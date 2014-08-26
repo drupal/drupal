@@ -36,9 +36,9 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "label" = "name",
  *   },
  *   links = {
- *     "canonical" = "entity_test.edit_entity_test_rev",
- *     "delete-form" = "entity_test.delete_entity_test_rev",
- *     "edit-form" = "entity_test.edit_entity_test_rev"
+ *     "canonical" = "entity.entity_test_rev.edit_form",
+ *     "delete-form" = "entity.entity_test_rev.delete_form",
+ *     "edit-form" = "entity.entity_test_rev.edit_form"
  *   }
  * )
  */

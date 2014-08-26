@@ -1,4 +1,4 @@
-entity_test.render:
+entity.entity_test.canonical:
   path: '/entity_test/{entity_test}'
   defaults:
     _entity_view: 'entity_test.full'
@@ -6,35 +6,35 @@ entity_test.render:
   requirements:
     _access: 'TRUE'
 
-entity_test.delete_entity_test:
+entity.entity_test.delete_form:
   path: '/entity_test/delete/entity_test/{entity_test}'
   defaults:
     _entity_form: entity_test.delete
   requirements:
     _access: 'TRUE'
 
-entity_test.delete_entity_test_mul:
+entity.entity_test_mul.delete_form:
   path: '/entity_test/delete/entity_test_mul/{entity_test_mul}'
   defaults:
     _entity_form: entity_test_mul.delete
   requirements:
     _access: 'TRUE'
 
-entity_test.delete_entity_test_mulrev:
+entity.entity_test_mulrev.delete_form:
   path: '/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}'
   defaults:
     _entity_form: entity_test_mulrev.delete
   requirements:
     _access: 'TRUE'
 
-entity_test.delete_entity_test_rev:
+entity.entity_test_rev.delete_form:
   path: '/entity_test/delete/entity_test_rev/{entity_test_rev}'
   defaults:
     _entity_form: entity_test_rev.delete
   requirements:
     _access: 'TRUE'
 
-entity_test.render_options:
+entity.entity_test.render_options:
   path: '/entity_test_converter/{foo}'
   options:
     parameters:
@@ -45,14 +45,14 @@ entity_test.render_options:
   requirements:
     _access: 'TRUE'
 
-entity_test.render_no_view_mode:
+entity.entity_test.render_no_view_mode:
   path: '/entity_test_no_view_mode/{entity_test}'
   defaults:
     _entity_view: 'entity_test'
   requirements:
     _access: 'TRUE'
 
-entity_test.list_referencing_entities:
+entity.entity_test.list_referencing_entities:
   path: '/entity_test/list/{entity_reference_field_name}/{referenced_entity_type}/{referenced_entity_id}'
   defaults:
     _content: '\Drupal\entity_test\Controller\EntityTestController::listReferencingEntities'

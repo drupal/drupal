@@ -31,9 +31,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "edit-form" = "entity_test.edit_entity_test",
+ *     "edit-form" = "entity.entity_test_base_field_display.edit_form",
  *   },
- *   field_ui_base_route = "entity_test.admin_entity_test",
+ *   field_ui_base_route = "entity.entity_test_base_field_display.admin_form",
  * )
  */
 class EntityTestBaseFieldDisplay extends EntityTest {

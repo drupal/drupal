@@ -31,10 +31,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "canonical" = "entity_test.render",
- *     "edit-form" = "entity_test.edit_entity_test_string_id",
+ *     "canonical" = "entity.entity_test.canonical",
+ *     "edit-form" = "entity.entity_test_string_id.edit_form",
  *   },
- *   field_ui_base_route = "entity_test.admin_entity_test_string_id",
+ *   field_ui_base_route = "entity.entity_test_string_id.admin_form",
  * )
  */
 class EntityTestStringId extends EntityTest {

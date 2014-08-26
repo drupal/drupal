@@ -95,7 +95,7 @@ class EntityTestForm extends ContentEntityForm {
     if ($entity->id()) {
       $entity_type = $entity->getEntityTypeId();
       $form_state->setRedirect(
-        "entity_test.edit_$entity_type",
+        "entity.$entity_type.edit_form",
         array($entity_type => $entity->id())
       );
     }

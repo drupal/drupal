@@ -27,13 +27,13 @@ class EntityTestRoutes {
 
     $routes = array();
     foreach ($types as $entity_type) {
-      $routes["entity_test.add_$entity_type"] = new Route(
+      $routes["entity.$entity_type.add_form"] = new Route(
         "$entity_type/add",
         array('_content' => '\Drupal\entity_test\Controller\EntityTestController::testAdd', 'entity_type' => $entity_type),
         array('_permission' => 'administer entity_test content')
       );
 
-      $routes["entity_test.edit_$entity_type"] = new Route(
+      $routes["entity.$entity_type.edit_form"] = new Route(
         "$entity_type/manage/{" . $entity_type . '}',
         array('_content' => '\Drupal\entity_test\Controller\EntityTestController::testEdit', '_entity_type' => $entity_type),
         array('_permission' => 'administer entity_test content'),
@@ -42,7 +42,7 @@ class EntityTestRoutes {
         ))
       );
 
-      $routes["entity_test.admin_$entity_type"] = new Route(
+      $routes["entity.$entity_type.admin_form"] = new Route(
         "$entity_type/structure/{bundle}",
         array('_content' => '\Drupal\entity_test\Controller\EntityTestController::testAdmin'),
         array('_permission' => 'administer entity_test content')

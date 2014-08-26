@@ -38,9 +38,9 @@ use Drupal\entity_test\Entity\EntityTestRev;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "canonical" = "entity_test.edit_entity_test_mulrev",
- *     "delete-form" = "entity_test.delete_entity_test_mulrev",
- *     "edit-form" = "entity_test.edit_entity_test_mulrev"
+ *     "canonical" = "entity.entity_test_mulrev.edit_form",
+ *     "delete-form" = "entity.entity_test_mulrev.delete_form",
+ *     "edit-form" = "entity.entity_test_mulrev.edit_form"
  *   }
  * )
  */

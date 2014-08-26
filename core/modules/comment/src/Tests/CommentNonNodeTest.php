@@ -430,6 +430,8 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields');
     // Ensure field isn't shown for string IDs.
     $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+    // Ensure a core field type shown.
+    $this->assertOption('edit-fields-add-new-field-type', 'boolean');
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
@@ -440,6 +442,8 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
     // Ensure field isn't shown for empty IDs.
     $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+    // Ensure a core field type shown.
+    $this->assertOption('edit-fields-add-new-field-type', 'boolean');
   }
 
 }

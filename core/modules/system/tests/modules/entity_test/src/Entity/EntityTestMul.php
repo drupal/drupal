@@ -37,11 +37,11 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "label" = "name"
  *   },
  *   links = {
- *     "canonical" = "entity_test.edit_entity_test_mul",
- *     "edit-form" = "entity_test.edit_entity_test_mul",
- *     "delete-form" = "entity_test.delete_entity_test_mul",
+ *     "canonical" = "entity.entity_test_mul.edit_form",
+ *     "edit-form" = "entity.entity_test_mul.edit_form",
+ *     "delete-form" = "entity.entity_test_mul.delete_form",
  *   },
- *   field_ui_base_route = "entity_test.admin_entity_test_mul",
+ *   field_ui_base_route = "entity.entity_test_mul.admin_form",
  * )
  */
 class EntityTestMul extends EntityTest {
