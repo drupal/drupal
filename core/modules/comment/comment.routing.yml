@@ -51,13 +51,17 @@ entity.comment.delete_form:
     _entity_access: 'comment.delete'
 
 comment.reply:
-  path: '/comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
+  path: '/comment/reply/{entity_type}/{entity}/{field_name}/{pid}'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
     _title: 'Add new comment'
     pid: ~
   requirements:
     _access: 'TRUE'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
 
 comment.new_comments_node_links:
   path: '/comments/render_new_comments_node_links'

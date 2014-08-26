@@ -3,7 +3,6 @@ services:
     class: Drupal\comment\CommentBreadcrumbBuilder
     tags:
       - { name: breadcrumb_builder, priority: 100 }
-    arguments: ['@entity.manager']
 
   comment.manager:
     class: Drupal\comment\CommentManager

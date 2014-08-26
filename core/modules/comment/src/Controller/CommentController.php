@@ -143,7 +143,7 @@ class CommentController extends ControllerBase {
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
       return $this->redirect('comment.reply', array(
         'entity_type' => 'node',
-        'entity_id' => $node->id(),
+        'entity' => $node->id(),
         'field_name' => $field_name,
       ));
     }
@@ -162,10 +162,8 @@ class CommentController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
-   * @param string $entity_type
-   *   Every comment belongs to an entity. This is the type of the entity.
-   * @param string $entity_id
-   *   Every comment belongs to an entity. This is the ID of the entity.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity this comment belongs to.
    * @param string $field_name
    *   The field_name to which the comment belongs.
    * @param int $pid
@@ -191,11 +189,10 @@ class CommentController extends ControllerBase {
    *     - If user is not authorized to view comments.
    *     - If current entity comments are disable.
    */
-  public function getReplyForm(Request $request, $entity_type, $entity_id, $field_name, $pid = NULL) {
-
+  public function getReplyForm(Request $request, EntityInterface $entity, $field_name, $pid = NULL) {
     // Check if entity and field exists.
-    $fields = $this->commentManager->getFields($entity_type);
-    if (empty($fields[$field_name]) || !($entity = $this->entityManager()->getStorage($entity_type)->load($entity_id))) {
+    $fields = $this->commentManager->getFields($entity->getEntityTypeId());
+    if (empty($fields[$field_name])) {
       throw new NotFoundHttpException();
     }
 

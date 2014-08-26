@@ -139,7 +139,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 $links['comment-add']['route_name'] = 'comment.reply';
                 $links['comment-add']['route_parameters'] = array(
                   'entity_type' => $entity->getEntityTypeId(),
-                  'entity_id' => $entity->id(),
+                  'entity' => $entity->id(),
                   'field_name' => $field_name,
                 );
               }
@@ -174,7 +174,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                   $links['comment-add']['route_name'] = 'comment.reply';
                   $links['comment-add']['route_parameters'] = array(
                     'entity_type' => $entity->getEntityTypeId(),
-                    'entity_id' => $entity->id(),
+                    'entity' => $entity->id(),
                     'field_name' => $field_name,
                   );
                 }
