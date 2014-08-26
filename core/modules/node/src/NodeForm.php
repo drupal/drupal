@@ -95,7 +95,7 @@ class NodeForm extends ContentEntityForm {
 
       // Rebuild the form.
       $form_state['rebuild'] = TRUE;
-      $this->entity = $preview['controller']->getEntity();
+      $this->entity = $preview->getFormObject()->getEntity();
       unset($this->entity->in_preview);
     }
 

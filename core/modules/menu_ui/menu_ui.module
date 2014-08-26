@@ -321,7 +321,7 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
 function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   $definition = $form_state['menu_link_definition'];
   $type = $node->getType();
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
@@ -446,7 +446,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
   $menu_options = menu_ui_get_menus();
-  $type = $form_state['controller']->getEntity();
+  $type = $form_state->getFormObject()->getEntity();
   if ($type->id()) {
     $config_values = \Drupal::config('menu.entity.node.' . $type->id())->get();
   }
@@ -516,7 +516,7 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
  * @see menu_ui_form_node_type_form_alter().
  */
 function menu_ui_form_node_type_form_submit(&$form, FormStateInterface $form_state) {
-  $type = $form_state['controller']->getEntity();
+  $type = $form_state->getFormObject()->getEntity();
   \Drupal::config('menu.entity.node.' . $type->id())
     ->set('available_menus', array_values(array_filter($form_state->getValue('menu_options'))))
     ->set('parent', $form_state->getValue('menu_parent'))

@@ -56,7 +56,7 @@ function path_permission() {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   if ($node->hasField('path') && $node->get('path')->access('edit')) {
     $form['path_settings'] = array(
       '#type' => 'details',

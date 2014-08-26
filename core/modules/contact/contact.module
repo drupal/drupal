@@ -170,7 +170,7 @@ function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
     '#open' => TRUE,
     '#weight' => 5,
   );
-  $account = $form_state['controller']->getEntity();
+  $account = $form_state->getFormObject()->getEntity();
   if (!\Drupal::currentUser()->isAnonymous() && $account->id()) {
     $account_data = \Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
   }
@@ -187,7 +187,7 @@ function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
  * Submit callback for the user profile form to save the contact page setting.
  */
 function contact_user_profile_form_submit($form, FormStateInterface $form_state) {
-  $account = $form_state['controller']->getEntity();
+  $account = $form_state->getFormObject()->getEntity();
   if ($account->id() && $form_state->hasValue('contact')) {
     \Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state->getValue('contact'));
   }

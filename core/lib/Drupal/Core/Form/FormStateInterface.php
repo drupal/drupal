@@ -470,4 +470,12 @@ interface FormStateInterface {
    */
   public function prepareCallback($callback);
 
+  /**
+   * Returns the form object that is responsible for building this form.
+   *
+   * @return \Drupal\Core\Form\FormInterface
+   *   The form object.
+   */
+  public function getFormObject();
+
 }

@@ -41,7 +41,7 @@ class NodePreviewConverter implements ParamConverterInterface {
   public function convert($value, $definition, $name, array $defaults, Request $request) {
     $store = $this->tempStoreFactory->get('node_preview');
     if ($form_state = $store->get($value)) {
-      return $form_state['controller']->getEntity();
+      return $form_state->getFormObject()->getEntity();
     }
   }
 

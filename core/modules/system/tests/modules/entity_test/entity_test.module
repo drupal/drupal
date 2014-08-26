@@ -247,7 +247,7 @@ function entity_test_permission() {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $langcode = $form_state['controller']->getFormLangcode($form_state);
+  $langcode = $form_state->getFormObject()->getFormLangcode($form_state);
   \Drupal::state()->set('entity_test.form_langcode', $langcode);
 }
 

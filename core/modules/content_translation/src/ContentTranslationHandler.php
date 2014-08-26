@@ -84,8 +84,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * {@inheritdoc}
    */
   public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
-    $form_controller = content_translation_form_controller($form_state);
-    $form_langcode = $form_controller->getFormLangcode($form_state);
+    $form_object = $form_state->getFormObject();
+    $form_langcode = $form_object->getFormLangcode($form_state);
     $entity_langcode = $entity->getUntranslated()->language()->id;
     $source_langcode = $this->getSourceLangcode($form_state);
 
@@ -95,7 +95,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       // Make sure a new translation does not appear as existing yet.
       unset($translations[$form_langcode]);
     }
-    $is_translation = !$form_controller->isDefaultFormLangcode($form_state);
+    $is_translation = !$form_object->isDefaultFormLangcode($form_state);
     $has_translations = count($translations) > 1;
 
     // Adjust page title to specify the current language being edited, if we
@@ -377,8 +377,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    $form_controller = content_translation_form_controller($form_state);
-    $form_langcode = $form_controller->getFormLangcode($form_state);
+    $form_object = $form_state->getFormObject();
+    $form_langcode = $form_object->getFormLangcode($form_state);
 
     if (!isset($entity->translation[$form_langcode])) {
       $entity->translation[$form_langcode] = array();
@@ -435,15 +435,15 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * Takes care of the source language change.
    */
   public function entityFormSourceChange($form, FormStateInterface $form_state) {
-    $form_controller = content_translation_form_controller($form_state);
-    $entity = $form_controller->getEntity();
+    $form_object = $form_state->getFormObject();
+    $entity = $form_object->getEntity();
     $source = $form_state->getValue(array('source_langcode', 'source'));
 
     $entity_type_id = $entity->getEntityTypeId();
     $form_state->setRedirect('content_translation.translation_add_' . $entity_type_id, array(
       $entity_type_id => $entity->id(),
       'source' => $source,
-      'target' => $form_controller->getFormLangcode($form_state),
+      'target' => $form_object->getFormLangcode($form_state),
     ));
     $languages = language_list();
     drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->name)));
@@ -455,8 +455,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * Takes care of entity deletion.
    */
   function entityFormDelete($form, FormStateInterface $form_state) {
-    $form_controller = content_translation_form_controller($form_state);
-    $entity = $form_controller->getEntity();
+    $form_object = $form_state->getFormObject()->getEntity();
+    $entity = $form_object->getEntity();
     if (count($entity->getTranslationLanguages()) > 1) {
       drupal_set_message(t('This will delete all the translations of %label.', array('%label' => $entity->label())), 'warning');
     }
@@ -468,12 +468,12 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * Takes care of content translation deletion.
    */
   function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
-    $form_controller = content_translation_form_controller($form_state);
-    $entity = $form_controller->getEntity();
+    $form_object = $form_state->getFormObject();
+    $entity = $form_object->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
     $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, array(
       $entity_type_id => $entity->id(),
-      'language' => $form_controller->getFormLangcode($form_state),
+      'language' => $form_object->getFormLangcode($form_state),
     ));
   }
 

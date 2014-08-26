@@ -1024,7 +1024,7 @@ function system_user_login($account) {
 function system_user_timezone(&$form, FormStateInterface $form_state) {
   $user = \Drupal::currentUser();
 
-  $account = $form_state['controller']->getEntity();
+  $account = $form_state->getFormObject()->getEntity();
   $form['timezone'] = array(
     '#type' => 'details',
     '#title' => t('Locale settings'),

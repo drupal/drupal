@@ -268,7 +268,7 @@ function seven_preprocess_maintenance_page(&$variables) {
  */
 function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->get('controller')->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
 
   $form['#theme'] = array('node_edit_form');
   $form['#attached']['css'][] = drupal_get_path('module', 'node') . '/css/node.module.css';

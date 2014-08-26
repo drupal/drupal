@@ -387,7 +387,7 @@ function forum_comment_delete(CommentInterface $comment) {
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $vid = \Drupal::config('forum.settings')->get('vocabulary');
-  $vocabulary = $form_state['controller']->getEntity();
+  $vocabulary = $form_state->getFormObject()->getEntity();
   if ($vid == $vocabulary->id()) {
     $form['help_forum_vocab'] = array(
       '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
@@ -419,7 +419,7 @@ function forum_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_st
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   if (isset($node->taxonomy_forums) && !$node->isNew()) {
     $forum_terms = $node->taxonomy_forums;
     // If editing, give option to leave shadows.

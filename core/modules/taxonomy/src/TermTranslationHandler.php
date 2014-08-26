@@ -33,7 +33,7 @@ class TermTranslationHandler extends ContentTranslationHandler {
    */
   function entityFormSave(array $form, FormStateInterface $form_state) {
     if ($this->getSourceLangcode($form_state)) {
-      $entity = content_translation_form_controller($form_state)->getEntity();
+      $entity = $form_state->getFormObject()->getEntity();
       // We need a redirect here, otherwise we would get an access denied page,
       // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.

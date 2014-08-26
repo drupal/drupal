@@ -335,22 +335,6 @@ function content_translation_controller($entity_type_id) {
 }
 
 /**
- * Returns the entity form for the given form.
- *
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current form state holding the entity form.
- *
- * @return \Drupal\Core\Entity\EntityFormInterface;
- *   An instance of the content translation form interface or FALSE if not an
- *   entity form.
- *
- * @todo Move to \Drupal\content_translation\ContentTranslationManager.
- */
-function content_translation_form_controller(FormStateInterface $form_state) {
-  return isset($form_state['controller']) && $form_state['controller'] instanceof EntityFormInterface ? $form_state['controller'] : FALSE;
-}
-
-/**
  * Checks whether a content translation is accessible.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -430,8 +414,11 @@ function content_translation_permission() {
  * Implements hook_form_alter().
  */
 function content_translation_form_alter(array &$form, FormStateInterface $form_state) {
-  $form_controller = content_translation_form_controller($form_state);
-  $entity = $form_controller ? $form_controller->getEntity() : NULL;
+  $form_object = $form_state->getFormObject();
+  if (!($form_object instanceof EntityFormInterface)) {
+    return;
+  }
+  $entity = $form_object->getEntity();
 
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1) {
     $controller = content_translation_controller($entity->getEntityTypeId());
@@ -440,7 +427,7 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
     // @todo Move the following lines to the code generating the property form
     //   elements once we have an official #multilingual FAPI key.
     $translations = $entity->getTranslationLanguages();
-    $form_langcode = $form_controller->getFormLangcode($form_state);
+    $form_langcode = $form_object->getFormLangcode($form_state);
 
     // Handle fields shared between translations when there is at least one
     // translation available or a new one is being created.

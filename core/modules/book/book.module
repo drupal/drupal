@@ -161,7 +161,7 @@ function book_node_links_alter(array &$node_links, NodeInterface $node, array &$
  * @see book_pick_book_nojs_submit()
  */
 function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   $account = \Drupal::currentUser();
   $access = $account->hasPermission('administer book outlines');
   if (!$access) {
@@ -217,7 +217,7 @@ function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStat
  * @see book_form_node_form_alter()
  */
 function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   $node->book = $form_state->getValue('book');
   $form_state['rebuild'] = TRUE;
 }
