@@ -76,6 +76,17 @@ class CommentTypeTest extends CommentTestBase {
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     $this->assertEqual($comment_type->language()->getId(), $default_langcode);
+
+    // Edit the comment-type and ensure that we cannot change the entity-type.
+    $this->drupalGet('admin/structure/comment/manage/foo');
+    $this->assertNoField('target_entity_type_id', 'Entity type file not present');
+    $this->assertText(t('Target entity type'));
+    // Save the form and ensure the entity-type value is preserved even though
+    // the field isn't present.
+    $this->drupalPostForm(NULL, array(), t('Save'));
+    \Drupal::entityManager()->getStorage('comment_type')->resetCache(array('foo'));
+    $comment_type = CommentType::load('foo');
+    $this->assertEqual($comment_type->getTargetEntityTypeId(), 'node');
   }
 
   /**

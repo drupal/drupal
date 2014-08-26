@@ -88,18 +88,28 @@ class CommentTypeForm extends EntityForm {
       '#title' => t('Description'),
     );
 
-    $options = array();
-    foreach ($this->entityManager->getDefinitions() as $entity_type) {
-      if ($entity_type->isFieldable()) {
-        $options[$entity_type->id()] = $entity_type->getLabel();
+    if ($comment_type->isNew()) {
+      $options = array();
+      foreach ($this->entityManager->getDefinitions() as $entity_type) {
+        if ($entity_type->isFieldable()) {
+          $options[$entity_type->id()] = $entity_type->getLabel();
+        }
       }
+      $form['target_entity_type_id'] = array(
+        '#type' => 'select',
+        '#default_value' => $comment_type->getTargetEntityTypeId(),
+        '#title' => t('Target entity type'),
+        '#options' => $options,
+        '#description' => t('The target entity type can not be changed after the comment type has been created.')
+      );
     }
-    $form['target_entity_type_id'] = array(
-      '#type' => 'select',
-      '#default_value' => $comment_type->getTargetEntityTypeId(),
-      '#title' => t('Target entity type'),
-      '#options' => $options,
-    );
+    else {
+      $form['target_entity_type_id_display'] = array(
+        '#type' => 'item',
+        '#markup' => $this->entityManager->getDefinition($comment_type->getTargetEntityTypeId())->getLabel(),
+        '#title' => t('Target entity type'),
+      );
+    }
 
     if ($this->moduleHandler->moduleExists('content_translation')) {
       $form['language'] = array(
