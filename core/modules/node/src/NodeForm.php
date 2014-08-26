@@ -97,9 +97,6 @@ class NodeForm extends ContentEntityForm {
       $form_state['rebuild'] = TRUE;
       $this->entity = $preview['controller']->getEntity();
       unset($this->entity->in_preview);
-
-      // Remove the entry from the temp store.
-      $store->delete($uuid);
     }
 
     /** @var \Drupal\node\NodeInterface $node */
@@ -499,6 +496,12 @@ class NodeForm extends ContentEntityForm {
       }
       else {
         $form_state->setRedirect('<front>');
+      }
+
+      // Remove the preview entry from the temp store, if any.
+      $store = $this->tempStoreFactory->get('node_preview');
+      if ($store->get($node->uuid())) {
+        $store->delete($node->uuid());
       }
     }
     else {

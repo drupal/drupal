@@ -145,6 +145,12 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
 
+    // Assert the content is kept when reloading the page.
+    $this->drupalGet('node/add/page', array('query' => array('uuid' => $uuid)));
+    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+
     // Save the node.
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
