@@ -43,7 +43,7 @@ class HistoryTimestampTest extends ViewTestBase {
 
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
-    $GLOBALS['user'] = $account;
+    \Drupal::currentUser()->setAccount($account);
 
     db_insert('history')
       ->fields(array(

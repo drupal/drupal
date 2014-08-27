@@ -1165,14 +1165,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @return \Drupal\Core\Session\AccountInterface
    */
   protected function currentUser() {
-    if (!$this->currentUser) {
-      if (\Drupal::hasService('current_user')) {
-        $this->currentUser = \Drupal::currentUser();
-      }
-      else {
-        global $user;
-        $this->currentUser = $user;
-      }
+    if (!$this->currentUser && \Drupal::hasService('current_user')) {
+      $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
   }
