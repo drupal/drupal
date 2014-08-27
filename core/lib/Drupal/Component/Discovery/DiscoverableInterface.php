@@ -16,7 +16,7 @@ interface DiscoverableInterface {
    * Returns an array of discoverable items.
    *
    * @return array
-   *   An array of discovered data.
+   *   An array of discovered data keyed by provider.
    */
   public function findAll();
 

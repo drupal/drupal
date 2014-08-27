@@ -8,9 +8,9 @@
 namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserPermissionsForm extends FormBase {
 
   /**
-   * The module handler.
+   * The permission handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\user\PermissionHandlerInterface
    */
-  protected $moduleHandler;
+  protected $permissionHandler;
 
   /**
    * The role storage.
@@ -36,13 +36,13 @@ class UserPermissionsForm extends FormBase {
   /**
    * Constructs a new UserPermissionsForm.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   *   The permission handler.
    * @param \Drupal\user\RoleStorageInterface $role_storage
    *   The role storage.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, RoleStorageInterface $role_storage) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage) {
+    $this->permissionHandler = $permission_handler;
     $this->roleStorage = $role_storage;
   }
 
@@ -51,7 +51,7 @@ class UserPermissionsForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
+      $container->get('user.permissions'),
       $container->get('entity.manager')->getStorage('user_role')
     );
   }
@@ -96,14 +96,6 @@ class UserPermissionsForm extends FormBase {
     $module_info = system_rebuild_module_data();
     $hide_descriptions = system_admin_compact_mode();
 
-    // Get a list of all the modules implementing a hook_permission() and sort by
-    // display name.
-    $modules = array();
-    foreach ($this->moduleHandler->getImplementations('permission') as $module) {
-      $modules[$module] = $module_info[$module]->info['name'];
-    }
-    asort($modules);
-
     $form['system_compact_link'] = array(
       '#theme' => 'system_compact_link',
     );
@@ -121,55 +113,59 @@ class UserPermissionsForm extends FormBase {
       );
     }
 
-    foreach ($modules as $module => $display_name) {
-      if ($permissions = $this->moduleHandler->invoke($module, 'permission')) {
-        // Module name.
-        $form['permissions'][$module] = array(array(
+    $permissions = $this->permissionHandler->getPermissions();
+    $permissions_by_provider = array();
+    foreach ($permissions as $permission_name => $permission) {
+      $permissions_by_provider[$permission['provider']][$permission_name] = $permission;
+    }
+
+    foreach ($permissions_by_provider as $provider => $permissions) {
+      // Module name.
+      $form['permissions'][$provider] = array(array(
+        '#wrapper_attributes' => array(
+          'colspan' => count($role_names) + 1,
+          'class' => array('module'),
+          'id' => 'module-' . $provider,
+        ),
+        '#markup' => $module_info[$provider]->info['name'],
+      ));
+      foreach ($permissions as $perm => $perm_item) {
+        // Fill in default values for the permission.
+        $perm_item += array(
+          'description' => '',
+          'restrict access' => FALSE,
+          'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
+        );
+        $options[$perm] = $perm_item['title'];
+        // Show the permission description.
+        if (!$hide_descriptions) {
+          $user_permission_description = $perm_item['description'];
+          // Append warning message.
+          if (!empty($perm_item['warning'])) {
+            $user_permission_description .= ' <em class="permission-warning">' . $perm_item['warning'] . '</em>';
+          }
+        }
+        $form['permissions'][$perm]['description'] = array(
           '#wrapper_attributes' => array(
-            'colspan' => count($role_names) + 1,
-            'class' => array('module'),
-            'id' => 'module-' . $module,
+            'class' => array('permission'),
           ),
-          '#markup' => $module_info[$module]->info['name'],
-        ));
-        foreach ($permissions as $perm => $perm_item) {
-          // Fill in default values for the permission.
-          $perm_item += array(
-            'description' => '',
-            'restrict access' => FALSE,
-            'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
-          );
-          $options[$perm] = $perm_item['title'];
-          // Show the permission description.
-          if (!$hide_descriptions) {
-            $user_permission_description = $perm_item['description'];
-            // Append warning message.
-            if (!empty($perm_item['warning'])) {
-              $user_permission_description .= ' <em class="permission-warning">' . $perm_item['warning'] . '</em>';
-            }
-          }
-          $form['permissions'][$perm]['description'] = array(
+          '#type' => 'item',
+          '#markup' => $perm_item['title'],
+          '#description' => $user_permission_description,
+        );
+        $options[$perm] = '';
+        foreach ($role_names as $rid => $name) {
+          $form['permissions'][$perm][$rid] = array(
+            '#title' => $name . ': ' . $perm_item['title'],
+            '#title_display' => 'invisible',
             '#wrapper_attributes' => array(
-              'class' => array('permission'),
+              'class' => array('checkbox'),
             ),
-            '#type' => 'item',
-            '#markup' => $perm_item['title'],
-            '#description' => $user_permission_description,
+            '#type' => 'checkbox',
+            '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
+            '#attributes' => array('class' => array('rid-' . $rid)),
+            '#parents' => array($rid, $perm),
           );
-          $options[$perm] = '';
-          foreach ($role_names as $rid => $name) {
-            $form['permissions'][$perm][$rid] = array(
-              '#title' => $name . ': ' . $perm_item['title'],
-              '#title_display' => 'invisible',
-              '#wrapper_attributes' => array(
-                'class' => array('checkbox'),
-              ),
-              '#type' => 'checkbox',
-              '#default_value' => in_array($perm,$role_permissions[$rid]) ? 1 : 0,
-              '#attributes' => array('class' => array('rid-' . $rid)),
-              '#parents' => array($rid, $perm),
-            );
-          }
         }
       }
     }

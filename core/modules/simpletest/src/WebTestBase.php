@@ -649,7 +649,7 @@ abstract class WebTestBase extends TestBase {
    *   TRUE if the permissions are valid, FALSE otherwise.
    */
   protected function checkPermissions(array $permissions) {
-    $available = array_keys(\Drupal::moduleHandler()->invokeAll('permission'));
+    $available = array_keys(\Drupal::service('user.permissions')->getPermissions());
     $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {

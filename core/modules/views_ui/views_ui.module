@@ -125,19 +125,6 @@ function views_ui_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function views_ui_permission() {
-  return array(
-    'administer views' => array(
-      'title' => t('Administer views'),
-      'description' => t('Access the views administration pages.'),
-      'restrict access' => TRUE,
-    ),
-  );
-}
-
-/**
  * Implements hook_preprocess_HOOK() for views templates.
  */
 function views_ui_preprocess_views_view(&$variables) {

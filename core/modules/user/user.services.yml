@@ -59,6 +59,9 @@ services:
     arguments: ['@serialization.phpserialize', '@database', '@lock', '%user.tempstore.expire%']
     tags:
       - { name: backend_overridable }
+  user.permissions:
+    class: Drupal\user\PermissionHandler
+    arguments: ['@module_handler', '@string_translation']
 
 parameters:
   user.tempstore.expire: 604800

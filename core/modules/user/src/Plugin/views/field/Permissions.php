@@ -83,7 +83,7 @@ class Permissions extends PrerenderList {
     $uids = array();
     $this->items = array();
 
-    $permission_names = \Drupal::moduleHandler()->invokeAll('permission');
+    $permission_names = \Drupal::service('user.permissions')->getPermissions();
 
     $rids = array();
     foreach ($values as $result) {
