@@ -112,16 +112,6 @@ interface FormBuilderInterface {
   public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL);
 
   /**
-   * Fetches a form from the cache.
-   */
-  public function getCache($form_build_id, FormStateInterface &$form_state);
-
-  /**
-   * Stores a form in the cache.
-   */
-  public function setCache($form_build_id, $form, FormStateInterface $form_state);
-
-  /**
    * Retrieves, populates, and processes a form.
    *
    * This function allows you to supply values for form elements and submit a

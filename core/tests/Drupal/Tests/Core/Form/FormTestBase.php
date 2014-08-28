@@ -55,18 +55,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected $moduleHandler;
 
   /**
-   * The expirable key value store used by form cache.
+   * The form cache.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Form\FormCacheInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $formCache;
-
-  /**
-   * The expirable key value store used by form state cache.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $formStateCache;
 
   /**
    * The current user.
@@ -118,13 +111,6 @@ abstract class FormTestBase extends UnitTestCase {
   protected $eventDispatcher;
 
   /**
-   * The expirable key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactory|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $keyValueExpirableFactory;
-
-  /**
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $translationManager;
@@ -149,18 +135,7 @@ abstract class FormTestBase extends UnitTestCase {
   protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $this->formCache = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
-    $this->formStateCache = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
-    $this->keyValueExpirableFactory = $this->getMockBuilder('Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->keyValueExpirableFactory->expects($this->any())
-      ->method('get')
-      ->will($this->returnValueMap(array(
-        array('form', $this->formCache),
-        array('form_state', $this->formStateCache),
-      )));
-
+    $this->formCache = $this->getMock('Drupal\Core\Form\FormCacheInterface');
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->classResolver = $this->getClassResolverStub();
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
@@ -185,7 +160,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->setMethods(array('batchGet', 'drupalInstallationAttempted'))
       ->getMock();
 
-    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->themeManager, $this->csrfToken, $this->httpKernel);
+    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->themeManager, $this->csrfToken, $this->httpKernel);
     $this->formBuilder->setCurrentUser($this->account);
   }
 

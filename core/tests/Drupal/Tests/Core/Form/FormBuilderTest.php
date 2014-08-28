@@ -336,21 +336,6 @@ class FormBuilderTest extends FormTestBase {
       ->method('buildForm')
       ->will($this->returnValue($expected_form));
 
-    // The CSRF token is checked each time.
-    $this->csrfToken->expects($this->exactly(2))
-      ->method('get')
-      ->will($this->returnValue('csrf_token'));
-    // The CSRF token is validated only when retrieving from the cache.
-    $this->csrfToken->expects($this->once())
-      ->method('validate')
-      ->with('csrf_token')
-      ->will($this->returnValue(TRUE));
-    // The user is checked for authentication once for the form building and
-    // twice for each cache set.
-    $this->account->expects($this->exactly(3))
-      ->method('isAuthenticated')
-      ->will($this->returnValue(TRUE));
-
     // Do an initial build of the form and track the build ID.
     $form_state = new FormState();
     $form_state['build_info']['args'] = array();
@@ -363,13 +348,8 @@ class FormBuilderTest extends FormTestBase {
     // The form cache, form_state cache, and CSRF token validation will only be
     // called on the cached form.
     $this->formCache->expects($this->once())
-      ->method('setWithExpire');
-    $this->formCache->expects($this->once())
-      ->method('get')
-      ->will($this->returnValue($cached_form));
-    $this->formStateCache->expects($this->once())
-      ->method('get')
-      ->will($this->returnValue($form_state->getCacheableArray()));
+      ->method('getCache')
+      ->willReturn($form);
 
     // The final form build will not trigger any actual form building, but will
     // use the form cache.

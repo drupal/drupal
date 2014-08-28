@@ -9,13 +9,11 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -32,7 +30,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @ingroup form_api
  */
-class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface {
+class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface {
 
   /**
    * The module handler.
@@ -40,13 +38,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
-
-  /**
-   * The factory for expirable key value stores used by form cache.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
-   */
-  protected $keyValueExpirableFactory;
 
   /**
    * The event dispatcher.
@@ -108,16 +99,23 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected $formSubmitter;
 
   /**
+   * The form cache.
+   *
+   * @var \Drupal\Core\Form\FormCacheInterface
+   */
+  protected $formCache;
+
+  /**
    * Constructs a new FormBuilder.
    *
    * @param \Drupal\Core\Form\FormValidatorInterface $form_validator
    *   The form validator.
    * @param \Drupal\Core\Form\FormSubmitterInterface $form_submitter
    *   The form submission processor.
+   * @oaram \Drupal\Core\Form\FormCacheInterface $form_cache
+   *   The form cache.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
-   *   The keyvalue expirable factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -128,14 +126,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The theme manager.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
-   * @param \Drupal\Core\HttpKernel $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
+    $this->formCache = $form_cache;
     $this->moduleHandler = $module_handler;
-    $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->eventDispatcher = $event_dispatcher;
     $this->requestStack = $request_stack;
     $this->classResolver = $class_resolver;
@@ -325,63 +323,15 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getCache($form_build_id, FormStateInterface &$form_state) {
-    if ($form = $this->keyValueExpirableFactory->get('form')->get($form_build_id)) {
-      $user = $this->currentUser();
-      if ((isset($form['#cache_token']) && $this->csrfToken->validate($form['#cache_token'])) || (!isset($form['#cache_token']) && $user->isAnonymous())) {
-        if ($stored_form_state = $this->keyValueExpirableFactory->get('form_state')->get($form_build_id)) {
-          // Re-populate $form_state for subsequent rebuilds.
-          $form_state->setFormState($stored_form_state);
-
-          // If the original form is contained in include files, load the files.
-          // @see form_load_include()
-          $form_state['build_info'] += array('files' => array());
-          foreach ($form_state['build_info']['files'] as $file) {
-            if (is_array($file)) {
-              $file += array('type' => 'inc', 'name' => $file['module']);
-              $this->moduleHandler->loadInclude($file['module'], $file['type'], $file['name']);
-            }
-            elseif (file_exists($file)) {
-              require_once DRUPAL_ROOT . '/' . $file;
-            }
-          }
-          // Retrieve the list of previously known safe strings and store it
-          // for this request.
-          // @todo Ensure we are not storing an excessively large string list
-          //   in: https://www.drupal.org/node/2295823
-          $form_state['build_info'] += array('safe_strings' => array());
-          SafeMarkup::setMultiple($form_state['build_info']['safe_strings']);
-          unset($form_state['build_info']['safe_strings']);
-        }
-        return $form;
-      }
-    }
+  public function getCache($form_build_id, FormStateInterface $form_state) {
+    return $this->formCache->getCache($form_build_id, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setCache($form_build_id, $form, FormStateInterface $form_state) {
-    // 6 hours cache life time for forms should be plenty.
-    $expire = 21600;
-
-    // Cache form structure.
-    if (isset($form)) {
-      if ($this->currentUser()->isAuthenticated()) {
-        $form['#cache_token'] = $this->csrfToken->get();
-      }
-      $this->keyValueExpirableFactory->get('form')->setWithExpire($form_build_id, $form, $expire);
-    }
-
-    // Cache form state.
-    // Store the known list of safe strings for form re-use.
-    // @todo Ensure we are not storing an excessively large string list in:
-    //   https://www.drupal.org/node/2295823
-    $form_state->addBuildInfo('safe_strings', SafeMarkup::getAll());
-
-    if ($data = $form_state->getCacheableArray()) {
-      $this->keyValueExpirableFactory->get('form_state')->setWithExpire($form_build_id, $data, $expire);
-    }
+    $this->formCache->setCache($form_build_id, $form, $form_state);
   }
 
   /**
