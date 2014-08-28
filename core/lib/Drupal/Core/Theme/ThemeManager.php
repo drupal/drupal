@@ -9,6 +9,7 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -123,6 +124,9 @@ class ThemeManager implements ThemeManagerInterface {
     // the default theme as well as really specific ones like the ajax base theme.
     if (!$route_match) {
       $route_match = \Drupal::routeMatch();
+    }
+    if ($route_match instanceof StackedRouteMatchInterface) {
+      $route_match = $route_match->getMasterRouteMatch();
     }
     $theme = $this->themeNegotiator->determineActiveTheme($route_match);
     $this->activeTheme = $this->themeInitialization->initTheme($theme);

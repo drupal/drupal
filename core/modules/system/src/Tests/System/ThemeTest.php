@@ -209,6 +209,14 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('admin/config');
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
 
+    // Ensure that the admin theme is also visible on the 403 page.
+    $normal_user = $this->drupalCreateUser(['view the administration theme']);
+    $this->drupalLogin($normal_user);
+    $this->drupalGet('admin/config');
+    $this->assertResponse(403);
+    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->drupalLogin($this->admin_user);
+
     $this->drupalGet('node/add');
     $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
 

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Default object for current_route_match service.
  */
-class CurrentRouteMatch implements RouteMatchInterface {
+class CurrentRouteMatch implements RouteMatchInterface, StackedRouteMatchInterface {
 
   /**
    * The related request stack.
@@ -88,7 +88,7 @@ class CurrentRouteMatch implements RouteMatchInterface {
    * @return \Drupal\Core\Routing\RouteMatchInterface
    *   The current route match object.
    */
-  protected function getCurrentRouteMatch() {
+  public function getCurrentRouteMatch() {
     return $this->getRouteMatch($this->requestStack->getCurrentRequest());
   }
 
@@ -116,6 +116,20 @@ class CurrentRouteMatch implements RouteMatchInterface {
       }
     }
     return $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMasterRouteMatch() {
+    return $this->getRouteMatch($this->requestStack->getMasterRequest());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentRouteMatch() {
+    return $this->getRouteMatch($this->requestStack->getParentRequest());
   }
 
 }
