@@ -8,7 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -43,7 +42,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
     $feed = entity_load('aggregator_feed', 5);
     $this->assertNotNull($feed->uuid());
     $this->assertEqual($feed->title->value, 'Know Your Meme');
-    $this->assertEqual($feed->language()->id, LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $this->assertEqual($feed->language()->id, 'en');
     $this->assertEqual($feed->url->value, 'http://knowyourmeme.com/newsfeed.rss');
     $this->assertEqual($feed->refresh->value, 900);
     $this->assertEqual($feed->checked->value, 1387659487);

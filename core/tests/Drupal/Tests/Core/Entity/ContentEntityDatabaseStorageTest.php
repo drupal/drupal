@@ -12,6 +12,7 @@ use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -1025,6 +1026,11 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    */
   public function testCreate() {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+
+    $language = new Language(array('id' => 'en'));
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->will($this->returnValue($language));
 
     $this->container->set('language_manager', $language_manager);
     $this->container->set('entity.manager', $this->entityManager);

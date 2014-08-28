@@ -49,7 +49,7 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
    */
   protected function assertDefaultValues($entity_type) {
     $entity = entity_create($entity_type);
-    $this->assertEqual($entity->langcode->value, LanguageInterface::LANGCODE_NOT_SPECIFIED, String::format('%entity_type: Default language', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->langcode->value, 'en', String::format('%entity_type: Default language', array('%entity_type' => $entity_type)));
     $this->assertTrue(Uuid::isValid($entity->uuid->value), String::format('%entity_type: Default UUID', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name->getValue(), array(0 => array('value' => NULL)), 'Field has one empty value by default.');
   }

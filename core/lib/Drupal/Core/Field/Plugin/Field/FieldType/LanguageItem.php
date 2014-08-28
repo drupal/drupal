@@ -91,8 +91,9 @@ class LanguageItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    // Default to LANGCODE_NOT_SPECIFIED.
-    $this->setValue(array('value' => LanguageInterface::LANGCODE_NOT_SPECIFIED), $notify);
+    // Default to the site's default language. When language module is enabled,
+    // this behavior is configurable, see language_field_info_alter().
+    $this->setValue(array('value' => \Drupal::languageManager()->getDefaultLanguage()->getId()), $notify);
     return $this;
   }
 

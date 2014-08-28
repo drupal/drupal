@@ -138,6 +138,9 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->method('getLanguage')
       ->with('en')
       ->will($this->returnValue($language));
+    $this->languageManager->expects($this->any())
+        ->method('getCurrentLanguage')
+        ->will($this->returnValue($language));
 
     $this->fieldTypePluginManager = $this->getMockBuilder('\Drupal\Core\Field\FieldTypePluginManager')
       ->disableOriginalConstructor()

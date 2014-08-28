@@ -92,13 +92,11 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function add(NodeTypeInterface $node_type) {
     $account = $this->currentUser();
-    $langcode = $this->moduleHandler()->invoke('language', 'get_default_langcode', array('node', $node_type->type));
 
     $node = $this->entityManager()->getStorage('node')->create(array(
       'uid' => $account->id(),
       'name' => $account->getUsername() ?: '',
       'type' => $node_type->type,
-      'langcode' => $langcode ? $langcode : $this->languageManager()->getCurrentLanguage()->id,
     ));
 
     $form = $this->entityFormBuilder()->getForm($node);

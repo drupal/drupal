@@ -680,3 +680,11 @@ function language_system_regional_settings_form_submit($form, FormStateInterface
   $language->default = TRUE;
   language_save($language);
 }
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function language_field_info_alter(&$info) {
+  // Change the default behavior of language field.
+  $info['language']['class'] = '\Drupal\language\DefaultLanguageItem';
+}

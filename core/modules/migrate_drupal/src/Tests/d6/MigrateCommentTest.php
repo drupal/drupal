@@ -81,7 +81,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     $this->assertEqual(0, $comment->pid->target_id);
     $this->assertEqual(1, $comment->getCommentedEntityId());
     $this->assertEqual('node', $comment->getCommentedEntityTypeId());
-    $this->assertEqual(LanguageInterface::LANGCODE_NOT_SPECIFIED, $comment->language()->id);
+    $this->assertEqual('en', $comment->language()->id);
     $this->assertEqual('comment_no_subject', $comment->getTypeId());
 
     $comment = entity_load('comment', 2);

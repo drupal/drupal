@@ -10,6 +10,7 @@ namespace Drupal\content_translation\Tests\Views;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\content_translation\Tests\ContentTranslationTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests the content translation overview link field handler.
@@ -42,6 +43,11 @@ class TranslationLinkTest extends ContentTranslationTestBase {
     // Assign user 1  a language code so that the entity can be translated.
     $user = user_load(1);
     $user->langcode = 'en';
+    $user->save();
+
+    // Assign user 2 LANGCODE_NOT_SPECIFIED code so entity can't be translated.
+    $user = user_load(2);
+    $user->langcode = Language::LANGCODE_NOT_SPECIFIED;
     $user->save();
 
     ViewTestData::createTestViews(get_class($this), array('content_translation_test_views'));

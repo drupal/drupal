@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides route responses for taxonomy.module.
@@ -29,9 +28,6 @@ class TaxonomyController extends ControllerBase {
    */
   public function addForm(VocabularyInterface $taxonomy_vocabulary) {
     $term = $this->entityManager()->getStorage('taxonomy_term')->create(array('vid' => $taxonomy_vocabulary->id()));
-    if ($this->moduleHandler()->moduleExists('language')) {
-      $term->langcode = language_get_default_langcode('taxonomy_term', $taxonomy_vocabulary->id());
-    }
     return $this->entityFormBuilder()->getForm($term);
   }
 

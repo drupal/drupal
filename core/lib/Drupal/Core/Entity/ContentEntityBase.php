@@ -588,9 +588,16 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if ($this->hasField('langcode') && ($item = $this->get('langcode')) && isset($item->language)) {
       $this->defaultLangcode = $item->language->id;
     }
+
     if (empty($this->defaultLangcode)) {
-      // Make sure we return a proper language object.
-      $this->defaultLangcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+      // Make sure we return a proper language object, if the entity has a
+      // langcode field, default to the site's default language.
+      if ($this->hasField('langcode')) {
+        $this->defaultLangcode = $this->languageManager()->getDefaultLanguage()->getId();
+      }
+      else {
+        $this->defaultLangcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+      }
     }
     // This needs to be initialized manually as it is skipped when instantiating
     // the language field object to avoid infinite recursion.
