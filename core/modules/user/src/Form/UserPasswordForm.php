@@ -11,6 +11,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\Element\Email;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,7 +76,7 @@ class UserPasswordForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Username or email address'),
       '#size' => 60,
-      '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
+      '#maxlength' => max(USERNAME_MAX_LENGTH, Email::EMAIL_MAX_LENGTH),
       '#required' => TRUE,
       '#attributes' => array(
         'autocorrect' => 'off',

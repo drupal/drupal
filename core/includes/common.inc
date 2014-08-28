@@ -1062,8 +1062,9 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
  *     styles will be aggregated and compressed. Defaults to TRUE.
  *   - 'browsers': An array containing information specifying which browsers
- *     should load the CSS item. See drupal_pre_render_conditional_comments()
- *     for details.
+ *     should load the CSS item. See
+ *     \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments() for
+ *     details.
  *
  * @return
  *   An array of queued cascading stylesheets.
@@ -1273,72 +1274,6 @@ function drupal_sort_css_js($a, $b) {
   else {
     return 0;
   }
-}
-
-/**
- * Pre-render callback: Adds the elements needed for CSS tags to be rendered.
- *
- * For production websites, LINK tags are preferable to STYLE tags with @import
- * statements, because:
- * - They are the standard tag intended for linking to a resource.
- * - On Firefox 2 and perhaps other browsers, CSS files included with @import
- *   statements don't get saved when saving the complete web page for offline
- *   use: http://drupal.org/node/145218.
- * - On IE, if only LINK tags and no @import statements are used, all the CSS
- *   files are downloaded in parallel, resulting in faster page load, but if
- *   @import statements are used and span across multiple STYLE tags, all the
- *   ones from one STYLE tag must be downloaded before downloading begins for
- *   the next STYLE tag. Furthermore, IE7 does not support media declaration on
- *   the @import statement, so multiple STYLE tags must be used when different
- *   files are for different media types. Non-IE browsers always download in
- *   parallel, so this is an IE-specific performance quirk:
- *   http://www.stevesouders.com/blog/2009/04/09/dont-use-import/.
- *
- * However, IE has an annoying limit of 31 total CSS inclusion tags
- * (http://drupal.org/node/228818) and LINK tags are limited to one file per
- * tag, whereas STYLE tags can contain multiple @import statements allowing
- * multiple files to be loaded per tag. When CSS aggregation is disabled, a
- * Drupal site can easily have more than 31 CSS files that need to be loaded, so
- * using LINK tags exclusively would result in a site that would display
- * incorrectly in IE. Depending on different needs, different strategies can be
- * employed to decide when to use LINK tags and when to use STYLE tags.
- *
- * The strategy employed by this function is to use LINK tags for all aggregate
- * files and for all files that cannot be aggregated (e.g., if 'preprocess' is
- * set to FALSE or the type is 'external'), and to use STYLE tags for groups
- * of files that could be aggregated together but aren't (e.g., if the site-wide
- * aggregation setting is disabled). This results in all LINK tags when
- * aggregation is enabled, a guarantee that as many or only slightly more tags
- * are used with aggregation disabled than enabled (so that if the limit were to
- * be crossed with aggregation enabled, the site developer would also notice the
- * problem while aggregation is disabled), and an easy way for a developer to
- * view HTML source while aggregation is disabled and know what files will be
- * aggregated together when aggregation becomes enabled.
- *
- * This function evaluates the aggregation enabled/disabled condition on a group
- * by group basis by testing whether an aggregate file has been made for the
- * group rather than by testing the site-wide aggregation setting. This allows
- * this function to work correctly even if modules have implemented custom
- * logic for grouping and aggregating files.
- *
- * @param $element
- *   A render array containing:
- *   - '#items': The CSS items as returned by _drupal_add_css() and altered by
- *     drupal_get_css().
- *
- * @return
- *   A render array that will render to a string of XHTML CSS tags.
- *
- * @see drupal_get_css()
- */
-function drupal_pre_render_styles($elements) {
-  $css_assets = $elements['#items'];
-
-  // Aggregate the CSS if necessary, but only during normal site operation.
-  if (!defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('css.preprocess')) {
-    $css_assets = \Drupal::service('asset.css.collection_optimizer')->optimize($css_assets);
-  }
-  return \Drupal::service('asset.css.collection_renderer')->render($css_assets);
 }
 
 /**
@@ -1670,7 +1605,8 @@ function drupal_clean_id_identifier($id) {
  *     'preprocess' option was set to FALSE.
  *   - browsers: An array containing information specifying which browsers
  *     should load the JavaScript item. See
- *     drupal_pre_render_conditional_comments() for details.
+ *     \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments() for
+ *     details.
  *
  * @return
  *   The current array of JavaScript files, settings, and in-line code,
@@ -1988,41 +1924,6 @@ function drupal_merge_js_settings($settings_items) {
  */
 function drupal_merge_attached(array $a, array $b) {
   return NestedArray::mergeDeep($a, $b);
-}
-
-/**
- * #pre_render callback to add the elements needed for JavaScript tags to be rendered.
- *
- * This function evaluates the aggregation enabled/disabled condition on a group
- * by group basis by testing whether an aggregate file has been made for the
- * group rather than by testing the site-wide aggregation setting. This allows
- * this function to work correctly even if modules have implemented custom
- * logic for grouping and aggregating files.
- *
- * @param $element
- *   A render array containing:
- *   - #items: The JavaScript items as returned by _drupal_add_js() and
- *     altered by drupal_get_js().
- *   - #group_callback: A function to call to group #items. Following
- *     this function, #aggregate_callback is called to aggregate items within
- *     the same group into a single file.
- *   - #aggregate_callback: A function to call to aggregate the items within
- *     the groups arranged by the #group_callback function.
- *
- * @return
- *   A render array that will render to a string of JavaScript tags.
- *
- * @see drupal_get_js()
- */
-function drupal_pre_render_scripts($elements) {
-  $js_assets = $elements['#items'];
-
-  // Aggregate the JavaScript if necessary, but only during normal site
-  // operation.
-  if (!defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('js.preprocess')) {
-    $js_assets = \Drupal::service('asset.js.collection_optimizer')->optimize($js_assets);
-  }
-  return \Drupal::service('asset.js.collection_renderer')->render($js_assets);
 }
 
 /**
@@ -2563,137 +2464,6 @@ function drupal_set_page_content($content = NULL) {
 }
 
 /**
- * Pre-render callback: Renders #browsers into #prefix and #suffix.
- *
- * @param $elements
- *   A render array with a '#browsers' property. The '#browsers' property can
- *   contain any or all of the following keys:
- *   - 'IE': If FALSE, the element is not rendered by Internet Explorer. If
- *     TRUE, the element is rendered by Internet Explorer. Can also be a string
- *     containing an expression for Internet Explorer to evaluate as part of a
- *     conditional comment. For example, this can be set to 'lt IE 7' for the
- *     element to be rendered in Internet Explorer 6, but not in Internet
- *     Explorer 7 or higher. Defaults to TRUE.
- *   - '!IE': If FALSE, the element is not rendered by browsers other than
- *     Internet Explorer. If TRUE, the element is rendered by those browsers.
- *     Defaults to TRUE.
- *   Examples:
- *   - To render an element in all browsers, '#browsers' can be left out or set
- *     to array('IE' => TRUE, '!IE' => TRUE).
- *   - To render an element in Internet Explorer only, '#browsers' can be set
- *     to array('!IE' => FALSE).
- *   - To render an element in Internet Explorer 6 only, '#browsers' can be set
- *     to array('IE' => 'lt IE 7', '!IE' => FALSE).
- *   - To render an element in Internet Explorer 8 and higher and in all other
- *     browsers, '#browsers' can be set to array('IE' => 'gte IE 8').
- *
- * @return
- *   The passed-in element with markup for conditional comments potentially
- *   added to '#prefix' and '#suffix'.
- */
-function drupal_pre_render_conditional_comments($elements) {
-  $browsers = isset($elements['#browsers']) ? $elements['#browsers'] : array();
-  $browsers += array(
-    'IE' => TRUE,
-    '!IE' => TRUE,
-  );
-
-  // If rendering in all browsers, no need for conditional comments.
-  if ($browsers['IE'] === TRUE && $browsers['!IE']) {
-    return $elements;
-  }
-
-  // Determine the conditional comment expression for Internet Explorer to
-  // evaluate.
-  if ($browsers['IE'] === TRUE) {
-    $expression = 'IE';
-  }
-  elseif ($browsers['IE'] === FALSE) {
-    $expression = '!IE';
-  }
-  else {
-    $expression = $browsers['IE'];
-  }
-
-  // Wrap the element's potentially existing #prefix and #suffix properties with
-  // conditional comment markup. The conditional comment expression is evaluated
-  // by Internet Explorer only. To control the rendering by other browsers,
-  // either the "downlevel-hidden" or "downlevel-revealed" technique must be
-  // used. See http://en.wikipedia.org/wiki/Conditional_comment for details.
-  $elements += array(
-    '#prefix' => '',
-    '#suffix' => '',
-  );
-  if (!$browsers['!IE']) {
-    // "downlevel-hidden".
-    $elements['#prefix'] = "\n<!--[if $expression]>\n" . $elements['#prefix'];
-    $elements['#suffix'] .= "<![endif]-->\n";
-  }
-  else {
-    // "downlevel-revealed".
-    $elements['#prefix'] = "\n<!--[if $expression]><!-->\n" . $elements['#prefix'];
-    $elements['#suffix'] .= "<!--<![endif]-->\n";
-  }
-
-  return $elements;
-}
-
-/**
- * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
- *
- * Note: It is the caller's responsibility to sanitize any input parameters.
- * This callback does not perform sanitization.
- *
- * @param array $element
- *   An associative array containing:
- *   - #tag: The tag name to output. Typical tags added to the HTML HEAD:
- *     - meta: To provide meta information, such as a page refresh.
- *     - link: To refer to stylesheets and other contextual information.
- *     - script: To load JavaScript.
- *     The value of #tag is not escaped or sanitized, so do not pass in user
- *     input.
- *   - #attributes: (optional) An array of HTML attributes to apply to the
- *     tag.
- *   - #value: (optional) A string containing tag content, such as inline
- *     CSS.
- *   - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
- *     wrapper prefix.
- *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
- *     wrapper suffix.
- */
-function drupal_pre_render_html_tag($element) {
-  $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
-  if (!isset($element['#value'])) {
-    // This function is intended for internal use, so we assume that no unsafe
-    // values are passed in #tag. The attributes are already safe because
-    // Attribute output is already automatically sanitized.
-    // @todo Escape this properly instead? https://www.drupal.org/node/2296101
-    $markup = SafeMarkup::set('<' . $element['#tag'] . $attributes . " />\n");
-  }
-  else {
-    $markup = '<' . $element['#tag'] . $attributes . '>';
-    if (isset($element['#value_prefix'])) {
-      $markup .= $element['#value_prefix'];
-    }
-    $markup .= $element['#value'];
-    if (isset($element['#value_suffix'])) {
-      $markup .= $element['#value_suffix'];
-    }
-    $markup .= '</' . $element['#tag'] . ">\n";
-    // @todo We cannot actually guarantee this markup is safe. Consider a fix
-    //   in: https://www.drupal.org/node/2296101
-    $markup = SafeMarkup::set($markup);
-  }
-  if (!empty($element['#noscript'])) {
-    $element['#markup'] = '<noscript>' . $markup . '</noscript>';
-  }
-  else {
-    $element['#markup'] = $markup;
-  }
-  return $element;
-}
-
-/**
  * Pre-render callback: Renders a link into #markup.
  *
  * @deprecated Use \Drupal\Core\Render\Element\Link::preRenderLink().
@@ -2794,26 +2564,6 @@ function drupal_pre_render_links($element) {
       $element['#attached'] = drupal_merge_attached($element['#attached'], $child['#attached']);
     }
   }
-  return $element;
-}
-
-/**
- * Pre-render callback: Attaches the dropbutton library and required markup.
- */
-function drupal_pre_render_dropbutton($element) {
-  $element['#attached']['library'][] = 'core/drupal.dropbutton';
-  $element['#attributes']['class'][] = 'dropbutton';
-  if (!isset($element['#theme_wrappers'])) {
-    $element['#theme_wrappers'] = array();
-  }
-  array_unshift($element['#theme_wrappers'], 'dropbutton_wrapper');
-
-  // Enable targeted theming of specific dropbuttons (e.g., 'operations' or
-  // 'operations__node').
-  if (isset($element['#subtype'])) {
-    $element['#theme'] .= '__' . $element['#subtype'];
-  }
-
   return $element;
 }
 

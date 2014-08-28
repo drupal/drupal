@@ -66,8 +66,13 @@ function datetime_element_info() {
   $types['datetime'] = array(
     '#input' => TRUE,
     '#element_validate' => array('datetime_datetime_validate'),
-    '#process' => array('datetime_datetime_form_process', 'form_process_group'),
-    '#pre_render' => array('form_pre_render_group'),
+    '#process' => array(
+      'datetime_datetime_form_process',
+      array('Drupal\Core\Render\Element\RenderElement', 'processGroup'),
+    ),
+    '#pre_render' => array(
+      array('Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'),
+    ),
     '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
     '#date_date_format' => $date_format,

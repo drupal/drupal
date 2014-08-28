@@ -22,10 +22,10 @@
  *     property hides the label for everyone except screen readers.
  *   - attribute: Set the title attribute on the element to create a tooltip but
  *     output no label element. This is supported only for checkboxes and radios
- *     in form_pre_render_conditional_form_element(). It is used where a visual
- *     label is not needed, such as a table of checkboxes where the row and
- *     column provide the context. The tooltip will include the title and
- *     required marker.
+ *     in \Drupal\Core\Render\Element\CompositeFormElementTrait::preRenderCompositeFormElement().
+ *     It is used where a visual label is not needed, such as a table of
+ *     checkboxes where the row and column provide the context. The tooltip will
+ *     include the title and required marker.
  * - description: (optional) A list of description properties containing:
  *    - content: A description of the form element, may not be set.
  *    - attributes: (optional) A list of HTML attributes to apply to the

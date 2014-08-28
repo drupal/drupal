@@ -7,11 +7,12 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\Element;
 
 /**
- * Provides a base class for element render plugins.
+ * Provides a base class for render element plugins.
  *
  * @see \Drupal\Core\Render\Annotation\RenderElement
  * @see \Drupal\Core\Render\ElementInterface
@@ -21,6 +22,30 @@ use Drupal\Core\Render\Element;
  * @ingroup theme_render
  */
 abstract class RenderElement extends PluginBase implements ElementInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function setAttributes(&$element, $class = array()) {
+    if (!empty($class)) {
+      if (!isset($element['#attributes']['class'])) {
+        $element['#attributes']['class'] = array();
+      }
+      $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
+    }
+    // This function is invoked from form element theme functions, but the
+    // rendered form element may not necessarily have been processed by
+    // form_builder().
+    if (!empty($element['#required'])) {
+      $element['#attributes']['class'][] = 'required';
+      $element['#attributes']['required'] = 'required';
+      $element['#attributes']['aria-required'] = 'true';
+    }
+    if (isset($element['#parents']) && isset($element['#errors']) && !empty($element['#validated'])) {
+      $element['#attributes']['class'][] = 'error';
+      $element['#attributes']['aria-invalid'] = 'true';
+    }
+  }
 
   /**
    * Adds members of this group as actual elements for rendering.
@@ -77,6 +102,68 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       elseif (Element::children($element['#groups'][$group])) {
         $element['#printed'] = TRUE;
       }
+    }
+
+    return $element;
+  }
+
+  /**
+   * Form element processing handler for the #ajax form property.
+   *
+   * This method is useful for non-input elements that can be used in and
+   * outside the context of a form.
+   *
+   * @param array $element
+   *   An associative array containing the properties of the element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   *
+   * @return array
+   *   The processed element.
+   *
+   * @see ajax_pre_render_element()
+   */
+  public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
+    $element = ajax_pre_render_element($element);
+    if (!empty($element['#ajax_processed'])) {
+      $form_state['cache'] = TRUE;
+    }
+    return $element;
+  }
+
+  /**
+   * Arranges elements into groups.
+   *
+   * This method is useful for non-input elements that can be used in and
+   * outside the context of a form.
+   *
+   * @param array $element
+   *   An associative array containing the properties and children of the
+   *   element. Note that $element must be taken by reference here, so processed
+   *   child elements are taken over into $form_state.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   *
+   * @return array
+   *   The processed element.
+   */
+  public static function processGroup(&$element, FormStateInterface $form_state, &$complete_form) {
+    $parents = implode('][', $element['#parents']);
+
+    // Each details element forms a new group. The #type 'vertical_tabs' basically
+    // only injects a new details element.
+    $form_state['groups'][$parents]['#group_exists'] = TRUE;
+    $element['#groups'] = &$form_state['groups'];
+
+    // Process vertical tabs group member details elements.
+    if (isset($element['#group'])) {
+      // Add this details element to the defined group (by reference).
+      $group = $element['#group'];
+      $form_state['groups'][$group][] = &$element;
     }
 
     return $element;

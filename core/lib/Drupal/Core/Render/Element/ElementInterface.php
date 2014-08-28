@@ -10,7 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
- * Provides an interface for element plugins.
+ * Provides an interface for render element plugins.
  *
  * Render element plugins allow modules to declare their own Render API element
  * types and specify the default values for the properties. The values returned
@@ -41,5 +41,17 @@ interface ElementInterface extends PluginInspectionInterface {
    *   return value format.
    */
   public function getInfo();
+
+  /**
+   * Sets a form element's class attribute.
+   *
+   * Adds 'required' and 'error' classes as needed.
+   *
+   * @param array $element
+   *   The form element.
+   * @param array $class
+   *   Array of new class names to be added.
+   */
+  public static function setAttributes(&$element, $class = array());
 
 }

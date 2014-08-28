@@ -9,6 +9,7 @@ namespace Drupal\user\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
+use Drupal\Core\Render\Element\Email;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -101,7 +102,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
-    $mail = $this->randomMachineName(EMAIL_MAX_LENGTH - 11) . '@example.com';
+    $mail = $this->randomMachineName(Email::EMAIL_MAX_LENGTH - 11) . '@example.com';
     $user->set('mail', $mail);
     $violations = $user->validate();
     // @todo There are two violations because EmailItem::getConstraints()
@@ -110,7 +111,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     //   https://drupal.org/node/2023465.
     $this->assertEqual(count($violations), 2, 'Violations found when email is too long');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: the email address can not be longer than @max characters.', array('%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => EMAIL_MAX_LENGTH)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: the email address can not be longer than @max characters.', array('%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => Email::EMAIL_MAX_LENGTH)));
     $this->assertEqual($violations[1]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[1]->getMessage(), t('This value is not a valid email address.'));
 

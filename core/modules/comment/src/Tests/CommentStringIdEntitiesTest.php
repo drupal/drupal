@@ -29,8 +29,6 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
     'field_ui',
     'entity',
     'entity_test',
-    // EMAIL_MAX_LENGTH constant.
-    'system',
     'text',
   );
 

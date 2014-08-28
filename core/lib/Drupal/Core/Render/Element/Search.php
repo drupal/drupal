@@ -2,20 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Render\Element\Textfield.
+ * Contains \Drupal\Core\Render\Element\Search.
  */
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
- * Provides a one-line text field form element.
+ * Provides a form input element for searching.
  *
- * @FormElement("textfield")
+ * This is commonly used to provide a filter or search box at the top of a
+ * long listing page, to allow users to find specific items in the list for
+ * faster input.
+ *
+ * @FormElement("search")
  */
-class Textfield extends FormElement {
+class Search extends FormElement {
 
   /**
    * {@inheritdoc}
@@ -30,31 +33,17 @@ class Textfield extends FormElement {
       '#process' => array(
         array($class, 'processAutocomplete'),
         array($class, 'processAjaxForm'),
-        array($class, 'processPattern'),
-        array($class, 'processGroup'),
       ),
       '#pre_render' => array(
-        array($class, 'preRenderTextfield'),
-        array($class, 'preRenderGroup'),
+        array($class, 'preRenderSearch'),
       ),
-      '#theme' => 'input__textfield',
+      '#theme' => 'input__search',
       '#theme_wrappers' => array('form_element'),
     );
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input !== FALSE && $input !== NULL) {
-      // Equate $input to the form value to ensure it's marked for
-      // validation.
-      return str_replace(array("\r", "\n"), '', $input);
-    }
-  }
-
-  /**
-   * Prepares a #type 'textfield' render element for theme_input().
+   * Prepares a #type 'search' render element for theme_input().
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -64,10 +53,10 @@ class Textfield extends FormElement {
    * @return array
    *   The $element with prepared variables ready for theme_input().
    */
-  public static function preRenderTextfield($element) {
-    $element['#attributes']['type'] = 'text';
+  public static function preRenderSearch($element) {
+    $element['#attributes']['type'] = 'search';
     Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-text'));
+    static::setAttributes($element, array('form-search'));
 
     return $element;
   }

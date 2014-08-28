@@ -11,7 +11,6 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
@@ -802,25 +801,6 @@ function theme_disable($theme_list) {
 }
 
 /**
- * Renders a twig string directly.
- *
- * @param string $template_string
- *   The template string to render with placeholders.
- * @param array $context
- *   An array of parameters to pass to the template.
- *
- * @return string
- *   The rendered inline template.
- */
-function drupal_render_inline_template(&$element) {
-  /** @var \Drupal\Core\Template\TwigEnvironment $environment */
-  $environment = \Drupal::service('twig');
-  $markup = $environment->renderInline($element['#template'], $element['#context']);
-  $element['#markup'] = $markup;
-  return $element;
-}
-
-/**
  * @addtogroup themeable
  * @{
  */
@@ -1086,129 +1066,6 @@ function template_preprocess_image(&$variables) {
       $variables['attributes'][$key] = $variables[$key];
     }
   }
-}
-
-/**
- * #pre_render callback to transform children of an element into #rows suitable for theme_table().
- *
- * This function converts sub-elements of an element of #type 'table' to be
- * suitable for theme_table():
- * - The first level of sub-elements are table rows. Only the #attributes
- *   property is taken into account.
- * - The second level of sub-elements is converted into columns for the
- *   corresponding first-level table row.
- *
- * Simple example usage:
- * @code
- * $form['table'] = array(
- *   '#type' => 'table',
- *   '#header' => array(t('Title'), array('data' => t('Operations'), 'colspan' => '1')),
- *   // Optionally, to add tableDrag support:
- *   '#tabledrag' => array(
- *     array(
- *       'action' => 'order',
- *       'relationship' => 'sibling',
- *       'group' => 'thing-weight',
- *     ),
- *   ),
- * );
- * foreach ($things as $row => $thing) {
- *   $form['table'][$row]['#weight'] = $thing['weight'];
- *
- *   $form['table'][$row]['title'] = array(
- *     '#type' => 'textfield',
- *     '#default_value' => $thing['title'],
- *   );
- *
- *   // Optionally, to add tableDrag support:
- *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
- *   $form['table'][$row]['weight'] = array(
- *     '#type' => 'textfield',
- *     '#title' => t('Weight for @title', array('@title' => $thing['title'])),
- *     '#title_display' => 'invisible',
- *     '#size' => 4,
- *     '#default_value' => $thing['weight'],
- *     '#attributes' => array('class' => array('thing-weight')),
- *   );
- *
- *   // The amount of link columns should be identical to the 'colspan'
- *   // attribute in #header above.
- *   $form['table'][$row]['edit'] = array(
- *     '#type' => 'link',
- *     '#title' => t('Edit'),
- *     '#href' => 'thing/' . $row . '/edit',
- *   );
- * }
- * @endcode
- *
- * @param array $element
- *   A structured array containing two sub-levels of elements. Properties used:
- *   - #tabledrag: The value is a list of $options arrays that are passed to
- *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
- *     $options array.
- *
- * @see system_element_info()
- * @see theme_table()
- * @see drupal_process_attached()
- * @see drupal_attach_tabledrag()
- */
-function drupal_pre_render_table(array $element) {
-  foreach (Element::children($element) as $first) {
-    $row = array('data' => array());
-    // Apply attributes of first-level elements as table row attributes.
-    if (isset($element[$first]['#attributes'])) {
-      $row += $element[$first]['#attributes'];
-    }
-    // Turn second-level elements into table row columns.
-    // @todo Do not render a cell for children of #type 'value'.
-    // @see http://drupal.org/node/1248940
-    foreach (Element::children($element[$first]) as $second) {
-      // Assign the element by reference, so any potential changes to the
-      // original element are taken over.
-      $column = array('data' => &$element[$first][$second]);
-
-      // Apply wrapper attributes of second-level elements as table cell
-      // attributes.
-      if (isset($element[$first][$second]['#wrapper_attributes'])) {
-        $column += $element[$first][$second]['#wrapper_attributes'];
-      }
-
-      $row['data'][] = $column;
-    }
-    $element['#rows'][] = $row;
-  }
-
-  // Take over $element['#id'] as HTML ID attribute, if not already set.
-  Element::setAttributes($element, array('id'));
-
-
-  // Add sticky headers, if applicable.
-  if (count($element['#header']) && $element['#sticky']) {
-    $element['#attached']['library'][] = 'core/drupal.tableheader';
-    // Add 'sticky-enabled' class to the table to identify it for JS.
-    // This is needed to target tables constructed by this function.
-    $element['#attributes']['class'][] = 'sticky-enabled';
-  }
-  // If the table has headers and it should react responsively to columns hidden
-  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
-  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
-  if (count($element['#header']) && $element['#responsive']) {
-    $element['#attached']['library'][] = 'core/drupal.tableresponsive';
-    // Add 'responsive-enabled' class to the table to identify it for JS.
-    // This is needed to target tables constructed by this function.
-    $element['#attributes']['class'][] = 'responsive-enabled';
-  }
-
-  // If the custom #tabledrag is set and there is a HTML ID, add the table's
-  // HTML ID to the options and attach the behavior.
-  if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
-    foreach ($element['#tabledrag'] as $options) {
-      $options['table_id'] = $element['#attributes']['id'];
-      drupal_attach_tabledrag($element, $options);
-    }
-  }
-
-  return $element;
 }
 
 /**
@@ -1732,38 +1589,10 @@ function _template_preprocess_default_variables() {
 /**
  * #pre_render callback for the html element type.
  *
- * @param array $element
- *   A structured array containing the html element type build properties.
- *
- * @see system_element_info()
+ * @deprecated Use \Drupal\Core\Render\Element\Html::preRenderHtml().
  */
 function drupal_pre_render_html(array $element) {
-  // Add favicon.
-  if (theme_get_setting('features.favicon')) {
-    $favicon = theme_get_setting('favicon.url');
-    $type = theme_get_setting('favicon.mimetype');
-    $element['#attached']['drupal_add_html_head_link'][][] = array(
-      'rel' => 'shortcut icon',
-      'href' => UrlHelper::stripDangerousProtocols($favicon),
-      'type' => $type,
-    );
-  }
-
-  return $element;
-}
-
-/**
- * #pre_render callback for the page element type.
- *
- * @param array $element
- *   A structured array containing the page element type build properties.
- *
- * @see system_element_info()
- */
-function drupal_pre_render_page(array $element) {
-  $element['#cache']['tags']['theme'] = \Drupal::theme()->getActiveTheme()->getName();
-  $element['#cache']['tags']['theme_global_settings'] = TRUE;
-  return $element;
+  return Element\Html::preRenderHtml($element);
 }
 
 /**

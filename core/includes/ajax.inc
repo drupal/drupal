@@ -163,10 +163,10 @@ use Drupal\Core\Render\Element;
 /**
  * Form element processing handler for the #ajax form property.
  *
- * @deprecated Use \Drupal\Core\Render\Element\FormElement::processAjaxForm().
+ * @deprecated Use \Drupal\Core\Render\Element\RenderElement::processAjaxForm().
  */
-function ajax_process_form($element, FormStateInterface $form_state, &$complete_form) {
-  return Element\FormElement::processAjaxForm($element, $form_state, $complete_form);
+function ajax_process_form(&$element, FormStateInterface $form_state, &$complete_form) {
+  return Element\RenderElement::processAjaxForm($element, $form_state, $complete_form);
 }
 
 /**

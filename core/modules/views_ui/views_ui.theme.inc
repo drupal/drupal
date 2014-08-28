@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -141,8 +142,9 @@ function theme_views_ui_build_group_filter_form($variables) {
     t('Operations'),
   );
 
-  $form['default_group'] = form_process_radios($form['default_group']);
-  $form['default_group_multiple'] = form_process_checkboxes($form['default_group_multiple']);
+  $form_state = new FormState();
+  $form['default_group'] = Element\Radios::processRadios($form['default_group'], $form_state, $form);
+  $form['default_group_multiple'] = Element\Checkboxes::processCheckboxes($form['default_group_multiple'], $form_state, $form);
   $form['default_group']['All']['#title'] = '';
 
   hide($form['default_group_multiple']['All']);

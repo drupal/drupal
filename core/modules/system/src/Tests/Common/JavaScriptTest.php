@@ -341,7 +341,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   /**
    * Tests adding JavaScript within conditional comments.
    *
-   * @see drupal_pre_render_conditional_comments()
+   * @see \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments()
    */
   function testBrowserConditionalComments() {
     $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';

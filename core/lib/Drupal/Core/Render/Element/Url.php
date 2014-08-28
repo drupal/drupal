@@ -2,20 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Render\Element\Textfield.
+ * Contains \Drupal\Core\Render\Element\Url.
  */
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
- * Provides a one-line text field form element.
+ * Provides a form element for input of a URL.
  *
- * @FormElement("textfield")
+ * @FormElement("url")
  */
-class Textfield extends FormElement {
+class Url extends FormElement {
 
   /**
    * {@inheritdoc}
@@ -25,36 +26,40 @@ class Textfield extends FormElement {
     return array(
       '#input' => TRUE,
       '#size' => 60,
-      '#maxlength' => 128,
+      '#maxlength' => 255,
       '#autocomplete_route_name' => FALSE,
       '#process' => array(
         array($class, 'processAutocomplete'),
         array($class, 'processAjaxForm'),
         array($class, 'processPattern'),
-        array($class, 'processGroup'),
+      ),
+      '#element_validate' => array(
+        array($class, 'validateUrl'),
       ),
       '#pre_render' => array(
-        array($class, 'preRenderTextfield'),
-        array($class, 'preRenderGroup'),
+        array($class, 'preRenderUrl'),
       ),
-      '#theme' => 'input__textfield',
+      '#theme' => 'input__url',
       '#theme_wrappers' => array('form_element'),
     );
   }
 
   /**
-   * {@inheritdoc}
+   * Form element validation handler for #type 'url'.
+   *
+   * Note that #maxlength and #required is validated by _form_validate() already.
    */
-  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input !== FALSE && $input !== NULL) {
-      // Equate $input to the form value to ensure it's marked for
-      // validation.
-      return str_replace(array("\r", "\n"), '', $input);
+  public static function validateUrl(&$element, FormStateInterface $form_state, &$complete_form) {
+    $value = trim($element['#value']);
+    $form_state->setValueForElement($element, $value);
+
+    if ($value !== '' && !UrlHelper::isValid($value, TRUE)) {
+      $form_state->setError($element, t('The URL %url is not valid.', array('%url' => $value)));
     }
   }
 
   /**
-   * Prepares a #type 'textfield' render element for theme_input().
+   * Prepares a #type 'url' render element for theme_input().
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -64,10 +69,10 @@ class Textfield extends FormElement {
    * @return array
    *   The $element with prepared variables ready for theme_input().
    */
-  public static function preRenderTextfield($element) {
-    $element['#attributes']['type'] = 'text';
+  public static function preRenderUrl($element) {
+    $element['#attributes']['type'] = 'url';
     Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-text'));
+    static::setAttributes($element, array('form-url'));
 
     return $element;
   }

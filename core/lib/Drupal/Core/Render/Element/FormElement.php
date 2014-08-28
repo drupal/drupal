@@ -10,7 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides a base class for form render plugins.
+ * Provides a base class for form element plugins.
  *
  * @see \Drupal\Core\Render\Annotation\FormElement
  * @see \Drupal\Core\Render\Element\FormElementInterface
@@ -29,62 +29,6 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   }
 
   /**
-   * Form element processing handler for the #ajax form property.
-   *
-   * @param array $element
-   *   An associative array containing the properties of the element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @return array
-   *   The processed element.
-   *
-   * @see ajax_pre_render_element()
-   */
-  public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
-    $element = ajax_pre_render_element($element);
-    if (!empty($element['#ajax_processed'])) {
-      $form_state['cache'] = TRUE;
-    }
-    return $element;
-  }
-
-  /**
-   * Arranges elements into groups.
-   *
-   * @param array $element
-   *   An associative array containing the properties and children of the
-   *   element. Note that $element must be taken by reference here, so processed
-   *   child elements are taken over into $form_state.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @return array
-   *   The processed element.
-   */
-  public static function processGroup(&$element, FormStateInterface $form_state, &$complete_form) {
-    $parents = implode('][', $element['#parents']);
-
-    // Each details element forms a new group. The #type 'vertical_tabs' basically
-    // only injects a new details element.
-    $form_state['groups'][$parents]['#group_exists'] = TRUE;
-    $element['#groups'] = &$form_state['groups'];
-
-    // Process vertical tabs group member details elements.
-    if (isset($element['#group'])) {
-      // Add this details element to the defined group (by reference).
-      $group = $element['#group'];
-      $form_state['groups'][$group][] = &$element;
-    }
-
-    return $element;
-  }
-
-  /**
    * #process callback for #pattern form element property.
    *
    * @param array $element
@@ -97,16 +41,41 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *
    * @return array
    *   The processed element.
-   *
-   * @see form_validate_pattern()
    */
   public static function processPattern(&$element, FormStateInterface $form_state, &$complete_form) {
     if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
       $element['#attributes']['pattern'] = $element['#pattern'];
-      $element['#element_validate'][] = 'form_validate_pattern';
+      $element['#element_validate'][] = array(get_called_class(), 'validatePattern');
     }
 
     return $element;
+  }
+
+  /**
+   * #element_validate callback for #pattern form element property.
+   *
+   * @param $element
+   *   An associative array containing the properties and children of the
+   *   generic form element.
+   * @param $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   */
+  public static function validatePattern(&$element, FormStateInterface $form_state, &$complete_form) {
+    if ($element['#value'] !== '') {
+      // The pattern must match the entire string and should have the same
+      // behavior as the RegExp object in ECMA 262.
+      // - Use bracket-style delimiters to avoid introducing a special delimiter
+      //   character like '/' that would have to be escaped.
+      // - Put in brackets so that the pattern can't interfere with what's
+      //   prepended and appended.
+      $pattern = '{^(?:' . $element['#pattern'] . ')$}';
+
+      if (!preg_match($pattern, $element['#value'])) {
+        $form_state->setError($element, t('%name field is not in the right format.', array('%name' => $element['#title'])));
+      }
+    }
   }
 
   /**

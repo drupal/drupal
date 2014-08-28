@@ -135,7 +135,11 @@ function language_element_info_alter(&$type) {
     if (!isset($type['language_select']['#theme_wrappers'])) {
       $type['language_select']['#theme_wrappers'] = array();
     }
-    $type['language_select']['#process'] = array_merge($type['language_select']['#process'], array('language_process_language_select', 'form_process_select', 'ajax_process_form'));
+    $type['language_select']['#process'] = array_merge($type['language_select']['#process'], array(
+      'language_process_language_select',
+      array('Drupal\Core\Render\Element\Select', 'processSelect'),
+      array('Drupal\Core\Render\Element\RenderElement', 'processAjaxForm'),
+    ));
     $type['language_select']['#theme'] = 'select';
     $type['language_select']['#theme_wrappers'] = array_merge($type['language_select']['#theme_wrappers'], array('form_element'));
     $type['language_select']['#languages'] = LanguageInterface::STATE_CONFIGURABLE;

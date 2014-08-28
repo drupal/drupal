@@ -1364,13 +1364,20 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
 }
 
 /**
+ * Implements hook_element_info_alter().
+ */
+function user_element_info_alter(array &$types) {
+  if (isset($types['password_confirm'])) {
+    $types['password_confirm']['#process'][] = 'user_form_process_password_confirm';
+  }
+}
+
+/**
  * Form element process handler for client-side password validation.
  *
  * This #process handler is automatically invoked for 'password_confirm' form
  * elements to add the JavaScript and string translations for dynamic password
  * validation.
- *
- * @see system_element_info()
  */
 function user_form_process_password_confirm($element) {
   $password_settings = array(
