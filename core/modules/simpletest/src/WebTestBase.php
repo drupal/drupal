@@ -725,14 +725,6 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Generate a token for the currently logged in user.
-   */
-  protected function drupalGetToken($value = '') {
-    $private_key = \Drupal::service('private_key')->get();
-    return Crypt::hmacBase64($value, $this->session_id . $private_key);
-  }
-
-  /**
    * Logs a user out of the internal browser and confirms.
    *
    * Confirms logout by checking the login page.
