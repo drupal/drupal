@@ -445,6 +445,9 @@ class AccountSettingsForm extends ConfigFormBase {
     $this->config('system.site')
       ->set('mail_notification', $form_state->getValue('mail_notification_address'))
       ->save();
+
+    // Clear field definition cache for signatures.
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
 }

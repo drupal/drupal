@@ -21,7 +21,7 @@ class UserSignatureTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = array('node', 'comment', 'field_ui');
 
   protected function setUp() {
     parent::setUp();
@@ -62,7 +62,7 @@ class UserSignatureTest extends WebTestBase {
     // Create regular and administrative users.
     $this->web_user = $this->drupalCreateUser(array('post comments'));
 
-    $admin_permissions = array('post comments', 'administer comments');
+    $admin_permissions = array('post comments', 'administer comments', 'administer user form display', 'administer account settings');
     foreach (filter_formats() as $format) {
       if ($permission = $format->getPermissionName()) {
         $admin_permissions[] = $permission;
@@ -129,5 +129,14 @@ class UserSignatureTest extends WebTestBase {
     // Verify that the user signature's text format's cache tag is present.
     $this->drupalGet('node/' . $node->id());
     $this->assertTrue(in_array('filter_format:filtered_html_format', explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'))));
+
+    // Verify the signature field is available on Manage form display page.
+    \Drupal::config('user.settings')->set('signatures', 0)->save();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    $this->drupalGet('admin/config/people/accounts/form-display');
+    $this->assertNoText('Signature settings');
+    $this->drupalPostForm('admin/config/people/accounts', array('user_signatures' => TRUE), t('Save configuration'));
+    $this->drupalGet('admin/config/people/accounts/form-display');
+    $this->assertText('Signature settings');
   }
 }
