@@ -20,6 +20,15 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
       '#type' => 'html',
       '#page_object' => $page,
     );
+    // drupal_render() will render the 'html' template, which will call
+    // HtmlPage::getScripts(). But normally we can only run
+    // drupal_process_attached() after drupal_render(). Hence any assets
+    // attached to '#type' => 'html' will be lost. This is a work-around for
+    // that limitation, until the HtmlPage object contains its assets — this is
+    // an unfortunate intermediate consequence of the way HtmlPage dictates page
+    // rendering and how that differs from how drupal_render() works.
+    $render += element_info($render['#type']);
+    drupal_process_attached($render);
     return drupal_render($render);
   }
 
@@ -102,6 +111,13 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
     $page->setBodyTop(drupal_render($page_array['page_top']));
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
+    drupal_process_attached($page_array);
+    if (isset($page_array['page_top'])) {
+      drupal_process_attached($page_array['page_top']);
+    }
+    if (isset($page_array['page_bottom'])) {
+      drupal_process_attached($page_array['page_bottom']);
+    }
 
     return \Drupal::service('html_page_renderer')->render($page);
   }

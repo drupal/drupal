@@ -111,9 +111,10 @@ class TextFormatterTest extends EntityUnitTestBase {
     foreach ($formatters as $formatter) {
       // Verify the processed text field formatter's render array.
       $build = $entity->get('processed_text')->view(array('type' => $formatter));
+      drupal_render($build[0]);
       $this->assertEqual($build[0]['#markup'], "<p>Hello, world!</p>\n");
       $expected_cache_tags = array(
-        'filter_format' => array('my_text_format' => 'my_text_format'),
+        'filter_format' => array('my_text_format'),
       );
       $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags when formatting a processed text field.', array('@formatter' => $formatter)));
 

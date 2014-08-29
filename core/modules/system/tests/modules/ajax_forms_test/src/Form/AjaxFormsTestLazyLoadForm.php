@@ -73,6 +73,7 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
         ),
       );
       drupal_render($attached);
+      drupal_process_attached($attached);
     }
     $form_state['rebuild'] = TRUE;
   }

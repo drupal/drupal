@@ -73,6 +73,9 @@ class HtmlControllerBase {
     }
 
     $content = $this->drupalRender($page_content);
+    if (!empty($page_content)) {
+      drupal_process_attached($page_content);
+    }
     $cache = !empty($page_content['#cache']['tags']) ? array('tags' => $page_content['#cache']['tags']) : array();
     $fragment = new HtmlFragment($content, $cache);
 
@@ -85,7 +88,7 @@ class HtmlControllerBase {
     }
 
     // Add feed links from the page content.
-    $attached = drupal_render_collect_attached($page_content, TRUE);
+    $attached = isset($page_content['#attached']) ? $page_content['#attached'] : array();
     if (!empty($attached['drupal_add_feed'])) {
       foreach ($attached['drupal_add_feed'] as $feed) {
         $feed_link = new FeedLinkElement($feed[1], $this->urlGenerator->generateFromPath($feed[0]));

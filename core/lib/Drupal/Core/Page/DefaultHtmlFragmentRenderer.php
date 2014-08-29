@@ -59,6 +59,14 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     $page->setContent(drupal_render($page_array));
     $page->setStatusCode($status_code);
 
+    drupal_process_attached($page_array);
+    if (isset($page_array['page_top'])) {
+      drupal_process_attached($page_array['page_top']);
+    }
+    if (isset($page_array['page_bottom'])) {
+      drupal_process_attached($page_array['page_bottom']);
+    }
+
     if ($fragment instanceof CacheableInterface) {
       // Collect cache tags for all the content in all the regions on the page.
       $tags = $page_array['#cache']['tags'];
@@ -100,6 +108,21 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
       // output by Drupal.
       $link = new FeedLinkElement($feed['title'], url($feed['url'], array('absolute' => TRUE)));
       $page->addLinkElement($link);
+    }
+
+    // Add libraries and CSS used by this theme.
+    $active_theme = \Drupal::theme()->getActiveTheme();
+    foreach ($active_theme->getLibraries() as $library) {
+      $page_array['#attached']['library'][] = $library;
+    }
+    foreach ($active_theme->getStyleSheets() as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        $page_array['#attached']['css'][$stylesheet] = array(
+          'group' => CSS_AGGREGATE_THEME,
+          'every_page' => TRUE,
+          'media' => $media
+        );
+      }
     }
 
     return $page;

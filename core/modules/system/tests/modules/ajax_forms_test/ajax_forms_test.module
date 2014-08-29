@@ -180,7 +180,9 @@ function ajax_forms_test_advanced_commands_settings_with_merging_callback($form,
       ),
     ),
   );
+  // @todo Why is this being tested via an explicit drupal_render() call?
   drupal_render($attached);
+  drupal_process_attached($attached);
 
   $response = new AjaxResponse();
   return $response;

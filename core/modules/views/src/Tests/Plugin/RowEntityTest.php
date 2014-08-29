@@ -54,7 +54,8 @@ class RowEntityTest extends ViewUnitTestBase {
     $term->save();
 
     $view = Views::getView('test_entity_row');
-    $this->render($view->preview());
+    $build = $view->preview();
+    $this->render($build);
 
     $this->assertText($term->getName(), 'The rendered entity appears as row in the view.');
 

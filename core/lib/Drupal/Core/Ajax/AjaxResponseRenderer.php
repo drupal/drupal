@@ -78,7 +78,9 @@ class AjaxResponseRenderer {
    * @todo: Remove as part of https://drupal.org/node/2182149
    */
   protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
-    return drupal_render($elements, $is_recursive_call);
+    $output = drupal_render($elements, $is_recursive_call);
+    drupal_process_attached($elements);
+    return $output;
   }
 
   /**

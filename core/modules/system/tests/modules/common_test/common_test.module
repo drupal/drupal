@@ -117,6 +117,10 @@ function common_test_theme() {
       'variables' => array('foo' => 'foo', 'bar' => 'bar'),
       'template' => 'common-test-foo',
     ),
+    'common_test_render_element' => array(
+      'render element' => 'foo',
+      'template' => 'common-test-render-element',
+    ),
     'common_test_empty' => array(
       'variables' => array('foo' => 'foo'),
     ),

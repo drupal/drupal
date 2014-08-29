@@ -63,7 +63,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testAddFile() {
     $attached['#attached']['js']['core/misc/collapse.js'] = array();
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), 'JavaScript files are correctly added.');
   }
@@ -74,7 +74,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testAddSetting() {
     // Add a file in order to test default settings.
     $attached['#attached']['library'][] = 'core/drupalSettings';
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $last_settings = reset($javascript['settings']['data']);
     $this->assertTrue(array_key_exists('currentPath', $last_settings['path']), 'The current path JavaScript setting is set correctly.');
@@ -90,7 +90,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testAddExternal() {
     $attached['#attached']['js']['http://example.com/script.js'] = array('type' => 'external');
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertTrue(array_key_exists('http://example.com/script.js', $javascript), 'Added an external JavaScript file.');
   }
@@ -109,7 +109,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js']['core/misc/collapse.js'] = array(
       'attributes' => array('defer' => 'defer'),
     );
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
 
     $expected_1 = '<script src="http://example.com/script.js" defer="defer"></script>';
@@ -136,7 +136,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js']['core/misc/collapse.js'] = array(
       'attributes' => array('defer' => 'defer'),
     );
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
 
     $expected_1 = '<script src="http://example.com/script.js" defer="defer"></script>';
@@ -152,7 +152,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testHeaderSetting() {
     $attached = array();
     $attached['#attached']['library'][] = 'core/drupalSettings';
-    drupal_render($attached);
+    $this->render($attached);
 
     $javascript = drupal_get_js('header');
     $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
@@ -211,7 +211,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'data' => array('commonTestRealWorldAlmostIdentical' => $settings_two),
     );
 
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js('header');
 
     // Test whether _drupal_add_js can be used to override a previous setting.
@@ -248,7 +248,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testReset() {
     $attached['#attached']['library'][] = 'core/drupal';
     $attached['#attached']['js']['core/misc/collapse.js'] = array();
-    drupal_render($attached);
+    $this->render($attached);
     drupal_static_reset('_drupal_add_js');
     $this->assertEqual(array(), _drupal_add_js(), 'Resetting the JavaScript correctly empties the cache.');
   }
@@ -264,7 +264,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'data' => $inline,
       'attributes' => array('defer' => 'defer'),
     );
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertTrue(array_key_exists('core/assets/vendor/jquery/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');
     $data = end($javascript);
@@ -281,7 +281,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'type' => 'external',
       'data' => $external,
     );
-    drupal_render($attached);
+    $this->render($attached);
 
     $javascript = drupal_get_js();
     // Local files have a base_path() prefix, external files should not.
@@ -300,7 +300,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'scope' => 'footer',
       'attributes' => array('defer' => 'defer'),
     );
-    drupal_render($attached);
+    $this->render($attached);
 
     $javascript = drupal_get_js('footer');
     $this->assertTrue(strpos($javascript, $inline) > 0, 'Rendered JavaScript footer returns the inline code.');
@@ -312,7 +312,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testNoCache() {
     $attached['#attached']['library'][] = 'core/drupal';
     $attached['#attached']['js']['core/misc/collapse.js'] = array('cache' => FALSE);
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], 'Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.');
   }
@@ -323,7 +323,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testDifferentGroup() {
     $attached['#attached']['library'][] = 'core/drupal';
     $attached['#attached']['js']['core/misc/collapse.js'] = array('group' => JS_THEME);
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, 'Adding a JavaScript file with a different group caches the given group.');
   }
@@ -333,7 +333,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testDifferentWeight() {
     $attached['#attached']['js']['core/misc/collapse.js'] = array('weight' => 2);
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = _drupal_add_js();
     $this->assertEqual($javascript['core/misc/collapse.js']['weight'], 2, 'Adding a JavaScript file with a different weight caches the given weight.');
   }
@@ -355,7 +355,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'data' => 'jQuery(function () { });',
       'browsers' => array('IE' => FALSE),
     );
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
 
     $expected_1 = "<!--[if lte IE 8]>\n" . '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>' . "\n<![endif]-->";
@@ -372,7 +372,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['library'][] = 'core/drupal';
     $attached['#attached']['js']['core/misc/collapse.js'] = array('version' => 'foo');
     $attached['#attached']['js']['core/misc/ajax.js'] = array('version' => 'bar');
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'core/misc/collapse.js?v=foo') > 0 && strpos($javascript, 'core/misc/ajax.js?v=bar') > 0 , 'JavaScript version identifiers correctly appended to URLs');
   }
@@ -393,7 +393,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js']['core/misc/collapse.js'] = array('every_page' => TRUE);
     $attached['#attached']['js']['core/misc/autocomplete.js'] = array();
     $attached['#attached']['js']['core/misc/batch.js'] = array('every_page' => TRUE);
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
       '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>',
@@ -415,7 +415,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js']['core/misc/collapse.js'] = array('every_page' => TRUE);
     $attached['#attached']['js']['core/misc/autocomplete.js'] = array();
     $attached['#attached']['js']['core/misc/batch.js'] = array('every_page' => TRUE);
-    drupal_render($attached);
+    $this->render($attached);
     $js_items = _drupal_add_js();
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
@@ -438,7 +438,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['library'][] = 'core/drupal';
     $attached['#attached']['js']['core/misc/ajax.js'] = array();
     $attached['#attached']['js']['core/misc/autocomplete.js'] = array();
-    drupal_render($attached);
+    $this->render($attached);
 
     $js_items = _drupal_add_js();
     $scripts_html = array(
@@ -448,7 +448,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
         'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
       )
     );
-    drupal_render($scripts_html);
+    $this->render($scripts_html);
 
     // Store the expected key for the first item in the cache.
     $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
@@ -462,7 +462,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js']['some/custom/javascript_file.js'] = array('scope' => 'footer');
     $attached['#attached']['js']['core/misc/ajax.js'] = array();
     $attached['#attached']['js']['core/misc/autocomplete.js'] = array();
-    drupal_render($attached);
+    $this->render($attached);
 
     // Rebuild the cache.
     $js_items = _drupal_add_js();
@@ -473,7 +473,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
         'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
       )
     );
-    drupal_render($scripts_html);
+    $this->render($scripts_html);
 
     // Compare the expected key for the first file to the current one.
     $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
@@ -528,7 +528,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $attached['#attached']['js'][] = $shared_options + array(
       'data' => '(function($){alert("Weight 0 #3");})(jQuery);',
     );
-    drupal_render($attached);
+    $this->render($attached);
 
     // Construct the expected result from the regex.
     $expected = array(
@@ -569,7 +569,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
       'every_page' => TRUE,
       'weight' => -21,
     );
-    drupal_render($attached);
+    $this->render($attached);
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/assets/vendor/jquery/jquery.js'), 'Rendering a JavaScript file above jQuery.');
   }
@@ -583,7 +583,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     // Add both tableselect.js and simpletest.js, with a larger weight on SimpleTest.
     $attached['#attached']['js']['core/misc/tableselect.js'] = array();
     $attached['#attached']['js'][drupal_get_path('module', 'simpletest') . '/simpletest.js'] = array('weight' => 9999);
-    drupal_render($attached);
+    $this->render($attached);
 
     // Render the JavaScript, testing if simpletest.js was altered to be before
     // tableselect.js. See simpletest_js_alter() to see where this alteration
@@ -598,7 +598,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testLibraryRender() {
     $attached = array();
     $attached['#attached']['library'][] = 'core/jquery.farbtastic';
-    drupal_render($attached);
+    $this->render($attached);
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
@@ -619,7 +619,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     $attached['#attached']['library'][] = 'core/jquery.farbtastic';
-    drupal_render($attached);
+    $this->render($attached);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/jquery-form/jquery.form.js'), 'Altered library dependencies are added to the page.');
   }
@@ -647,7 +647,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     drupal_static_reset('drupal_get_library');
 
     $attached['#attached']['library'][] = 'unknown/unknown';
-    drupal_render($attached);
+    $this->render($attached);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'unknown') === FALSE, 'Unknown library was not added to the page.');
   }
@@ -657,7 +657,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testAttachedLibrary() {
     $element['#attached']['library'][] = 'core/jquery.farbtastic';
-    drupal_render($element);
+    $this->render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'The attached_library property adds the additional libraries.');
   }

@@ -45,7 +45,7 @@ class Rss extends StylePluginBase {
     if ($display->hasPath()) {
       if (empty($this->preview)) {
         $build['#attached']['drupal_add_feed'][] = array($url, $title);
-        drupal_render($build);
+        drupal_process_attached($build);
       }
     }
     else {
@@ -64,6 +64,7 @@ class Rss extends StylePluginBase {
         'href' => $url,
       );
       $this->view->feed_icon .= drupal_render($feed_icon);
+      drupal_process_attached($feed_icon);
     }
   }
 

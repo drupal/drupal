@@ -11,6 +11,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
@@ -1750,6 +1751,14 @@ function template_preprocess_html(&$variables) {
       $page->addMetaElement($metatag);
     }
   }
+
+  // Add favicon.
+  if (theme_get_setting('features.favicon')) {
+    $url = UrlHelper::stripDangerousProtocols(theme_get_setting('favicon.url'));
+    $link = new LinkElement($url, 'shortcut icon', ['type' => theme_get_setting('favicon.mimetype')]);
+    $page->addLinkElement($link);
+  }
+
   $variables['page_top'][] = array('#markup' => $page->getBodyTop());
   $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());
 }

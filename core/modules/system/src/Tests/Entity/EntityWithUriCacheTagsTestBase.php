@@ -46,7 +46,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
       $cid = 'entity_view:' . $entity_type . ':' . $this->entity->id() . ':' . $view_mode . ':stark:r.anonymous:' . date_default_timezone_get();
       $cache_entry = \Drupal::cache('render')->get($cid);
       $expected_cache_tags = array_merge(array($view_cache_tag, $cache_tag), $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
-      $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+      $this->verifyRenderCache($cid, $expected_cache_tags);
     }
 
     // Verify that after modifying the entity, there is a cache miss.

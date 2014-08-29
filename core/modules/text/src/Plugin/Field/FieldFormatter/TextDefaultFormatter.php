@@ -60,18 +60,6 @@ class TextDefaultFormatter extends FormatterBase {
         '#format' => $item->format,
         '#langcode' => $item->getLangcode(),
       );
-      // The viewElements() method of entity field formatters is run
-      // during the #pre_render phase of rendering an entity. A formatter
-      // builds the content of the field in preparation for theming.
-      // All cache tags must be available after the #pre_render phase. In order
-      // to collect the cache tags associated with the processed text, it must
-      // be passed to drupal_render() so that its #pre_render callback is
-      // invoked and its full build array is assembled. Rendering the processed
-      // text in place here will allow its cache tags to be bubbled up and
-      // included with those of the main entity when cache tags are collected
-      // for a renderable array in drupal_render().
-      // @todo remove this work-around, see https://drupal.org/node/2273277
-      drupal_render($elements[$delta], TRUE);
     }
 
     return $elements;

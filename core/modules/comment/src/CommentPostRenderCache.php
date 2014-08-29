@@ -72,7 +72,7 @@ class CommentPostRenderCache {
     $form = $this->entityFormBuilder->getForm($comment);
     // @todo: This only works as long as assets are still tracked in a global
     //   static variable, see https://drupal.org/node/2238835
-    $markup = drupal_render($form, TRUE);
+    $markup = drupal_render($form);
 
     $callback = 'comment.post_render_cache:renderForm';
     $placeholder = drupal_render_cache_generate_placeholder($callback, $context);

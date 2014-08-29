@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\text\Plugin\field\formatter\TextTrimmedFormatter.
+ * Contains \Drupal\text\Plugin\field\FieldFormatter\TextTrimmedFormatter.
  */
 namespace Drupal\text\Plugin\Field\FieldFormatter;
 
@@ -90,6 +90,16 @@ class TextTrimmedFormatter extends FormatterBase {
   protected function viewElementsWithTextProcessing(FieldItemListInterface $items) {
     $elements = array();
 
+    $render_as_summary = function (&$element) {
+      // Make sure any default #pre_render callbacks are set on the element,
+      // because text_pre_render_summary() must run last.
+      $element += \Drupal::service('element_info')->getInfo($element['#type']);
+      // Add the #pre_render callback that renders the text into a summary.
+      $element['#pre_render'][] = '\Drupal\text\Plugin\field\FieldFormatter\TextTrimmedFormatter::preRenderSummary';
+      // Pass on the trim length to the #pre_render callback via a property.
+      $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
+    };
+
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
         '#type' => 'processed_text',
@@ -98,26 +108,12 @@ class TextTrimmedFormatter extends FormatterBase {
         '#langcode' => $item->getLangcode(),
       );
 
-      // The viewElements() method of entity field formatters is run
-      // during the #pre_render phase of rendering an entity. A formatter
-      // builds the content of the field in preparation for theming.
-      // All cache tags must be available after the #pre_render phase. In order
-      // to collect the cache tags associated with the processed text, it must
-      // be passed to drupal_render() so that its #pre_render callback is
-      // invoked and its full build array is assembled. Rendering the processed
-      // text in place here will allow its cache tags to be bubbled up and
-      // included with those of the main entity when cache tags are collected
-      // for a renderable array in drupal_render().
       if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item->summary)) {
         $elements[$delta]['#text'] = $item->summary;
-        // @todo remove this work-around, see https://drupal.org/node/2273277
-        drupal_render($elements[$delta], TRUE);
       }
       else {
         $elements[$delta]['#text'] = $item->value;
-        // @todo remove this work-around, see https://drupal.org/node/2273277
-        drupal_render($elements[$delta], TRUE);
-        $elements[$delta]['#markup'] = text_summary($elements[$delta]['#markup'], $item->format, $this->getSetting('trim_length'));
+        $render_as_summary($elements[$delta]);
       }
     }
 
@@ -151,6 +147,29 @@ class TextTrimmedFormatter extends FormatterBase {
     }
 
     return $elements;
+  }
+
+  /**
+   * Pre-render callback: Renders a processed text element's #markup as a summary.
+   *
+   * @param array $element
+   *   A structured array with the following key-value pairs:
+   *   - #markup: the filtered text (as filtered by filter_pre_render_text())
+   *   - #format: containing the machine name of the filter format to be used to
+   *     filter the text. Defaults to the fallback format. See
+   *     filter_fallback_format().
+   *   - #text_summary_trim_length: the desired character length of the summary
+   *     (used by text_summary())
+   *
+   * @return array
+   *   The passed-in element with the filtered text in '#markup' trimmed.
+   *
+   * @see filter_pre_render_text()
+   * @see text_summary()
+   */
+  public static function preRenderSummary(array $element) {
+    $element['#markup'] = text_summary($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
+    return $element;
   }
 
 }

@@ -33,7 +33,9 @@ function ajax_test_render() {
       ),
     ),
   );
+  // @todo Why is this being tested via an explicit drupal_render() call?
   drupal_render($attached);
+  drupal_process_attached($attached);
   $response = new AjaxResponse();
   return $response;
 }
@@ -69,7 +71,11 @@ function ajax_test_order() {
       ),
     ),
   );
+
+  // @todo Why is this being tested via an explicit drupal_render() call?
   drupal_render($attached);
+  drupal_process_attached($attached);
+
   return $response;
 }
 

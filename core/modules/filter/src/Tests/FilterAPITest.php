@@ -247,12 +247,12 @@ class FilterAPITest extends EntityUnitTestBase {
     $expected_cache_tags = array(
       // The cache tag set by the processed_text element itself.
       'filter_format' => array(
-        'element_test' => 'element_test',
+        'element_test',
       ),
       // The cache tags set by the filter_test_cache_tags filter.
       'foo' => array(
-        'bar' => 'bar',
-        'baz' => 'baz',
+        'bar',
+        'baz',
       ),
     );
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');

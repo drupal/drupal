@@ -110,6 +110,14 @@ class BatchController implements ContainerInjectionInterface {
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
 
+    drupal_process_attached($page_array);
+    if (isset($page_array['page_top'])) {
+      drupal_process_attached($page_array['page_top']);
+    }
+    if (isset($page_array['page_bottom'])) {
+      drupal_process_attached($page_array['page_bottom']);
+    }
+
     $page->setStatusCode($status_code);
 
     return $page;

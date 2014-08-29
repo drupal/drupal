@@ -135,20 +135,15 @@ class CacheTest extends PluginTestBase {
     $output = $view->preview();
     drupal_render($output);
     unset($view->pre_render_called);
-    drupal_static_reset('_drupal_add_css');
-    drupal_static_reset('_drupal_add_js');
     $view->destroy();
 
     $view->setDisplay();
     $output = $view->preview();
     drupal_render($output);
-    $css = _drupal_add_css();
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
     $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
-    $js = _drupal_add_js();
-
-    $this->assertTrue(isset($css[basename($css_path)]), 'Make sure the css is added for cached views.');
-    $this->assertTrue(isset($js[$js_path]), 'Make sure the js is added for cached views.');
+    $this->assertTrue(in_array($css_path, $output['#attached']['css']), 'Make sure the css is added for cached views.');
+    $this->assertTrue(in_array($js_path, $output['#attached']['js']), 'Make sure the js is added for cached views.');
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
 
     // Now add some css/jss before running the view.
@@ -165,22 +160,19 @@ class CacheTest extends PluginTestBase {
       ),
     );
     drupal_render($attached);
+    drupal_process_attached($attached);
     $view->destroy();
 
     $output = $view->preview();
     drupal_render($output);
-    drupal_static_reset('_drupal_add_css');
-    drupal_static_reset('_drupal_add_js');
+    $this->assertTrue(empty($output['#attached']['css']), 'The view does not have attached CSS.');
+    $this->assertTrue(empty($output['#attached']['js']), 'The view does not have attached JS.');
     $view->destroy();
 
     $output = $view->preview();
     drupal_render($output);
-
-    $css = _drupal_add_css();
-    $js = _drupal_add_js();
-
-    $this->assertFalse(isset($css['system.maintenance.css']), 'Make sure that unrelated css is not added.');
-    $this->assertFalse(isset($js[drupal_get_path('module', 'user') . '/user.permissions.js']), 'Make sure that unrelated js is not added.');
+    $this->assertTrue(empty($output['#attached']['css']), 'The cached view does not have attached CSS.');
+    $this->assertTrue(empty($output['#attached']['js']), 'The cached view does not have attached JS.');
   }
 
 }

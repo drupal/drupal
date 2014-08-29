@@ -244,7 +244,7 @@ abstract class CachePluginBase extends PluginBase {
       $this->storage['head'] = '';
     }
 
-    $attached = drupal_render_collect_attached($this->storage['output']);
+    $attached = $this->storage['output']['#attached'];
     $this->storage['css'] = $attached['css'];
     $this->storage['js'] = $attached['js'];
   }

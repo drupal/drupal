@@ -741,7 +741,7 @@ function template_preprocess_comment(&$variables) {
   }
 
   if (isset($variables['elements']['signature'])) {
-    $variables['signature'] = $variables['elements']['signature']['#markup'];
+    $variables['signature'] = $variables['elements']['signature'];
     unset($variables['elements']['signature']);
   }
   else {

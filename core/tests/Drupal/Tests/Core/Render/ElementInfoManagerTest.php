@@ -86,6 +86,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#type' => 'page',
         '#show_messages' => TRUE,
         '#theme' => 'page',
+        '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
         '#show_messages' => TRUE,
@@ -96,6 +97,7 @@ class ElementInfoManagerTest extends UnitTestCase {
     $data[] = array(
       'form',
       array(
+        '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
         '#show_messages' => TRUE,
@@ -110,6 +112,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#show_messages' => TRUE,
         '#theme' => 'page',
         '#number' => 597219,
+        '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
         '#show_messages' => TRUE,
@@ -178,6 +181,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#type' => 'page',
         '#show_messages' => TRUE,
         '#theme' => 'page',
+        '#defaults_loaded' => TRUE,
       ),
     );
 
@@ -189,6 +193,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#theme' => 'page',
         '#input' => TRUE,
         '#value_callback' => array('TestElementPlugin', 'valueCallback'),
+        '#defaults_loaded' => TRUE,
       ),
     );
     return $data;

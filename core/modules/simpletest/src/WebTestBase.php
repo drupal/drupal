@@ -18,6 +18,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
@@ -341,26 +342,37 @@ abstract class WebTestBase extends TestBase {
    * @see drupal_render()
    */
   protected function drupalBuildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL, $reset = FALSE) {
+    $ensure_fully_built = function(&$elements) use (&$ensure_fully_built) {
+      // If the default values for this element have not been loaded yet, populate
+      // them.
+      if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
+        $elements += element_info($elements['#type']);
+      }
+
+      // Make any final changes to the element before it is rendered. This means
+      // that the $element or the children can be altered or corrected before the
+      // element is rendered into the final text.
+      if (isset($elements['#pre_render'])) {
+        foreach ($elements['#pre_render'] as $callable) {
+          $elements = call_user_func($callable, $elements);
+        }
+      }
+
+      // And recurse.
+      $children = Element::children($elements, TRUE);
+      foreach ($children as $key) {
+        $ensure_fully_built($elements[$key]);
+      }
+    };
+
     $render_controller = $this->container->get('entity.manager')->getViewBuilder($entity->getEntityTypeId());
     if ($reset) {
       $render_controller->resetCache(array($entity->id()));
     }
-    $elements = $render_controller->view($entity, $view_mode, $langcode);
-    // If the default values for this element have not been loaded yet, populate
-    // them.
-    if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
-      $elements += element_info($elements['#type']);
-    }
+    $build = $render_controller->view($entity, $view_mode, $langcode);
+    $ensure_fully_built($build);
 
-    // Make any final changes to the element before it is rendered. This means
-    // that the $element or the children can be altered or corrected before the
-    // element is rendered into the final text.
-    if (isset($elements['#pre_render'])) {
-      foreach ($elements['#pre_render'] as $callable) {
-        $elements = call_user_func($callable, $elements);
-      }
-    }
-    return $elements;
+    return $build;
   }
 
   /**

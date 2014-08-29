@@ -547,8 +547,9 @@ abstract class KernelTestBase extends UnitTestBase {
    * @return string
    *   The rendered string output (typically HTML).
    */
-  protected function render(array $elements) {
+  protected function render(array &$elements) {
     $content = drupal_render($elements);
+    drupal_process_attached($elements);
     $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . String::checkPlain($content));
     return $content;

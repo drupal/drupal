@@ -26,6 +26,7 @@ function views_ajax_form_wrapper($form_class, FormStateInterface &$form_state) {
 
   $form = \Drupal::formBuilder()->buildForm($form_class, $form_state);
   $output = drupal_render($form);
+  drupal_process_attached($form);
 
   // These forms have the title built in, so set the title here:
   if (empty($form_state['ajax']) && !empty($form_state['title'])) {

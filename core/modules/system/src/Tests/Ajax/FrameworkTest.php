@@ -50,6 +50,7 @@ class FrameworkTest extends AjaxTestBase {
       ),
     );
     drupal_render($attached);
+    drupal_process_attached($attached);
     $expected_commands[1] = new AddCssCommand(drupal_get_css(_drupal_add_css(), TRUE));
     drupal_static_reset('_drupal_add_js');
     $attached = array(
@@ -60,6 +61,7 @@ class FrameworkTest extends AjaxTestBase {
       ),
     );
     drupal_render($attached);
+    drupal_process_attached($attached);
     $expected_commands[2] = new PrependCommand('head', drupal_get_js('header', _drupal_add_js(), TRUE));
     drupal_static_reset('_drupal_add_js');
     $attached = array(
@@ -70,6 +72,7 @@ class FrameworkTest extends AjaxTestBase {
       ),
     );
     drupal_render($attached);
+    drupal_process_attached($attached);
     $expected_commands[3] = new AppendCommand('body', drupal_get_js('footer', _drupal_add_js(), TRUE));
     $expected_commands[4] = new HtmlCommand('body', 'Hello, world!');
 

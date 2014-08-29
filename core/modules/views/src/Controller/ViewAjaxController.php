@@ -156,7 +156,9 @@ class ViewAjaxController implements ContainerInjectionInterface {
    * @see https://drupal.org/node/2171071
    */
   protected function drupalRender(array $elements) {
-    return drupal_render($elements);
+    $output = drupal_render($elements);
+    drupal_process_attached($elements);
+    return $output;
   }
 
 }
