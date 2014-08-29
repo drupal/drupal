@@ -80,7 +80,7 @@ class PermissionHandler implements PermissionHandlerInterface {
 
     $all_permissions += $this->buildPermissionsModules();
 
-    return $this->sortPermissionsByProviderName($all_permissions);
+    return $this->sortPermissions($all_permissions);
   }
 
   /**
@@ -138,7 +138,7 @@ class PermissionHandler implements PermissionHandlerInterface {
   }
 
   /**
-   * Sorts the given permissions by provider name.
+   * Sorts the given permissions by provider name and title.
    *
    * @param array $all_permissions
    *   The permissions to be sorted.
@@ -149,13 +149,18 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   - description: The description of the permission, defaults to NULL.
    *   - provider: The provider of the permission.
    */
-  protected function sortPermissionsByProviderName(array $all_permissions = array()) {
+  protected function sortPermissions(array $all_permissions = array()) {
     // Get a list of all the modules providing permissions and sort by
     // display name.
     $modules = $this->getModuleNames();
 
     uasort($all_permissions, function (array $permission_a, array $permission_b) use ($modules) {
-      return $modules[$permission_a['provider']] > $modules[$permission_b['provider']];
+      if ($modules[$permission_a['provider']] == $modules[$permission_b['provider']]) {
+        return $permission_a['title'] > $permission_b['title'];
+      }
+      else {
+        return $modules[$permission_a['provider']] > $modules[$permission_b['provider']];
+      }
     });
     return $all_permissions;
   }

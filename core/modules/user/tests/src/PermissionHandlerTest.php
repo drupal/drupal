@@ -75,7 +75,7 @@ class PermissionHandlerTest extends UnitTestCase {
    * @covers ::getPermissions
    * @covers ::buildPermissions
    * @covers ::buildPermissionsModules
-   * @covers ::sortPermissionsByProviderName
+   * @covers ::sortPermissions
    * @covers ::getModuleNames
    */
   public function testBuildPermissionsModules() {
@@ -123,6 +123,7 @@ class PermissionHandlerTest extends UnitTestCase {
     // sorting.
     $this->assertSame(array('access_module_a', 'access_module_c', 'access module b'), array_keys($actual_permissions));
   }
+
 
   /**
    * Tests permissions provided by YML files.
@@ -186,6 +187,56 @@ class PermissionHandlerTest extends UnitTestCase {
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
+  }
+
+  /**
+   * Tests permissions sort inside a module.
+   *
+   * @covers ::__construct
+   * @covers ::getPermissions
+   * @covers ::buildPermissions
+   * @covers ::buildPermissionsYaml
+   * @covers ::sortPermissions
+   */
+  public function testBuildPermissionsSortPerModule() {
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
+
+    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler->expects($this->once())
+      ->method('getModuleDirectories')
+      ->willReturn([
+        'module_a' => vfsStream::url('modules/module_a'),
+      ]);
+
+    $url = vfsStream::url('modules');
+    mkdir($url . '/module_a');
+    file_put_contents($url . '/module_a/module_a.permissions.yml',
+"access_module_a2: single_description
+access_module_a1: single_description"
+    );
+    $modules = ['module_a'];
+    $extensions = [
+      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
+    ];
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->with('permission')
+      ->willReturn([]);
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getModuleList')
+      ->willReturn(array_flip($modules));
+
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation);
+
+    // Setup system_rebuild_module_data().
+    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+
+    $actual_permissions = $this->permissionHandler->getPermissions();
+
+    $this->assertEquals(['access_module_a1', 'access_module_a2'], array_keys($actual_permissions));
   }
 
   /**
