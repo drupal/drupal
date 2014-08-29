@@ -324,8 +324,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function hasParentComment() {
-    $parent = $this->get('pid')->entity;
-    return !empty($parent);
+    return (bool) $this->get('pid')->target_id;
   }
 
   /**
