@@ -47,6 +47,37 @@ interface FormStateInterface {
   public function setCompleteForm(array &$complete_form);
 
   /**
+   * Ensures an include file is loaded whenever the form is processed.
+   *
+   * Example:
+   * @code
+   *   // Load node.admin.inc from Node module.
+   *   $form_state->loadInclude('inc', 'node', 'node.admin');
+   * @endcode
+   *
+   * Use this function instead of module_load_include() from inside a form
+   * constructor or any form processing logic as it ensures that the include file
+   * is loaded whenever the form is processed. In contrast to using
+   * module_load_include() directly, this method makes sure the include file is
+   * correctly loaded also if the form is cached.
+   *
+   * @param string $module
+   *   The module to which the include file belongs.
+   * @param string $type
+   *   The include file's type (file extension).
+   * @param string|null $name
+   *   (optional) The base file name (without the $type extension). If omitted,
+   *   $module is used; i.e., resulting in "$module.$type" by default.
+   *
+   * @return string|false
+   *   The filepath of the loaded include file, or FALSE if the include file was
+   *   not found or has been loaded already.
+   *
+   * @see module_load_include()
+   */
+  public function loadInclude($module, $type, $name = NULL);
+
+  /**
    * Returns an array representation of the cacheable portion of the form state.
    *
    * @return array

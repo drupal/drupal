@@ -35,7 +35,7 @@ abstract class ViewFormBase extends EntityForm {
     }
 
     // @todo Remove the need for this.
-    form_load_include($form_state, 'inc', 'views_ui', 'admin');
+    $form_state->loadInclude('views_ui', 'inc', 'admin');
     $form_state->set('view', $this->entity);
   }
 

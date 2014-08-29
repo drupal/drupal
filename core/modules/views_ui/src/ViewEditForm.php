@@ -89,7 +89,7 @@ class ViewEditForm extends ViewFormBase {
     //   - Change $form_state['view'] to $form_state['temporary']['view'].
     //   - Add a #process function to initialize $form_state['temporary']['view']
     //     on cached form submissions.
-    //   - Use form_load_include().
+    //   - Use \Drupal\Core\Form\FormStateInterface::loadInclude().
     $form_state['no_cache'] = TRUE;
 
     if ($display_id) {

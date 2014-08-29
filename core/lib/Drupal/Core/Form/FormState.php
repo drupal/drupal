@@ -61,7 +61,7 @@ class FormState implements FormStateInterface, \ArrayAccess {
    *     'name' as needed by module_load_include(). The files listed here are
    *     automatically loaded by form_get_cache(). By default the current menu
    *     router item's 'file' definition is added, if any. Use
-   *     form_load_include() to add include files from a form constructor.
+   *     self::loadInclude() to add include files from a form constructor.
    *   - form_id: Identification of the primary form being constructed and
    *     processed.
    *   - base_form_id: Identification for a base form, as declared in the form
@@ -427,6 +427,29 @@ class FormState implements FormStateInterface, \ArrayAccess {
       $this->set($key, $value);
     }
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadInclude($module, $type, $name = NULL) {
+    if (!isset($name)) {
+      $name = $module;
+    }
+    $build_info = $this->get('build_info');
+    if (!isset($build_info['files']["$module:$name.$type"])) {
+      // Only add successfully included files to the form state.
+      if ($result = $this->moduleLoadInclude($module, $type, $name)) {
+        $build_info['files']["$module:$name.$type"] = array(
+          'type' => $type,
+          'module' => $module,
+          'name' => $name,
+        );
+        $this->set('build_info', $build_info);
+        return $result;
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -822,6 +845,13 @@ class FormState implements FormStateInterface, \ArrayAccess {
    */
   protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
     return drupal_set_message($message, $type, $repeat);
+  }
+
+  /**
+   * Wraps ModuleHandler::loadInclude().
+   */
+  protected function moduleLoadInclude($module, $type, $name = NULL) {
+    return \Drupal::moduleHandler()->loadInclude($module, $type, $name);
   }
 
 }

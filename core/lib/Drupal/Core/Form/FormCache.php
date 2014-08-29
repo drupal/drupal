@@ -94,7 +94,7 @@ class FormCache implements FormCacheInterface {
       $form_state->setFormState($stored_form_state);
 
       // If the original form is contained in include files, load the files.
-      // @see form_load_include()
+      // @see \Drupal\Core\Form\FormStateInterface::loadInclude()
       $form_state['build_info'] += array('files' => array());
       foreach ($form_state['build_info']['files'] as $file) {
         if (is_array($file)) {

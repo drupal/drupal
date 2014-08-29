@@ -348,6 +348,79 @@ class FormStateTest extends UnitTestCase {
     return $data;
   }
 
+  /**
+   * @covers ::loadInclude
+   */
+  public function testLoadInclude() {
+    $type = 'some_type';
+    $module = 'some_module';
+    $name = 'some_name';
+    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+      ->setMethods(array('moduleLoadInclude'))
+      ->getMock();
+    $form_state->expects($this->once())
+      ->method('moduleLoadInclude')
+      ->with($module, $type, $name)
+      ->willReturn(TRUE);
+    $this->assertTrue($form_state->loadInclude($module, $type, $name));
+  }
+
+  /**
+   * @covers ::loadInclude
+   */
+  public function testLoadIncludeNoName() {
+    $type = 'some_type';
+    $module = 'some_module';
+    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+      ->setMethods(array('moduleLoadInclude'))
+      ->getMock();
+    $form_state->expects($this->once())
+      ->method('moduleLoadInclude')
+      ->with($module, $type, $module)
+      ->willReturn(TRUE);
+    $this->assertTrue($form_state->loadInclude($module, $type));
+  }
+
+  /**
+   * @covers ::loadInclude
+   */
+  public function testLoadIncludeNotFound() {
+    $type = 'some_type';
+    $module = 'some_module';
+    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+      ->setMethods(array('moduleLoadInclude'))
+      ->getMock();
+    $form_state->expects($this->once())
+      ->method('moduleLoadInclude')
+      ->with($module, $type, $module)
+      ->willReturn(FALSE);
+    $this->assertFalse($form_state->loadInclude($module, $type));
+  }
+
+  /**
+   * @covers ::loadInclude
+   */
+  public function testLoadIncludeAlreadyLoaded() {
+    $type = 'some_type';
+    $module = 'some_module';
+    $name = 'some_name';
+    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+      ->setConstructorArgs([['build_info' => ['files' => [
+        'some_module:some_name.some_type' => [
+          'type' => $type,
+          'module' => $module,
+          'name' => $name,
+        ],
+      ]]]])
+      ->setMethods(array('moduleLoadInclude'))
+      ->getMock();
+
+    $form_state->expects($this->never())
+      ->method('moduleLoadInclude');
+
+    $this->assertFalse($form_state->loadInclude($module, $type, $name));
+  }
+
 }
 
 /**
