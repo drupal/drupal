@@ -2,15 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\system\Entity\DateFormat.
+ * Contains \Drupal\Core\Datetime\Entity\DateFormat.
  */
 
-namespace Drupal\system\Entity;
+namespace Drupal\Core\Datetime\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\system\DateFormatInterface;
+use Drupal\Core\Datetime\DateFormatInterface;
 
 /**
  * Defines the Date Format configuration entity class.
@@ -20,22 +19,12 @@ use Drupal\system\DateFormatInterface;
  *   label = @Translation("Date format"),
  *   handlers = {
  *     "access" = "Drupal\system\DateFormatAccessControlHandler",
- *     "list_builder" = "Drupal\system\DateFormatListBuilder",
- *     "form" = {
- *       "add" = "Drupal\system\Form\DateFormatAddForm",
- *       "edit" = "Drupal\system\Form\DateFormatEditForm",
- *       "delete" = "Drupal\system\Form\DateFormatDeleteForm"
- *     }
  *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
  *   },
  *   admin_permission = "administer site configuration",
- *   links = {
- *     "delete-form" = "entity.date_format.delete_form",
- *     "edit-form" = "entity.date_format.edit_form"
- *   }
  * )
  */
 class DateFormat extends ConfigEntityBase implements DateFormatInterface {

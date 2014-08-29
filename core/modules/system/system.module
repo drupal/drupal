@@ -1278,6 +1278,20 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
 }
 
 /**
+ * Implements hook_entity_type_build().
+ */
+function system_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['date_format']
+    ->setFormClass('add', 'Drupal\system\Form\DateFormatAddForm')
+    ->setFormClass('edit', 'Drupal\system\Form\DateFormatEditForm')
+    ->setFormClass('delete', 'Drupal\system\Form\DateFormatDeleteForm')
+    ->setListBuilderClass('Drupal\system\DateFormatListBuilder')
+    ->setLinkTemplate('edit-form', 'entity.date_format.edit_form')
+    ->setLinkTemplate('delete-form', 'entity.date_format.delete_form');
+}
+
+/**
  * Implements hook_page_alter().
  */
 function system_page_alter(&$page) {

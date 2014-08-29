@@ -397,15 +397,15 @@ class ConfigTranslationUiTest extends WebTestBase {
 
       // Update translatable fields.
       $edit = array(
-        'config_names[system.date_format.' . $id . '][label][translation]' => $id . ' - FR',
-        'config_names[system.date_format.' . $id . '][pattern][translation]' => 'D',
+        'config_names[core.date_format.' . $id . '][label][translation]' => $id . ' - FR',
+        'config_names[core.date_format.' . $id . '][pattern][translation]' => 'D',
       );
 
       // Save language specific version of form.
       $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
 
       // Get translation and check we've got the right value.
-      $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.date_format.' . $id);
+      $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'core.date_format.' . $id);
       $expected = array(
         'label' => $id . ' - FR',
         'pattern' => 'D',

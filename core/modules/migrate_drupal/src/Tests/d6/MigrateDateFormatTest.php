@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Upgrade date formats to system.date_format.*.yml.
+ * Upgrade date formats to core.date_format.*.yml.
  *
  * @group migrate_drupal
  */

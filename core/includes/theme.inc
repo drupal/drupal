@@ -844,6 +844,68 @@ function template_preprocess_time(&$variables) {
 }
 
 /**
+ * Prepares variables for datetime form element templates.
+ *
+ * The datetime form element serves as a wrapper around the date element type,
+ * which creates a date and a time component for a date.
+ *
+ * Default template: datetime-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #options, #description, #required,
+ *     #attributes.
+ *
+ * @see form_process_datetime()
+ */
+function template_preprocess_datetime_form(&$variables) {
+  $element = $variables['element'];
+
+  $variables['attributes'] = array();
+  if (isset($element['#id'])) {
+    $variables['attributes']['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
+  }
+  $variables['attributes']['class'][] = 'container-inline';
+
+  $variables['content'] = $element;
+}
+
+/**
+ * Prepares variables for datetime form wrapper templates.
+ *
+ * Default template: datetime-wrapper.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #children, #required, #attributes.
+ */
+function template_preprocess_datetime_wrapper(&$variables) {
+  $element = $variables['element'];
+
+  if (!empty($element['#title'])) {
+    $variables['title'] = $element['#title'];
+  }
+
+  if (!empty($element['#description'])) {
+    $variables['description'] = $element['#description'];
+  }
+
+  $title_attributes = array('class' => array('label'));
+  // For required datetime fields a 'form-required' class is appended to the
+  // label attributes.
+  if (!empty($element['#required'])) {
+    $title_attributes['class'][] = 'form-required';
+  }
+  $variables['title_attributes'] = new Attribute($title_attributes);
+  $variables['content'] = $element['#children'];
+}
+
+/**
  * Prepares variables for status message templates.
  *
  * Default template: status-messages.html.twig.
@@ -2182,6 +2244,14 @@ function drupal_common_theme() {
     'time' => array(
       'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
       'template' => 'time',
+    ),
+    'datetime_form' => array(
+      'template' => 'datetime-form',
+      'render element' => 'element',
+    ),
+    'datetime_wrapper' => array(
+      'template' => 'datetime-wrapper',
+      'render element' => 'element',
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),

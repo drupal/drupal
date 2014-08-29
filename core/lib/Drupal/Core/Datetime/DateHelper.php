@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\datetime\DateHelper.
+ * Contains \Drupal\Core\Datetime\DateHelper.
  *
  * Lots of helpful functions for use in massaging dates, specific to the the
  * Gregorian calendar system. The values include both translated and
@@ -14,7 +14,7 @@
  * translation should be hard-coded and wrapped in t() so the translation system
  * will be able to process them.
  */
-namespace Drupal\datetime;
+namespace Drupal\Core\Datetime;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 

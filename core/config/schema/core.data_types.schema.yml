@@ -382,6 +382,26 @@ core.base_field_override.*.*.*:
   type: field_config_base
   label: 'Base field bundle override'
 
+core.date_format.*:
+  type: config_entity
+  label: 'Date format'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    locked:
+      type: boolean
+      label: 'Locked'
+    pattern:
+      type: date_format
+      label: 'PHP date format'
+    langcode:
+      type: string
+      label: 'Default language'
+
 # Schema for the String field type.
 
 field.string.instance_settings:

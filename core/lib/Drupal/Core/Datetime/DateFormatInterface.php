@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\DateFormatInterface.
+ * Contains \Drupal\Core\Datetime\DateFormatInterface.
  */
 
-namespace Drupal\system;
+namespace Drupal\Core\Datetime;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Datetime\DrupalDateTime;

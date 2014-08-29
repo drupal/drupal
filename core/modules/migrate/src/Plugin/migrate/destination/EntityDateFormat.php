@@ -19,7 +19,7 @@ class EntityDateFormat extends EntityConfigBase {
   /**
    * {@inheritdoc}
    *
-   * @param \Drupal\system\DateFormatInterface $entity
+   * @param \Drupal\Core\Datetime\DateFormatInterface $entity
    *   The date entity.
    */
   protected function updateEntityProperty(EntityInterface $entity, array $parents, $value) {

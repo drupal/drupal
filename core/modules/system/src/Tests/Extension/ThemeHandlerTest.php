@@ -186,14 +186,14 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->themeHandler()->disable(array($name));
 
     $this->assertIdentical($this->config("$name.settings")->get('base'), 'only');
-    $this->assertIdentical($this->config('system.date_format.fancy')->get('label'), 'Fancy date');
+    $this->assertIdentical($this->config('core.date_format.fancy')->get('label'), 'Fancy date');
 
     // Default configuration never overwrites custom configuration, so just
     // changing values in existing configuration will cause ConfigInstaller to
     // simply skip those files. To ensure that no default configuration is
     // re-imported, the custom configuration has to be deleted.
     $this->configStorage()->delete("$name.settings");
-    $this->configStorage()->delete('system.date_format.fancy');
+    $this->configStorage()->delete('core.date_format.fancy');
     // Reflect direct storage operations in ConfigFactory.
     $this->container->get('config.factory')->reset();
 
@@ -206,7 +206,7 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->assertEqual(array_keys(system_list('theme')), array_keys($themes));
 
     $this->assertFalse($this->config("$name.settings")->get());
-    $this->assertNull($this->config('system.date_format.fancy')->get('label'));
+    $this->assertNull($this->config('core.date_format.fancy')->get('label'));
   }
 
   /**

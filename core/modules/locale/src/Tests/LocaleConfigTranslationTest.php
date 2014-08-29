@@ -110,7 +110,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
-    $wrapper = $this->container->get('locale.config.typed')->get('system.date_format.medium');
+    $wrapper = $this->container->get('locale.config.typed')->get('core.date_format.medium');
 
     // Get translation and check we've only got the site name.
     $translation = $wrapper->getTranslation($langcode);
