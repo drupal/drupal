@@ -24,7 +24,7 @@ views_ui.reports_fields:
   title: 'Used in views'
   base_route: field_ui.list
 
-views_ui.edit:
+entity.view.edit_form:
   title: 'Edit'
-  route_name: views_ui.edit
-  base_route: views_ui.edit
+  route_name: entity.view.edit_form
+  base_route: entity.view.edit_form

@@ -275,8 +275,8 @@ class DisplayBlockTest extends ViewTestBase {
     $cached_block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('cache' => array('max_age' => 3600)));
     $this->drupalGet('test-page');
 
-    $id = 'block:block=' . $block->id() . ':|views_ui_edit:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
-    $cached_id = 'block:block=' . $cached_block->id() . ':|views_ui_edit:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
+    $id = 'block:block=' . $block->id() . ':|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
+    $cached_id = 'block:block=' . $cached_block->id() . ':|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
     $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $cached_id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $cached_id)));
@@ -287,8 +287,8 @@ class DisplayBlockTest extends ViewTestBase {
     $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="views-uiedit"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
-    $this->assertIdentical($json[$cached_id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $cached_block->id() . '">Configure block</a></li><li class="views-uiedit"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
+    $this->assertIdentical($json[$cached_id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $cached_block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
   }
 
 }

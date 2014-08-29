@@ -3,8 +3,8 @@ module: views_ui
 label: 'Views ui'
 langcode: en
 routes:
-  - route_name: views_ui.edit
-  - route_name: views_ui.edit_display
+  - route_name: entity.view.edit_form
+  - route_name: entity.view.edit_display_form
 tips:
   views-main:
     id: views-main

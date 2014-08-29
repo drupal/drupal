@@ -232,7 +232,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
       case 'block':
         return $this->entityType;
       case 'view':
-        return 'views_ui_edit';
+        return 'entity.view.edit_form';
       default:
         return NULL;
     }

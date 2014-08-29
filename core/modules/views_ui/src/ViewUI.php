@@ -635,7 +635,7 @@ class ViewUI implements ViewStorageInterface {
 
       $show_additional_queries = $config->get('ui.show.additional_queries');
 
-      Timer::start('views_ui.preview');
+      Timer::start('entity.view.preview_form');
 
       if ($show_additional_queries) {
         $this->startQueryCapture();
@@ -649,7 +649,7 @@ class ViewUI implements ViewStorageInterface {
         $this->endQueryCapture();
       }
 
-      $this->render_time = Timer::stop('views_ui.preview');
+      $this->render_time = Timer::stop('entity.view.preview_form');
 
       views_ui_contextual_links_suppress_pop();
 

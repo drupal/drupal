@@ -508,7 +508,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Assert contextual link related to views.
-    $ids = array('views_ui_edit:view=frontpage:location=page&name=frontpage&display_id=page_1');
+    $ids = array('entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1');
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
     $json = Json::decode($response);

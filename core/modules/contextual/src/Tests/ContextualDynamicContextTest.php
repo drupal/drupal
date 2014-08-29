@@ -60,7 +60,7 @@ class ContextualDynamicContextTest extends WebTestBase {
       'node:node=' . $node1->id() . ':changed=' . $node1->getChangedTime(),
       'node:node=' . $node2->id() . ':changed=' . $node2->getChangedTime(),
       'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime(),
-      'views_ui_edit:view=frontpage:location=page&name=frontpage&display_id=page_1',
+      'entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1',
     );
 
     // Editor user: can access contextual links and can edit articles.

@@ -141,7 +141,7 @@ class ViewEditForm extends ViewFormBase {
       $lock_message_substitutions = array(
         '!user' => drupal_render($username),
         '!age' => $this->dateFormatter->formatInterval(REQUEST_TIME - $view->lock->updated),
-        '!break' => $view->url('break-lock'),
+        '!break' => $view->url('break-lock-form'),
       );
       $form['locked'] = array(
         '#type' => 'container',
@@ -296,7 +296,7 @@ class ViewEditForm extends ViewFormBase {
         unset($displays[$id]);
 
         // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
-        $form_state->setRedirect('views_ui.edit_display', array(
+        $form_state->setRedirect('entity.view.edit_display_form', array(
           'view' => $view->id(),
           'display_id' => $new_id,
         ));
@@ -592,7 +592,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $id,
     ));
@@ -611,7 +611,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $id,
     ));
@@ -629,7 +629,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $id,
     ));
@@ -708,7 +708,7 @@ class ViewEditForm extends ViewFormBase {
         ),
         'duplicate' => array(
           'title' => $this->t('Duplicate view'),
-        ) + $view->urlInfo('duplicate')->toArray(),
+        ) + $view->urlInfo('duplicate-form')->toArray(),
         'reorder' => array(
           'title' => $this->t('Reorder displays'),
           'href' => "admin/structure/views/nojs/reorder-displays/{$view->id()}/$display_id",
@@ -827,7 +827,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $new_display_id,
     ));
@@ -849,7 +849,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $display_id,
     ));
@@ -885,7 +885,7 @@ class ViewEditForm extends ViewFormBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state->setRedirect('views_ui.edit_display', array(
+    $form_state->setRedirect('entity.view.edit_display_form', array(
       'view' => $view->id(),
       'display_id' => $new_display_id,
     ));

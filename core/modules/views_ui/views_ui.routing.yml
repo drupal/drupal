@@ -46,7 +46,7 @@ views_ui.reports_plugins:
   requirements:
     _permission: 'administer views'
 
-views_ui.enable:
+entity.view.enable:
   path: '/admin/structure/views/view/{view}/enable'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
@@ -55,7 +55,7 @@ views_ui.enable:
     _entity_access: view.enable
     _csrf_token: 'TRUE'
 
-views_ui.disable:
+entity.view.disable:
   path: '/admin/structure/views/view/{view}/disable'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
@@ -64,7 +64,7 @@ views_ui.disable:
     _entity_access: view.disable
     _csrf_token: 'TRUE'
 
-views_ui.duplicate:
+entity.view.duplicate_form:
   path: '/admin/structure/views/view/{view}/duplicate'
   defaults:
     _entity_form: 'view.duplicate'
@@ -72,7 +72,7 @@ views_ui.duplicate:
   requirements:
     _entity_access: view.duplicate
 
-views_ui.delete:
+entity.view.delete_form:
   path: '/admin/structure/views/view/{view}/delete'
   defaults:
     _entity_form: 'view.delete'
@@ -87,7 +87,7 @@ views_ui.autocomplete:
   requirements:
     _permission: 'administer views'
 
-views_ui.edit:
+entity.view.edit_form:
   path: '/admin/structure/views/view/{view}'
   options:
     parameters:
@@ -99,7 +99,7 @@ views_ui.edit:
   requirements:
     _entity_access: view.update
 
-views_ui.edit_display:
+entity.view.edit_display_form:
   path: '/admin/structure/views/view/{view}/edit/{display_id}'
   options:
     parameters:
@@ -112,7 +112,7 @@ views_ui.edit_display:
   requirements:
     _entity_access: view.update
 
-views_ui.preview:
+entity.view.preview_form:
   path: '/admin/structure/views/view/{view}/preview/{display_id}'
   options:
     parameters:
@@ -125,7 +125,7 @@ views_ui.preview:
   requirements:
     _permission: 'administer views'
 
-views_ui.break_lock:
+entity.view.break_lock_form:
   path: '/admin/structure/views/view/{view}/break-lock'
   defaults:
     _entity_form: 'view.break_lock'

@@ -145,17 +145,17 @@ class ViewListBuilder extends ConfigEntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
 
-    if ($entity->hasLinkTemplate('duplicate')) {
+    if ($entity->hasLinkTemplate('duplicate-form')) {
       $operations['duplicate'] = array(
         'title' => $this->t('Duplicate'),
         'weight' => 15,
-      ) + $entity->urlInfo('duplicate')->toArray();
+      ) + $entity->urlInfo('duplicate-form')->toArray();
     }
 
     // Add AJAX functionality to enable/disable operations.
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
-        $operations[$op]['route_name'] = "views_ui.$op";
+        $operations[$op]['route_name'] = "entity.view.{$op}";
         $operations[$op]['route_parameters'] = array('view' => $entity->id());
 
         // Enable and disable operations should use AJAX.
