@@ -10,10 +10,6 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Core\Asset\LibraryDiscoveryParser;
 use Drupal\Tests\UnitTestCase;
 
-if (!defined('DRUPAL_ROOT')) {
-  define('DRUPAL_ROOT', dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)))));
-}
-
 if (!defined('CSS_AGGREGATE_DEFAULT')) {
   define('CSS_AGGREGATE_DEFAULT', 0);
   define('CSS_AGGREGATE_THEME', 100);

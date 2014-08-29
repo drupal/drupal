@@ -373,9 +373,6 @@ if (!defined('DRUPAL_EXTENSION_NAME_MAX_LENGTH')) {
 if (!defined('DRUPAL_PHP_FUNCTION_PATTERN')) {
   define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
 }
-if (!defined('DRUPAL_ROOT')) {
-  define('DRUPAL_ROOT', dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)))));
-}
 if (!defined('DRUPAL_MINIMUM_PHP')) {
   define('DRUPAL_MINIMUM_PHP', '5.3.10');
 }

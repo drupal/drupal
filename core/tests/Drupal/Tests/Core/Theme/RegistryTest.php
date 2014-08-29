@@ -127,7 +127,3 @@ class TestRegistry extends Registry {
   }
 
 }
-
-if (!defined('DRUPAL_ROOT')) {
-  define('DRUPAL_ROOT', dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)))));
-}
