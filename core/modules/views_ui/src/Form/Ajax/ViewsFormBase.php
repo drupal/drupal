@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -96,8 +97,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
     // being used.
-    $seen_ids_init = &drupal_static('drupal_html_id:init');
-    $seen_ids_init = array();
+    Html::resetSeenIds();
 
     // check to see if this is the top form of the stack. If it is, pop
     // it off; if it isn't, the user clicked somewhere else and the stack is

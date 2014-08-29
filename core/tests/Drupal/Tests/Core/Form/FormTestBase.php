@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Form {
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -168,7 +169,7 @@ abstract class FormTestBase extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function tearDown() {
-    $this->formBuilder->drupalStaticReset();
+    Html::resetSeenIds();
   }
 
   /**

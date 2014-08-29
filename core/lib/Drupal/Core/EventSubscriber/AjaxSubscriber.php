@@ -2,18 +2,32 @@
 
 /**
  * @file
- * Contains \Drupal\Core\EventSubscriber\AjaxResponseSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\AjaxSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class AjaxResponseSubscriber implements EventSubscriberInterface {
+/**
+ * Subscribes to set AJAX HTML IDs and prepare AJAX responses.
+ */
+class AjaxSubscriber implements EventSubscriberInterface {
+
+  /**
+   * Sets the AJAX HTML IDs from the current request.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The response event, which contains the current request.
+   */
+  public function onRequest(GetResponseEvent $event) {
+    Html::setAjaxHtmlIds($event->getRequest()->request->get('ajax_html_ids', ''));
+  }
 
   /**
    * Renders the ajax commands right before preparing the result.
@@ -33,6 +47,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::RESPONSE][] = array('onResponse', -100);
+    $events[KernelEvents::REQUEST][] = array('onREquest', 50);
 
     return $events;
   }

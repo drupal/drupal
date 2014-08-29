@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\UrlCacheContext;
 use Drupal\simpletest\DrupalUnitTestBase;
@@ -94,7 +95,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertEqual(drupal_render($output), $expected_output);
 
     // Reset the HTML IDs so that the next render is not affected.
-    drupal_static_reset('drupal_html_id');
+    Html::resetSeenIds();
 
     // Test the rendering of a block with a given title.
     $entity = $this->controller->create(array(

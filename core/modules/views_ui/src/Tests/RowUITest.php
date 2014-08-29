@@ -61,7 +61,7 @@ class RowUITest extends UITestBase {
 
     // Change the row plugin to fields using ajax.
     $this->drupalPostAjaxForm($row_plugin_url, array('row[type]' => 'fields'), array('op' => 'Apply'), str_replace('/nojs/', '/ajax/', $row_plugin_url));
-    $this->drupalPostAjaxForm(NULL, array(), array('op' => 'Apply'));
+    $this->drupalPostAjaxForm(NULL, array(), array('op' => 'Apply'), str_replace('/nojs/', '/ajax/', $row_plugin_url));
     $this->assertResponse(200);
     $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
   }

@@ -205,7 +205,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form = $this->formBuilder->getForm($form_id);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame($form_id, $form['#id']);
+    $this->assertSame('test-form-id', $form['#id']);
   }
 
   /**
@@ -219,7 +219,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form = $this->formBuilder->getForm($form_arg);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame($form_id, $form['#id']);
+    $this->assertArrayHasKey('#id', $form);
   }
 
   /**
@@ -234,7 +234,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form = $this->formBuilder->getForm($form_id);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame('test_form', $form['#id']);
+    $this->assertSame('test-form', $form['#id']);
   }
 
   /**
@@ -249,7 +249,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form = $this->formBuilder->getForm($form_id);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame($form_id, $form['#id']);
+    $this->assertArrayHasKey('#id', $form);
   }
 
   /**
@@ -264,7 +264,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form = $this->formBuilder->buildForm($form_id, $form_state);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame('test_form', $form['#id']);
+    $this->assertSame('test-form', $form['#id']);
   }
 
   /**
@@ -280,7 +280,7 @@ class FormBuilderTest extends FormTestBase {
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertFormElement($expected_form, $form, 'test');
     $this->assertSame($form_id, $form_state['build_info']['form_id']);
-    $this->assertSame($form_id, $form['#id']);
+    $this->assertArrayHasKey('#id', $form);
   }
 
   /**
@@ -403,13 +403,13 @@ class FormBuilderTest extends FormTestBase {
       ->setMethods(array('drupalSetMessage'))
       ->getMock();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
-    $this->assertSame($form_id, $form['#id']);
+    $this->assertSame('test-form-id', $form['#id']);
 
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
       ->setMethods(array('drupalSetMessage'))
       ->getMock();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
-    $this->assertSame("$form_id--2", $form['#id']);
+    $this->assertSame('test-form-id--2', $form['#id']);
   }
 
 }

@@ -564,8 +564,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
-  ajax_response_subscriber:
-    class: Drupal\Core\EventSubscriber\AjaxResponseSubscriber
+  ajax_subscriber:
+    class: Drupal\Core\EventSubscriber\AjaxSubscriber
     tags:
       - { name: event_subscriber }
   route_enhancer.param_conversion:

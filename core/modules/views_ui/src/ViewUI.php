@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -433,8 +434,7 @@ class ViewUI implements ViewStorageInterface {
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
     // being used.
-    $seen_ids_init = &drupal_static('drupal_html_id:init');
-    $seen_ids_init = array();
+    Html::resetSeenIds();
 
     if (empty($this->stack)) {
       $this->stack = array();

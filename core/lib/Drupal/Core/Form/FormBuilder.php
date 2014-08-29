@@ -8,6 +8,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
@@ -384,10 +385,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Assign a default CSS class name based on $form_id.
     // This happens here and not in self::prepareForm() in order to allow the
     // form constructor function to override or remove the default class.
-    $form['#attributes']['class'][] = $this->drupalHtmlClass($form_id);
+    $form['#attributes']['class'][] = Html::getClass($form_id);
     // Same for the base form ID, if any.
     if (isset($form_state['build_info']['base_form_id'])) {
-      $form['#attributes']['class'][] = $this->drupalHtmlClass($form_state['build_info']['base_form_id']);
+      $form['#attributes']['class'][] = Html::getClass($form_state['build_info']['base_form_id']);
     }
 
     // We need to pass $form_state by reference in order for forms to modify it,
@@ -459,7 +460,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // element IDs needlessly.
       if (!FormState::hasAnyErrors()) {
         // In case of errors, do not break HTML IDs of other forms.
-        $this->drupalStaticReset('drupal_html_id');
+        Html::resetSeenIds();
       }
 
       if (!$form_state['rebuild'] && !FormState::hasAnyErrors()) {
@@ -561,7 +562,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       else {
         $form['#token'] = $form_id;
         $form['form_token'] = array(
-          '#id' => $this->drupalHtmlId('edit-' . $form_id . '-form-token'),
+          '#id' => Html::getUniqueId('edit-' . $form_id . '-form-token'),
           '#type' => 'token',
           '#default_value' => $this->csrfToken->get($form['#token']),
           // Form processing and validation requires this value, so ensure the
@@ -576,7 +577,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form['form_id'] = array(
         '#type' => 'hidden',
         '#value' => $form_id,
-        '#id' => $this->drupalHtmlId("edit-$form_id"),
+        '#id' => Html::getUniqueId("edit-$form_id"),
         // Form processing and validation requires this value, so ensure the
         // submitted form value appears literally, regardless of custom #tree
         // and #parents being set elsewhere.
@@ -584,7 +585,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       );
     }
     if (!isset($form['#id'])) {
-      $form['#id'] = $this->drupalHtmlId($form_id);
+      $form['#id'] = Html::getUniqueId($form_id);
     }
 
     $form += $this->getElementInfo('form');
@@ -702,7 +703,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     if (!isset($element['#id'])) {
-      $element['#id'] = $this->drupalHtmlId('edit-' . implode('-', $element['#parents']));
+      $element['#id'] = Html::getUniqueId('edit-' . implode('-', $element['#parents']));
     }
 
     // Add the aria-describedby attribute to associate the form control with its
@@ -1082,31 +1083,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   protected function getElementInfo($type) {
     return element_info($type);
-  }
-
-  /**
-   * Wraps drupal_html_class().
-   *
-   * @return string
-   */
-  protected function drupalHtmlClass($class) {
-    return drupal_html_class($class);
-  }
-
-  /**
-   * Wraps drupal_html_id().
-   *
-   * @return string
-   */
-  protected function drupalHtmlId($id) {
-    return drupal_html_id($id);
-  }
-
-  /**
-   * Wraps drupal_static_reset().
-   */
-  protected function drupalStaticReset($name = NULL) {
-    drupal_static_reset($name);
   }
 
   /**

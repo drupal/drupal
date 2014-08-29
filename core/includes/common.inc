@@ -13,6 +13,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SortArray;
@@ -1299,25 +1300,12 @@ function drupal_clear_css_cache() {
  *
  * @return
  *   The cleaned identifier.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Html::cleanCssIdentifier()
  */
 function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '__' => '__', '/' => '-', '[' => '-', ']' => '')) {
-  // By default, we filter using Drupal's coding standards.
-  $identifier = strtr($identifier, $filter);
-
-  // Valid characters in a CSS identifier are:
-  // - the hyphen (U+002D)
-  // - a-z (U+0030 - U+0039)
-  // - A-Z (U+0041 - U+005A)
-  // - the underscore (U+005F)
-  // - 0-9 (U+0061 - U+007A)
-  // - ISO 10646 characters U+00A1 and higher
-  // We strip out any character not in the above list.
-  $identifier = preg_replace('/[^\x{002D}\x{0030}-\x{0039}\x{0041}-\x{005A}\x{005F}\x{0061}-\x{007A}\x{00A1}-\x{FFFF}]/u', '', $identifier);
-
-  // Identifiers cannot start with a digit, two hyphens, or a hyphen followed by a digit.
-  $identifier = preg_replace(array('/^[0-9]/', '/^(-[0-9])|^(--)/'), array('_', '__') , $identifier);
-
-  return $identifier;
+  return Html::cleanCssIdentifier($identifier, $filter);
 }
 
 /**
@@ -1331,16 +1319,12 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
  *
  * @return
  *   The cleaned class name.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Html::getClass()
  */
 function drupal_html_class($class) {
-  // The output of this function will never change, so this uses a normal
-  // static instead of drupal_static().
-  static $classes = array();
-
-  if (!isset($classes[$class])) {
-    $classes[$class] = drupal_clean_css_identifier(drupal_strtolower($class));
-  }
-  return $classes[$class];
+  return Html::getClass($class);
 }
 
 /**
@@ -1369,66 +1353,12 @@ function drupal_html_class($class) {
  *
  * @return
  *   The cleaned ID.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Html::getUniqueId()
  */
 function drupal_html_id($id) {
-  // If this is an Ajax request, then content returned by this page request will
-  // be merged with content already on the base page. The HTML IDs must be
-  // unique for the fully merged content. Therefore, initialize $seen_ids to
-  // take into account IDs that are already in use on the base page.
-  $seen_ids_init = &drupal_static(__FUNCTION__ . ':init');
-  if (!isset($seen_ids_init)) {
-    $ajax_html_ids = \Drupal::request()->request->get('ajax_html_ids');
-    // Ideally, Drupal would provide an API to persist state information about
-    // prior page requests in the database, and we'd be able to add this
-    // function's $seen_ids static variable to that state information in order
-    // to have it properly initialized for this page request. However, no such
-    // page state API exists, so instead, ajax.js adds all of the in-use HTML
-    // IDs to the POST data of Ajax submissions. Direct use of $_POST is
-    // normally not recommended as it could open up security risks, but because
-    // the raw POST data is cast to a number before being returned by this
-    // function, this usage is safe.
-    if (empty($ajax_html_ids)) {
-      $seen_ids_init = array();
-    }
-    else {
-      // This function ensures uniqueness by appending a counter to the base id
-      // requested by the calling function after the first occurrence of that
-      // requested id. $_POST['ajax_html_ids'] contains the ids as they were
-      // returned by this function, potentially with the appended counter, so
-      // we parse that to reconstruct the $seen_ids array.
-      $ajax_html_ids = explode(' ', $ajax_html_ids);
-      foreach ($ajax_html_ids as $seen_id) {
-        // We rely on '--' being used solely for separating a base id from the
-        // counter, which this function ensures when returning an id.
-        $parts = explode('--', $seen_id, 2);
-        if (!empty($parts[1]) && is_numeric($parts[1])) {
-          list($seen_id, $i) = $parts;
-        }
-        else {
-          $i = 1;
-        }
-        if (!isset($seen_ids_init[$seen_id]) || ($i > $seen_ids_init[$seen_id])) {
-          $seen_ids_init[$seen_id] = $i;
-        }
-      }
-    }
-  }
-  $seen_ids = &drupal_static(__FUNCTION__, $seen_ids_init);
-
-  $id = drupal_clean_id_identifier($id);
-  // Ensure IDs are unique by appending a counter after the first occurrence.
-  // The counter needs to be appended with a delimiter that does not exist in
-  // the base ID. Requiring a unique delimiter helps ensure that we really do
-  // return unique IDs and also helps us re-create the $seen_ids array during
-  // Ajax requests.
-  if (isset($seen_ids[$id])) {
-    $id = $id . '--' . ++$seen_ids[$id];
-  }
-  else {
-    $seen_ids[$id] = 1;
-  }
-
-  return $id;
+  return Html::getUniqueId($id);
 }
 
 /**
@@ -1444,21 +1374,12 @@ function drupal_html_id($id) {
  *   The cleaned ID.
  *
  * @see drupal_html_id()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Html::getId()
  */
 function drupal_clean_id_identifier($id) {
-  $id = strtr(drupal_strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
-
-  // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
-  // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
-  // colons (":"), and periods ("."). We strip out any character not in that
-  // list. Note that the CSS spec doesn't allow colons or periods in identifiers
-  // (http://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
-  // characters as well.
-  $id = preg_replace('/[^A-Za-z0-9\-_]/', '', $id);
-
-  // Removing multiple consecutive hyphens.
-  $id = preg_replace('/\-+/', '-', $id);
-  return $id;
+  return Html::getId($id);
 }
 
 /**
