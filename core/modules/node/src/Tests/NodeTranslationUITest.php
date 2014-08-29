@@ -194,6 +194,9 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('node/' . $article->id() . '/translations');
     $this->assertNoRaw('"theme":"seven"', 'Translation uses frontend theme if edit is frontend.');
+
+    // Assert presence of translation page itself (vs. DisabledBundle below).
+    $this->assertResponse(200);
   }
 
   /**
@@ -205,13 +208,15 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->drupalCreateContentType(array('type' => $disabledBundle, 'name' => $disabledBundle));
 
     // Create a node for each bundle.
-    $enabledNode = $this->drupalCreateNode(array('type' => $this->bundle));
+    $node = $this->drupalCreateNode(array('type' => $this->bundle));
 
-    // Make sure that only a single row was inserted into the
-    // {content_translation} table.
+    // Make sure that nothing was inserted into the {content_translation} table.
     $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
-    $this->assertEqual(1, count($rows));
-    $this->assertEqual($enabledNode->id(), reset($rows)->entity_id);
+    $this->assertEqual(0, count($rows));
+
+    // Ensure the translation tab is not accessible.
+    $this->drupalGet('node/' . $node->id() . '/translations');
+    $this->assertResponse(403);
   }
 
   /**

@@ -47,7 +47,8 @@ class ContentTranslationOverviewAccess implements AccessInterface {
    */
   public function access(Request $request, AccountInterface $account) {
     $entity_type = $request->attributes->get('entity_type_id');
-    if ($entity = $request->attributes->get($entity_type)) {
+    $entity = $request->attributes->get($entity_type);
+    if ($entity && $entity->isTranslatable()) {
       // Get entity base info.
       $bundle = $entity->bundle();
 
@@ -56,6 +57,11 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       $translation = $definition->get('translation');
       $access_callback = $translation['content_translation']['access_callback'];
       if (call_user_func($access_callback, $entity)) {
+        return static::ALLOW;
+      }
+
+      // Check "translate any entity" permission.
+      if ($account->hasPermission('translate any entity')) {
         return static::ALLOW;
       }
 

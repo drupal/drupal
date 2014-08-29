@@ -246,8 +246,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function isTranslatable() {
+    // Check that the bundle is translatable, the entity has a language defined
+    // and if we have more than one language on the site.
     $bundles = $this->entityManager()->getBundleInfo($this->entityTypeId);
-    return !empty($bundles[$this->bundle()]['translatable']);
+    return !empty($bundles[$this->bundle()]['translatable']) && empty($this->getUntranslated()->language()->locked) && $this->languageManager()->isMultilingual();
   }
 
   /**
@@ -513,7 +515,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $this->fieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $this->bundle());
+      $this->fieldDefinitions = $this->entityManager()->getFieldDefinitions($this->entityTypeId, $this->bundle());
     }
     return $this->fieldDefinitions;
   }

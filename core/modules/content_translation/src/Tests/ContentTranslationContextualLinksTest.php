@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Language\Language;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
@@ -40,6 +41,13 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   protected $translator;
 
   /**
+   * The enabled languages.
+   *
+   * @var array
+   */
+  protected $langcodes;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -55,11 +63,48 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
+    // Set up an additional language.
+    $this->langcodes = array(language_default()->id, 'es');
+    language_save(new Language(array('id' => 'es')));
 
     // Create a content type.
     $this->bundle = $this->randomMachineName();
     $this->contentType = $this->drupalCreateContentType(array('type' => $this->bundle));
 
+    // Enable translation for the current entity type and ensure the change is
+    // picked up.
+    content_translation_set_config('node', $this->bundle, 'enabled', TRUE);
+    drupal_static_reset();
+    \Drupal::entityManager()->clearCachedBundles();
+    \Drupal::service('router.builder')->rebuild();
+
+    // Add a translatable field to the content type.
+    entity_create('field_storage_config', array(
+      'name' => 'field_test_text',
+      'entity_type' => 'node',
+      'type' => 'text',
+      'cardinality' => 1,
+      'translatable' => TRUE,
+    ))->save();
+    entity_create('field_instance_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_text',
+      'bundle' => $this->bundle,
+      'label' => 'Test text-field',
+    ))->save();
+    entity_get_form_display('node', $this->bundle, 'default')
+      ->setComponent('field_test_text', array(
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ))
+      ->save();
+
+    // Enable content translation.
+    $configuration = array(
+      'langcode' => language_default()->id,
+      'language_show' => TRUE,
+    );
+    language_save_default_configuration('node', $this->bundle, $configuration);
     // Create a translator user.
     $permissions = array(
       'access contextual links',
@@ -76,7 +121,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   public function testContentTranslationContextualLinks() {
     // Create a node.
     $title = $this->randomString();
-    $this->drupalCreateNode(array('type' => $this->bundle, 'title' => $title));
+    $this->drupalCreateNode(array('type' => $this->bundle, 'title' => $title, 'langcode' => 'en'));
     $node = $this->drupalGetNodeByTitle($title);
 
     // Check that the translate link appears on the node page.

@@ -61,10 +61,8 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
         ),
         array(
           '_access_content_translation_overview' => $entity_type_id,
-          '_permission' => 'translate any entity',
         ),
         array(
-          '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
           'parameters' => array(
             $entity_type_id => array(
               'type' => 'entity:' . $entity_type_id,
