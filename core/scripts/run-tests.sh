@@ -767,8 +767,21 @@ function simpletest_script_get_test_list() {
   }
   else {
     if ($args['class']) {
-      foreach ($args['test_names'] as $class_name) {
-        $test_list[] = $class_name;
+      $test_list = array();
+      foreach ($args['test_names'] as $test_class) {
+        if (class_exists($test_class)) {
+          $test_list[] = $test_class;
+        }
+        else {
+          $groups = simpletest_test_get_all();
+          $all_classes = array();
+          foreach ($groups as $group) {
+            $all_classes = array_merge($all_classes, array_keys($group));
+          }
+          simpletest_script_print_error('Test class not found: ' . $test_class);
+          simpletest_script_print_alternatives($test_class, $all_classes, 6);
+          exit(1);
+        }
       }
     }
     elseif ($args['file']) {
@@ -803,7 +816,14 @@ function simpletest_script_get_test_list() {
     else {
       $groups = simpletest_test_get_all();
       foreach ($args['test_names'] as $group_name) {
-        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
+        if (isset($groups[$group_name])) {
+          $test_list = array_merge($test_list, array_keys($groups[$group_name]));
+        }
+        else {
+          simpletest_script_print_error('Test group not found: ' . $group_name);
+          simpletest_script_print_alternatives($group_name, array_keys($groups));
+          exit(1);
+        }
       }
     }
   }
@@ -1058,4 +1078,38 @@ function simpletest_script_color_code($status) {
       return SIMPLETEST_SCRIPT_COLOR_EXCEPTION;
   }
   return 0; // Default formatting.
+}
+
+/**
+ * Prints alternative test names.
+ *
+ * Searches the provided array of string values for close matches based on the
+ * Levenshtein algorithm.
+ *
+ * @see http://php.net/manual/en/function.levenshtein.php
+ *
+ * @param string $string
+ *   A string to test.
+ * @param array $array
+ *   A list of strings to search.
+ * @param int $degree
+ *   The matching strictness. Higher values return fewer matches. A value of
+ *   4 means that the function will return strings from $array if the candidate
+ *   string in $array would be identical to $string by changing 1/4 or fewer of
+ *   its characters.
+ */
+function simpletest_script_print_alternatives($string, $array, $degree = 4) {
+  $alternatives = array();
+  foreach ($array as $item) {
+    $lev = levenshtein($string, $item);
+    if ($lev <= strlen($item) / $degree || FALSE !== strpos($string, $item)) {
+      $alternatives[] = $item;
+    }
+  }
+  if (!empty($alternatives)) {
+    simpletest_script_print("  Did you mean?\n", SIMPLETEST_SCRIPT_COLOR_FAIL);
+    foreach ($alternatives as $alternative) {
+      simpletest_script_print("  - $alternative\n", SIMPLETEST_SCRIPT_COLOR_FAIL);
+    }
+  }
 }
