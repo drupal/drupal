@@ -134,9 +134,12 @@ class FieldInstanceEditForm extends FormBase {
       '#weight' => -5,
     );
 
-    // Add instance settings for the field type.
+    // Add instance settings for the field type and a container for third party
+    // settings that modules can add to via hook_form_FORM_ID_alter().
     $form['instance']['settings'] = $items[0]->instanceSettingsForm($form, $form_state);
     $form['instance']['settings']['#weight'] = 10;
+    $form['instance']['third_party_settings'] = array();
+    $form['instance']['third_party_settings']['#weight'] = 11;
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
@@ -186,7 +189,7 @@ class FieldInstanceEditForm extends FormBase {
 
     // Merge incoming values into the instance.
     foreach ($form_state->getValue('instance') as $key => $value) {
-      $this->instance->$key = $value;
+      $this->instance->set($key, $value);
     }
     $this->instance->save();
 

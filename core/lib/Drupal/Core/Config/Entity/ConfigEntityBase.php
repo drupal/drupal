@@ -326,6 +326,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         }
       }
     }
+    if ($this instanceof ThirdPartySettingsInterface) {
+      // Configuration entities need to depend on the providers of any third
+      // parties that they store the configuration for.
+      foreach ($this->getThirdPartyProviders() as $provider) {
+        $this->addDependency('module', $provider);
+      }
+    }
     return $this->dependencies;
   }
 

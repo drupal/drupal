@@ -7,6 +7,7 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -54,6 +55,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
       return;
     }
 
+    /** @var \Drupal\Core\Field\FieldItemListInterface $items */
     foreach ($entity as $field_name => $items) {
       $field_definition = $items->getFieldDefinition();
       $field_type_definition = $field_type_manager->getDefinition($field_definition->getType());
@@ -61,7 +63,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
       // Sync if the field is translatable, not empty, and the synchronization
       // setting is enabled.
-      if ($field_definition->isTranslatable() && !$items->isEmpty() && $translation_sync = $field_definition->getSetting('translation_sync')) {
+      if ($field_definition instanceof ThirdPartySettingsInterface && $field_definition->isTranslatable() && !$items->isEmpty() && $translation_sync = $field_definition->getThirdPartySetting('content_translation', 'translation_sync')) {
         // Retrieve all the untranslatable column groups and merge them into
         // single list.
         $groups = array_keys(array_diff($translation_sync, array_filter($translation_sync)));

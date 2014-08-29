@@ -374,6 +374,11 @@ field_config_base:
       label: 'Default value function'
     settings:
       type: field.[%parent.field_type].instance_settings
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: field_config.third_party.[%key]
     field_type:
       type: string
       label: 'Field type'

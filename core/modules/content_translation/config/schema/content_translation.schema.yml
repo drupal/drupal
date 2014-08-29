@@ -1,0 +1,12 @@
+# Schema for the Content Translation module.
+
+field_config.third_party.content_translation:
+  type: mapping
+  label: 'Content translation field settings'
+  mapping:
+    translation_sync:
+      type: sequence
+      label: 'Field properties for which to synchronize translations'
+      sequence:
+        - type: string
+          label: 'Field column for which to synchronize translations'

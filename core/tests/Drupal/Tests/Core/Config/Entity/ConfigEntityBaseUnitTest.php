@@ -280,6 +280,18 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::calculateDependencies
+   */
+  public function testCalculateDependenciesWithThirdPartySettings() {
+    $this->entity = $this->getMockForAbstractClass('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithThirdPartySettings', array(array(), $this->entityTypeId));
+    $this->entity->setThirdPartySetting('test_provider', 'test', 'test');
+    $this->entity->setThirdPartySetting('test_provider2', 'test', 'test');
+    $this->entity->setThirdPartySetting($this->provider, 'test', 'test');
+
+    $this->assertEquals(array('test_provider', 'test_provider2'), $this->entity->calculateDependencies()['module']);
+  }
+
+  /**
    * @covers ::setOriginalId
    * @covers ::getOriginalId
    */

@@ -629,8 +629,8 @@ function content_translation_form_field_ui_field_instance_edit_form_alter(array 
     module_load_include('inc', 'content_translation', 'content_translation.admin');
     $element = content_translation_field_sync_widget($instance);
     if ($element) {
-      $form['instance']['settings']['translation_sync'] = $element;
-      $form['instance']['settings']['translation_sync']['#weight'] = -10;
+      $form['instance']['third_party_settings']['content_translation']['translation_sync'] = $element;
+      $form['instance']['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
     }
   }
 }
@@ -639,16 +639,6 @@ function content_translation_form_field_ui_field_instance_edit_form_alter(array 
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
-  // By default no column has to be synchronized.
-  // @todo Replace with own storage in https://drupal.org/node/2224761
-  if ($entity->getEntityTypeId() === 'field_storage_config') {
-    $entity->settings += array('translation_sync' => FALSE);
-  }
-  // Synchronization can be enabled per instance.
-  // @todo Replace with own storage in https://drupal.org/node/2224761
-  if ($entity->getEntityTypeId() === 'field_instance_config') {
-    $entity->settings += array('translation_sync' => FALSE);
-  }
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
     // @todo Avoid using request attributes once translation metadata become
     //   regular fields.
@@ -777,46 +767,4 @@ function content_translation_form_language_content_settings_form_alter(array &$f
 function content_translation_preprocess_language_content_settings_table(&$variables) {
   module_load_include('inc', 'content_translation', 'content_translation.admin');
   _content_translation_preprocess_language_content_settings_table($variables);
-}
-
-/**
- * Stores content translation settings.
- *
- * @param array $settings
- *   An associative array of settings keyed by entity type and bundle. At bundle
- *   level the following keys are available:
- *   - translatable: The bundle translatability status, which is a bool.
- *   - columns: An associative array of translation synchronization settings
- *     keyed by field names.
- */
-function content_translation_save_settings($settings) {
-  foreach ($settings as $entity_type => $entity_settings) {
-    foreach ($entity_settings as $bundle => $bundle_settings) {
-      // The 'translatable' value is set only if it is possible to enable.
-      if (isset($bundle_settings['translatable'])) {
-        // Store whether a bundle has translation enabled or not.
-        content_translation_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
-
-        // Save translation_sync settings.
-        if (!empty($bundle_settings['columns'])) {
-          foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-            $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
-            if ($instance->isTranslatable()) {
-              $instance->settings['translation_sync'] = $column_settings;
-            }
-            // If the field does not have translatable enabled we need to reset
-            // the sync settings to their defaults.
-            else {
-              unset($instance->settings['translation_sync']);
-            }
-            $instance->save();
-          }
-        }
-      }
-    }
-  }
-
-  // Ensure entity and menu router information are correctly rebuilt.
-  \Drupal::entityManager()->clearCachedDefinitions();
-  \Drupal::service('router.builder')->setRebuildNeeded();
 }

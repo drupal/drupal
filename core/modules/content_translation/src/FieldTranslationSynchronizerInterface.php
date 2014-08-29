@@ -20,7 +20,8 @@ interface FieldTranslationSynchronizerInterface {
    * Field column synchronization takes care of propagating any change in the
    * field items order and in the column values themselves to all the available
    * translations. This functionality is provided by defining a
-   * 'translation_sync' key in the field instance settings, holding an array of
+   * 'translation_sync' key for the 'content_translation' module's portion of
+   * the field definition's 'third_party_settings', holding an array of
    * column names to be synchronized. The synchronized column values are shared
    * across translations, while the rest varies per-language. This is useful for
    * instance to translate the "alt" and "title" textual elements of an image

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -23,8 +24,12 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   A form element to configure field synchronization.
  */
 function content_translation_field_sync_widget(FieldDefinitionInterface $field) {
-  $element = array();
+  // No way to store field sync information on this field.
+  if (!($field instanceof ThirdPartySettingsInterface)) {
+    return array();
+  }
 
+  $element = array();
   $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType());
   $column_groups = $definition['column_groups'];
   if (!empty($column_groups) && count($column_groups) > 1) {
@@ -36,14 +41,14 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field) 
       $default[$group] = !empty($info['translatable']) ? $group : FALSE;
     }
 
-    $settings = array('dependent_selectors' => array('instance[settings][translation_sync]' => array('file')));
+    $settings = array('dependent_selectors' => array('instance[third_party_settings][content_translation][translation_sync]' => array('file')));
+    $default = $field->getThirdPartySetting('content_translation', 'translation_sync', $default);
 
-    $translation_sync = $field->getSetting('translation_sync');
     $element = array(
       '#type' => 'checkboxes',
       '#title' => t('Translatable elements'),
       '#options' => $options,
-      '#default_value' => !empty($translation_sync) ? $translation_sync : $default,
+      '#default_value' => $default,
       '#attached' => array(
         'library' => array(
           'content_translation/drupal.content_translation.admin',
@@ -108,16 +113,12 @@ function _content_translation_form_language_content_settings_form_alter(array &$
                 '#default_value' => $definition->isTranslatable(),
               );
               // Display the column translatability configuration widget.
-              // @todo Remove this special casing when arbitrary settings can be
-              //   stored for any field. See https://drupal.org/node/2224761.
-              if ($definition instanceof FieldInstanceConfigInterface) {
-                $column_element = content_translation_field_sync_widget($definition);
-                if ($column_element) {
-                  $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
-                  // @todo This should not concern only files.
-                  if (isset($column_element['#options']['file'])) {
-                    $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
-                  }
+              $column_element = content_translation_field_sync_widget($definition);
+              if ($column_element) {
+                $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
+                // @todo This should not concern only files.
+                if (isset($column_element['#options']['file'])) {
+                  $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
                 }
               }
             }
@@ -313,9 +314,32 @@ function content_translation_form_language_content_settings_submit(array $form, 
           }
         }
       }
+      if (isset($bundle_settings['translatable'])) {
+        // Store whether a bundle has translation enabled or not.
+        content_translation_set_config($entity_type_id, $bundle, 'enabled', $bundle_settings['translatable']);
+
+        // Save translation_sync settings.
+        if (!empty($bundle_settings['columns'])) {
+          foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
+            $field_config = $fields[$field_name]->getConfig($bundle);
+            if ($field_config->isTranslatable()) {
+              $field_config->setThirdPartySetting('content_translation', 'translation_sync', $column_settings);
+            }
+            // If the field does not have translatable enabled we need to reset
+            // the sync settings to their defaults.
+            else {
+              $field_config->unsetThirdPartySetting('content_translation', 'translation_sync');
+            }
+            $field_config->save();
+          }
+        }
+      }
     }
   }
 
-  content_translation_save_settings($settings);
+  // Ensure entity and menu router information are correctly rebuilt.
+  \Drupal::entityManager()->clearCachedDefinitions();
+  \Drupal::service('router.builder')->setRebuildNeeded();
+
   drupal_set_message(t('Settings successfully updated.'));
 }
