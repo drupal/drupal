@@ -53,6 +53,14 @@ interface ShortcutInterface extends ContentEntityInterface {
   public function setWeight($weight);
 
   /**
+   * Returns the URL object pointing to the configured route.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL object.
+   */
+  public function getUrl();
+
+  /**
    * Returns the route name associated with this shortcut, if any.
    *
    * @return string|null

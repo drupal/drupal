@@ -666,4 +666,13 @@ class Drupal {
     return static::$container->get('menu.link_tree');
   }
 
+  /**
+   * Returns the path validator.
+   *
+   * @return \Drupal\Core\Path\PathValidatorInterface
+   */
+  public static function pathValidator() {
+    return static::$container->get('path.validator');
+  }
+
 }

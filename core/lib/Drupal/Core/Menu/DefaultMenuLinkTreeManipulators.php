@@ -8,6 +8,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Path\PathValidator;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -93,6 +94,9 @@ class DefaultMenuLinkTreeManipulators {
    *   TRUE if the current user can access the link, FALSE otherwise.
    */
   protected function menuLinkCheckAccess(MenuLinkInterface $instance) {
+    if ($this->account->hasPermission('link to any page')) {
+      return TRUE;
+    }
     // Use the definition here since that's a lot faster than creating a Url
     // object that we don't need.
     $definition = $instance->getPluginDefinition();

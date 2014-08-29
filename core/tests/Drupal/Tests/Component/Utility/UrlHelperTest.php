@@ -273,6 +273,22 @@ class UrlHelperTest extends UnitTestCase {
         ),
       ),
       array(
+        'http://',
+        array(
+          'path' => '',
+          'query' => array(),
+          'fragment' => '',
+        ),
+      ),
+      array(
+        'https://',
+        array(
+          'path' => '',
+          'query' => array(),
+          'fragment' => '',
+        ),
+      ),
+      array(
         '/my/path?destination=home#footer',
         array(
           'path' => '/my/path',

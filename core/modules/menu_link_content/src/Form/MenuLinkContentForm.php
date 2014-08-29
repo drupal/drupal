@@ -18,11 +18,9 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\Form\MenuLinkFormInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\AliasManagerInterface;
-use Drupal\Core\Routing\MatchingRouteNotFoundException;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -78,6 +76,13 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   protected $account;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a MenuLinkContentForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -96,8 +101,10 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
    */
-  public function __construct(EntityManagerInterface $entity_manager, MenuParentFormSelectorInterface $menu_parent_selector, AliasManagerInterface $alias_manager, ModuleHandlerInterface $module_handler, RequestContext $request_context, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(EntityManagerInterface $entity_manager, MenuParentFormSelectorInterface $menu_parent_selector, AliasManagerInterface $alias_manager, ModuleHandlerInterface $module_handler, RequestContext $request_context, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, PathValidatorInterface $path_validator) {
     parent::__construct($entity_manager, $language_manager);
     $this->menuParentSelector = $menu_parent_selector;
     $this->pathAliasManager = $alias_manager;
@@ -106,6 +113,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     $this->languageManager = $language_manager;
     $this->accessManager = $access_manager;
     $this->account = $account;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -120,7 +128,8 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       $container->get('router.request_context'),
       $container->get('language_manager'),
       $container->get('access_manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('path.validator')
     );
   }
 
@@ -168,46 +177,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   }
 
   /**
-   * Breaks up a user-entered URL or path into all the relevant parts.
-   *
-   * @param string $url
-   *   The user-entered URL or path.
-   *
-   * @return array
-   *   The extracted parts.
-   */
-  protected function extractUrl($url) {
-    $extracted = UrlHelper::parse($url);
-    $external = UrlHelper::isExternal($url);
-    if ($external) {
-      $extracted['url'] = $extracted['path'];
-      $extracted['route_name'] = NULL;
-      $extracted['route_parameters'] = array();
-    }
-    else {
-      $extracted['url'] = '';
-      // If the path doesn't match a Drupal path, the route should end up empty.
-      $extracted['route_name'] = NULL;
-      $extracted['route_parameters'] = array();
-      try {
-        // Find the route_name.
-        $normal_path = $this->pathAliasManager->getPathByAlias($extracted['path']);
-        $url_obj = Url::createFromPath($normal_path);
-        $extracted['route_name'] = $url_obj->getRouteName();
-        $extracted['route_parameters'] = $url_obj->getRouteParameters();
-      }
-      catch (MatchingRouteNotFoundException $e) {
-        // The path doesn't match a Drupal path.
-      }
-      catch (ParamNotConvertedException $e) {
-        // A path like node/99 matched a route, but the route parameter was
-        // invalid (e.g. node with ID 99 does not exist).
-      }
-    }
-    return $extracted;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function extractFormValues(array &$form, FormStateInterface $form_state) {
@@ -220,17 +189,24 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     }
     $new_definition['parent'] = isset($parent) ? $parent : '';
 
-    $extracted = $this->extractUrl($form_state->getValue('url'));
-    $new_definition['url'] = $extracted['url'];
-    $new_definition['route_name'] = $extracted['route_name'];
-    $new_definition['route_parameters'] = $extracted['route_parameters'];
-    $new_definition['options'] = array();
-    if ($extracted['query']) {
-      $new_definition['options']['query'] = $extracted['query'];
+    $new_definition['url'] = NULL;
+    $new_definition['route_name'] = NULL;
+    $new_definition['route_parameters'] = [];
+    $new_definition['options'] = [];
+
+    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue('url'));
+
+    if ($extracted) {
+      if ($extracted->isExternal()) {
+        $new_definition['url'] = $extracted->getPath();
+      }
+      else {
+        $new_definition['route_name'] = $extracted->getRouteName();
+        $new_definition['route_parameters'] = $extracted->getRouteParameters();
+        $new_definition['options'] = $extracted->getOptions();
+      }
     }
-    if ($extracted['fragment']) {
-      $new_definition['options']['fragment'] = $extracted['fragment'];
-    }
+
     $new_definition['title'] = $form_state->getValue(array('title', 0, 'value'));
     $new_definition['description'] = $form_state->getValue(array('description', 0, 'value'));
     $new_definition['weight'] = (int) $form_state->getValue(array('weight', 0, 'value'));
@@ -380,30 +356,10 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   The current state of the form.
    */
   protected function doValidate(array $form, FormStateInterface $form_state) {
-    $extracted = $this->extractUrl($form_state->getValue('url'));
+    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue('url'));
 
-    // If both URL and route_name are empty, the entered value is not valid.
-    $valid = FALSE;
-    if ($extracted['url']) {
-      // This is an external link.
-      $valid = TRUE;
-    }
-    elseif ($extracted['route_name']) {
-      // Users are not allowed to add a link to a page they cannot access.
-      $valid = $this->accessManager->checkNamedRoute($extracted['route_name'], $extracted['route_parameters'], $this->account);
-    }
-    if (!$valid) {
+    if (!$extracted) {
       $form_state->setErrorByName('url', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state->getValue('url'))));
-    }
-    elseif ($extracted['route_name']) {
-      // The user entered a Drupal path.
-      $normal_path = $this->pathAliasManager->getPathByAlias($extracted['path']);
-      if ($extracted['path'] != $normal_path) {
-        drupal_set_message($this->t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array(
-          '%link_path' => $extracted['path'],
-          '%normal_path' => $normal_path,
-        )));
-      }
     }
   }
 

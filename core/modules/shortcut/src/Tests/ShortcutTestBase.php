@@ -73,8 +73,8 @@ abstract class ShortcutTestBase extends WebTestBase {
     }
 
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview', 'administer users'));
-    $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets'));
+    $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview', 'administer users', 'link to any page'));
+    $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets', 'access shortcuts', 'access content'));
 
     // Create a node.
     $this->node = $this->drupalCreateNode(array('type' => 'article'));

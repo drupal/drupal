@@ -52,6 +52,7 @@ class LinkFieldTest extends WebTestBase {
     $this->web_user = $this->drupalCreateUser(array(
       'view test entity',
       'administer entity_test content',
+      'link to any page',
     ));
     $this->drupalLogin($this->web_user);
   }

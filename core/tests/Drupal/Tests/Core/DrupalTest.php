@@ -320,6 +320,22 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
+   * Tests the menuTree() method.
+   */
+  public function testMenuTree() {
+    $this->setMockContainerService('menu.link_tree');
+    $this->assertNotNull(\Drupal::menuTree());
+  }
+
+  /**
+   * Tests the pathValidator() method.
+   */
+  public function testPathValidator() {
+    $this->setMockContainerService('path.validator');
+    $this->assertNotNull(\Drupal::pathValidator());
+  }
+
+  /**
    * Sets up a mock expectation for the container get() method.
    *
    * @param string $service_name

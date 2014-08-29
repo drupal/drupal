@@ -22,6 +22,9 @@ interface InboundPathProcessorInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HttpRequest object representing the current request.
+   *
+   * @return string
+   *   The processed path.
    */
   public function processInbound($path, Request $request);
 

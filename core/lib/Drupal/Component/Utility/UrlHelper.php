@@ -151,7 +151,12 @@ class UrlHelper {
     if (strpos($url, '://') !== FALSE) {
       // Split off everything before the query string into 'path'.
       $parts = explode('?', $url);
-      $options['path'] = $parts[0];
+
+      // Don't support URLs without a path, like 'http://'.
+      list(, $path) = explode('://', $parts[0], 2);
+      if ($path != '') {
+        $options['path'] = $parts[0];
+      }
       // If there is a query string, transform it into keyed query parameters.
       if (isset($parts[1])) {
         $query_parts = explode('#', $parts[1]);

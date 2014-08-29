@@ -84,6 +84,13 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   /**
    * {@inheritdoc}
    */
+  public function getUrl() {
+    return new Url($this->getRouteName(), $this->getRouteParams());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getRouteName() {
     return $this->get('route_name')->value;
   }

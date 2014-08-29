@@ -72,22 +72,27 @@ class UrlTest extends UnitTestCase {
    * @covers ::createFromPath()
    */
   public function testCreateFromPath() {
-    $this->router->expects($this->any())
-      ->method('match')
-      ->will($this->returnValueMap(array(
-        array('/node', array(
+    $this->router->expects($this->at(0))
+      ->method('matchRequest')
+      ->with(Request::create('/node'))
+      ->willReturn([
           RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
           '_raw_variables' => new ParameterBag(),
-        )),
-        array('/node/1', array(
-          RouteObjectInterface::ROUTE_NAME => 'node_view',
-          '_raw_variables' => new ParameterBag(array('node' => '1')),
-        )),
-        array('/node/2/edit', array(
-          RouteObjectInterface::ROUTE_NAME => 'node_edit',
-          '_raw_variables' => new ParameterBag(array('node' => '2')),
-        )),
-      )));
+        ]);
+    $this->router->expects($this->at(1))
+      ->method('matchRequest')
+      ->with(Request::create('/node/1'))
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'node_view',
+        '_raw_variables' => new ParameterBag(['node' => '1']),
+      ]);
+    $this->router->expects($this->at(2))
+      ->method('matchRequest')
+      ->with(Request::create('/node/2/edit'))
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'node_edit',
+        '_raw_variables' => new ParameterBag(['node' => '2']),
+      ]);
 
     $urls = array();
     foreach ($this->map as $index => $values) {
@@ -114,13 +119,12 @@ class UrlTest extends UnitTestCase {
    *
    * @covers ::createFromPath()
    *
-   * @expectedException \Drupal\Core\Routing\MatchingRouteNotFoundException
-   * @expectedExceptionMessage No matching route could be found for the path "non-existent"
+   * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
    */
   public function testCreateFromPathInvalid() {
     $this->router->expects($this->once())
-      ->method('match')
-      ->with('/non-existent')
+      ->method('matchRequest')
+      ->with(Request::create('/non-existent'))
       ->will($this->throwException(new ResourceNotFoundException()));
 
     $this->assertNull(Url::createFromPath('non-existent'));
@@ -155,15 +159,10 @@ class UrlTest extends UnitTestCase {
    *
    * @covers ::createFromRequest()
    *
-   * @expectedException \Drupal\Core\Routing\MatchingRouteNotFoundException
-   * @expectedExceptionMessage No matching route could be found for the request: request_as_a_string
+   * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
    */
   public function testCreateFromRequestInvalid() {
-    // Mock the request in order to override the __toString() method.
-    $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-    $request->expects($this->once())
-      ->method('__toString')
-      ->will($this->returnValue('request_as_a_string'));
+    $request = Request::create('/test-path');
 
     $this->router->expects($this->once())
       ->method('matchRequest')

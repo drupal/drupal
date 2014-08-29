@@ -76,15 +76,10 @@ class ExternalUrlTest extends UnitTestCase {
    *
    * @covers ::createFromRequest()
    *
-   * @expectedException \Drupal\Core\Routing\MatchingRouteNotFoundException
-   * @expectedExceptionMessage No matching route could be found for the request: request_as_a_string
+   * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
    */
   public function testCreateFromRequest() {
-    // Mock the request in order to override the __toString() method.
-    $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-    $request->expects($this->once())
-      ->method('__toString')
-      ->will($this->returnValue('request_as_a_string'));
+    $request = Request::create('/test-path');
 
     $this->router->expects($this->once())
       ->method('matchRequest')

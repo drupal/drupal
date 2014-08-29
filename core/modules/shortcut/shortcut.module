@@ -259,29 +259,6 @@ function shortcut_set_title_exists($title) {
 }
 
 /**
- * Determines if a path corresponds to a valid shortcut link.
- *
- * @param string $path
- *   The path to the link.
- *
- * @return bool
- *   TRUE if the shortcut link is valid, FALSE otherwise. Valid links are ones
- *   that correspond to actual paths on the site.
- *
- * @see menu_edit_item_validate()
- */
-function shortcut_valid_link($path) {
-  // Do not use URL aliases.
-  $normal_path = \Drupal::service('path.alias_manager')->getPathByAlias($path);
-  if ($path != $normal_path) {
-    $path = $normal_path;
-  }
-
-  // An empty path is valid too and will be converted to <front>.
-  return (!UrlHelper::isExternal($path) && (\Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0)) || empty($path) || $path == '<front>';
-}
-
-/**
  * Returns an array of shortcut links, suitable for rendering.
  *
  * @param \Drupal\shortcut\ShortcutSetInterface $shortcut_set

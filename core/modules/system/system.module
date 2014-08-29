@@ -249,6 +249,11 @@ function system_permission() {
       'title' => t('View site reports'),
       'restrict access' => TRUE,
     ),
+    'link to any page' => [
+      'title' => t('Link to any page'),
+      'description' => t('This allows to bypass access checking when linking to internal paths.'),
+      'restrict access' => TRUE,
+    ],
   );
 }
 

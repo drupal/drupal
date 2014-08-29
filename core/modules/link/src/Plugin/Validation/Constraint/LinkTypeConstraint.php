@@ -8,14 +8,9 @@
 namespace Drupal\link\Plugin\Validation\Constraint;
 
 use Drupal\link\LinkItemInterface;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\MatchingRouteNotFoundException;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Component\Utility\UrlHelper;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Validation constraint for links receiving data allowed by its settings.
@@ -53,35 +48,19 @@ class LinkTypeConstraint extends Constraint implements ConstraintValidatorInterf
    */
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
-      $url_is_valid = TRUE;
+      $url_is_valid = FALSE;
       /** @var $link_item \Drupal\link\LinkItemInterface */
       $link_item = $value;
       $link_type = $link_item->getFieldDefinition()->getSetting('link_type');
       $url_string = $link_item->url;
       // Validate the url property.
       if ($url_string !== '') {
-        try {
-          // @todo This shouldn't be needed, but massageFormValues() may not
-          //   run.
-          $parsed_url = UrlHelper::parse($url_string);
+        if ($url = \Drupal::pathValidator()->getUrlIfValid($url_string)) {
+          $url_is_valid = (bool) $url;
 
-          $url = Url::createFromPath($parsed_url['path']);
-
-          if ($url->isExternal() && !UrlHelper::isValid($url_string, TRUE)) {
+          if ($url->isExternal() && !($link_type & LinkItemInterface::LINK_EXTERNAL)) {
             $url_is_valid = FALSE;
           }
-          elseif ($url->isExternal() && !($link_type & LinkItemInterface::LINK_EXTERNAL)) {
-            $url_is_valid = FALSE;
-          }
-        }
-        catch (NotFoundHttpException $e) {
-          $url_is_valid = FALSE;
-        }
-        catch (MatchingRouteNotFoundException $e) {
-          $url_is_valid = FALSE;
-        }
-        catch (ParamNotConvertedException $e) {
-          $url_is_valid = FALSE;
         }
       }
       if (!$url_is_valid) {

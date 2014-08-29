@@ -7,15 +7,10 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Routing\MatchingRouteNotFoundException;
-use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Plugin implementation of the 'link' widget.
@@ -47,9 +42,10 @@ class LinkWidget extends WidgetBase {
 
     $default_url_value = NULL;
     if (isset($items[$delta]->url)) {
-      $url = Url::createFromPath($items[$delta]->url);
-      $url->setOptions($items[$delta]->options);
-      $default_url_value = ltrim($url->toString(), '/');
+      if ($url = \Drupal::pathValidator()->getUrlIfValid($items[$delta]->url)) {
+        $url->setOptions($items[$delta]->options);
+        $default_url_value = ltrim($url->toString(), '/');
+      }
     }
     $element['url'] = array(
       '#type' => 'url',
@@ -204,32 +200,16 @@ class LinkWidget extends WidgetBase {
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
       if (!empty($value['url'])) {
-        try {
-          $parsed_url = UrlHelper::parse($value['url']);
-
-          // If internal links are supported, look up whether the given value is
-          // a path alias and store the system path instead.
-          if ($this->supportsInternalLinks() && !UrlHelper::isExternal($value['url'])) {
-            $parsed_url['path'] = \Drupal::service('path.alias_manager')->getPathByAlias($parsed_url['path']);
-          }
-
-          $url = Url::createFromPath($parsed_url['path']);
-          $url->setOption('query', $parsed_url['query']);
-          $url->setOption('fragment', $parsed_url['fragment']);
-          $url->setOption('attributes', $value['attributes']);
-
-          $value += $url->toArray();
-          // Reset the URL value to contain only the path.
-          $value['url'] = $parsed_url['path'];
+        $url = \Drupal::pathValidator()->getUrlIfValid($value['url']);
+        if (!$url) {
+          return $values;
         }
-        catch (NotFoundHttpException $e) {
-          // Nothing to do here, LinkTypeConstraintValidator emits errors.
-        }
-        catch (MatchingRouteNotFoundException $e) {
-          // Nothing to do here, LinkTypeConstraintValidator emits errors.
-        }
-        catch (ParamNotConvertedException $e) {
-          // Nothing to do here, LinkTypeConstraintValidator emits errors.
+
+        $value += $url->toArray();
+
+        // Reset the URL value to contain only the path.
+        if (!$url->isExternal() && $this->supportsInternalLinks()) {
+          $value['url'] = substr($url->toString(), strlen(\Drupal::request()->getBasePath() . '/'));
         }
       }
     }

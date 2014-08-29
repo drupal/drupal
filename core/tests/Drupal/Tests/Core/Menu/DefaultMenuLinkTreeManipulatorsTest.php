@@ -44,7 +44,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * The original menu tree build in mockTree().
    *
-   * @var \Drupal\Tests\Core\Menu\MenuLinkMock[]
+   * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
    */
   protected $originalTree = array();
 
@@ -134,6 +134,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * Tests the checkAccess() tree manipulator.
    *
    * @covers ::checkAccess
+   * @covers ::menuLinkCheckAccess
    */
   public function testCheckAccess() {
     // Those menu links that are non-external will have their access checks
@@ -176,6 +177,31 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertTrue($element->access);
     // Menu link 8: 'access' already set, to FALSE, hence removed.
     $this->assertFalse(array_key_exists(8, $tree));
+  }
+
+  /**
+   * Tests checkAccess() tree manipulator with 'link to any page' permission.
+   *
+   * @covers ::checkAccess
+   * @covers ::menuLinkCheckAccess
+   */
+  public function testCheckAccessWithLinkToAnyPagePermission() {
+    $this->mockTree();
+    $this->currentUser->expects($this->exactly(8))
+      ->method('hasPermission')
+      ->with('link to any page')
+      ->willReturn(TRUE);
+
+    $this->mockTree();
+    $this->defaultMenuTreeManipulators->checkAccess($this->originalTree);
+
+    $this->assertTrue($this->originalTree[1]->access);
+    $this->assertTrue($this->originalTree[2]->access);
+    $this->assertTrue($this->originalTree[2]->subtree[3]->access);
+    $this->assertTrue($this->originalTree[2]->subtree[3]->subtree[4]->access);
+    $this->assertTrue($this->originalTree[5]->subtree[7]->access);
+    $this->assertTrue($this->originalTree[6]->access);
+    $this->assertTrue($this->originalTree[8]->access);
   }
 
   /**
