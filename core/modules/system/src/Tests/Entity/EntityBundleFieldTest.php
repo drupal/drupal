@@ -49,7 +49,9 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
     $this->assertNotNull($definition, 'Field definition found.');
 
     // Make sure the table has been created.
-    $table = $this->entityManager->getStorage('entity_test')->_fieldTableName($definition);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $this->entityManager->getStorage('entity_test')->getTableMapping();
+    $table = $table_mapping->getDedicatedDataTableName($definition);
     $this->assertTrue($this->database->schema()->tableExists($table), 'Table created');
     $this->moduleHandler->uninstall(array('entity_bundle_field_test'), FALSE);
     $this->assertFalse($this->database->schema()->tableExists($table), 'Table dropped');
@@ -87,7 +89,9 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($entity->custom_field->value, 'cozy', 'Entity was updated correctly.');
 
     $entity->delete();
-    $table = $storage->_fieldTableName($entity->getFieldDefinition('custom_field'));
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $storage->getTableMapping();
+    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_field'));
     $result = $this->database->select($table, 'f')
       ->fields('f')
       ->condition('f.entity_id', $entity->id())
@@ -100,7 +104,7 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
     $entity->save();
     entity_test_delete_bundle('custom');
 
-    $table = $storage->_fieldTableName($entity->getFieldDefinition('custom_field'));
+    $table = $table_mapping->getDedicatedDataTableName($entity->getFieldDefinition('custom_field'));
     $result = $this->database->select($table, 'f')
       ->condition('f.entity_id', $entity->id())
       ->condition('deleted', 1)

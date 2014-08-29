@@ -7,8 +7,20 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
 /**
  * Provides a common interface for mapping field columns to SQL tables.
+ *
+ * Warning: using methods provided here should be done only when writing code
+ * that is explicitly targeting a SQL-based entity storage. Typically this API
+ * is used by SQL storage classes, or other SQL-specific code like the Views
+ * integration code for the Entity SQL storage. Another example of legal usage
+ * of this API is when needing to write a query that \Drupal::entityQuery() does
+ * not support. Always retrieve entity identifiers and use them to load entities
+ * instead of accessing data stored in the database directly. Any other usage
+ * circumvents the entity system and is strongly discouraged, at least when
+ * writing contributed code.
  */
 interface TableMappingInterface {
 
@@ -70,4 +82,24 @@ interface TableMappingInterface {
    */
   public function getExtraColumns($table_name);
 
+  /**
+   * A list of columns that can not be used as field type columns.
+   *
+   * @return array
+   */
+  public function getReservedColumns();
+
+  /**
+   * Generates a column name for a field.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   * @param string $column
+   *   The name of the column.
+   *
+   * @return string
+   *   A string containing a generated column name for a field data table that is
+   *   unique among all other fields.
+   */
+  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $column);
 }

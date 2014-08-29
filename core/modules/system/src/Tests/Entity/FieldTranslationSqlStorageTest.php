@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -83,12 +82,14 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $id = $entity->id();
     $langcode = $entity->getUntranslated()->language()->id;
     $fields = array($this->field_name, $this->untranslatable_field_name);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
 
     foreach ($fields as $field_name) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
       $tables = array(
-        ContentEntityDatabaseStorage::_fieldTableName($field_storage),
-        ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage),
+        $table_mapping->getDedicatedDataTableName($field_storage),
+        $table_mapping->getDedicatedRevisionTableName($field_storage),
       );
 
       foreach ($tables as $table) {

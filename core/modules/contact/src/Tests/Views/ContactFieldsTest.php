@@ -7,7 +7,6 @@
 
 namespace Drupal\contact\Tests\Views;
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\views\Tests\ViewTestBase;
 
 /**
@@ -60,7 +59,7 @@ class ContactFieldsTest extends ViewTestBase {
   public function testViewsData() {
     // Test that the field is not exposed to views, since contact_message
     // entities have no storage.
-    $table_name = ContentEntityDatabaseStorage::_fieldTableName($this->field_storage);
+    $table_name = 'contact_message__' .  $this->field_storage->getName();
     $data = $this->container->get('views.views_data')->get($table_name);
     $this->assertFalse($data, 'The field is not exposed to Views.');
   }

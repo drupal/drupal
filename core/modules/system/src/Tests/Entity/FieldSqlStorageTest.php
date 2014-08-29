@@ -56,6 +56,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   protected $instance;
 
   /**
+   * Name of the data table of the field.
+   *
    * @var string
    */
   protected $table;
@@ -66,6 +68,13 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * @var string
    */
   protected $revision_table;
+
+  /**
+   * The table mapping for the tested entity type.
+   *
+   * @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping
+   */
+  protected $table_mapping;
 
   protected function setUp() {
     parent::setUp();
@@ -88,8 +97,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     ));
     $this->instance->save();
 
-    $this->table = ContentEntityDatabaseStorage::_fieldTableName($this->fieldStorage);
-    $this->revision_table = ContentEntityDatabaseStorage::_fieldRevisionTableName($this->fieldStorage);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
+    $this->table_mapping = $table_mapping;
+    $this->table = $table_mapping->getDedicatedDataTableName($this->fieldStorage);
+    $this->revision_table = $table_mapping->getDedicatedRevisionTableName($this->fieldStorage);
   }
 
   /**
@@ -99,7 +111,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $entity_type = $bundle = 'entity_test_rev';
     $storage = $this->container->get('entity.manager')->getStorage($entity_type);
 
-    $columns = array('bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode', ContentEntityDatabaseStorage::_fieldColumnName($this->fieldStorage, 'value'));
+    $columns = array('bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode', $this->table_mapping->getFieldColumnName($this->fieldStorage, 'value'));
 
     // Create an entity with four revisions.
     $revision_ids = array();
@@ -337,7 +349,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Create a text field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_text',
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_rev',
       'type' => 'text',
       'settings' => array('max_length' => 255),
     ));
@@ -355,7 +367,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Ensure that the field tables are still there.
-    foreach (ContentEntityDatabaseStorage::_fieldSqlSchema($prior_field_storage) as $table_name => $table_info) {
+    $tables = array(
+      $this->table_mapping->getDedicatedDataTableName($prior_field_storage),
+      $this->table_mapping->getDedicatedRevisionTableName($prior_field_storage),
+    );
+    foreach ($tables as $table_name) {
       $this->assertTrue(db_table_exists($table_name), t('Table %table exists.', array('%table' => $table_name)));
     }
   }
@@ -378,7 +394,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'bundle' => $entity_type,
     ));
     $instance->save();
-    $tables = array(ContentEntityDatabaseStorage::_fieldTableName($field_storage), ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage));
+    $tables = array($this->table_mapping->getDedicatedDataTableName($field_storage), $this->table_mapping->getDedicatedRevisionTableName($field_storage));
 
     // Verify the indexes we will create do not exist yet.
     foreach ($tables as $table) {
@@ -451,10 +467,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Verify the SQL schema.
     $schemas = ContentEntityDatabaseStorage::_fieldSqlSchema($field_storage);
-    $schema = $schemas[ContentEntityDatabaseStorage::_fieldTableName($field_storage)];
+    $schema = $schemas[$this->table_mapping->getDedicatedDataTableName($field_storage)];
     $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema');
     $foreign_key = reset($schema['foreign keys']);
-    $foreign_key_column = ContentEntityDatabaseStorage::_fieldColumnName($field_storage, $foreign_key_name);
+    $foreign_key_column = $this->table_mapping->getFieldColumnName($field_storage, $foreign_key_name);
     $this->assertEqual($foreign_key['table'], $foreign_key_name, 'Foreign key table name preserved in the schema');
     $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'id', 'Foreign key column name preserved in the schema');
   }
@@ -504,9 +520,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'test_field',
     ));
     $expected = 'short_entity_type__short_field_name';
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedDataTableName($field_storage), $expected);
     $expected = 'short_entity_type_revision__short_field_name';
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage), $expected);
 
     // Short entity type, long field name
     $entity_type = 'short_entity_type';
@@ -517,9 +533,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'test_field',
     ));
     $expected = 'short_entity_type__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedDataTableName($field_storage), $expected);
     $expected = 'short_entity_type_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage), $expected);
 
     // Long entity type, short field name
     $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
@@ -530,9 +546,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'test_field',
     ));
     $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedDataTableName($field_storage), $expected);
     $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage), $expected);
 
     // Long entity type and field name.
     $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
@@ -543,17 +559,17 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'test_field',
     ));
     $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedDataTableName($field_storage), $expected);
     $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage), $expected);
     // Try creating a second field and check there are no clashes.
     $field_storage2 = entity_create('field_storage_config', array(
       'entity_type' => $entity_type,
       'name' => $field_name . '2',
       'type' => 'test_field',
     ));
-    $this->assertNotEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage), ContentEntityDatabaseStorage::_fieldTableName($field_storage2));
-    $this->assertNotEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage), ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage2));
+    $this->assertNotEqual($this->table_mapping->getDedicatedDataTableName($field_storage), $this->table_mapping->getDedicatedDataTableName($field_storage2));
+    $this->assertNotEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage), $this->table_mapping->getDedicatedRevisionTableName($field_storage2));
 
     // Deleted field.
     $field_storage = entity_create('field_storage_config', array(
@@ -563,9 +579,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'deleted' => TRUE,
     ));
     $expected = 'field_deleted_data_' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field_storage, TRUE), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedDataTableName($field_storage, TRUE), $expected);
     $expected = 'field_deleted_revision_' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage, TRUE), $expected);
+    $this->assertEqual($this->table_mapping->getDedicatedRevisionTableName($field_storage, TRUE), $expected);
   }
 
 }

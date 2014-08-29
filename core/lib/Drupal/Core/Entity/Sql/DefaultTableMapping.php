@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
 /**
  * Defines a default table mapping class.
  */
@@ -175,6 +177,103 @@ class DefaultTableMapping implements TableMappingInterface {
     // Force the re-computation of the column list.
     unset($this->allColumns[$table_name]);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReservedColumns() {
+    return array('deleted');
+  }
+
+  /**
+   * Generates a table name for a field data table.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   * @param bool $is_deleted
+   *   (optional) Whether the table name holding the values of a deleted field
+   *   should be returned.
+   *
+   * @return string
+   *   A string containing the generated name for the database table.
+   */
+  public function getDedicatedDataTableName(FieldStorageDefinitionInterface $storage_definition, $is_deleted = FALSE) {
+    if ($is_deleted) {
+      // When a field is a deleted, the table is renamed to
+      // {field_deleted_data_FIELD_UUID}. To make sure we don't end up with
+      // table names longer than 64 characters, we hash the unique storage
+      // identifier and return the first 10 characters so we end up with a short
+      // unique ID.
+      return "field_deleted_data_" . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+    }
+    else {
+      return $this->generateFieldTableName($storage_definition, FALSE);
+    }
+  }
+
+  /**
+   * Generates a table name for a field revision archive table.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   * @param bool $is_deleted
+   *   (optional) Whether the table name holding the values of a deleted field
+   *   should be returned.
+   *
+   * @return string
+   *   A string containing the generated name for the database table.
+   */
+  public function getDedicatedRevisionTableName(FieldStorageDefinitionInterface $storage_definition, $is_deleted = FALSE) {
+    if ($is_deleted) {
+      // When a field is a deleted, the table is renamed to
+      // {field_deleted_revision_FIELD_UUID}. To make sure we don't end up with
+      // table names longer than 64 characters, we hash the unique storage
+      // identifier and return the first 10 characters so we end up with a short
+      // unique ID.
+      return "field_deleted_revision_" . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+    }
+    else {
+      return $this->generateFieldTableName($storage_definition, TRUE);
+    }
+  }
+
+  /**
+   * Generates a safe and unambiguous field table name.
+   *
+   * The method accounts for a maximum table name length of 64 characters, and
+   * takes care of disambiguation.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   * @param bool $revision
+   *   TRUE for revision table, FALSE otherwise.
+   *
+   * @return string
+   *   The final table name.
+   */
+  protected function generateFieldTableName(FieldStorageDefinitionInterface $storage_definition, $revision) {
+    $separator = $revision ? '_revision__' : '__';
+    $table_name = $storage_definition->getTargetEntityTypeId() . $separator . $storage_definition->getName();
+    // Limit the string to 48 characters, keeping a 16 characters margin for db
+    // prefixes.
+    if (strlen($table_name) > 48) {
+      // Use a shorter separator, a truncated entity_type, and a hash of the
+      // field UUID.
+      $separator = $revision ? '_r__' : '__';
+      // Truncate to the same length for the current and revision tables.
+      $entity_type = substr($storage_definition->getTargetEntityTypeId(), 0, 34);
+      $field_hash = substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+      $table_name = $entity_type . $separator . $field_hash;
+    }
+    return $table_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $column) {
+    return in_array($column, $this->getReservedColumns()) ? $column : $storage_definition->getName() . '_' . $column;
   }
 
 }

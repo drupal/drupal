@@ -10,10 +10,8 @@ namespace Drupal\Core\Entity\Query\Sql;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -116,11 +114,14 @@ class Tables implements TablesInterface {
       if ($field_storage instanceof FieldStorageConfigInterface) {
         // Find the field column.
         $column = $field_storage->getMainPropertyName();
+        /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+        $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
+
         if ($key < $count) {
           $next = $specifiers[$key + 1];
           // Is this a field column?
           $columns = $field_storage->getColumns();
-          if (isset($columns[$next]) || in_array($next, FieldStorageConfig::getReservedColumns())) {
+          if (isset($columns[$next]) || in_array($next, $table_mapping->getReservedColumns())) {
             // Use it.
             $column = $next;
             // Do not process it again.
@@ -142,7 +143,7 @@ class Tables implements TablesInterface {
           }
         }
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
-        $sql_column = ContentEntityDatabaseStorage::_fieldColumnName($field_storage, $column);
+        $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
       }
       // This is an entity base field (non-configurable field).
       else {
@@ -220,11 +221,13 @@ class Tables implements TablesInterface {
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
     $field_name = $field->getName();
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
-      $table = $this->sqlQuery->getMetaData('age') == EntityStorageInterface::FIELD_LOAD_CURRENT ? ContentEntityDatabaseStorage::_fieldTableName($field) : ContentEntityDatabaseStorage::_fieldRevisionTableName($field);
+      $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
+      /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+      $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
+      $table = $this->sqlQuery->getMetaData('age') == EntityStorageInterface::FIELD_LOAD_CURRENT ? $table_mapping->getDedicatedDataTableName($field) : $table_mapping->getDedicatedRevisionTableName($field);
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $entity_type = $this->sqlQuery->getMetaData('entity_type');
       $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = $base_table.$entity_id_field", $langcode);
     }
     return $this->fieldTables[$index_prefix . $field_name];

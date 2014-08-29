@@ -5,7 +5,6 @@
  * Provide views data for image.module.
  */
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -37,10 +36,13 @@ function image_field_views_data(FieldStorageConfigInterface $field_storage) {
  * Views integration to provide reverse relationships on image fields.
  */
 function image_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
-  $entity_type_id = $field_storage->entity_type;
+  $entity_type_id = $field_storage->getTargetEntityTypeId();
   $field_name = $field_storage->getName();
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $entity_manager = \Drupal::entityManager();
+  $entity_type = $entity_manager->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+  /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+  $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
 
   list($label) = field_views_field_label($entity_type_id, $field_name);
 
@@ -50,7 +52,7 @@ function image_field_views_data_views_data_alter(array &$data, FieldStorageConfi
     'id' => 'entity_reverse',
     'field_name' => $field_name,
     'entity_type' => $entity_type_id,
-    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field_storage),
+    'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
     'field field' => $field_name . '_target_id',
     'base' => $entity_type->getBaseTable(),
     'base field' => $entity_type->getKey('id'),

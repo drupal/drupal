@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\field\Tests\Views;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
  * Tests the Field Views data.
@@ -51,8 +50,10 @@ class ApiDataTest extends FieldTestBase {
     // Check the table and the joins of the first field.
     // Attached to node only.
     $field_storage = $this->fieldStorages[0];
-    $current_table = ContentEntityDatabaseStorage::_fieldTableName($field_storage);
-    $revision_table = ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
+    $current_table = $table_mapping->getDedicatedDataTableName($field_storage);
+    $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
     $data[$current_table] = $views_data->get($current_table);
     $data[$revision_table] = $views_data->get($revision_table);
 

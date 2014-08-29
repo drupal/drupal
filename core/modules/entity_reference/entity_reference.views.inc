@@ -5,7 +5,6 @@
  * Provides views data for the entity_reference module.
  */
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -14,6 +13,7 @@ use Drupal\field\FieldStorageConfigInterface;
 function entity_reference_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = field_views_field_default_views_data($field_storage);
   $entity_manager = \Drupal::entityManager();
+  $table_mapping = $entity_manager->getStorage($field_storage->getTargetEntityTypeId())->getTableMapping();
   foreach ($data as $table_name => $table_data) {
     // Add a relationship to the target entity type.
     $target_entity_type_id = $field_storage->getSetting('target_type');
@@ -38,13 +38,16 @@ function entity_reference_field_views_data(FieldStorageConfigInterface $field_st
 
     // Provide a reverse relationship for the entity type that is referenced by
     // the field.
-    $pseudo_field_name = 'reverse__' . $field_storage->getTargetEntityTypeId() . '__' . $field_storage->getName();
+    $entity_type_id = $field_storage->getTargetEntityTypeId();
+    $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_storage->getName();
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage($entity_type_id)->getTableMapping();
     $data[$target_base_table][$pseudo_field_name]['relationship'] = array(
       'title' => t('@label using @field_name', $args),
       'help' => t('Relate each @label with a @field_name.', $args),
       'id' => 'entity_reverse',
       'field_name' => $field_storage->getName(),
-      'field table' => ContentEntityDatabaseStorage::_fieldTableName($field_storage),
+      'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
       'field field' => $field_storage->getName() . '_target_id',
       'base' => $target_entity_type->getBaseTable(),
       'base field' => $target_entity_type->getKey('id'),
