@@ -228,55 +228,6 @@ function locale_schema() {
     ),
     'primary key' => array('project', 'langcode'),
   );
-
-  $schema['locale_project'] = array(
-    'description' => 'Translation status information for projects and server data.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'A unique short name to identify the project.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'project_type' => array(
-        'description' => 'Project type: core, module, or theme.',
-        'type' => 'varchar',
-        'length' => 15,
-        'not null' => TRUE,
-      ),
-      'core' => array(
-        // http://drupal.org/node/542202#core has an example.
-        'description' => 'Core compatibility string for this project, for example: 8.x',
-        'type' => 'varchar',
-        'length' => 4,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'version' => array(
-        // http://drupal.org/node/467026 has examples.
-        'description' => 'The version release of the project, for example: 8.x-2.1 or 8.x-1.0-dev',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'server_pattern' => array(
-        'description' => 'Pattern of path and name of the gettext file at the translation server.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'status' => array(
-        // locale.compare.inc gives possible values for status.
-        'description' => 'The status of the project. Possible values are: 1 = enabled, 0 = disabled.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-    ),
-    'primary key' => array('name'),
-  );
   return $schema;
 }
 

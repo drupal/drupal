@@ -57,8 +57,7 @@ function locale_translation_get_projects($project_names = array()) {
 
   if (empty($projects)) {
     // Get project data from the database.
-    $row_count = db_query_range('SELECT 1 FROM {locale_project}', 0, 1)->fetchField();
-
+    $row_count = \Drupal::service('locale.project')->countProjects();
     // http://drupal.org/node/1777106 is a follow-up issue to make the check for
     // possible out-of-date project information more robust.
     if ($row_count == 0 && \Drupal::moduleHandler()->moduleExists('update')) {
@@ -67,11 +66,10 @@ function locale_translation_get_projects($project_names = array()) {
       // data if none are found.
       locale_translation_build_projects();
     }
-    $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
-
-    foreach ($result as $project) {
-      $projects[$project->name] = $project;
-    }
+    $projects = \Drupal::service('locale.project')->getAll();
+    array_walk($projects, function(&$project) {
+      $project = (object) $project;
+    });
   }
 
   // Return the requested project names or all projects.
@@ -329,13 +327,15 @@ function locale_cron_fill_queue() {
 
   // Determine which project+language should be updated.
   $last = REQUEST_TIME - $config->get('translation.update_interval_days') * 3600 * 24;
-  $query = db_select('locale_file', 'f');
-  $query->join('locale_project', 'p', 'p.name = f.project');
-  $query->condition('f.last_checked', $last, '<');
-  $query->fields('f', array('project', 'langcode'));
-  // Only currently installed / enabled components should be checked for.
-  $query->condition('p.status', 1);
-  $files = $query->execute()->fetchAll();
+  $projects = \Drupal::service('locale.project')->getAll();
+  $projects = array_filter($projects, function($project) {
+    return $project['status'] == 1;
+  });
+  $files = db_select('locale_file', 'f')
+    ->condition('f.project', array_keys($projects))
+    ->condition('f.last_checked', $last, '<')
+    ->fields('f', array('project', 'langcode'))
+    ->execute()->fetchAll();
   foreach ($files as $file) {
     $updates[$file->project][] = $file->langcode;
 

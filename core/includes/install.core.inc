@@ -1607,16 +1607,15 @@ function _install_prepare_import($langcode) {
     // we check if at least the major version number is available.
     if ($info['major']) {
       $core = $info['major'] . '.x';
-      db_insert('locale_project')
-        ->fields(array(
-          'name' => 'drupal',
-          'project_type' => 'module',
-          'core' => $core,
-          'version' => $version,
-          'server_pattern' => $install_state['server_pattern'],
-          'status' => 1,
-        ))
-        ->execute();
+      $data = array(
+         'name' => 'drupal',
+         'project_type' => 'module',
+         'core' => $core,
+         'version' => $version,
+         'server_pattern' => $install_state['server_pattern'],
+         'status' => 1,
+      );
+      \Drupal::service('locale.project')->set($data['name'], $data);
       module_load_include('compare.inc', 'locale');
       locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
     }

@@ -530,9 +530,7 @@ function locale_system_remove($components) {
       // Remove translatable projects.
       // Followup issue http://drupal.org/node/1842362 to replace the
       // {locale_project} table. Then change this to a function call.
-      db_delete('locale_project')
-        ->condition('name', $list)
-        ->execute();
+      \Drupal::service('locale.project')->deleteMultiple($list);
 
       // Clear the translation status.
       locale_translation_status_delete_projects($list);
