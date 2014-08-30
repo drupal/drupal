@@ -22,11 +22,17 @@
 @media all and (min-width: 851px) {
   .config-translation-form .translation-element-wrapper .source {
     width: 48%;
-    float: left;
+    float: left; /* LTR */
+  }
+  [dir="rtl"] .config-translation-form .translation-element-wrapper .source {
+    float: right;
   }
   .config-translation-form .translation-element-wrapper .translation {
     width: 48%;
-    float: right;
+    float: right; /* LTR */
+  }
+  [dir="rtl"] .config-translation-form .translation-element-wrapper .translation {
+    float: left;
   }
   .config-translation-form .translation-element-wrapper .translation label {
     position: static !important;
