@@ -145,7 +145,7 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_dc:
     display_plugin: page
@@ -154,7 +154,7 @@ display:
     position: 3
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       display_description: ''
       path: test-desc-filter
@@ -215,7 +215,7 @@ display:
     position: 3
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       display_description: ''
       path: test-desc-paris
@@ -277,7 +277,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-name-filter
       display_description: ''
@@ -288,7 +288,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-name-paris
       display_description: ''
@@ -348,7 +348,7 @@ display:
     position: 3
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       display_description: ''
       path: test-field-paris
@@ -410,7 +410,7 @@ display:
     position: 3
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       display_description: ''
       path: test-field-filter

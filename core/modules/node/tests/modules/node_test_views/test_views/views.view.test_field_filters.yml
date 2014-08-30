@@ -173,7 +173,7 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_tf:
     display_plugin: page
@@ -182,7 +182,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-title-filter
       display_description: ''
@@ -255,7 +255,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-body-filter
       display_description: ''
@@ -326,7 +326,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-body-paris
       display_description: ''
@@ -398,7 +398,7 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-title-paris
       display_description: ''

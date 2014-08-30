@@ -46,7 +46,7 @@ class LanguageArgument extends ArgumentPluginBase {
    *   language was not found.
    */
   function language($langcode) {
-    $languages = views_language_list();
+    $languages = $this->listLanguages();
     return isset($languages[$langcode]) ? $languages[$langcode] : t('Unknown language');
   }
 

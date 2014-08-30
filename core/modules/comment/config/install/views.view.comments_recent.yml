@@ -228,7 +228,7 @@ display:
           content: 'No comments available.'
           tokenize: false
           plugin_id: text_custom
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   block_1:
     provider: views
@@ -239,7 +239,7 @@ display:
     display_options:
       block_description: 'Recent comments'
       block_category: 'Lists (Views)'
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       allow:
         items_per_page: true

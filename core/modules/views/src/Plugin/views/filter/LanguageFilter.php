@@ -7,6 +7,9 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\views\Plugin\views\PluginBase;
+
 /**
  * Provides filtering by language.
  *
@@ -16,16 +19,13 @@ namespace Drupal\views\Plugin\views\filter;
  */
 class LanguageFilter extends InOperator {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Language');
-      $languages = array(
-        '***CURRENT_LANGUAGE***' => t("Current user's language"),
-        '***DEFAULT_LANGUAGE***' => t("Default site language"),
-      );
-      $languages = array_merge($languages, views_language_list());
-      $this->value_options = $languages;
+      $this->value_options = $this->listLanguages(LanguageInterface::STATE_ALL |LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
     }
   }
-
 }

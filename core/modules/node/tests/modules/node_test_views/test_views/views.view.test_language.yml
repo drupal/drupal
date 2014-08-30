@@ -300,7 +300,7 @@ display:
           validate_options: {  }
           plugin_id: language
           provider: views
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:
     display_plugin: page
@@ -309,6 +309,6 @@ display:
     position: 1
     provider: views
     display_options:
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
       path: test-language

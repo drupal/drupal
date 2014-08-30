@@ -289,20 +289,18 @@ class Field extends FieldPluginBase {
       $this->ensureMyTable();
       $this->addAdditionalFields($fields);
 
-      // Filter by langcode, if field translation is enabled.
+      // If we are grouping by something on this field, we want to group by
+      // the displayed value, which is translated. So, we need to figure out
+      // which language should be used to translate the value. See also
+      // $this->field_langcode().
       $field = $field_definition;
       if ($field->isTranslatable() && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
         $column = $this->tableAlias . '.langcode';
-        // By the same reason as field_language the field might be
-        // LanguageInterface::LANGCODE_NOT_SPECIFIED in reality so allow it as
-        // well.
-        // @see this::field_langcode()
-        $default_langcode = language_default()->id;
-        $langcode = str_replace(
-          array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-          array($this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT), $default_langcode),
-          $this->view->display_handler->options['field_langcode']
-        );
+        $langcode = $this->view->display_handler->options['field_langcode'];
+        $substitutions = static::queryLanguageSubstitutions();
+        if (isset($substitutions[$langcode])) {
+          $langcode = $substitutions[$langcode];
+        }
         $placeholder = $this->placeholder();
         $langcode_fallback_candidates = $this->languageManager->getFallbackCandidates(array('langcode' => $langcode, 'operation' => 'views_query', 'data' => $this));
         $this->query->addWhereExpression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
@@ -917,12 +915,11 @@ class Field extends FieldPluginBase {
    */
   function field_langcode(EntityInterface $entity) {
     if ($this->getFieldDefinition()->isTranslatable()) {
-      $default_langcode = language_default()->id;
-      $langcode = str_replace(
-        array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-        array($this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id, $default_langcode),
-        $this->view->display_handler->options['field_langcode']
-      );
+      $langcode = $this->view->display_handler->options['field_langcode'];
+      $substitutions = static::queryLanguageSubstitutions();
+      if (isset($substitutions[$langcode])) {
+        $langcode = $substitutions[$langcode];
+      }
 
       // Give the Entity Field API a chance to fallback to a different language
       // (or LanguageInterface::LANGCODE_NOT_SPECIFIED), in case the field has

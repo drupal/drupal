@@ -130,7 +130,7 @@ display:
               - views
           operator: in
           value:
-            '***CURRENT_LANGUAGE***': '***CURRENT_LANGUAGE***'
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
           group: 1
           exposed: false
           expose:
@@ -240,7 +240,7 @@ display:
       relationships: {  }
       fields: {  }
       arguments: {  }
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
@@ -249,7 +249,7 @@ display:
   page_1:
     display_options:
       path: node
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
@@ -286,5 +286,5 @@ display:
           view_mode: rss
           links: false
         provider: views
-      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\PluginBase.
+ * Contains \Drupal\views\Plugin\views\PluginBase.
  */
 
 namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\Core\Render\Element;
@@ -42,6 +43,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup views_plugins
  */
 abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Include negotiated languages when listing languages.
+   *
+   * @see \Drupal\views\Plugin\views\PluginBase::listLanguages()
+   */
+  const INCLUDE_NEGOTIATED = 16;
 
   /**
    * Options for this plugin will be held here.
@@ -439,4 +447,86 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     return array();
   }
 
+  /**
+   * Makes an array of languages, optionally including special languages.
+   *
+   * @param int $flags
+   *   (optional) Flags for which languages to return (additive). Options:
+   *   - \Drupal\Core\Language::STATE_ALL (default): All languages
+   *     (configurable and default).
+   *   - \Drupal\Core\Language::STATE_CONFIGURABLE: Configurable languages.
+   *   - \Drupal\Core\Language::STATE_LOCKED: Locked languages.
+   *   - \Drupal\Core\Language::STATE_SITE_DEFAULT: Add site default language;
+   *     note that this is not included in STATE_ALL.
+   *   - \Drupal\views\Plugin\views\PluginBase::INCLUDE_NEGOTIATED: Add
+   *     negotiated language types.
+   *
+   * @return array
+   *   An array of language names, keyed by the language code. Negotiated and
+   *   special languages have special codes that are substituted in queries by
+   *   static::queryLanguageSubstitutions().
+   */
+  protected function listLanguages($flags = LanguageInterface::STATE_ALL) {
+    $manager = \Drupal::languageManager();
+    $list = array();
+
+    // The Language Manager class takes care of the STATE_SITE_DEFAULT case.
+    // It comes in with ID set to 'site_default'. Since this is not a real
+    // language, surround it by '***LANGUAGE_...***', like the negotiated
+    // languages below.
+    $languages = $manager->getLanguages($flags);
+    foreach ($languages as $id => $language) {
+      if ($id == 'site_default') {
+        $id = '***LANGUAGE_' . $id . '***';
+      }
+      $list[$id] = t($language->name);
+    }
+
+    // Add in negotiated languages, if requested.
+    if ($flags & PluginBase::INCLUDE_NEGOTIATED) {
+      $types = $manager->getDefinedLanguageTypesInfo();
+      foreach ($types as $id => $type) {
+        // Omit unnamed types. These are things like language_url, which are
+        // not configurable and do not need to be in this list. And surround
+        // IDs by '***LANGUAGE_...***', to avoid query collisions.
+        if (isset($type['name'])) {
+          $id = '***LANGUAGE_' . $id . '***';
+          $list[$id] = t('Language selected for !type', array('!type' => $type['name']));
+        }
+      }
+    }
+
+    return $list;
+  }
+
+  /**
+   * Returns substitutions for Views queries for languages.
+   *
+   * This is needed so that the language options returned by
+   * $this->listLanguages() are able to be used in queries. It is called
+   * by the Views module implementation of hook_views_query_substitutions()
+   * to get the language-related substitutions.
+   *
+   * @return array
+   *   An array in the format of hook_views_query_substitutions() that gives
+   *   the query substitutions needed for the special language types.
+   */
+  public static function queryLanguageSubstitutions() {
+    $changes = array();
+    $manager = \Drupal::languageManager();
+
+    // Handle default language.
+    $default = $manager->getDefaultLanguage()->id;
+    $changes['***LANGUAGE_site_default***'] = $default;
+
+    // Handle negotiated languages.
+    $types = $manager->getDefinedLanguageTypesInfo();
+    foreach ($types as $id => $type) {
+      if (isset($type['name'])) {
+        $changes['***LANGUAGE_' . $id . '***'] = $manager->getCurrentLanguage($id)->id;
+      }
+    }
+
+    return $changes;
+  }
 }

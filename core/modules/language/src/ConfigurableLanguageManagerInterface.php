@@ -44,20 +44,9 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    * through the user interface.
    *
    * @return array
-   *   An array of language type names.
+   *   An array of language type machine names.
    */
   public function getDefinedLanguageTypes();
-
-  /**
-   * Returns information about all defined language types.
-   *
-   * @return array
-   *   An associative array of language type information arrays keyed by type
-   *   names. Based on information from hook_language_types_info().
-   *
-   * @see hook_language_types_info()
-   */
-  public function getDefinedLanguageTypesInfo();
 
   /**
    * Stores language types configuration.

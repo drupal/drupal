@@ -94,7 +94,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
     $langcode_url = 'admin/structure/views/nojs/display/test_view/default/field_langcode';
     $this->assertLinkByHref($langcode_url);
-    $this->assertLink(t("Current user's language"));
+    $this->assertLink(t('Language selected for !type', array('!type' => t('Content'))));
     // Click the link and check the form before language is added.
     $this->drupalGet($langcode_url);
     $this->assertResponse(200);
@@ -106,7 +106,7 @@ class ViewEditTest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/nojs/display/test_display/page_1/field_langcode');
     $this->assertResponse(200);
-    $this->assertFieldByName('field_langcode', '***CURRENT_LANGUAGE***');
+    $this->assertFieldByName('field_langcode', '***LANGUAGE_language_content***');
     $this->assertFieldByName('field_langcode_add_to_query', TRUE);
   }
 

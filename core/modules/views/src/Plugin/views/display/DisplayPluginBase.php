@@ -579,7 +579,7 @@ abstract class DisplayPluginBase extends PluginBase {
         'bool' => TRUE,
       ),
       'field_langcode' => array(
-        'default' => '***CURRENT_LANGUAGE***',
+        'default' => '***LANGUAGE_language_content***',
       ),
       'field_langcode_add_to_query' => array(
         'default' => TRUE,
@@ -1245,19 +1245,13 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Allow to set some advanced settings for the query plugin'),
     );
 
-    $languages = array(
-        '***CURRENT_LANGUAGE***' => t("Current user's language"),
-        '***DEFAULT_LANGUAGE***' => t("Default site language"),
-        LanguageInterface::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
-    );
-    if (\Drupal::moduleHandler()->moduleExists('language')) {
-      $languages = array_merge($languages, language_list());
-    }
+    $language_options = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
+
     $options['field_langcode'] = array(
       'category' => 'other',
       'title' => t('Field Language'),
-      'value' => $languages[$this->getOption('field_langcode')],
-      'desc' => t('All fields which support translations will be displayed in the selected language.'),
+      'value' => $language_options[$this->getOption('field_langcode')],
+      'desc' => t('All fields that support translations will be displayed in the selected language.'),
     );
 
     $access_plugin = $this->getPlugin('access');
@@ -1619,12 +1613,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // an entity base table. Also, we make sure that there's at least one
         // entity type with a translation handler attached.
         if (in_array($this->view->storage->get('base_table'), $translatable_entity_tables)) {
-          $languages = array(
-            '***CURRENT_LANGUAGE***' => t("Current user's language"),
-            '***DEFAULT_LANGUAGE***' => t("Default site language"),
-            LanguageInterface::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
-          );
-          $languages = array_merge($languages, views_language_list());
+          $languages = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
 
           $form['field_langcode'] = array(
             '#type' => 'select',

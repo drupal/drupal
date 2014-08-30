@@ -5,19 +5,23 @@
  * Provides views runtime hooks for views.module.
  */
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * Implements hook_views_query_substitutions().
  *
- * Substitute current time; this works with cached queries.
+ * Makes the following substitutions:
+ * - Current time.
+ * - Drupal version.
+ * - Special language codes; see
+ *   \Drupal\views\Plugin\views\PluginBase::listLanguages().
  */
 function views_views_query_substitutions(ViewExecutable $view) {
-  return array(
+  $substitutions = array(
     '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id,
-    '***DEFAULT_LANGUAGE***' => \Drupal::languageManager()->getDefaultLanguage()->id,
-  );
+  ) + PluginBase::queryLanguageSubstitutions();
+
+  return $substitutions;
 }

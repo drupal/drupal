@@ -34,19 +34,32 @@ interface LanguageManagerInterface {
    * Returns an array of the available language types.
    *
    * @return array
-   *   An array of language type names.
+   *   An array of language type machine names.
    */
   public function getLanguageTypes();
+
+  /**
+   * Returns information about all defined language types.
+   *
+   * @return array
+   *   An associative array of language type information arrays keyed by
+   *   language type machine name, in the format of
+   *   hook_language_types_info(). In some implementing classes, this is based
+   *   on information from hook_language_types_info() and
+   *   hook_language_types_info_alter().
+   */
+  public function getDefinedLanguageTypesInfo();
 
   /**
    * Returns the current language for the given type.
    *
    * @param string $type
-   *   (optional) The language type, e.g. the interface or the content language.
-   *   Defaults to \Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE.
+   *   (optional) The language type; e.g., the interface or the content
+   *   language. Defaults to
+   *   \Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE.
    *
    * @return \Drupal\Core\Language\LanguageInterface
-   *   A language object for the given type.
+   *   The current language object for the given type of language.
    */
   public function getCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE);
 

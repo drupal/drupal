@@ -559,20 +559,26 @@ function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\Fiel
 /**
  * Replace special strings in the query before it is executed.
  *
+ * The idea is that certain dynamic values can be placed in a query when it is
+ * built, and substituted at run-time, allowing the query to be cached and
+ * still work correctly when executed.
+ *
  * @param \Drupal\views\ViewExecutable $view
  *   The View being executed.
+ *
  * @return array
  *   An associative array where each key is a string to be replaced, and the
  *   corresponding value is its replacement. The strings to replace are often
- *   surrounded with '***', as illustrated in the example implementation.
+ *   surrounded with '***', as illustrated in the example implementation, to
+ *   avoid collisions with other values in the query.
  */
 function hook_views_query_substitutions(ViewExecutable $view) {
   // Example from views_views_query_substitutions().
   return array(
     '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id,
-    '***DEFAULT_LANGUAGE***' => \Drupal::languageManager()->getDefaultLanguage()->id,
+    '***LANGUAGE_language_content***' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id,
+    '***LANGUAGE_site_default***' => \Drupal::languageManager()->getDefaultLanguage()->id,
   );
 }
 

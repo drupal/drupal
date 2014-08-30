@@ -81,6 +81,31 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getDefinedLanguageTypesInfo() {
+    // This needs to have the same return value as
+    // language_language_type_info(), so that even if the Language module is
+    // not defined, users of this information, such as the Views module, can
+    // access names and descriptions of the default language types.
+    return array(
+      LanguageInterface::TYPE_INTERFACE => array(
+        'name' => $this->t('User interface text'),
+        'description' => $this->t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
+        'locked' => TRUE,
+      ),
+      LanguageInterface::TYPE_CONTENT => array(
+        'name' => $this->t('Content'),
+        'description' => $this->t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+        'locked' => TRUE,
+      ),
+      LanguageInterface::TYPE_URL => array(
+        'locked' => TRUE,
+      ),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE) {
     return $this->getDefaultLanguage();
   }
@@ -120,7 +145,9 @@ class LanguageManager implements LanguageManagerInterface {
     // Add the site's default language if flagged as allowed value.
     if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
       $default = isset($default) ? $default : $this->getDefaultLanguage();
-      // Rename the default language.
+      // Rename the default language. But we do not want to do this globally,
+      // if we're acting on a global object, so clone the object first.
+      $default = clone $default;
       $default->name = $this->t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
       $filtered_languages['site_default'] = $default;
     }
