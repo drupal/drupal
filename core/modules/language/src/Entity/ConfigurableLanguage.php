@@ -109,9 +109,20 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   protected $preSaveMultilingual;
 
   /**
+   * The language negotiation method used when a language was detected.
+   *
+   * The method ID, for example
+   * \Drupal\language\LanguageNegotiatorInterface::METHOD_ID.
+   *
+   * @var string
+   */
+  public $methodId;
+
+  /**
    * Sets the default flag on the language entity.
    *
    * @param bool $default
+   *   TRUE if the language entity is the site default language, FALSE if not.
    */
   public function setDefault($default) {
     $this->default = $default;
@@ -201,7 +212,9 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    *
-   * @throws \RuntimeException
+   * @throws \DeleteDefaultLanguageException
+   *   Exception thrown if we're trying to delete the default language entity.
+   *   This is not allowed as a site must have a default language.
    */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     $default_langcode = static::getDefaultLangcode();
@@ -233,6 +246,77 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   protected static function getDefaultLangcode() {
     $language = \Drupal::service('language.default')->get();
     return $language->getId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setName($name) {
+    $this->label = $name;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getId() {
+    return $this->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDirection() {
+    return $this->direction;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDirection($direction) {
+    $this->direction = $direction;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNegotiationMethodId() {
+    return $this->methodId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNegotiationMethodId($method_id) {
+    $this->methodId = $method_id;
+
+    return $this;
   }
 
 }
