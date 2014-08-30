@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Provides a path subscriber that converts path aliases.
  */
-class PathSubscriber extends PathListenerBase implements EventSubscriberInterface {
+class PathSubscriber implements EventSubscriberInterface {
 
   /**
    * The alias manager that caches alias lookups based on the request.
