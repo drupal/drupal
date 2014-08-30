@@ -873,7 +873,7 @@ services:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['@theme_handler', '@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack']
+    arguments: ['@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack']
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
     arguments: ['@theme_handler', '@state']

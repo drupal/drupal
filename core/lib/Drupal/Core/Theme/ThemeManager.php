@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,11 +17,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ThemeManager implements ThemeManagerInterface {
 
   /**
-   * The theme handler used to get a list of all themes.
+   * The theme negotiator.
    *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
    */
-  protected $themeHandler;
+  protected $themeNegotiator;
 
   /**
    * The theme registry used to render an output.
@@ -51,8 +50,6 @@ class ThemeManager implements ThemeManagerInterface {
   /**
    * Constructs a new ThemeManager object.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    * @param \Drupal\Core\Theme\Registry $theme_registry
    *   The theme registry.
    * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
@@ -62,8 +59,7 @@ class ThemeManager implements ThemeManagerInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, Registry $theme_registry, ThemeNegotiatorInterface $theme_negotiator, ThemeInitialization $theme_initialization, RequestStack $request_stack) {
-    $this->themeHandler = $theme_handler;
+  public function __construct(Registry $theme_registry, ThemeNegotiatorInterface $theme_negotiator, ThemeInitialization $theme_initialization, RequestStack $request_stack) {
     $this->themeNegotiator = $theme_negotiator;
     $this->themeRegistry = $theme_registry;
     $this->themeInitialization = $theme_initialization;
