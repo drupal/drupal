@@ -53,12 +53,11 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate role warning displayed.');
 
     // Test renaming a role.
-    $old_name = $role_name;
     $role_name = '456';
     $edit = array('label' => $role_name);
     $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
     $this->assertRaw(t('Role %label has been updated.', array('%label' => $role_name)));
-    $new_role = entity_load('user_role', $old_name);
+    $new_role = entity_load('user_role', $role->id(), TRUE);
     $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
@@ -67,7 +66,7 @@ class UserRoleAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
-    $this->assertFalse(entity_load('user_role', $role_name), 'A deleted role can no longer be loaded.');
+    $this->assertFalse(entity_load('user_role', $role->id(), TRUE), 'A deleted role can no longer be loaded.');
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.

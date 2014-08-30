@@ -28,6 +28,7 @@ use Drupal\user\RoleInterface;
  *   },
  *   admin_permission = "administer permissions",
  *   config_prefix = "role",
+ *   static_cache = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "weight" = "weight",
