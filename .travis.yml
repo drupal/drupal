@@ -46,4 +46,4 @@ before_script:
   - mysql -uroot -proot -hmysql -e 'SET GLOBAL innodb_fast_shutdown=0;'
 
 script:
-  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --db-url="mysql://root:root@mysql/drupal" --all
+  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal --all
