@@ -7,7 +7,7 @@ parameters:
 services:
   cache_factory:
     class: Drupal\Core\Cache\CacheFactory
-    arguments: ['@settings']
+    arguments: ['@settings', '%cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
   cache_contexts:
@@ -47,14 +47,14 @@ services:
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory_method: get
     factory_service: cache_factory
     arguments: [bootstrap]
   cache.config:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory_method: get
     factory_service: cache_factory
     arguments: [config]
@@ -96,7 +96,7 @@ services:
   cache.discovery:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory_method: get
     factory_service: cache_factory
     arguments: [discovery]
@@ -113,7 +113,8 @@ services:
     class: Drupal\Core\Config\ConfigInstaller
     arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']
   config.storage:
-    alias: config.storage.active
+    class: Drupal\Core\Config\CachedStorage
+    arguments: ['@config.storage.active', '@cache.config']
   config.storage.active:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', 'config']

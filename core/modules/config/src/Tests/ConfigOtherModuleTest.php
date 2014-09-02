@@ -17,23 +17,10 @@ use Drupal\simpletest\WebTestBase;
 class ConfigOtherModuleTest extends WebTestBase {
 
   /**
-   * @var \Drupal\Core\Extension\ModuleHandler
-   */
-  protected $moduleHandler;
-
-  /**
-   * Sets up the module handler for enabling and disabling modules.
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->moduleHandler = $this->container->get('module_handler');
-  }
-
-  /**
    * Tests enabling the provider of the default configuration first.
    */
   public function testInstallOtherModuleFirst() {
-    $this->moduleHandler->install(array('config_other_module_config_test'));
+    $this->installModule('config_other_module_config_test');
 
     // Check that the config entity doesn't exist before the config_test module
     // is enabled. We cannot use the entity system because the config_test
@@ -43,18 +30,18 @@ class ConfigOtherModuleTest extends WebTestBase {
 
     // Install the module that provides the entity type. This installs the
     // default configuration.
-    $this->moduleHandler->install(array('config_test'));
+    $this->installModule('config_test');
     $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration has been installed.');
 
     // Uninstall the module that provides the entity type. This will remove the
     // default configuration.
-    $this->moduleHandler->uninstall(array('config_test'));
+    $this->uninstallModule('config_test');
     $config = $this->container->get('config.factory')->get('config_test.dynamic.other_module_test');
     $this->assertTrue($config->isNew(), 'Default configuration for other modules is removed when the config entity provider is disabled.');
 
     // Install the module that provides the entity type again. This installs the
     // default configuration.
-    $this->moduleHandler->install(array('config_test'));
+    $this->installModule('config_test');
     $other_module_config_entity = entity_load('config_test', 'other_module_test', TRUE);
     $this->assertTrue($other_module_config_entity, "Default configuration has been recreated.");
 
@@ -64,14 +51,14 @@ class ConfigOtherModuleTest extends WebTestBase {
     $other_module_config_entity->save();
 
     // Uninstall the module that provides the default configuration.
-    $this->moduleHandler->uninstall(array('config_other_module_config_test'));
+    $this->uninstallModule('config_other_module_config_test');
     $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration for other modules is not removed when the module that provides it is uninstalled.');
 
     // Default configuration provided by config_test should still exist.
     $this->assertTrue(entity_load('config_test', 'dotted.default', TRUE), 'The configuration is not deleted.');
 
     // Re-enable module to test that default config is unchanged.
-    $this->moduleHandler->install(array('config_other_module_config_test'));
+    $this->installModule('config_other_module_config_test');
     $config_entity = entity_load('config_test', 'other_module_test', TRUE);
     $this->assertEqual($config_entity->get('style'), "The piano ain't got no wrong notes.", 'Re-enabling the module does not install default config over the existing config entity.');
   }
@@ -80,10 +67,10 @@ class ConfigOtherModuleTest extends WebTestBase {
    * Tests enabling the provider of the config entity type first.
    */
   public function testInstallConfigEnityModuleFirst() {
-    $this->moduleHandler->install(array('config_test'));
+    $this->installModule('config_test');
     $this->assertFalse(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test does not exist.');
 
-    $this->moduleHandler->install(array('config_other_module_config_test'));
+    $this->installModule('config_other_module_config_test');
     $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test has been installed.');
   }
 
@@ -91,12 +78,34 @@ class ConfigOtherModuleTest extends WebTestBase {
    * Tests uninstalling Node module removes views which are dependent on it.
    */
   public function testUninstall() {
-    $this->moduleHandler->install(array('views'));
+    $this->installModule('views');
     $this->assertTrue(entity_load('view', 'frontpage', TRUE) === NULL, 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
-    $this->moduleHandler->install(array('node'));
+    $this->installModule('node');
     $this->assertTrue(entity_load('view', 'frontpage', TRUE) !== NULL, 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
-    $this->moduleHandler->uninstall(array('node'));
+    $this->uninstallModule('node');
     $this->assertTrue(entity_load('view', 'frontpage', TRUE) === NULL, 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
+  }
+
+  /**
+   * Installs a module.
+   *
+   * @param string $module
+   *   The module name.
+   */
+  protected function installModule($module) {
+    $this->container->get('module_handler')->install(array($module));
+    $this->container = \Drupal::getContainer();
+  }
+
+  /**
+   * Uninstalls a module.
+   *
+   * @param string $module
+   *   The module name.
+   */
+  protected function uninstallModule($module) {
+    $this->container->get('module_handler')->uninstall(array($module));
+    $this->container = \Drupal::getContainer();
   }
 
 }

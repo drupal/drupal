@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -1171,9 +1172,17 @@ abstract class WebTestBase extends TestBase {
    */
   protected function refreshVariables() {
     // Clear the tag cache.
+    // @todo Replace drupal_static() usage within classes and provide a
+    //   proper interface for invoking reset() on a cache backend:
+    //   https://www.drupal.org/node/2311945.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
     drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::deletedTags');
     drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::invalidatedTags');
+    foreach (Cache::getBins() as $backend) {
+      if (is_callable(array($backend, 'reset'))) {
+        $backend->reset();
+      }
+    }
 
     $this->container->get('config.factory')->reset();
     $this->container->get('state')->resetCache();

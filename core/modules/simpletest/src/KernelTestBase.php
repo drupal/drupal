@@ -257,7 +257,7 @@ abstract class KernelTestBase extends UnitTestBase {
     $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
 
     $container
-      ->register('config.storage.active', 'Drupal\Core\Config\DatabaseStorage')
+      ->register('config.storage', 'Drupal\Core\Config\DatabaseStorage')
       ->addArgument(Database::getConnection())
       ->addArgument('config');
 
