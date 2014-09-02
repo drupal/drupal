@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -34,12 +35,13 @@ class TwigEnvironmentTest extends KernelTestBase {
     $this->assertEqual($environment->renderInline('test-with-context {{ lama }}', array('lama' => 'muuh')), 'test-with-context muuh');
 
     $element = array();
+    $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
     $element['test'] = array(
       '#type' => 'inline_template',
-      '#template' => 'test-with-context {{ lama }}',
-      '#context' => array('lama' => 'muuh'),
+      '#template' => 'test-with-context {{ unsafe_content }}',
+      '#context' => array('unsafe_content' => $unsafe_string),
     );
-    $this->assertEqual(drupal_render($element), 'test-with-context muuh');
+    $this->assertEqual(drupal_render($element), 'test-with-context ' . String::checkPlain($unsafe_string));
   }
 
 }
