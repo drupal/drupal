@@ -29,6 +29,7 @@ before_script:
   # Apache.
   - sudo apt-get install -y sudo apache2 libapache2-mod-fastcgi
   - sudo a2enmod rewrite actions fastcgi alias
+  - sudo sed -e "s/www-data/$(whoami)/g" --in-place /etc/apache2/envvars
 
   # FPM.
   - cp $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
