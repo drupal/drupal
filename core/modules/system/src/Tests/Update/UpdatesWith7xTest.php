@@ -37,7 +37,7 @@ class UpdatesWith7xTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
-    $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
+    $this->update_url = $GLOBALS['base_url'] . '/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));
   }
 
@@ -52,7 +52,8 @@ class UpdatesWith7xTest extends WebTestBase {
 
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->update_user);
-    $this->drupalPostForm($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->clickLink(t('Continue'));
     $this->assertText(t('Some of the pending updates cannot be applied because their dependencies were not met.'));
   }
 }

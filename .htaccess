@@ -113,7 +113,6 @@ DirectoryIndex index.php index.html index.htm
   # RewriteBase /
 
   # Redirect common PHP files to their new locations.
-  RewriteCond %{REQUEST_URI} ^(.*)?/(update.php) [OR]
   RewriteCond %{REQUEST_URI} ^(.*)?/(install.php) [OR]
   RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild.php)
   RewriteCond %{REQUEST_URI} !core
