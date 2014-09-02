@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Entity\Schema\ContentEntitySchemaHandlerTest.
+ * Contains \Drupal\Tests\Core\Entity\Schema\SqlContentEntityStorageSchemaTest.
  */
 
 namespace Drupal\Tests\Core\Entity\Schema;
 
 use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\Schema\ContentEntitySchemaHandler;
+use Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler
+ * @coversDefaultClass \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
  * @group Entity
  */
-class ContentEntitySchemaHandlerTest extends UnitTestCase {
+class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
   /**
    * The mocked entity manager used in this test.
@@ -49,7 +49,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
   /**
    * The content entity schema handler used in this test.
    *
-   * @var \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler.
+   * @var \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema.
    */
   protected $schemaHandler;
 
@@ -778,7 +778,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
       ->method('getFieldStorageDefinitions')
       ->with($this->entityType->id())
       ->will($this->returnValue($this->storageDefinitions));
-    $this->schemaHandler = new ContentEntitySchemaHandler(
+    $this->schemaHandler = new SqlContentEntityStorageSchema(
       $this->entityManager,
       $this->entityType,
       $this->storage

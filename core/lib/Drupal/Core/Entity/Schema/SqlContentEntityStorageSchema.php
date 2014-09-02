@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler.
+ * Contains \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema.
  */
 
 namespace Drupal\Core\Entity\Schema;
@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 /**
  * Defines a schema handler that supports revisionable, translatable entities.
  */
-class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
+class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
 
   /**
    * The entity type this schema builder is responsible for.
@@ -45,7 +45,7 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
   protected $schema;
 
   /**
-   * Constructs a ContentEntitySchemaHandler.
+   * Constructs a SqlContentEntityStorageSchema.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
@@ -64,11 +64,28 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
    * {@inheritdoc}
    */
   public function getSchema() {
-    // Prepare basic information about the entity type.
-    $tables = $this->getTables();
+    return $this->getEntitySchema($this->entityType);
+  }
 
-    if (!isset($this->schema[$this->entityType->id()])) {
+  /**
+   * Returns the entity schema for the specified entity type.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param bool $reset
+   *   (optional) If set to TRUE static cache will be ignored and a new schema
+   *   array generation will be performed. Defaults to FALSE.
+   *
+   * @return array
+   *   A Schema API array describing the entity schema, excluding dedicated
+   *   field tables.
+   */
+  protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
+    $entity_type_id = $entity_type->id();
+
+    if (!isset($this->schema[$entity_type_id]) || $reset) {
       // Initialize the table schema.
+      $tables = $this->getTables();
       $schema[$tables['base_table']] = $this->initializeBaseTable();
       if (isset($tables['revision_table'])) {
         $schema[$tables['revision_table']] = $this->initializeRevisionTable();
@@ -108,10 +125,10 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
         $this->processRevisionDataTable($schema[$tables['revision_data_table']]);
       }
 
-      $this->schema[$this->entityType->id()] = $schema;
+      $this->schema[$entity_type_id] = $schema;
     }
 
-    return $this->schema[$this->entityType->id()];
+    return $this->schema[$entity_type_id];
   }
 
   /**

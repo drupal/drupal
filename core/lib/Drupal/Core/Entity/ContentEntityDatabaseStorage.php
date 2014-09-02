@@ -13,13 +13,11 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\Schema\ContentEntitySchemaHandler;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This class can be used as-is by most content entity types. Entity types
  * requiring special handling can extend the class.
  *
- * The class uses \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler
+ * The class uses \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
  * internally in order to automatically generate the database schema based on
  * the defined base fields. Entity types can override
  * ContentEntityDatabaseStorage::getSchema() to customize the generated
@@ -229,12 +227,13 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   /**
    * Gets the schema handler for this entity storage.
    *
-   * @return \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler
+   * @return \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
    *   The schema handler.
    */
   protected function schemaHandler() {
     if (!isset($this->schemaHandler)) {
-      $this->schemaHandler = new ContentEntitySchemaHandler($this->entityManager, $this->entityType, $this);
+      $schema_handler_class = $this->entityType->getHandlerClass('storage_schema') ?: 'Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema';
+      $this->schemaHandler = new $schema_handler_class($this->entityManager, $this->entityType, $this);
     }
     return $this->schemaHandler;
   }
@@ -1024,8 +1023,8 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    * @return bool
    *   TRUE if the the column is serial, FALSE otherwise.
    *
-   * @see \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler::processBaseTable()
-   * @see \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler::processRevisionTable()
+   * @see \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema::processBaseTable()
+   * @see \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema::processRevisionTable()
    */
   protected function isColumnSerial($table_name, $schema_name) {
     $result = FALSE;

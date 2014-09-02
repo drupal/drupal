@@ -22,6 +22,7 @@ use Drupal\aggregator\FeedInterface;
  *   label = @Translation("Aggregator feed"),
  *   handlers = {
  *     "storage" = "Drupal\aggregator\FeedStorage",
+ *     "storage_schema" = "Drupal\aggregator\FeedStorageSchema",
  *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",
  *     "access" = "Drupal\aggregator\FeedAccessControlHandler",
  *     "views_data" = "Drupal\aggregator\AggregatorFeedViewsData",

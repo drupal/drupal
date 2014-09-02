@@ -25,6 +25,7 @@ use Drupal\user\UserInterface;
  *   bundle_label = @Translation("Content type"),
  *   handlers = {
  *     "storage" = "Drupal\node\NodeStorage",
+ *     "storage_schema" = "Drupal\node\NodeStorageSchema",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessControlHandler",
  *     "views_data" = "Drupal\node\NodeViewsData",

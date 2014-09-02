@@ -23,6 +23,7 @@ use Drupal\Core\Url;
  *   label = @Translation("Aggregator feed item"),
  *   handlers = {
  *     "storage" = "Drupal\aggregator\ItemStorage",
+ *     "storage_schema" = "Drupal\aggregator\ItemStorageSchema",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder",
  *     "access" = "Drupal\aggregator\FeedAccessControlHandler",
  *     "views_data" = "Drupal\aggregator\AggregatorItemViewsData"
