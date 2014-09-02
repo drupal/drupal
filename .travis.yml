@@ -44,6 +44,9 @@ before_script:
   # Mysql.
   - mysql -uroot -proot -hmysql -e 'SET GLOBAL wait_timeout = 5400;'
   - mysql -uroot -proot -hmysql -e 'SET GLOBAL innodb_fast_shutdown=0;'
+  - mysql -uroot -proot -hmysql -e 'CREATE DATABASE drupal;'
+  - mysql -uroot -proot -hmysql -e 'GRANT ALL PRIVILEGES ON drupal.* TO "drupal"@"%" IDENTIFIED BY "drupal";'
+  - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
 
 script:
-  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal --all
+  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
