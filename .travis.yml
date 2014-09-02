@@ -43,4 +43,4 @@ before_script:
   - sudo service apache2 restart
 
 script:
-  - php core/scripts/run-tests.sh --verbose --color --concurrency 4 --php `which php` --url http://localhost --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal --keep-results --class "Drupal\system\Tests\Module\InstallUninstallTest"
+  - php core/scripts/run-tests.sh --verbose --color --concurrency 4 --php `which php` --url http://localhost --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal --keep-results --class "Drupal\path\Tests\PathAliasTest"
