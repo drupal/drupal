@@ -147,7 +147,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    */
   protected function selectViewMode($entity_type) {
     $view_modes = \Drupal::entityManager()
-      ->getStorage('view_mode')
+      ->getStorage('entity_view_mode')
       ->loadByProperties(array('targetEntityType' => $entity_type));
 
     if (empty($view_modes)) {

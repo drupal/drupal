@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityFormModeInterface.
+ * Contains \Drupal\Core\Entity\EntityFormModeInterface.
  */
 
-namespace Drupal\entity;
+namespace Drupal\Core\Entity;
 
 /**
  * Provides an interface defining an entity form mode entity type.

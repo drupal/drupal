@@ -119,7 +119,7 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
  * Widgets are @link forms_api_reference.html Form API @endlink
  * elements with additional processing capabilities. The methods of the
  * WidgetInterface object are typically called by respective methods in the
- * \Drupal\entity\Entity\EntityFormDisplay class.
+ * \Drupal\Core\Entity\Entity\EntityFormDisplay class.
  *
  * @see field
  * @see field_types

@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Entity\EntityViewDisplay.
+ * Contains \Drupal\Core\Entity\Entity\EntityViewDisplay.
  */
 
-namespace Drupal\entity\Entity;
+namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\entity\EntityDisplayBase;
+use Drupal\Core\Entity\EntityDisplayBase;
 
 /**
  * Configuration entity that contains display options for all components of a
@@ -19,10 +19,6 @@ use Drupal\entity\EntityDisplayBase;
  * @ConfigEntityType(
  *   id = "entity_view_display",
  *   label = @Translation("Entity view display"),
- *   handlers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage"
- *   },
- *   config_prefix = "view_display",
  *   entity_keys = {
  *     "id" = "id",
  *     "status" = "status"

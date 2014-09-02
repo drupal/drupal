@@ -19,6 +19,7 @@ dependencies:
   - block_content
   - quickedit
   - editor
+  - entity
   - entity_reference
   - help
   - image

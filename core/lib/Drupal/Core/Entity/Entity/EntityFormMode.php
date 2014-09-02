@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Entity\EntityFormMode.
+ * Contains \Drupal\Core\Entity\Entity\EntityFormMode.
  */
 
-namespace Drupal\entity\Entity;
+namespace Drupal\Core\Entity\Entity;
 
-use Drupal\entity\EntityDisplayModeBase;
-use Drupal\entity\EntityFormModeInterface;
+use Drupal\Core\Entity\EntityDisplayModeBase;
+use Drupal\Core\Entity\EntityFormModeInterface;
 
 /**
- * Defines the form mode configuration entity class.
+ * Defines the entity form mode configuration entity class.
  *
  * Form modes allow entity forms to be displayed differently depending on the
  * context. For instance, the user entity form can be displayed with a set of
@@ -26,27 +26,13 @@ use Drupal\entity\EntityFormModeInterface;
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface::getAllFormModes()
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFormModes()
- * @see hook_entity_form_mode_info_alter()
  *
  * @ConfigEntityType(
- *   id = "form_mode",
+ *   id = "entity_form_mode",
  *   label = @Translation("Form mode"),
- *   handlers = {
- *     "list_builder" = "Drupal\entity\EntityFormModeListBuilder",
- *     "form" = {
- *       "add" = "Drupal\entity\Form\EntityFormModeAddForm",
- *       "edit" = "Drupal\entity\Form\EntityDisplayModeEditForm",
- *       "delete" = "Drupal\entity\Form\EntityDisplayModeDeleteForm"
- *     }
- *   },
- *   admin_permission = "administer display modes",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
- *   },
- *   links = {
- *     "delete-form" = "entity.form_mode.delete_form",
- *     "edit-form" = "entity.form_mode.edit_form"
  *   }
  * )
  */

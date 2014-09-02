@@ -2,13 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityDisplayBase.
+ * Contains \Drupal\Core\Entity\EntityDisplayBase.
  */
 
-namespace Drupal\entity;
+namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
@@ -186,7 +185,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
     // Depend on configured modes.
     if ($this->mode != 'default') {
-      $mode_entity = \Drupal::entityManager()->getStorage($this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
+      $mode_entity = \Drupal::entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
       $this->addDependency('entity', $mode_entity->getConfigDependencyName());
     }
     return $this->dependencies;

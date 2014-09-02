@@ -832,13 +832,14 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected function getAllDisplayModesByEntityType($display_type) {
     if (!isset($this->displayModeInfo[$display_type])) {
       $key = 'entity_' . $display_type . '_info';
+      $entity_type_id = 'entity_' . $display_type;
       $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->id;
       if ($cache = $this->cacheBackend->get("$key:$langcode")) {
         $this->displayModeInfo[$display_type] = $cache->data;
       }
       else {
         $this->displayModeInfo[$display_type] = array();
-        foreach ($this->getStorage($display_type)->loadMultiple() as $display_mode) {
+        foreach ($this->getStorage($entity_type_id)->loadMultiple() as $display_mode) {
           list($display_mode_entity_type, $display_mode_name) = explode('.', $display_mode->id(), 2);
           $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = $display_mode->toArray();
         }

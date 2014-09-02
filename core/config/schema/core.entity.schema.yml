@@ -1,6 +1,6 @@
 # Schema for Configuration files of the entity module.
 
-entity.view_mode.*.*:
+core.entity_view_mode.*.*:
   type: mapping
   label: 'Entity view mode settings'
   mapping:
@@ -29,7 +29,7 @@ entity.view_mode.*.*:
       type: config_dependencies
       label: 'Dependencies'
 
-entity.form_mode.*.*:
+core.entity_form_mode.*.*:
   type: config_entity
   label: 'Entity form mode settings'
   mapping:
@@ -47,7 +47,7 @@ entity.form_mode.*.*:
       label: 'Cache'
 
 # Overview configuration information for view mode or form mode displays.
-entity.view_display.*.*.*:
+core.entity_view_display.*.*.*:
   type: config_entity
   label: 'Entity display'
   mapping:
@@ -79,7 +79,7 @@ entity.view_display.*.*.*:
           label: 'Value'
 
 # Overview configuration information for form mode displays.
-entity.form_display.*.*.*:
+core.entity_form_display.*.*.*:
   type: config_entity
   label: 'Entity form display'
   mapping:

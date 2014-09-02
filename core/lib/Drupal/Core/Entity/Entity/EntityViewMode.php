@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Entity\EntityViewMode.
+ * Contains \Drupal\Core\Entity\Entity\EntityViewMode.
  */
 
-namespace Drupal\entity\Entity;
+namespace Drupal\Core\Entity\Entity;
 
-use Drupal\entity\EntityDisplayModeBase;
-use Drupal\entity\EntityViewModeInterface;
+use Drupal\Core\Entity\EntityDisplayModeBase;
+use Drupal\Core\Entity\EntityViewModeInterface;
 
 /**
- * Defines the view mode configuration entity class.
+ * Defines the entity view mode configuration entity class.
  *
  * View modes let entities be displayed differently depending on the context.
  * For instance, a node can be displayed differently on its own page ('full'
@@ -30,24 +30,11 @@ use Drupal\entity\EntityViewModeInterface;
  * @see hook_entity_view_mode_info_alter()
  *
  * @ConfigEntityType(
- *   id = "view_mode",
+ *   id = "entity_view_mode",
  *   label = @Translation("View mode"),
- *   handlers = {
- *     "list_builder" = "Drupal\entity\EntityDisplayModeListBuilder",
- *     "form" = {
- *       "add" = "Drupal\entity\Form\EntityDisplayModeAddForm",
- *       "edit" = "Drupal\entity\Form\EntityDisplayModeEditForm",
- *       "delete" = "Drupal\entity\Form\EntityDisplayModeDeleteForm"
- *     }
- *   },
- *   admin_permission = "administer display modes",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
- *   },
- *   links = {
- *     "delete-form" = "entity.view_mode.delete_form",
- *     "edit-form" = "entity.view_mode.edit_form"
  *   }
  * )
  */

@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\entity\EntityViewModeInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 

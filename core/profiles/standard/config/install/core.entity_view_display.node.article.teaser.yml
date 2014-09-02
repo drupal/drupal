@@ -27,7 +27,7 @@ content:
     label: above
 dependencies:
   entity:
-    - entity.view_mode.node.teaser
+    - core.entity_view_mode.node.teaser
     - field.instance.node.article.body
     - field.instance.node.article.field_image
     - field.instance.node.article.field_tags

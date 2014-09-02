@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityDisplayModeInterface.
+ * Contains \Drupal\Core\Entity\EntityDisplayModeInterface.
  */
 
-namespace Drupal\entity;
+namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

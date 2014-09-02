@@ -250,7 +250,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     $id_key = $this->getEntityType()->getKey('id');
     foreach (array_keys($definition['mapping']) as $name) {
       // Special handling for IDs so that computed compound IDs work.
-      // @see \Drupal\entity\EntityDisplayBase::id()
+      // @see \Drupal\Core\Entity\EntityDisplayBase::id()
       if ($name == $id_key) {
         $properties[$name] = $this->id();
       }

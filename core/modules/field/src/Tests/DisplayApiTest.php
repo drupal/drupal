@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Entity\Entity\EntityViewMode;
+
 /**
  * Tests the field display API.
  *
@@ -99,7 +101,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       ->setComponent($this->field_name, $this->display_options['default'])
       ->save();
     // Create a display for the teaser view mode.
-    entity_create('view_mode', array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
+    EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
     entity_get_display($instance['entity_type'], $instance['bundle'], 'teaser')
       ->setComponent($this->field_name, $this->display_options['teaser'])
       ->save();

@@ -27,7 +27,7 @@ class EntityDisplayModeController extends ControllerBase {
       if ($entity_type->isFieldable() && $entity_type->hasViewBuilderClass()) {
         $entity_types[$entity_type_id] = array(
           'title' => $entity_type->getLabel(),
-          'url' => new Url('entity.view_mode_add_type', array('entity_type_id' => $entity_type_id)),
+          'url' => new Url('entity.entity_view_mode_add_type', array('entity_type_id' => $entity_type_id)),
           'localized_options' => array(),
         );
       }
@@ -50,7 +50,7 @@ class EntityDisplayModeController extends ControllerBase {
       if ($entity_type->isFieldable() && $entity_type->hasFormClasses()) {
         $entity_types[$entity_type_id] = array(
           'title' => $entity_type->getLabel(),
-          'url' => new Url('entity.form_mode_add_type', array('entity_type_id' => $entity_type_id)),
+          'url' => new Url('entity.entity_form_mode_add_type', array('entity_type_id' => $entity_type_id)),
           'localized_options' => array(),
         );
       }

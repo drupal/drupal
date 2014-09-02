@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
  * Filter that limits test entity list to revisable ones.

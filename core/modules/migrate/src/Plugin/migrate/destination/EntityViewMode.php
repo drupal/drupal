@@ -9,7 +9,7 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 /**
  * @MigrateDestination(
- *   id = "entity:view_mode"
+ *   id = "entity:entity_view_mode"
  * )
  */
 class EntityViewMode extends EntityConfigBase {

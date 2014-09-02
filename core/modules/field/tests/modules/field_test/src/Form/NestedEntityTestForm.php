@@ -10,7 +10,7 @@ namespace Drupal\field_test\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
  * Provides a form for field_test routes.

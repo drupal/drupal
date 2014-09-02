@@ -7,6 +7,7 @@
 
 namespace Drupal\entity\Tests;
 
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -78,12 +79,12 @@ class EntityDisplayTest extends DrupalUnitTestBase {
 
     // Check that CreateCopy() creates a new component that can be correclty
     // saved.
-    entity_create('view_mode', array('id' => $display->targetEntityType . '.other_view_mode', 'targetEntityType' => $display->targetEntityType))->save();
+    EntityViewMode::create(array('id' => $display->targetEntityType . '.other_view_mode', 'targetEntityType' => $display->targetEntityType))->save();
     $new_display = $display->createCopy('other_view_mode');
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
     $dependencies = $new_display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('entity.view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
+    $this->assertEqual(array('entity' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
     $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
     $this->assertEqual($new_display->bundle, $display->bundle);
     $this->assertEqual($new_display->mode, 'other_view_mode');
@@ -233,7 +234,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     // Check that saving the display only writes data for fields whose display
     // is configurable.
     $display->save();
-    $config = \Drupal::config('entity.view_display.' . $display->id());
+    $config = \Drupal::config('core.entity_view_display.' . $display->id());
     $data = $config->get();
     $this->assertFalse(isset($data['content']['test_no_display']));
     $this->assertFalse(isset($data['hidden']['test_no_display']));
@@ -275,9 +276,9 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $type->type = 'article_rename';
     $type->save();
     $old_display = entity_load('entity_view_display', 'node.article.default');
-    $this->assertFalse($old_display);
+    $this->assertFalse((bool) $old_display);
     $old_form_display = entity_load('entity_form_display', 'node.article.default');
-    $this->assertFalse($old_form_display);
+    $this->assertFalse((bool) $old_form_display);
     $new_display = entity_load('entity_view_display', 'node.article_rename.default');
     $this->assertEqual('article_rename', $new_display->bundle);
     $this->assertEqual('node.article_rename.default', $new_display->id);
@@ -302,9 +303,9 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     // Delete the bundle.
     $type->delete();
     $display = entity_load('entity_view_display', 'node.article_rename.default');
-    $this->assertFalse($display);
+    $this->assertFalse((bool) $display);
     $form_display = entity_load('entity_form_display', 'node.article_rename.default');
-    $this->assertFalse($form_display);
+    $this->assertFalse((bool) $form_display);
   }
 
   /**
@@ -326,7 +327,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $instance->save();
 
     // Create default and teaser entity display.
-    entity_create('view_mode', array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
+    EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
     entity_create('entity_view_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

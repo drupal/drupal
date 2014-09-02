@@ -7,6 +7,7 @@
 
 namespace Drupal\entity\Tests;
 
+use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -146,7 +147,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     // Check that saving the display only writes data for fields whose display
     // is configurable.
     $display->save();
-    $config = \Drupal::config('entity.form_display.' . $display->id());
+    $config = \Drupal::config('core.entity_form_display.' . $display->id());
     $data = $config->get();
     $this->assertFalse(isset($data['content']['test_no_display']));
     $this->assertFalse(isset($data['hidden']['test_no_display']));
@@ -190,7 +191,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     $instance->save();
 
     // Create default and compact entity display.
-    entity_create('form_mode', array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
+    EntityFormMode::create(array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
     entity_create('entity_form_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
