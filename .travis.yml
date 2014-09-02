@@ -32,8 +32,6 @@ before_script:
 
   # FPM.
   - cp $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - echo "cgi.fix_pathinfo = 1" >> $HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "max_execution_time = 300" >> $HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
@@ -44,4 +42,4 @@ before_script:
   - sudo service apache2 restart
 
 script:
-  - php core/scripts/run-tests.sh --verbose --color --concurrency 4 --php `which php` --url http://localhost --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal Simpletest
+  - php core/scripts/run-tests.sh --verbose --color --concurrency 4 --php `which php` --url http://localhost --sqlite build/test.sqlite --dburl mysql://root:root@mysql/drupal simpletest
