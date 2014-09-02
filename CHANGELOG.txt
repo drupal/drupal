@@ -1,6 +1,8 @@
 
 Drupal 7.32, xxxx-xx-xx (development version)
 -----------------------
+- Removed special-case behavior for file uploads which allowed user #1 to
+  bypass maximum file size and user quota limits.
 
 Drupal 7.31, 2014-08-06
 ----------------------
