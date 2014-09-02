@@ -41,5 +41,9 @@ before_script:
   # Kick Apache!
   - sudo service apache2 restart
 
+  # Mysql.
+  - mysql -uroot -proot -hmysql -e 'SET GLOBAL wait_timeout = 5400;'
+  - mysql -uroot -proot -hmysql -e 'SET GLOBAL innodb_fast_shutdown=0;'
+
 script:
-  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl sqlite://localhost/build/db.sqlite --all
+  - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --db-url="mysql://root:root@mysql/drupal" --all
