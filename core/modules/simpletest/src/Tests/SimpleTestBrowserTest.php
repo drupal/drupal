@@ -138,6 +138,11 @@ class SimpleTestBrowserTest extends WebTestBase {
       'tests[Drupal\action\Tests\Menu\ActionLocalTasksTest]' => TRUE,
     );
     $this->drupalPostForm(NULL, $edit, t('Run tests'));
+    $edit = array(
+      // A PHPUnit test.
+      'tests[Drupal\action\Tests\Menu\ActionLocalTasksTest]' => TRUE,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Run tests'));
     $this->assertText('0 fails, 0 exceptions');
   }
 
