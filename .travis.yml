@@ -25,7 +25,7 @@ before_script:
   - if [ `expr "$(phpenv global)" "<" "5.5"` -eq 1 ]; then phpenv config-add apc.ini; fi
   - phpenv config-add core/misc/travis-ci/php.ini
   - phpenv config-rm xdebug.ini
-  - pyrus install pecl/yaml
+  - pyrus install http://pecl.php.net/get/yaml-1.1.1.tgz
 
   # Apache.
   - sudo apt-get install -y sudo apache2 libapache2-mod-fastcgi
