@@ -51,4 +51,4 @@ before_script:
 
 script:
   - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal simpletest
-  - cat $HOME/.phpenv/versions/$(phpenv version-name)/log/php-fpm.log
+  - cat $HOME/.phpenv/versions/$(phpenv version-name)/var/log/php-fpm.log
