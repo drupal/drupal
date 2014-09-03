@@ -371,17 +371,23 @@ $settings['update_free_access'] = FALSE;
 /**
  * Class Loader.
  *
- * By default, Drupal uses Composer's ClassLoader, which is best for
- * development, as it does not break when code is moved on the file
- * system. It is possible, however, to wrap the class loader with a
- * cached class loader solution for better performance, which is
+ * By default, Composer's ClassLoader is used, which is best for development, as
+ * it does not break when code is moved in the file system. You can decorate the
+ * class loader with a cached solution for better performance, which is
  * recommended for production sites.
  *
- * Examples:
- *   $settings['class_loader'] = 'apc';
- *   $settings['class_loader'] = 'default';
+ * To do so, you may decorate and replace the local $class_loader variable.
+ *
+ * For example, to use Symfony's APC class loader, uncomment the code below.
  */
-# $settings['class_loader'] = 'apc';
+/*
+if ($settings['hash_salt']) {
+  $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader('drupal.' . $settings['hash_salt'], $class_loader);
+  $class_loader->unregister();
+  $apc_loader->register();
+  $class_loader = $apc_loader;
+}
+*/
 
 /**
  * Authorized file system operations:

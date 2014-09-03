@@ -286,7 +286,8 @@ function install_begin_request(&$install_state) {
   }
 
   $site_path = DrupalKernel::findSitePath($request, FALSE);
-  Settings::initialize($site_path);
+  $class_loader = require __DIR__ . '/../vendor/autoload.php';
+  Settings::initialize($site_path, $class_loader);
 
   // Ensure that procedural dependencies are loaded as early as possible,
   // since the error/exception handlers depend on them.
@@ -358,7 +359,7 @@ function install_begin_request(&$install_state) {
   }
 
   // Only allow dumping the container once the hash salt has been created.
-  $kernel = InstallerKernel::createFromRequest($request, drupal_classloader(), $environment, (bool) Settings::get('hash_salt', FALSE));
+  $kernel = InstallerKernel::createFromRequest($request, $class_loader, $environment, (bool) Settings::get('hash_salt', FALSE));
   $kernel->setSitePath($site_path);
   $kernel->boot();
   $container = $kernel->getContainer();

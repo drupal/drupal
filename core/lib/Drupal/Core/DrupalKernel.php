@@ -182,19 +182,20 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Create a DrupalKernel object from a request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
-   * @param \Composer\Autoload\ClassLoader $class_loader
-   *   (optional) The classloader is only used if $storage is not given or
-   *   the load from storage fails and a container rebuild is required. In
-   *   this case, the loaded modules will be registered with this loader in
-   *   order to be able to find the module serviceProviders.
+   *   The request.
+   * @param $class_loader
+   *   The class loader. Normally Composer's ClassLoader, as included by the
+   *   front controller, but may also be decorated; e.g.,
+   *   \Symfony\Component\ClassLoader\ApcClassLoader.
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'.
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
+   *
    * @return static
    */
-  public static function createFromRequest(Request $request, ClassLoader $class_loader, $environment, $allow_dumping = TRUE) {
+  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE) {
     // Include our bootstrap file.
     require_once dirname(dirname(dirname(__DIR__))) . '/includes/bootstrap.inc';
 
@@ -204,9 +205,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     static::bootEnvironment();
 
     // Get our most basic settings setup.
-    $site_path = static::findSitePath($request);
-    $kernel->setSitePath($site_path);
-    Settings::initialize($site_path);
+    $kernel->initializeSettings($request);
 
     // Redirect the user to the installation script if Drupal has not been
     // installed yet (i.e., if no $databases array has been defined in the
@@ -220,20 +219,31 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
+   * Initializes the kernel's site path and the Settings singleton.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request that will be used to determine the site path.
+   */
+  protected function initializeSettings(Request $request) {
+    $site_path = static::findSitePath($request);
+    $this->setSitePath($site_path);
+    Settings::initialize($site_path, $this->classLoader);
+  }
+
+  /**
    * Constructs a DrupalKernel object.
    *
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'.
-   * @param \Composer\Autoload\ClassLoader $class_loader
-   *   (optional) The class loader is only used if $storage is not given or
-   *   the load from storage fails and a container rebuild is required. In
-   *   this case, the loaded modules will be registered with this loader in
-   *   order to be able to find the module serviceProviders.
+   * @param $class_loader
+   *   The class loader. Normally \Composer\Autoload\ClassLoader, as included by
+   *   the front controller, but may also be decorated; e.g.,
+   *   \Symfony\Component\ClassLoader\ApcClassLoader.
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    */
-  public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE) {
+  public function __construct($environment, $class_loader, $allow_dumping = TRUE) {
     $this->environment = $environment;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
@@ -348,8 +358,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Start a page timer:
     Timer::start('page');
-
-    drupal_classloader();
 
     // Load legacy and other functional code.
     require_once DRUPAL_ROOT . '/core/includes/common.inc';
