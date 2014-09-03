@@ -51,6 +51,6 @@ before_script:
   - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
 
 script:
-  - php core/scripts/run-tests.sh --verbose --die-on-fail --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal simpletest
+  - php core/scripts/run-tests.sh --verbose --die-on-fail --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config
   - sudo cat $HOME/.phpenv/versions/$(phpenv version-name)/var/log/php-fpm.log
   - sudo rsync -avz /var/log/* logs
