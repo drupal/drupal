@@ -25,6 +25,7 @@ before_script:
   - if [ `expr "$(phpenv global)" "<" "5.5"` -eq 1 ]; then phpenv config-add apc.ini; fi
   - phpenv config-add core/misc/travis-ci/php.ini
   - phpenv config-rm xdebug.ini
+  - sudo pecl install yaml-beta
 
   # Apache.
   - sudo apt-get install -y sudo apache2 libapache2-mod-fastcgi
