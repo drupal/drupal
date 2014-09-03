@@ -33,6 +33,7 @@ before_script:
   # FPM.
   - cp $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo sed -e "s/;error_log/error_log/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo sed -e "s/;log_level/log_level/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
