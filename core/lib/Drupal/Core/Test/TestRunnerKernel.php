@@ -22,14 +22,14 @@ class TestRunnerKernel extends DrupalKernel {
   /**
    * {@inheritdoc}
    */
-  public static function createFromRequest(Request $request, ClassLoader $class_loader, $environment = 'test_runner', $allow_dumping = TRUE) {
+  public static function createFromRequest(Request $request, $class_loader, $environment = 'test_runner', $allow_dumping = TRUE) {
     return parent::createFromRequest($request, $class_loader, $environment);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($environment, ClassLoader $class_loader) {
+  public function __construct($environment, $class_loader) {
     parent::__construct($environment, $class_loader, FALSE);
 
     // Prime the module list and corresponding Extension objects.
