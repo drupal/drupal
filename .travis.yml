@@ -32,6 +32,7 @@ before_script:
 
   # FPM.
   - cp $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo sed -e "s/;error_log = log/php-fpm.log/error_log = log/php-fpm.log/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
@@ -50,4 +51,4 @@ before_script:
 
 script:
   - php core/scripts/run-tests.sh --verbose --keep-results --concurrency 4 --color --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal simpletest
-  - cat $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - cat $HOME/.phpenv/versions/$(phpenv version-name)/log/php-fpm.log
