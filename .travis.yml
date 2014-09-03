@@ -26,11 +26,6 @@ before_script:
   - phpenv config-add core/misc/travis-ci/php.ini
   - phpenv config-rm xdebug.ini
 
-  - pyrus channel-discover pear.phpunit.de
-  - pyrus channel-discover components.ez.no
-  - pyrus channel-discover pear.symfony-project.com
-  - pyrus install phpunit/PHPUnit
-
   # Apache.
   - sudo apt-get install -y sudo apache2 libapache2-mod-fastcgi
   - sudo a2enmod rewrite actions fastcgi alias
