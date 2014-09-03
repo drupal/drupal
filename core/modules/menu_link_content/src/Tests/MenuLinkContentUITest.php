@@ -34,7 +34,6 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
   protected function setUp() {
     $this->entityTypeId = 'menu_link_content';
     $this->bundle = 'menu_link_content';
-    $this->fieldName = 'title';
     parent::setUp();
   }
 

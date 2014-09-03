@@ -12,3 +12,8 @@ entity.shortcut_set.edit_form:
   route_name: entity.shortcut_set.edit_form
   base_route: entity.shortcut_set.customize_form
   weight: 10
+
+entity.shortcut.canonical:
+  route_name: entity.shortcut.canonical
+  base_route: entity.shortcut.canonical
+  title: Edit

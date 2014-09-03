@@ -173,27 +173,31 @@ abstract class ContentTranslationTestBase extends WebTestBase {
    * Creates the test fields.
    */
   protected function setupTestFields() {
-    $this->fieldName = 'field_test_et_ui_test';
-
-    entity_create('field_storage_config', array(
-      'name' => $this->fieldName,
-      'type' => 'text',
-      'entity_type' => $this->entityTypeId,
-      'cardinality' => 1,
-      'translatable' => TRUE,
-    ))->save();
-    entity_create('field_instance_config', array(
-      'entity_type' => $this->entityTypeId,
-      'field_name' => $this->fieldName,
-      'bundle' => $this->bundle,
-      'label' => 'Test translatable text-field',
-    ))->save();
-    entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
-      ->setComponent($this->fieldName, array(
-        'type' => 'text_textfield',
-        'weight' => 0,
-      ))
-      ->save();
+    $entity_type = \Drupal::entityManager()->getDefinition($this->entityTypeId);
+    if ($entity_type->isFieldable()) {
+      if (empty($this->fieldName)) {
+        $this->fieldName = 'field_test_et_ui_test';
+      }
+      entity_create('field_storage_config', array(
+        'name' => $this->fieldName,
+        'type' => 'text',
+        'entity_type' => $this->entityTypeId,
+        'cardinality' => 1,
+        'translatable' => TRUE,
+      ))->save();
+      entity_create('field_instance_config', array(
+        'entity_type' => $this->entityTypeId,
+        'field_name' => $this->fieldName,
+        'bundle' => $this->bundle,
+        'label' => 'Test translatable text-field',
+      ))->save();
+      entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
+        ->setComponent($this->fieldName, array(
+          'type' => 'text_textfield',
+          'weight' => 0,
+        ))
+        ->save();
+    }
   }
 
   /**
