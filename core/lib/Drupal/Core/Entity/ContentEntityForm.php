@@ -8,8 +8,8 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity\Entity\EntityFormDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

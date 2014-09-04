@@ -183,6 +183,13 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->get('changed')->value;
+  }
+
+  /**
    * Builds up the menu link plugin definition for this entity.
    *
    * @return array
@@ -385,6 +392,10 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['parent'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Parent plugin ID'))
       ->setDescription(t('The ID of the parent menu link plugin, or empty string when at the top level of the hierarchy.'));
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the menu link was last edited.'));
 
     return $fields;
   }

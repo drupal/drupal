@@ -22,9 +22,15 @@ class ListCacheBinsPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container) {
     $cache_bins = array();
+    $cache_default_bin_backends = array();
     foreach ($container->findTaggedServiceIds('cache.bin') as $id => $attributes) {
-      $cache_bins[$id] = substr($id, strpos($id, '.') + 1);
+      $bin = substr($id, strpos($id, '.') + 1);
+      $cache_bins[$id] = $bin;
+      if (isset($attributes[0]['default_backend'])) {
+        $cache_default_bin_backends[$bin] = $attributes[0]['default_backend'];
+      }
     }
     $container->setParameter('cache_bins', $cache_bins);
+    $container->setParameter('cache_default_bin_backends', $cache_default_bin_backends);
   }
 }

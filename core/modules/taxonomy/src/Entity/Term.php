@@ -22,6 +22,7 @@ use Drupal\taxonomy\TermInterface;
  *   bundle_label = @Translation("Vocabulary"),
  *   handlers = {
  *     "storage" = "Drupal\taxonomy\TermStorage",
+ *     "storage_schema" = "Drupal\taxonomy\TermStorageSchema",
  *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",
  *     "access" = "Drupal\taxonomy\TermAccessControlHandler",
  *     "views_data" = "Drupal\taxonomy\TermViewsData",

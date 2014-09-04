@@ -37,4 +37,4 @@ process:
   status: 'constants/status'
 
 destination:
-  plugin: entity:view_mode
+  plugin: entity:entity_view_mode

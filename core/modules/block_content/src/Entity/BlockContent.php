@@ -21,7 +21,8 @@ use Drupal\block_content\BlockContentInterface;
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
  *   handlers = {
- *     "storage" = "Drupal\block_content\BlockContentStorage",
+ *     "storage" = "Drupal\Core\Entity\ContentEntityDatabaseStorage",
+ *     "storage_schema" = "Drupal\block_content\BlockContentStorageSchema",
  *     "access" = "Drupal\block_content\BlockContentAccessControlHandler",
  *     "list_builder" = "Drupal\block_content\BlockContentListBuilder",
  *     "view_builder" = "Drupal\block_content\BlockContentViewBuilder",

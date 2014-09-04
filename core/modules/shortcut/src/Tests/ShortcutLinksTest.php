@@ -38,6 +38,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Create some paths to test.
     $test_cases = array(
+      array('path' => '', 'route_name' => '<front>'),
       array('path' => '<front>', 'route_name' => '<front>'),
       array('path' => 'admin', 'route_name' => 'system.admin'),
       array('path' => 'admin/config/system/site-information', 'route_name' => 'system.site_information_settings'),

@@ -104,46 +104,6 @@ function _drupal_maintenance_theme() {
 }
 
 /**
- * Returns HTML for a list of maintenance tasks to perform.
- *
- * @param $variables
- *   An associative array containing:
- *   - items: An associative array of maintenance tasks.
- *     It's the caller's responsibility to ensure this array's items contain no
- *     dangerous HTML such as SCRIPT tags.
- *   - active: The key for the currently active maintenance task.
- *
- * @ingroup themeable
- */
-function theme_task_list($variables) {
-  $items = $variables['items'];
-  $active = $variables['active'];
-
-  $done = isset($items[$active]) || $active == NULL;
-  $output = '<h2 class="visually-hidden">Installation tasks</h2>';
-  $output .= '<ol class="task-list">';
-
-  foreach ($items as $k => $item) {
-    if ($active == $k) {
-      $class = 'active';
-      $status = '(' . t('active') . ')';
-      $done = FALSE;
-    }
-    else {
-      $class = $done ? 'done' : '';
-      $status = $done ? '(' . t('done') . ')' : '';
-    }
-    $output .= '<li';
-    $output .= ($class ? ' class="' . $class . '"' : '') . '>';
-    $output .= $item;
-    $output .= ($status ? '<span class="visually-hidden"> ' . $status . '</span>' : '');
-    $output .= '</li>';
-  }
-  $output .= '</ol>';
-  return $output;
-}
-
-/**
  * Returns HTML for a results report of an operation run by authorize.php.
  *
  * @param $variables

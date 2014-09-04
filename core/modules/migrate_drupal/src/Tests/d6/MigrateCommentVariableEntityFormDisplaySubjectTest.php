@@ -11,7 +11,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Upgrade comment subject variable to entity.form_display.comment.*.default.yml
+ * Upgrade comment subject variable to core.entity_form_display.comment.*.default.yml
  *
  * @group migrate_drupal
  */

@@ -19,9 +19,11 @@ namespace Drupal\Core\Cache;
  * Mecached or Redis, and will be used by all web nodes, thus making it
  * consistent, but also require a network round trip for each cache get.
  *
- * It is expected this backend will be used primarily on sites running on
- * multiple web nodes, as single-node configurations can just use the fast
- * cache backend directly.
+ * In addition to being useful for sites running on multiple web nodes, this
+ * backend can also be useful for sites running on a single web node where the
+ * fast backend (e.g., APCu) isn't shareable between the web and CLI processes.
+ * Single-node configurations that don't have that limitation can just use the
+ * fast cache backend directly.
  *
  * We always use the fast backend when reading (get()) entries from cache, but
  * check whether they were created before the last write (set()) to this
@@ -68,7 +70,7 @@ class ChainedFastBackend implements CacheBackendInterface {
   /**
    * The time at which the last write to this cache bin happened.
    *
-   * @var int
+   * @var float
    */
   protected $lastWriteTimestamp;
 
@@ -102,14 +104,47 @@ class ChainedFastBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    // Retrieve as many cache items as possible from the fast backend. (Some
-    // cache entries may have been created before the last write to this cache
-    // bin and therefore be stale/wrong/inconsistent.)
     $cids_copy = $cids;
     $cache = array();
+
+    // If we can determine the time at which the last write to the consistent
+    // backend occurred (we might not be able to if it has been recently
+    // flushed/restarted), then we can use that to validate items from the fast
+    // backend, so try to get those first. Otherwise, we can't assume that
+    // anything in the fast backend is valid, so don't even bother fetching
+    // from there.
     $last_write_timestamp = $this->getLastWriteTimestamp();
     if ($last_write_timestamp) {
-      foreach ($this->fastBackend->getMultiple($cids, $allow_invalid) as $item) {
+      // Items in the fast backend might be invalid based on their timestamp,
+      // but we can't check the timestamp prior to getting the item, which
+      // includes unserializing it. However, unserializing an invalid item can
+      // throw an exception. For example, a __wakeup() implementation that
+      // receives object properties containing references to code or data that
+      // no longer exists in the application's current state.
+      //
+      // Unserializing invalid data, whether it throws an exception or not, is
+      // a waste of time, but we only incur it while a cache invalidation has
+      // not yet finished propagating to all the fast backend instances.
+      //
+      // Most cache backend implementations should not wrap their internal
+      // get() implementations with a try/catch, because they have no reason to
+      // assume that their data is invalid, and doing so would mask
+      // unserialization errors of valid data. We do so here, only because the
+      // fast backend is non-authoritative, and after discarding its
+      // exceptions, we proceed to check the consistent (authoritative) backend
+      // and allow exceptions from that to bubble up.
+      try {
+        $items = $this->fastBackend->getMultiple($cids, $allow_invalid);
+      }
+      catch (\Exception $e) {
+        $cids = $cids_copy;
+        $items = array();
+      }
+
+      // Even if items were successfully fetched from the fast backend, they
+      // are potentially invalid if older than the last time the bin was
+      // written to in the consistent backend, so only keep ones that aren't.
+      foreach ($items as $item) {
         if ($item->created < $last_write_timestamp) {
           $cids[array_search($item->cid, $cids_copy)] = $item->cid;
         }
@@ -227,6 +262,13 @@ class ChainedFastBackend implements CacheBackendInterface {
   public function removeBin() {
     $this->consistentBackend->removeBin();
     $this->fastBackend->removeBin();
+  }
+
+  /**
+   * @todo Document in https://www.drupal.org/node/2311945.
+   */
+  public function reset() {
+    $this->lastWriteTimestamp = NULL;
   }
 
   /**

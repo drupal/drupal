@@ -7,7 +7,7 @@
 
 namespace Drupal\datetime\Tests;
 
-use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 

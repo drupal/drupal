@@ -9,6 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Defines the cached storage.
@@ -18,6 +19,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * handles cache invalidation.
  */
 class CachedStorage implements StorageInterface, StorageCacheInterface {
+  use DependencySerializationTrait;
 
   /**
    * The configuration storage to be cached.

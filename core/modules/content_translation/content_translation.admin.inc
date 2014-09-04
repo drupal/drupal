@@ -94,35 +94,34 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       // to be able to skip alterations.
       $form['settings'][$entity_type_id][$bundle]['settings']['language']['#content_translation_skip_alter'] = TRUE;
 
-      // Only show the checkbox to enable translation if the bundles in the
-      // entity might have fields and if there are fields to translate.
-      if ($entity_type->isFieldable()) {
-        $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
-        if ($fields) {
+      $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
+      if ($fields) {
+        foreach ($fields as $field_name => $definition) {
+          // Allow to configure only fields supporting multilingual storage.
+          if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable()) {
+            $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
+              '#label' => $definition->getLabel(),
+              '#type' => 'checkbox',
+              '#default_value' => $definition->isTranslatable(),
+            );
+            // Display the column translatability configuration widget.
+            $column_element = content_translation_field_sync_widget($definition);
+            if ($column_element) {
+              $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
+              // @todo This should not concern only files.
+              if (isset($column_element['#options']['file'])) {
+                $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
+              }
+            }
+          }
+        }
+        if (!empty($form['settings'][$entity_type_id][$bundle]['fields'])) {
+          // Only show the checkbox to enable translation if the bundles in the
+          // entity might have fields and if there are fields to translate.
           $form['settings'][$entity_type_id][$bundle]['translatable'] = array(
             '#type' => 'checkbox',
             '#default_value' => content_translation_enabled($entity_type_id, $bundle),
           );
-
-          foreach ($fields as $field_name => $definition) {
-            // Allow to configure only fields supporting multilingual storage.
-            if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable()) {
-              $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
-                '#label' => $definition->getLabel(),
-                '#type' => 'checkbox',
-                '#default_value' => $definition->isTranslatable(),
-              );
-              // Display the column translatability configuration widget.
-              $column_element = content_translation_field_sync_widget($definition);
-              if ($column_element) {
-                $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
-                // @todo This should not concern only files.
-                if (isset($column_element['#options']['file'])) {
-                  $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
-                }
-              }
-            }
-          }
         }
       }
     }

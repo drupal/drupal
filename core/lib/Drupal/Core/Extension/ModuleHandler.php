@@ -942,7 +942,19 @@ class ModuleHandler implements ModuleHandlerInterface {
     // the module already, which means that it might be loaded, but not
     // necessarily installed.
     $schema_store = \Drupal::keyValue('system.schema');
+    $entity_manager = \Drupal::entityManager();
     foreach ($module_list as $module) {
+
+      // Clean up all entity bundles (including field instances) of every entity
+      // type provided by the module that is being uninstalled.
+      foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
+        if ($entity_type->getProvider() == $module) {
+          foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {
+            entity_invoke_bundle_hook('delete', $entity_type_id, $bundle);
+          }
+        }
+      }
+
       // Allow modules to react prior to the uninstallation of a module.
       $this->invokeAll('module_preuninstall', array($module));
 
@@ -954,7 +966,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       \Drupal::service('config.manager')->uninstall('module', $module);
 
       // Remove any entity schemas belonging to the module.
-      $entity_manager = \Drupal::entityManager();
+
       $schema = \Drupal::database()->schema();
       foreach ($entity_manager->getDefinitions() as $entity_type) {
         if ($entity_type->getProvider() == $module) {

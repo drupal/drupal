@@ -96,9 +96,9 @@ class AreaEntityTest extends ViewTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     // Mark entity_test test view_mode as customizable.
-    $view_mode = \Drupal::entityManager()->getStorage('view_mode')->load('entity_test.test');
-    $view_mode->enable();
-    $view_mode->save();
+    $entity_view_mode = \Drupal::entityManager()->getStorage('entity_view_mode')->load('entity_test.test');
+    $entity_view_mode->enable();
+    $entity_view_mode->save();
 
     // Change the view mode of the area handler.
     $view = Views::getView('test_entity_area');

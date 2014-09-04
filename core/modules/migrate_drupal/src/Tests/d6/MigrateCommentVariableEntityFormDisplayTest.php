@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 /**
- * Upgrade comment variables to entity.form_display.node.*.default.yml.
+ * Upgrade comment variables to core.entity_form_display.node.*.default.yml.
  *
  * @group migrate_drupal
  */

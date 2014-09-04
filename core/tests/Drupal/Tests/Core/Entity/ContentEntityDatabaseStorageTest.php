@@ -299,9 +299,9 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
         // ContentEntityStorageBase::__construct()
         array('uuid', NULL),
         array('bundle', NULL),
-        // ContentEntitySchemaHandler::initializeBaseTable()
+        // SqlContentEntityStorageSchema::initializeBaseTable()
         array('id' => 'id'),
-        // ContentEntitySchemaHandler::processBaseTable()
+        // SqlContentEntityStorageSchema::processBaseTable()
         array('id' => 'id'),
       )));
 
@@ -331,7 +331,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->assertEquals($expected, $this->entityStorage->getSchema());
 
     // Test that repeated calls do not result in repeatedly instantiating
-    // ContentEntitySchemaHandler as getFieldStorageDefinitions() is only
+    // SqlContentEntityStorageSchema as getFieldStorageDefinitions() is only
     // expected to be called once.
     $this->assertEquals($expected, $this->entityStorage->getSchema());
   }

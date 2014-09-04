@@ -86,9 +86,9 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $expected = array(
       'node.type.' . $active_type . '::node.type.' . $staged_type,
       'core.base_field_override.node.' . $active_type . '.status::core.base_field_override.node.' . $staged_type . '.status',
-      'entity.form_display.node.' . $active_type . '.default::entity.form_display.node.' . $staged_type . '.default',
-      'entity.view_display.node.' . $active_type . '.default::entity.view_display.node.' . $staged_type . '.default',
-      'entity.view_display.node.' . $active_type . '.teaser::entity.view_display.node.' . $staged_type . '.teaser',
+      'core.entity_form_display.node.' . $active_type . '.default::core.entity_form_display.node.' . $staged_type . '.default',
+      'core.entity_view_display.node.' . $active_type . '.default::core.entity_view_display.node.' . $staged_type . '.default',
+      'core.entity_view_display.node.' . $active_type . '.teaser::core.entity_view_display.node.' . $staged_type . '.teaser',
       'field.instance.node.' . $active_type . '.body::field.instance.node.' . $staged_type . '.body',
     );
     $renames = $this->configImporter()->getUnprocessedConfiguration('rename');

@@ -32,7 +32,8 @@ class IgnoreReplicaSubscriberTest extends UnitTestBase {
     Database::addConnectionInfo('default', 'replica', $connection_info['default']);
 
     db_ignore_replica();
-    $kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
+    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    $kernel = new DrupalKernel('testing', $class_loader, FALSE);
     $event = new GetResponseEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MASTER_REQUEST);
     $subscriber = new ReplicaDatabaseIgnoreSubscriber();
     $subscriber->checkReplicaServer($event);

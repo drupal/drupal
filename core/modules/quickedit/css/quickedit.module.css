@@ -14,7 +14,6 @@
   z-index: 98;
   position: relative;
   cursor: pointer;
-  display: block;
 }
 .quickedit-editable:focus {
   outline: none;

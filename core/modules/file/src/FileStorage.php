@@ -27,29 +27,4 @@ class FileStorage extends ContentEntityDatabaseStorage implements FileStorageInt
     return $query->execute()->fetchField();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getSchema() {
-    $schema = parent::getSchema();
-
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['file_managed']['fields']['status']['not null'] = TRUE;
-    $schema['file_managed']['fields']['changed']['not null'] = TRUE;
-    $schema['file_managed']['fields']['uri']['not null'] = TRUE;
-
-    // @todo There should be a 'binary' field type or setting.
-    $schema['file_managed']['fields']['uri']['binary'] = TRUE;
-    $schema['file_managed']['indexes'] += array(
-      'file__status' => array('status'),
-      'file__changed' => array('changed'),
-    );
-    $schema['file_managed']['unique keys'] += array(
-      'file__uri' => array('uri'),
-    );
-
-    return $schema;
-  }
-
 }

@@ -71,12 +71,11 @@ class TwigEnvironment extends \Twig_Environment {
     $options += array(
       // @todo Ensure garbage collection of expired files.
       'cache' => TRUE,
-      // @todo Remove this.
-      // @see http://drupal.org/node/1712444
-      'autoescape' => FALSE,
       'debug' => FALSE,
       'auto_reload' => NULL,
     );
+    // Ensure autoescaping is always on.
+    $options['autoescape'] = TRUE;
 
     parent::__construct($loader, $options);
   }

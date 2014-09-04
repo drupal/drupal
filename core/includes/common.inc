@@ -2863,9 +2863,6 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
       if (is_string($callable) && strpos($callable, '::') === FALSE) {
         $callable = $controller_resolver->getControllerFromDefinition($callable);
       }
-      else {
-        $callable = $callable;
-      }
       $elements = call_user_func($callable, $elements);
     }
   }

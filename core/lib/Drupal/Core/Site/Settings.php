@@ -87,8 +87,14 @@ final class Settings {
    *
    * @param string $site_path
    *   The current site path.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader that is used for this request. Passed by reference and
+   *   exposed to the local scope of settings.php, so as to allow it to be
+   *   decorated with Symfony's ApcClassLoader, for example.
+   *
+   * @see default.settings.php
    */
-  public static function initialize($site_path) {
+  public static function initialize($site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
     global $base_url, $cookie_domain, $config_directories, $config;
     $settings = array();

@@ -43,7 +43,7 @@ class InvalidUpdateHookTest extends WebTestBase {
     parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
-    $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
+    $this->update_url = $GLOBALS['base_url'] . '/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));
   }
 
@@ -51,7 +51,7 @@ class InvalidUpdateHookTest extends WebTestBase {
     // Confirm that a module with hook_update_8000() cannot be updated.
     $this->drupalLogin($this->update_user);
     $this->drupalGet($this->update_url);
-    $this->drupalPostForm($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->clickLink(t('Continue'));
     $this->assertText(t('Some of the pending updates cannot be applied because their dependencies were not met.'));
   }
 

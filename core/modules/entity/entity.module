@@ -8,7 +8,6 @@
  * entity system.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -26,9 +25,9 @@ function entity_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing view modes') . '</dt>';
-      $output .= '<dd>' . t('Each content entity can have various "modes" for viewing. For instance, a content item could be viewed in full content mode on its own page, teaser mode in a list, or RSS mode in a feed. You can create, edit the names of, and delete view modes on the <a href="!view-modes">View modes page</a>. Once a view mode has been set up, you can choose and format fields for the view mode within each entity sub-type on the Manage display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!view-modes' => \Drupal::url('entity.view_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Each content entity can have various "modes" for viewing. For instance, a content item could be viewed in full content mode on its own page, teaser mode in a list, or RSS mode in a feed. You can create, edit the names of, and delete view modes on the <a href="!view-modes">View modes page</a>. Once a view mode has been set up, you can choose and format fields for the view mode within each entity sub-type on the Manage display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!view-modes' => \Drupal::url('entity.entity_view_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
       $output .= '<dt>' . t('Managing form modes') . '</dt>';
-      $output .= '<dd>' . t('Each content entity can have various editing forms appropriate for different situations, which are known as "form modes". For instance, you might want to define a quick editing mode that allows users to edit the most important fields, and a full editing mode that gives access to all the fields. You can create, edit the names of, and delete form modes on the <a href="!form-modes">Manage custom form modes page</a>. Once a form mode has been set up, you can choose which fields are available on that form within each entity sub-type on the Manage form display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!form-modes' => \Drupal::url('entity.form_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Each content entity can have various editing forms appropriate for different situations, which are known as "form modes". For instance, you might want to define a quick editing mode that allows users to edit the most important fields, and a full editing mode that gives access to all the fields. You can create, edit the names of, and delete form modes on the <a href="!form-modes">Manage custom form modes page</a>. Once a form mode has been set up, you can choose which fields are available on that form within each entity sub-type on the Manage form display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!form-modes' => \Drupal::url('entity.entity_form_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -46,70 +45,26 @@ function entity_permission() {
 }
 
 /**
- * Implements hook_entity_bundle_rename().
+ * Implements hook_entity_type_alter().
  */
-function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
-  // Rename entity displays.
-  $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
-  if ($bundle_old !== $bundle_new) {
-    $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle_old . '.');
-    foreach ($ids as $id) {
-      $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
-      $display = entity_load('entity_view_display', $id);
-      $new_id = $entity_type_id . '.' . $bundle_new . '.' . $display->mode;
-      $display->set('id', $new_id);
-      $display->bundle = $bundle_new;
-      $display->save();
-    }
-  }
+function entity_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $form_mode = $entity_types['entity_form_mode'];
+  $form_mode->setListBuilderClass('Drupal\entity\EntityFormModeListBuilder');
+  $form_mode->setFormClass('add', 'Drupal\entity\Form\EntityFormModeAddForm');
+  $form_mode->setFormClass('edit', 'Drupal\entity\Form\EntityDisplayModeEditForm');
+  $form_mode->setFormClass('delete', 'Drupal\entity\Form\EntityDisplayModeDeleteForm');
+  $form_mode->set('admin_permission', 'administer display modes');
+  $form_mode->setLinkTemplate('delete-form', 'entity.entity_form_mode.delete_form');
+  $form_mode->setLinkTemplate('edit-form', 'entity.entity_form_mode.edit_form');
 
-  // Rename entity form displays.
-  $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
-  if ($bundle_old !== $bundle_new) {
-    $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle_old . '.');
-    foreach ($ids as $id) {
-      $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
-      $form_display = entity_load('entity_form_display', $id);
-      $new_id = $entity_type_id . '.' . $bundle_new . '.' . $form_display->mode;
-      $form_display->set('id', $new_id);
-      $form_display->bundle = $bundle_new;
-      $form_display->save();
-    }
-  }
+  $view_mode = $entity_types['entity_view_mode'];
+  $view_mode->setListBuilderClass('Drupal\entity\EntityDisplayModeListBuilder');
+  $view_mode->setFormClass('add', 'Drupal\entity\Form\EntityDisplayModeAddForm');
+  $view_mode->setFormClass('edit', 'Drupal\entity\Form\EntityDisplayModeEditForm');
+  $view_mode->setFormClass('delete', 'Drupal\entity\Form\EntityDisplayModeDeleteForm');
+  $view_mode->set('admin_permission', 'administer display modes');
+  $view_mode->setLinkTemplate('delete-form', 'entity.entity_view_mode.delete_form');
+  $view_mode->setLinkTemplate('edit-form', 'entity.entity_view_mode.edit_form');
 }
 
-/**
- * Implements hook_entity_bundle_delete().
- */
-function entity_entity_bundle_delete($entity_type_id, $bundle) {
-  // Remove entity displays of the deleted bundle.
-  $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
-  $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle . '.');
-  foreach ($ids as &$id) {
-    $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
-  }
-  entity_delete_multiple('entity_view_display', $ids);
-
-  // Remove entity form displays of the deleted bundle.
-  $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
-  $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle . '.');
-  foreach ($ids as &$id) {
-    $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
-  }
-  entity_delete_multiple('entity_form_display', $ids);
-}
-
-/**
- * Implements hook_module_preuninstall().
- */
-function entity_module_preuninstall($module) {
-  // Clean up all entity bundles (including field instances) of every entity
-  // type provided by the module that is being uninstalled.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($entity_type->getProvider() == $module) {
-      foreach (array_keys(entity_get_bundles($entity_type_id)) as $bundle) {
-        entity_invoke_bundle_hook('delete', $entity_type_id, $bundle);
-      }
-    }
-  }
-}

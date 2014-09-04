@@ -123,6 +123,28 @@ class LinksTest extends WebTestBase {
   }
 
   /**
+   * Assert that a link entity's created timestamp is set.
+   */
+  public function testCreateLink() {
+    $options = array(
+      'menu_name' => 'menu_test',
+      'bundle' => 'menu_link_content',
+    );
+    $link = entity_create('menu_link_content', $options);
+    $link->save();
+    // Make sure the changed timestamp is set.
+    $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Creating a menu link sets the "changed" timestamp.');
+    $options = array(
+      'title' => 'Test Link',
+    );
+    $link->setOptions($options);
+    $link->changed->value = REQUEST_TIME - 5;
+    $link->save();
+    // Make sure the changed timestamp is updated.
+    $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Changing a menu link sets "changed" timestamp.');
+  }
+
+  /**
    * Test automatic reparenting of menu links.
    */
   function testMenuLinkReparenting($module = 'menu_test') {

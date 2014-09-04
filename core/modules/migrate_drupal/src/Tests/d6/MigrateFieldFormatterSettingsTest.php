@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -33,7 +34,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     entity_create('node_type', array('type' => 'test_page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
     // Create the node preview view mode.
-    entity_create('view_mode', array('id' => 'node.preview', 'targetEntityType' => 'node'))->save();
+    EntityViewMode::create(array('id' => 'node.preview', 'targetEntityType' => 'node'))->save();
 
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(

@@ -1024,7 +1024,8 @@ function drupal_bootstrap($phase = NULL) {
 
       switch ($current_phase) {
         case DRUPAL_BOOTSTRAP_CONFIGURATION:
-          $kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod');
+          $classloader = require __DIR__ . '/../vendor/autoload.php';
+          $kernel = DrupalKernel::createFromRequest($request, $classloader, 'prod');
           break;
 
         case DRUPAL_BOOTSTRAP_KERNEL:
@@ -1399,50 +1400,6 @@ function _current_path($path = NULL) {
 }
 
 /**
- * Initializes and returns the class loader.
- *
- * The class loader is responsible for lazy-loading all PSR-0 compatible
- * classes, interfaces, and traits (PHP 5.4 and later). It's only dependency
- * is DRUPAL_ROOT. Otherwise it may be called as early as possible.
- *
- * @param $class_loader
- *   The name of class loader to use. This can be used to change the class
- *   loader class when calling drupal_classloader() from settings.php. It is
- *   ignored otherwise.
- *
- * @return \Composer\Autoload\ClassLoader
- *   A ClassLoader class instance (or extension thereof).
- */
-function drupal_classloader($class_loader = NULL) {
-  // By default, use the ClassLoader which is best for development, as it does
-  // not break when code is moved on the file system. However, as it is slow,
-  // allow to use the APC class loader in production.
-  static $loader;
-
-  if (!isset($loader)) {
-
-    // Retrieve the Composer ClassLoader for loading classes.
-    $loader = include __DIR__ . '/../vendor/autoload.php';
-
-    // Register the class loader.
-    // When configured to use APC, the ApcClassLoader is registered instead.
-    // Note that ApcClassLoader decorates ClassLoader and only provides the
-    // findFile() method, but none of the others. The actual registry is still
-    // in ClassLoader.
-    if (!isset($class_loader)) {
-      $class_loader = Settings::get('class_loader', 'default');
-    }
-    if ($class_loader === 'apc') {
-      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
-      $apc_loader = new ApcClassLoader('drupal.' . Settings::getHashSalt(), $loader);
-      $loader->unregister();
-      $apc_loader->register();
-    }
-  }
-  return $loader;
-}
-
-/**
  * Registers an additional namespace.
  *
  * @param string $name
@@ -1451,7 +1408,7 @@ function drupal_classloader($class_loader = NULL) {
  *   The relative path to the Drupal component in the filesystem.
  */
 function drupal_classloader_register($name, $path) {
-  $loader = drupal_classloader();
+  $loader = \Drupal::service('class_loader');
   $loader->addPsr4('Drupal\\' . $name . '\\', DRUPAL_ROOT . '/' . $path . '/src');
 }
 

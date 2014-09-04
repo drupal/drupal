@@ -183,7 +183,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
     $active_providers = ($route && $route->getOption('_auth')) ? $route->getOption('_auth') : array($this->defaultProviderId());
 
     // Get the sorted list of active providers for the given route.
-    $providers = array_intersect($active_providers, array_keys($this->providers));
+    $providers = array_intersect($active_providers, array_keys($this->getSortedProviders()));
 
     foreach ($providers as $provider_id) {
       if ($this->providers[$provider_id]->handleException($event) == TRUE) {

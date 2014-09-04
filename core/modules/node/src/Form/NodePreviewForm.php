@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -141,9 +140,9 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
     $view_modes = $this->entityManager->getViewModes('node');
 
     // Get the list of available view modes for the current node's bundle.
-    $ids = $this->configFactory->listAll('entity.view_display.node.' . $node->bundle());
+    $ids = $this->configFactory->listAll('core.entity_view_display.node.' . $node->bundle());
     foreach ($ids as $id) {
-      $config_id = str_replace('entity.view_display' . '.', '', $id);
+      $config_id = str_replace('core.entity_view_display' . '.', '', $id);
       $load_ids[] = $config_id;
     }
     $displays = entity_load_multiple('entity_view_display', $load_ids);

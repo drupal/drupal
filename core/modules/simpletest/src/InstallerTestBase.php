@@ -138,7 +138,8 @@ abstract class InstallerTestBase extends WebTestBase {
 
     // Import new settings.php written by the installer.
     $request = Request::createFromGlobals();
-    Settings::initialize(DrupalKernel::findSitePath($request));
+    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    Settings::initialize(DrupalKernel::findSitePath($request), $class_loader);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;
     }
@@ -150,7 +151,7 @@ abstract class InstallerTestBase extends WebTestBase {
     // WebTestBase::tearDown() will delete the entire test site directory.
     // Not using File API; a potential error must trigger a PHP warning.
     chmod(DRUPAL_ROOT . '/' . $this->siteDirectory, 0777);
-    $this->kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod', FALSE);
+    $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
     $this->kernel->prepareLegacyRequest($request);
     $this->container = $this->kernel->getContainer();
     $config = $this->container->get('config.factory');

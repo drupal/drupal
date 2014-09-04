@@ -197,9 +197,6 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
 
     $form = array(
       '#type' => 'container',
-      '#attached' => array(
-        'css' => array(drupal_get_path('module', 'entity_reference') . '/css/entity_reference.admin.css'),
-      ),
       '#process' => array(
         '_entity_reference_field_instance_settings_ajax_process',
       ),

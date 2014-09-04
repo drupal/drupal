@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -860,14 +861,15 @@ abstract class WebTestBase extends TestBase {
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
     // reload the newly written custom settings.php manually.
-    Settings::initialize($directory);
+    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    Settings::initialize($directory, $class_loader);
 
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($parameters);
 
     // Import new settings.php written by the installer.
-    Settings::initialize($directory);
+    Settings::initialize($directory, $class_loader);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;
     }
@@ -881,7 +883,7 @@ abstract class WebTestBase extends TestBase {
     chmod($directory, 0777);
 
     $request = \Drupal::request();
-    $this->kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod', TRUE);
+    $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', TRUE);
     $this->kernel->prepareLegacyRequest($request);
     // Force the container to be built from scratch instead of loaded from the
     // disk. This forces us to not accidently load the parent site.
@@ -1171,9 +1173,17 @@ abstract class WebTestBase extends TestBase {
    */
   protected function refreshVariables() {
     // Clear the tag cache.
+    // @todo Replace drupal_static() usage within classes and provide a
+    //   proper interface for invoking reset() on a cache backend:
+    //   https://www.drupal.org/node/2311945.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
     drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::deletedTags');
     drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::invalidatedTags');
+    foreach (Cache::getBins() as $backend) {
+      if (is_callable(array($backend, 'reset'))) {
+        $backend->reset();
+      }
+    }
 
     $this->container->get('config.factory')->reset();
     $this->container->get('state')->resetCache();

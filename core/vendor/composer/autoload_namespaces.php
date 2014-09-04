@@ -26,6 +26,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\ClassLoader\\' => array($vendorDir . '/symfony/class-loader'),
     'Symfony\\Cmf\\Component\\Routing' => array($vendorDir . '/symfony-cmf/routing'),
+    'Stack' => array($vendorDir . '/stack/builder/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Gliph' => array($vendorDir . '/sdboyer/gliph/src'),
     'EasyRdf_' => array($vendorDir . '/easyrdf/easyrdf/lib'),

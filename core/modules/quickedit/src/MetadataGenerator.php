@@ -12,7 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface;
-use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Generates in-place editing metadata for an entity field.

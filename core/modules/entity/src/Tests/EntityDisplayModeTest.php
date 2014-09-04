@@ -21,7 +21,7 @@ class EntityDisplayModeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'entity');
 
   /**
    * Tests the EntityViewMode user interface.

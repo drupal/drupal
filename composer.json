@@ -26,7 +26,8 @@
     "phpunit/phpunit": "4.1.*",
     "phpunit/phpunit-mock-objects": "dev-master#e60bb929c50ae4237aaf680a4f6773f4ee17f0a2",
     "zendframework/zend-feed": "2.2.*",
-    "mikey179/vfsStream": "1.*"
+    "mikey179/vfsStream": "1.*",
+    "stack/builder": "1.0.*"
   },
   "autoload": {
     "psr-4": {
