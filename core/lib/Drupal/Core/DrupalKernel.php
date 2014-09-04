@@ -418,12 +418,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Helper method that does request related initialization.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * {@inheritdoc}
    */
-  protected function preHandle(Request $request) {
+  public function preHandle(Request $request) {
     // Load all enabled modules.
     $this->container->get('module_handler')->loadAll();
 
@@ -568,7 +565,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     $this->boot();
-    $this->preHandle($request);
     return $this->getHttpKernel()->handle($request, $type, $catch);
   }
 

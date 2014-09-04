@@ -22,7 +22,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -127,10 +126,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The theme manager.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
-   * @param \Symfony\Component\HttpKernel\HttpKernel $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernelInterface $http_kernel = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->formCache = $form_cache;

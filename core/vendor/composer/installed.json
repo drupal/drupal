@@ -2512,5 +2512,57 @@
             "database",
             "routing"
         ]
+    },
+    {
+        "name": "stack/builder",
+        "version": "v1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/stackphp/builder.git",
+            "reference": "b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/stackphp/builder/zipball/b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7",
+            "reference": "b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "symfony/http-foundation": "~2.1",
+            "symfony/http-kernel": "~2.1"
+        },
+        "require-dev": {
+            "silex/silex": "~1.0"
+        },
+        "time": "2014-01-28 19:42:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Stack": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Igor Wiedler",
+                "email": "igor@wiedler.ch",
+                "homepage": "http://wiedler.ch/igor/"
+            }
+        ],
+        "description": "Builder for stack middlewares based on HttpKernelInterface.",
+        "keywords": [
+            "stack"
+        ]
     }
 ]

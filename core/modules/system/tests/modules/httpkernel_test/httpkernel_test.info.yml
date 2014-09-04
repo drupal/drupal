@@ -1,0 +1,6 @@
+name: 'HttpKernel test'
+type: module
+description: 'Support module for httpkernel tests.'
+package: Testing
+version: VERSION
+core: 8.x

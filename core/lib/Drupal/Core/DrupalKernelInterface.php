@@ -108,4 +108,12 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    */
   public function prepareLegacyRequest(Request $request);
 
+  /**
+   * Helper method that does request related initialization.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   */
+  public function preHandle(Request $request);
+
 }
