@@ -247,7 +247,7 @@ function hook_entity_info() {
         'custom settings' => FALSE,
       ),
       'search_result' => array(
-        'label' => t('Search result'),
+        'label' => t('Search result highlighting input'),
         'custom settings' => FALSE,
       ),
     );
