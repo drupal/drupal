@@ -14,7 +14,7 @@ action.admin_add:
   requirements:
     _permission: 'administer actions'
 
-action.admin_configure:
+entity.action.edit_form:
   path: '/admin/config/system/actions/configure/{action}'
   defaults:
     _entity_form: 'action.edit'
@@ -22,7 +22,7 @@ action.admin_configure:
   requirements:
     _permission: 'administer actions'
 
-action.delete:
+entity.action.delete_form:
   path: '/admin/config/system/actions/configure/{action}/delete'
   defaults:
     _entity_form: 'action.delete'

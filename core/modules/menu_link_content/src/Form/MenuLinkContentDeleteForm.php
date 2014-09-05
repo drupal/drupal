@@ -60,7 +60,7 @@ class MenuLinkContentDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('menu_ui.menu_edit', array('menu' => $this->entity->getMenuName()));
+    return new Url('entity.menu.edit_form', array('menu' => $this->entity->getMenuName()));
   }
 
   /**

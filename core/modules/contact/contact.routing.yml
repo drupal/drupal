@@ -47,7 +47,7 @@ contact.site_page_form:
   requirements:
     _entity_access: 'contact_form.view'
 
-contact.personal_page:
+entity.user.contact_form:
   path: '/user/{user}/contact'
   defaults:
     _title: 'Contact'

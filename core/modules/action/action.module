@@ -29,7 +29,7 @@ function action_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an email to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
       return $output;
 
-    case 'action.admin_configure':
+    case 'entity.action.edit_form':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended in order to better identify the precise action taking place.');
   }
 }
@@ -55,6 +55,6 @@ function action_entity_type_build(array &$entity_types) {
     ->setFormClass('edit', 'Drupal\action\ActionEditForm')
     ->setFormClass('delete', 'Drupal\action\Form\ActionDeleteForm')
     ->setListBuilderClass('Drupal\action\ActionListBuilder')
-    ->setLinkTemplate('delete-form', 'action.delete')
-    ->setLinkTemplate('edit-form', 'action.admin_configure');
+    ->setLinkTemplate('delete-form', 'entity.action.delete_form')
+    ->setLinkTemplate('edit-form', 'entity.action.edit_form');
 }

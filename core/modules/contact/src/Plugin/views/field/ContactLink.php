@@ -112,7 +112,7 @@ class ContactLink extends Link {
 
     // Check access when we pull up the user account so we know
     // if the user has made the contact page available.
-    if (!$this->accessManager->checkNamedRoute('contact.personal_page', array('user' => $entity->id()), $this->currentUser())) {
+    if (!$this->accessManager->checkNamedRoute('entity.user.contact_form', array('user' => $entity->id()), $this->currentUser())) {
       return;
     }
 

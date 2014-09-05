@@ -239,8 +239,8 @@ class MenuForm extends EntityForm {
     $delta = max($count($tree), 50);
 
     $form = array_merge($form, $this->buildOverviewTreeForm($tree, $delta));
-    $destination = $this->getUrlGenerator()->getPathFromRoute('menu_ui.menu_edit', array('menu' => $this->entity->id()));
-    $url = $destination = $this->url('menu_link_content.link_add', array('menu' => $this->entity->id()), array('query' => array('destination' => $destination)));
+    $destination = $this->getUrlGenerator()->getPathFromRoute('entity.menu.edit_form', array('menu' => $this->entity->id()));
+    $url = $destination = $this->url('entity.menu.add_link_form', array('menu' => $this->entity->id()), array('query' => array('destination' => $destination)));
     $form['#empty_text'] = $this->t('There are no menu links yet. <a href="@url">Add link</a>.', array('@url' => $url));
 
     return $form;

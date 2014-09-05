@@ -45,7 +45,7 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
   }
-  if ($route_name == 'menu_ui.menu_add' && \Drupal::moduleHandler()->moduleExists('block')) {
+  if ($route_name == 'entity.menu.add_form' && \Drupal::moduleHandler()->moduleExists('block')) {
     return '<p>' . t('You can enable the newly-created block for this menu on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
   elseif ($route_name == 'menu_ui.overview_page' && \Drupal::moduleHandler()->moduleExists('block')) {
@@ -74,10 +74,10 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setFormClass('edit', 'Drupal\menu_ui\MenuForm')
     ->setFormClass('delete', 'Drupal\menu_ui\Form\MenuDeleteForm')
     ->setListBuilderClass('Drupal\menu_ui\MenuListBuilder')
-    ->setLinkTemplate('add-form', 'menu_ui.menu_add')
-    ->setLinkTemplate('delete-form', 'menu_ui.delete_menu')
-    ->setLinkTemplate('edit-form', 'menu_ui.menu_edit')
-    ->setLinkTemplate('add-link-form', 'menu_link_content.link_add');
+    ->setLinkTemplate('add-form', 'entity.menu.add_form')
+    ->setLinkTemplate('delete-form', 'entity.menu.delete_form')
+    ->setLinkTemplate('edit-form', 'entity.menu.edit_form')
+    ->setLinkTemplate('add-link-form', 'entity.menu.add_link_form');
 }
 
 
@@ -567,7 +567,7 @@ function menu_ui_system_breadcrumb_alter(array &$breadcrumb, RouteMatchInterface
     if (($menu_link instanceof MenuLinkInterface)) {
       // Add a link to the menu admin screen.
       $menu = Menu::load($menu_link->getMenuName());
-      $breadcrumb[] = Link::createFromRoute($menu->label(), 'menu_ui.menu_edit', array('menu' => $menu->id()));
+      $breadcrumb[] = Link::createFromRoute($menu->label(), 'entity.menu.edit_form', array('menu' => $menu->id()));
     }
   }
 }

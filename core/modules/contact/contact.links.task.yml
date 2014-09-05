@@ -3,8 +3,8 @@ entity.contact_form.edit_form:
   route_name: entity.contact_form.edit_form
   base_route: entity.contact_form.edit_form
 
-contact.personal_page:
+entity.user.contact_form:
   title: 'Contact'
-  route_name: contact.personal_page
+  route_name: entity.user.contact_form
   weight: 2
   base_route: entity.user.canonical
