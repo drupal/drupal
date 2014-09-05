@@ -54,6 +54,12 @@ class InstallerTranslationTest extends InstallerTestBase {
     // Ensure that we can enable basic_auth on a non-english site.
     $this->drupalPostForm('admin/modules', array('modules[Web services][basic_auth][enable]' => TRUE), t('Save configuration'));
     $this->assertResponse(200);
+
+    // Assert that the theme CSS was added to the page.
+    $edit = array('preprocess_css' => FALSE);
+    $this->drupalPostForm('admin/config/development/performance', $edit, t('Save configuration'));
+    $this->drupalGet('<front>');
+    $this->assertRaw('stark/css/layout.css');
   }
 
 }
