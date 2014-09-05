@@ -21,6 +21,13 @@ theme_test.template_test:
   requirements:
     _access: 'TRUE'
 
+theme_test.inline_template_test:
+  path: '/theme-test/inline-template-test'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::testInlineTemplate'
+  requirements:
+    _access: 'TRUE'
+
 theme_test.suggestion:
   path: '/theme-test/suggestion'
   options:

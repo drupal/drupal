@@ -60,6 +60,22 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
+   * Tests the inline template functionality.
+   *
+   * @return array
+   *   A render array containing an inline template.
+   */
+  public function testInlineTemplate() {
+    $element = array();
+    $element['test'] = array(
+      '#type' => 'inline_template',
+      '#template' => 'test-with-context {{ lama }}',
+      '#context' => array('lama' => 'muuh'),
+    );
+    return $element;
+  }
+
+  /**
    * Calls a theme hook suggestion.
    *
    * @return string

@@ -118,4 +118,20 @@ class TwigSettingsTest extends WebTestBase {
     $this->assertFalse($new_cache_filename, 'Twig environment does not return cache filename after caching is disabled.');
   }
 
+  /**
+   * Tests twig inline templates with auto_reload.
+   */
+  public function testTwigInlineWithAutoReload() {
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['auto_reload'] = TRUE;
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+
+    $this->drupalGet('theme-test/inline-template-test');
+    $this->assertResponse(200);
+    $this->drupalGet('theme-test/inline-template-test');
+    $this->assertResponse(200);
+  }
+
 }
