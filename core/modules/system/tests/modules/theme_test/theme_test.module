@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Extension\Extension;
+
 /**
  * Implements hook_theme().
  */
@@ -147,4 +149,17 @@ function theme_test_theme_suggestions_theme_test_suggestions_alter(array &$sugge
  */
 function theme_theme_test_suggestions_include($variables) {
   return 'Original function before altering theme suggestions.';
+}
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * @see \Drupal\system\Tests\Theme\ThemeInfoTest::testChanges()
+ */
+function theme_test_system_info_alter(array &$info, Extension $file, $type) {
+  if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
+    // Add a library to see if the system picks it up.
+    $info += ['libraries' => []];
+    $info['libraries'][] = 'core/backbone';
+  }
 }

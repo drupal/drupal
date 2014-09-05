@@ -407,7 +407,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     $list = $this->rebuildThemeData();
     foreach ($list as $name => $theme) {
       if (isset($enabled[$name])) {
-        $this->list[$name] = $theme;
+        $this->addTheme($theme);
       }
     }
     $this->state->set('system.theme.data', $this->list);
