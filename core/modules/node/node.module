@@ -432,6 +432,12 @@ function node_entity_extra_field_info() {
       'weight' => 0,
       'visible' => FALSE,
     );
+    $extra['node'][$bundle->type]['display']['links'] = array(
+      'label' => t('Links'),
+      'description' => $description,
+      'weight' => 100,
+      'visible' => TRUE,
+    );
   }
 
   return $extra;

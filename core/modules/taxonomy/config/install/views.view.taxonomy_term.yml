@@ -171,7 +171,6 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          links: true
           comments: false
         provider: views
       header: {  }
@@ -238,7 +237,6 @@ display:
         options:
           relationship: none
           view_mode: default
-          links: false
         provider: views
 label: 'Taxonomy term'
 module: taxonomy

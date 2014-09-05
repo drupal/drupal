@@ -107,5 +107,7 @@
       </div>
     {% endif %}
   </div>
-  {{ content.links }}
+  {% if content.links %}
+    {{ content.links }}
+  {% endif %}
 </article>

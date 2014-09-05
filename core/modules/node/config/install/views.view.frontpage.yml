@@ -196,7 +196,6 @@ display:
         options:
           build_mode: teaser
           comments: false
-          links: true
           view_mode: teaser
         provider: views
       sorts:
@@ -284,7 +283,6 @@ display:
         options:
           relationship: none
           view_mode: rss
-          links: false
         provider: views
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

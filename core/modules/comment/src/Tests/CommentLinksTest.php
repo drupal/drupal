@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\entity\Entity\EntityViewDisplay;
 
 /**
  * Basic comment links tests to ensure markup present.
@@ -42,16 +43,7 @@ class CommentLinksTest extends CommentTestBase {
   public static $modules = array('views');
 
   /**
-   * Tests comment links.
-   *
-   * The output of comment links depends on various environment conditions:
-   * - Various Comment module configuration settings, user registration
-   *   settings, and user access permissions.
-   * - Whether the user is authenticated or not, and whether any comments exist.
-   *
-   * To account for all possible cases, this test creates permutations of all
-   * possible conditions and tests the expected appearance of comment links in
-   * each environment.
+   * Tests that comment links are output and can be hidden.
    */
   public function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
@@ -112,6 +104,27 @@ class CommentLinksTest extends CommentTestBase {
       }
       $this->assertLink('Add new comment');
     }
+
+    // Make sure we can hide node links.
+    entity_get_display('node', $this->node->bundle(), 'default')
+      ->removeComponent('links')
+      ->save();
+    $this->drupalGet($this->node->url());
+    $this->assertNoLink('1 comment');
+    $this->assertNoLink('Add new comment');
+
+    // Visit the full node, make sure there are links for the comment.
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertText($comment->getSubject());
+    $this->assertLink('Reply');
+
+    // Make sure we can hide comment links.
+    entity_get_display('comment', 'comment', 'default')
+      ->removeComponent('links')
+      ->save();
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertText($comment->getSubject());
+    $this->assertNoLink('Reply');
   }
 
 }

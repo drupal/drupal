@@ -34,23 +34,24 @@ class NodeViewBuilder extends EntityViewBuilder {
       $bundle = $entity->bundle();
       $display = $displays[$bundle];
 
-      $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
-      $context = array(
-        'node_entity_id' => $entity->id(),
-        'view_mode' => $view_mode,
-        'langcode' => $langcode,
-        'in_preview' => !empty($entity->in_preview),
-      );
-      $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
-      $build[$id]['links'] = array(
-        '#post_render_cache' => array(
-          $callback => array(
-            $context,
+      if ($display->getComponent('links')) {
+        $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
+        $context = array(
+          'node_entity_id' => $entity->id(),
+          'view_mode' => $view_mode,
+          'langcode' => $langcode,
+          'in_preview' => !empty($entity->in_preview),
+        );
+        $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
+        $build[$id]['links'] = array(
+          '#post_render_cache' => array(
+            $callback => array(
+              $context,
+            ),
           ),
-        ),
-        '#markup' => $placeholder,
-      );
-
+          '#markup' => $placeholder,
+        );
+      }
 
       // Add Language field text element to node render array.
       if ($display->getComponent('langcode')) {

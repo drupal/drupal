@@ -63,8 +63,7 @@ display:
       row:
         type: 'entity:comment'
         options:
-          links: true
-          view_mode: full
+          view_mode: default
           rendering_language: translation_language_renderer
       relationships:
         node:

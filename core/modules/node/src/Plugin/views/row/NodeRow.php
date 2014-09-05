@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\EntityRow;
 
 /**
@@ -31,22 +30,7 @@ class NodeRow extends EntityRow {
 
     $options['view_mode']['default'] = 'teaser';
 
-    $options['links'] = array('default' => TRUE, 'bool' => TRUE);
-
     return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    parent::buildOptionsForm($form, $form_state);
-
-    $form['links'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display links'),
-      '#default_value' => $this->options['links'],
-    );
   }
 
 }

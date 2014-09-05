@@ -68,7 +68,6 @@ display:
       row:
         type: 'entity:comment'
         options:
-          links: true
           view_mode: full
       relationships:
         node:

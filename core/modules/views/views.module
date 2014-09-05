@@ -246,11 +246,6 @@ function views_preprocess_node(&$variables) {
       $variables['page'] = FALSE;
     }
   }
-
-  // Allow to alter comments and links based on the settings in the row plugin.
-  if (!empty($variables['view']->rowPlugin) && $variables['view']->rowPlugin->getPluginId() == 'entity:node') {
-    node_row_node_view_preprocess_node($variables);
-  }
 }
 
 /**

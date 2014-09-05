@@ -119,9 +119,11 @@
       </div>
       {% endif %}
 
-      <nav>
-        {{ content.links }}
-      </nav>
+        {% if content.links %}
+          <nav>
+            {{ content.links }}
+          </nav>
+        {% endif %}
     </footer> <!-- /.comment-footer -->
   </div> <!-- /.comment-text -->
 

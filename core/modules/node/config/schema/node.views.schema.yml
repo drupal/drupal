@@ -4,9 +4,6 @@
   type: views_entity_row
   label: 'Entity options'
   mapping:
-    links:
-      type: boolean
-      label: 'Display links'
     comments:
       type: boolean
       label: 'Show comments'
@@ -253,6 +250,3 @@ views.row.node_rss:
     view_mode:
       type: string
       label: 'Display type'
-    links:
-      type: boolean
-      label: 'Display links'

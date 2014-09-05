@@ -125,27 +125,6 @@ class RowPluginTest extends NodeTestBase {
       $this->assertTrue(strpos($output, $node->body->summary) !== FALSE, 'Make sure the teaser appears in the output of the view.');
       $this->assertFalse(strpos($output, $node->body->value) !== FALSE, 'Make sure the full text does not appears in the output of the view if teaser is set as viewmode.');
     }
-
-    // Test with links disabled.
-    $view->rowPlugin->options['links'] = FALSE;
-    \Drupal::entityManager()->getViewBuilder('node')->resetCache();
-    $output = $view->preview();
-    $output = drupal_render($output);
-    $this->drupalSetContent($output);
-    foreach ($this->nodes as $node) {
-      $this->assertFalse($this->xpath('//li[contains(@class, :class)]/a[contains(@href, :href)]', array(':class' => 'node-readmore', ':href' => "node/{$node->id()}")), 'Make sure no readmore link appears.');
-    }
-
-    // Test with links enabled.
-    $view->rowPlugin->options['links'] = TRUE;
-    \Drupal::entityManager()->getViewBuilder('node')->resetCache();
-    $output = $view->preview();
-    $output = drupal_render($output);
-    $this->drupalSetContent($output);
-    foreach ($this->nodes as $node) {
-      $this->assertTrue($this->xpath('//li[contains(@class, :class)]/a[contains(@href, :href)]', array(':class' => 'node-readmore', ':href' => "node/{$node->id()}")), 'Make sure no readmore link appears.');
-    }
-
   }
 
 }

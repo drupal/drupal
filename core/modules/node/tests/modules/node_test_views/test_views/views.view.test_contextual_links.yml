@@ -47,7 +47,6 @@ display:
         options:
           build_mode: teaser
           comments: false
-          links: true
           view_mode: teaser
       style:
         type: default

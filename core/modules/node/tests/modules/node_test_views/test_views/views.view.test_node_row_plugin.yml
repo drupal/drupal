@@ -33,7 +33,6 @@ display:
         options:
           build_mode: teaser
           comments: false
-          links: true
         type: 'entity:node'
       sorts: {  }
       style:

@@ -48,12 +48,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       '#required' => TRUE,
     );
 
-    $elements['links'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Show links'),
-      '#default_value' => $this->getSetting('links'),
-    );
-
     return $elements;
   }
 
@@ -66,7 +60,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $view_modes = \Drupal::entityManager()->getViewModeOptions($this->getFieldSetting('target_type'));
     $view_mode = $this->getSetting('view_mode');
     $summary[] = t('Rendered as @mode', array('@mode' => isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : $view_mode));
-    $summary[] = $this->getSetting('links') ? t('Display links') : t('Do not display links');
 
     return $summary;
   }
@@ -76,9 +69,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $view_mode = $this->getSetting('view_mode');
-    $links = $this->getSetting('links');
-
-    $target_type = $this->getFieldSetting('target_type');
 
     $elements = array();
 
@@ -97,10 +87,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       if (!empty($item->target_id)) {
         $elements[$delta] = entity_view($item->entity, $view_mode, $item->getLangcode());
 
-        if (empty($links) && isset($result[$delta][$target_type][$item->target_id]['links'])) {
-          // Hide the element links.
-          $elements[$delta][$target_type][$item->target_id]['links']['#access'] = FALSE;
-        }
         // Add a resource attribute to set the mapping property's value to the
         // entity's url. Since we don't know what the markup of the entity will
         // be, we shouldn't rely on it for structured data such as RDFa.

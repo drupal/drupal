@@ -116,7 +116,6 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          links: true
           comments: false
         provider: node
       header: {  }

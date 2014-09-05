@@ -112,6 +112,9 @@ class NodeFieldFilterTest extends NodeTestBase {
    *   Message suffix to display.
    */
   protected function assertPageCounts($path, $counts, $message) {
+    // Disable read more links.
+    entity_get_display('node', 'page', 'teaser')->removeComponent('links')->save();
+
     // Get the text of the page.
     $this->drupalGet($path);
     $text = $this->getTextContent();
