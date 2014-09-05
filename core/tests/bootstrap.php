@@ -62,7 +62,7 @@ function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $l
     }
     if (is_dir($dir . '/tests/src')) {
       // Register the PSR-4 directory for PHPUnit test classes.
-      $loader->addPsr4('Drupal\\' . $extension . '\Tests\\', $dir . '/tests/src');
+      $loader->addPsr4('Drupal\\Tests\\' . $extension . '\\', $dir . '/tests/src');
     }
   }
 }

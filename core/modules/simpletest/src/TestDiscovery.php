@@ -81,20 +81,17 @@ class TestDiscovery {
     foreach ($this->getExtensions() as $name => $extension) {
       $this->availableExtensions[$extension->getType()][$name] = $name;
 
-      $base_namespace = "Drupal\\$name\\";
       $base_path = DRUPAL_ROOT . '/' . $extension->getPath();
 
       // Add namespace of disabled/uninstalled extensions.
-      if (!isset($existing[$base_namespace])) {
-        $this->classLoader->addPsr4($base_namespace, "$base_path/src");
+      if (!isset($existing["Drupal\\$name\\"])) {
+        $this->classLoader->addPsr4("Drupal\\$name\\", "$base_path/src");
       }
       // Add Simpletest test namespace.
-      $this->testNamespaces[$base_namespace . 'Tests\\'][] = "$base_path/src/Tests";
+      $this->testNamespaces["Drupal\\$name\\Tests\\"][] = "$base_path/src/Tests";
 
       // Add PHPUnit test namespace.
-      // @todo Move PHPUnit namespace of extensions into Drupal\Tests\$name.
-      // @see https://www.drupal.org/node/2260121
-      $this->testNamespaces[$base_namespace . 'Tests\\'][] = "$base_path/tests/src";
+      $this->testNamespaces["Drupal\\Tests\\$name\\"][] = "$base_path/tests/src";
     }
 
     foreach ($this->testNamespaces as $prefix => $paths) {
@@ -329,7 +326,6 @@ class TestDiscovery {
         }
         else {
           // Drupal\Tests\{group}\...
-          // @see https://www.drupal.org/node/2260121
           $info['group'][] = $classparts[2];
         }
       }
