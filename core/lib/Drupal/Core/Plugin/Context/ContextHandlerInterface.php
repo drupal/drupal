@@ -8,7 +8,6 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Provides an interface for handling sets of contexts.
@@ -53,13 +52,13 @@ interface ContextHandlerInterface {
    *
    * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts.
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface $definition
    *   The definition to satisfy.
    *
    * @return \Drupal\Component\Plugin\Context\ContextInterface[]
    *   An array of matching contexts.
    */
-  public function getMatchingContexts(array $contexts, DataDefinitionInterface $definition);
+  public function getMatchingContexts(array $contexts, ContextDefinitionInterface $definition);
 
   /**
    * Prepares a plugin for evaluation.
