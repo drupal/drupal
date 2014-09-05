@@ -91,4 +91,18 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
     return $a->isLocked() ? 1 : -1;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    return array('rendered' => TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListCacheTags() {
+    return array('rendered' => TRUE);
+  }
+
 }
