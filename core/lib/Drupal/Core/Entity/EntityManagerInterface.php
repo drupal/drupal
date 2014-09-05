@@ -12,7 +12,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 /**
  * Provides an interface for entity type managers.
  */
-interface EntityManagerInterface extends PluginManagerInterface {
+interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListenerInterface {
 
   /**
    * Builds a list of entity type labels suitable for a Form API options list.

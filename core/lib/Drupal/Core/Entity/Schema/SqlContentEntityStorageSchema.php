@@ -7,9 +7,11 @@
 
 namespace Drupal\Core\Entity\Schema;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Defines a schema handler that supports revisionable, translatable entities.
@@ -45,6 +47,13 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
   protected $schema;
 
   /**
+   * The database connection to be used.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * Constructs a SqlContentEntityStorageSchema.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -53,18 +62,52 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    *   The entity type.
    * @param \Drupal\Core\Entity\ContentEntityDatabaseStorage $storage
    *   The storage of the entity type. This must be an SQL-based storage.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection to be used.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ContentEntityTypeInterface $entity_type, ContentEntityDatabaseStorage $storage) {
+  public function __construct(EntityManagerInterface $entity_manager, ContentEntityTypeInterface $entity_type, ContentEntityDatabaseStorage $storage, Connection $database) {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $entity_manager->getFieldStorageDefinitions($entity_type->id());
     $this->storage = $storage;
+    $this->database = $database;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSchema() {
-    return $this->getEntitySchema($this->entityType);
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    $schema_handler = $this->database->schema();
+    $schema = $this->getEntitySchema($entity_type, TRUE);
+    foreach ($schema as $table_name => $table_schema) {
+      if (!$schema_handler->tableExists($table_name)) {
+        $schema_handler->createTable($table_name, $table_schema);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    // @todo Implement proper updates: https://www.drupal.org/node/1498720.
+    //   Meanwhile, treat a change from non-SQL storage to SQL storage as
+    //   identical to creation with respect to SQL schema handling.
+    if (!is_subclass_of($original->getStorageClass(), '\Drupal\Core\Entity\Sql\SqlEntityStorageInterface')) {
+      $this->onEntityTypeCreate($entity_type);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    $schema_handler = $this->database->schema();
+    $schema = $this->getEntitySchema($entity_type, TRUE);
+    foreach ($schema as $table_name => $table_schema) {
+      if ($schema_handler->tableExists($table_name)) {
+        $schema_handler->dropTable($table_name);
+      }
+    }
   }
 
   /**

@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup entity_api
  */
-class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface {
+class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, EntityTypeListenerInterface {
 
   /**
    * The mapping of field columns to SQL tables.
@@ -218,13 +218,6 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getSchema() {
-    return $this->schemaHandler()->getSchema();
-  }
-
-  /**
    * Gets the schema handler for this entity storage.
    *
    * @return \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
@@ -233,7 +226,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   protected function schemaHandler() {
     if (!isset($this->schemaHandler)) {
       $schema_handler_class = $this->entityType->getHandlerClass('storage_schema') ?: 'Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema';
-      $this->schemaHandler = new $schema_handler_class($this->entityManager, $this->entityType, $this);
+      $this->schemaHandler = new $schema_handler_class($this->entityManager, $this->entityType, $this, $this->database);
     }
     return $this->schemaHandler;
   }
@@ -1363,6 +1356,27 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
     // Everything that is not provided by the entity type is stored in a
     // dedicated table.
     return $definition->getProvider() != $this->entityType->getProvider() && !$definition->hasCustomStorage();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    $this->schemaHandler()->onEntityTypeCreate($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    $this->schemaHandler()->onEntityTypeUpdate($entity_type, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    $this->schemaHandler()->onEntityTypeDelete($entity_type);
   }
 
   /**

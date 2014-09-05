@@ -12,7 +12,6 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -845,19 +844,14 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
         drupal_set_installed_schema_version($module, $version);
 
-        // Install any entity schemas belonging to the module.
+        // Notify the entity manager that this module's entity types are new,
+        // so that it can notify all interested handlers. For example, a
+        // SQL-based storage handler can use this as an opportunity to create
+        // the necessary database tables.
         $entity_manager = \Drupal::entityManager();
-        $schema = \Drupal::database()->schema();
         foreach ($entity_manager->getDefinitions() as $entity_type) {
           if ($entity_type->getProvider() == $module) {
-            $storage = $entity_manager->getStorage($entity_type->id());
-            if ($storage instanceof EntitySchemaProviderInterface) {
-              foreach ($storage->getSchema() as $table_name => $table_schema) {
-                if (!$schema->tableExists($table_name)) {
-                  $schema->createTable($table_name, $table_schema);
-                }
-              }
-            }
+            $entity_manager->onEntityTypeCreate($entity_type);
           }
         }
 
@@ -965,19 +959,13 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Remove all configuration belonging to the module.
       \Drupal::service('config.manager')->uninstall('module', $module);
 
-      // Remove any entity schemas belonging to the module.
-
-      $schema = \Drupal::database()->schema();
+      // Notify the entity manager that this module's entity types are being
+      // deleted, so that it can notify all interested handlers. For example,
+      // a SQL-based storage handler can use this as an opportunity to drop
+      // the corresponding database tables.
       foreach ($entity_manager->getDefinitions() as $entity_type) {
         if ($entity_type->getProvider() == $module) {
-          $storage = $entity_manager->getStorage($entity_type->id());
-          if ($storage instanceof EntitySchemaProviderInterface) {
-            foreach ($storage->getSchema() as $table_name => $table_schema) {
-              if ($schema->tableExists($table_name)) {
-                $schema->dropTable($table_name);
-              }
-            }
-          }
+          $entity_manager->onEntityTypeDelete($entity_type);
         }
       }
 

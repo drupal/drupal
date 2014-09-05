@@ -8,12 +8,11 @@
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
 
 /**
  * A common interface for SQL-based entity storage implementations.
  */
-interface SqlEntityStorageInterface extends EntityStorageInterface, EntitySchemaProviderInterface {
+interface SqlEntityStorageInterface extends EntityStorageInterface {
 
   /**
    * Gets a table mapping for the entity's SQL tables.

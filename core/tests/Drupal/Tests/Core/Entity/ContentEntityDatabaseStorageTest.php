@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
@@ -266,21 +267,23 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests ContentEntityDatabaseStorage::getSchema().
+   * Tests ContentEntityDatabaseStorage::onEntityTypeCreate().
    *
    * @covers ::__construct()
-   * @covers ::getSchema()
-   * @covers ::schemaHandler()
+   * @covers ::onEntityTypeCreate()
    * @covers ::getTableMapping()
    */
-  public function testGetSchema() {
+  public function testOnEntityTypeCreate() {
     $columns = array(
       'value' => array(
         'type' => 'int',
       ),
     );
 
-    $this->fieldDefinitions['id'] = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $this->fieldDefinitions['id'] = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    $this->fieldDefinitions['id']->expects($this->any())
+      ->method('getName')
+      ->will($this->returnValue('id'));
     $this->fieldDefinitions['id']->expects($this->once())
       ->method('getColumns')
       ->will($this->returnValue($columns));
@@ -305,35 +308,47 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
         array('id' => 'id'),
       )));
 
-    $this->entityManager->expects($this->once())
-      ->method('getFieldStorageDefinitions')
-      ->with($this->entityType->id())
-      ->will($this->returnValue($this->fieldDefinitions));
-
     $this->setUpEntityStorage();
 
     $expected = array(
-      'entity_test' => array(
-        'description' => 'The base table for entity_test entities.',
-        'fields' => array(
-          'id' => array(
-            'type' => 'serial',
-            'description' => NULL,
-            'not null' => TRUE,
-          ),
+      'description' => 'The base table for entity_test entities.',
+      'fields' => array(
+        'id' => array(
+          'type' => 'serial',
+          'description' => NULL,
+          'not null' => TRUE,
         ),
-        'primary key' => array('id'),
-        'unique keys' => array(),
-        'indexes' => array(),
-        'foreign keys' => array(),
       ),
+      'primary key' => array('id'),
+      'unique keys' => array(),
+      'indexes' => array(),
+      'foreign keys' => array(),
     );
-    $this->assertEquals($expected, $this->entityStorage->getSchema());
 
-    // Test that repeated calls do not result in repeatedly instantiating
-    // SqlContentEntityStorageSchema as getFieldStorageDefinitions() is only
-    // expected to be called once.
-    $this->assertEquals($expected, $this->entityStorage->getSchema());
+    $schema_handler = $this->getMockBuilder('Drupal\Core\Database\Schema')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $schema_handler->expects($this->any())
+      ->method('createTable')
+      ->with($this->equalTo('entity_test'), $this->equalTo($expected));
+
+    $this->connection->expects($this->once())
+      ->method('schema')
+      ->will($this->returnValue($schema_handler));
+
+    $storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setMethods(array('schemaHandler'))
+      ->getMock();
+
+    $schema_handler = new SqlContentEntityStorageSchema($this->entityManager, $this->entityType, $storage, $this->connection);
+
+    $storage
+      ->expects($this->any())
+      ->method('schemaHandler')
+      ->will($this->returnValue($schema_handler));
+
+    $storage->onEntityTypeCreate($this->entityType);
   }
 
   /**
@@ -397,18 +412,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   public function testGetTableMappingSimpleWithFields(array $entity_keys) {
     $base_field_names = array('title', 'description', 'owner');
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
-
-    $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-    $this->fieldDefinitions = array_fill_keys($field_names, $definition);
-
-    $this->entityType->expects($this->any())
-      ->method('getKey')
-      ->will($this->returnValueMap(array(
-        array('id', $entity_keys['id']),
-        array('uuid', $entity_keys['uuid']),
-        array('bundle', $entity_keys['bundle']),
-      )));
-
+    $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
     $this->setUpEntityStorage();
 
     $mapping = $this->entityStorage->getTableMapping();
@@ -533,25 +537,11 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
       $base_field_names = array('title');
       $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
-
-      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-      $this->fieldDefinitions = array_fill_keys($field_names, $definition);
+      $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
       $revisionable_field_names = array('description', 'owner');
-      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-      // isRevisionable() is only called once, but we re-use the same definition
-      // for all revisionable fields.
-      $definition->expects($this->any())
-        ->method('isRevisionable')
-        ->will($this->returnValue(TRUE));
-      $field_names = array_merge(
-        $field_names,
-        $revisionable_field_names
-      );
-      $this->fieldDefinitions += array_fill_keys(
-        array_merge($revisionable_field_names, $revision_metadata_field_names),
-        $definition
-      );
+      $field_names = array_merge($field_names, $revisionable_field_names);
+      $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, $revision_metadata_field_names), array('isRevisionable' => TRUE));
 
       $this->entityType->expects($this->exactly(2))
         ->method('isRevisionable')
@@ -658,9 +648,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
     $base_field_names = array('title', 'description', 'owner');
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
-
-    $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-    $this->fieldDefinitions = array_fill_keys($field_names, $definition);
+    $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
     $this->entityType->expects($this->exactly(2))
       ->method('isTranslatable')
@@ -840,21 +828,10 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
       $base_field_names = array('title');
       $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
-
-      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-      $this->fieldDefinitions = array_fill_keys($field_names, $definition);
+      $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
       $revisionable_field_names = array('description', 'owner');
-      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
-      // isRevisionable() is only called once, but we re-use the same definition
-      // for all revisionable fields.
-      $definition->expects($this->any())
-        ->method('isRevisionable')
-        ->will($this->returnValue(TRUE));
-      $this->fieldDefinitions += array_fill_keys(
-        array_merge($revisionable_field_names, $revision_metadata_field_names),
-        $definition
-      );
+      $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, $revision_metadata_field_names), array('isRevisionable' => TRUE));
 
       $this->entityType->expects($this->exactly(2))
         ->method('isRevisionable')
@@ -1078,9 +1055,56 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
+   * Returns a set of mock field definitions for the given names.
+   *
+   * @param array $field_names
+   *   An array of field names.
+   * @param array $methods
+   *   (optional) An associative array of mock method return values keyed by
+   *   method name.
+   *
+   * @return \Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   *   An array of mock base field definitions.
+   */
+  protected function mockFieldDefinitions(array $field_names, $methods = array()) {
+    $field_definitions = array();
+    $definition = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+
+    // Assign common method return values.
+    foreach ($methods as $method => $result) {
+      $definition
+        ->expects($this->any())
+        ->method($method)
+        ->will($this->returnValue($result));
+    }
+
+    // Assign field names to mock definitions.
+    foreach ($field_names as $field_name) {
+      $field_definitions[$field_name] = clone $definition;
+      $field_definitions[$field_name]
+        ->expects($this->any())
+        ->method('getName')
+        ->will($this->returnValue($field_name));
+    }
+
+    return $field_definitions;
+  }
+
+  /**
    * Sets up the content entity database storage.
    */
   protected function setUpEntityStorage() {
+    $this->connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->will($this->returnValue($this->entityType));
+
+    $this->entityManager->expects($this->any())
+      ->method('getFieldStorageDefinitions')
+      ->will($this->returnValue($this->fieldDefinitions));
 
     $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
@@ -1223,7 +1247,6 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
     $entities = $entity_storage->loadMultiple(array($id));
     $this->assertEquals($entity, $entities[$id]);
-
   }
 
   /**
@@ -1239,6 +1262,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
     $this->container->set('module_handler', $this->moduleHandler);
   }
+
 }
 
 /**

@@ -958,6 +958,42 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type->id());
+    if ($storage instanceof EntityTypeListenerInterface) {
+      $storage->onEntityTypeCreate($entity_type);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type->id());
+    if ($storage instanceof EntityTypeListenerInterface) {
+      $storage->onEntityTypeUpdate($entity_type, $original);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type->id());
+    if ($storage instanceof EntityTypeListenerInterface) {
+      $storage->onEntityTypeDelete($entity_type);
+    }
+  }
+
+  /**
    * Acts on entity bundle rename.
    *
    * @param string $entity_type_id

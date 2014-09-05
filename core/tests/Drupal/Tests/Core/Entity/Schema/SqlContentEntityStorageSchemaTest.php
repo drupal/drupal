@@ -82,7 +82,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @covers ::__construct()
    * @covers ::getSchema()
-   * @covers ::getTables()
+   * @covers ::getEntitySchemaTables()
    * @covers ::initializeBaseTable()
    * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
@@ -246,16 +246,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     ));
 
-    $this->setUpSchemaHandler();
-
-    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setExtraColumns('entity_test', array('default_langcode'));
-
-    $this->storage->expects($this->once())
-      ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
-
     $expected = array(
       'entity_test' => array(
         'description' => 'The base table for entity_test entities.',
@@ -381,9 +371,18 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ),
       ),
     );
-    $actual = $this->schemaHandler->getSchema();
 
-    $this->assertEquals($expected, $actual);
+    $this->setUpEntitySchemaHandler($expected);
+
+    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
+    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setExtraColumns('entity_test', array('default_langcode'));
+
+    $this->storage->expects($this->any())
+      ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+
+    $this->schemaHandler->onEntityTypeCreate($this->entityType);
   }
 
   /**
@@ -391,7 +390,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @covers ::__construct()
    * @covers ::getSchema()
-   * @covers ::getTables()
+   * @covers ::getEntitySchemaTables()
    * @covers ::initializeBaseTable()
    * @covers ::initializeRevisionTable()
    * @covers ::addTableDefaults()
@@ -419,16 +418,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ),
       ),
     ));
-
-    $this->setUpSchemaHandler();
-
-    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
-
-    $this->storage->expects($this->once())
-      ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
 
     $expected = array(
       'entity_test' => array(
@@ -483,9 +472,17 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     );
 
-    $actual = $this->schemaHandler->getSchema();
+    $this->setUpEntitySchemaHandler($expected);
 
-    $this->assertEquals($expected, $actual);
+    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
+    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
+
+    $this->storage->expects($this->any())
+      ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+
+    $this->schemaHandler->onEntityTypeCreate($this->entityType);
   }
 
   /**
@@ -493,7 +490,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @covers ::__construct()
    * @covers ::getSchema()
-   * @covers ::getTables()
+   * @covers ::getEntitySchemaTables()
    * @covers ::initializeDataTable()
    * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
@@ -507,7 +504,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     ));
 
-    $this->storage->expects($this->once())
+    $this->storage->expects($this->any())
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
 
@@ -518,16 +515,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ),
       ),
     ));
-
-    $this->setUpSchemaHandler();
-
-    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
-
-    $this->storage->expects($this->once())
-      ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
 
     $expected = array(
       'entity_test' => array(
@@ -575,9 +562,17 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     );
 
-    $actual = $this->schemaHandler->getSchema();
+    $this->setUpEntitySchemaHandler($expected);
 
-    $this->assertEquals($expected, $actual);
+    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
+    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
+
+    $this->storage->expects($this->any())
+      ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+
+    $this->schemaHandler->onEntityTypeCreate($this->entityType);
   }
 
   /**
@@ -585,7 +580,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @covers ::__construct()
    * @covers ::getSchema()
-   * @covers ::getTables()
+   * @covers ::getEntitySchemaTables()
    * @covers ::initializeDataTable()
    * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
@@ -625,18 +620,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ),
       ),
     ));
-
-    $this->setUpSchemaHandler();
-
-    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision_field_data', array_keys($this->storageDefinitions));
-
-    $this->storage->expects($this->once())
-      ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
 
     $expected = array(
       'entity_test' => array(
@@ -763,26 +746,73 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     );
 
-    $actual = $this->schemaHandler->getSchema();
+    $this->setUpEntitySchemaHandler($expected);
 
-    $this->assertEquals($expected, $actual);
+    $table_mapping = new DefaultTableMapping($this->storageDefinitions);
+    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_revision_field_data', array_keys($this->storageDefinitions));
+
+    $this->storage->expects($this->any())
+      ->method('getTableMapping')
+      ->will($this->returnValue($table_mapping));
+
+    $this->schemaHandler->onEntityTypeCreate($this->entityType);
   }
 
   /**
    * Sets up the schema handler.
    *
-   * This uses the field definitions set in $this->fieldDefinitions.
+   * This uses the field definitions set in $this->storageDefinitions.
+   *
+   * @param array $expected
+   *   (optional) An associative array describing the expected entity schema to
+   *   be created. Defaults to expecting nothing.
    */
-  protected function setUpSchemaHandler() {
-    $this->entityManager->expects($this->once())
+  protected function setUpEntitySchemaHandler(array $expected = array()) {
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with($this->entityType->id())
+      ->will($this->returnValue($this->entityType));
+
+    $this->entityManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->with($this->entityType->id())
       ->will($this->returnValue($this->storageDefinitions));
-    $this->schemaHandler = new SqlContentEntityStorageSchema(
-      $this->entityManager,
-      $this->entityType,
-      $this->storage
-    );
+
+    $db_schema_handler = $this->getMockBuilder('Drupal\Core\Database\Schema')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    if ($expected) {
+      $invocation_count = 0;
+      $expected_table_names = array_keys($expected);
+      $expected_table_schemas = array_values($expected);
+
+      $db_schema_handler->expects($this->any())
+        ->method('createTable')
+        ->with(
+          $this->callback(function($table_name) use (&$invocation_count, $expected_table_names) {
+            return $expected_table_names[$invocation_count] == $table_name;
+          }),
+          $this->callback(function($table_schema) use (&$invocation_count, $expected_table_schemas) {
+            return $expected_table_schemas[$invocation_count] == $table_schema;
+          })
+        )
+        ->will($this->returnCallback(function() use (&$invocation_count) {
+          $invocation_count++;
+        }));
+    }
+
+    $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $connection->expects($this->any())
+      ->method('schema')
+      ->will($this->returnValue($db_schema_handler));
+
+    $this->schemaHandler = new SqlContentEntityStorageSchema($this->entityManager, $this->entityType, $this->storage, $connection);
   }
 
   /**
@@ -795,7 +825,11 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   FieldStorageDefinitionInterface::getSchema().
    */
   public function setUpStorageDefinition($field_name, array $schema) {
-    $this->storageDefinitions[$field_name] = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $this->storageDefinitions[$field_name] = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    // getDescription() is called once for each table.
+    $this->storageDefinitions[$field_name]->expects($this->any())
+      ->method('getName')
+      ->will($this->returnValue($field_name));
     // getDescription() is called once for each table.
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getDescription')
@@ -804,7 +838,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getSchema')
       ->will($this->returnValue($schema));
-    $this->storageDefinitions[$field_name]->expects($this->once())
+    $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getColumns')
       ->will($this->returnValue($schema['columns']));
   }
