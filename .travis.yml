@@ -9,11 +9,13 @@ services:
 
 before_script:
   # Repositories.
+  # @todo, Commit upstream to containers.
   - sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu/ precise multiverse'
   - sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu/ precise-updates multiverse'
   - sudo apt-get update
 
   # Permissions.
+  # @todo, Commit upstream to containers.
   - CURRENT_USER=$(whoami)
   - sudo chown -R ${CURRENT_USER}:${CURRENT_USER} $(pwd)
 
