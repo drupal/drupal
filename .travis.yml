@@ -39,10 +39,14 @@ before_script:
   # We are limited to running fpm at 1 proc since certain tests fail eg. ConfigImportAllTest.
   # - sudo sed -e "s/pm = dynamic/pm = static/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   # - sudo sed -e "s/pm.max_children = 5/pm.max_children = 1/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  # We are limited to running fpm at 1 proc since certain tests fail eg. ConfigImportAllTest.
+  - sudo sed -e "s/pm.max_children = 5/pm.max_children = 4/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo sed -e "s/pm.start_servers = 2/pm.start_servers = 4/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo sed -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 0/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
-  - sudo cp -f core/misc/travis-ci/vhost.conf /etc/apache2/sites-enabled/000-default
+  - sudo cp -f core/misc/travis-ci/vhost.conf /etc/apache2/sites-enbled/000-default
   - sudo sed -e "s?%BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default
 
   # Kick Apache!
@@ -56,5 +60,5 @@ before_script:
   - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
 
 script:
-  - php core/scripts/run-tests.sh --keep-results --color --concurrency 1 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
-  # - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config
+  # - php core/scripts/run-tests.sh --keep-results --color --concurrency 1 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
+  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config --class "Drupal\config\Tests\ConfigImportAllTest"
