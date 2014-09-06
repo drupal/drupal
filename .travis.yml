@@ -57,4 +57,4 @@ before_script:
 
 script:
   # - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
-  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config --class "Drupal\config\Tests\ConfigImportAllTest"
+  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config
