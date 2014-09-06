@@ -37,8 +37,8 @@ before_script:
   # We are running some exec's in our code base. We need to fix fpm's PATH for it to work with phpenv.
   - echo "env[PATH] = $PATH" >> $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   # We are limited to running fpm at 1 proc since certain tests fail eg. ConfigImportAllTest.
-  - sudo sed -e "s/pm = dynamic/pm = static/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo sed -e "s/pm.max_children = 5/pm.max_children = 1/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  # - sudo sed -e "s/pm = dynamic/pm = static/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  # - sudo sed -e "s/pm.max_children = 5/pm.max_children = 1/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
