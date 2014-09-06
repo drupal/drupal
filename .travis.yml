@@ -56,5 +56,5 @@ before_script:
   - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
 
 script:
-  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
+  - php core/scripts/run-tests.sh --keep-results --color --concurrency 1 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
   # - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config
