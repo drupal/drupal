@@ -21,7 +21,7 @@ before_script:
   - sudo chown -R ${CURRENT_USER}:${CURRENT_USER} $(pwd)
 
   # Directory stucture.
-  - mkdir build
+  - rm -fR build && mkdir build
 
   # Additional PHP config
   - echo -e "apc.enable_cli = 1\napc.shm_size = 128M\napc.num_files_hint = 7000" > apc.ini
