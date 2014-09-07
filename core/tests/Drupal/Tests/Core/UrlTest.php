@@ -74,21 +74,21 @@ class UrlTest extends UnitTestCase {
   public function testCreateFromPath() {
     $this->router->expects($this->at(0))
       ->method('matchRequest')
-      ->with(Request::create('/node'))
+      ->with($this->getRequestConstraint('/node'))
       ->willReturn([
           RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
           '_raw_variables' => new ParameterBag(),
         ]);
     $this->router->expects($this->at(1))
       ->method('matchRequest')
-      ->with(Request::create('/node/1'))
+      ->with($this->getRequestConstraint('/node/1'))
       ->willReturn([
         RouteObjectInterface::ROUTE_NAME => 'node_view',
         '_raw_variables' => new ParameterBag(['node' => '1']),
       ]);
     $this->router->expects($this->at(2))
       ->method('matchRequest')
-      ->with(Request::create('/node/2/edit'))
+      ->with($this->getRequestConstraint('/node/2/edit'))
       ->willReturn([
         RouteObjectInterface::ROUTE_NAME => 'node_edit',
         '_raw_variables' => new ParameterBag(['node' => '2']),
@@ -102,6 +102,21 @@ class UrlTest extends UnitTestCase {
       $urls[$index] = $url;
     }
     return $urls;
+  }
+
+   /**
+   * This constraint checks whether a Request object has the right path.
+   *
+   * @param string $path
+   *   The path.
+   *
+   * @return \PHPUnit_Framework_Constraint_Callback
+   *   The constraint checks whether a Request object has the right path.
+   */
+  protected function getRequestConstraint($path) {
+    return $this->callback(function (Request $request) use ($path) {
+      return $request->getPathInfo() == $path;
+    });
   }
 
   /**
@@ -124,7 +139,7 @@ class UrlTest extends UnitTestCase {
   public function testCreateFromPathInvalid() {
     $this->router->expects($this->once())
       ->method('matchRequest')
-      ->with(Request::create('/non-existent'))
+      ->with($this->getRequestConstraint('/non-existent'))
       ->will($this->throwException(new ResourceNotFoundException()));
 
     $this->assertNull(Url::createFromPath('non-existent'));
