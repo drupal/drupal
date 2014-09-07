@@ -41,7 +41,7 @@ before_script:
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
-  - sudo cp -f core/misc/travis-ci/vhost.conf /etc/apache2/sites-enbled/000-default
+  - sudo cp -f core/misc/travis-ci/vhost.conf /etc/apache2/sites-enabled/000-default
   - sudo sed -e "s?%BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default
 
   # Kick Apache!
