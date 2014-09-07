@@ -38,13 +38,6 @@ before_script:
   - sudo sed -e "s/;log_level/log_level/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   # We are running some exec's in our code base. We need to fix fpm's PATH for it to work with phpenv.
   - echo "env[PATH] = $PATH" >> $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  # We are limited to running fpm at 1 proc since certain tests fail eg. ConfigImportAllTest.
-  # - sudo sed -e "s/pm = dynamic/pm = static/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  # - sudo sed -e "s/pm.max_children = 5/pm.max_children = 1/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  # We are limited to running fpm at 1 proc since certain tests fail eg. ConfigImportAllTest.
-  - sudo sed -e "s/pm.max_children = 5/pm.max_children = 4/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo sed -e "s/pm.start_servers = 2/pm.start_servers = 4/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo sed -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 0/g" --in-place $HOME/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - $HOME/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
   # vHost.
@@ -62,5 +55,4 @@ before_script:
   - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
 
 script:
-  # - php core/scripts/run-tests.sh --keep-results --color --concurrency 1 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
-  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal config --class "Drupal\config\Tests\ConfigImportAllTest"
+  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
