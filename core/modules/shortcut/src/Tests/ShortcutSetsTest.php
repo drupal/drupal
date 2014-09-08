@@ -33,6 +33,58 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
+   * Tests editing a shortcut set.
+   */
+  function testShortcutSetEdit() {
+    $set = $this->set;
+    $shortcuts = $set->getShortcuts();
+
+    // Visit the shortcut set edit admin ui.
+    $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $set->id() . '/customize');
+
+    // Test for the page title.
+    $this->assertTitle(t('List links') . ' | Drupal');
+
+    // Test for the table.
+    $element = $this->xpath('//div[@class="layout-content"]//table');
+    $this->assertTrue($element, 'Shortcut entity list table found.');
+
+    // Test the table header.
+    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
+    $this->assertEqual(count($elements), 3, 'Correct number of table header cells found.');
+
+    // Test the contents of each th cell.
+    $expected_items = array(t('Name'), t('Weight'), t('Operations'));
+    foreach ($elements as $key => $element) {
+      $this->assertIdentical((string) $element[0], $expected_items[$key]);
+    }
+
+    // Look for test shortcuts in the table.
+    $weight = count($shortcuts);
+    $edit = array();
+    foreach ($shortcuts as $shortcut) {
+      $title = $shortcut->getTitle();
+
+      // Confirm that a link to the shortcut is found within the table.
+      $this->assertLink($title);
+
+      // Look for a test shortcut weight select form element.
+      $this->assertFieldByName('shortcuts[links][' . $shortcut->id() . '][weight]');
+
+      // Change the weight of the shortcut.
+      $edit['shortcuts[links][' . $shortcut->id() . '][weight]'] = $weight;
+      $weight--;
+    }
+
+    $this->drupalPostForm(NULL, $edit, t('Save changes'));
+    $this->assertRaw(t('The shortcut set has been updated.'));
+
+    // Check to ensure that the shortcut weights have changed.
+    $weights = $this->getShortcutInformation($set, 'weight');
+    $this->assertEqual($weights, array(2, 1));
+  }
+
+  /**
    * Tests switching a user's own shortcut set.
    */
   function testShortcutSetSwitchOwn() {

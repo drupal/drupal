@@ -87,6 +87,7 @@ class SetCustomize extends EntityForm {
     // Only includes a Save action for the entity, no direct Delete button.
     return array(
       'submit' => array(
+        '#type' => 'submit',
         '#value' => t('Save changes'),
         '#access' => (bool) Element::getVisibleChildren($form['shortcuts']['links']),
         '#submit' => array('::submit', '::save'),
