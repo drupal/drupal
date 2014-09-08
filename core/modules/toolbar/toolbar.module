@@ -78,7 +78,6 @@ function toolbar_element_info() {
       // The id cannot be simply "toolbar" or it will clash with the simpletest
       // tests listing which produces a checkbox with attribute id="toolbar"
       'id' => 'toolbar-administration',
-      'class' => array('toolbar'),
       'role' => 'group',
       'aria-label' => t('Site administration toolbar'),
     ),
@@ -87,7 +86,6 @@ function toolbar_element_info() {
       '#heading' => t('Toolbar items'),
       '#attributes' => array(
         'id' => 'toolbar-bar',
-        'class' => array('toolbar-bar', 'clearfix',),
         'role' => 'navigation',
         'aria-label' => t('Toolbar items'),
       ),
@@ -243,13 +241,10 @@ function template_preprocess_toolbar(&$variables) {
       }
     }
 
+    $attributes = array();
     // Pass the wrapper attributes along.
     if (array_key_exists('#wrapper_attributes', $element[$key])) {
-      $element[$key]['#wrapper_attributes']['class'][] = 'toolbar-tab';
       $attributes = $element[$key]['#wrapper_attributes'];
-    }
-    else {
-      $attributes = array('class' => array('toolbar-tab'));
     }
 
     // Add the tab.

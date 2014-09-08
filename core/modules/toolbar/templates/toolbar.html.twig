@@ -22,11 +22,11 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
-  <nav{{ toolbar_attributes }}>
+<div{{ attributes.addClass('toolbar') }}>
+  <nav{{ toolbar_attributes.addClass('toolbar-bar', 'clearfix') }}>
     <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
     {% for tab in tabs %}
-      <div{{ tab.attributes }}>{{ tab.link }}</div>
+      <div{{ tab.attributes.addClass('toolbar-tab') }}>{{ tab.link }}</div>
     {% endfor %}
   </nav>
   {% for tray in trays %}
