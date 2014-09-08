@@ -43,9 +43,9 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
       // theme system is initialized this early, it is still capable of
       // returning output and theming the page as a whole.
       $more_link = array(
-        '#theme' => 'more_link',
-        '#url' => 'user',
-        '#title' => 'Themed output generated in a KernelEvents::REQUEST listener',
+        '#type' => 'more_link',
+        '#href' => 'user',
+        '#attributes' => array('title' => 'Themed output generated in a KernelEvents::REQUEST listener'),
       );
       $GLOBALS['theme_test_output'] = drupal_render($more_link);
     }

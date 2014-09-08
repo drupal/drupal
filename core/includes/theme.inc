@@ -1519,18 +1519,6 @@ function template_preprocess_feed_icon(&$variables) {
 }
 
 /**
- * Returns HTML for a "more" link, like those used in blocks.
- *
- * @param $variables
- *   An associative array containing:
- *   - url: The URL of the main page.
- *   - title: A descriptive verb for the link, like 'Read more'.
- */
-function theme_more_link($variables) {
-  return '<div class="more-link">' . l(t('More'), $variables['url'], array('attributes' => array('title' => $variables['title']))) . '</div>';
-}
-
-/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
@@ -2347,9 +2335,6 @@ function drupal_common_theme() {
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),
       'template' => 'feed-icon',
-    ),
-    'more_link' => array(
-      'variables' => array('url' => NULL, 'title' => NULL)
     ),
     'progress_bar' => array(
       'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),

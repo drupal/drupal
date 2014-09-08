@@ -26,9 +26,9 @@ abstract class ForumBlockBase extends BlockBase {
     if ($node_title_list = node_title_list($result)) {
       $elements['forum_list'] = $node_title_list;
       $elements['forum_more'] = array(
-        '#theme' => 'more_link',
-        '#url' => 'forum',
-        '#title' => t('Read the latest forum topics.')
+        '#type' => 'more_link',
+        '#href' => 'forum',
+        '#attributes' => array('title' => $this->t('Read the latest forum topics.')),
       );
     }
     return $elements;
