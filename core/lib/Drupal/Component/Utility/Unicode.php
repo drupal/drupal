@@ -163,7 +163,8 @@ EOD;
       static::$status = static::STATUS_ERROR;
       return 'mbstring.encoding_translation';
     }
-    if (ini_get('mbstring.http_input') != 'pass') {
+    // mbstring.http_input is deprecated and empty by default in PHP 5.6.
+    if (version_compare(PHP_VERSION, '5.6.0') == -1 && ini_get('mbstring.http_input') != 'pass') {
       static::$status = static::STATUS_ERROR;
       return 'mbstring.http_input';
     }
