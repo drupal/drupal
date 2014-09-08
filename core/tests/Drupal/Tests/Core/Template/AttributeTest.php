@@ -65,6 +65,10 @@ class AttributeTest extends UnitTestCase {
     // Add empty Attribute object with no classes.
     $attribute = new Attribute();
 
+    // Add no class on empty attribute.
+    $attribute->addClass();
+    $this->assertEmpty($attribute['class']);
+
     // Add one class on empty attribute.
     $attribute->addClass('banana');
     $this->assertArrayEquals(array('banana'), $attribute['class']->value());

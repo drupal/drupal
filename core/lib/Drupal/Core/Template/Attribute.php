@@ -128,7 +128,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
   }
 
   /**
-   * Adds argument values by merging them on to array of existing CSS classes.
+   * Adds classes or merges them on to array of existing CSS classes.
    *
    * @param string|array ...
    *   CSS classes to add to the class attribute array.
@@ -137,26 +137,28 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    */
   public function addClass() {
     $args = func_get_args();
-    $classes = array();
-    foreach ($args as $arg) {
-      // Merge the values passed in from the classes array.
-      // The argument is cast to an array to support comma separated single
-      // values or one or more array arguments.
-      $classes = array_merge($classes, (array) $arg);
-    }
+    if ($args) {
+      $classes = array();
+      foreach ($args as $arg) {
+        // Merge the values passed in from the classes array.
+        // The argument is cast to an array to support comma separated single
+        // values or one or more array arguments.
+        $classes = array_merge($classes, (array) $arg);
+      }
 
-    // Merge if there are values, just add them otherwise.
-    if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
-      // Merge the values passed in from the class value array.
-      $classes = array_merge($this->storage['class']->value(), $classes);
-      // Filter out any duplicate values.
-      $classes = array_unique($classes);
-      $this->storage['class']->exchangeArray($classes);
-    }
-    else {
-      // Filter out any duplicate values.
-      $classes = array_unique($classes);
-      $this->offsetSet('class', $classes);
+      // Merge if there are values, just add them otherwise.
+      if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
+        // Merge the values passed in from the class value array.
+        $classes = array_merge($this->storage['class']->value(), $classes);
+        // Filter out any duplicate values.
+        $classes = array_unique($classes);
+        $this->storage['class']->exchangeArray($classes);
+      }
+      else {
+        // Filter out any duplicate values.
+        $classes = array_unique($classes);
+        $this->offsetSet('class', $classes);
+      }
     }
 
     return $this;
