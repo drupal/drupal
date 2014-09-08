@@ -94,21 +94,28 @@ class EntityResolverManager {
   /**
    * Sets the upcasting information using reflection.
    *
-   * @param array $controller
-   *   An array of class instance and method name.
+   * @param string|array $controller
+   *   A PHP callable representing the controller.
    * @param \Symfony\Component\Routing\Route $route
    *   The route object to populate without upcasting information.
    *
    * @return bool
    *   Returns TRUE if the upcasting parameters could be set, FALSE otherwise.
    */
-  protected function setParametersFromReflection(array $controller, Route $route) {
+  protected function setParametersFromReflection($controller, Route $route) {
     $entity_types = $this->getEntityTypes();
     $parameter_definitions = $route->getOption('parameters') ?: array();
 
     $result = FALSE;
-    list($instance, $method) = $controller;
-    $reflection = new \ReflectionMethod($instance, $method);
+
+    if (is_array($controller)) {
+      list($instance, $method) = $controller;
+      $reflection = new \ReflectionMethod($instance, $method);
+    }
+    else {
+      $reflection = new \ReflectionFunction($controller);
+    }
+
     $parameters = $reflection->getParameters();
     foreach ($parameters as $parameter) {
       $parameter_name = $parameter->getName();
