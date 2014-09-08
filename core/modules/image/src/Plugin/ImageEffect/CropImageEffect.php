@@ -83,4 +83,13 @@ class CropImageEffect extends ResizeImageEffect {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+
+    $this->configuration['anchor'] = $form_state->getValue('anchor');
+  }
+
 }

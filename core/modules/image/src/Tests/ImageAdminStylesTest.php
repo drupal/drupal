@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\image\ImageStyleInterface;
 
 /**
@@ -69,30 +70,30 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style_path = $admin_path . '/manage/' . $style_name;
     $effect_edits = array(
       'image_resize' => array(
-        'data[width]' => 100,
-        'data[height]' => 101,
+        'width' => 100,
+        'height' => 101,
       ),
       'image_scale' => array(
-        'data[width]' => 110,
-        'data[height]' => 111,
-        'data[upscale]' => 1,
+        'width' => 110,
+        'height' => 111,
+        'upscale' => 1,
       ),
       'image_scale_and_crop' => array(
-        'data[width]' => 120,
-        'data[height]' => 121,
+        'width' => 120,
+        'height' => 121,
       ),
       'image_crop' => array(
-        'data[width]' => 130,
-        'data[height]' => 131,
-        'data[anchor]' => 'center-center',
+        'width' => 130,
+        'height' => 131,
+        'anchor' => 'left-top',
       ),
       'image_desaturate' => array(
         // No options for desaturate.
       ),
       'image_rotate' => array(
-        'data[degrees]' => 5,
-        'data[random]' => 1,
-        'data[bgcolor]' => '#FFFF00',
+        'degrees' => 5,
+        'random' => 1,
+        'bgcolor' => '#FFFF00',
       ),
     );
 
@@ -115,10 +116,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Add each sample effect to the style.
     foreach ($effect_edits as $effect => $edit) {
+      $edit_data = array();
+      foreach ($edit as $field => $value) {
+        $edit_data['data[' . $field . ']'] = $value;
+      }
       // Add the effect.
       $this->drupalPostForm($style_path, array('new' => $effect), t('Add'));
       if (!empty($edit)) {
-        $this->drupalPostForm(NULL, $edit, t('Add effect'));
+        $this->drupalPostForm(NULL, $edit_data, t('Add effect'));
       }
     }
 
@@ -128,15 +133,15 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style_uri_path = $style->url();
     $this->assertTrue(strpos($style_uri_path, $style_path) !== FALSE, 'The image style URI is correct.');
 
-    // Confirm that all effects on the image style have settings on the effect
-    // edit form that match what was saved.
+    // Confirm that all effects on the image style have settings that match
+    // what was saved.
     $uuids = array();
     foreach ($style->getEffects() as $uuid => $effect) {
       // Store the uuid for later use.
       $uuids[$effect->getPluginId()] = $uuid;
-      $this->drupalGet($style_path . '/effects/' . $uuid);
+      $effect_configuration = $effect->getConfiguration();
       foreach ($effect_edits[$effect->getPluginId()] as $field => $value) {
-        $this->assertFieldByName($field, $value, format_string('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value)));
+        $this->assertEqual($value, $effect_configuration['data'][$field], String::format('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value)));
       }
     }
 
