@@ -804,7 +804,8 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@config.factory', '@module_handler', '@image.toolkit.operation.manager', '@logger.channel.image']
+    arguments: ['@config.factory']
+    parent: default_plugin_manager
   image.toolkit.operation.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
     arguments: ['@logger.channel.image']

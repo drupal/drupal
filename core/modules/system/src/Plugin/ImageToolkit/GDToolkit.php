@@ -10,6 +10,7 @@ namespace Drupal\system\Plugin\ImageToolkit;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the GD2 toolkit for image manipulation within Drupal.
@@ -51,6 +52,20 @@ class GDToolkit extends ImageToolkitBase {
   protected $preLoadInfo = NULL;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('image.toolkit.operation.manager'),
+      $container->get('logger.channel.image'),
+      $container->get('config.factory')
+    );
+  }
+
+  /**
    * Sets the GD image resource.
    *
    * @param resource $resource
@@ -80,14 +95,14 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm() {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['image_jpeg_quality'] = array(
       '#type' => 'number',
       '#title' => t('JPEG quality'),
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
       '#min' => 0,
       '#max' => 100,
-      '#default_value' => \Drupal::config('system.image.gd')->get('jpeg_quality'),
+      '#default_value' => $this->configFactory->get('system.image.gd')->get('jpeg_quality'),
       '#field_suffix' => t('%'),
     );
     return $form;
@@ -96,8 +111,8 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit($form, FormStateInterface $form_state) {
-    \Drupal::config('system.image.gd')
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configFactory->get('system.image.gd')
       ->set('jpeg_quality', $form_state->getValue(array('gd', 'image_jpeg_quality')))
       ->save();
   }
@@ -164,7 +179,7 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
     if ($this->getType() == IMAGETYPE_JPEG) {
-      $success = $function($this->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
+      $success = $function($this->getResource(), $destination, $this->configFactory->get('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.

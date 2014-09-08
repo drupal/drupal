@@ -21,7 +21,7 @@ class ImageToolkitForm extends ConfigFormBase {
   /**
    * An array containing currently available toolkits.
    *
-   * @var array
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface[]
    */
   protected $availableToolkits = array();
 
@@ -87,10 +87,22 @@ class ImageToolkitForm extends ConfigFormBase {
           ),
         ),
       );
-      $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();
+      $form['image_toolkit_settings'][$id] += $toolkit->buildConfigurationForm(array(), $form_state);
     }
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
+    // Call the form validation handler for each of the toolkits.
+    foreach ($this->availableToolkits as $toolkit) {
+      $toolkit->validateConfigurationForm($form, $form_state);
+    }
   }
 
   /**
@@ -103,7 +115,7 @@ class ImageToolkitForm extends ConfigFormBase {
 
     // Call the form submit handler for each of the toolkits.
     foreach ($this->availableToolkits as $toolkit) {
-      $toolkit->settingsFormSubmit($form, $form_state);
+      $toolkit->submitConfigurationForm($form, $form_state);
     }
 
     parent::submitForm($form, $form_state);

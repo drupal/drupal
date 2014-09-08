@@ -8,6 +8,8 @@
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
@@ -21,6 +23,13 @@ use Psr\Log\LoggerInterface;
  * @see plugin_api
  */
 abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterface {
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
 
   /**
    * Image object this toolkit instance is tied to.
@@ -57,12 +66,20 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    *   The toolkit operation manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->operationManager = $operation_manager;
     $this->logger = $logger;
+    $this->configFactory = $config_factory;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {  }
 
   /**
    * {@inheritdoc}

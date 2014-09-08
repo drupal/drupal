@@ -7,9 +7,10 @@
 
 namespace Drupal\Core\ImageToolkit;
 
-use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * @defgroup image Image toolkits
@@ -49,21 +50,7 @@ use Drupal\Core\Image\ImageInterface;
  * @see \Drupal\Core\ImageToolkit\ImageToolkitManager
  * @see plugin_api
  */
-interface ImageToolkitInterface extends PluginInspectionInterface {
-
-  /**
-   * Retrieves the toolkit's settings form.
-   *
-   * @see system_image_toolkit_settings()
-   */
-  public function settingsForm();
-
-  /**
-   * Handles submissions for toolkit's settings form.
-   *
-   * @see system_image_toolkit_settings_submit()
-   */
-  public function settingsFormSubmit($form, FormStateInterface $form_state);
+interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginInspectionInterface, PluginFormInterface {
 
   /**
    * Sets the image object that this toolkit instance is tied to.

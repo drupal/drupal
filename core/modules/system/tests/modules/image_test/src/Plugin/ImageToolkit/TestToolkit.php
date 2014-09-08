@@ -8,8 +8,13 @@
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
+use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
+use Drupal\Core\State\StateInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a Test toolkit for image manipulation within Drupal.
@@ -20,6 +25,13 @@ use Drupal\Core\ImageToolkit\ImageToolkitBase;
  * )
  */
 class TestToolkit extends ImageToolkitBase {
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
 
   /**
    * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
@@ -43,9 +55,47 @@ class TestToolkit extends ImageToolkitBase {
   protected $height;
 
   /**
+   * Constructs a TestToolkit object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
+   *   The toolkit operation manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state key value store.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger, ConfigFactoryInterface $config_factory, StateInterface $state) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $operation_manager, $logger, $config_factory);
+    $this->state = $state;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function settingsForm() {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('image.toolkit.operation.manager'),
+      $container->get('logger.channel.image'),
+      $container->get('config.factory'),
+      $container->get('state')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $this->logCall('settings', func_get_args());
     $form['test_parameter'] = array(
       '#type' => 'number',
@@ -53,7 +103,7 @@ class TestToolkit extends ImageToolkitBase {
       '#description' => $this->t('A toolkit parameter for testing purposes.'),
       '#min' => 0,
       '#max' => 100,
-      '#default_value' => \Drupal::config('system.image.test_toolkit')->get('test_parameter'),
+      '#default_value' => $this->configFactory->get('system.image.test_toolkit')->get('test_parameter'),
     );
     return $form;
   }
@@ -61,8 +111,17 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit($form, FormStateInterface $form_state) {
-    \Drupal::config('system.image.test_toolkit')
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    if ($form_state['values']['test']['test_parameter'] == 0) {
+      $form_state->setErrorByName('test][test_parameter', $this->t('Test parameter should be different from 0.'));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configFactory->get('system.image.test_toolkit')
       ->set('test_parameter', $form_state->getValue(array('test', 'test_parameter')))
       ->save();
   }
@@ -111,7 +170,7 @@ class TestToolkit extends ImageToolkitBase {
    * @see \Drupal\system\Tests\Image\ToolkitTestBase::imageTestGetAllCalls()
    */
   protected function logCall($op, $args) {
-    $results = \Drupal::state()->get('image_test.results') ?: array();
+    $results = $this->state->get('image_test.results') ?: array();
     $results[$op][] = $args;
     // A call to apply is also logged under its operation name whereby the
     // array of arguments are logged as separate arguments, this because at the
@@ -120,7 +179,7 @@ class TestToolkit extends ImageToolkitBase {
       $operation = array_shift($args);
       $results[$operation][] = array_values(reset($args));
     }
-    \Drupal::state()->set('image_test.results', $results);
+    $this->state->set('image_test.results', $results);
   }
 
   /**
