@@ -8,7 +8,6 @@
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Routing\AdminContext;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -63,7 +62,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
+  public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
 
     // If the entity type is dynamic, confirm it to be a config entity. Static
@@ -71,7 +70,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
     if (strpos($definition['type'], 'entity:{') === 0) {
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
       if (!$entity_type->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
-        return parent::convert($value, $definition, $name, $defaults, $request);
+        return parent::convert($value, $definition, $name, $defaults);
       }
     }
 

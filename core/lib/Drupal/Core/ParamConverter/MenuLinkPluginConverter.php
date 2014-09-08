@@ -9,7 +9,6 @@ namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -37,7 +36,7 @@ class MenuLinkPluginConverter implements ParamConverterInterface {
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
+  public function convert($value, $definition, $name, array $defaults) {
     if ($value) {
       try {
         return $this->menuLinkManager->createInstance($value);

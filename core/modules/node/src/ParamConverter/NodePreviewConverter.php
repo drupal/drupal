@@ -8,7 +8,6 @@
 namespace Drupal\node\ParamConverter;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\user\TempStoreFactory;
@@ -38,7 +37,7 @@ class NodePreviewConverter implements ParamConverterInterface {
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
+  public function convert($value, $definition, $name, array $defaults) {
     $store = $this->tempStoreFactory->get('node_preview');
     if ($form_state = $store->get($value)) {
       return $form_state->getFormObject()->getEntity();

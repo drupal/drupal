@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\ParamConverter;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -54,8 +53,6 @@ interface ParamConverterManagerInterface {
    *
    * @param array $defaults
    *   The route defaults array.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    *
    * @throws \Drupal\Core\ParamConverter\ParamNotConvertedException
    *   If one of the assigned converters returned NULL because the given
@@ -64,6 +61,6 @@ interface ParamConverterManagerInterface {
    * @return array
    *   The modified defaults.
    */
-  public function convert(array $defaults, Request $request);
+  public function convert(array $defaults);
 
 }

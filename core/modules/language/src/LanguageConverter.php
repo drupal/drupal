@@ -9,7 +9,6 @@ namespace Drupal\language;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -37,7 +36,7 @@ class LanguageConverter implements ParamConverterInterface {
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
+  public function convert($value, $definition, $name, array $defaults) {
     if (!empty($value)) {
       return $this->languageManager->getLanguage($value);
     }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -62,7 +61,7 @@ class EntityConverter implements ParamConverterInterface {
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
+  public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
     if ($storage = $this->entityManager->getStorage($entity_type_id)) {
       return $storage->load($value);

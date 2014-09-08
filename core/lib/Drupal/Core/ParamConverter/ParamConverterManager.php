@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Manages converter services for converting request parameters to full objects.
@@ -81,7 +80,7 @@ class ParamConverterManager implements ParamConverterManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function convert(array $defaults, Request $request) {
+  public function convert(array $defaults) {
     /** @var $route \Symfony\Component\Routing\Route */
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
 
@@ -104,7 +103,7 @@ class ParamConverterManager implements ParamConverterManagerInterface {
 
       // If a converter returns NULL it means that the parameter could not be
       // converted.
-      $defaults[$name] = $this->getConverter($definition['converter'])->convert($defaults[$name], $definition, $name, $defaults, $request);
+      $defaults[$name] = $this->getConverter($definition['converter'])->convert($defaults[$name], $definition, $name, $defaults);
       if (!isset($defaults[$name])) {
         throw new ParamNotConvertedException(sprintf('The "%s" parameter was not converted for the path "%s" (route name: "%s")', $name, $route->getPath(), $defaults[RouteObjectInterface::ROUTE_NAME]));
       }
@@ -114,4 +113,3 @@ class ParamConverterManager implements ParamConverterManagerInterface {
   }
 
 }
-

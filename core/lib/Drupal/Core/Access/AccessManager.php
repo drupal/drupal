@@ -205,7 +205,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
         $parameters += $route->getDefaults();
         $route_request->attributes->set('_raw_variables', new ParameterBag($parameters));
         $parameters[RouteObjectInterface::ROUTE_OBJECT] = $route;
-        $route_request->attributes->add($this->paramConverterManager->convert($parameters, $route_request));
+        $route_request->attributes->add($this->paramConverterManager->convert($parameters));
       }
       return $this->check($route, $route_request, $account);
     }

@@ -9,7 +9,6 @@ namespace Drupal\views_ui\ParamConverter;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\user\TempStoreFactory;
@@ -55,8 +54,8 @@ class ViewUIConverter extends EntityConverter implements ParamConverterInterface
   /**
    * {@inheritdoc}
    */
-  public function convert($value, $definition, $name, array $defaults, Request $request) {
-    if (!$entity = parent::convert($value, $definition, $name, $defaults, $request)) {
+  public function convert($value, $definition, $name, array $defaults) {
+    if (!$entity = parent::convert($value, $definition, $name, $defaults)) {
       return;
     }
 
