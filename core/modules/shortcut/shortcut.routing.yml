@@ -62,6 +62,14 @@ entity.shortcut.canonical:
   requirements:
     _entity_access: 'shortcut.update'
 
+entity.shortcut.link_delete_inline:
+  path: '/admin/config/user-interface/shortcut/link/{shortcut}/delete-inline'
+  defaults:
+    _controller: 'Drupal\shortcut\Controller\ShortcutController::deleteShortcutLinkInline'
+  requirements:
+    _entity_access: 'shortcut.delete'
+    _csrf_token: 'TRUE'
+
 entity.shortcut.delete_form:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}/delete'
   defaults:

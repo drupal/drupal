@@ -118,7 +118,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Test the "Remove from shortcuts" link.
     $this->clickLink('Cron');
     $this->clickLink('Remove from Default shortcuts');
-    $this->drupalPostForm(NULL, array(), 'Delete');
     $this->assertText('The shortcut Cron has been deleted.');
     $this->assertNoLink('Cron', 'Shortcut link removed from page');
 

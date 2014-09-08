@@ -359,7 +359,7 @@ function shortcut_preprocess_page(&$variables) {
     else {
       $query['id'] = $shortcut_id;
       $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Remove from shortcuts');
-      $route_name = 'entity.shortcut.delete_form';
+      $route_name = 'entity.shortcut.link_delete_inline';
       $route_parameters = array('shortcut' => $shortcut_id);
     }
 
