@@ -10,6 +10,7 @@ namespace Drupal\block\Tests;
 use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests basic block functionality.
@@ -106,7 +107,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'id' => $block['id'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
     // Check to see if the block was created by checking its configuration.
-    $instance = entity_load('block', $block['id']);
+    $instance = Block::load($block['id']);
 
     $this->assertEqual($instance->label(), $block['settings[label]'], 'Stored block title found.');
 

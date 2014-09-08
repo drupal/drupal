@@ -9,6 +9,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Entity\Menu;
+use Drupal\block\Entity\Block;
 
 /**
  * Implements hook_help().
@@ -298,7 +299,7 @@ function template_preprocess_block(&$variables) {
  * Removes deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
-  foreach (entity_load_multiple('block') as $block) {
+  foreach (Block::loadMultiple() as $block) {
     /** @var $block \Drupal\block\BlockInterface */
     $visibility = $block->getVisibility();
     if (isset($visibility['user_role']['roles'][$role->id()])) {
@@ -314,7 +315,7 @@ function block_user_role_delete($role) {
  */
 function block_menu_delete(Menu $menu) {
   if (!$menu->isSyncing()) {
-    foreach (entity_load_multiple('block') as $block) {
+    foreach (Block::loadMultiple() as $block) {
       if ($block->get('plugin') == 'system_menu_block:' . $menu->id()) {
         $block->delete();
       }
@@ -329,7 +330,7 @@ function block_menu_delete(Menu $menu) {
  */
 function block_configurable_language_delete(ConfigurableLanguage $language) {
   // Remove the block visibility settings for the deleted language.
-  foreach (entity_load_multiple('block') as $block) {
+  foreach (Block::loadMultiple() as $block) {
     /** @var $block \Drupal\block\BlockInterface */
     $visibility = $block->getVisibility();
     if (isset($visibility['language']['langcodes'][$language->id()])) {

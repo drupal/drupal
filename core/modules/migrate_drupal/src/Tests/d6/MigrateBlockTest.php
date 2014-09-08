@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\block\Entity\Block;
 
 /**
  * Upgrade block settings to block.block.*.yml.
@@ -81,8 +82,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
    * Test the block settings migration.
    */
   public function testBlockMigration() {
-    /** @var $blocks \Drupal\block\BlockInterface[] */
-    $blocks = entity_load_multiple('block');
+    $blocks = Block::loadMultiple();
     $this->assertEqual(count($blocks), 8);
 
     // User blocks

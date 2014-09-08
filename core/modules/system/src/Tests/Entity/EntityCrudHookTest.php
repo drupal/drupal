@@ -11,6 +11,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests the invocation of hooks when creating, inserting, loading, updating or
@@ -101,7 +102,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $entity = entity_load('block', $entity->id());
+    $entity = Block::load($entity->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type block',

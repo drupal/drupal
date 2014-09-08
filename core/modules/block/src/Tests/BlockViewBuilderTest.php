@@ -13,6 +13,7 @@ use Drupal\Core\Cache\UrlCacheContext;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests the block view builder.
@@ -79,7 +80,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $entity->save();
 
     // Test the rendering of a block.
-    $entity = entity_load('block', 'test_block1');
+    $entity = Block::load('test_block1');
     $output = entity_view($entity, 'block');
     $expected = array();
     $expected[] = '<div class="block block-block-test" id="block-test-block1">';

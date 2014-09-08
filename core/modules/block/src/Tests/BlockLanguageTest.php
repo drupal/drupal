@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests if a block can be configure to be only visibile on a particular
@@ -104,7 +105,7 @@ class BlockLanguageTest extends WebTestBase {
 
     // Check that the language is no longer stored in the configuration after
     // it is deleted.
-    $block = entity_load('block', $block->id());
+    $block = Block::load($block->id());
     $visibility = $block->getVisibility();
     $this->assertTrue(empty($visibility['language']['langcodes']['fr']), 'Language is no longer not set in the block configuration after deleting the block.');
   }
