@@ -38,6 +38,15 @@ $config['system.performance']['js']['preprocess'] = FALSE;
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 
 /**
+ * Allow test modules and themes to be installed.
+ *
+ * Drupal ignores test modules and themes by default for performance reasons.
+ * During development it can be useful to install test extensions for debugging
+ * purposes.
+ */
+$settings['extension_discovery_scan_tests'] = TRUE;
+
+/**
  * Enable access to rebuild.php.
  *
  * This setting can be enabled to allow Drupal's php and database cached
