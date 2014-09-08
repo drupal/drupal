@@ -7,9 +7,8 @@
 namespace Drupal\rdf\Tests\Field;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the RDFa output of the taxonomy term reference field formatter.
@@ -100,6 +99,10 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
   public function testAllFormatters() {
     // Tests the plain formatter.
     $this->assertFormatterRdfa(array('type' => 'taxonomy_term_reference_plain'), 'http://schema.org/about', array('value' => $this->term->getName(), 'type' => 'literal'));
+    // Grant the access content permission to the anonymous user.
+    Role::create(array('id' => DRUPAL_ANONYMOUS_RID))
+      ->grantPermission('access content')
+      ->save();
     // Tests the link formatter.
     $term_uri = $this->getAbsoluteUri($this->term);
     $this->assertFormatterRdfa(array('type'=>'taxonomy_term_reference_link'), 'http://schema.org/about', array('value' => $term_uri, 'type' => 'uri'));

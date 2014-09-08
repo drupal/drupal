@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -20,6 +21,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  * @group UrlTest
  */
 class UrlTest extends UnitTestCase {
+
+  /**
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
 
   /**
    * The URL generator
@@ -60,10 +66,10 @@ class UrlTest extends UnitTestCase {
       ->will($this->returnValueMap($this->map));
 
     $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
-    $container = new ContainerBuilder();
-    $container->set('router.no_access_checks', $this->router);
-    $container->set('url_generator', $this->urlGenerator);
-    \Drupal::setContainer($container);
+    $this->container = new ContainerBuilder();
+    $this->container->set('router.no_access_checks', $this->router);
+    $this->container->set('url_generator', $this->urlGenerator);
+    \Drupal::setContainer($this->container);
   }
 
   /**
@@ -332,5 +338,82 @@ class UrlTest extends UnitTestCase {
       $this->assertSame($this->map[$index][2], $url->getOptions());
     }
   }
+
+  /**
+   * Tests the access() method.
+   *
+   * @param bool $access
+   *
+   * @covers ::access
+   * @covers ::getAccessManager
+   * @covers ::setAccessManager
+   * @dataProvider accessProvider
+   */
+  public function testAccess($access) {
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $url = new TestUrl('entity.node.canonical', ['node' => 3]);
+    $url->setAccessManager($this->getMockAccessManager($access, $account));
+    $this->assertEquals($access, $url->access($account));
+  }
+
+  /**
+   * Tests the renderAccess() method.
+   *
+   * @param bool $access
+   *
+   * @covers ::renderAccess
+   * @dataProvider accessProvider
+   */
+  public function testRenderAccess($access) {
+    $element = array(
+      '#route_name' => 'entity.node.canonical',
+      '#route_parameters' => ['node' => 3],
+      '#options' => [],
+    );
+    $this->container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
+    $this->container->set('access_manager', $this->getMockAccessManager($access));
+    $this->assertEquals($access, TestUrl::renderAccess($element));
+  }
+
+  /**
+   * Creates a mock access manager for the access tests.
+   *
+   * @param bool $access
+   * @param \Drupal\Core\Session\AccountInterface|NULL $account
+   *
+   * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected function getMockAccessManager($access, $account = NULL) {
+    $access_manager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $access_manager->expects($this->once())
+      ->method('checkNamedRoute')
+      ->with('entity.node.canonical', ['node' => 3], $account)
+      ->willReturn($access);
+    return $access_manager;
+  }
+
+  /**
+   * Data provider for the access test methods.
+   */
+  public function accessProvider() {
+    return array(
+      array(TRUE),
+      array(FALSE),
+    );
+  }
+
+}
+
+class TestUrl extends Url {
+
+  /**
+   * Sets the access manager.
+   *
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   */
+  public function setAccessManager(AccessManagerInterface $access_manager) {
+    $this->accessManager = $access_manager;
+  }
+
 
 }

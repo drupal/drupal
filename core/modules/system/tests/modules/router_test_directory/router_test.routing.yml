@@ -93,6 +93,20 @@ router_test.14:
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test9'
 
+router_test.15:
+  path: '/router_test/test15'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'FALSE'
+
+router_test.16:
+  path: '/router_test/test16'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _permission: 'administer users'
+
 router_test.hierarchy_parent:
   path: '/menu-test/parent'
   defaults:

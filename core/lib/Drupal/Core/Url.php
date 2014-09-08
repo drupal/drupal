@@ -10,6 +10,7 @@ namespace Drupal\Core;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,6 +26,13 @@ class Url {
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
+
+  /**
+   * The access manager
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected $accessManager;
 
   /**
    * The route name.
@@ -386,6 +394,7 @@ class Url {
         '#route_name' => $this->getRouteName(),
         '#route_parameters' => $this->getRouteParameters(),
         '#options' => $this->getOptions(),
+        '#access_callback' => array(get_class(), 'renderAccess'),
       );
     }
   }
@@ -409,6 +418,45 @@ class Url {
       throw new \UnexpectedValueException('External URLs do not have internal representations.');
     }
     return $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
+  }
+
+  /**
+   * Checks this Url object against applicable access check services.
+   *
+   * Determines whether the route is accessible or not.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) Run access checks for this account. Defaults to the current
+   *   user.
+   *
+   * @return bool
+   *   Returns TRUE if the user has access to the url, otherwise FALSE.
+   */
+  public function access(AccountInterface $account = NULL) {
+    return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account);
+  }
+
+  /**
+   * Checks a Url render element against applicable access check services.
+   *
+   * @param array $element
+   *   A render element as returned from \Drupal\Core\Url::toRenderArray().
+   *
+   * @return bool
+   *   Returns TRUE if the current user has access to the url, otherwise FALSE.
+   */
+  public static function renderAccess(array $element) {
+    return (new static($element['#route_name'], $element['#route_parameters'], $element['#options']))->access();
+  }
+
+  /**
+   * @return \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected function accessManager() {
+    if (!isset($this->accessManager)) {
+      $this->accessManager = \Drupal::service('access_manager');
+    }
+    return $this->accessManager;
   }
 
   /**

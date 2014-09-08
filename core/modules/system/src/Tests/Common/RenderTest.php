@@ -54,6 +54,31 @@ class RenderTest extends DrupalUnitTestBase {
         'expected' => '',
       ),
       array(
+        'name' => 'access denied via callback',
+        'value' => array(
+          '#markup' => 'foo',
+          '#access_callback' => 'is_bool',
+        ),
+        'expected' => '',
+      ),
+      array(
+        'name' => 'access granted via callback',
+        'value' => array(
+          '#markup' => 'foo',
+          '#access_callback' => 'is_array',
+        ),
+        'expected' => 'foo',
+      ),
+      array(
+        'name' => 'access FALSE is honored',
+        'value' => array(
+          '#markup' => 'foo',
+          '#access' => FALSE,
+          '#access_callback' => 'is_array',
+        ),
+        'expected' => '',
+      ),
+      array(
         'name' => 'previously printed',
         'value' => array(
           '#markup' => 'foo',

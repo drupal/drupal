@@ -664,7 +664,7 @@ services:
     class: Drupal\Core\Access\AccessArgumentsResolver
   access_manager:
     class: Drupal\Core\Access\AccessManager
-    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver', '@request_stack']
+    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver', '@request_stack', '@current_user']
     calls:
       - [setContainer, ['@service_container']]
   access_route_subscriber:

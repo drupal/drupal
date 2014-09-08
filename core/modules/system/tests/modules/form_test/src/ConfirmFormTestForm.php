@@ -34,7 +34,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('system.admin');
+    return new Url('form_test.route8');
   }
 
   /**

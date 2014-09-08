@@ -2809,6 +2809,14 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
     $stack->push($current);
   };
+  /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
+  $controller_resolver = \Drupal::service('controller_resolver');
+  if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
+    if (is_string($elements['#access_callback']) && strpos($elements['#access_callback'], '::') === FALSE) {
+      $elements['#access_callback'] = $controller_resolver->getControllerFromDefinition($elements['#access_callback']);
+    }
+    $elements['#access'] = call_user_func($elements['#access_callback'], $elements);
+  }
 
   // Early-return nothing if user does not have access.
   if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
@@ -2856,8 +2864,6 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // Make any final changes to the element before it is rendered. This means
   // that the $element or the children can be altered or corrected before the
   // element is rendered into the final text.
-  /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
-  $controller_resolver = \Drupal::service('controller_resolver');
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $callable) {
       if (is_string($callable) && strpos($callable, '::') === FALSE) {

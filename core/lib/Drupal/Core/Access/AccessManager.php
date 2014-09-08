@@ -103,6 +103,13 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   protected $requestStack;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a AccessManager instance.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
@@ -115,13 +122,16 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    *   The access arguments resolver.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverInterface $arguments_resolver, RequestStack $requestStack) {
+  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverInterface $arguments_resolver, RequestStack $requestStack, AccountInterface $current_user) {
     $this->routeProvider = $route_provider;
     $this->urlGenerator = $url_generator;
     $this->paramConverterManager = $paramconverter_manager;
     $this->argumentsResolver = $arguments_resolver;
     $this->requestStack = $requestStack;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -182,7 +192,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account, Request $route_request = NULL) {
+  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, Request $route_request = NULL) {
     try {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
@@ -210,7 +220,10 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function check(Route $route, Request $request, AccountInterface $account) {
+  public function check(Route $route, Request $request, AccountInterface $account = NULL) {
+    if (!isset($account)) {
+      $account = $this->currentUser;
+    }
     $checks = $route->getOption('_access_checks') ?: array();
     $conjunction = $route->getOption('_access_mode') ?: static::ACCESS_MODE_ALL;
 

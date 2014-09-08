@@ -25,7 +25,7 @@ class ConfirmFormArrayPathTestForm extends ConfirmFormTestForm {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('system.admin', array(), array(
+    return new Url('form_test.route6', array(), array(
       'query' => array(
         'destination' => 'admin/config',
       ),

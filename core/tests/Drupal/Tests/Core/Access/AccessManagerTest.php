@@ -92,6 +92,11 @@ class AccessManagerTest extends UnitTestCase {
   protected $requestStack;
 
   /**
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -129,11 +134,12 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
 
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->argumentsResolver = $this->getMock('Drupal\Core\Access\AccessArgumentsResolverInterface');
 
     $this->requestStack = new RequestStack();
 
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $this->accessManager->setContainer($this->container);
   }
 
@@ -162,7 +168,7 @@ class AccessManagerTest extends UnitTestCase {
    */
   public function testSetChecksWithDynamicAccessChecker() {
     // Setup the access manager.
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $this->accessManager->setContainer($this->container);
 
     // Setup the dynamic access checker.
@@ -217,6 +223,25 @@ class AccessManagerTest extends UnitTestCase {
     $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_1'), $request, $this->account));
     $this->assertTrue($this->accessManager->check($this->routeCollection->get('test_route_2'), $request, $this->account));
     $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_3'), $request, $this->account));
+  }
+
+  /**
+   * Tests \Drupal\Core\Access\AccessManager::check() with no account specified.
+   *
+   * @covers ::check
+   */
+  public function testCheckWithNullAccount() {
+    $this->setupAccessChecker();
+    $this->accessManager->setChecks($this->routeCollection);
+    $request = new Request;
+    $route = $this->routeCollection->get('test_route_2');
+    $this->argumentsResolver->expects($this->once())
+      ->method('getArguments')
+      ->with(array($this->container->get('test_access_default'), 'access'), $route, $request, $this->currentUser)
+      ->will($this->returnCallback(function ($callable, $route, $request, $account) {
+        return array($route);
+      }));
+    $this->accessManager->check($route, $request);
   }
 
   /**
@@ -472,7 +497,7 @@ class AccessManagerTest extends UnitTestCase {
 
     $subrequest = Request::create('/test-route-1/example');
 
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $this->accessManager->setContainer($this->container);
     $this->requestStack->push(new Request());
 
@@ -532,7 +557,7 @@ class AccessManagerTest extends UnitTestCase {
 
     $subrequest = Request::create('/test-route-1/example');
 
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $this->accessManager->setContainer($this->container);
     $this->requestStack->push(new Request());
 
@@ -610,7 +635,7 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue($return_value));
     $container->set('test_incorrect_value', $access_check);
 
-    $access_manager = new AccessManager($route_provider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $access_manager = new AccessManager($route_provider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $access_manager->setContainer($container);
     $access_manager->addCheckService('test_incorrect_value', 'access');
 
@@ -665,7 +690,7 @@ class AccessManagerTest extends UnitTestCase {
    * Adds a default access check service to the container and the access manager.
    */
   protected function setupAccessChecker() {
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver, $this->requestStack, $this->currentUser);
     $this->accessManager->setContainer($this->container);
     $access_check = new DefaultAccessCheck();
     $this->container->register('test_access_default', $access_check);
