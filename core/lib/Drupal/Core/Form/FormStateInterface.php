@@ -52,7 +52,7 @@ interface FormStateInterface {
    * Example:
    * @code
    *   // Load node.admin.inc from Node module.
-   *   $form_state->loadInclude('inc', 'node', 'node.admin');
+   *   $form_state->loadInclude('node', 'inc', 'node.admin');
    * @endcode
    *
    * Use this function instead of module_load_include() from inside a form
