@@ -217,7 +217,7 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
       $field_mapping = $mapping->getPreparedFieldMapping($name);
       if ($field_mapping) {
         foreach ($entity->get($name) as $item) {
-          $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->getValue());
+          $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->toArray());
         }
       }
     }
@@ -234,7 +234,7 @@ function rdf_comment_storage_load($comments) {
     // to optimize performance for websites that implement an entity cache.
     $created_mapping = rdf_get_mapping('comment', $comment->bundle())
       ->getPreparedFieldMapping('created');
-    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->getCreatedTime());
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->get('created')->first()->toArray());
     $entity = $comment->getCommentedEntity();
     $comment->rdf_data['entity_uri'] = $entity->url();
     if ($comment->hasParentComment()) {
@@ -305,7 +305,7 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['display_submitted']) {
-    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->getCreatedTime());
+    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->get('created')->first()->toArray());
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),

@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests the node entity preview functionality.
@@ -202,14 +203,16 @@ class PagePreviewTest extends NodeTestBase {
     $body_key = 'body[0][value]';
     $term_key = $this->field_name;
     // Force revision on "Basic page" content.
-    $this->container->get('config.factory')->get('node.type.page')->set('settings.node.options', array('status', 'revision'))->save();
+    $node_type = NodeType::load('page');
+    $node_type->settings['node']['options']['revision'] = TRUE;
+    $node_type->save();
 
     // Fill in node creation form and preview node.
     $edit = array();
     $edit[$title_key] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     $edit[$term_key] = $this->term->id();
-    $edit['revision_log'] = $this->randomMachineName(32);
+    $edit['revision_log[0][value]'] = $this->randomString(32);
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
@@ -225,7 +228,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
 
     // Check that the revision log field has the correct value.
-    $this->assertFieldByName('revision_log', $edit['revision_log'], 'Revision log field displayed.');
+    $this->assertFieldByName('revision_log[0][value]', $edit['revision_log[0][value]'], 'Revision log field displayed.');
   }
 
 }

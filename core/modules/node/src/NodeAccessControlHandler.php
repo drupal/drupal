@@ -129,13 +129,27 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    * {@inheritdoc}
    */
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-    $administrative_fields = array('uid', 'status', 'created', 'promote', 'sticky', 'revision_log');
-    $read_only_fields = array('changed', 'revision_timestamp', 'revision_uid');
+    // Only users with the administer nodes permission can edit administrative
+    // fields.
+    $administrative_fields = array('uid', 'status', 'created', 'promote', 'sticky');
     if ($operation == 'edit' && in_array($field_definition->getName(), $administrative_fields)) {
       return $account->hasPermission('administer nodes');
     }
+
+    // No user can change read only fields.
+    $read_only_fields = array('changed', 'revision_timestamp', 'revision_uid');
     if ($operation == 'edit' && in_array($field_definition->getName(), $read_only_fields)) {
       return FALSE;
+    }
+
+    // Users have access to the revision_log field either if they have
+    // administrative permissions or if the new revision option is enabled.
+    if ($operation == 'edit' && $field_definition->getName() == 'revision_log') {
+      if ($account->hasPermission('administer nodes')) {
+        return TRUE;
+      }
+      $node_type_settings = $items->getEntity()->type->entity->getModuleSettings('node');
+      return !empty($node_type_settings['options']['revision']);
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

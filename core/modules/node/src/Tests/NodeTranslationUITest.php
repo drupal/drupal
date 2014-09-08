@@ -152,11 +152,11 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         'promote' => (bool) mt_rand(0, 1),
       );
       $edit = array(
-        'uid' => $user->getUsername(),
-        'created[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
-        'created[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
-        'sticky' => $values[$langcode]['sticky'],
-        'promote' => $values[$langcode]['promote'],
+        'uid[0][target_id]' => $user->getUsername(),
+        'created[0][value][date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
+        'created[0][value][time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
+        'sticky[value]' => $values[$langcode]['sticky'],
+        'promote[value]' => $values[$langcode]['promote'],
       );
       $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
     }

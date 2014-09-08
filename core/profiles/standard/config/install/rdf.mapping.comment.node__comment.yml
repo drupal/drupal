@@ -11,12 +11,12 @@ fieldMappings:
     properties:
       - 'schema:dateCreated'
     datatype_callback:
-      callable: 'date_iso8601'
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
   changed:
     properties:
       - 'schema:dateModified'
     datatype_callback:
-      callable: 'date_iso8601'
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
   comment_body:
     properties:
       - 'schema:text'

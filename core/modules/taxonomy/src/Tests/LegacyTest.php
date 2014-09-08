@@ -74,8 +74,8 @@ class LegacyTest extends TaxonomyTestBase {
     $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
-    $edit['created[date]'] = $date->format('Y-m-d');
-    $edit['created[time]'] = $date->format('H:i:s');
+    $edit['created[0][value][date]'] = $date->format('Y-m-d');
+    $edit['created[0][value][time]'] = $date->format('H:i:s');
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit['field_tags'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));

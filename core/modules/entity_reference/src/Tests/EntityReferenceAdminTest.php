@@ -113,6 +113,9 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Create entity reference field with taxonomy term as a target.
     $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', 'tags');
 
+    // Create entity reference field with user as a target.
+    $user_field_name = $this->createEntityReferenceField('user');
+
     // Create entity reference field with node as a target.
     $node_field_name = $this->createEntityReferenceField('node', $this->type);
 
@@ -129,6 +132,17 @@ class EntityReferenceAdminTest extends WebTestBase {
       'entity_reference_entity_id',
       'entity_reference_rss_category',
       'entity_reference_entity_view',
+      'hidden',
+    ));
+
+    // Test if User Reference Field has the correct formatters.
+    // Author should be available for this field.
+    // RSS Category should not be available for this field.
+    $this->assertFieldSelectOptions('fields[field_' . $user_field_name . '][type]', array(
+      'author',
+      'entity_reference_entity_id',
+      'entity_reference_entity_view',
+      'entity_reference_label',
       'hidden',
     ));
 

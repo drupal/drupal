@@ -9,9 +9,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Template\Attribute;
-use Drupal\Core\Datetime\Element\Datetime;
-use Drupal\node\NodeInterface;
 
 /**
  * Defines the timezone that dates should be stored in.
@@ -136,24 +133,4 @@ function datetime_datelist_widget_validate(&$element, FormStateInterface $form_s
  */
 function datetime_date_default_time($date) {
   $date->setTime(12, 0, 0);
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter() for node forms.
- */
-function datetime_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Alter the 'Authored on' date to use datetime.
-  $form['created']['#type'] = 'datetime';
-  $date_format = entity_load('date_format', 'html_date')->getPattern();
-  $time_format = entity_load('date_format', 'html_time')->getPattern();
-  $form['created']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => Datetime::formatExample($date_format . ' ' . $time_format)));
-  unset($form['created']['#maxlength']);
-}
-
-/**
- * Implements hook_node_prepare_form().
- */
-function datetime_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
-  // Prepare the 'Authored on' date to use datetime.
-  $node->date = DrupalDateTime::createFromTimestamp($node->getCreatedTime());
 }

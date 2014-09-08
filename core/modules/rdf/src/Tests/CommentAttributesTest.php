@@ -72,12 +72,12 @@ class CommentAttributesTest extends CommentTestBase {
       'created' => array(
         'properties' => array('dc:date', 'dc:created'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => array('callable' => 'date_iso8601'),
+        'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
       ),
       'changed' => array(
         'properties' => array('dc:modified'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => array('callable' => 'date_iso8601'),
+        'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
       ),
       'comment_body' => array(
         'properties' => array('content:encoded'),

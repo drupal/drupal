@@ -23,10 +23,8 @@
  * - author_picture: The node author user entity, rendered using the "compact"
  *   view mode.
  * - metadata: Metadata for this node.
- * - date: Formatted creation date. Preprocess functions can reformat it by
- *   calling format_date() with the desired parameters on
- *   $variables['created'].
- * - author_name: Themed username of node author output from theme_username().
+ * - date: Themed creation date field.
+ * - author_name: Themed author name field.
  * - url: Direct URL of the current node.
  * - display_submitted: Whether submission information should be displayed.
  * - attributes: HTML attributes for the containing element.
@@ -90,7 +88,7 @@
     <footer class="node__meta">
       {{ author_picture }}
       <div class="node__submitted {{ author_attributes.class }}"{{ author_attributes|without('class') }}>
-        {% trans %}Submitted by {{ author_name|passthrough }} on {{ date }}{% endtrans %}
+        {% trans %}Submitted by {{ author_name|passthrough }} on {{ date|passthrough }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>

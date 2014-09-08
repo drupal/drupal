@@ -57,9 +57,9 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertTrue($node, 'Node found in database.');
 
     // Verify that pages do not show submitted information by default.
-    $submitted_by = t('Submitted by !username on !datetime', array('!username' => $this->loggedInUser->getUsername(), '!datetime' => format_date($node->getCreatedTime())));
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($submitted_by);
+    $this->assertNoText($node->getOwner()->getUsername());
+    $this->assertNoText(format_date($node->getCreatedTime()));
 
     // Change the node type setting to show submitted by information.
     $node_type = entity_load('node_type', 'page');
@@ -67,7 +67,8 @@ class NodeCreationTest extends NodeTestBase {
     $node_type->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($submitted_by);
+    $this->assertText($node->getOwner()->getUsername());
+    $this->assertText(format_date($node->getCreatedTime()));
   }
 
   /**
@@ -149,7 +150,7 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid" and contains(@data-autocomplete-path, "user/autocomplete")]');
+    $result = $this->xpath('//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
     $this->assertEqual(count($result), 0, 'No autocompletion without access user profiles.');
 
     $admin_user = $this->drupalCreateUser(array('administer nodes', 'create page content', 'access user profiles'));
@@ -157,7 +158,7 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid" and contains(@data-autocomplete-path, "user/autocomplete")]');
+    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference/autocomplete/tags/uid/node/page")]');
     $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
   }
 

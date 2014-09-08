@@ -76,12 +76,6 @@ class NodeViewBuilder extends EntityViewBuilder {
     if (isset($defaults['#cache']) && isset($entity->in_preview)) {
       unset($defaults['#cache']);
     }
-    else {
-      // The node 'submitted' info is not rendered in a standard way (renderable
-      // array) so we have to add a cache tag manually.
-      // @todo Delete this once https://drupal.org/node/2226493 lands.
-      $defaults['#cache']['tags']['user'][] = $entity->getOwnerId();
-    }
 
     return $defaults;
   }

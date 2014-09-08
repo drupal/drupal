@@ -108,21 +108,20 @@ class PageEditTest extends NodeTestBase {
 
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
-      'uid' => 'invalid-name',
+      'uid[0][target_id]' => 'invalid-name',
     );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $this->assertText('The username invalid-name does not exist.');
+    $this->assertRaw(t('There are no entities matching "%name".', array('%name' => 'invalid-name')));
 
-    // Change the authored by field to an empty string, which should assign
-    // authorship to the anonymous user (uid 0).
-    $edit['uid'] = '';
+    // Change the authored by field to the anonymous user (uid 0).
+    $edit['uid[0][target_id]'] = 'Anonymous (0)';
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
     $this->assertIdentical($node->getOwnerId(), '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
-    $edit['uid'] = $this->web_user->getUsername();
+    $edit['uid[0][target_id]'] = $this->web_user->getUsername();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
     $this->assertIdentical($node->getOwnerId(), $this->web_user->id(), 'Node authored by normal user.');
@@ -130,6 +129,6 @@ class PageEditTest extends NodeTestBase {
     // Check that normal users cannot change the authored by information.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldByName('uid');
+    $this->assertNoFieldByName('uid[0][target_id]');
   }
 }

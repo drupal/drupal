@@ -7,15 +7,14 @@
 
 namespace Drupal\node;
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Form controller for the node edit forms.
@@ -65,12 +64,11 @@ class NodeForm extends ContentEntityForm {
   protected function prepareEntity() {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
-    // Set up default values, if required.
-    $type = entity_load('node_type', $node->bundle());
+    // Make node type settings easily accessible.
+    $type = $node->type->entity;
     $this->settings = $type->getModuleSettings('node');
 
     if (!$node->isNew()) {
-      $node->date = format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O');
       // Remove the revision log message from the original node entity.
       $node->revision_log = NULL;
     }
@@ -80,8 +78,8 @@ class NodeForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-
-    // Try to restore from temp store.
+    // Try to restore from temp store, this must be done before calling
+    // parent::form().
     $uuid = $this->entity->uuid();
     $store = $this->tempStoreFactory->get('node_preview');
 
@@ -106,13 +104,12 @@ class NodeForm extends ContentEntityForm {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label()));
     }
 
-    $current_user = \Drupal::currentUser();
-    $user_config = \Drupal::config('user.settings');
+    $current_user = $this->currentUser();
 
     // Override the default CSS class name, since the user-defined node type
     // name in 'TYPE-node-form' potentially clashes with third-party class
     // names.
-    $form['#attributes']['class'][0] = drupal_html_class('node-' . $node->getType() . '-form');
+    $form['#attributes']['class'][0] = Html::getClass('node-' . $node->getType() . '-form');
 
     // Changed must be sent to the client, for later overwrite error checking.
     $form['changed'] = array(
@@ -134,8 +131,9 @@ class NodeForm extends ContentEntityForm {
       '#attributes' => array('class' => array('entity-meta')),
       '#weight' => 99,
     );
+    $form = parent::form($form, $form_state);
 
-    // Add a revision log field if the "Create new revision" option is checked,
+    // Add a revision_log field if the "Create new revision" option is checked,
     // or if the current user has the ability to check that option.
     $form['revision_information'] = array(
       '#type' => 'details',
@@ -157,23 +155,17 @@ class NodeForm extends ContentEntityForm {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => !empty($this->settings['options']['revision']),
-      '#access' => $node->isNewRevision() || $current_user->hasPermission('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes'),
       '#group' => 'revision_information',
     );
 
-    $form['revision_log'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Revision log message'),
-      '#rows' => 4,
-      '#default_value' => !empty($node->revision_log->value) ? $node->revision_log->value : '',
-      '#description' => t('Briefly describe the changes you have made.'),
+    $form['revision_log'] += array(
       '#states' => array(
         'visible' => array(
           ':input[name="revision"]' => array('checked' => TRUE),
         ),
       ),
       '#group' => 'revision_information',
-      '#access' => $node->isNewRevision() || $current_user->hasPermission('administer nodes'),
     );
 
     // Node author information for administrators.
@@ -186,37 +178,18 @@ class NodeForm extends ContentEntityForm {
       ),
       '#attached' => array(
         'library' => array('node/drupal.node'),
-        'js' => array(
-          array(
-            'type' => 'setting',
-            'data' => array('anonymous' => $user_config->get('anonymous')),
-          ),
-        ),
       ),
       '#weight' => 90,
       '#optional' => TRUE,
     );
 
-    $form['uid'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Authored by'),
-      '#maxlength' => 60,
-      '#autocomplete_route_name' => 'user.autocomplete',
-      '#default_value' => $node->getOwnerId()? $node->getOwner()->getUsername() : '',
-      '#weight' => -1,
-      '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
-      '#group' => 'author',
-      '#access' => $current_user->hasPermission('administer nodes'),
-    );
-    $form['created'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Authored on'),
-      '#maxlength' => 25,
-      '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->getCreatedTime(), 'custom', 'O'))),
-      '#default_value' => !empty($node->date) ? $node->date : '',
-      '#group' => 'author',
-      '#access' => $current_user->hasPermission('administer nodes'),
-    );
+    if (isset($form['uid'])) {
+      $form['uid']['#group'] = 'author';
+    }
+
+    if (isset($form['created'])) {
+      $form['created']['#group'] = 'author';
+    }
 
     // Node options for administrators.
     $form['options'] = array(
@@ -233,23 +206,15 @@ class NodeForm extends ContentEntityForm {
       '#optional' => TRUE,
     );
 
-    $form['promote'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Promoted to front page'),
-      '#default_value' => $node->isPromoted(),
-      '#group' => 'options',
-      '#access' => $current_user->hasPermission('administer nodes'),
-    );
+    if (isset($form['promote'])) {
+      $form['promote']['#group'] = 'options';
+    }
 
-    $form['sticky'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Sticky at top of lists'),
-      '#default_value' => $node->isSticky(),
-      '#group' => 'options',
-      '#access' => $current_user->hasPermission('administer nodes'),
-    );
+    if (isset($form['sticky'])) {
+      $form['sticky']['#group'] = 'options';
+    }
 
-    return parent::form($form, $form_state, $node);
+    return $form;
   }
 
   /**
@@ -336,21 +301,6 @@ class NodeForm extends ContentEntityForm {
 
     if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->getChangedTime())) {
       $form_state->setErrorByName('changed', $this->t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
-    }
-
-    // Validate the "authored by" field.
-    if (!$form_state->isValueEmpty('uid') && !user_load_by_name($form_state->getValue('uid'))) {
-      // The use of empty() is mandatory in the context of usernames
-      // as the empty string denotes the anonymous user. In case we
-      // are dealing with an anonymous user we set the user ID to 0.
-      $form_state->setErrorByName('uid', $this->t('The username %name does not exist.', array('%name' => $form_state->getValue('uid'))));
-    }
-
-    // Validate the "authored on" field.
-    // The date element contains the date object.
-    $date = $node->date instanceof DrupalDateTime ? $node->date : new DrupalDateTime($node->date);
-    if ($date->hasErrors()) {
-      $form_state->setErrorByName('date', $this->t('You have to specify a valid date.'));
     }
 
     // Invoke hook_node_validate() for validation needed by modules.
@@ -449,18 +399,12 @@ class NodeForm extends ContentEntityForm {
     $entity = parent::buildEntity($form, $form_state);
     // A user might assign the node author by entering a user name in the node
     // form, which we then need to translate to a user ID.
-    if (!$form_state->isValueEmpty('uid') && $account = user_load_by_name($form_state->getValue('uid'))) {
+    // @todo: Remove it when https://www.drupal.org/node/2322525 is pushed.
+    if (!empty($form_state->getValue('uid')[0]['target_id']) && $account = User::load($form_state->getValue('uid')[0]['target_id'])) {
       $entity->setOwnerId($account->id());
     }
     else {
       $entity->setOwnerId(0);
-    }
-
-    if (!$form_state->isValueEmpty('created') && $form_state->getValue('created') instanceOf DrupalDateTime) {
-      $entity->setCreatedTime($form_state->getValue('created')->getTimestamp());
-    }
-    else {
-      $entity->setCreatedTime(REQUEST_TIME);
     }
     return $entity;
   }

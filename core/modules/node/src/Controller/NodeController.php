@@ -91,11 +91,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   A node submission form.
    */
   public function add(NodeTypeInterface $node_type) {
-    $account = $this->currentUser();
-
     $node = $this->entityManager()->getStorage('node')->create(array(
-      'uid' => $account->id(),
-      'name' => $account->getUsername() ?: '',
       'type' => $node_type->type,
     ));
 

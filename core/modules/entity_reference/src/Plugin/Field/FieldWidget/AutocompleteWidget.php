@@ -73,7 +73,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
       elseif (preg_match("/.+\(([\w.]+)\)/", $element['#value'], $matches)) {
         $value = $matches[1];
       }
-      if (!$value) {
+      if ($value === NULL) {
         // Try to get a match from the input string when the user didn't use the
         // autocomplete but filled in a value manually.
         $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($this->fieldDefinition);

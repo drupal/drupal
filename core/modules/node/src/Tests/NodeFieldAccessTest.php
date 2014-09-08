@@ -8,6 +8,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -35,7 +36,6 @@ class NodeFieldAccessTest extends EntityUnitTestBase {
     'sticky',
     'created',
     'uid',
-    'revision_log',
   );
 
   /**
@@ -49,6 +49,32 @@ class NodeFieldAccessTest extends EntityUnitTestBase {
    * Test permissions on nodes status field.
    */
   function testAccessToAdministrativeFields() {
+
+    // Create the page node type with revisions disabled.
+    $page = NodeType::create([
+      'type' => 'page',
+      'settings' => array(
+        'node' => array(
+          'options' => array(
+            'revision' => FALSE,
+          ),
+        ),
+      ),
+    ]);
+    $page->save();
+
+    // Create the article node type with revisions disabled.
+    $article = NodeType::create([
+      'type' => 'article',
+      'settings' => array(
+        'node' => array(
+          'options' => array(
+            'revision' => TRUE,
+          ),
+        ),
+      ),
+    ]);
+    $article->save();
 
     // An administrator user. No user exists yet, ensure that the first user
     // does not have UID 1.
@@ -79,7 +105,7 @@ class NodeFieldAccessTest extends EntityUnitTestBase {
     $node2 = Node::create(array(
       'title' => $this->randomMachineName(8),
       'uid' => $page_manager_user->id(),
-      'type' => 'page',
+      'type' => 'article',
     ));
     $node3 = Node::create(array(
       'title' => $this->randomMachineName(8),
@@ -122,6 +148,18 @@ class NodeFieldAccessTest extends EntityUnitTestBase {
         $this->assertFalse($may_view, String::format('No user is not allowed to edit the field @name.', array('@name' => $field)));
       }
     }
+
+    // Check the revision_log field on node 1 which has revisions disabled.
+    $may_update = $node1->revision_log->access('edit', $content_admin_user);
+    $this->assertTrue($may_update, 'A user with permission "administer nodes" can edit the revision_log field when revisions are disabled.');
+    $may_update = $node1->revision_log->access('edit', $page_creator_user);
+    $this->assertFalse($may_update, 'A user without permission "administer nodes" can not edit the revision_log field when revisions are disabled.');
+
+    // Check the revision_log field on node 2 which has revisions enabled.
+    $may_update = $node2->revision_log->access('edit', $content_admin_user);
+    $this->assertTrue($may_update, 'A user with permission "administer nodes" can edit the revision_log field when revisions are enabled.');
+    $may_update = $node2->revision_log->access('edit', $page_creator_user);
+    $this->assertTrue($may_update, 'A user without permission "administer nodes" can edit the revision_log field when revisions are enabled.');
   }
 
 }

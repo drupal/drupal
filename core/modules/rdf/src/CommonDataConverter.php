@@ -20,7 +20,21 @@ class CommonDataConverter {
    * @return mixed
    *   Returns the data.
    */
-  static function rawValue($data) {
+  public static function rawValue($data) {
     return $data;
   }
+
+  /**
+   * Converts a date entity field array into an ISO 8601 timestamp string.
+   *
+   * @param array $data
+   *   The array containing the 'value' element.
+   *
+   * @return string
+   *   Returns the ISO 8601 timestamp.
+   */
+  public static function dateIso8601Value($data) {
+    return date_iso8601($data['value']);
+  }
+
 }

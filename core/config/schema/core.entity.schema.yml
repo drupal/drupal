@@ -137,3 +137,23 @@ entity_form_display.field.string:
         placeholder:
           type: label
           label: 'Placeholder'
+
+entity_form_display.field.datetime_timestamp:
+  type: entity_field_form_display_base
+  label: 'Datetime timestamp display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.boolean_checkbox:
+  type: entity_field_form_display_base
+  label: 'Boolean checkbox display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string

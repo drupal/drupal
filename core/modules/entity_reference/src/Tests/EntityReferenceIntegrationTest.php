@@ -59,6 +59,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    * Tests the entity reference field with all its supported field widgets.
    */
   public function testSupportedEntityTypesAndWidgets() {
+    $user_id = mt_rand(128, 256);
     foreach ($this->getTestEntities() as $referenced_entities) {
       $this->fieldName = 'field_test_' . $referenced_entities[0]->getEntityTypeId();
 
@@ -68,10 +69,15 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Test the default 'entity_reference_autocomplete' widget.
       entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName)->save();
 
+      $user_id++;
+      entity_create('user', array(
+        'uid' => $user_id,
+        'name' => $this->randomString(),
+      ))->save();
       $entity_name = $this->randomMachineName();
       $edit = array(
         'name' => $entity_name,
-        'user_id' => mt_rand(0, 128),
+        'user_id' => $user_id,
         $this->fieldName . '[0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
         // Test an input of the entity label without a ' (entity_id)' suffix.
         $this->fieldName . '[1][target_id]' => $referenced_entities[1]->label(),
@@ -94,9 +100,14 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       $target_id = $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')';
       // Test an input of the entity label without a ' (entity_id)' suffix.
       $target_id .= ', ' . $referenced_entities[1]->label();
+      $user_id++;
+      entity_create('user', array(
+        'uid' => $user_id,
+        'name' => $this->randomString(),
+      ))->save();
       $edit = array(
         'name' => $entity_name,
-        'user_id' => mt_rand(0, 128),
+        'user_id' => $user_id,
         $this->fieldName . '[target_id]' => $target_id,
       );
       $this->drupalPostForm($this->entityType . '/add', $edit, t('Save'));
@@ -111,9 +122,11 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Test all the other widgets supported by the entity reference field.
       // Since we don't know the form structure for these widgets, just test
       // that editing and saving an already created entity works.
+      // Also exclude the special author reference widgets.
+      $exclude = array('entity_reference_autocomplete', 'entity_reference_autocomplete_tags', 'route_based_autocomplete', 'author_autocomplete');
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
       $supported_widgets = \Drupal::service('plugin.manager.field.widget')->getOptions('entity_reference');
-      $supported_widget_types = array_diff(array_keys($supported_widgets), array('entity_reference_autocomplete', 'entity_reference_autocomplete_tags'));
+      $supported_widget_types = array_diff(array_keys($supported_widgets), $exclude);
 
       foreach ($supported_widget_types as $widget_type) {
         entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName, array(

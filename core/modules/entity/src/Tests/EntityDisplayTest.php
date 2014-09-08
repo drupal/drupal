@@ -286,19 +286,23 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual('article_rename', $new_form_display->bundle);
     $this->assertEqual('node.article_rename.default', $new_form_display->id);
 
-    $expected_dependencies = array(
+    $expected_view_dependencies = array(
       'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
-      'module' => array('text')
+      'module' => array('text', 'user')
     );
     // Check that the display has dependencies on the bundle, fields and the
     // modules that provide the formatters.
     $dependencies = $new_display->calculateDependencies();
-    $this->assertEqual($expected_dependencies, $dependencies);
+    $this->assertEqual($expected_view_dependencies, $dependencies);
 
     // Check that the form display has dependencies on the bundle, fields and
     // the modules that provide the formatters.
     $dependencies = $new_form_display->calculateDependencies();
-    $this->assertEqual($expected_dependencies, $dependencies);
+    $expected_form_dependencies = array(
+      'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
+      'module' => array('text')
+    );
+    $this->assertEqual($expected_form_dependencies, $dependencies);
 
     // Delete the bundle.
     $type->delete();

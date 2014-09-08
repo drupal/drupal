@@ -177,6 +177,14 @@ function node_theme() {
       'base hook' => 'field',
       'template' => 'field--node--title',
     ),
+    'field__node__uid' => array(
+      'base hook' => 'field',
+      'template' => 'field--node--uid',
+    ),
+    'field__node__created' => array(
+      'base hook' => 'field',
+      'template' => 'field--node--created',
+    ),
   );
 }
 
@@ -194,15 +202,6 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
         }
       }
     }
-  }
-}
-
-/**
- * Implements hook_entity_form_display_alter().
- */
-function node_entity_form_display_alter(EntityFormDisplayInterface $form_display, $context) {
-  if ($context['entity_type'] == 'node') {
-    $node_type = node_type_load($context['bundle']);
   }
 }
 
@@ -614,14 +613,10 @@ function template_preprocess_node(&$variables) {
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
-
-  $variables['date'] = format_date($node->getCreatedTime());
-  $username = array(
-    '#theme' => 'username',
-    '#account' => $node->getOwner(),
-    '#link_options' => array('attributes' => array('rel' => 'author')),
-  );
-  $variables['author_name'] = drupal_render($username);
+  $variables['date'] = drupal_render($variables['elements']['created'], TRUE);
+  unset($variables['elements']['created']);
+  $variables['author_name'] = drupal_render($variables['elements']['uid'], TRUE);
+  unset($variables['elements']['uid']);
 
   $variables['url'] = $node->url('canonical', array(
     'language' => $node->language(),
