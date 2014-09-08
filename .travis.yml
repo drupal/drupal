@@ -6,7 +6,7 @@ php:
   - 5.4
 
 services:
-  - mysql:tmpfs
+  - mysql-tmpfs
 
 before_script:
   # Repositories.
