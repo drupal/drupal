@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation for Views UI rearrange filter form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ * - grouping: A flag whether or not there is more than one group.
+ * - ungroupable_table: The ungroupable filter table.
+ * - table: The groupable filter table.
+ *
+ * @see template_preprocess_views_ui_rearrange_filter_form()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ form.override }}
+<div class="scroll" data-drupal-views-scroll>
+  {% if grouping %}
+    {{ form.filter_groups.operator }}
+  {% else %}
+    {{ form.filter_groups.groups.0 }}
+  {% endif %}
+  {{ ungroupable_table }}
+  {{ table }}
+</div>
+{{ form|without('override', 'filter_groups', 'remove_groups', 'filters') }}
