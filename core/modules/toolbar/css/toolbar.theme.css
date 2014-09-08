@@ -131,13 +131,6 @@
 .toolbar .toolbar-tray-vertical .menu li:last-child > ul {
   border-bottom: 0;
 }
-.toolbar .toolbar-tray-vertical .menu .menu .menu {
-  margin-left: 1.3333em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .menu .menu .menu {
-  margin-left: 0;
-  margin-right: 1.3333em;
-}
 .toolbar .toolbar-tray-vertical .menu .menu .menu .menu {
   margin-left: 0.25em; /* LTR */
 }
@@ -147,13 +140,6 @@
 }
 .toolbar .menu .menu a {
   color: #434343;
-}
-.toolbar .toolbar-tray-vertical .menu .menu .menu a {
-  padding-left: 0.6667em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .menu .menu .menu a {
-  padding-left: 0;
-  padding-right: 0.5em;
 }
 
 /**

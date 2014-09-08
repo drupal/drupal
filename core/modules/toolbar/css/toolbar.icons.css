@@ -44,19 +44,19 @@
 .toolbar .menu ul a.toolbar-icon:before {
   display: none;
 }
-.toolbar .toolbar-tray-vertical .menu ul {
-  margin-left: 1.5em; /* LTR */
+.toolbar .toolbar-tray-vertical .menu ul a {
+  padding-left: 2.75em; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul {
-  margin-left: 0;
-  margin-right: 1.5em;
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul a {
+  padding-left: 0;
+  padding-right: 2.75em;
 }
-.toolbar .toolbar-tray-vertical .menu ul ul {
-  margin-left: 0.75em; /* LTR */
+.toolbar .toolbar-tray-vertical .menu ul ul a {
+  padding-left: 3.75em; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul ul {
-  margin-left: 0;
-  margin-right: 0.75em;
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul ul a {
+  padding-left: 0;
+  padding-right: 3.75em;
 }
 
 /**
@@ -183,6 +183,48 @@
     right: 0.6667em;
   }
 }
+
+/**
+ *  Accessibility/focus
+ */
+.toolbar-tab a {
+  border-left: 2px solid transparent; /* LTR */
+}
+[dir="rtl"] .toolbar-tab a {
+  border-left: none;
+  border-right: 2px solid transparent;
+}
+.toolbar-tab a:focus {
+  outline: none;
+  border-color: #ddd;
+}
+.toolbar-lining button:focus {
+  outline: none;
+}
+.toolbar-tray-horizontal a,
+.toolbar-box a {
+  border-left: 2px solid transparent; /* LTR */
+}
+[dir="rtl"] .toolbar-tray-horizontal a,
+[dir="rtl"] .toolbar-box a {
+  border-left: none;
+  border-right: 2px solid transparent;
+}
+.toolbar-tray-horizontal a:focus,
+.toolbar-box a:focus {
+  outline: none;
+  border-color: #4479C0;
+  background-color: #f5f5f5;
+  text-decoration: none;
+}
+.toolbar-box a:hover:focus {
+  text-decoration: underline;
+}
+.toolbar .toolbar-icon.toolbar-handle:focus {
+  outline: none;
+  background-color: #f5f5f5;
+}
+
 
 /**
  * Handle.
