@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\KeyValueStore\KeyValueFactory;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests the key-value database storage.
@@ -17,35 +17,27 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class DatabaseStorageExpirableTest extends StorageTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   protected function setUp() {
     parent::setUp();
     $this->factory = 'keyvalue.expirable';
-    module_load_install('system');
-    $schema = system_schema();
-    db_create_table('key_value_expire', $schema['key_value_expire']);
-    $this->container
-      ->register('database', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('default');
-    $this->container
-      ->register('keyvalue.expirable.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory')
-      ->addArgument(new Reference('serialization.phpserialize'))
-      ->addArgument(new Reference('database'));
-    $this->container
-      ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
-    $parameter = array();
-    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.expirable.database';
-    $this->container->setParameter('factory.keyvalue.expirable', $parameter);
+    $this->installSchema('system', array('key_value_expire'));
   }
 
-  protected function tearDown() {
-    // The DatabaseExpirableStorage class has a destructor which deletes rows
-    // from the key_value_expire table. We need to make sure the destructor
-    // runs before the table is deleted.
-    $this->container->set('keyvalue.expirable', NULL);
-    db_drop_table('key_value_expire');
-    parent::tearDown();
+  /**
+   * {@inheritdoc}
+   */
+  public function containerBuild(ContainerBuilder $container) {
+    parent::containerBuild($container);
+
+    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.expirable.database';
+    $container->setParameter('factory.keyvalue.expirable', $parameter);
   }
 
   /**

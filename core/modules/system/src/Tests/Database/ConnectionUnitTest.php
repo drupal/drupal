@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests management of database connections.
  *
  * @group Database
  */
-class ConnectionUnitTest extends UnitTestBase {
+class ConnectionUnitTest extends KernelTestBase {
 
   protected $key;
   protected $target;
@@ -240,6 +240,12 @@ class ConnectionUnitTest extends UnitTestBase {
     $unserialized_reflection = new \ReflectionObject($unserialized);
     foreach ($db_reflection->getProperties() as $value) {
       $value->setAccessible(TRUE);
+
+      // Skip properties that are lazily populated on access.
+      if ($value->getName() === 'driverClasses' || $value->getName() === 'schema') {
+        continue;
+      }
+
       $unserialized_property = $unserialized_reflection->getProperty($value->getName());
       $unserialized_property->setAccessible(TRUE);
       // For the PDO object, just check the statement class attribute.
@@ -252,7 +258,13 @@ class ConnectionUnitTest extends UnitTestBase {
         $this->assertEqual(get_class($unserialized_statement_class[1][0]), get_class($db_statement_class[1][0]));
       }
       else {
-        $this->assertEqual($unserialized_property->getValue($unserialized), $value->getValue($db));
+        $actual = $unserialized_property->getValue($unserialized);
+        $expected = $value->getValue($db);
+        $this->assertEqual($actual, $expected, vsprintf('Unserialized Connection property %s value %s is equal to expected %s', array(
+          var_export($value->getName(), TRUE),
+          is_object($actual) ? print_r($actual, TRUE) : var_export($actual, TRUE),
+          is_object($expected) ? print_r($expected, TRUE) : var_export($expected, TRUE),
+        )));
       }
     }
 

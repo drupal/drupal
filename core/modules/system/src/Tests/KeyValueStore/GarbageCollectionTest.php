@@ -10,26 +10,27 @@ namespace Drupal\system\Tests\KeyValueStore;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests garbage collection for the the expirable key-value database storage.
  *
  * @group KeyValueStore
  */
-class GarbageCollectionTest extends UnitTestBase {
+class GarbageCollectionTest extends KernelTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
 
   protected function setUp() {
     parent::setUp();
-    module_load_install('system');
-    $schema = system_schema();
-    db_create_table('key_value_expire', $schema['key_value_expire']);
+    $this->installSchema('system', array('key_value_expire'));
   }
 
-  protected function tearDown() {
-    db_drop_table('key_value_expire');
-    parent::tearDown();
-  }
 
   /**
    * Tests garbage collection.

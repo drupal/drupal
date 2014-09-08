@@ -7,14 +7,12 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
-use Drupal\simpletest\UnitTestBase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for testing key-value storages.
  */
-abstract class StorageTestBase extends UnitTestBase {
+abstract class StorageTestBase extends KernelTestBase {
 
   /**
    * An array of random stdClass objects.
@@ -37,32 +35,9 @@ abstract class StorageTestBase extends UnitTestBase {
    */
   protected $factory = 'keyvalue';
 
-  /**
-   * A container for the services needed in these tests.
-   *
-   * @var ContainerBuilder
-   */
-  protected $container;
-
   protected function setUp() {
     parent::setUp();
 
-    $this->container = new ContainerBuilder();
-    $this->container
-      ->register('service_container', 'Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setSynthetic(TRUE);
-    $this->container->set('service_container', $this->container);
-    $this->container->register('settings', 'Drupal\Core\Site\Settings')
-      ->setFactoryClass('Drupal\Core\Site\Settings')
-      ->setFactoryMethod('getInstance');
-    $this->container
-      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument('%factory.keyvalue%');
-    $this->container
-      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument('%factory.keyvalue.expirable%');
     // Define two data collections,
     $this->collections = array(0 => 'zero', 1 => 'one');
 

@@ -9,14 +9,15 @@ namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Database;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests exceptions thrown by queries.
  *
  * @group Database
  */
-class DatabaseExceptionWrapperTest extends UnitTestBase {
+class DatabaseExceptionWrapperTest extends KernelTestBase {
+
   function testDatabaseExceptionWrapper() {
     $connection = Database::getConnection();
     $query = $connection->prepare('bananas');

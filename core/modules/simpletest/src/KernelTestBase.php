@@ -170,8 +170,12 @@ abstract class KernelTestBase extends UnitTestBase {
     $this->container = $this->kernel->getContainer();
     $this->container->get('request_stack')->push($request);
 
-    $this->container->get('state')->set('system.module.files', $this->moduleFiles);
-    $this->container->get('state')->set('system.theme.files', $this->themeFiles);
+    // Re-inject extension file listings into state, unless the key/value
+    // service was overridden (in which case its storage does not exist yet).
+    if ($this->container->get('keyvalue') instanceof KeyValueMemoryFactory) {
+      $this->container->get('state')->set('system.module.files', $this->moduleFiles);
+      $this->container->get('state')->set('system.theme.files', $this->themeFiles);
+    }
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing

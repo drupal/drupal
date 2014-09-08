@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\Bootstrap;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that drupal_static() and drupal_static_reset() work.
  *
  * @group Bootstrap
  */
-class ResettableStaticUnitTest extends UnitTestBase {
+class ResettableStaticUnitTest extends KernelTestBase {
 
   /**
    * Tests drupal_static() function.

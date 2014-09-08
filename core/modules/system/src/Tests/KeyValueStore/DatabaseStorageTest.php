@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\KeyValueStore\KeyValueFactory;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests the key-value database storage.
@@ -17,30 +17,26 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class DatabaseStorageTest extends StorageTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   protected function setUp() {
     parent::setUp();
-    module_load_install('system');
-    $schema = system_schema();
-    db_create_table('key_value', $schema['key_value']);
-    $this->container
-      ->register('database', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('default');
-    $this->container
-      ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
-      ->addArgument(new Reference('serialization.phpserialize'))
-      ->addArgument(new Reference('database'));
-    $this->container
-      ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
-    $parameter = array();
-    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.database';
-    $this->container->setParameter('factory.keyvalue', $parameter);
+    $this->installSchema('system', array('key_value'));
   }
 
-  protected function tearDown() {
-    db_drop_table('key_value');
-    parent::tearDown();
+  /**
+   * {@inheritdoc}
+   */
+  public function containerBuild(ContainerBuilder $container) {
+    parent::containerBuild($container);
+
+    $parameter[KeyValueFactory::DEFAULT_SETTING] = 'keyvalue.database';
+    $container->setParameter('factory.keyvalue', $parameter);
   }
 
 }

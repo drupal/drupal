@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\System;
 use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber;
 use Drupal\Core\DrupalKernel;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * @group system
  */
-class IgnoreReplicaSubscriberTest extends UnitTestBase {
+class IgnoreReplicaSubscriberTest extends KernelTestBase {
 
   /**
    * Tests \Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber::checkReplicaServer().

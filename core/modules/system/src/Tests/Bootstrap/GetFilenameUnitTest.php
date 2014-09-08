@@ -7,14 +7,20 @@
 
 namespace Drupal\system\Tests\Bootstrap;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that drupal_get_filename() works correctly.
  *
  * @group Bootstrap
  */
-class GetFilenameUnitTest extends UnitTestBase {
+class GetFilenameUnitTest extends KernelTestBase {
+
+  protected function setUp() {
+    parent::setUp();
+    $this->container = NULL;
+    \Drupal::setContainer(NULL);
+  }
 
   /**
    * Tests that drupal_get_filename() works when the file is not in database.
@@ -25,9 +31,10 @@ class GetFilenameUnitTest extends UnitTestBase {
     global $install_state;
     $install_state['parameters']['profile'] = 'testing';
 
-    // Assert that the test is meaningful by making sure the keyvalue service
-    // does not exist.
-    $this->assertFalse(\Drupal::hasService('keyvalue'), 'The container has no keyvalue service.');
+    // Assert that this test is meaningful.
+    $this->assertNull($this->container);
+    $this->assertNull(\Drupal::getContainer());
+
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'system'), 'core/modules/system/system.info.yml');
 

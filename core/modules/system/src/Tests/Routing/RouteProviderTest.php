@@ -9,13 +9,12 @@ namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\State\State;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-
-use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
@@ -27,7 +26,7 @@ use Drupal\Tests\Core\Routing\NullRouteBuilder;
  *
  * @group Routing
  */
-class RouteProviderTest extends UnitTestBase {
+class RouteProviderTest extends KernelTestBase {
 
   /**
    * A collection of shared fixture data for tests.
