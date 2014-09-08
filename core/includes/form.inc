@@ -97,18 +97,6 @@ function form_get_errors(FormStateInterface $form_state) {
 }
 
 /**
- * Returns the error message filed against the given form element.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use $form_state->getError().
- *
- * @see \Drupal\Core\Form\FormStateInterface::getError().
- */
-function form_get_error($element, FormStateInterface $form_state) {
-  return $form_state->getError($element);
-}
-
-/**
  * Flags an element as having an error.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
