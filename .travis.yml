@@ -6,6 +6,7 @@ php:
   - 5.4
 
 services:
+  # Thinking we could just make this "mysql" instead.
   - mysql-tmpfs
 
 before_script:
@@ -49,11 +50,11 @@ before_script:
   - sudo service apache2 restart
 
   # Mysql.
-  - mysql -uroot -proot -hmysql -e 'SET GLOBAL wait_timeout = 5400;'
-  - mysql -uroot -proot -hmysql -e 'SET GLOBAL innodb_fast_shutdown=0;'
-  - mysql -uroot -proot -hmysql -e 'CREATE DATABASE drupal;'
-  - mysql -uroot -proot -hmysql -e 'GRANT ALL PRIVILEGES ON drupal.* TO "drupal"@"%" IDENTIFIED BY "drupal";'
-  - mysql -uroot -proot -hmysql -e 'FLUSH PRIVILEGES;'
+  - mysql -uroot -proot -hmysql-tmpfs -e 'SET GLOBAL wait_timeout = 5400;'
+  - mysql -uroot -proot -hmysql-tmpfs -e 'SET GLOBAL innodb_fast_shutdown=0;'
+  - mysql -uroot -proot -hmysql-tmpfs -e 'CREATE DATABASE drupal;'
+  - mysql -uroot -proot -hmysql-tmpfs -e 'GRANT ALL PRIVILEGES ON drupal.* TO "drupal"@"%" IDENTIFIED BY "drupal";'
+  - mysql -uroot -proot -hmysql-tmpfs -e 'FLUSH PRIVILEGES;'
 
 script:
-  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql/drupal --all
+  - php core/scripts/run-tests.sh --keep-results --color --concurrency 4 --php `which php` --url http://localhost/ --sqlite build/test.sqlite --dburl mysql://drupal:drupal@mysql-tmpfs/drupal --all
