@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -466,7 +466,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', 'Foreign key column name modified after update');
 
     // Verify the SQL schema.
-    $schemas = ContentEntityDatabaseStorage::_fieldSqlSchema($field_storage);
+    $schemas = SqlContentEntityStorage::_fieldSqlSchema($field_storage);
     $schema = $schemas[$this->table_mapping->getDedicatedDataTableName($field_storage)];
     $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema');
     $foreign_key = reset($schema['foreign keys']);

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -63,7 +63,7 @@ function field_views_data_alter(&$data) {
  * @param \Drupal\field\FieldStorageConfigInterface $field_storage
  *   The field storage definition.
  *
- * @return \Drupal\Core\Entity\ContentEntityDatabaseStorage
+ * @return \Drupal\Core\Entity\Sql\SqlContentEntityStorage
  *   Returns the entity type storage if supported.
  */
 function _field_views_get_entity_type_storage(FieldStorageConfigInterface $field_storage) {
@@ -71,7 +71,7 @@ function _field_views_get_entity_type_storage(FieldStorageConfigInterface $field
   $entity_manager = \Drupal::entityManager();
   if ($entity_manager->hasDefinition($field_storage->getTargetEntityTypeId())) {
     $storage = $entity_manager->getStorage($field_storage->getTargetEntityTypeId());
-    $result = $storage instanceof ContentEntityDatabaseStorage ? $storage : FALSE;
+    $result = $storage instanceof SqlContentEntityStorage ? $storage : FALSE;
   }
   return $result;
 }

@@ -7,14 +7,14 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * Defines a Controller class for taxonomy terms.
  */
-class TermStorage extends ContentEntityDatabaseStorage implements TermStorageInterface {
+class TermStorage extends SqlContentEntityStorage implements TermStorageInterface {
 
   /**
    * {@inheritdoc}

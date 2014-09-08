@@ -33,7 +33,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
   /**
    * The storage for the test entity type.
    *
-   * @var \Drupal\Core\Entity\ContentEntityDatabaseStorage
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage
    */
   public $storage;
 

@@ -160,7 +160,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    * Test entity cache.
    *
    * Complements unit test coverage in
-   * \Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTest.
+   * \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.
    */
   function testEntityCache() {
     // Initialize random values and a test entity.

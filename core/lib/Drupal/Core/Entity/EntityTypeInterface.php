@@ -535,7 +535,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's base table.
    *
-   * @todo Used by ContentEntityDatabaseStorage only.
+   * @todo Used by SqlContentEntityStorage only.
    *
    * @return string|null
    *   The name of the entity's base table, or NULL if none exists.
@@ -572,7 +572,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's revision data table.
    *
-   * @todo Used by ContentEntityDatabaseStorage only.
+   * @todo Used by SqlContentEntityStorage only.
    *
    * @return string|null
    *   The name of the entity type's revision data table, or NULL if none
@@ -583,7 +583,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's revision table.
    *
-   * @todo Used by ContentEntityDatabaseStorage only.
+   * @todo Used by SqlContentEntityStorage only.
    *
    * @return string|null
    *   The name of the entity type's revision table, or NULL if none exists.
@@ -593,7 +593,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's data table.
    *
-   * @todo Used by ContentEntityDatabaseStorage only.
+   * @todo Used by SqlContentEntityStorage only.
    *
    * @return string|null
    *   The name of the entity type's data table, or NULL if none exists.

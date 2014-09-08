@@ -21,7 +21,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *   id = "menu_link_content",
  *   label = @Translation("Custom menu link"),
  *   handlers = {
- *     "storage" = "Drupal\Core\Entity\ContentEntityDatabaseStorage",
+ *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
  *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",

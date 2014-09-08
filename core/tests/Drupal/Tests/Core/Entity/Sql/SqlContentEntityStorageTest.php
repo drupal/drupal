@@ -2,31 +2,31 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTest.
+ * Contains \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.
  */
 
-namespace Drupal\Tests\Core\Entity;
+namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\ContentEntityDatabaseStorage
+ * @coversDefaultClass \Drupal\Core\Entity\Sql\SqlContentEntityStorage
  * @group Entity
  */
-class ContentEntityDatabaseStorageTest extends UnitTestCase {
+class SqlContentEntityStorageTest extends UnitTestCase {
 
   /**
    * The content entity database storage used in this test.
    *
-   * @var \Drupal\Core\Entity\ContentEntityDatabaseStorage|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityStorage;
 
@@ -107,13 +107,13 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests ContentEntityDatabaseStorage::getBaseTable().
+   * Tests SqlContentEntityStorage::getBaseTable().
    *
    * @param string $base_table
    *   The base table to be returned by the mocked entity type.
    * @param string $expected
    *   The expected return value of
-   *   ContentEntityDatabaseStorage::getBaseTable().
+   *   SqlContentEntityStorage::getBaseTable().
    *
    * @covers ::__construct()
    * @covers ::getBaseTable()
@@ -136,7 +136,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    * @return array[]
    *   An nested array where each inner array has the base table to be returned
    *   by the mocked entity type as the first value and the expected return
-   *   value of ContentEntityDatabaseStorage::getBaseTable() as the second
+   *   value of SqlContentEntityStorage::getBaseTable() as the second
    *   value.
    */
   public function providerTestGetBaseTable() {
@@ -149,13 +149,13 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests ContentEntityDatabaseStorage::getRevisionTable().
+   * Tests SqlContentEntityStorage::getRevisionTable().
    *
    * @param string $revision_table
    *   The revision table to be returned by the mocked entity type.
    * @param string $expected
    *   The expected return value of
-   *   ContentEntityDatabaseStorage::getRevisionTable().
+   *   SqlContentEntityStorage::getRevisionTable().
    *
    * @cover ::__construct()
    * @covers ::getRevisionTable()
@@ -181,7 +181,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    * @return array[]
    *   An nested array where each inner array has the revision table to be
    *   returned by the mocked entity type as the first value and the expected
-   *   return value of ContentEntityDatabaseStorage::getRevisionTable() as the
+   *   return value of SqlContentEntityStorage::getRevisionTable() as the
    *   second value.
    */
   public function providerTestGetRevisionTable() {
@@ -195,7 +195,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests ContentEntityDatabaseStorage::getDataTable().
+   * Tests SqlContentEntityStorage::getDataTable().
    *
    * @cover ::__construct()
    * @covers ::getDataTable()
@@ -214,13 +214,13 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests ContentEntityDatabaseStorage::getRevisionDataTable().
+   * Tests SqlContentEntityStorage::getRevisionDataTable().
    *
    * @param string $revision_data_table
    *   The revision data table to be returned by the mocked entity type.
    * @param string $expected
    *   The expected return value of
-   *   ContentEntityDatabaseStorage::getRevisionDataTable().
+   *   SqlContentEntityStorage::getRevisionDataTable().
    *
    * @cover ::__construct()
    * @covers ::getRevisionDataTable()
@@ -253,7 +253,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    * @return array[]
    *   An nested array where each inner array has the revision data table to be
    *   returned by the mocked entity type as the first value and the expected
-   *   return value of ContentEntityDatabaseStorage::getRevisionDataTable() as
+   *   return value of SqlContentEntityStorage::getRevisionDataTable() as
    *   the second value.
    */
   public function providerTestGetRevisionDataTable() {
@@ -336,7 +336,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('schema')
       ->will($this->returnValue($schema_handler));
 
-    $storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+    $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
       ->setMethods(array('schemaHandler'))
       ->getMock();
@@ -991,7 +991,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getSchema')
       ->will($this->returnValue($field_schema));
 
-    $schema = ContentEntityDatabaseStorage::_fieldSqlSchema($field_storage);
+    $schema = SqlContentEntityStorage::_fieldSqlSchema($field_storage);
 
     // Make sure that the entity_id schema field if of type varchar.
     $this->assertEquals($schema['test_entity__test_field']['fields']['entity_id']['type'], 'varchar');
@@ -1110,7 +1110,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new ContentEntityDatabaseStorage($this->entityType, $this->connection, $this->entityManager, $this->cache);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache);
   }
 
   /**
@@ -1123,7 +1123,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
     $key = 'values:' . $this->entityTypeId . ':1';
     $id = 1;
-    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTestEntityInterface')
       ->getMockForAbstractClass();
     $entity->expects($this->any())
       ->method('id')
@@ -1163,7 +1163,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
-    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTestEntityInterface')
       ->getMockForAbstractClass();
     $entity->expects($this->any())
       ->method('id')
@@ -1186,7 +1186,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->cache->expects($this->never())
       ->method('set');
 
-    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
       ->setMethods(array('getFromStorage'))
       ->getMock();
@@ -1209,7 +1209,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
-    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTestEntityInterface')
       ->getMockForAbstractClass();
     $entity->expects($this->any())
       ->method('id')
@@ -1236,7 +1236,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('set')
       ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, array($this->entityTypeId . '_values' => TRUE, 'entity_field_info' => TRUE));
 
-    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
       ->setMethods(array('getFromStorage'))
       ->getMock();
@@ -1269,7 +1269,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
  * Provides an entity with dummy implementations of static methods, because
  * those cannot be mocked.
  */
-abstract class ContentEntityDatabaseStorageTestEntityInterface implements EntityInterface {
+abstract class SqlContentEntityStorageTestEntityInterface implements EntityInterface {
 
   /**
    * {@inheritdoc}

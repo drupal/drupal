@@ -19,7 +19,7 @@ use Drupal\Core\Render\Element;
  * entity storage classes; see the
  * @link entity_api Entity API topic @endlink for more information. Most
  * entities use or extend the default classes:
- * \Drupal\Core\Entity\ContentEntityDatabaseStorage for content entities, and
+ * \Drupal\Core\Entity\Sql\SqlContentEntityStorage for content entities, and
  * \Drupal\Core\Config\Entity\ConfigEntityStorage for configuration entities.
  * For these entities, there is a set of hooks that is invoked for each
  * CRUD operation, which module developers can implement to affect these
@@ -306,7 +306,7 @@ use Drupal\Core\Render\Element;
  *     checkAccess() and checkCreateAccess() methods, not access().
  *   - storage: A class implementing
  *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
- *     entities will use \Drupal\Core\Entity\ContentEntityDatabaseStorage, and
+ *     entities will use \Drupal\Core\Entity\Sql\SqlContentEntityStorage, and
  *     config entities will use \Drupal\Core\Config\Entity\ConfigEntityStorage.
  *     You can extend one of these classes to provide custom behavior.
  *   - views_data: A class implementing \Drupal\views\EntityViewsDataInterface

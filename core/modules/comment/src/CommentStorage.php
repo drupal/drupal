@@ -9,21 +9,21 @@ namespace Drupal\comment;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the controller class for comments.
  *
- * This extends the Drupal\Core\Entity\ContentEntityDatabaseStorage class,
+ * This extends the Drupal\Core\Entity\Sql\SqlContentEntityStorage class,
  * adding required special handling for comment entities.
  */
-class CommentStorage extends ContentEntityDatabaseStorage implements CommentStorageInterface {
+class CommentStorage extends SqlContentEntityStorage implements CommentStorageInterface {
 
   /**
    * The current user.

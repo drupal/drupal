@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema.
+ * Contains \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema.
  */
 
-namespace Drupal\Core\Entity\Schema;
+namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Schema\EntitySchemaHandlerInterface;
 
 /**
  * Defines a schema handler that supports revisionable, translatable entities.
@@ -35,7 +35,7 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
   /**
    * The storage object for the given entity type.
    *
-   * @var \Drupal\Core\Entity\ContentEntityDatabaseStorage
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage
    */
   protected $storage;
 
@@ -60,12 +60,12 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    *   The entity manager.
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type.
-   * @param \Drupal\Core\Entity\ContentEntityDatabaseStorage $storage
+   * @param \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage
    *   The storage of the entity type. This must be an SQL-based storage.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ContentEntityTypeInterface $entity_type, ContentEntityDatabaseStorage $storage, Connection $database) {
+  public function __construct(EntityManagerInterface $entity_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database) {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $entity_manager->getFieldStorageDefinitions($entity_type->id());
     $this->storage = $storage;

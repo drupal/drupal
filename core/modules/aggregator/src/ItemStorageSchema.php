@@ -8,7 +8,7 @@
 namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 
 /**
  * Defines the item schema handler.

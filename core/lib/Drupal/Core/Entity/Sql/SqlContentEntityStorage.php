@@ -2,19 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\ContentEntityDatabaseStorage.
+ * Contains \Drupal\Core\Entity\Sql\SqlContentEntityStorage.
  */
 
-namespace Drupal\Core\Entity;
+namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\ContentEntityStorageBase;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeListenerInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\Sql\DefaultTableMapping;
-use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -26,15 +31,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This class can be used as-is by most content entity types. Entity types
  * requiring special handling can extend the class.
  *
- * The class uses \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
+ * The class uses \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema
  * internally in order to automatically generate the database schema based on
  * the defined base fields. Entity types can override
- * ContentEntityDatabaseStorage::getSchema() to customize the generated
+ * SqlContentEntityStorage::getSchema() to customize the generated
  * schema; e.g., to add additional indexes.
  *
  * @ingroup entity_api
  */
-class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, EntityTypeListenerInterface {
+class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, EntityTypeListenerInterface {
 
   /**
    * The mapping of field columns to SQL tables.
@@ -139,7 +144,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * Constructs a ContentEntityDatabaseStorage object.
+   * Constructs a SqlContentEntityStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -220,12 +225,12 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   /**
    * Gets the schema handler for this entity storage.
    *
-   * @return \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
+   * @return \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema
    *   The schema handler.
    */
   protected function schemaHandler() {
     if (!isset($this->schemaHandler)) {
-      $schema_handler_class = $this->entityType->getHandlerClass('storage_schema') ?: 'Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema';
+      $schema_handler_class = $this->entityType->getHandlerClass('storage_schema') ?: 'Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema';
       $this->schemaHandler = new $schema_handler_class($this->entityManager, $this->entityType, $this, $this->database);
     }
     return $this->schemaHandler;
@@ -1016,8 +1021,8 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    * @return bool
    *   TRUE if the the column is serial, FALSE otherwise.
    *
-   * @see \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema::processBaseTable()
-   * @see \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema::processRevisionTable()
+   * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processBaseTable()
+   * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processRevisionTable()
    */
   protected function isColumnSerial($table_name, $schema_name) {
     $result = FALSE;

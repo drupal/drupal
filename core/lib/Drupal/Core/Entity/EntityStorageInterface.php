@@ -11,7 +11,7 @@ namespace Drupal\Core\Entity;
  * Defines the interface for entity storage classes.
  *
  * For common default implementations, see
- * \Drupal\Core\Entity\ContentEntityDatabaseStorage for content entities and
+ * \Drupal\Core\Entity\Sql\SqlContentEntityStorage for content entities and
  * \Drupal\Core\Config\Entity\ConfigEntityStorage for config entities. Those
  * implementations are used by default when the @ContentEntityType or
  * @ConfigEntityType annotations are used.

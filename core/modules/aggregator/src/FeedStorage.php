@@ -7,15 +7,15 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
  * Controller class for aggregator's feeds.
  *
- * This extends the Drupal\Core\Entity\ContentEntityDatabaseStorage class,
- * adding required special handling for feed entities.
+ * This extends the Drupal\Core\Entity\Sql\SqlContentEntityStorage class, adding
+ * required special handling for feed entities.
  */
-class FeedStorage extends ContentEntityDatabaseStorage implements FeedStorageInterface {
+class FeedStorage extends SqlContentEntityStorage implements FeedStorageInterface {
 
   /**
    * {@inheritdoc}

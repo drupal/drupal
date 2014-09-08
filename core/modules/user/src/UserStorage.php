@@ -8,11 +8,11 @@
 namespace Drupal\user;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,10 +20,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Controller class for users.
  *
- * This extends the Drupal\Core\Entity\ContentEntityDatabaseStorage class,
+ * This extends the Drupal\Core\Entity\Sql\SqlContentEntityStorage class,
  * adding required special handling for user objects.
  */
-class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInterface {
+class UserStorage extends SqlContentEntityStorage implements UserStorageInterface {
 
   /**
    * Provides the password hashing service object.

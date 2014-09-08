@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Entity\Schema\SqlContentEntityStorageSchemaTest.
+ * Contains \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageSchemaTest.
  */
 
-namespace Drupal\Tests\Core\Entity\Schema;
+namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema
+ * @coversDefaultClass \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema
  * @group Entity
  */
 class SqlContentEntityStorageSchemaTest extends UnitTestCase {
@@ -35,7 +35,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The mocked SQL storage used in this test.
    *
-   * @var \Drupal\Core\Entity\ContentEntityDatabaseStorage|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $storage;
 
@@ -49,7 +49,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The content entity schema handler used in this test.
    *
-   * @var \Drupal\Core\Entity\Schema\SqlContentEntityStorageSchema.
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema.
    */
   protected $schemaHandler;
 
@@ -58,7 +58,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+    $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
 
