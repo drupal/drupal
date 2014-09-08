@@ -1562,45 +1562,38 @@ function template_preprocess_container(&$variables) {
   $variables['attributes'] = $element['#attributes'];
 }
 
-
 /**
- * Returns HTML for a list of maintenance tasks to perform.
+ * Prepares variables for maintenance task list templates.
  *
- * @param $variables
+ * Default template: task-list.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - items: An associative array of maintenance tasks.
  *     It's the caller's responsibility to ensure this array's items contain no
  *     dangerous HTML such as SCRIPT tags.
  *   - active: The key for the currently active maintenance task.
- *
- * @ingroup themeable
  */
-function theme_task_list($variables) {
+function template_preprocess_task_list(&$variables) {
   $items = $variables['items'];
   $active = $variables['active'];
 
   $done = isset($items[$active]) || $active == NULL;
-  $output = '<h2 class="visually-hidden">Installation tasks</h2>';
-  $output .= '<ol class="task-list">';
-
   foreach ($items as $k => $item) {
+    $variables['tasks'][$k]['item'] = $item;
+    $variables['tasks'][$k]['attributes'] = new Attribute();
     if ($active == $k) {
-      $class = 'active';
-      $status = '(' . t('active') . ')';
+      $variables['tasks'][$k]['attributes']->addClass('active');
+      $variables['tasks'][$k]['status'] = t('active');
       $done = FALSE;
     }
     else {
-      $class = $done ? 'done' : '';
-      $status = $done ? '(' . t('done') . ')' : '';
+      if ($done) {
+        $variables['tasks'][$k]['attributes']->addClass('done');
+        $variables['tasks'][$k]['status'] = t('done');
+      }
     }
-    $output .= '<li';
-    $output .= ($class ? ' class="' . $class . '"' : '') . '>';
-    $output .= $item;
-    $output .= ($status ? '<span class="visually-hidden"> ' . $status . '</span>' : '');
-    $output .= '</li>';
   }
-  $output .= '</ol>';
-  return $output;
 }
 
 /**
@@ -2361,6 +2354,7 @@ function drupal_common_theme() {
     ),
     'task_list' => array(
       'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
+      'template' => 'task-list',
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),
