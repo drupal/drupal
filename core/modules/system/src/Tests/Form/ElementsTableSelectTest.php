@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Tests the tableselect form element for expected behavior.
@@ -223,7 +224,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     drupal_process_form($form_id, $form, $form_state);
 
-    $errors = form_get_errors($form_state);
+    $errors = $form_state->getErrors();
 
     // Clear errors and messages.
     drupal_get_messages();

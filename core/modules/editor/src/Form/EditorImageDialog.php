@@ -223,7 +223,7 @@ class EditorImageDialog extends FormBase {
       $form_state->setValue(array('attributes', 'alt'), '');
     }
 
-    if (form_get_errors($form_state)) {
+    if ($form_state->getErrors()) {
       unset($form['#prefix'], $form['#suffix']);
       $status_messages = array('#theme' => 'status_messages');
       $output = drupal_render($form);

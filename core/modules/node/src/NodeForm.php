@@ -260,7 +260,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $preview_mode = $this->settings['preview'];
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors($form_state) && isset($form_state['node_preview']));
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!$form_state->getErrors() && isset($form_state['node_preview']));
 
     // If saving is an option, privileged users get dedicated form submit
     // buttons to adjust the publishing status while saving in one go.

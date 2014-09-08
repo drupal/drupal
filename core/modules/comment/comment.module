@@ -613,7 +613,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
   $preview_build = array();
   $entity = $comment->getCommentedEntity();
 
-  if (!form_get_errors($form_state)) {
+  if (!$form_state->getErrors()) {
     // Attach the user and time information.
     $author_name = $comment->getAuthorName();
     if (!empty($author_name)) {

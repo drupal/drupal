@@ -382,7 +382,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Process the block's submission handling if no errors occurred only.
-    if (!form_get_errors($form_state)) {
+    if (!$form_state->getErrors()) {
       $this->configuration['label'] = $form_state->getValue('label');
       $this->configuration['label_display'] = $form_state->getValue('label_display');
       $this->configuration['provider'] = $form_state->getValue('provider');

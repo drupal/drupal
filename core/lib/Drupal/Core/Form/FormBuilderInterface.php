@@ -119,7 +119,7 @@ interface FormBuilderInterface {
    * processes a form, but does not allow you to supply values.
    *
    * There is no return value, but you can check to see if there are errors
-   * by calling form_get_errors().
+   * by calling $form_state->getErrors().
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
    *   A form object to use to build the form, or the unique string identifying

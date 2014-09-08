@@ -61,7 +61,7 @@ function datetime_help($route_name, RouteMatchInterface $route_match) {
  *   The current state of the form.
  */
 function datetime_datetime_widget_validate(&$element, FormStateInterface $form_state) {
-  if (!form_get_errors($form_state)) {
+  if (!$form_state->getErrors()) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {
@@ -99,7 +99,7 @@ function datetime_datetime_widget_validate(&$element, FormStateInterface $form_s
  *   The current state of the form.
  */
 function datetime_datelist_widget_validate(&$element, FormStateInterface $form_state) {
-  if (!form_get_errors($form_state)) {
+  if (!$form_state->getErrors()) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {

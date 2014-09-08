@@ -56,7 +56,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
     \Drupal::formBuilder()->submitForm($this->form, $form_state);
 
     // Check that the form returns an error when expected, and vice versa.
-    $errors = form_get_errors($form_state);
+    $errors = $form_state->getErrors();
     $valid_form = empty($errors);
     $args = array(
       '%values' => print_r($values, TRUE),

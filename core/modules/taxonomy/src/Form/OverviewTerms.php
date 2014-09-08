@@ -189,7 +189,7 @@ class OverviewTerms extends FormBase {
       }
     }
 
-    $errors = form_get_errors($form_state);
+    $errors = $form_state->getErrors();
     $destination = drupal_get_destination();
     $row_position = 0;
     // Build the actual form.

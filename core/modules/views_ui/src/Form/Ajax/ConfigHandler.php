@@ -193,7 +193,7 @@ class ConfigHandler extends ViewsFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state['handler']->validateOptionsForm($form['options'], $form_state);
 
-    if (form_get_errors($form_state)) {
+    if ($form_state->getErrors()) {
       $form_state['rerender'] = TRUE;
     }
   }

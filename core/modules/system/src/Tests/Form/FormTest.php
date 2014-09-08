@@ -47,7 +47,7 @@ class FormTest extends WebTestBase {
    * Carriage returns, tabs, spaces, and unchecked checkbox elements are not
    * valid content for a required field.
    *
-   * If the form field is found in form_get_errors() then the test pass.
+   * If the form field is found in $form_state->getErrors() then the test pass.
    */
   function testRequiredFields() {
     // Originates from http://drupal.org/node/117748
@@ -118,7 +118,7 @@ class FormTest extends WebTestBase {
           $form['#token'] = FALSE;
           \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
-          $errors = form_get_errors($form_state);
+          $errors = $form_state->getErrors();
           // Form elements of type 'radios' throw all sorts of PHP notices
           // when you try to render them like this, so we ignore those for
           // testing the required marker.
