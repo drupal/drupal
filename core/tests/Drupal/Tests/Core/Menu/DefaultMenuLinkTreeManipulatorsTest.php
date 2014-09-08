@@ -35,6 +35,13 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   protected $currentUser;
 
   /**
+   * The mocked query factory.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $queryFactory;
+
+  /**
    * The default menu link tree manipulators.
    *
    * @var \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
@@ -63,8 +70,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
     $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->queryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
 
-    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser);
+    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->queryFactory);
   }
 
   /**
@@ -275,4 +285,81 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals(array(4), array_keys($tree));
   }
 
+  /**
+   * Tests the optimized node access checking.
+   *
+   * @covers ::checkNodeAccess
+   * @covers ::collectNodeLinks
+   * @covers ::checkAccess
+   */
+  public function  testCheckNodeAccess() {
+    $links = array(
+      1 => MenuLinkMock::create(array('id' => 'node.1', 'route_name' => 'entity.node.canonical', 'title' => 'foo', 'parent' => '', 'route_parameters' => array('node' => 1))),
+      2 => MenuLinkMock::create(array('id' => 'node.2', 'route_name' => 'entity.node.canonical', 'title' => 'bar', 'parent' => '', 'route_parameters' => array('node' => 2))),
+      3 => MenuLinkMock::create(array('id' => 'node.3', 'route_name' => 'entity.node.canonical', 'title' => 'baz', 'parent' => 'node.2', 'route_parameters' => array('node' => 3))),
+      4 => MenuLinkMock::create(array('id' => 'node.4', 'route_name' => 'entity.node.canonical', 'title' => 'qux', 'parent' => 'node.3', 'route_parameters' => array('node' => 4))),
+      5 => MenuLinkMock::create(array('id' => 'test.1', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => '')),
+      6 => MenuLinkMock::create(array('id' => 'test.2', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => 'test.1')),
+    );
+    $tree = array();
+    $tree[1] = new MenuLinkTreeElement($links[1], FALSE, 1, FALSE, array());
+    $tree[2] = new MenuLinkTreeElement($links[2], TRUE, 1, FALSE, array(
+      3 => new MenuLinkTreeElement($links[3], TRUE, 2, FALSE, array(
+        4 => new MenuLinkTreeElement($links[4], FALSE, 3, FALSE, array()),
+      )),
+    ));
+    $tree[5] = new MenuLinkTreeElement($links[5], TRUE, 1, FALSE, array(
+      6 => new MenuLinkTreeElement($links[6], FALSE, 2, FALSE, array()),
+    ));
+
+    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query->expects($this->at(0))
+      ->method('condition')
+      ->with('nid', array(1, 2, 3, 4));
+    $query->expects($this->at(1))
+      ->method('condition')
+      ->with('status', NODE_PUBLISHED);
+    $query->expects($this->once())
+      ->method('execute')
+      ->willReturn(array(1, 2, 4));
+    $this->queryFactory->expects($this->once())
+      ->method('get')
+      ->with('node')
+      ->willReturn($query);
+
+    $tree = $this->defaultMenuTreeManipulators->checkNodeAccess($tree);
+    $this->assertTrue($tree[1]->access);
+    $this->assertTrue($tree[2]->access);
+    // Ensure that access denied is set.
+    $this->assertFalse($tree[2]->subtree[3]->access);
+    $this->assertTrue($tree[2]->subtree[3]->subtree[4]->access);
+    // Ensure that other routes than entity.node.canonical are set as well.
+    $this->assertNull($tree[5]->access);
+    $this->assertNull($tree[5]->subtree[6]->access);
+
+    // On top of the node access checking now run the ordinary route based
+    // access checkers.
+
+    // Ensure that the access manager is just called for the non-node routes.
+    $this->accessManager->expects($this->at(0))
+      ->method('checkNamedRoute')
+      ->with('test_route', [], $this->currentUser, NULL)
+      ->willReturn(TRUE);
+    $this->accessManager->expects($this->at(1))
+      ->method('checkNamedRoute')
+      ->with('test_route', [], $this->currentUser, NULL)
+      ->willReturn(FALSE);
+    $tree = $this->defaultMenuTreeManipulators->checkAccess($tree);
+
+    $this->assertTrue($tree[1]->access);
+    $this->assertTrue($tree[2]->access);
+    $this->assertFalse(isset($tree[2]->subtree[3]));
+    $this->assertTrue($tree[5]->access);
+    $this->assertFalse(isset($tree[5]->subtree[6]));
+  }
+
+}
+
+if (!defined('NODE_PUBLISHED')) {
+  define('NODE_PUBLISHED', 1);
 }

@@ -67,6 +67,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $parameters->setMaxDepth($depth_limit);
       $tree = $this->menuLinkTree->load($menu_name, $parameters);
       $manipulators = array(
+        array('callable' => 'menu.default_tree_manipulators:checkNodeAccess'),
         array('callable' => 'menu.default_tree_manipulators:checkAccess'),
         array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
       );

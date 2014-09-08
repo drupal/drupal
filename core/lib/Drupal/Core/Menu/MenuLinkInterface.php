@@ -107,6 +107,20 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
   public function isDeletable();
 
   /**
+   * Returns the route name, if available.
+   *
+   * @return string
+   */
+  public function getRouteName();
+
+  /**
+   * Returns the route parameters, if available.
+   *
+   * @return array
+   */
+  public function getRouteParameters();
+
+  /**
    * Returns a URL object containing either the external path or route.
    *
    * @param bool $title_attribute
