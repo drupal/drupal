@@ -91,14 +91,14 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests sorting an array of Language objects.
+   * Tests sorting an array of language objects.
    *
    * @covers ::sort()
    *
    * @dataProvider providerTestSortArrayOfLanguages
    *
-   * @param \Drupal\Core\Language\Language[] $languages
-   *   An array of \Drupal\Core\Language\Language objects.
+   * @param \Drupal\Core\Language\LanguageInterface[] $languages
+   *   An array of language objects.
    * @param array $expected
    *   The expected array of keys.
    */

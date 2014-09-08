@@ -206,12 +206,17 @@ class Language implements LanguageInterface {
   /**
    * Sort language objects.
    *
-   * @param array $languages
+   * @param \Drupal\Core\Language\LanguageInterface[] $languages
    *   The array of language objects keyed by langcode.
    */
   public static function sort(&$languages) {
-    uasort($languages, function ($a, $b) {
-      return SortArray::sortByWeightAndTitleKey($a, $b, 'weight', 'name');
+    uasort($languages, function (LanguageInterface $a, LanguageInterface $b) {
+      $a_weight = $a->getWeight();
+      $b_weight = $b->getWeight();
+      if ($a_weight == $b_weight) {
+        return strnatcasecmp($a->getName(), $b->getName());
+      }
+      return ($a_weight < $b_weight) ? -1 : 1;
     });
   }
 
