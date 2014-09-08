@@ -1,0 +1,28 @@
+/* Update options. */
+div.admin-options {
+  background: #f8f8f8;
+  line-height: 30px;
+  height: 30px;
+  padding: 9px;
+  border: 1px solid #ccc;
+  margin: 0 0 10px;
+}
+div.admin-options label {
+  text-transform: uppercase;
+  font: 0.846em/1.875em "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+}
+div.admin-options label,
+div.admin-options div.form-item {
+  margin-right: 10px; /* LTR */
+  float: left; /* LTR */
+}
+[dir="rtl"] div.admin-options label,
+[dir="rtl"] div.admin-options div.form-item {
+  margin-left: 10px;
+  margin-right: 0;
+  float: right;
+}
+div.admin-options div.form-item {
+  padding: 0;
+  border: 0;
+}

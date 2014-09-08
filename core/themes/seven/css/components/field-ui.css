@@ -1,0 +1,20 @@
+/* Field UI */
+#field-display-overview input.field-plugin-settings-edit {
+  margin: 0;
+  padding: 1px 8px;
+}
+#field-display-overview tr.field-plugin-settings-changed {
+  background: #ffffbb;
+}
+#field-display-overview tr.drag {
+  background: #ffee77;
+}
+#field-display-overview tr.field-plugin-settings-editing {
+  background: #d5e9f2;
+}
+#field-display-overview .field-plugin-settings-edit-form .form-item {
+  margin: 10px 0;
+}
+#field-display-overview .field-plugin-settings-edit-form .form-submit {
+  margin-bottom: 0;
+}

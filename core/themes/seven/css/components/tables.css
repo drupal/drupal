@@ -1,0 +1,159 @@
+/**
+ * Tables.
+ */
+table {
+  width: 100%;
+  margin: 0 0 10px;
+  font-size: 0.923em;
+}
+caption {
+  text-align: left; /* LTR */
+}
+[dir="rtl"] caption {
+  text-align: right;
+}
+th {
+  text-align: left; /* LTR */
+  padding: 10px 12px;
+}
+[dir="rtl"] th {
+  text-align: right;
+}
+thead th {
+  background: #f5f5f2;
+  border: solid #bfbfba;
+  border-width: 1px 0;
+  color: #333;
+  text-transform: uppercase;
+}
+tr {
+  border-bottom: 1px solid #e6e4df;
+  padding: 0.1em 0.6em;
+}
+thead > tr {
+  border-bottom: 1px solid #000;
+}
+tbody tr:hover {
+  background: #f7fcff;
+}
+td,
+th {
+  vertical-align: top;
+}
+td {
+  padding: 10px 12px;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] td {
+  text-align: right;
+}
+th > a {
+  position: relative;
+  display: block;
+}
+
+/* 1. Must match negative bottom padding of the parent <th> */
+th > a:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: -10px; /* 1. */
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.1s;
+}
+th.active > a {
+  color: #004875;
+}
+th.active img {
+  position: absolute;
+  right: 0; /* LTR */
+  top: 50%;
+}
+[dir="rtl"] th.active img {
+  right: auto;
+  left: 0;
+}
+th.active > a:after {
+  border-bottom-color: #004875;
+}
+th > a:focus,
+th > a:hover,
+th.active > a:focus,
+th.active > a:hover {
+  color: #008ee6;
+  text-decoration: none;
+}
+th > a:focus:after,
+th > a:hover:after,
+th.active > a:focus:after,
+th.active > a:hover:after {
+  border-bottom-color: #008ee6;
+}
+td .item-list ul {
+  margin: 0;
+}
+td.active {
+  background: none;
+}
+
+/* Force browsers to calculate the width of a 'select all' TH element. */
+th.select-all {
+  width: 1px;
+}
+
+/**
+ * Captions.
+ */
+.caption {
+  margin-bottom: 1.2em;
+}
+
+/**
+ * Status report table.
+ */
+table.system-status-report tr {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #bebfb9;
+  border-right: 1px solid #bebfb9;
+  border-bottom: inherit;
+}
+table.system-status-report tr:first-child {
+  border-top: 1px solid #bebfb9;
+}
+table.system-status-report tr:last-child {
+  border-bottom: 1px solid #bebfb9;
+}
+
+table.system-status-report tr.ok {
+  color: #255b1e;
+  background-color: #e5ffe2;
+}
+table.system-status-report tr.warning {
+  color: #840;
+  background-color: #fffce5;
+}
+table.system-status-report tr.error {
+  color: #8c2e0b;
+  background-color: #fef5f1;
+}
+
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width: 37.5em) { /* 600px */
+  th.priority-low,
+  td.priority-low,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width: 60em) { /* 920px */
+  th.priority-low,
+  td.priority-low {
+    display: none;
+  }
+}

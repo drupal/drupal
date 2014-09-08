@@ -8,16 +8,16 @@
 .install-background {
   background-color: #1275b2;
   background-image:
-    url(../images/noise-low.png),
+    url(../../images/noise-low.png),
     -webkit-radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
   background-image:
-    url(../images/noise-low.png),
+    url(../../images/noise-low.png),
     -moz-radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
   background-image:
-    url(../images/noise-low.png),
+    url(../../images/noise-low.png),
     -o-radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
   background-image:
-    url(../images/noise-low.png),
+    url(../../images/noise-low.png),
     radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
   background-repeat: repeat;
   background-position: left top, 50% 50%;

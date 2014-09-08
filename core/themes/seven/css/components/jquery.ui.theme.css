@@ -65,26 +65,26 @@
   height: 16px;
   overflow: hidden;
   background-repeat: no-repeat;
-  background-image: url(../images/ui-icons-222222-256x240.png);
+  background-image: url(../../images/ui-icons-222222-256x240.png);
 }
 .ui-widget-content .ui-icon,
 .ui-widget-header .ui-icon {
-  background-image: url(../images/ui-icons-222222-256x240.png);
+  background-image: url(../../images/ui-icons-222222-256x240.png);
 }
 .ui-state-default .ui-icon {
-  background-image: url(../images/ui-icons-888888-256x240.png);
+  background-image: url(../../images/ui-icons-888888-256x240.png);
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-state-active .ui-icon {
-  background-image: url(../images/ui-icons-454545-256x240.png);
+  background-image: url(../../images/ui-icons-454545-256x240.png);
 }
 .ui-state-highlight .ui-icon {
-  background-image: url(../images/ui-icons-800000-256x240.png);
+  background-image: url(../../images/ui-icons-800000-256x240.png);
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-  background-image: url(../images/ui-icons-ffffff-256x240.png);
+  background-image: url(../../images/ui-icons-ffffff-256x240.png);
 }
 .ui-widget p .ui-icon {
   margin: 2px 3px 0 0;
@@ -364,7 +364,7 @@
   height: 1.4em;
 }
 .ui-progressbar .ui-progressbar-value {
-  background: #0072b9 url(../../../misc/progress.gif);
+  background: #0072b9 url(../../../../misc/progress.gif);
   height: 1.5em;
 }
 

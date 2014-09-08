@@ -1,0 +1,283 @@
+/**
+ * Tabs.
+ */
+.is-collapse-enabled  .tabs,
+.is-horizontal .tabs {
+  position: relative;
+}
+.is-collapse-enabled .tabs:before,
+.is-horizontal .tabs:before {
+  content: '';
+  display: block;
+  background-color: #A6A6A6;
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  right: 0;
+}
+
+/* Span the full width of the viewport */
+#branding .is-horizontal .tabs:before,
+#branding .is-collapse-enabled .tabs:before {
+  left: -2.5em;
+  right: -2.5em;
+}
+
+/**
+ * Tab
+ *
+ * 1. Required by some elements such as <button>
+ * 2. Fixed height needed to ensure alignment with absolutely-positioned
+ *    active tab.
+ */
+.tabs__tab {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: -1px 0 0;
+  padding: 9px 2em 7px 1em;
+  width: 100%;  /* 1 */
+  border: 1px solid #bfbfbf;
+  background-color: rgba(242, 242, 240, 0.7);
+  color: #0074bd;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabs__tab:hover {
+  color: #008ee6;
+  background-color: #fafaf7;
+}
+li.tabs__tab {
+  padding: 0;
+}
+li.tabs__tab a {
+  padding: 9px 2em 7px 1em;
+}
+.tabs a:hover,
+.tabs a:focus {
+  text-decoration: none;
+}
+
+/* Primary tabs */
+.tabs.primary {
+  clear: both;
+  margin: 16px 0 0;
+  margin: 1rem 0 0;
+}
+.tabs.primary .tabs__tab.active {
+  z-index: 15;
+  border-color: #a6a6a6;
+  border-radius: 4px 0 0 0;
+  background-color: #ffffff;
+  color: #004f80;
+}
+.tabs.primary a {
+  background: none;
+}
+.tabs.primary a:focus {
+  color: #008ee6;
+  background-color: #fafaf7;
+  text-decoration: underline;
+}
+.tabs.primary .active a:focus {
+  background: none;
+  text-decoration: underline;
+}
+
+/* Only add the arrow if there's space */
+@media screen and (min-width:18.75em) { /* 300px */
+  .tabs.primary a {
+    background: url(../../../../misc/icons/0074bd/chevron-right.svg) 99% center no-repeat;
+  }
+  [dir="rtl"] .tabs.primary a {
+    background: url(../../../../misc/icons/0074bd/chevron-left.svg) 1% center no-repeat;
+  }
+  .tabs.primary .tabs__tab.active a {
+    background-image: none;
+  }
+}
+.tabs__trigger {
+  display: none;
+}
+
+/* JS dependent styling */
+ .is-collapse-enabled .tabs__trigger {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  display: block;
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: 2px;
+  left: auto;
+  width: 25%;
+  padding-right: 4px;
+  padding-left: 4px;
+  border-left: 0;
+  border-radius: 0 4px 0 0;
+  font-family: Arial, sans-serif;
+  font-size: 1.25em;
+  letter-spacing: 0.1em;
+  text-align: center;
+  outline: 0;
+}
+[dir="rtl"] .is-collapse-enabled .tabs__trigger {
+  border-right: 0;
+  border-left: 1px solid #bfbfbf;
+  border-radius: 4px 0 0 0;
+  right: auto;
+  left: 0;
+  top: 11px;
+}
+.is-collapse-enabled .tabs {
+  padding-top: 38px;
+  max-height: 0;
+}
+.tabs.is-open {
+  max-height: 999em;
+  padding-bottom:16px;
+  padding-bottom: 1rem;
+}
+.is-collapse-enabled .tabs__tab.active {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 75%;
+  border-bottom: 0;
+}
+[dir="rtl"] .is-collapse-enabled .tabs__tab.active {
+  left: auto;
+  right: 0;
+}
+.is-collapse-enabled .tabs.primary a.active:before {
+  content: none;
+}
+.is-open .tabs__tab.active {
+  border-color: #a6a6a6;
+  background-color: #ffffff;
+  color: #004f80;
+  border-bottom: 1px solid #a6a6a6;
+}
+
+/* Styles for the horizontal state always take priority */
+.is-horizontal .tabs {
+  max-height: none !important;
+  padding-top: 0 !important;
+  overflow: visible;
+}
+.is-horizontal .tabs__tab {
+  float: left;
+  height: auto;
+  width: auto;
+  margin: 0 0 -1px;
+  text-align: center;
+  border-bottom-color: #a6a6a6;
+}
+[dir="rtl"] .is-horizontal .tabs__tab {
+  float: right;
+}
+.is-horizontal .tabs__tab + .tabs__tab {
+  margin-left: -1px;
+}
+.is-horizontal .tabs.primary .tabs__tab:first-child {
+  border-radius: 4px 0 0 0;
+}
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:first-child {
+  border-radius: 0 4px 0 0;
+}
+.is-horizontal .tabs.primary .tabs__tab:last-child {
+  border-radius: 0 4px 0 0;
+}
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:last-child {
+  border-radius: 4px 0 0 0;
+}
+
+/* Override the states above */
+.is-horizontal .tabs__tab.active,
+.is-horizontal .tabs.primary .tabs__tab.active,
+[dir="rtl"] .is-horizontal .tabs.primary .tabs__tab.active {
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  width: auto;
+  top: 0;
+  border-bottom: 0;
+  margin: 0 -4px;
+}
+[dir="rtl"] .is-horizontal .tabs__tab.active {
+  margin: 0 -6px;
+}
+.is-horizontal .tabs.primary a {
+  background-image: none;
+  padding: 7px 2em 7px 2em;
+}
+.is-horizontal .tabs__trigger {
+  display: none;
+}
+
+/* Secondary tabs */
+.tabs.secondary {
+  display: block;
+  margin-top: 16px;
+  margin-top: 1rem;
+}
+.tabs.secondary .tabs__tab {
+  display: block;
+  padding: 5px 15px 5px 16px;
+  margin-left: -1px;
+  color: #0074bd;
+  -webkit-transition: border-color 0.2s, background-color 0.2s;
+  -moz-transition: border-color 0.2s, background-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.tabs.secondary .tabs__tab + .tabs__tab {
+  border-top: 1px solid #d9d8d4;
+}
+.tabs.secondary .tabs__tab.active {
+  color: #004f80;
+  border-left: 2px solid #004f80;
+  padding-left: 15px;
+}
+.tabs.secondary .tabs__tab:hover {
+  color: #008ee6;
+  border-left: 2px solid #008ee6;
+  padding-left: 15px;
+}
+.tabs.secondary a {
+  background-color: transparent;
+  padding: 7px 13px 5px;
+  text-decoration: none;
+}
+.tabs.secondary .active a {
+  color: #004f80;
+}
+.tabs.secondary a:focus {
+  text-decoration: underline;
+}
+
+/* Styles for the horizontal state */
+.is-horizontal .tabs.secondary .tabs__tab {
+  background: none;
+  float: left;
+  position: relative;
+  top: 0;
+  z-index: 15;
+  margin-left: 1em;
+  margin-right: 1em;
+  border-bottom: 2px solid transparent;
+  border-left: 1px solid transparent;
+  border-right-color: transparent;
+  border-top: 0;
+  padding: 0;
+}
+.is-horizontal .tabs.secondary .tabs__tab.active {
+  border-bottom-color: #004f80;
+}
+.is-horizontal .tabs.secondary .tabs__tab:hover {
+  border-bottom-color: #008ee6;
+}

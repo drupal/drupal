@@ -1,0 +1,42 @@
+/**
+ * Skip link.
+ */
+.skip-link {
+  margin-top: 0;
+  position: absolute;
+  left: 50%; /* LTR */
+  margin-left: -5.25em; /* LTR */
+  width: auto;
+  z-index: 50;
+}
+[dir="rtl"] .skip-link {
+  right: 50%;
+  margin-right: -5.25em;
+}
+.skip-link,
+.skip-link:link,
+.skip-link:visited {
+  display: inline-block;
+  background: #444;
+  color: #fff;
+  font-size: 0.94em;
+  padding: 1px 10px 2px 10px; /* LTR */
+  text-decoration: none;
+  border-radius: 0 0 10px 10px;
+}
+[dir="rtl"] .skip-link,
+[dir="rtl"] .skip-link:link,
+[dir="rtl"] .skip-link:visited {
+  padding: 1px 10px 2px 10px;
+}
+.skip-link:hover,
+.skip-link:focus,
+.skip-link:active {
+  outline: 0;
+}
+.skip-link.visually-hidden.focusable:active,
+.skip-link.visually-hidden.focusable:focus,
+.skip-link.visually-hidden.focusable:hover
+{
+  position: absolute !important;
+}

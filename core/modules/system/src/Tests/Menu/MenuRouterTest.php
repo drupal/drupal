@@ -266,7 +266,7 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Active theme: seven. Actual theme: seven.', 'The administrative theme can be correctly set in a theme negotiation.');
-    $this->assertRaw('seven/css/style.css', "The administrative theme's CSS appears on the page.");
+    $this->assertRaw('seven/css/base/elements.css', "The administrative theme's CSS appears on the page.");
   }
 
   /**
@@ -285,7 +285,7 @@ class MenuRouterTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Active theme: seven. Actual theme: seven.', 'The theme negotiation system is correctly triggered for an administrator when the site is in maintenance mode.');
-    $this->assertRaw('seven/css/style.css', "The administrative theme's CSS appears on the page.");
+    $this->assertRaw('seven/css/base/elements.css', "The administrative theme's CSS appears on the page.");
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
