@@ -78,7 +78,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
   /**
    * Gets the comment ids of the passed comment entities' children.
    *
-   * @param array $comments
+   * @param \Drupal\comment\CommentInterface[] $comments
    *   An array of comment entities keyed by their ids.
    * @return array
    *   The entity ids of the passed comment entities' children as an array.

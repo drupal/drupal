@@ -112,17 +112,14 @@ class CommentLanguageTest extends WebTestBase {
         $this->drupalPostForm(NULL, $edit, t('Save'));
 
         // Check that comment language matches the current content language.
-        $cid = db_select('comment_field_data', 'c')
-          ->fields('c', array('cid'))
+        $cids = \Drupal::entityQuery('comment')
           ->condition('entity_id', $node->id())
           ->condition('entity_type', 'node')
           ->condition('field_name', 'comment')
-          ->condition('default_langcode', 1)
-          ->orderBy('cid', 'DESC')
+          ->sort('cid', 'DESC')
           ->range(0, 1)
-          ->execute()
-          ->fetchField();
-        $comment = Comment::load($cid);
+          ->execute();
+        $comment = Comment::load(reset($cids));
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode->value, '%langcode' => $langcode);
         $this->assertEqual($comment->langcode->value, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
         $this->assertEqual($comment->comment_body->value, $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
