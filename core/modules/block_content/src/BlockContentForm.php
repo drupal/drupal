@@ -35,6 +35,13 @@ class BlockContentForm extends ContentEntityForm {
   protected $languageManager;
 
   /**
+   * The block content entity.
+   *
+   * @var \Drupal\block_content\BlockContentInterface
+   */
+  protected $entity;
+
+  /**
    * Constructs a BlockContentForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -167,31 +174,16 @@ class BlockContentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityForm::submit().
-   *
-   * Updates the custom block object by processing the submitted values.
-   *
-   * This function can be called by a "Next" button of a wizard to update the
-   * form state's entity with the current step's values before proceeding to the
-   * next step.
+   * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
-    // Build the block object from the submitted values.
-    $block = parent::submit($form, $form_state);
+  public function save(array $form, FormStateInterface $form_state) {
+    $block = $this->entity;
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {
       $block->setNewRevision();
     }
 
-    return $block;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-    $block = $this->entity;
     $insert = $block->isNew();
     $block->save();
     $context = array('@type' => $block->bundle(), '%info' => $block->label());

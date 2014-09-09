@@ -116,18 +116,20 @@ interface EntityFormInterface extends BaseFormIdInterface {
   public function validate(array $form, FormStateInterface $form_state);
 
   /**
-   * Updates the form's entity by processing this submission's values.
+   * Form submission handler for the 'save' action.
    *
-   * Note: Before this can be safely invoked the entity form must have passed
-   * validation, i.e. only add this as form #submit handler if validation is
-   * added as well.
+   * Normally this method should be overridden to provide specific messages to
+   * the user and redirect the form after the entity has been saved.
    *
    * @param array $form
-   *   A nested array form elements comprising the form.
+   *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   *
+   * @return int
+   *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
    */
-  public function submit(array $form, FormStateInterface $form_state);
+  public function save(array $form, FormStateInterface $form_state);
 
   /**
    * Sets the string translation service for this form.

@@ -98,10 +98,8 @@ class BookOutlineForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
-   *
-   * @see book_remove_button_submit()
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect(
       'entity.node.canonical',
       array('node' => $this->entity->id())

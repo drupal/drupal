@@ -387,8 +387,8 @@ abstract class AccountForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
-    parent::submit($form, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
 
     $user = $this->getEntity($form_state);
     // If there's a session set to the users id, remove the password reset tag

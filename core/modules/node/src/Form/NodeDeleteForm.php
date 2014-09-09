@@ -72,7 +72,7 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $this->logger('content')->notice('@type: deleted %title.', array('@type' => $this->entity->bundle(), '%title' => $this->entity->label()));
     $node_type_storage = $this->entityManager->getStorage('node_type');

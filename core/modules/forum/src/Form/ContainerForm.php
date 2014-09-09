@@ -42,10 +42,10 @@ class ContainerForm extends ForumForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
-    $is_new = $this->entity->isNew();
-    $this->entity->forum_container = TRUE;
-    $term = parent::save($form, $form_state);
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    $entity = parent::buildEntity($form, $form_state);
+    $entity->forum_container = TRUE;
+    return $entity;
   }
 
 }

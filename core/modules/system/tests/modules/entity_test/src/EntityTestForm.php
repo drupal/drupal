@@ -64,23 +64,14 @@ class EntityTestForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
-    // Build the entity object from the submitted values.
-    $entity = parent::submit($form, $form_state);
+  public function save(array $form, FormStateInterface $form_state) {
+    $entity = $this->entity;
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {
       $entity->setNewRevision();
     }
 
-    return $entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-    $entity = $this->entity;
     $is_new = $entity->isNew();
     $entity->save();
 

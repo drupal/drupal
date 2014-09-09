@@ -77,7 +77,7 @@ abstract class ImageStyleFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $this->entity->save();
+    parent::save($form, $form_state);
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 

@@ -106,12 +106,6 @@ class EntityForm extends FormBase implements EntityFormInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  /**
    * Initialize the form state and the entity before the first form build.
    */
   protected function init(FormStateInterface $form_state) {
@@ -203,12 +197,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
    *   many entity types.
    */
   protected function actions(array $form, FormStateInterface $form_state) {
-    // @todo Rename the action key from submit to save.
+    // @todo Consider renaming the action key from submit to save. The impacts
+      //   are hard to predict. For example, see
+      //   language_configuration_element_process().
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       '#validate' => array('::validate'),
-      '#submit' => array('::submit', '::save'),
+      '#submit' => array('::submitForm', '::save'),
     );
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('delete-form')) {
@@ -247,33 +243,30 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * {@inheritdoc}
    *
    * This is the default entity object builder function. It is called before any
-   * other submit handler to build the new entity object to be passed to the
+   * other submit handler to build the new entity object to be used by the
    * following submit handlers. At this point of the form workflow the entity is
    * validated and the form state can be updated, this way the subsequently
-   * invoked handlers can retrieve a regular entity object to act on.
+   * invoked handlers can retrieve a regular entity object to act on. Generally
+   * this method should not be overridden unless the entity requires the same
+   * preparation for two actions, see \Drupal\comment\CommentFormController for
+   * an example with the save and preview actions.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove button and internal Form API values from submitted values.
     form_state_values_clean($form_state);
     $this->entity = $this->buildEntity($form, $form_state);
-    return $this->entity;
   }
 
   /**
-   * Form submission handler for the 'save' action.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // @todo Perform common save operations.
+    return $this->entity->save();
   }
 
   /**

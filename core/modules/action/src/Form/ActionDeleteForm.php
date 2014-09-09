@@ -40,7 +40,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
 
     $this->logger('user')->notice('Deleted action %aid (%action)', array('%aid' => $this->entity->id(), '%action' => $this->entity->label()));

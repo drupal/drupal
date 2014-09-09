@@ -149,7 +149,8 @@ class ViewAddForm extends ViewFormBase {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save and edit');
-
+    // Remove EntityFormController::save() form the submission handlers.
+    $actions['submit']['#submit'] = array(array($this, 'submitForm'));
     $actions['cancel'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Cancel'),
@@ -179,11 +180,11 @@ class ViewAddForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       /** @var $wizard \Drupal\views\Plugin\views\wizard\WizardInterface */
       $wizard = $form_state['wizard_instance'];
-      $view = $wizard->createView($form, $form_state);
+      $this->entity = $wizard->createView($form, $form_state);
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
@@ -191,9 +192,9 @@ class ViewAddForm extends ViewFormBase {
       $form_state->setRedirect('views_ui.list');
       return;
     }
-    $view->save();
+    $this->entity->save();
 
-    $form_state->setRedirectUrl($view->urlInfo('edit-form'));
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 
   /**

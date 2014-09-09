@@ -245,7 +245,7 @@ class CommentForm extends ContentEntityForm {
       '#value' => $this->t('Preview'),
       '#access' => $preview_mode != DRUPAL_DISABLED,
       '#validate' => array('::validate'),
-      '#submit' => array('::submit', '::preview'),
+      '#submit' => array('::submitForm', '::preview'),
     );
 
     return $element;
@@ -301,12 +301,12 @@ class CommentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::submit().
+   * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
     /** @var \Drupal\comment\CommentInterface $comment */
-    $comment = parent::submit($form, $form_state);
-
+    $comment = $this->entity;
     // If the comment was posted by a registered user, assign the author's ID.
     // @todo Too fragile. Should be prepared and stored in comment_form()
     // already.

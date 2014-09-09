@@ -40,7 +40,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $this->logger('user')->notice('Role %name has been deleted.', array('%name' => $this->entity->label()));
     drupal_set_message($this->t('Role %name has been deleted.', array('%name' => $this->entity->label())));

@@ -23,12 +23,4 @@ class DateFormatAddForm extends DateFormatFormBase {
     return $actions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function submit(array $form, FormStateInterface $form_state) {
-    parent::submit($form, $form_state);
-    drupal_set_message(t('Custom date format added.'));
-  }
-
 }

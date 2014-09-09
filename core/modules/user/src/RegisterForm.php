@@ -73,9 +73,9 @@ class RegisterForm extends AccountForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::submit().
+   * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $admin = $form_state->getValue('administer_users');
 
     if (!\Drupal::config('user.settings')->get('verify_mail') || $admin) {
@@ -91,11 +91,11 @@ class RegisterForm extends AccountForm {
     $form_state->setValue('pass', $pass);
     $form_state->setValue('init', $form_state->getValue('mail'));
 
-    parent::submit($form, $form_state);
+    parent::submitForm($form, $form_state);
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::submit().
+   * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;

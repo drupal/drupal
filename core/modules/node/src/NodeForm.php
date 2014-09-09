@@ -274,7 +274,7 @@ class NodeForm extends ContentEntityForm {
       '#value' => t('Preview'),
       '#weight' => 20,
       '#validate' => array('::validate'),
-      '#submit' => array('::submit', '::preview'),
+      '#submit' => array('::submitForm', '::preview'),
     );
 
     $element['delete']['#access'] = $node->access('delete');
@@ -305,15 +305,18 @@ class NodeForm extends ContentEntityForm {
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Updates the node object by processing the submitted values.
    *
    * This function can be called by a "Next" button of a wizard to update the
    * form state's entity with the current step's values before proceeding to the
    * next step.
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Build the node object from the submitted values.
-    $node = parent::submit($form, $form_state);
+    parent::submitForm($form, $form_state);
+    $node = $this->entity;
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision') && $form_state->getValue('revision') != FALSE) {
@@ -331,8 +334,6 @@ class NodeForm extends ContentEntityForm {
       $function = $module . '_node_submit';
       $function($node, $form, $form_state);
     }
-
-    return $node;
   }
 
   /**

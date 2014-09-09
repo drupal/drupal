@@ -86,7 +86,7 @@ class BlockContentTypeForm extends EntityForm {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityForm::save().
+   * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
     $block_type = $this->entity;

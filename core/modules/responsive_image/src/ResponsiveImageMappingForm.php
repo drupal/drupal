@@ -134,7 +134,7 @@ class ResponsiveImageMappingForm extends EntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::save().
+   * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */

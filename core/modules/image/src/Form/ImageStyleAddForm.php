@@ -17,8 +17,8 @@ class ImageStyleAddForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
     drupal_set_message($this->t('Style %name was created.', array('%name' => $this->entity->label())));
   }
 

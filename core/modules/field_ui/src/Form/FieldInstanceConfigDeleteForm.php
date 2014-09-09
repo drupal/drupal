@@ -68,7 +68,7 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = entity_get_bundles();
     $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];

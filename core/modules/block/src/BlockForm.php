@@ -161,8 +161,8 @@ class BlockForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
-    parent::submit($form, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
 
     $entity = $this->entity;
     // The Block Entity form puts all block plugin form elements in the

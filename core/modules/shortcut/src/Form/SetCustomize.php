@@ -90,7 +90,7 @@ class SetCustomize extends EntityForm {
         '#type' => 'submit',
         '#value' => t('Save changes'),
         '#access' => (bool) Element::getVisibleChildren($form['shortcuts']['links']),
-        '#submit' => array('::submit', '::save'),
+        '#submit' => array('::submitForm', '::save'),
       ),
     );
   }

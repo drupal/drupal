@@ -106,7 +106,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // @todo This should be replaced with $this->entity->delete() when the
     //   additional logic in language_delete() is ported.
     $success = language_delete($this->entity->id());

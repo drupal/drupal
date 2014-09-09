@@ -37,7 +37,7 @@ class ResponsiveImageMappingDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('Responsive image mapping %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger('responsive_image')->notice('Responsive image mapping %label has been deleted.', array('%label' => $this->entity->label()));

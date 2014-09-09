@@ -172,7 +172,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Remove button and internal Form API values from submitted values.
-    parent::submit($form, $form_state);
+    parent::submitForm($form, $form_state);
     $this->save($form, $form_state);
   }
 

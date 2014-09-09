@@ -54,7 +54,7 @@ class BlockContentDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('Custom block %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger('block_content')->notice('Custom block %label has been deleted.', array('%label' => $this->entity->label()));
