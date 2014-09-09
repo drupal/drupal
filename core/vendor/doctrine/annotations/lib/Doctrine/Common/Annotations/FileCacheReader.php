@@ -19,7 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-
 /**
  * File cache reader for annotations.
  *
@@ -48,14 +47,17 @@ class FileCacheReader implements Reader
      */
     private $loadedAnnotations = array();
 
+    /**
+     * @var array
+     */
     private $classNameHashes = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param Reader $reader
-     * @param string $cacheDir
-     * @param bool $debug
+     * @param Reader  $reader
+     * @param string  $cacheDir
+     * @param boolean $debug
      *
      * @throws \InvalidArgumentException
      */
@@ -65,19 +67,13 @@ class FileCacheReader implements Reader
         if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true)) {
             throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $cacheDir));
         }
-        if (!is_writable($cacheDir)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.', $cacheDir));
-        }
 
         $this->dir   = rtrim($cacheDir, '\\/');
         $this->debug = $debug;
     }
 
     /**
-     * Retrieve annotations for class
-     *
-     * @param \ReflectionClass $class
-     * @return array
+     * {@inheritDoc}
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
@@ -111,10 +107,7 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Get annotations for property
-     *
-     * @param \ReflectionProperty $property
-     * @return array
+     * {@inheritDoc}
      */
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
@@ -149,10 +142,7 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Retrieve annotations for method
-     *
-     * @param \ReflectionMethod $method
-     * @return array
+     * {@inheritDoc}
      */
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
@@ -187,24 +177,23 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Save cache file
+     * Saves the cache file.
      *
      * @param string $path
-     * @param mixed $data
+     * @param mixed  $data
+     *
+     * @return void
      */
     private function saveCacheFile($path, $data)
     {
+        if (!is_writable($this->dir)) {
+            throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.', $this->dir));
+        }
         file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
     }
 
     /**
-     * Gets a class annotation.
-     *
-     * @param \ReflectionClass $class The ReflectionClass of the class from which
-     *                               the class annotations should be read.
-     * @param string $annotationName The name of the annotation.
-     *
-     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
+     * {@inheritDoc}
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
@@ -220,11 +209,7 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Gets a method annotation.
-     *
-     * @param \ReflectionMethod $method
-     * @param string $annotationName The name of the annotation.
-     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
+     * {@inheritDoc}
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
@@ -240,11 +225,7 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Gets a property annotation.
-     *
-     * @param \ReflectionProperty $property
-     * @param string $annotationName The name of the annotation.
-     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
+     * {@inheritDoc}
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {
@@ -260,7 +241,9 @@ class FileCacheReader implements Reader
     }
 
     /**
-     * Clear stores annotations
+     * Clears loaded annotations.
+     *
+     * @return void
      */
     public function clearLoadedAnnotations()
     {

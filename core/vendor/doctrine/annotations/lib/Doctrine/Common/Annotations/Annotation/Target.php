@@ -40,11 +40,11 @@ final class Target
      * @var array
      */
     private static $map = array(
-        'ALL'         => self::TARGET_ALL,
-        'CLASS'       => self::TARGET_CLASS,
-        'METHOD'      => self::TARGET_METHOD,
-        'PROPERTY'    => self::TARGET_PROPERTY,
-        'ANNOTATION'  => self::TARGET_ANNOTATION,
+        'ALL'        => self::TARGET_ALL,
+        'CLASS'      => self::TARGET_CLASS,
+        'METHOD'     => self::TARGET_METHOD,
+        'PROPERTY'   => self::TARGET_PROPERTY,
+        'ANNOTATION' => self::TARGET_ANNOTATION,
     );
 
     /**
@@ -67,7 +67,7 @@ final class Target
     public $literal;
 
     /**
-     * Annotation construct
+     * Annotation constructor.
      *
      * @param array $values
      *
@@ -97,7 +97,7 @@ final class Target
                             $literal,  implode(', ', array_keys(self::$map)))
                 );
             }
-            $bitmask += self::$map[$literal];
+            $bitmask |= self::$map[$literal];
         }
 
         $this->targets  = $bitmask;

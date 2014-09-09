@@ -17,38 +17,31 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations\Annotation;
+namespace Doctrine\Tests\Common\Annotations\Annotation;
+
+use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Annotation that can be used to signal to the parser to ignore specific
- * annotations during the parsing process.
+ * Tests for {@see \Doctrine\Common\Annotations\Annotation\Target}
  *
- * @Annotation
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @covers \Doctrine\Common\Annotations\Annotation\Target
  */
-final class IgnoreAnnotation
+class TargetTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var array
+     * @group DDC-3006
      */
-    public $names;
-
-    /**
-     * Constructor.
-     *
-     * @param array $values
-     *
-     * @throws \RuntimeException
-     */
-    public function __construct(array $values)
+    public function testValidMixedTargets()
     {
-        if (is_string($values['value'])) {
-            $values['value'] = array($values['value']);
-        }
-        if (!is_array($values['value'])) {
-            throw new \RuntimeException(sprintf('@IgnoreAnnotation expects either a string name, or an array of strings, but got %s.', json_encode($values['value'])));
-        }
+        $target = new Target(array("value" => array("ALL")));
+        $this->assertEquals(Target::TARGET_ALL, $target->targets);
 
-        $this->names = $values['value'];
+        $target = new Target(array("value" => array("METHOD", "METHOD")));
+        $this->assertEquals(Target::TARGET_METHOD, $target->targets);
+        $this->assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+
+        $target = new Target(array("value" => array("PROPERTY", "METHOD")));
+        $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
     }
 }
+

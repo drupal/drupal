@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8afb97667c2791fec2fb1fc43853da24",
+    "hash": "7d34fdcf5f05caf22258954b560e70f6",
     "packages": [
         {
             "name": "doctrine/annotations",
-            "version": "dev-master",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "463d926a8dcc49271cb7db5a08364a70ed6e3cd3"
+                "reference": "d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/463d926a8dcc49271cb7db5a08364a70ed6e3cd3",
-                "reference": "463d926a8dcc49271cb7db5a08364a70ed6e3cd3",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd",
+                "reference": "d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd",
                 "shasum": ""
             },
             "require": {
@@ -25,12 +25,13 @@
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "doctrine/cache": "1.*"
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -65,7 +66,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -76,7 +77,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2013-11-19 05:59:59"
+            "time": "2014-07-06 15:52:21"
         },
         {
             "name": "doctrine/cache",
@@ -2493,7 +2494,6 @@
     "stability-flags": {
         "symfony/yaml": 20,
         "doctrine/common": 20,
-        "doctrine/annotations": 20,
         "kriswallsmith/assetic": 15,
         "phpunit/phpunit-mock-objects": 20
     },
