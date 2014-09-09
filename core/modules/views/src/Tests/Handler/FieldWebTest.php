@@ -228,8 +228,7 @@ class FieldWebTest extends HandlerTestBase {
       $expected_result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
       $alter['path'] = 'node/123?foo#bar';
       $result = $id_field->theme($row);
-      // @fixme: The actual result is node/123?foo#bar so views has a bug here.
-      // $this->assertSubStringExists(decode_entities($result), decode_entities($expected_result));
+      $this->assertSubString(decode_entities($result), decode_entities($expected_result));
 
       $expected_result = url('<front>', array('absolute' => $absolute));
       $alter['path'] = '<front>';
