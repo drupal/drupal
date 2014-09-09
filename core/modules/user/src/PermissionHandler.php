@@ -127,7 +127,7 @@ class PermissionHandler implements PermissionHandlerInterface {
         if (!is_array($permission)) {
           $permission = array(
             'title' => $permission,
-            'description' => NULL,``
+            'description' => NULL,
           );
         }
         $permission['provider'] = $provider;
