@@ -1748,7 +1748,7 @@ function install_check_translations($install_state) {
   file_prepare_directory($translations_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
   // Get values so the requirements errors can be specific.
-  if (drupal_verify_install_file($translations_directory, FILE_EXIST|FILE_WRITABLE, 'dir')) {
+  if (drupal_verify_install_file($translations_directory, FILE_EXIST, 'dir')) {
     $readable = is_readable($translations_directory);
     $writable = is_writable($translations_directory);
     $translations_directory_exists = TRUE;
