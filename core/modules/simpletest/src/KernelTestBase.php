@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @ingroup testing
  */
-abstract class KernelTestBase extends UnitTestBase {
+abstract class KernelTestBase extends TestBase {
 
   use AssertContentTrait;
 
@@ -47,8 +47,8 @@ abstract class KernelTestBase extends UnitTestBase {
    * this property. The values of all properties in all classes in the hierarchy
    * are merged.
    *
-   * Unlike UnitTestBase::setUp(), any modules specified in the $modules
-   * property are automatically loaded and set as the fixed module list.
+   * Any modules specified in the $modules property are automatically loaded and
+   * set as the fixed module list.
    *
    * Unlike WebTestBase::setUp(), the specified modules are loaded only, but not
    * automatically installed. Modules need to be installed manually, if needed.
@@ -143,8 +143,6 @@ abstract class KernelTestBase extends UnitTestBase {
       copy($settings_services_file, DRUPAL_ROOT . '/' . $this->siteDirectory . '/services.yml');
     }
 
-    parent::setUp();
-
     // Create and set new configuration directories.
     $this->prepareConfigDirectories();
 
@@ -212,9 +210,9 @@ abstract class KernelTestBase extends UnitTestBase {
     // StreamWrapper APIs.
     // @todo Move StreamWrapper management into DrupalKernel.
     // @see https://drupal.org/node/2028109
+    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $this->settingsSet('file_public_path', $this->public_files_directory);
     $this->streamWrappers = array();
-    // The public stream wrapper only depends on the file_public_path setting,
-    // which is provided by UnitTestBase::setUp().
     $this->registerStreamWrapper('public', 'Drupal\Core\StreamWrapper\PublicStream');
     // The temporary stream wrapper is able to operate both with and without
     // configuration.
