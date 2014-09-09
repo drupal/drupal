@@ -42,6 +42,7 @@ class PathAliasTest extends PathTestBase {
     $edit['source'] = 'node/' . $node1->id();
     $edit['alias'] = $this->randomMachineName(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+    sleep(1);
 
     // Check the path alias whitelist cache.
     $whitelist = \Drupal::cache()->get('path_alias_whitelist');
