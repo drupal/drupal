@@ -239,7 +239,8 @@ class GDToolkit extends ImageToolkitBase {
           // truecolor image or if the transparent color is part of the palette.
           // Since the index of the transparency color is a property of the
           // image rather than of the palette, it is possible that an image
-          // could be created with this index set outside the palette size.
+          // could be created with this index set outside the palette size (see
+          // http://stackoverflow.com/a/3898007).
           $transparent_color = imagecolorsforindex($this->getResource(), $transparent);
           $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
