@@ -7,27 +7,21 @@
 
 namespace Drupal\field_ui_test\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Defines the test Field UI class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "field_ui_test_no_bundle",
  *   label = @Translation("Test Field UI entity, no bundle"),
- *   handlers = {
- *     "storage" = "Drupal\Core\Entity\EntityDatabaseStorage"
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "uuid" = "uuid",
  *   },
  *   fieldable = TRUE
  * )
  */
-class FieldUITestNoBundle extends Entity {
-
-  /**
-   * The entity ID.
-   *
-   * @var int
-   */
-  public $id;
+class FieldUITestNoBundle extends EntityTest {
 
 }
