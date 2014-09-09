@@ -425,6 +425,9 @@ function simpletest_script_setup_database($new = FALSE) {
         'default' => $info['fragment'],
       ),
     );
+    if (isset($info['port'])) {
+      $databases['default']['default']['port'] = $info['port'];
+    }
   }
   // Otherwise, use the default database connection from settings.php.
   else {
