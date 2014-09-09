@@ -49,7 +49,6 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
 
     ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));

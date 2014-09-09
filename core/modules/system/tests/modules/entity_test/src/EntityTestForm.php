@@ -6,7 +6,6 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -19,21 +18,29 @@ class EntityTestForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEntity() {
-    if (empty($this->entity->name->value)) {
-      // Assign a random name to new EntityTest entities, to avoid repetition in
-      // tests.
-      $random = new Random();
-      $this->entity->name->value = $random->name();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $entity = $this->entity;
+
+    $form['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Name'),
+      '#default_value' => $entity->name->value,
+      '#size' => 60,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+      '#weight' => -10,
+    );
+
+    $form['user_id'] = array(
+      '#type' => 'textfield',
+      '#title' => 'UID',
+      '#default_value' => $entity->user_id->target_id,
+      '#size' => 60,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+      '#weight' => -10,
+    );
 
     $form['langcode'] = array(
       '#title' => t('Language'),

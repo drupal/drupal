@@ -9,14 +9,14 @@ namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests KeyValueEntityStorage for content entities.
  *
  * @group KeyValueStore
  */
-class KeyValueContentEntityStorageTest extends KernelTestBase {
+class KeyValueContentEntityStorageTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
@@ -24,14 +24,6 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('entity', 'user', 'entity_test', 'keyvalue_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installEntitySchema('user');
-  }
 
   /**
    * Tests CRUD operations.

@@ -42,7 +42,6 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
 
     $this->fields = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
 
-    $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installConfig(array('field', 'filter'));
   }

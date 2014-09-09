@@ -86,6 +86,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // used to ignore the value check.
     $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is displayed.');
     $edit = array(
+      'user_id' => mt_rand(0, 10),
+      'name' => $this->randomMachineName(),
       "{$this->field_name}[]" => array($term1->id(), $term2->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -126,6 +128,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Term 1 should still pass validation.
     $edit = array(
+      'user_id' => mt_rand(0, 10),
+      'name' => $this->randomMachineName(),
       "{$this->field_name}[]" => array($term1->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

@@ -90,6 +90,8 @@ class EmailFieldTest extends WebTestBase {
     // Submit a valid email address and ensure it is accepted.
     $value = 'test@example.com';
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

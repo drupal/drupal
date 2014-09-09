@@ -98,7 +98,7 @@ class EntityRevisionsTest extends WebTestBase {
     // Confirm the correct revision text appears in the edit form.
     $entity = entity_load($entity_type, $entity->id->value);
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value);
-    $this->assertFieldById('edit-name-0-value', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
+    $this->assertFieldById('edit-name', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
     $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
   }
 }

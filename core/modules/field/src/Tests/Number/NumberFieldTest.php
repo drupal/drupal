@@ -79,6 +79,8 @@ class NumberFieldTest extends WebTestBase {
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -170,6 +172,8 @@ class NumberFieldTest extends WebTestBase {
     // Submit a valid integer
     $value = rand($minimum, $maximum);
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -180,6 +184,8 @@ class NumberFieldTest extends WebTestBase {
     // Try to set a value below the minimum value
     $this->drupalGet('entity_test/add');
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $minimum - 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -188,6 +194,8 @@ class NumberFieldTest extends WebTestBase {
     // Try to set a decimal value
     $this->drupalGet('entity_test/add');
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => 1.5,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -196,6 +204,8 @@ class NumberFieldTest extends WebTestBase {
     // Try to set a value above the maximum value
     $this->drupalGet('entity_test/add');
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $maximum + 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -211,6 +221,8 @@ class NumberFieldTest extends WebTestBase {
     foreach ($valid_entries as $valid_entry) {
       $this->drupalGet('entity_test/add');
       $edit = array(
+        'user_id' => 1,
+        'name' => $this->randomMachineName(),
         "{$field_name}[0][value]" => $valid_entry,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -262,6 +274,8 @@ class NumberFieldTest extends WebTestBase {
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

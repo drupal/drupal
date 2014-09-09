@@ -103,6 +103,8 @@ class BooleanFieldTest extends WebTestBase {
 
     // Submit and ensure it is accepted.
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       "{$field_name}[value]" => 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

@@ -109,6 +109,8 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Submit with some value.
     $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
       $this->field_name => array($term->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

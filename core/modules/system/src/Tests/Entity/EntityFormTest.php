@@ -61,7 +61,8 @@ class EntityFormTest extends WebTestBase {
     $name2 = $this->randomMachineName(10);
 
     $edit = array(
-      'name[0][value]' => $name1,
+      'name' => $name1,
+      'user_id' => mt_rand(0, 128),
       'field_test_text[0][value]' => $this->randomMachineName(16),
     );
 
@@ -69,7 +70,7 @@ class EntityFormTest extends WebTestBase {
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
 
-    $edit['name[0][value]'] = $name2;
+    $edit['name'] = $name2;
     $this->drupalPostForm($entity_type . '/manage/' . $entity->id(), $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
