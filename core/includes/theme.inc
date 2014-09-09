@@ -2377,12 +2377,15 @@ function drupal_common_theme() {
     ),
     'menu_local_task' => array(
       'render element' => 'element',
+      'template' => 'menu-local-task',
     ),
     'menu_local_action' => array(
       'render element' => 'element',
+      'template' => 'menu-local-action',
     ),
     'menu_local_tasks' => array(
       'variables' => array('primary' => array(), 'secondary' => array()),
+      'template' => 'menu-local-tasks',
     ),
     // From form.inc.
     'input' => array(

@@ -37,77 +37,34 @@ function seven_preprocess_page(&$variables) {
 }
 
 /**
- * Overrides theme_menu_local_tasks().
+ * Implements hook_pre_render_HOOK() for menu-local-tasks templates.
  *
- * Returns HTML for primary and secondary local tasks.
+ * Use preprocess hook to set #attached to child elemnts
+ * because they will be processed by Twig and drupal_render will
+ * be invoked.
  */
-function seven_menu_local_tasks(&$variables) {
-  $output = '';
-
+function seven_preprocess_menu_local_tasks(&$variables) {
   if (!empty($variables['primary'])) {
     $variables['primary']['#attached'] = array(
       'library' => array(
         'seven/drupal.nav-tabs',
       ),
     );
-    $variables['primary']['#prefix'] = '<h2 id="primary-tabs-title" class="visually-hidden">' . t('Primary tabs') . '</h2>';
-    $variables['primary']['#prefix'] .= '<nav role="navigation" class="is-horizontal is-collapsible" aria-labelledby="primary-tabs-title" data-drupal-nav-tabs>';
-    $variables['primary']['#prefix'] .= '<button class="reset-appearance tabs__tab tabs__trigger" aria-label="Primary tabs display toggle" data-drupal-nav-tabs-trigger>&bull;&bull;&bull;</button>';
-    $variables['primary']['#prefix'] .= '<ul class="tabs primary clearfix" data-drupal-nav-tabs-target>';
-    $variables['primary']['#suffix'] = '</ul>';
-    $variables['primary']['#suffix'] .= '</nav>';
-    $output .= drupal_render($variables['primary']);
   }
-  if (!empty($variables['secondary'])) {
+  elseif (!empty($variables['secondary'])) {
     $variables['secondary']['#attached'] = array(
       'library' => array(
         'seven/drupal.nav-tabs',
       ),
     );
-    $variables['secondary']['#prefix'] = '<h2 id="secondary-tabs-title" class="visually-hidden">' . t('Secondary tabs') . '</h2>';
-    $variables['secondary']['#prefix'] .= '<nav role="navigation" class="is-horizontal" aria-labelledby="secondary-tabs-title" data-drupal-nav-tabs>';
-    $variables['secondary']['#prefix'] .= '<ul class="tabs secondary clearfix">';
-    $variables['secondary']['#suffix'] = '</ul>';
-    $variables['secondary']['#suffix'] .= '</nav>';
-    $output .= drupal_render($variables['secondary']);
   }
-
-  return $output;
 }
 
 /**
- * Overrides theme_menu_local_task().
- *
- * Returns HTML for a local task.
+ * Implements hook_preprocess_HOOK() for menu-local-task templates.
  */
-function seven_menu_local_task($variables) {
-  $link = $variables['element']['#link'];
-  $link += array(
-    'localized_options' => array(),
-  );
-  $link_text = $link['title'];
-
-  if (!empty($variables['element']['#active'])) {
-    // Add text to indicate active tab for non-visual users.
-    $active = '<span class="visually-hidden">' . t('(active tab)') . '</span>';
-
-    // If the link does not contain HTML already, String::checkPlain() it now.
-    // After we set 'html'=TRUE the link will not be sanitized by l().
-    if (empty($link['localized_options']['html'])) {
-      $link['title'] = String::checkPlain($link['title']);
-    }
-    $link['localized_options']['html'] = TRUE;
-    $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
-  }
-  if (!empty($link['href'])) {
-    // @todo - remove this once all pages are converted to routes.
-    $a_tag = l($link_text, $link['href'], $link['localized_options']);
-  }
-  else {
-    $a_tag = \Drupal::l($link_text, $link['route_name'], $link['route_parameters'], $link['localized_options']);
-  }
-
-  return '<li' . (!empty($variables['element']['#active']) ? ' class="tabs__tab active"' : ' class="tabs__tab"') . '>' . $a_tag . '</li>';
+function seven_preprocess_menu_local_task(&$variables) {
+  $variables['attributes']['class'][] = 'tabs__tab';
 }
 
 /**
@@ -164,22 +121,11 @@ function seven_preprocess_tablesort_indicator(&$variables) {
 }
 
 /**
- * Overrides theme_menu_local_action().
+ * Implements hook_preprocess_HOOK() for menu-local-action templates.
  */
-function seven_menu_local_action($variables) {
-  $link = $variables['element']['#link'];
-  $link += array(
-    'href' => '',
-    'localized_options' => array(),
-    'route_parameters' => array(),
-  );
-  $link['localized_options']['attributes']['class'][] = 'button';
-  $link['localized_options']['attributes']['class'][] = 'button--primary';
-  $link['localized_options']['attributes']['class'][] = 'button--small';
-
-  // @todo Replace with a generalized solution for icons.
-  // See http://drupal.org/node/1849712
-  $link['localized_options']['attributes']['class'][] = 'button-action';
+function seven_preprocess_menu_local_action(array &$variables) {
+  $variables['link']['#options']['attributes']['class'][] = 'button--primary';
+  $variables['link']['#options']['attributes']['class'][] = 'button--small';
 
   // We require Modernizr's touch test for button styling.
   $libraries = array(
@@ -190,20 +136,6 @@ function seven_menu_local_action($variables) {
     ),
   );
   drupal_render($libraries);
-
-  $output = '<li>';
-  // @todo Remove this check and the call to l() when all pages are converted to
-  //   routes.
-  // @todo Figure out how to support local actions without a href properly.
-  if ($link['href'] === '' && !empty($link['route_name'])) {
-    $output .= Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link['localized_options']);
-  }
-  else {
-    $output .= l($link['title'], $link['href'], $link['localized_options']);
-  }
-  $output .= "</li>";
-
-  return $output;
 }
 
 /**

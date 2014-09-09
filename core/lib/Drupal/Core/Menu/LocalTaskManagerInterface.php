@@ -49,7 +49,7 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    *   The route for which to make renderable local tasks.
    *
    * @return array
-   *   A render array as expected by theme_menu_local_tasks.
+   *   A render array as expected by menu-local-tasks.html.twig.
    */
   public function getTasksBuild($current_route_name);
 

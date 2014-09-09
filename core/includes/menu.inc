@@ -371,18 +371,18 @@ function theme_menu_link(array $variables) {
 }
 
 /**
- * Returns HTML for a single local task link.
+ * Prepares variables for single local task link templates.
  *
- * @param $variables
+ * Default template: menu-local-task.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element containing:
  *     - #link: A menu link array with 'title', 'href', and 'localized_options'
  *       keys.
  *     - #active: A boolean indicating whether the local task is active.
- *
- * @ingroup themeable
  */
-function theme_menu_local_task($variables) {
+function template_preprocess_menu_local_task(&$variables) {
   $link = $variables['element']['#link'];
   $link += array(
     'localized_options' => array(),
@@ -392,6 +392,7 @@ function theme_menu_local_task($variables) {
   if (!empty($variables['element']['#active'])) {
     // Add text to indicate active tab for non-visual users.
     $active = '<span class="visually-hidden">' . t('(active tab)') . '</span>';
+    $variables['attributes']['class'] = array('active');
 
     // If the link does not contain HTML already, String::checkPlain() it now.
     // After we set 'html'=TRUE the link will not be sanitized by l().
@@ -403,29 +404,36 @@ function theme_menu_local_task($variables) {
   }
   $link['localized_options']['set_active_class'] = TRUE;
 
+  $variables['link'] = array(
+    '#type' => 'link',
+    '#title' => $link_text,
+    '#options' => $link['localized_options'],
+  );
+
   if (!empty($link['href'])) {
-    // @todo - remove this once all pages are converted to routes.
-    $a_tag = l($link_text, $link['href'], $link['localized_options']);
+    // @todo - Remove this once all pages are converted to routes.
+    $variables['link']['#href'] = $link['href'];
   }
   else {
-    $a_tag = \Drupal::l($link_text, $link['route_name'], $link['route_parameters'], $link['localized_options']);
+    $variables['link'] += array(
+      '#route_name' => $link['route_name'],
+      '#route_parameters' => $link['route_parameters'],
+    );
   }
-
-  return '<li' . (!empty($variables['element']['#active']) ? ' class="active"' : '') . '>' . $a_tag . '</li>';
 }
 
 /**
- * Returns HTML for a single local action link.
+ * Prepares variables for single local action link templates.
  *
- * @param $variables
+ * Default template: menu-local-action.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element containing:
  *     - #link: A menu link array with 'title', 'href', and 'localized_options'
  *       keys.
- *
- * @ingroup themeable
  */
-function theme_menu_local_action($variables) {
+function template_preprocess_menu_local_action(&$variables) {
   $link = $variables['element']['#link'];
   $link += array(
     'href' => '',
@@ -436,19 +444,23 @@ function theme_menu_local_action($variables) {
   $link['localized_options']['attributes']['class'][] = 'button-action';
   $link['localized_options']['set_active_class'] = TRUE;
 
-  $output = '<li>';
-  // @todo Remove this check and the call to l() when all pages are converted to
-  //   routes.
+  $variables['link'] = array(
+    '#type' => 'link',
+    '#title' => $link['title'],
+    '#options' => $link['localized_options'],
+  );
+
   // @todo Figure out how to support local actions without a href properly.
   if ($link['href'] === '' && !empty($link['route_name'])) {
-    $output .= Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link['localized_options']);
+    $variables['link'] += array(
+      '#route_name' => $link['route_name'],
+      '#route_parameters' => $link['route_parameters'],
+    );
   }
   else {
-    $output .= l($link['title'], $link['href'], $link['localized_options']);
+    // @todo - Remove this once all pages are converted to routes.
+    $variables['link']['#href'] = $link['href'];
   }
-  $output .= "</li>";
-
-  return $output;
 }
 
 /**
@@ -638,36 +650,6 @@ function menu_local_tabs() {
     '#secondary' => menu_secondary_local_tasks(),
   );
   return !empty($build['#primary']) || !empty($build['#secondary']) ? $build : array();
-}
-
-/**
- * Returns HTML for primary and secondary local tasks.
- *
- * @param $variables
- *   An associative array containing:
- *     - primary: (optional) An array of local tasks (tabs).
- *     - secondary: (optional) An array of local tasks (tabs).
- *
- * @ingroup themeable
- * @see menu_local_tasks()
- */
-function theme_menu_local_tasks(&$variables) {
-  $output = '';
-
-  if (!empty($variables['primary'])) {
-    $variables['primary']['#prefix'] = '<h2 class="visually-hidden">' . t('Primary tabs') . '</h2>';
-    $variables['primary']['#prefix'] .= '<ul class="tabs primary">';
-    $variables['primary']['#suffix'] = '</ul>';
-    $output .= drupal_render($variables['primary']);
-  }
-  if (!empty($variables['secondary'])) {
-    $variables['secondary']['#prefix'] = '<h2 class="visually-hidden">' . t('Secondary tabs') . '</h2>';
-    $variables['secondary']['#prefix'] .= '<ul class="tabs secondary">';
-    $variables['secondary']['#suffix'] = '</ul>';
-    $output .= drupal_render($variables['secondary']);
-  }
-
-  return $output;
 }
 
 /**
