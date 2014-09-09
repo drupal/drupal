@@ -18,11 +18,12 @@ class UserNameConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($name, Constraint $constraint) {
-    if (!$name) {
+  public function validate($items, Constraint $constraint) {
+    if (!isset($items) || !$items->value) {
       $this->context->addViolation($constraint->emptyMessage);
       return;
     }
+    $name = $items->first()->value;
     if (substr($name, 0, 1) == ' ') {
       $this->context->addViolation($constraint->spaceBeginMessage);
     }

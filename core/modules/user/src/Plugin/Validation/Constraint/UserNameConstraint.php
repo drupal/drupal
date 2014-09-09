@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @Plugin(
  *   id = "UserName",
- *   label = @Translation("User name", context = "Validation")
+ *   label = @Translation("User name", context = "Validation"),
  * )
  */
 class UserNameConstraint extends Constraint {

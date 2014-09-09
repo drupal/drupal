@@ -472,7 +472,7 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
       ->setDefaultValue('')
-      ->setPropertyConstraints('value', array(
+      ->setConstraints(array(
         // No Length constraint here because the UserName constraint also covers
         // that.
         'UserName' => array(),
@@ -487,7 +487,7 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Email'))
       ->setDescription(t('The email of this user.'))
       ->setDefaultValue('')
-      ->setPropertyConstraints('value', array('UserMailUnique' => array()));
+      ->setConstraints(array('UserMailUnique' => array()));
 
     // @todo Convert to a text field in https://drupal.org/node/1548204.
     $fields['signature'] = BaseFieldDefinition::create('string')

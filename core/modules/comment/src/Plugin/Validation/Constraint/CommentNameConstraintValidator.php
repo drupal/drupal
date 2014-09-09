@@ -18,12 +18,12 @@ class CommentNameConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($field_item, Constraint $constraint) {
-    $author_name = $field_item->value;
+  public function validate($items, Constraint $constraint) {
+    $author_name = $items->first()->value;
     if (isset($author_name) && $author_name !== '') {
       // Do not allow unauthenticated comment authors to use a name that is
       // taken by a registered user.
-      if ($field_item->getEntity()->getOwnerId() === 0) {
+      if ($items->getEntity()->getOwnerId() === 0) {
         // @todo Properly inject dependency https://drupal.org/node/2197029
         $users = \Drupal::entityManager()->getStorage('user')->loadByProperties(array('name' => $author_name));
         if (!empty($users)) {

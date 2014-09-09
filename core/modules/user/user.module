@@ -17,7 +17,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\menu_link\Entity\MenuLink;
@@ -332,7 +332,7 @@ function user_load_by_name($name) {
  *
  */
 function user_validate_name($name) {
-  $definition = DataDefinition::create('string')
+  $definition = BaseFieldDefinition::create('string')
     ->addConstraint('UserName', array());
   $data = \Drupal::typedDataManager()->create($definition);
   $data->setValue($name);
