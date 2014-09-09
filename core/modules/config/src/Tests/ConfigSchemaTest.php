@@ -166,6 +166,9 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.id]';
     $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
     $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
+    $expected['mapping']['third_party_settings']['type'] = 'sequence';
+    $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
+    $expected['mapping']['third_party_settings']['sequence'][0]['type'] = 'image_style.third_party.[%key]';
     $expected['type'] = 'image.style.*';
 
     $this->assertEqual($definition, $expected);

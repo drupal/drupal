@@ -9,6 +9,7 @@ namespace Drupal\image\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\Core\Routing\RequestHelper;
@@ -49,6 +50,8 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * )
  */
 class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagsInterface {
+
+  use ThirdPartySettingsTrait;
 
   /**
    * The name of the image style to use as replacement upon delete.

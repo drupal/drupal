@@ -129,6 +129,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Load the saved image style.
     $style = entity_load('image_style', $style_name);
+
+    // Ensure that third party settings were added to the config entity.
+    // These are added by a hook_image_style_presave() implemented in
+    // image_module_test module.
+    $this->assertEqual('bar', $style->getThirdPartySetting('image_module_test', 'foo'), 'Third party settings were added to the image style.');
+
     // Ensure that the image style URI matches our expected path.
     $style_uri_path = $style->url();
     $this->assertTrue(strpos($style_uri_path, $style_path) !== FALSE, 'The image style URI is correct.');

@@ -5,6 +5,8 @@
  * Provides Image module hook implementations for testing purposes.
  */
 
+use Drupal\image\ImageStyleInterface;
+
 function image_module_test_file_download($uri) {
   $default_uri = \Drupal::state()->get('image.test_file_download') ?: FALSE;
   if ($default_uri == $uri) {
@@ -20,4 +22,13 @@ function image_module_test_file_download($uri) {
 function image_module_test_image_effect_info_alter(&$effects) {
   $image_effects_definition_called = &drupal_static(__FUNCTION__, 0);
   $image_effects_definition_called++;
+}
+
+/**
+ * Implements hook_image_style_presave().
+ *
+ * Used to save test third party settings in the image style entity.
+ */
+function image_module_test_image_style_presave(ImageStyleInterface $style) {
+  $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
 }

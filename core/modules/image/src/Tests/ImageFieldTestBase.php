@@ -32,7 +32,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'image', 'field_ui');
+  public static $modules = array('node', 'image', 'field_ui', 'image_module_test');
 
   protected $admin_user;
 
