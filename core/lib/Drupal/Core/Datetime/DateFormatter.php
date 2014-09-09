@@ -103,8 +103,7 @@ class DateFormatter {
    *   - One of the built-in formats: 'short', 'medium',
    *     'long', 'html_datetime', 'html_date', 'html_time',
    *     'html_yearless_date', 'html_week', 'html_month', 'html_year'.
-   *   - The name of a date type defined by a module in
-   *     hook_date_format_types(), if it's been assigned a format.
+   *   - The name of a date type defined by a date format config entity.
    *   - The machine name of an administrator-defined date format.
    *   - 'custom', to use $format.
    *   Defaults to 'medium'.
