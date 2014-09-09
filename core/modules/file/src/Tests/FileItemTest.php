@@ -95,6 +95,11 @@ class FileItemTest extends FieldUnitTestBase {
     // a non-existing entity.
     $file2->delete();
     $entity->delete();
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->file_test->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

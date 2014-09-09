@@ -91,5 +91,10 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->{$this->fieldName}->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 }

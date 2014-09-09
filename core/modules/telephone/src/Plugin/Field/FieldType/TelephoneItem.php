@@ -7,6 +7,7 @@
 
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -75,6 +76,14 @@ class TelephoneItem extends FieldItemBase {
     ));
 
     return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $values['value'] = rand(pow(10, 8), pow(10, 9)-1);
+    return $values;
   }
 
 }

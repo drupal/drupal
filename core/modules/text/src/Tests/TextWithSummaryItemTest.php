@@ -93,6 +93,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $entity->summary_field->format = 'no_filters';
     $this->assertEqual($entity->summary_field->processed, $value);
     $this->assertEqual($entity->summary_field->summary_processed, $summary);
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create($entity_type);
+    $entity->summary_field->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
   /**

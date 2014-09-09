@@ -91,6 +91,13 @@ class NumberItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_integer->value, $new_integer);
     $this->assertEqual($entity->field_float->value, $new_float);
     $this->assertEqual($entity->field_decimal->value, $new_decimal);
+
+    /// Test sample item generation.
+    $entity = entity_create('entity_test');
+    $entity->field_integer->generateSampleItems();
+    $entity->field_float->generateSampleItems();
+    $entity->field_decimal->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

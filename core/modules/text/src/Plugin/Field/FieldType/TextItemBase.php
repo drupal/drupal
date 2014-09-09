@@ -7,6 +7,8 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -80,6 +82,30 @@ abstract class TextItemBase extends FieldItemBase {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $random = new Random();
+    $settings = $field_definition->getSettings();
+
+    if (empty($settings['max_length'])) {
+      // Textarea handling
+      $value = $random->paragraphs();
+    }
+    else {
+      // Textfield handling.
+      $value = substr($random->sentences(mt_rand(1, $settings['max_length'] / 3), FALSE), 0, $settings['max_length']);
+    }
+
+    $values = array(
+      'value' => $value,
+      'summary' => $value,
+      'format' => filter_fallback_format(),
+    );
+    return $values;
   }
 
 }

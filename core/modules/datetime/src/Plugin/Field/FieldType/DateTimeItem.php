@@ -7,6 +7,7 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -99,6 +100,24 @@ class DateTimeItem extends FieldItemBase {
     );
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $type = $field_definition->getSetting('datetime_type');
+
+    // Just pick a date in the past year. No guidance is provided by this Field
+    // type.
+    $timestamp = REQUEST_TIME - mt_rand(0, 86400*365);
+    if ($type == DateTimeItem::DATETIME_TYPE_DATE) {
+      $values['value'] = gmdate(DATETIME_DATE_STORAGE_FORMAT, $timestamp);
+    }
+    else {
+      $values['value'] = gmdate(DATETIME_DATETIME_STORAGE_FORMAT, $timestamp);
+    }
+    return $values;
   }
 
   /**

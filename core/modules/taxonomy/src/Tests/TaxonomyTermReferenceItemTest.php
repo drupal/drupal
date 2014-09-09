@@ -25,7 +25,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'options', 'text', 'filter');
+  public static $modules = array('taxonomy', 'entity_reference', 'options', 'text', 'filter');
 
   /**
    * The term entity.
@@ -110,6 +110,11 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy->target_id = $term2->id();
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id(), 'Field item entity contains the new TID.');
     $this->assertEqual($entity->field_test_taxonomy->entity->getName(), $term2->getName(), 'Field item entity contains the new name.');
+
+    // Test sample item generation.
+    $entity = entity_create('entity_test');
+    $entity->field_test_taxonomy->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

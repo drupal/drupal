@@ -7,6 +7,8 @@
 
 namespace Drupal\path\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
@@ -86,6 +88,15 @@ class PathItem extends FieldItemBase {
     // Delete all aliases associated with this entity.
     $entity = $this->getEntity();
     \Drupal::service('path.alias_storage')->delete(array('source' => $entity->getSystemPath()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $random = new Random();
+    $values['alias'] = str_replace(' ', '-', strtolower($random->sentences(3)));
+    return $values;
   }
 
 }

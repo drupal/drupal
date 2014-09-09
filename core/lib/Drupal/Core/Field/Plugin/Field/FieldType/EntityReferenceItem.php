@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
@@ -206,6 +207,18 @@ class EntityReferenceItem extends FieldItemBase {
     if ($this->hasUnsavedEntity()) {
       $this->entity->save();
       $this->target_id = $this->entity->id();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $manager = \Drupal::service('plugin.manager.entity_reference.selection');
+    if ($referenceable = $manager->getSelectionHandler($field_definition)->getReferenceableEntities()) {
+      $group = array_rand($referenceable);
+      $values['target_id'] = array_rand($referenceable[$group]);
+      return $values;
     }
   }
 

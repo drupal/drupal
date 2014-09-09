@@ -136,6 +136,32 @@ class Random {
   }
 
   /**
+   * Generate a string that looks like a word (letters only, alternating consonants and vowels).
+   *
+   * @param int $length
+   *  The desired word length.
+   *
+   * @return string
+   */
+  public function word($length) {
+    mt_srand((double) microtime()*1000000);
+
+    $vowels = array("a", "e", "i", "o", "u");
+    $cons = array("b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr",
+      "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr", "sl", "cl", "sh");
+
+    $num_vowels = count($vowels);
+    $num_cons = count($cons);
+    $word = '';
+
+    while(strlen($word) < $length){
+      $word .= $cons[mt_rand(0, $num_cons - 1)] . $vowels[mt_rand(0, $num_vowels - 1)];
+    }
+
+    return substr($word, 0, $length);
+  }
+
+  /**
    * Generates a random PHP object.
    *
    * @param int $size
@@ -153,6 +179,126 @@ class Random {
       $object->{$random_key} = $random_value;
     }
     return $object;
+  }
+
+  /**
+   * Generates sentences Latin words, often used as placeholder text.
+   *
+   * @param int $min_word_count
+   *   The minimum number of words in the return string. Total word count
+   *   can slightly exceed provided this value in order to deliver
+   *   sentences of random length.
+   * @param bool $capitalize
+   *   Uppercase all the words in the string.
+   *
+   * @return string
+   *   Nonsense latin words which form sentence(s).
+   */
+  public function sentences($min_word_count, $capitalize = FALSE) {
+    $dictionary = array("abbas", "abdo", "abico", "abigo", "abluo", "accumsan",
+      "acsi", "ad", "adipiscing", "aliquam", "aliquip", "amet", "antehabeo",
+      "appellatio", "aptent", "at", "augue", "autem", "bene", "blandit",
+      "brevitas", "caecus", "camur", "capto", "causa", "cogo", "comis",
+      "commodo", "commoveo", "consectetuer", "consequat", "conventio", "cui",
+      "damnum", "decet", "defui", "diam", "dignissim", "distineo", "dolor",
+      "dolore", "dolus", "duis", "ea", "eligo", "elit", "enim", "erat",
+      "eros", "esca", "esse", "et", "eu", "euismod", "eum", "ex", "exerci",
+      "exputo", "facilisi", "facilisis", "fere", "feugiat", "gemino",
+      "genitus", "gilvus", "gravis", "haero", "hendrerit", "hos", "huic",
+      "humo", "iaceo", "ibidem", "ideo", "ille", "illum", "immitto",
+      "importunus", "imputo", "in", "incassum", "inhibeo", "interdico",
+      "iriure", "iusto", "iustum", "jugis", "jumentum", "jus", "laoreet",
+      "lenis", "letalis", "lobortis", "loquor", "lucidus", "luctus", "ludus",
+      "luptatum", "macto", "magna", "mauris", "melior", "metuo", "meus",
+      "minim", "modo", "molior", "mos", "natu", "neo", "neque", "nibh",
+      "nimis", "nisl", "nobis", "nostrud", "nulla", "nunc", "nutus", "obruo",
+      "occuro", "odio", "olim", "oppeto", "os", "pagus", "pala", "paratus",
+      "patria", "paulatim", "pecus", "persto", "pertineo", "plaga", "pneum",
+      "populus", "praemitto", "praesent", "premo", "probo", "proprius",
+      "quadrum", "quae", "qui", "quia", "quibus", "quidem", "quidne", "quis",
+      "ratis", "refero", "refoveo", "roto", "rusticus", "saepius",
+      "sagaciter", "saluto", "scisco", "secundum", "sed", "si", "similis",
+      "singularis", "sino", "sit", "sudo", "suscipere", "suscipit", "tamen",
+      "tation", "te", "tego", "tincidunt", "torqueo", "tum", "turpis",
+      "typicus", "ulciscor", "ullamcorper", "usitas", "ut", "utinam",
+      "utrum", "uxor", "valde", "valetudo", "validus", "vel", "velit",
+      "veniam", "venio", "vereor", "vero", "verto", "vicis", "vindico",
+      "virtus", "voco", "volutpat", "vulpes", "vulputate", "wisi", "ymo",
+      "zelus");
+    $dictionary_flipped = array_flip($dictionary);
+    $greeking = '';
+
+    if (!$capitalize) {
+      $words_remaining = $min_word_count;
+      while ($words_remaining > 0) {
+        $sentence_length = mt_rand(3, 10);
+        $words = array_rand($dictionary_flipped, $sentence_length);
+        $sentence = implode(' ', $words);
+        $greeking .= ucfirst($sentence) . '. ';
+        $words_remaining -= $sentence_length;
+      }
+    }
+    else {
+      // Use slightly different method for titles.
+      $words = array_rand($dictionary_flipped, $min_word_count);
+      $words = is_array($words) ? implode(' ', $words) : $words;
+      $greeking = ucwords($words);
+    }
+    return trim($greeking);
+  }
+
+  /**
+   * Generate paragraphs separated by double new line.
+   *
+   * @param int $paragraph_count
+   * @return string
+   */
+  public function paragraphs($paragraph_count = 12) {
+    $output = '';
+    for ($i = 1; $i <= $paragraph_count; $i++) {
+      $output .= $this->sentences(mt_rand(20, 60)) ."\n\n";
+    }
+    return $output;
+  }
+
+
+  /**
+   * Create a placeholder image.
+   *
+   * @param string $destination
+   *   The absolute file path where the image should be stored.
+   * @param int $min_resolution
+   * @param int $max_resolution
+   *
+   * @return string
+   *   Path to image file.
+   */
+  public function image($destination, $min_resolution, $max_resolution) {
+    $extension = pathinfo($destination, PATHINFO_EXTENSION);
+    $min = explode('x', $min_resolution);
+    $max = explode('x', $max_resolution);
+
+    $width = rand((int) $min[0], (int) $max[0]);
+    $height = rand((int) $min[1], (int) $max[1]);
+
+    // Make an image split into 4 sections with random colors.
+    $im = imagecreate($width, $height);
+    for ($n = 0; $n < 4; $n++) {
+      $color = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
+      $x = $width / 2 * ($n % 2);
+      $y = $height / 2 * (int) ($n >= 2);
+      imagefilledrectangle($im, $x, $y, $x + $width / 2, $y + $height / 2, $color);
+    }
+
+    // Make a perfect circle in the image middle.
+    $color = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
+    $smaller_dimension = min($width, $height);
+    $smaller_dimension = ($smaller_dimension % 2) ? $smaller_dimension : $smaller_dimension;
+    imageellipse($im, $width / 2, $height / 2, $smaller_dimension, $smaller_dimension, $color);
+
+    $save_function = 'image'. ($extension == 'jpg' ? 'jpeg' : $extension);
+    $save_function($im, $destination);
+    return $destination;
   }
 
 }

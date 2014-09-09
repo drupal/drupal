@@ -100,6 +100,11 @@ class LinkItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test->url, $new_url);
     $this->assertEqual($entity->field_test->title, $new_title);
     $this->assertEqual($entity->field_test->options['attributes']['class'], $new_class);
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->field_test->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

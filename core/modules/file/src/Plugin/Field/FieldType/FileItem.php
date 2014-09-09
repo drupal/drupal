@@ -8,6 +8,8 @@
 namespace Drupal\file\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
@@ -301,6 +303,25 @@ class FileItem extends EntityReferenceItem {
     }
 
     return $validators;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $random = new Random();
+    $settings = $field_definition->getSettings();
+
+    // Generate a file entity.
+    $destination = $settings['uri_scheme'] . '://' . $settings['file_directory'] . $random->name(10, TRUE) . '.txt';
+    $data = $random->paragraphs(3);
+    $file = file_save_data($data, $destination, FILE_EXISTS_ERROR);
+    $values = array(
+      'target_id' => $file->id(),
+      'display' => (int)$settings['display_default'],
+      'description' => $random->sentences(10),
+    );
+    return $values;
   }
 
   /**

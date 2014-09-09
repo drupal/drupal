@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -113,5 +114,12 @@ class BooleanItem extends FieldItemBase implements AllowedValuesInterface {
     return $this->getPossibleOptions($account);
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $values['value'] = mt_rand(0, 1);
+    return $values;
+  }
 }
+

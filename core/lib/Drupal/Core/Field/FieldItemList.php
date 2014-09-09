@@ -281,6 +281,18 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
+   public function generateSampleItems($count = 1) {
+    $field_definition = $this->getFieldDefinition();
+    $field_type_class = \Drupal::service('plugin.manager.field.field_type')->getPluginClass($field_definition->getType());
+    for ($delta = 0; $delta < $count; $delta++) {
+      $values[$delta] = $field_type_class::generateSampleValue($field_definition);
+    }
+    $this->setValue($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConstraints() {
     $constraints = parent::getConstraints();
     // Check that the number of values doesn't exceed the field cardinality. For

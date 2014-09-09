@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Render\Element\Email;
@@ -67,6 +69,15 @@ class EmailItem extends FieldItemBase {
     ));
 
     return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $random = new Random();
+    $values['value'] = $random->name() . '@example.com';
+    return $values;
   }
 
   /**

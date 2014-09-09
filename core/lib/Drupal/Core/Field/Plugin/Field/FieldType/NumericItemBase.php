@@ -113,4 +113,19 @@ abstract class NumericItemBase extends FieldItemBase {
     return $constraints;
   }
 
+  /**
+   * Helper method to truncate a decimal number to a given number of decimals.
+   *
+   * @param float $decimal
+   *   Decimal number to truncate.
+   * @param int $num
+   *   Number of digits the output will have.
+   *
+   * @return float
+   *   Decimal number truncated.
+   */
+  protected static function truncateDecimal($decimal, $num) {
+    return floor($decimal * pow(10, $num)) / pow(10, $num);
+  }
+
 }

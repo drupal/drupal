@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
@@ -62,6 +63,13 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
     $allowed_options = options_allowed_values($this->getFieldDefinition(), $this->getEntity());
     return $allowed_options;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+     // @todo Implement this once https://www.drupal.org/node/2238085 lands.
+   }
 
   /**
    * {@inheritdoc}

@@ -69,6 +69,11 @@ class EmailItemTest extends FieldUnitTestBase {
     $entity->save();
     $entity = entity_load('entity_test', $id);
     $this->assertEqual($entity->field_email->value, $new_value);
+
+    // Test sample item generation.
+    $entity = entity_create('entity_test');
+    $entity->field_email->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

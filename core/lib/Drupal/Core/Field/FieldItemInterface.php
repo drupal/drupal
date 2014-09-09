@@ -217,6 +217,20 @@ interface FieldItemInterface extends ComplexDataInterface {
   public function deleteRevision();
 
   /**
+   * Generates placeholder field values.
+   *
+   * Useful when populating site with placeholder content during site building
+   * or profiling.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   *
+   * @return array
+   *   An associative array of values.
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition);
+
+  /**
    * Defines the field-level settings for this plugin.
    *
    * @return array

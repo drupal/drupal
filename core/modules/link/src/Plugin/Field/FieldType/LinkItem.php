@@ -7,6 +7,8 @@
 
 namespace Drupal\link\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -131,6 +133,32 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
     );
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // Set of possible top-level domains.
+    $tlds = array('com', 'net', 'gov', 'org', 'edu', 'biz', 'info');
+    // Set random length for the domain name.
+    $domain_length = mt_rand(7, 15);
+    $random = new Random();
+
+    switch ($field_definition->getSetting('title')) {
+      case DRUPAL_DISABLED:
+        $values['title'] = '';
+        break;
+      case DRUPAL_REQUIRED:
+        $values['title'] = $random->sentences(4);
+        break;
+      case DRUPAL_OPTIONAL:
+        // In case of optional title, randomize its generation.
+        $values['title'] = mt_rand(0,1) ? $random->sentences(4) : '';
+        break;
+    }
+    $values['url'] = 'http://www.' . $random->word($domain_length) . '.' . $tlds[mt_rand(0, (sizeof($tlds)-1))];
+    return $values;
   }
 
   /**

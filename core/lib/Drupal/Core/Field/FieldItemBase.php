@@ -240,6 +240,11 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) { }
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteRevision() { }
 
   /**

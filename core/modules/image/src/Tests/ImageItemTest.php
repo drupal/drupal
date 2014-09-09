@@ -114,6 +114,11 @@ class ImageItemTest extends FieldUnitTestBase {
     $this->image->delete();
     $entity = entity_create('entity_test', array('mame' => $this->randomMachineName()));
     $entity->save();
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->image_test->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

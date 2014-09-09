@@ -126,6 +126,24 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
   }
 
   /**
+   * Validate and save entity. Fail if violations are found.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to save.
+   *
+   * @return void
+   */
+  protected function entityValidateAndSave(EntityInterface $entity) {
+    $violations = $entity->validate();
+    if ($violations->count()) {
+      $this->fail($violations);
+    }
+    else {
+      $entity->save();
+    }
+  }
+
+  /**
    * Generate random values for a field_test field.
    *
    * @param $cardinality
