@@ -83,7 +83,7 @@ class TwigNodeTrans extends \Twig_Node {
     $compiler->raw(')');
 
     // Append translation debug markup, if necessary.
-    if (Settings::get('twig_debug', FALSE)) {
+    if ($compiler->getEnvironment()->isDebug()) {
       $compiler->raw(" . '\n<!-- TRANSLATION: ");
       $compiler->subcompile($singular);
       if (!empty($plural)) {

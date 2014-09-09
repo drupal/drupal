@@ -162,13 +162,12 @@ class TwigTransTest extends WebTestBase {
    * Test Twig "trans" debug markup.
    */
   public function testTwigTransDebug() {
-    // Enable twig debug and write to the test settings.php file.
-    $this->settingsSet('twig_debug', TRUE);
-    $settings['settings']['twig_debug'] = (object) array(
-      'value' => TRUE,
-      'required' => TRUE,
-    );
-    $this->writeSettings($settings);
+    // Enable debug, rebuild the service container, and clear all caches.
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+    $this->resetAll();
 
     // Get page for assertion testing.
     $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
