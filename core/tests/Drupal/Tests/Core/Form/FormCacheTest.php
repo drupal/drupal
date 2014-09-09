@@ -16,6 +16,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormCache
  * @group Form
+ * @backupStaticAttributes enabled
  */
 class FormCacheTest extends UnitTestCase {
 
@@ -74,8 +75,6 @@ class FormCacheTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->resetSafeMarkup();
-
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCacheStore = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
@@ -93,14 +92,6 @@ class FormCacheTest extends UnitTestCase {
       ->getMock();
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->formCache = new FormCache($this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    $this->resetSafeMarkup();
   }
 
   /**
@@ -404,15 +395,6 @@ class FormCacheTest extends UnitTestCase {
       ->with($form_build_id, $form_state_data, $this->isType('int'));
 
     $this->formCache->setCache($form_build_id, $form, $form_state);
-  }
-
-  /**
-   * Ensures SafeMarkup does not bleed from one test to another.
-   */
-  protected function resetSafeMarkup() {
-    $property = (new \ReflectionClass('Drupal\Component\Utility\SafeMarkup'))->getProperty('safeStrings');
-    $property->setAccessible(TRUE);
-    $property->setValue(array());
   }
 
 }

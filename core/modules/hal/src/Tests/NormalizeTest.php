@@ -36,7 +36,6 @@ class NormalizeTest extends NormalizerTestBase {
     $values = array(
       'langcode' => 'de',
       'name' => $this->randomMachineName(),
-      'user_id' => 1,
       'field_test_text' => array(
         'value' => $this->randomMachineName(),
         'format' => 'full_html',

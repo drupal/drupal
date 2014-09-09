@@ -121,8 +121,6 @@ class TextFieldTest extends WebTestBase {
     // Submit with some value.
     $value = $this->randomMachineName();
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -193,8 +191,6 @@ class TextFieldTest extends WebTestBase {
     // Submit with data that should be filtered.
     $value = '<em>' . $this->randomMachineName() . '</em>';
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -235,8 +231,6 @@ class TextFieldTest extends WebTestBase {
 
     // Edit and change the text format to the new one that was created.
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][format]" => $format_id,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

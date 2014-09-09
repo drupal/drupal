@@ -109,8 +109,6 @@ class TranslationWebTest extends FieldTestBase {
 
     // Create a new revision.
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][value]" => $entity->{$field_name}->value,
       'revision' => TRUE,
     );

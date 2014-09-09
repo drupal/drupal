@@ -88,6 +88,10 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
       ));
 
     // @todo: Add allowed values validation.
@@ -99,8 +103,22 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The ID of the associated user.'))
-      ->setSettings(array('target_type' => 'user'))
-      ->setTranslatable(TRUE);
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      // Default EntityTest entities to have the root user as the owner, to
+      // simplify testing.
+      ->setDefaultValue(array(0 => 1))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => -1,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
+      ));
 
     return $fields;
   }
