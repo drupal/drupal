@@ -50,6 +50,13 @@ class Table extends StylePluginBase {
   protected $usesRowClass = TRUE;
 
   /**
+   * Should field labels be enabled by default.
+   *
+   * @var bool
+   */
+  protected $defaultFieldLabels = TRUE;
+
+  /**
    * Contains the current active sort column.
    * @var string
    */

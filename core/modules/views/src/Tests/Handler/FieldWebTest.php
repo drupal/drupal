@@ -326,6 +326,8 @@ class FieldWebTest extends HandlerTestBase {
     $id_field = $view->field['id'];
 
     $id_field->options['element_default_classes'] = FALSE;
+    // Setup some kind of label by default.
+    $id_field->options['label'] = $this->randomMachineName();
     $output = $view->preview();
     $output = drupal_render($output);
     $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-content')));

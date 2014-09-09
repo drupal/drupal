@@ -105,6 +105,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $groupingTheme = 'views_view_grouping';
 
   /**
+   * Should field labels be enabled by default.
+   *
+   * @var bool
+   */
+  protected $defaultFieldLabels = FALSE;
+
+  /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
    * The style options might come externally as the style can be sourced from at
@@ -187,6 +194,15 @@ abstract class StylePluginBase extends PluginBase {
         return TRUE;
       }
     }
+  }
+
+  /**
+   * Return TRUE if this style enables field labels by default.
+   *
+   * @return bool
+   */
+  public function defaultFieldLabels() {
+    return $this->defaultFieldLabels;
   }
 
   /**

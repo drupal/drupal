@@ -428,7 +428,13 @@ abstract class FieldPluginBase extends HandlerBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['label'] = array('default' => $this->definition['title'], 'translatable' => TRUE);
+    $options['label'] = array('default' => '', 'translatable' => TRUE);
+    // Some styles (for example table) should have labels enabled by default.
+    $style = $this->view->getStyle();
+    if (isset($style) && $style->defaultFieldLabels()) {
+      $options['label']['default'] = $this->definition['title'];
+    }
+
     $options['exclude'] = array('default' => FALSE, 'bool' => TRUE);
     $options['alter'] = array(
       'contains' => array(
@@ -864,10 +870,10 @@ abstract class FieldPluginBase extends HandlerBase {
       // Setup the tokens for fields.
       $previous = $this->getPreviousFieldLabels();
       foreach ($previous as $id => $label) {
-        $options[t('Fields')]["[$id]"] = $label;
+        $options[t('Fields')]["[$id]"] = substr(strrchr($label, ":"), 2 );
       }
       // Add the field to the list of options.
-      $options[t('Fields')]["[{$this->options['id']}]"] = $this->label();
+      $options[t('Fields')]["[{$this->options['id']}]"] = substr(strrchr($this->adminLabel(), ":"), 2 );
 
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {

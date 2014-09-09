@@ -10,18 +10,21 @@ display:
           id: id
           table: views_test_data
           field: id
+          label: ID
           plugin_id: numeric
           provider: views_test_data
         name:
           id: name
           table: views_test_data
           field: name
+          label: Name
           plugin_id: string
           provider: views_test_data
         created:
           id: created
           table: views_test_data
           field: created
+          label: created
           plugin_id: date
           provider: views_test_data
       display_options:

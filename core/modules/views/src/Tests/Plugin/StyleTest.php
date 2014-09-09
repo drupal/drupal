@@ -121,18 +121,21 @@ class StyleTest extends ViewTestBase {
         'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
+        'label' => 'Name',
       ),
       'job' => array(
         'id' => 'job',
         'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
+        'label' => 'Job',
       ),
       'age' => array(
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
+        'label' => 'Age',
       ),
     ));
 
