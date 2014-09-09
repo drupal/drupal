@@ -61,7 +61,7 @@ services:
       - { name: backend_overridable }
   user.permissions:
     class: Drupal\user\PermissionHandler
-    arguments: ['@module_handler', '@string_translation']
+    arguments: ['@module_handler', '@string_translation', '@controller_resolver']
 
 parameters:
   user.tempstore.expire: 604800

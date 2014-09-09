@@ -45,10 +45,18 @@ class PermissionHandlerTest extends UnitTestCase {
   protected $stringTranslation;
 
   /**
+   * The mocked controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $controllerResolver;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     $this->stringTranslation = $this->getStringTranslationStub();
+    $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
   }
 
   /**
@@ -112,7 +120,7 @@ class PermissionHandlerTest extends UnitTestCase {
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation);
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     // Setup system_rebuild_module_data().
     $this->permissionHandler->setSystemRebuildModuleData($extensions);
@@ -180,7 +188,10 @@ class PermissionHandlerTest extends UnitTestCase {
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation);
+    $this->controllerResolver->expects($this->never())
+      ->method('getControllerFromDefinition');
+
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     // Setup system_rebuild_module_data().
     $this->permissionHandler->setSystemRebuildModuleData($extensions);
@@ -229,7 +240,7 @@ access_module_a1: single_description"
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation);
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     // Setup system_rebuild_module_data().
     $this->permissionHandler->setSystemRebuildModuleData($extensions);
@@ -237,6 +248,143 @@ access_module_a1: single_description"
     $actual_permissions = $this->permissionHandler->getPermissions();
 
     $this->assertEquals(['access_module_a1', 'access_module_a2'], array_keys($actual_permissions));
+  }
+
+  /**
+   * Tests dynamic callback permissions provided by YML files.
+   *
+   * @covers ::__construct
+   * @covers ::getPermissions
+   * @covers ::buildPermissions
+   * @covers ::buildPermissionsYaml
+   */
+  public function testBuildPermissionsYamlCallback() {
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
+
+    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler->expects($this->once())
+      ->method('getModuleDirectories')
+      ->willReturn(array(
+        'module_a' => vfsStream::url('modules/module_a'),
+        'module_b' => vfsStream::url('modules/module_b'),
+        'module_c' => vfsStream::url('modules/module_c'),
+      ));
+
+    $url = vfsStream::url('modules');
+    mkdir($url . '/module_a');
+    file_put_contents($url . '/module_a/module_a.permissions.yml',
+"permission_callbacks:
+  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription'
+");
+    mkdir($url . '/module_b');
+    file_put_contents($url . '/module_b/module_b.permissions.yml',
+"permission_callbacks:
+  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
+");
+    mkdir($url . '/module_c');
+    file_put_contents($url . '/module_c/module_c.permissions.yml',
+"permission_callbacks:
+  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess'
+");
+
+    $modules = array('module_a', 'module_b', 'module_c');
+    $extensions = array(
+      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
+      'module_b' => $this->mockModuleExtension('module_b', 'Module b'),
+      'module_c' => $this->mockModuleExtension('module_c', 'Module c'),
+    );
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->with('permission')
+      ->willReturn(array());
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getModuleList')
+      ->willReturn(array_flip($modules));
+
+    $this->controllerResolver->expects($this->at(0))
+      ->method('getControllerFromDefinition')
+      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription')
+      ->willReturn(array(new TestPermissionCallbacks(), 'singleDescription'));
+    $this->controllerResolver->expects($this->at(1))
+      ->method('getControllerFromDefinition')
+      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
+      ->willReturn(array(new TestPermissionCallbacks(), 'titleDescription'));
+    $this->controllerResolver->expects($this->at(2))
+      ->method('getControllerFromDefinition')
+      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess')
+      ->willReturn(array(new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess'));
+
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+
+    // Setup system_rebuild_module_data().
+    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+
+    $actual_permissions = $this->permissionHandler->getPermissions();
+    $this->assertPermissions($actual_permissions);
+  }
+
+  /**
+   * Tests a YAML file containing both static permissions and a callback.
+   */
+  public function testPermissionsYamlStaticAndCallback() {
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
+
+    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler->expects($this->once())
+      ->method('getModuleDirectories')
+      ->willReturn(array(
+        'module_a' => vfsStream::url('modules/module_a'),
+      ));
+
+    $url = vfsStream::url('modules');
+    mkdir($url . '/module_a');
+    file_put_contents($url . '/module_a/module_a.permissions.yml',
+"'access module a':
+  title: 'Access A'
+  description: 'bla bla'
+permission_callbacks:
+  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
+");
+
+    $modules = array('module_a');
+    $extensions = array(
+      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
+    );
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->with('permission')
+      ->willReturn(array());
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getModuleList')
+      ->willReturn(array_flip($modules));
+
+    $this->controllerResolver->expects($this->once())
+      ->method('getControllerFromDefinition')
+      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
+      ->willReturn(array(new TestPermissionCallbacks(), 'titleDescription'));
+
+    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+
+    // Setup system_rebuild_module_data().
+    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+
+    $actual_permissions = $this->permissionHandler->getPermissions();
+
+    $this->assertCount(2, $actual_permissions);
+    $this->assertEquals($actual_permissions['access module a']['title'], 'Access A');
+    $this->assertEquals($actual_permissions['access module a']['provider'], 'module_a');
+    $this->assertEquals($actual_permissions['access module a']['description'], 'bla bla');
+    $this->assertEquals($actual_permissions['access module b']['title'], 'Access B');
+    $this->assertEquals($actual_permissions['access module b']['provider'], 'module_a');
+    $this->assertEquals($actual_permissions['access module b']['description'], 'bla bla');
   }
 
   /**
@@ -273,6 +421,35 @@ class TestPermissionHandler extends PermissionHandler {
 
   public function setSystemRebuildModuleData(array $extensions) {
     $this->systemModuleData = $extensions;
+  }
+
+}
+
+class TestPermissionCallbacks {
+
+  public function singleDescription() {
+    return array(
+      'access_module_a' => 'single_description'
+    );
+  }
+
+  public function titleDescription() {
+    return array(
+      'access module b' => array(
+        'title' => 'Access B',
+        'description' => 'bla bla',
+      ),
+    );
+  }
+
+  public function titleDescriptionRestrictAccess() {
+    return array(
+      'access_module_c' => array(
+        'title' => 'Access C',
+        'description' => 'bla bla',
+        'restrict access' => TRUE,
+      ),
+    );
   }
 
 }

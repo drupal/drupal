@@ -8,6 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Component\Discovery\YamlDiscovery;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -45,18 +46,28 @@ class PermissionHandler implements PermissionHandlerInterface {
   protected $yamlDiscovery;
 
   /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
+
+  /**
    * Constructs a new PermissionHandler.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation) {
+  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface $controller_resolver) {
     // @todo It would be nice if you could pull all module directories from the
     //   container.
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
+    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -94,7 +105,38 @@ class PermissionHandler implements PermissionHandlerInterface {
    */
   protected function buildPermissionsYaml() {
     $all_permissions = array();
+    $all_callback_permissions = array();
+
     foreach ($this->getYamlDiscovery()->findAll() as $provider => $permissions) {
+      // The top-level 'permissions_callback' is a list of methods in controller
+      // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
+      // should return an array of permissions in the same structure.
+      if (isset($permissions['permission_callbacks'])) {
+        foreach ($permissions['permission_callbacks'] as $permission_callback) {
+          $callback = $this->controllerResolver->getControllerFromDefinition($permission_callback);
+          if ($callback_permissions = call_user_func($callback)) {
+            // Add any callback permissions to the array of permissions. Any
+            // defaults can then get processed below.
+            foreach ($callback_permissions as $name => $callback_permission) {
+              if (!is_array($callback_permission)) {
+                $callback_permission = array(
+                  'title' => $callback_permission,
+                );
+              }
+
+              $callback_permission += array(
+                'description' => NULL,
+              );
+              $callback_permission['provider'] = $provider;
+
+              $all_callback_permissions[$name] = $callback_permission;
+            }
+          }
+        }
+
+        unset($permissions['permission_callbacks']);
+      }
+
       foreach ($permissions as &$permission) {
         if (!is_array($permission)) {
           $permission = array(
@@ -105,9 +147,11 @@ class PermissionHandler implements PermissionHandlerInterface {
         $permission['description'] = isset($permission['description']) ? $this->t($permission['description']) : NULL;
         $permission['provider'] = $provider;
       }
+
       $all_permissions += $permissions;
     }
-    return $all_permissions;
+
+    return $all_permissions + $all_callback_permissions;
   }
 
   /**

@@ -672,56 +672,6 @@ function template_preprocess_node(&$variables) {
 }
 
 /**
- * Implements hook_permission().
- */
-function node_permission() {
-  $perms = array(
-    'bypass node access' => array(
-      'title' => t('Bypass content access control'),
-      'description' => t('View, edit and delete all content regardless of permission restrictions.'),
-      'restrict access' => TRUE,
-    ),
-    'administer content types' => array(
-      'title' => t('Administer content types'),
-      'description' => t('Promote, change ownership, edit revisions, and perform other tasks across all content types.'),
-      'restrict access' => TRUE,
-    ),
-    'administer nodes' => array(
-      'title' => t('Administer content'),
-      'restrict access' => TRUE,
-    ),
-    'access content overview' => array(
-      'title' => t('Access the Content overview page'),
-      'description' => t('Get an overview of <a href="!url">all content</a>.', array('!url' => \Drupal::url('system.admin_content'))),
-    ),
-    'access content' => array(
-      'title' => t('View published content'),
-    ),
-    'view own unpublished content' => array(
-      'title' => t('View own unpublished content'),
-    ),
-    'view all revisions' => array(
-      'title' => t('View all revisions'),
-    ),
-    'revert all revisions' => array(
-      'title' => t('Revert all revisions'),
-      'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for nodes in question, or <em>administer nodes</em>.'),
-    ),
-    'delete all revisions' => array(
-      'title' => t('Delete all revisions'),
-      'description' => t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for nodes in question, or <em>administer nodes</em>.'),
-    ),
-  );
-
-  // Generate node permissions for all node types.
-  foreach (NodeType::loadMultiple() as $type) {
-    $perms += node_list_permissions($type);
-  }
-
-  return $perms;
-}
-
-/**
  * Implements hook_ranking().
  */
 function node_ranking() {
@@ -1191,48 +1141,6 @@ function node_node_access(NodeInterface $node, $op, $account) {
   }
 
   return NODE_ACCESS_IGNORE;
-}
-
-/**
- * Helper function to generate standard node permission list for a given type.
- *
- * @param $name
- *   The machine name of the node type.
- *
- * @return array
- *   An array of permission names and descriptions.
- */
-function node_list_permissions($type) {
-  // Build standard list of node permissions for this type.
-  $perms = array(
-    "create $type->type content" => array(
-      'title' => t('%type_name: Create new content', array('%type_name' => $type->name)),
-    ),
-    "edit own $type->type content" => array(
-      'title' => t('%type_name: Edit own content', array('%type_name' => $type->name)),
-    ),
-    "edit any $type->type content" => array(
-      'title' => t('%type_name: Edit any content', array('%type_name' => $type->name)),
-    ),
-    "delete own $type->type content" => array(
-      'title' => t('%type_name: Delete own content', array('%type_name' => $type->name)),
-    ),
-    "delete any $type->type content" => array(
-      'title' => t('%type_name: Delete any content', array('%type_name' => $type->name)),
-    ),
-    "view $type->type revisions" => array(
-      'title' => t('%type_name: View revisions', array('%type_name' => $type->name)),
-    ),
-    "revert $type->type revisions" => array(
-      'title' => t('%type_name: Revert revisions', array('%type_name' => $type->name)),
-      'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for nodes in question, or <em>administer nodes</em>.'),
-    ),
-    "delete $type->type revisions" => array(
-      'title' => t('%type_name: Delete revisions', array('%type_name' => $type->name)),
-      'description' => t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for nodes in question, or <em>administer nodes</em>.'),
-    ),
-  );
-  return $perms;
 }
 
 /**

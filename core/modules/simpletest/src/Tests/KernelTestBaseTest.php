@@ -77,8 +77,8 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests expected installation behavior of enableModules().
    */
   function testEnableModulesInstall() {
-    $module = 'node';
-    $table = 'node_access';
+    $module = 'module_test';
+    $table = 'module_test';
 
     // Verify that the module does not exist yet.
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists($module), "$module module not found.");
