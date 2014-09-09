@@ -44,44 +44,6 @@ function entity_get_bundles($entity_type = NULL) {
 }
 
 /**
- * Notifies modules about an operation that was performed on a entity bundle.
- *
- * @param string $hook
- *   One of 'create', 'rename' or 'delete'.
- * @param string $entity_type
- *   The entity type to which the bundle is bound.
- * @param string $bundle
- *   The name of the bundle on which the operation was performed.
- * @param string|null $bundle_new
- *   The new name of the bundle in case of a 'rename' operation. Defaults to
- *   NULL.
- */
-function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
-  $entity_manager = \Drupal::entityManager();
-
-  $entity_manager->clearCachedBundles();
-
-  // Notify the entity storage.
-  $method = 'onBundle' . ucfirst($hook);
-  $storage = $entity_manager->getStorage($entity_type);
-  if (method_exists($storage, $method)) {
-    $storage->$method($bundle, $bundle_new);
-  }
-
-  // Notify the entity manager.
-  if (method_exists($entity_manager, $method)) {
-    $entity_manager->$method($entity_type, $bundle, $bundle_new);
-  }
-
-  // Invoke hook_entity_bundle_*() hooks.
-  \Drupal::moduleHandler()->invokeAll('entity_bundle_' . $hook, array($entity_type, $bundle, $bundle_new));
-  // Clear the cached field definitions (not needed in case of 'create').
-  if ($hook == 'rename' || $hook == 'delete') {
-    $entity_manager->clearCachedFieldDefinitions();
-  }
-}
-
-/**
  * Loads an entity from the database.
  *
  * @param string $entity_type

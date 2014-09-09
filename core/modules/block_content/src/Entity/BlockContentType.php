@@ -77,24 +77,7 @@ class BlockContentType extends ConfigEntityBundleBase implements BlockContentTyp
     parent::postSave($storage, $update);
 
     if (!$update && !$this->isSyncing()) {
-      entity_invoke_bundle_hook('create', 'block_content', $this->id());
-      if (!$this->isSyncing()) {
-        block_content_add_body_field($this->id);
-      }
-    }
-    elseif ($this->getOriginalId() != $this->id) {
-      entity_invoke_bundle_hook('rename', 'block_content', $this->getOriginalId(), $this->id);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    foreach ($entities as $entity) {
-      entity_invoke_bundle_hook('delete', 'block_content', $entity->id());
+      block_content_add_body_field($this->id);
     }
   }
 

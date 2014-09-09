@@ -104,7 +104,7 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
-  entity_invoke_bundle_hook('create', $entity_type, $bundle);
+  \Drupal::entityManager()->onBundleCreate($entity_type, $bundle);
 }
 
 /**
@@ -124,7 +124,7 @@ function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'ent
   unset($bundles[$bundle_old]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
-  entity_invoke_bundle_hook('rename', $entity_type, $bundle_old, $bundle_new);
+  \Drupal::entityManager()->onBundleRename($entity_type, $bundle_old, $bundle_new);
 }
 
 /**
@@ -141,7 +141,7 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
   unset($bundles[$bundle]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
-  entity_invoke_bundle_hook('delete', $entity_type, $bundle);
+  \Drupal::entityManager()->onBundleDelete($entity_type, $bundle);
 }
 
 /**

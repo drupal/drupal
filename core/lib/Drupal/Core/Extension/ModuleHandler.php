@@ -944,7 +944,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
           foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {
-            entity_invoke_bundle_hook('delete', $entity_type_id, $bundle);
+            $entity_manager->onBundleDelete($entity_type_id, $bundle);
           }
         }
       }
