@@ -9,7 +9,7 @@ namespace Drupal\Core\Access;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PrivateKey;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\MetadataBag;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -27,13 +27,23 @@ class CsrfTokenGenerator {
   protected $privateKey;
 
   /**
+   * The session metadata bag.
+   *
+   * @var \Drupal\Core\Session\MetadataBag
+   */
+  protected $sessionMetadata;
+
+  /**
    * Constructs the token generator.
    *
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
+   * @param \Drupal\Core\Session\MetadataBag $session_metadata
+   *   The session metadata bag.
    */
-  public function __construct(PrivateKey $private_key) {
+  public function __construct(PrivateKey $private_key, MetadataBag $session_metadata) {
     $this->privateKey = $private_key;
+    $this->sessionMetadata = $session_metadata;
   }
 
   /**
@@ -56,11 +66,13 @@ class CsrfTokenGenerator {
    * @see \Drupal\Core\Session\SessionManager::start()
    */
   public function get($value = '') {
-    if (empty($_SESSION['csrf_token_seed'])) {
-      $_SESSION['csrf_token_seed'] = Crypt::randomBytesBase64();
+    $seed = $this->sessionMetadata->getCsrfTokenSeed();
+    if (empty($seed)) {
+      $seed = Crypt::randomBytesBase64();
+      $this->sessionMetadata->setCsrfTokenSeed($seed);
     }
 
-    return $this->computeToken($_SESSION['csrf_token_seed'], $value);
+    return $this->computeToken($seed, $value);
   }
 
   /**
@@ -75,11 +87,12 @@ class CsrfTokenGenerator {
    *   TRUE for a valid token, FALSE for an invalid token.
    */
   public function validate($token, $value = '') {
-    if (empty($_SESSION['csrf_token_seed'])) {
+    $seed = $this->sessionMetadata->getCsrfTokenSeed();
+    if (empty($seed)) {
       return FALSE;
     }
 
-    return $token === $this->computeToken($_SESSION['csrf_token_seed'], $value);
+    return $token === $this->computeToken($seed, $value);
   }
 
   /**

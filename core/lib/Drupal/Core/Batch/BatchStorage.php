@@ -8,25 +8,57 @@
 namespace Drupal\Core\Batch;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Session\SessionManager;
+use Drupal\Core\Access\CsrfTokenGenerator;
 
 class BatchStorage implements BatchStorageInterface {
 
   /**
+   * The database connection.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
-  public function __construct(Connection $connection) {
+  /**
+   * The session manager.
+   *
+   * @var \Drupal\Core\Session\SessionManager
+   */
+  protected $sessionManager;
+
+  /**
+   * The CSRF token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
+   * Constructs the database batch storage service.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   * @param \Drupal\Core\Session\SessionManager $session_manager
+   *   The session manager.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   *   The CSRF token generator.
+   */
+  public function __construct(Connection $connection, SessionManager $session_manager, CsrfTokenGenerator $csrf_token) {
     $this->connection = $connection;
+    $this->sessionManager = $session_manager;
+    $this->csrfToken = $csrf_token;
   }
 
   /**
    * {@inheritdoc}
    */
   public function load($id) {
+    // Ensure that a session is started before using the CSRF token generator.
+    $this->sessionManager->start();
     $batch = $this->connection->query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
       ':bid' => $id,
-      ':token' => \Drupal::csrfToken()->get($id),
+      ':token' => $this->csrfToken->get($id),
     ))->fetchField();
     if ($batch) {
       return unserialize($batch);
@@ -66,14 +98,17 @@ class BatchStorage implements BatchStorageInterface {
   /**
    * {@inheritdoc}
    */
-  function create(array $batch) {
+  public function create(array $batch) {
+    // Ensure that a session is started before using the CSRF token generator.
+    $this->sessionManager->start();
     $this->connection->insert('batch')
       ->fields(array(
         'bid' => $batch['id'],
         'timestamp' => REQUEST_TIME,
-        'token' => \Drupal::csrfToken()->get($batch['id']),
+        'token' => $this->csrfToken->get($batch['id']),
         'batch' => serialize($batch),
       ))
       ->execute();
   }
+
 }

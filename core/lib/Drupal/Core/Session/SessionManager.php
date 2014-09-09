@@ -14,7 +14,6 @@ use Drupal\Core\Session\SessionHandler;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler;
-use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag as SymfonyMetadataBag;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 /**
@@ -83,14 +82,13 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Symfony\Component\HttpFoundation\Session\Storage\MetadataBag $metadata_bag
+   * @param \Drupal\Core\Session\MetadataBag $metadata_bag
    *   The session metadata bag.
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    */
-  public function __construct(RequestStack $request_stack, Connection $connection, SymfonyMetadataBag $metadata_bag, Settings $settings) {
+  public function __construct(RequestStack $request_stack, Connection $connection, MetadataBag $metadata_bag, Settings $settings) {
     $options = array();
-
     $this->requestStack = $request_stack;
     $this->connection = $connection;
 
@@ -261,12 +259,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
     session_id(Crypt::randomBytesBase64());
 
-    // @todo The token seed can be moved onto \Drupal\Core\Session\MetadataBag.
-    //   The session manager then needs to notify the metadata bag when the
-    //   token should be regenerated. https://drupal.org/node/2256257
-    if (!empty($_SESSION)) {
-      unset($_SESSION['csrf_token_seed']);
-    }
+    $this->getMetadataBag()->clearCsrfTokenSeed();
 
     if (isset($old_session_id)) {
       $params = session_get_cookie_params();
@@ -404,18 +397,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     // Ignore the metadata bag, it does not contain any user data.
     $mask[$this->metadataBag->getStorageKey()] = FALSE;
-
-    // Ignore the CSRF token seed.
-    //
-    // @todo Anonymous users should not get a CSRF token at any time, or if they
-    //   do, then the originating code is responsible for cleaning up the
-    //   session once obsolete. Since that is not guaranteed to be the case,
-    //   this check force-ignores the CSRF token, so as to avoid performance
-    //   regressions.
-    //   The token seed can be moved onto \Drupal\Core\Session\MetadataBag. This
-    //   will result in the CSRF token being ignored automatically.
-    //   https://drupal.org/node/2256257
-    $mask['csrf_token_seed'] = FALSE;
 
     // Ignore attribute bags when they do not contain any data.
     foreach ($this->bags as $bag) {

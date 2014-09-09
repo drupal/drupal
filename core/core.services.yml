@@ -659,7 +659,7 @@ services:
     arguments: ['@state']
   csrf_token:
     class: Drupal\Core\Access\CsrfTokenGenerator
-    arguments: ['@private_key']
+    arguments: ['@private_key', '@session_manager.metadata_bag']
   access_arguments_resolver:
     class: Drupal\Core\Access\AccessArgumentsResolver
   access_manager:
@@ -823,7 +823,7 @@ services:
     arguments: ['@module_handler', '@cache.discovery', '@language_manager']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
-    arguments: ['@database']
+    arguments: ['@database', '@session_manager', '@csrf_token']
     tags:
       - { name: backend_overridable }
   replica_database_ignore__subscriber:
