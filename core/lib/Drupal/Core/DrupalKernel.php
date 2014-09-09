@@ -362,11 +362,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Load legacy and other functional code.
     require_once DRUPAL_ROOT . '/core/includes/common.inc';
     require_once DRUPAL_ROOT . '/core/includes/database.inc';
-    require_once DRUPAL_ROOT . '/' . Settings::get('path_inc', 'core/includes/path.inc');
+    require_once DRUPAL_ROOT . '/core/includes/path.inc';
     require_once DRUPAL_ROOT . '/core/includes/module.inc';
     require_once DRUPAL_ROOT . '/core/includes/theme.inc';
     require_once DRUPAL_ROOT . '/core/includes/pager.inc';
-    require_once DRUPAL_ROOT . '/' . Settings::get('menu_inc', 'core/includes/menu.inc');
+    require_once DRUPAL_ROOT . '/core/includes/menu.inc';
     require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
     require_once DRUPAL_ROOT . '/core/includes/file.inc';
     require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
