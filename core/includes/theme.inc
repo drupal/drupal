@@ -971,7 +971,7 @@ function template_preprocess_status_messages(&$variables) {
  *     following elements:
  *     - text: The heading text.
  *     - level: The heading level (e.g. 'h2', 'h3').
- *     - class: (optional) An array of the CSS classes for the heading.
+ *     - attributes: (optional) An array of the CSS attributes for the heading.
  *     When using a string it will be used as the text of the heading and the
  *     level will default to 'h2'. Headings should be used on navigation menus
  *     and any list of links that consistently appears on multiple pages. To
@@ -1011,10 +1011,6 @@ function template_preprocess_links(&$variables) {
         'level' => 'h2',
         'attributes' => array(),
       );
-      // @todo Remove backwards compatibility for $heading['class'].
-      if (isset($heading['class'])) {
-        $heading['attributes']['class'] = $heading['class'];
-      }
       // Convert the attributes array into an Attribute object.
       $heading['attributes'] = new Attribute($heading['attributes']);
       $heading['text'] = String::checkPlain($heading['text']);
@@ -1858,15 +1854,19 @@ function template_preprocess_page(&$variables) {
   if (!empty($variables['main_menu'])) {
     $variables['main_menu']['#heading'] = array(
       'text' => t('Main menu'),
-      'class' => array('visually-hidden'),
-      'attributes' => array('id' => 'links__system_main_menu'),
+      'attributes' => array(
+        'id' => 'links__system_main_menu',
+        'class' => array('visually-hidden'),
+       ),
     );
   }
   if (!empty($variables['secondary_menu'])) {
     $variables['secondary_menu']['#heading'] = array(
       'text' => t('Secondary menu'),
-      'class' => array('visually-hidden'),
-      'attributes' => array('id' => 'links__system_secondary_menu'),
+      'attributes' => array(
+        'id' => 'links__system_secondary_menu',
+        'class' => array('visually-hidden'),
+      ),
     );
   }
 

@@ -234,7 +234,11 @@ class FunctionsTest extends WebTestBase {
     \Drupal::request()->query->replace($original_query);
 
     // Verify that passing an array as heading works (core support).
-    $variables['heading'] = array('text' => 'Links heading', 'level' => 'h3', 'class' => 'heading');
+    $variables['heading'] = array(
+      'text' => 'Links heading',
+      'level' => 'h3',
+      'attributes' => array('class' => array('heading')),
+    );
     $expected_heading = '<h3 class="heading">Links heading</h3>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
