@@ -85,18 +85,6 @@ function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
 }
 
 /**
- * Returns an associative array of all errors.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use $form_state->getErrors().
- *
- * @see \Drupal\Core\Form\FormStateInterface::getErrors()
- */
-function form_get_errors(FormStateInterface $form_state) {
-  return $form_state->getErrors();
-}
-
-/**
  * Flags an element as having an error.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
