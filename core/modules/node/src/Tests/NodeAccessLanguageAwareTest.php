@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests node_access and db_select() with node_access tag functionality with
@@ -134,9 +135,11 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
 
     $this->nodes['no_language_public'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 0)),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->nodes['no_language_private'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 1)),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
   }
 

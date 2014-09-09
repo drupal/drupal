@@ -27,7 +27,9 @@ class BulkFormTest extends NodeTestBase {
    */
   public function testBulkForm() {
     $this->drupalLogin($this->drupalCreateUser(array('administer nodes')));
-    $node = $this->drupalCreateNode();
+    $node = $this->drupalCreateNode(array(
+      'promote' => FALSE,
+    ));
 
     $this->drupalGet('test-node-bulk-form');
     $elements = $this->xpath('//select[@id="edit-action"]//option');

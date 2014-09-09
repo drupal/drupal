@@ -134,7 +134,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
   public function testAutocompleteQuickEdit() {
     $this->drupalLogin($this->editor_user);
 
-    $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/und/full';
+    $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/' . $this->node->language()->getId() . '/full';
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
     $ajax_commands = Json::decode($response);
@@ -164,7 +164,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       $this->assertNoLink('new term');
 
       // Load the form again, which should now get it back from TempStore.
-      $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/und/full';
+      $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/' . $this->node->language()->getId() . '/full';
       $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
       $ajax_commands = Json::decode($response);

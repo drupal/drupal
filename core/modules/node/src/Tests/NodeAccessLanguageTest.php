@@ -79,7 +79,10 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Creating a public node with no special langcode, like when no language
     // module enabled.
-    $node_public_no_language = $this->drupalCreateNode(array('private' => FALSE));
+    $node_public_no_language = $this->drupalCreateNode(array(
+      'private' => FALSE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ));
     $this->assertTrue($node_public_no_language->language()->id == LanguageInterface::LANGCODE_NOT_SPECIFIED, 'Node created with not specified language.');
 
     // Tests that access is granted if requested with no language.
@@ -169,7 +172,10 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Creating a private node with no special langcode, like when no language
     // module enabled.
-    $node_private_no_language = $this->drupalCreateNode(array('private' => TRUE));
+    $node_private_no_language = $this->drupalCreateNode(array(
+      'private' => TRUE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ));
     $this->assertTrue($node_private_no_language->language()->id == LanguageInterface::LANGCODE_NOT_SPECIFIED, 'Node created with not specified language.');
 
     // Tests that access is not granted if requested with no language.
@@ -242,7 +248,10 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Creating a public node with no special langcode, like when no language
     // module enabled.
-    $node_no_language = $this->drupalCreateNode(array('private' => FALSE));
+    $node_no_language = $this->drupalCreateNode(array(
+      'private' => FALSE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ));
     $this->assertTrue($node_no_language->language()->id == LanguageInterface::LANGCODE_NOT_SPECIFIED, 'Node created with not specified language.');
 
     // Query the nodes table as the web user with the node access tag and no

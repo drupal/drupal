@@ -56,6 +56,8 @@ class SearchRankingTest extends SearchTestBase {
         )),
         'title' => 'Drupal rocks',
         'body' => array(array('value' => "Drupal's search rocks")),
+        'sticky' => 0,
+        'promote' => 0,
       );
       foreach (array(0, 1) as $num) {
         if ($num == 1) {

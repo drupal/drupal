@@ -9,6 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the Node Translation UI.
@@ -208,7 +209,10 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->drupalCreateContentType(array('type' => $disabledBundle, 'name' => $disabledBundle));
 
     // Create a node for each bundle.
-    $node = $this->drupalCreateNode(array('type' => $this->bundle));
+    $node = $this->drupalCreateNode(array(
+      'type' => $this->bundle,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ));
 
     // Make sure that nothing was inserted into the {content_translation} table.
     $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();

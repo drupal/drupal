@@ -225,16 +225,8 @@ abstract class WebTestBase extends TestBase {
    *       );
    *     @endcode
    *   - title: Random string.
-   *   - comment: CommentItemInterface::OPEN.
-   *   - promote: NODE_NOT_PROMOTED.
-   *   - log: Empty string.
-   *   - status: NODE_PUBLISHED.
-   *   - sticky: NODE_NOT_STICKY.
    *   - type: 'page'.
-   *   - langcode: LanguageInterface::LANGCODE_NOT_SPECIFIED.
-   *   - uid: The currently logged in user, or the user running test.
-   *   - revision: 1. (Backwards-compatible binary flag indicating whether a
-   *     new revision should be created; use 1 to specify a new revision.)
+   *   - uid: The currently logged in user, or anonymous.
    *
    * @return \Drupal\node\NodeInterface
    *   The created node entity.
@@ -242,44 +234,15 @@ abstract class WebTestBase extends TestBase {
   protected function drupalCreateNode(array $settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(array()),
+      'body'      => array(array(
+        'value' => $this->randomMachineName(32),
+        'format' => filter_default_format(),
+      )),
       'title'     => $this->randomMachineName(8),
-      'promote'   => NODE_NOT_PROMOTED,
-      'revision'  => 1,
-      'log'       => '',
-      'status'    => NODE_PUBLISHED,
-      'sticky'    => NODE_NOT_STICKY,
       'type'      => 'page',
-      'langcode'  => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'uid'       => \Drupal::currentUser()->id(),
     );
-
-    // Use the original node's created time for existing nodes.
-    if (isset($settings['created']) && !isset($settings['date'])) {
-      $settings['date'] = format_date($settings['created'], 'custom', 'Y-m-d H:i:s O');
-    }
-
-    // If the node's user uid is not specified manually, use the currently
-    // logged in user if available, or else the user running the test.
-    if (!isset($settings['uid'])) {
-      if ($this->loggedInUser) {
-        $settings['uid'] = $this->loggedInUser->id();
-      }
-      else {
-        $user = \Drupal::currentUser() ?: new AnonymousUserSession();
-        $settings['uid'] = $user->id();
-      }
-    }
-
-    // Merge body field value and format separately.
-    $settings['body'][0] += array(
-      'value' => $this->randomMachineName(32),
-      'format' => filter_default_format(),
-    );
-
     $node = entity_create('node', $settings);
-    if (!empty($settings['revision'])) {
-      $node->setNewRevision();
-    }
     $node->save();
 
     return $node;

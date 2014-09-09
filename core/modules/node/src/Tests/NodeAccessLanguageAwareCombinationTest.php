@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests node access functionality with multiple languages and two node access
@@ -171,18 +172,22 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $this->nodes['public_no_language_private'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 1)),
       'private' => FALSE,
+        'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->nodes['public_no_language_public'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 0)),
       'private' => FALSE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->nodes['private_no_language_private'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 1)),
       'private' => TRUE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->nodes['private_no_language_public'] = $this->drupalCreateNode(array(
       'field_private' => array(array('value' => 1)),
       'private' => TRUE,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
   }
 
