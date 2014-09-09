@@ -107,7 +107,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
     ksort($route_parameters);
     $cid = 'current-route-parameters:' . $menu_name . ':route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . serialize($route_parameters);
 
-    if (!isset($this->cachedCurrentRouteParameters[$menu_name])) {
+    if (!isset($this->cachedCurrentRouteParameters[$cid])) {
       $cache = $this->cache->get($cid);
       if ($cache && $cache->data) {
         $parameters = $cache->data;

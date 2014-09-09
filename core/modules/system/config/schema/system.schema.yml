@@ -355,6 +355,17 @@ block.settings.system_branding_block:
       type: boolean
       label: 'Use site slogan'
 
+block.settings.system_menu_block:*:
+  type: block_settings
+  label: 'Menu block'
+  mapping:
+    level:
+      type: integer
+      label: 'Starting level'
+    depth:
+      type: integer
+      label: 'Maximum number of levels'
+
 condition.plugin.request_path:
   type: condition.plugin
   mapping:

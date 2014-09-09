@@ -11,6 +11,11 @@ settings:
   label: Tools
   provider: system
   label_display: visible
+  cache:
+    max_age: -1
+    contexts: {  }
+  level: 1
+  depth: 0
 dependencies:
   entity:
     - system.menu.tools
