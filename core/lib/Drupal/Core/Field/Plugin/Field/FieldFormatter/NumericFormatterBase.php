@@ -78,6 +78,11 @@ abstract class NumericFormatterBase extends FormatterBase {
         $suffix = (count($suffixes) > 1) ? format_plural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
         $output = $prefix . $output . $suffix;
       }
+      // Output the raw value in a content attribute if the text of the HTML
+      // element differs from the raw value (for example when a prefix is used).
+      if (!empty($item->_attributes) && $item->value != $output) {
+        $item->_attributes += array('content' => $item->value);
+      }
 
       $elements[$delta] = array('#markup' => $output);
     }

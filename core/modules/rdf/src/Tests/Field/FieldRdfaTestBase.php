@@ -96,6 +96,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
     $build = entity_view($this->entity, 'default');
     $output = drupal_render($build);
     $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
+    $this->setRawContent($output);
 
     // If verbose debugging is turned on, display the HTML and parsed RDF
     // in the results.
@@ -109,8 +110,11 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
 
   /**
    * Creates the field for testing.
+   *
+   * @param array $field_settings
+   *   (optional) An array of field settings.
    */
-  protected function createTestField() {
+  protected function createTestField($field_settings = array()) {
     entity_create('field_storage_config', array(
       'name' => $this->fieldName,
       'entity_type' => 'entity_test',
@@ -120,6 +124,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
+      'settings' => $field_settings,
     ))->save();
   }
 
@@ -134,6 +139,54 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    */
   protected function getAbsoluteUri($entity) {
     return $entity->url('canonical', array('absolute' => TRUE));
+  }
+
+  /**
+   * Parses a content and return the html element.
+   *
+   * @param string $content
+   *   The html to parse.
+   *
+   * @return array
+   *   An array containing simplexml objects.
+   */
+  protected function parseContent($content) {
+    $htmlDom = new \DOMDocument();
+    @$htmlDom->loadHTML('<?xml encoding="UTF-8">' . $content);
+    $elements = simplexml_import_dom($htmlDom);
+
+    return $elements;
+  }
+
+  /**
+   * Performs an xpath search on a certain content.
+   *
+   * The search is relative to the root element of the $content variable.
+   *
+   * @param string $content
+   *   The html to parse.
+   * @param string $xpath
+   *   The xpath string to use in the search.
+   * @param array $arguments
+   *   Some arguments for the xpath.
+   *
+   * @return array|FALSE
+   *   The return value of the xpath search. For details on the xpath string
+   *   format and return values see the SimpleXML documentation,
+   *   http://php.net/manual/function.simplexml-element-xpath.php.
+   */
+  protected function xpathContent($content, $xpath, array $arguments = array()) {
+    if ($elements = $this->parseContent($content)) {
+      $xpath = $this->buildXPathQuery($xpath, $arguments);
+      $result = $elements->xpath($xpath);
+      // Some combinations of PHP / libxml versions return an empty array
+      // instead of the documented FALSE. Forcefully convert any falsish values
+      // to an empty array to allow foreach(...) constructions.
+      return $result ? $result : array();
+    }
+    else {
+      return FALSE;
+    }
   }
 
 }
