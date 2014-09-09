@@ -309,7 +309,7 @@ class FieldOverview extends OverviewBase {
 
       // Missing field name.
       if (!$field['field_name']) {
-        $form_state->setErrorByName('fields][_add_new_field][field_name', $this->t('Add new field: you need to provide a field name.'));
+        $form_state->setErrorByName('fields][_add_new_field][field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
       }
       // Field name validation.
       else {
