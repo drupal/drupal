@@ -54,6 +54,7 @@ small .admin-link:after {
   font-weight: bold;
 }
 #system-modules td.checkbox {
+  min-width: 25px;
   width: 4%;
 }
 #system-modules td.module {
