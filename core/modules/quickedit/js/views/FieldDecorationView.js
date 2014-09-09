@@ -218,8 +218,7 @@
         this._widthAttributeIsEmpty = true;
         this.$el
           .addClass('quickedit-animate-disable-width')
-          .css('width', this.$el.width())
-          .css('background-color', this._getBgColor(this.$el));
+          .css('width', this.$el.width());
       }
 
       // 2) Add padding; use animations.
@@ -258,8 +257,7 @@
       if (this._widthAttributeIsEmpty) {
         this.$el
           .addClass('quickedit-animate-disable-width')
-          .css('width', '')
-          .css('background-color', '');
+          .css('width', '');
       }
 
       // 2) Remove padding; use animations (these will run simultaneously with)
@@ -287,27 +285,6 @@
       // queued functions that will remove padding before the data marker has
       // been removed.
       this.$el.removeData('quickedit-padded');
-    },
-
-    /**
-     * Gets the background color of an element (or the inherited one).
-     *
-     * @param DOM $e
-     */
-    _getBgColor: function ($e) {
-      var c;
-
-      if ($e === null || $e[0].nodeName === 'HTML') {
-        // Fallback to white.
-        return 'rgb(255, 255, 255)';
-      }
-      c = $e.css('background-color');
-      // TRICKY: edge case for Firefox' "transparent" here; this is a
-      // browser bug: https://bugzilla.mozilla.org/show_bug.cgi?id=635724
-      if (c === 'rgba(0, 0, 0, 0)' || c === 'transparent') {
-        return this._getBgColor($e.parent());
-      }
-      return c;
     },
 
     /**
