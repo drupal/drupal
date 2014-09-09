@@ -166,29 +166,6 @@ function menu_ui_node_update(EntityInterface $node) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for node_type entities.
- */
-function menu_ui_node_type_insert(NodeTypeInterface $type) {
-  if ($type->isSyncing()) {
-    return;
-  }
-  \Drupal::config('menu.entity.node.' . $type->id())
-    ->set('available_menus', array('main'))
-    ->set('parent', 'main:')
-    ->save();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for node_type entities.
- */
-function menu_ui_node_type_delete(NodeTypeInterface $type) {
-  if ($type->isSyncing()) {
-    return;
-  }
-  \Drupal::config('menu.entity.node.' . $type->id())->delete();
-}
-
-/**
  * Helper for hook_ENTITY_TYPE_insert() and hook_ENTITY_TYPE_update() for nodes.
  */
 function menu_ui_node_save(EntityInterface $node) {
@@ -251,13 +228,14 @@ function menu_ui_node_predelete(EntityInterface $node) {
 function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
   if (empty($form_state['menu_link_definition'])) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $node_type_config = \Drupal::config('menu.entity.node.' . $node->getType());
-    $menu_name = strtok($node_type_config->get('parent'), ':');
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
+    $node_type = $node->type->entity;
+    $menu_name = strtok($node_type->getThirdPartySetting('menu_ui', 'parent', 'main:'), ':');
     $definition = FALSE;
     if ($node->id()) {
       $id = FALSE;
       // Give priority to the default menu
-      $type_menus = $node_type_config->get('available_menus');
+      $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', array('main'));
       if (in_array($menu_name, $type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
           ->condition('route_name', 'entity.node.canonical')
@@ -323,11 +301,12 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
   $definition = $form_state['menu_link_definition'];
-  $type = $node->getType();
+  /** @var \Drupal\node\NodeTypeInterface $node_type */
+  $node_type = $node->type->entity;
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
   $menu_names = menu_ui_get_menus();
-  $type_menus = \Drupal::config("menu.entity.node.$type")->get('available_menus');
+  $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', array('main'));
   $available_menus = array();
   foreach ($type_menus as $menu) {
     $available_menus[$menu] = $menu_names[$menu];
@@ -336,7 +315,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
     $default = $definition['menu_name'] . ':' . $definition['parent'];
   }
   else {
-    $default = \Drupal::config('menu.entity.node.'.$type)->get('parent');
+    $default = $node_type->getThirdPartySetting('menu_ui', 'parent', 'main:');
   }
   $parent_element = $menu_parent_selector->parentSelectElement($default,  $definition['id'], $available_menus);
   // If no possible parent menu items were found, there is nothing to display.
@@ -446,16 +425,8 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
   $menu_options = menu_ui_get_menus();
+  /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
-  if ($type->id()) {
-    $config_values = \Drupal::config('menu.entity.node.' . $type->id())->get();
-  }
-  else {
-    $config_values = array(
-      'available_menus' => array('main'),
-      'parent' => 'main:',
-    );
-  }
   $form['menu'] = array(
     '#type' => 'details',
     '#title' => t('Menu settings'),
@@ -467,7 +438,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   $form['menu']['menu_options'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Available menus'),
-    '#default_value' => $config_values['available_menus'],
+    '#default_value' => $type->getThirdPartySetting('menu_ui', 'available_menus', array('main')),
     '#options' => $menu_options,
     '#description' => t('The menus available to place links in for this content type.'),
   );
@@ -480,14 +451,14 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
     '#title' => t('Default parent item'),
-    '#default_value' => $config_values['parent'],
+    '#default_value' => $type->getThirdPartySetting('menu_ui', 'parent', 'main:'),
     '#options' => $options,
     '#description' => t('Choose the menu item to be the default parent for a new link in the content authoring form.'),
     '#attributes' => array('class' => array('menu-title-select')),
   );
 
   $form['actions']['submit']['#validate'][] = 'menu_ui_form_node_type_form_validate';
-  $form['actions']['submit']['#submit'][] = 'menu_ui_form_node_type_form_submit';
+  $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
 }
 
 /**
@@ -511,16 +482,13 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 }
 
 /**
- * Submit handler for forms with menu options.
+ * Entity builder for the node type form with menu options.
  *
  * @see menu_ui_form_node_type_form_alter().
  */
-function menu_ui_form_node_type_form_submit(&$form, FormStateInterface $form_state) {
-  $type = $form_state->getFormObject()->getEntity();
-  \Drupal::config('menu.entity.node.' . $type->id())
-    ->set('available_menus', array_values(array_filter($form_state->getValue('menu_options'))))
-    ->set('parent', $form_state->getValue('menu_parent'))
-    ->save();
+function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
+  $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
+  $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
 }
 
 /**

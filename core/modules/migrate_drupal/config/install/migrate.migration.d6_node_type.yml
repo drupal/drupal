@@ -14,8 +14,9 @@ process:
   description: description
   help: help
   title_label: title_label
-  'settings/node/preview': 'constants/preview'
-  'settings/node/submitted': submitted
+  'preview_mode': 'constants/preview'
+  'display_submitted': display_submitted
+  'new_revision': 'options/revision'
   'settings/node/options': options
   create_body: has_body
   create_body_label: body_label

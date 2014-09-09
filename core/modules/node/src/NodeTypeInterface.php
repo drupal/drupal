@@ -8,23 +8,12 @@
 namespace Drupal\node;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Provides an interface defining a node type entity.
  */
-interface NodeTypeInterface extends ConfigEntityInterface {
-
-  /**
-   * Returns the configured node type settings of a given module, if any.
-   *
-   * @param string $module
-   *   The name of the module whose settings to return.
-   *
-   * @return array
-   *   An associative array containing the module's settings for the node type.
-   *   Note that this can be empty, and default values do not necessarily exist.
-   */
-  public function getModuleSettings($module);
+interface NodeTypeInterface extends ConfigEntityInterface, ThirdPartySettingsInterface {
 
   /**
    * Determines whether the node type is locked.
@@ -33,5 +22,53 @@ interface NodeTypeInterface extends ConfigEntityInterface {
    *   The module name that locks the type or FALSE.
    */
   public function isLocked();
+
+  /**
+   * Returns whether a new revision should be created by default.
+   *
+   * @return bool
+   *   TRUE if a new revision should be created by default.
+   */
+  public function isNewRevision();
+
+  /**
+   * Set whether a new revision should be created by default.
+   *
+   * @param bool $new_revision_
+   *   TRUE if a new revision should be created by default.
+   */
+  public function setNewRevision($new_revision);
+
+  /**
+   * Returns whether 'Submitted by' information should be shown.
+   *
+   * @return bool
+   *   TRUE if the submitted by information should be shown.
+   */
+  public function displaySubmitted();
+
+  /**
+   * Set whether 'Submitted by' information should be shown.
+   *
+   * @param bool $display_submitted
+   *   TRUE if the submitted by information should be shown.
+   */
+  public function setDisplaySubmitted($display_submtited);
+
+  /**
+   * Returns the preview mode.
+   *
+   * @return int
+   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   */
+  public function getPreviewMode();
+
+  /**
+   * Sets the preview mode.
+   *
+   * @param int $preview_mode
+   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   */
+  public function setPreviewMode($preview_mode);
 
 }

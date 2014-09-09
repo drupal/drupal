@@ -68,7 +68,6 @@ class NodeTypeForm extends EntityForm {
       $node = $this->entityManager->getStorage('node')->create(array('type' => $type->id()));
     }
 
-    $node_settings = $type->getModuleSettings('node');
     $form['name'] = array(
       '#title' => t('Name'),
       '#type' => 'textfield',
@@ -118,11 +117,10 @@ class NodeTypeForm extends EntityForm {
       '#default_value' => $fields['title']->getLabel(),
       '#required' => TRUE,
     );
-    $form['submission']['preview'] = array(
+    $form['submission']['preview_mode'] = array(
       '#type' => 'radios',
       '#title' => t('Preview before submitting'),
-      '#parents' => array('settings', 'node', 'preview'),
-      '#default_value' => $node_settings['preview'],
+      '#default_value' => $type->getPreviewMode(),
       '#options' => array(
         DRUPAL_DISABLED => t('Disabled'),
         DRUPAL_OPTIONAL => t('Optional'),
@@ -144,7 +142,7 @@ class NodeTypeForm extends EntityForm {
       'status' => $node->status->value,
       'promote' => $node->promote->value,
       'sticky' => $node->sticky->value,
-      'revision' => $type->settings['node']['options']['revision'],
+      'revision' => $type->isNewRevision(),
     );
     // Prepare workflow options to be used for 'checkboxes' form element.
     $keys = array_keys(array_filter($workflow_options));
@@ -182,11 +180,10 @@ class NodeTypeForm extends EntityForm {
       '#title' => t('Display settings'),
       '#group' => 'additional_settings',
     );
-    $form['display']['submitted'] = array(
+    $form['display']['display_submitted'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display author and date information.'),
-      '#parents' => array('settings', 'node', 'submitted'),
-      '#default_value' => $node_settings['submitted'],
+      '#default_value' => $type->displaySubmitted(),
       '#description' => t('Author username and publish date will be displayed.'),
     );
     return $form;
@@ -220,7 +217,7 @@ class NodeTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
-    $type->settings['node']['options']['revision'] = $form_state['values']['options']['revision'];
+    $type->setNewRevision($form_state->getValue(array('options', 'revision')));
     $type->type = trim($type->id());
     $type->name = trim($type->name);
 

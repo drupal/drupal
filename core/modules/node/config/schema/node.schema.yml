@@ -27,39 +27,20 @@ node.type.*:
     help:
       type: text
       label: 'Explanation or submission guidelines'
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        node:
-          type: node.settings.node
-
-node.settings.node:
-  type: mapping
-  label: 'Content type settings'
-  mapping:
-    preview:
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
+    preview_mode:
       type: integer
       label: 'Preview before submitting'
-    options:
-      type: mapping
-      label: 'Publishing options'
-      mapping:
-        status:
-          type: boolean
-          label: 'Published'
-        promote:
-          type: boolean
-          label: 'Promoted to front page'
-        sticky:
-          type: boolean
-          label: 'Sticky at top of lists'
-        revision:
-          type: boolean
-          label: 'Create new revision'
-    submitted:
+    display_submitted:
       type: boolean
       label: 'Display setting for author and date Submitted by post information'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: node_type.third_party.[%key]
 
 # Plugin \Drupal\node\Plugin\Search\NodeSearch
 search.plugin.node_search:

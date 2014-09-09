@@ -55,6 +55,8 @@ class UserAttributesTest extends WebTestBase {
 
     $this->drupalLogin($user1);
 
+    $this->drupalCreateContentType(array('type' => 'article'));
+
     foreach($authors as $author) {
       $account_uri = url('user/' . $author->id(), array('absolute' => TRUE));
 

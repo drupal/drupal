@@ -63,7 +63,7 @@ class NodeCreationTest extends NodeTestBase {
 
     // Change the node type setting to show submitted by information.
     $node_type = entity_load('node_type', 'page');
-    $node_type->settings['node']['submitted'] = TRUE;
+    $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 
     $this->drupalGet('node/' . $node->id());

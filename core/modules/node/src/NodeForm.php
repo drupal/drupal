@@ -22,13 +22,6 @@ use Drupal\user\Entity\User;
 class NodeForm extends ContentEntityForm {
 
   /**
-   * Default settings for this content/node type.
-   *
-   * @var array
-   */
-  protected $settings;
-
-  /**
    * The tempstore factory.
    *
    * @var \Drupal\user\TempStoreFactory
@@ -64,9 +57,6 @@ class NodeForm extends ContentEntityForm {
   protected function prepareEntity() {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
-    // Make node type settings easily accessible.
-    $type = $node->type->entity;
-    $this->settings = $type->getModuleSettings('node');
 
     if (!$node->isNew()) {
       // Remove the revision log message from the original node entity.
@@ -154,7 +144,7 @@ class NodeForm extends ContentEntityForm {
     $form['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
-      '#default_value' => !empty($this->settings['options']['revision']),
+      '#default_value' => $node->type->entity->isNewRevision(),
       '#access' => $current_user->hasPermission('administer nodes'),
       '#group' => 'revision_information',
     );
@@ -223,7 +213,7 @@ class NodeForm extends ContentEntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $node = $this->entity;
-    $preview_mode = $this->settings['preview'];
+    $preview_mode = $node->type->entity->getPreviewMode();
 
     $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!$form_state->getErrors() && isset($form_state['node_preview']));
 

@@ -148,8 +148,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       if ($account->hasPermission('administer nodes')) {
         return TRUE;
       }
-      $node_type_settings = $items->getEntity()->type->entity->getModuleSettings('node');
-      return !empty($node_type_settings['options']['revision']);
+      return $items->getEntity()->type->entity->isNewRevision();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

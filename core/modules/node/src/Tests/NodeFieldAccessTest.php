@@ -53,26 +53,14 @@ class NodeFieldAccessTest extends EntityUnitTestBase {
     // Create the page node type with revisions disabled.
     $page = NodeType::create([
       'type' => 'page',
-      'settings' => array(
-        'node' => array(
-          'options' => array(
-            'revision' => FALSE,
-          ),
-        ),
-      ),
+        'new_revision' => FALSE,
     ]);
     $page->save();
 
     // Create the article node type with revisions disabled.
     $article = NodeType::create([
       'type' => 'article',
-      'settings' => array(
-        'node' => array(
-          'options' => array(
-            'revision' => TRUE,
-          ),
-        ),
-      ),
+      'new_revision' => TRUE,
     ]);
     $article->save();
 

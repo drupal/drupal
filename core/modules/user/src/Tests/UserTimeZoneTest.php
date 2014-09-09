@@ -46,6 +46,7 @@ class UserTimeZoneTest extends WebTestBase {
     $date2 = '2007-03-11 01:00:00 -0800';
     // One date in PDT (summer time):
     $date3 = '2007-03-20 21:00:00 -0700';
+    $this->drupalCreateContentType(array('type' => 'article'));
     $node1 = $this->drupalCreateNode(array('created' => strtotime($date1), 'type' => 'article'));
     $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
     $node3 = $this->drupalCreateNode(array('created' => strtotime($date3), 'type' => 'article'));

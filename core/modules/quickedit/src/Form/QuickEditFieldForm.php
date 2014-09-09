@@ -121,9 +121,8 @@ class QuickEditFieldForm extends FormBase {
     // @todo Rather than special-casing $node->revision, invoke prepareEdit()
     //   once http://drupal.org/node/1863258 lands.
     if ($entity->getEntityTypeId() == 'node') {
-      $node_type_settings = $this->nodeTypeStorage->load($entity->bundle())->getModuleSettings('node');
-      $options = (isset($node_type_settings['options'])) ? $node_type_settings['options'] : array();
-      $entity->setNewRevision(!empty($options['revision']));
+      $node_type = $this->nodeTypeStorage->load($entity->bundle());
+      $entity->setNewRevision($node_type->isNewRevision());
       $entity->revision_log = NULL;
     }
 

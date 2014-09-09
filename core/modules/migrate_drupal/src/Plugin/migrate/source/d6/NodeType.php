@@ -110,7 +110,7 @@ class NodeType extends DrupalSqlBase {
     }
     $row->setSourceProperty('options', $options);
     $submitted = isset($this->themeSettings['toggle_node_info_' . $type]) ? $this->themeSettings['toggle_node_info_' . $type] : FALSE;
-    $row->setSourceProperty('submitted', $submitted);
+    $row->setSourceProperty('display_submitted', $submitted);
 
     return parent::prepareRow($row);
   }

@@ -14,7 +14,7 @@ menu_ui.settings:
       type: boolean
       label: 'Override parent selector'
 
-menu.entity.node.*:
+node_type.third_party.menu_ui:
   type: mapping
   label: 'Per-content type menu settings'
   mapping:

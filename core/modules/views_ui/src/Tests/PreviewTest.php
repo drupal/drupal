@@ -98,6 +98,7 @@ class PreviewTest extends UITestBase {
   public function testPreviewWithPagersUI() {
 
     // Create 11 nodes and make sure that everyone is returned.
+    $this->drupalCreateContentType(array('type' => 'page'));
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }

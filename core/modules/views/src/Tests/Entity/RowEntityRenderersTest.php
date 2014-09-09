@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\Core\Language\Language;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
@@ -63,9 +64,9 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     }
 
     // Make sure we do not try to render non-existing user data.
-    $config = \Drupal::config('node.type.test');
-    $config->set('settings.node.submitted', FALSE);
-    $config->save();
+    $node_type = NodeType::create(array('type' => 'test'));
+    $node_type->setDisplaySubmitted(FALSE);
+    $node_type->save();
   }
 
   /**

@@ -48,6 +48,7 @@ class DateTimeTest extends WebTestBase {
     // Create some nodes with different authored-on dates.
     $date1 = '2007-01-31 21:00:00 -1000';
     $date2 = '2007-07-31 21:00:00 -1000';
+    $this->drupalCreateContentType(array('type' => 'article'));
     $node1 = $this->drupalCreateNode(array('created' => strtotime($date1), 'type' => 'article'));
     $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
 

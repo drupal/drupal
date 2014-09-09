@@ -39,7 +39,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Set page revision setting 'create new revision'. This will mean new
     // revisions are created by default when the node is edited.
     $type = entity_load('node_type', 'page');
-    $type->settings['node']['options']['revision'] = TRUE;
+    $type->setNewRevision(TRUE);
     $type->save();
 
     // Create the node.

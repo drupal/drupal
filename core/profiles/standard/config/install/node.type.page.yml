@@ -2,11 +2,8 @@ type: page
 name: 'Basic page'
 description: 'Use <em>basic pages</em> for your static content, such as an ''About us'' page.'
 help: ''
-settings:
-  node:
-    preview: 1
-    options:
-      revision: false
-    submitted: false
+new_revision: false
+preview_mode: 1
+display_submitted: false
 status: true
 langcode: en

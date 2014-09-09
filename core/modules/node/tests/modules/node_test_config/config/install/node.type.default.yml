@@ -2,11 +2,8 @@ type: default
 name: Default
 description: 'Default description.'
 help: ''
-settings:
-  node:
-    preview: 1
-    options:
-      revision: false
-    submitted: true
+new_revision: false
+display_submitted: true
+preview_mode: 1
 status: true
 langcode: en

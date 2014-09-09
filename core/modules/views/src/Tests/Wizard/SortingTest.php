@@ -20,6 +20,7 @@ class SortingTest extends WizardTestBase {
   function testSorting() {
     // Create nodes, each with a different creation time so that we can do a
     // meaningful sort.
+    $this->drupalCreateContentType(array('type' => 'page'));
     $node1 = $this->drupalCreateNode(array('created' => REQUEST_TIME));
     $node2 = $this->drupalCreateNode(array('created' => REQUEST_TIME + 1));
     $node3 = $this->drupalCreateNode(array('created' => REQUEST_TIME + 2));

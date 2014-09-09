@@ -40,6 +40,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
+    $this->drupalCreateContentType(array('type' => 'page'));
     $this->drupalCreateNode();
 
     // Make sure the title appears in the page.
@@ -92,6 +93,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
+    $this->drupalCreateContentType(array('type' => 'page'));
     $this->drupalCreateNode();
 
     // Make sure that the feed, page and block all start off with the correct

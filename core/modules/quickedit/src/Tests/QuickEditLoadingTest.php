@@ -242,7 +242,7 @@ class QuickEditLoadingTest extends WebTestBase {
       // in TempStore) and then save the entity. Now there should be two
       // revisions.
       $node_type = entity_load('node_type', 'article');
-      $node_type->settings['node']['options']['revision'] = TRUE;
+      $node_type->setNewRevision(TRUE);
       $node_type->save();
 
       // Retrieve field form.

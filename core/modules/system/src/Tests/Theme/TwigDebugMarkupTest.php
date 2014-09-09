@@ -30,6 +30,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     $extension = twig_extension();
     theme_enable(array('test_theme'));
     \Drupal::config('system.theme')->set('default', 'test_theme')->save();
+    $this->drupalCreateContentType(array('type' => 'page'));
     // Enable debug, rebuild the service container, and clear all caches.
     $parameters = $this->container->getParameter('twig.config');
     $parameters['debug'] = TRUE;

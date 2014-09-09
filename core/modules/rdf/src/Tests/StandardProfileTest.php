@@ -273,7 +273,7 @@ class StandardProfileTest extends WebTestBase {
     // true for testing.
     // @todo Clean-up standard profile defaults.
     $node_type = entity_load('node_type', 'page');
-    $node_type->settings['node']['submitted'] = TRUE;
+    $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 
     // Feed the HTML into the parser.

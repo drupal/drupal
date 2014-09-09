@@ -41,6 +41,7 @@ class MiniPagerTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->drupalCreateContentType(array('type' => 'page'));
     // Create a bunch of test nodes.
     for ($i = 0; $i < 20; $i++) {
       $this->nodes[] = $this->drupalCreateNode();

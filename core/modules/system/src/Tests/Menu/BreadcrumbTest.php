@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Menu;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests breadcrumbs functionality.
@@ -158,10 +159,10 @@ class BreadcrumbTest extends MenuTestBase {
     //   breadcrumbs may differ, possibly due to theme overrides.
     $menus = array('main', 'tools');
     // Alter node type menu settings.
-    \Drupal::config("menu.entity.node.$type")
-      ->set('available_menus', $menus)
-      ->set('parent', 'tools:')
-      ->save();
+    $node_type = NodeType::load($type);
+    $node_type->setThirdPartySetting('menu_ui', 'available_menus', $menus);
+    $node_type->setThirdPartySetting('menu_ui', 'parent', 'tools:');
+    $node_type->save();
 
     foreach ($menus as $menu) {
       // Create a parent node in the current menu.

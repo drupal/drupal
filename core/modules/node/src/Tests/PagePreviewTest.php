@@ -204,7 +204,7 @@ class PagePreviewTest extends NodeTestBase {
     $term_key = $this->field_name;
     // Force revision on "Basic page" content.
     $node_type = NodeType::load('page');
-    $node_type->settings['node']['options']['revision'] = TRUE;
+    $node_type->setNewRevision(TRUE);
     $node_type->save();
 
     // Fill in node creation form and preview node.

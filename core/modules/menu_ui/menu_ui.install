@@ -5,8 +5,6 @@
  * Install, update and uninstall functions for the menu_ui module.
  */
 
-use Drupal\Component\Uuid\Uuid;
-
 /**
  * Implements hook_install().
  */
@@ -17,15 +15,6 @@ function menu_ui_install() {
   // \Drupal\Core\Extension\ModuleHandler::install().
   // @see https://drupal.org/node/2181151
   \Drupal::service('router.builder')->rebuild();
-  if (\Drupal::moduleHandler()->moduleExists('node')) {
-    $node_types = array_keys(node_type_get_names());
-    foreach ($node_types as $type_id) {
-      \Drupal::config('menu.entity.node.' . $type_id)
-        ->set('available_menus', array('main'))
-        ->set('parent', 'main:0')
-        ->save();
-    }
-  }
 }
 
 /**

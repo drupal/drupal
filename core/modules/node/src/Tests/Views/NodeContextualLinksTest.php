@@ -35,6 +35,7 @@ class NodeContextualLinksTest extends NodeTestBase {
    * Tests contextual links.
    */
   public function testNodeContextualLinks() {
+    $this->drupalCreateContentType(array('type' => 'page'));
     $this->drupalCreateNode(array('promote' => 1));
     $this->drupalGet('node');
 

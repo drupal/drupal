@@ -635,12 +635,10 @@ function template_preprocess_node(&$variables) {
   }
 
   // Display post information only on certain node types.
-  // Avoid loading the entire node type config entity here that may not exist.
-  $node_type_config = \Drupal::config('node.type.' . $node->bundle());
+  $node_type = $node->type->entity;
   // Used by RDF to add attributes around the author and date submitted.
   $variables['author_attributes'] = new Attribute();
-  // Display submitted by default.
-  $variables['display_submitted'] = $node_type_config->isNew() || $node_type_config->get('settings.node.submitted');
+  $variables['display_submitted'] = $node_type->displaySubmitted();
   if ($variables['display_submitted']) {
     if (theme_get_setting('features.node_user_picture')) {
       // To change user picture settings (e.g. image style), edit the 'compact'
