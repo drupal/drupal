@@ -415,7 +415,7 @@ class OverviewTerms extends FormBase {
         }
         // Update any changed parents.
         if ($values['term']['parent'] != $term->parents[0]) {
-          $term->parent->value = $values['term']['parent'];
+          $term->parent->target_id = $values['term']['parent'];
           $changed_terms[$term->id()] = $term;
         }
         $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
@@ -427,7 +427,7 @@ class OverviewTerms extends FormBase {
     for ($weight; $weight < count($tree); $weight++) {
       $term = $tree[$weight];
       if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
-        $term->parent->value = $term->parents[0];
+        $term->parent->target_id = $term->parents[0];
         $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
       }

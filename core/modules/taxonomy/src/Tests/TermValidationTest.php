@@ -63,6 +63,10 @@ class TermValidationTest extends EntityUnitTestBase {
     $term->set('parent', 9999);
     $violations = $term->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when term parent is invalid.');
-    $this->assertEqual($violations[0]->getMessage(), format_string('%id is not a valid parent for this term.', array('%id' => 9999)));
+    $this->assertEqual($violations[0]->getMessage(), format_string('The referenced entity (%type: %id) does not exist.', array('%type' => 'taxonomy_term', '%id' => 9999)));
+
+    $term->set('parent', 0);
+    $violations = $term->validate();
+    $this->assertEqual(count($violations), 0, 'No violations for parent id 0.');
   }
 }

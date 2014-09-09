@@ -93,13 +93,21 @@ class EntityTest extends NormalizerTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array('vid' => 'example_vocabulary'));
     $vocabulary->save();
 
+    // @todo Until https://www.drupal.org/node/2327935 is fixed, if no parent is
+    // set, the test fails because target_id => 0 is reserialized to NULL.
+    $term_parent = entity_create('taxonomy_term', array(
+      'name' => $this->randomMachineName(),
+      'vid' => $vocabulary->id(),
+    ));
+    $term_parent->save();
     $term = entity_create('taxonomy_term', array(
       'name' => $this->randomMachineName(),
       'vid' => $vocabulary->id(),
       'description' => array(
         'value' => $this->randomMachineName(),
         'format' => $this->randomMachineName(),
-      )
+      ),
+      'parent' => $term_parent->id(),
     ));
     $term->save();
 

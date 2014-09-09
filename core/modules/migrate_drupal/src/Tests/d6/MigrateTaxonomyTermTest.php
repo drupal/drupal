@@ -93,7 +93,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
       $this->assertEqual($term->vid->target_id, $values['vid']);
       $this->assertEqual($term->weight->value, $values['weight']);
       if ($values['parent'] === array(0)) {
-        $this->assertEqual($term->parent->value, 0);
+        $this->assertEqual($term->parent->target_id, 0);
       }
       else {
         $parents = array();

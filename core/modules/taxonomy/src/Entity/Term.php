@@ -92,7 +92,7 @@ class Term extends ContentEntityBase implements TermInterface {
 
     // Only change the parents if a value is set, keep the existing values if
     // not.
-    if (isset($this->parent->value)) {
+    if (isset($this->parent->target_id)) {
       $storage->deleteTermHierarchy(array($this->id()));
       $storage->updateTermHierarchy($this);
     }
@@ -161,16 +161,12 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The weight of this term in relation to other terms.'))
       ->setDefaultValue(0);
 
-    // @todo Convert this to an entity_reference field, see
-    // https://drupal.org/node/1915056
-    $fields['parent'] = BaseFieldDefinition::create('integer')
+    $fields['parent'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Term Parents'))
       ->setDescription(t('The parents of this term.'))
+      ->setSetting('target_type', 'taxonomy_term')
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      // Save new terms with no parents by default.
-      ->setDefaultValue(0)
-      ->setSetting('unsigned', TRUE)
-      ->addConstraint('TermParent', array());
+      ->setCustomStorage(TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))

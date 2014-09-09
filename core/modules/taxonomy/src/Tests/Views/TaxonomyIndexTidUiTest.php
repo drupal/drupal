@@ -78,7 +78,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     for ($i = 0; $i < 3; $i++) {
       for ($j = 0; $j <= $i; $j++) {
         $option = $result[$counter++];
-        $prefix = $terms[$i][$j]->parent->value ? '-' : '';
+        $prefix = $terms[$i][$j]->parent->target_id ? '-' : '';
         $attributes = $option->attributes();
         $tid = (string) $attributes->value;
 
