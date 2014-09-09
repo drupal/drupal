@@ -578,7 +578,7 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getBundleLabel() {
-    return $this->bundle_label;
+    return (string) $this->bundle_label;
   }
 
   /**
@@ -635,7 +635,7 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getLabel() {
-    return $this->label;
+    return (string) $this->label;
   }
 
   /**
@@ -672,7 +672,7 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getGroupLabel() {
-    return !empty($this->group_label) ? $this->group_label : $this->t('Other', array(), array('context' => 'Entity type group'));
+    return !empty($this->group_label) ? (string) $this->group_label : $this->t('Other', array(), array('context' => 'Entity type group'));
   }
 
 }

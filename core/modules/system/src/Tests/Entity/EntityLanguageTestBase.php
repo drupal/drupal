@@ -106,11 +106,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     }
 
     // Create the default languages.
-    $default_language = language_save($this->languageManager->getDefaultLanguage());
-    $languages = $this->languageManager->getDefaultLockedLanguages($default_language->weight);
-    foreach ($languages as $language) {
-      language_save($language);
-    }
+    $this->installConfig(array('language'));
 
     // Create test languages.
     $this->langcodes = array();

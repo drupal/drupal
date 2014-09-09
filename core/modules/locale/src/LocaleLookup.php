@@ -92,12 +92,34 @@ class LocaleLookup extends CacheCollector {
     $this->configFactory = $config_factory;
     $this->languageManager = $language_manager;
 
-    // Add the current user's role IDs to the cache key, this ensures that, for
-    // example, strings for admin menu items and settings forms are not cached
-    // for anonymous users.
-    $user = \Drupal::currentUser();
-    $rids = $user ? implode(':', array_keys($user->getRoles())) : '0';
-    parent::__construct("locale:$langcode:$context:$rids", $cache, $lock, array('locale' => TRUE));
+    $this->cache = $cache;
+    $this->lock = $lock;
+    $this->tags = array('locale' => TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getCid() {
+    if (!isset($this->cid)) {
+      // Add the current user's role IDs to the cache key, this ensures that,
+      // for example, strings for admin menu items and settings forms are not
+      // cached for anonymous users.
+      $user = \Drupal::currentUser();
+      $rids = $user ? implode(':', array_keys($user->getRoles())) : '0';
+      $this->cid = "locale:{$this->langcode}:{$this->context}:$rids";
+
+      // Getting the roles from the current user might have resulted in t()
+      // calls that attempted to get translations from the locale cache. In that
+      // case they would not go into this method again as
+      // CacheCollector::lazyLoadCache() already set the loaded flag. They would
+      // however call resolveCacheMiss() and add that string to the list of
+      // cache misses that need to be written into the cache. Prevent that by
+      // resetting that list. All that happens in such a case are a few uncached
+      // translation lookups.
+      $this->keysToPersist = array();
+    }
+    return $this->cid;
   }
 
   /**
