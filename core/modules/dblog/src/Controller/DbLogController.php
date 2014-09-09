@@ -173,7 +173,13 @@ class DbLogController extends ControllerBase {
       if ($message && isset($dblog->wid)) {
         // Truncate link_text to 56 chars of message.
         $log_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
-        $message = $this->l($log_text, 'dblog.event',  array('event_id' => $dblog->wid), array('html' => TRUE));
+        $message = $this->l($log_text, 'dblog.event',  array('event_id' => $dblog->wid), array(
+          'attributes' => array(
+            // Provide a title for the link for useful hover hints.
+            'title' => Unicode::truncate(strip_tags($message), 256, TRUE, TRUE),
+          ),
+          'html' => TRUE,
+        ));
       }
       $username = array(
         '#theme' => 'username',
