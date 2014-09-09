@@ -521,6 +521,7 @@ td.group-title {
 }
 
 .views-displays .tabs.secondary .open > a:hover {
+  color: #0074bd;
   background-color: #f1f1f1;
 }
 
