@@ -214,7 +214,7 @@ textarea.form-textarea {
   }
   select:focus,
   select:hover {
-    background-image: url(../../../../misc/icons/333333/caret-down.svg"),
+    background-image: url(../../../../misc/icons/333333/caret-down.svg),
     -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
     color: #1a1a1a;
   }
