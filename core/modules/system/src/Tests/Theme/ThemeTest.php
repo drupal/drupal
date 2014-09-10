@@ -278,4 +278,17 @@ class ThemeTest extends WebTestBase {
     $this->assertText('theme test page bottom markup', 'Modules are able to set the page bottom region.');
   }
 
+  /**
+   * Tests that region attributes can be manipulated via preprocess functions.
+   */
+  function testRegionClass() {
+    \Drupal::moduleHandler()->install(array('block', 'theme_region_test'));
+
+    // Place a block.
+    $this->drupalPlaceBlock('system_main_block');
+    $this->drupalGet('');
+    $elements = $this->cssSelect(".region-sidebar-first.new_class");
+    $this->assertEqual(count($elements), 1, 'New class found.');
+  }
+
 }

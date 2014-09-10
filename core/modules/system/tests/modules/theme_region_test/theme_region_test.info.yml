@@ -1,0 +1,6 @@
+name: 'Theme region test'
+type: module
+description: 'Provides hook implementations for testing regions.'
+package: Testing
+version: VERSION
+core: 8.x

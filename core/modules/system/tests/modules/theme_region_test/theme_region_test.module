@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for testing purposes.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for region templates.
+ */
+function theme_region_test_preprocess_region(&$variables) {
+  if ($variables['region'] == 'sidebar_first') {
+    $variables['attributes']['class'][] = 'new_class';
+  }
+}
