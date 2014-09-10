@@ -687,7 +687,7 @@ interface FormStateInterface {
    *
    * @return array
    */
-  public function getGroups();
+  public function &getGroups();
 
   /**
    * Sets that this form has a file element.
