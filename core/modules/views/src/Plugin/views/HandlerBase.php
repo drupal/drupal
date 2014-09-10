@@ -16,7 +16,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\views\Views;
@@ -27,7 +26,7 @@ use Drupal\views\ViewsData;
  *
  * @ingroup views_plugins
  */
-abstract class HandlerBase extends PluginBase {
+abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Where the $query object will reside:
@@ -109,7 +108,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -172,7 +171,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Return a string representing this handler's name in the UI.
+   * {@inheritdoc}
    */
   public function adminLabel($short = FALSE) {
     if (!empty($this->options['admin_label'])) {
@@ -184,11 +183,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Shortcut to get a handler's raw field value.
-   *
-   * This should be overridden for handlers with formulae or other
-   * non-standard fields. Because this takes an argument, fields
-   * overriding this can just call return parent::getField($formula)
+   * {@inheritdoc}
    */
   public function getField($field = NULL) {
     if (!isset($field)) {
@@ -218,15 +213,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Sanitize the value for output.
-   *
-   * @param $value
-   *   The value being rendered.
-   * @param $type
-   *   The type of sanitization needed. If not provided, String::checkPlain() is used.
-   *
-   * @return string
-   *   Returns the safe value.
+   * {@inheritdoc}
    */
   public function sanitizeValue($value, $type = NULL) {
     switch ($type) {
@@ -277,7 +264,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Build the options form.
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
@@ -483,10 +470,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Check whether current user has access to this handler.
-   *
-   * @param AccountInterface $account
-   * @return boolean
+   * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
     if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
@@ -500,26 +484,19 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Run before the view is built.
-   *
-   * This gives all the handlers some time to set up before any handler has
-   * been fully run.
+   * {@inheritdoc}
    */
   public function preQuery() {
   }
 
   /**
-   * Don't run a query by default.
+   * {@inheritdoc}
    */
   public function query() {
   }
 
   /**
-   * Run after the view is executed, before the result is cached.
-   *
-   * This gives all the handlers some time to modify values. This is primarily
-   * used so that handlers that pull up secondary data can put it in the
-   * $values so that the raw data can be utilized externally.
+   * {@inheritdoc}
    */
   public function postExecute(&$values) { }
 
@@ -534,8 +511,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Called just prior to query(), this lets a handler set up any relationship
-   * it needs.
+   * {@inheritdoc}
    */
   public function setRelationship() {
     // Ensure this gets set to something.
@@ -564,8 +540,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Ensure the main table for this handler is in the query. This is used
-   * a lot.
+   * {@inheritdoc}
    */
   public function ensureMyTable() {
     if (!isset($this->tableAlias)) {
@@ -575,7 +550,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Provide text for the administrative summary.
+   * {@inheritdoc}
    */
   public function adminSummary() { }
 
@@ -612,11 +587,7 @@ abstract class HandlerBase extends PluginBase {
   public function storeExposedInput($input, $status) { return TRUE; }
 
   /**
-   * Get the join object that should be used for this handler.
-   *
-   * This method isn't used a great deal, but it's very handy for easily
-   * getting the join if it is necessary to make some changes to it, such
-   * as adding an 'extra'.
+   * {@inheritdoc}
    */
   public function getJoin() {
     // get the join from this table that links back to the base table.
@@ -635,21 +606,12 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Validates the handler against the complete View.
-   *
-   * This is called when the complete View is being validated. For validating
-   * the handler options form use validateOptionsForm().
-   *
-   * @see views_handler::validateOptionsForm()
-   *
-   * @return
-   *   Empty array if the handler is valid; an array of error strings if it is not.
+   * {@inheritdoc}
    */
   public function validate() { return array(); }
 
   /**
-   * Determines if the handler is considered 'broken', meaning it's a
-   * a placeholder used when a handler can't be found.
+   * {@inheritdoc}
    */
   public function broken() {
     return FALSE;
@@ -692,24 +654,14 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Sets the views data service.
-   *
-   * @param \Drupal\views\ViewsData $views_data
-   *   The views data.
+   * {@inheritdoc}
    */
   public function setViewsData(ViewsData $views_data) {
     $this->viewsData = $views_data;
   }
 
   /**
-   * Fetches a handler to join one table to a primary table from the data cache.
-   *
-   * @param string $table
-   *   The table to join from.
-   * @param string $base_table
-   *   The table to join to.
-   *
-   * @return \Drupal\views\Plugin\views\join\JoinPluginBase
+   * {@inheritdoc}
    */
   public static function getTableJoin($table, $base_table) {
     $data = Views::viewsData()->get($table);
@@ -745,13 +697,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Determines the entity type used by this handler.
-   *
-   * If this handler uses a relationship, the base class of the relationship is
-   * taken into account.
-   *
-   * @return string
-   *   The machine name of the entity type.
+   * {@inheritdoc}
    */
   public function getEntityType() {
     // If the user has configured a relationship on the handler take that into
@@ -772,15 +718,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Breaks x,y,z and x+y+z into an array.
-   *
-   * @param string $str
-   *   The string to split.
-   * @param bool $force_int
-   *   Enforce a numeric check.
-   *
-   * @return \stdClass
-   *   A stdClass object containing value and operator properties.
+   * {@inheritdoc}
    */
   public static function breakString($str, $force_int = FALSE) {
     $operator = NULL;

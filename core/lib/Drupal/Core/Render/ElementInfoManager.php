@@ -46,7 +46,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $this->setCacheBackend($cache_backend, 'element_info');
 
-    parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Annotation\RenderElement');
+    parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Element\ElementInterface', 'Drupal\Core\Render\Annotation\RenderElement');
   }
 
   /**

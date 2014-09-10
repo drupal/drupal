@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\MigraterPluginManager.
+ * Contains \Drupal\migrate\Plugin\MigratePluginManager.
  */
 
 namespace Drupal\migrate\Plugin;
@@ -46,7 +46,15 @@ class MigratePluginManager extends DefaultPluginManager {
    *   The annotation class name.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
-    parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, $annotation);
+    $plugin_interface_map = array(
+      'destination' => 'Drupal\migrate\Plugin\MigrateDestinationInterface',
+      'process' => 'Drupal\migrate\Plugin\MigrateProcessInterface',
+      'source' => 'Drupal\migrate\Plugin\MigrateSourceInterface',
+      'id_map' => 'Drupal\migrate\Plugin\MigrateIdMapInterface',
+      'entity_field' => 'Drupal\migrate\Plugin\MigrateEntityDestinationFieldInterface',
+    );
+    $plugin_interface = isset($plugin_interface_map[$type]) ? $plugin_interface_map[$type] : NULL;
+    parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, $plugin_interface, $annotation);
     $this->alterInfo('migrate_' . $type . '_info');
     $this->setCacheBackend($cache_backend, 'migrate_plugins_' . $type);
   }

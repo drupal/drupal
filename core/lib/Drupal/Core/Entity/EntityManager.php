@@ -171,7 +171,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The class resolver.
    */
   public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager) {
-    parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\Annotation\EntityType');
+    parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface', 'Drupal\Core\Entity\Annotation\EntityType');
 
     $this->setCacheBackend($cache, 'entity_type', array('entity_types' => TRUE));
     $this->alterInfo('entity_type');

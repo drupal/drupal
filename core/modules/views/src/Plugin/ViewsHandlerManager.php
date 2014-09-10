@@ -52,7 +52,11 @@ class ViewsHandlerManager extends DefaultPluginManager {
    */
   public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
-    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_definition_annotation_name);
+    $plugin_interface = 'Drupal\views\Plugin\views\ViewsHandlerInterface';
+    if ($handler_type == 'join') {
+      $plugin_interface = 'Drupal\views\Plugin\views\join\JoinPluginInterface';
+    }
+    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_annotation_name);
 
     $this->setCacheBackend($cache_backend, "views:$handler_type", array('extension' => array(TRUE, 'views')));
 
@@ -74,7 +78,7 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *   (optional) Override the actual handler object with this plugin ID. Used for
    *   aggregation when the handler is redirected to the aggregation handler.
    *
-   * @return \Drupal\views\Plugin\views\HandlerBase
+   * @return \Drupal\views\Plugin\views\ViewsHandlerInterface
    *   An instance of a handler object. May be a broken handler instance.
    */
   public function getHandler($item, $override = NULL) {

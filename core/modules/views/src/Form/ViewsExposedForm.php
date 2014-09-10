@@ -81,7 +81,7 @@ class ViewsExposedForm extends FormBase {
 
     // Go through each handler and let it generate its exposed widget.
     foreach ($view->display_handler->handlers as $type => $value) {
-      /** @var \Drupal\views\Plugin\views\HandlerBase $handler */
+      /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface $handler */
       foreach ($view->$type as $id => $handler) {
         if ($handler->canExpose() && $handler->isExposed()) {
           // Grouped exposed filters have their own forms.
@@ -134,7 +134,7 @@ class ViewsExposedForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     foreach (array('field', 'filter') as $type) {
-      /** @var \Drupal\views\Plugin\views\HandlerBase[] $handlers */
+      /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface[] $handlers */
       $handlers = &$form_state['view']->$type;
       foreach ($handlers as $key => $handler) {
         $handlers[$key]->validateExposed($form, $form_state);
@@ -150,7 +150,7 @@ class ViewsExposedForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach (array('field', 'filter') as $type) {
-      /** @var \Drupal\views\Plugin\views\HandlerBase[] $handlers */
+      /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface[] $handlers */
       $handlers = &$form_state['view']->$type;
       foreach ($handlers as $key => $info) {
         $handlers[$key]->submitExposed($form, $form_state);

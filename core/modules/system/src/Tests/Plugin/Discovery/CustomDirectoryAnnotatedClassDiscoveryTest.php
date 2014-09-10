@@ -57,6 +57,13 @@ class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry',
         'provider' => 'plugin_test',
       ),
+      'kale' => array(
+        'id' => 'kale',
+        'label' => 'Kale',
+        'color' => 'green',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Kale',
+        'provider' => 'plugin_test',
+      ),
       'orange' => array(
         'id' => 'orange',
         'label' => 'Orange',

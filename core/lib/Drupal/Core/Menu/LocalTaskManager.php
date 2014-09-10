@@ -126,7 +126,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->discovery = new YamlDiscovery('links.task', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
-    $this->factory = new ContainerFactory($this);
+    $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;

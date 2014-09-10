@@ -28,7 +28,7 @@ class SearchPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Search', $namespaces, $module_handler, 'Drupal\search\Annotation\SearchPlugin');
+    parent::__construct('Plugin/Search', $namespaces, $module_handler, 'Drupal\search\Plugin\SearchInterface', 'Drupal\search\Annotation\SearchPlugin');
     $this->setCacheBackend($cache_backend, 'search_plugins');
     $this->alterInfo('search_plugin');
   }

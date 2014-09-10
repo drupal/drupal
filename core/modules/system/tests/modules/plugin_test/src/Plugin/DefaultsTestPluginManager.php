@@ -29,7 +29,7 @@ class DefaultsTestPluginManager extends DefaultPluginManager {
     // discovery implementation, but StaticDiscovery lets us add some simple
     // mock plugins for unit testing.
     $this->discovery = new StaticDiscovery();
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this, 'Drupal\Component\Plugin\PluginInspectionInterface');
     $this->moduleHandler = $module_handler;
 
     // Specify default values.

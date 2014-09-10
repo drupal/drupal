@@ -36,7 +36,7 @@ class SelectionPluginManager extends DefaultPluginManager {
 
     // We're not using the parent constructor because we use a different factory
     // method and don't need the derivative discovery decorator.
-    $this->factory = new ReflectionFactory($this);
+    $this->factory = new ReflectionFactory($this, '\Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface');
 
     $this->moduleHandler = $module_handler;
     $this->alterInfo('entity_reference_selection');

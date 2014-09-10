@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Contains \Drupal\Core\Archiver\ArchiverManager.
  */
 
@@ -32,7 +33,7 @@ class ArchiverManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Archiver', $namespaces, $module_handler, 'Drupal\Core\Archiver\Annotation\Archiver');
+    parent::__construct('Plugin/Archiver', $namespaces, $module_handler, 'Drupal\Core\Archiver\ArchiverInterface', 'Drupal\Core\Archiver\Annotation\Archiver');
     $this->alterInfo('archiver_info');
     $this->setCacheBackend($cache_backend, 'archiver_info_plugins');
   }
@@ -42,7 +43,7 @@ class ArchiverManager extends DefaultPluginManager {
    */
   public function createInstance($plugin_id, array $configuration = array()) {
     $plugin_definition = $this->getDefinition($plugin_id);
-    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition, 'Drupal\Core\Archiver\ArchiverInterface');
     return new $plugin_class($configuration['filepath']);
   }
 

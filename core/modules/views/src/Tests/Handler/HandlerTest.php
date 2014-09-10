@@ -204,16 +204,14 @@ class HandlerTest extends ViewTestBase {
       $loaded_order = array_keys($view->display_handler->getOption($type));
       $this->assertIdentical($original_order[$type], $loaded_order);
     }
-
   }
-
 
   /**
    * Check to see if a value is the same as the value on a certain handler.
    *
    * @param $expected
    *   The expected value to check.
-   * @param \Drupal\views\Plugin\views\HandlerBase $handler
+   * @param \Drupal\views\Plugin\views\ViewsHandlerInterface $handler
    *   The handler that has the $handler->value property to compare with first.
    * @param string $message
    *   The message to display along with the assertion.

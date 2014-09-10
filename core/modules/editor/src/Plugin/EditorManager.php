@@ -33,7 +33,7 @@ class EditorManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Editor', $namespaces, $module_handler, 'Drupal\editor\Annotation\Editor');
+    parent::__construct('Plugin/Editor', $namespaces, $module_handler, 'Drupal\editor\Plugin\EditorPluginInterface', 'Drupal\editor\Annotation\Editor');
     $this->alterInfo('editor_info');
     $this->setCacheBackend($cache_backend, 'editor_plugins');
   }

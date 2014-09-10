@@ -44,7 +44,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\Annotation\Block');
+    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
 
     $this->alterInfo('block');
     $this->setCacheBackend($cache_backend, 'block_plugins');

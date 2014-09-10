@@ -116,7 +116,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     // discovery.
     $this->discovery = new YamlDiscovery('links.action', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
-    $this->factory = new ContainerFactory($this);
+    $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;

@@ -108,19 +108,6 @@ function update_test_mock_page($project_name) {
 }
 
 /**
- * Implements hook_archiver_info_alter().
- */
-function update_test_archiver_info_alter(&$definitions) {
-  // We only care about the extensions for now and the only way to add a new
-  // extension without a class is via alter. This definition is bogus, real
-  // archivers have a class and the definition goes in the annotation of the
-  // class.
-  $definitions['update_test_archiver'] = array(
-    'extensions' => array('update-test-extension'),
-  );
-}
-
-/**
  * Implements hook_filetransfer_info().
  */
 function update_test_filetransfer_info() {

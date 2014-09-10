@@ -46,7 +46,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    *   A logger instance.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
-    parent::__construct('Plugin/ImageToolkit/Operation', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation');
+    parent::__construct('Plugin/ImageToolkit/Operation', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\ImageToolkitOperationInterface', 'Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation');
 
     $this->alterInfo('image_toolkit_operation');
     $this->setCacheBackend($cache_backend, 'image_toolkit_operation_plugins');

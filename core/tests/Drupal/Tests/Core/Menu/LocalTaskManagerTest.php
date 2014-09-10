@@ -246,7 +246,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->manager = $this
       ->getMockBuilder('Drupal\Core\Menu\LocalTaskManager')
       ->disableOriginalConstructor()
-      ->setMethods(NULL)
+      ->setMethods(array('enforcePluginInterface'))
       ->getMock();
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'controllerResolver');

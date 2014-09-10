@@ -42,7 +42,7 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
     $this->alterInfo('condition_info');
     $this->setCacheBackend($cache_backend, 'condition_plugins');
 
-    parent::__construct('Plugin/Condition', $namespaces, $module_handler, 'Drupal\Core\Condition\Annotation\Condition');
+    parent::__construct('Plugin/Condition', $namespaces, $module_handler, 'Drupal\Core\Condition\ConditionInterface', 'Drupal\Core\Condition\Annotation\Condition');
   }
 
   /**

@@ -90,7 +90,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->discovery = new InfoHookDecorator($this->discovery, 'config_translation_info');
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
 
-    $this->factory = new ContainerFactory($this);
+    $this->factory = new ContainerFactory($this, '\Drupal\config_translation\ConfigMapperInterface');
 
     // Let others alter definitions with hook_config_translation_info_alter().
     $this->moduleHandler = $module_handler;

@@ -14,4 +14,4 @@ namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
  *   color = "green"
  * )
  */
-class Apple {}
+class Apple implements FruitInterface {}

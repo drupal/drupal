@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\migrate\Plugin\MigrateLoadInterface
+ * Contains Drupal\migrate_drupal\Plugin\MigrateLoadInterface
  */
 
 namespace Drupal\migrate_drupal\Plugin;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -16,7 +17,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *
  * @ingroup migration
  */
-interface MigrateLoadInterface {
+interface MigrateLoadInterface extends PluginInspectionInterface {
 
   /**
    * Load an additional migration.

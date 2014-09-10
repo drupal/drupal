@@ -105,7 +105,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, RequestStack $request_stack) {
     $this->discovery = new YamlDiscovery('links.contextual', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
-    $this->factory = new ContainerFactory($this);
+    $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\ContextualLinkInterface');
 
     $this->controllerResolver = $controller_resolver;
     $this->accessManager = $access_manager;

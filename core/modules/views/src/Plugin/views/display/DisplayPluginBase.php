@@ -837,7 +837,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * @param string $type
    *   The type of the plugin.
    *
-   * @return \Drupal\views\Plugin\views\PluginBase
+   * @return \Drupal\views\Plugin\views\ViewsPluginInterface
    */
   public function getPlugin($type) {
     // Look up the plugin name to use for this instance.
@@ -890,7 +890,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Get a full array of handlers for $type. This caches them.
    *
-   * @return \Drupal\views\Plugin\views\HandlerBase[]
+   * @return \Drupal\views\Plugin\views\ViewsHandlerInterface[]
    */
   public function getHandlers($type) {
     if (!isset($this->handlers[$type])) {

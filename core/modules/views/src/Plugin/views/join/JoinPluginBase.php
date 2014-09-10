@@ -58,7 +58,7 @@ use Drupal\Core\Plugin\PluginBase;
  *
  * Extensions of this class can be used to create more interesting joins.
  */
-class JoinPluginBase extends PluginBase {
+class JoinPluginBase extends PluginBase implements JoinPluginInterface {
 
   /**
    * The table to join (right table).
@@ -181,16 +181,7 @@ class JoinPluginBase extends PluginBase {
   }
 
   /**
-   * Builds the SQL for the join this object represents.
-   *
-   * When possible, try to use table alias instead of table names.
-   *
-   * @param $select_query
-   *   An select query object.
-   * @param $table
-   *   The base table to join.
-   * @param \Drupal\views\Plugin\views\query\QueryPluginBase $view_query
-   *   The source views query.
+   * {@inheritdoc}
    */
   public function buildJoin($select_query, $table, $view_query) {
     if (empty($this->configuration['table formula'])) {

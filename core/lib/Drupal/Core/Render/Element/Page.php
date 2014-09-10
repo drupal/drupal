@@ -12,7 +12,7 @@ namespace Drupal\Core\Render\Element;
  *
  * @RenderElement("page")
  */
-class Page {
+class Page extends RenderElement {
 
   /**
    * {@inheritdoc}

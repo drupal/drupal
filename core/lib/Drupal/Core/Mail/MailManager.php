@@ -12,8 +12,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Component\Utility\String;
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -67,7 +65,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *   The string translation service.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation) {
-    parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Annotation\Mail');
+    parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Mail\MailInterface', 'Drupal\Core\Annotation\Mail');
     $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
     $this->configFactory = $config_factory;
@@ -149,16 +147,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     }
 
     if (empty($this->instances[$plugin_id])) {
-      $plugin = $this->createInstance($plugin_id);
-      if (is_subclass_of($plugin, '\Drupal\Core\Mail\MailInterface')) {
-        $this->instances[$plugin_id] = $plugin;
-      }
-      else {
-        throw new InvalidPluginDefinitionException($plugin_id, String::format('Class %class does not implement interface %interface', array(
-          '%class' => get_class($plugin),
-          '%interface' => 'Drupal\Core\Mail\MailInterface',
-        )));
-      }
+      $this->instances[$plugin_id] = $this->createInstance($plugin_id);
     }
     return $this->instances[$plugin_id];
   }

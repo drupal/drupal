@@ -33,7 +33,7 @@ class ResourcePluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/rest/resource', $namespaces, $module_handler, 'Drupal\rest\Annotation\RestResource');
+    parent::__construct('Plugin/rest/resource', $namespaces, $module_handler, 'Drupal\rest\Plugin\ResourceInterface', 'Drupal\rest\Annotation\RestResource');
 
     $this->setCacheBackend($cache_backend, 'rest_plugins');
     $this->alterInfo('rest_resource');

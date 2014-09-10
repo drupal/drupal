@@ -19,7 +19,7 @@ class WidgetFactory extends DefaultFactory {
    */
   public function createInstance($plugin_id, array $configuration = array()) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
-    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition);
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
     return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings']);
   }
 }

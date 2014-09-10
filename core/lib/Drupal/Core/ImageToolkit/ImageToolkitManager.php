@@ -43,7 +43,7 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   The config factory.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
-    parent::__construct('Plugin/ImageToolkit', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\Annotation\ImageToolkit');
+    parent::__construct('Plugin/ImageToolkit', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\ImageToolkitInterface', 'Drupal\Core\ImageToolkit\Annotation\ImageToolkit');
 
     $this->setCacheBackend($cache_backend, 'image_toolkit_plugins');
     $this->configFactory = $config_factory;

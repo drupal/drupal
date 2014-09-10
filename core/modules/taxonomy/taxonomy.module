@@ -683,8 +683,21 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
  * Implements hook_field_widget_info_alter().
  */
 function taxonomy_field_widget_info_alter(&$info) {
-  $info['options_select']['field_types'][] = 'taxonomy_term_reference';
-  $info['options_buttons']['field_types'][] = 'taxonomy_term_reference';
+  if (isset($info['options_select'])) {
+    $info['options_select']['field_types'][] = 'taxonomy_term_reference';
+  }
+  if (isset($info['options_buttons'])) {
+    $info['options_buttons']['field_types'][] = 'taxonomy_term_reference';
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function taxonomy_field_formatter_info_alter(array &$info) {
+  if (!\Drupal::moduleHandler()->moduleExists('entity_reference')) {
+    unset($info['entity_reference_rss_category']);
+  }
 }
 
 /**
