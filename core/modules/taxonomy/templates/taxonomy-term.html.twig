@@ -22,6 +22,7 @@
  * - page: Flag for the full page state.
  * - term: The taxonomy term entity, including:
  *   - id: The ID of the taxonomy term.
+ *   - bundle: Machine name of the current vocabulary.
  * - view_mode: View mode, e.g. 'full', 'teaser', etc.
  *
  * @see template_preprocess_taxonomy_term()
@@ -29,7 +30,13 @@
  * @ingroup themeable
  */
 #}
-<div id="taxonomy-term-{{ term.id }}"{{ attributes }}>
+{%
+  set classes = [
+    'taxonomy-term',
+    'vocabulary-' ~ term.bundle|clean_class,
+  ]
+%}
+<div id="taxonomy-term-{{ term.id }}"{{ attributes.addClass(classes)|without('id') }}>
   {{ title_prefix }}
   {% if not page %}
     <h2><a href="{{ url }}">{{ name }}</a></h2>

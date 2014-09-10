@@ -319,11 +319,6 @@ function template_preprocess_taxonomy_term(&$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-
-  // Gather classes, and clean up name so there are no underscores.
-  $variables['attributes']['class'][] = 'taxonomy-term';
-  $vocabulary_name_css = str_replace('_', '-', $term->bundle());
-  $variables['attributes']['class'][] = 'vocabulary-' . $vocabulary_name_css;
 }
 
 /**
