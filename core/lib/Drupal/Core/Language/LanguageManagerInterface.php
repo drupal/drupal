@@ -98,6 +98,15 @@ interface LanguageManagerInterface {
   public function getLanguages($flags = LanguageInterface::STATE_CONFIGURABLE);
 
   /**
+   * Returns a list of languages set up on the site in their native form.
+   *
+   * @return \Drupal\Core\Language\LanguageInterface[]
+   *   An associative array of languages, keyed by the language code, ordered
+   *   by weight ascending and name ascending.
+   */
+  public function getNativeLanguages();
+
+  /**
    * Returns a language object from the given language code.
    *
    * @param string $langcode

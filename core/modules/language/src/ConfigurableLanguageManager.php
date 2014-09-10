@@ -15,6 +15,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -272,7 +273,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       $default = $this->getDefaultLanguage();
       $this->languages = array($default->id => $default);
 
-      // Retrieve the config storage to list available languages.
+      // Retrieve the list of languages defined in configuration.
       $prefix = 'language.entity.';
       $config_ids = $this->configFactory->listAll($prefix);
 
@@ -297,6 +298,24 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     }
 
     return parent::getLanguages($flags);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNativeLanguages() {
+    $languages = $this->getLanguages(BaseLanguageInterface::STATE_CONFIGURABLE);
+    $natives = array();
+
+    $original_language = $this->getConfigOverrideLanguage();
+
+    foreach ($languages as $langcode => $language) {
+      $this->setConfigOverrideLanguage($language);
+      $natives[$langcode] = ConfigurableLanguage::load($langcode);
+    }
+    $this->setConfigOverrideLanguage($original_language);
+    Language::sort($natives);
+    return $natives;
   }
 
   /**

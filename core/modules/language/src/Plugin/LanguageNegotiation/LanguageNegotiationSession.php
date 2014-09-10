@@ -131,11 +131,11 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
     $query = array();
     parse_str($request->getQueryString(), $query);
 
-    foreach ($this->languageManager->getLanguages() as $language) {
+    foreach ($this->languageManager->getNativeLanguages() as $language) {
       $langcode = $language->id;
       $links[$langcode] = array(
         'href' => $path,
-        'title' => $language->name,
+        'title' => $language->getName(),
         'attributes' => array('class' => array('language-link')),
         'query' => $query,
       );

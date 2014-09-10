@@ -165,6 +165,14 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getNativeLanguages() {
+    // In a language unaware site we don't have translated languages.
+    return $this->getLanguages();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLanguage($langcode) {
     $languages = $this->getLanguages(LanguageInterface::STATE_ALL);
     return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
