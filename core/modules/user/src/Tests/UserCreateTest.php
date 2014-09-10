@@ -73,6 +73,9 @@ class UserCreateTest extends WebTestBase {
     $this->assertFieldbyId('edit-status-1', 1, 'The user status option Active exists.', 'User login');
     $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
 
+    // Test that browser autocomplete behavior does not occur.
+    $this->assertNoRaw('data-user-info-from-browser', 'Ensure form attribute, data-user-info-from-browser, does not exist.');
+
     // Test that the password strength indicator displays.
     $config = \Drupal::config('user.settings');
 
