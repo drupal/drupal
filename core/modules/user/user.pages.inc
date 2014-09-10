@@ -29,9 +29,6 @@ function template_preprocess_user(&$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-
-  // Set up attributes.
-  $variables['attributes']['class'][] = 'profile';
 }
 
 /**

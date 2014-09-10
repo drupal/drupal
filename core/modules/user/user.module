@@ -625,11 +625,7 @@ function template_preprocess_username(&$variables) {
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }
-  // Set a default class.
-  $variables['attributes']['class'] = array('username');
   // We have a link path, so we should generate a link using url().
-  // Additional classes may be added as array elements like
-  // $variables['attributes']['class'][] = 'myclass';
   if (isset($variables['link_path'])) {
     $variables['attributes']['href'] = url($variables['link_path'], $variables['link_options']);
   }
