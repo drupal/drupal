@@ -167,7 +167,7 @@ class LocaleTypedConfig extends Element {
    * Translatable elements may use these additional keys in their data
    * definition:
    * - 'translatable', FALSE to opt out of translation.
-   * - 'locale context', to define the string context.
+   * - 'translation context', to define the string context.
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $element
    *   Configuration element.
@@ -184,7 +184,7 @@ class LocaleTypedConfig extends Element {
       $definition = $element->getDataDefinition();
       $value = $element->getValue();
       if ($value && !empty($definition['translatable'])) {
-        $context = isset($definition['locale context']) ? $definition['locale context'] : '';
+        $context = isset($definition['translation context']) ? $definition['translation context'] : '';
         if ($translation = $this->localeConfig->translateString($this->name, $options['target'], $value, $context)) {
           $element->setValue($translation);
           return TRUE;

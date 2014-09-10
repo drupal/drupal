@@ -92,7 +92,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertText($site_name, 'The translated site name is displayed after translations refreshed.');
 
     // Check default medium date format exists and create a translation for it.
-    $string = $this->storage->findString(array('source' => 'D, m/d/Y - H:i', 'context' => '', 'type' => 'configuration'));
+    $string = $this->storage->findString(array('source' => 'D, m/d/Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration'));
     $this->assertTrue($string, 'Configuration date formats have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.

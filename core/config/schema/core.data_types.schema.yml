@@ -72,6 +72,7 @@ date_format:
   type: string
   label: 'Date format'
   translatable: true
+  translation context: 'PHP date format'
 
 # HTML color value.
 color_hex:
