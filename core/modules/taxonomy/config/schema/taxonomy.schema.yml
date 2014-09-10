@@ -33,6 +33,11 @@ taxonomy.vocabulary.*:
     weight:
       type: integer
       label: 'Weight'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: taxonomy.vocabulary.third_party.[%key]
 
 field.taxonomy_term_reference.settings:
   type: base_entity_reference_field_settings

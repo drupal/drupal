@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\taxonomy\VocabularyInterface;
 
@@ -44,6 +45,7 @@ use Drupal\taxonomy\VocabularyInterface;
  * )
  */
 class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
+  use ThirdPartySettingsTrait;
 
   /**
    * The taxonomy vocabulary ID.

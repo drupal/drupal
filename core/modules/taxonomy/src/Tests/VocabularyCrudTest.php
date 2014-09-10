@@ -21,7 +21,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = array('field_test', 'taxonomy_crud');
 
   protected function setUp() {
     parent::setUp();
@@ -43,8 +43,6 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // Assert that there are no terms left.
     $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField(), 'There are no terms remaining.');
 
-    // Create a new vocabulary and add a few terms to it.
-    $vocabulary = $this->createVocabulary();
     $terms = array();
     for ($i = 0; $i < 5; $i++) {
       $terms[$i] = $this->createTerm($vocabulary);
@@ -109,6 +107,11 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $vocabulary3 = $this->createVocabulary();
     $vocabulary3->weight = 2;
     $vocabulary3->save();
+
+    // Check if third party settings exist.
+    $this->assertEqual('bar', $vocabulary1->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
+    $this->assertEqual('bar', $vocabulary2->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
+    $this->assertEqual('bar', $vocabulary3->getThirdPartySetting('taxonomy_crud', 'foo'), 'Third party settings were added to the vocabulary.');
 
     // Fetch the names for all vocabularies, confirm that they are keyed by
     // machine name.
