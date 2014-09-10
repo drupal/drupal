@@ -72,7 +72,7 @@ class ProgrammaticTest extends WebTestBase {
    */
   private function submitForm($values, $valid_input) {
     // Programmatically submit the given values.
-    $form_state = new FormState(array('values' => $values));
+    $form_state = (new FormState())->setValues($values);
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);
 
     // Check that the form returns an error when expected, and vice versa.
@@ -99,10 +99,10 @@ class ProgrammaticTest extends WebTestBase {
    * Test the programmed_bypass_access_check flag.
    */
   public function testProgrammaticAccessBypass() {
-    $form_state = new FormState(array('values' => array(
+    $form_state = (new FormState())->setValues([
       'textfield' => 'dummy value',
       'field_restricted' => 'dummy value'
-    )));
+    ]);
 
     // Programmatically submit the form with a value for the restricted field.
     // Since programmed_bypass_access_check is set to TRUE by default, the

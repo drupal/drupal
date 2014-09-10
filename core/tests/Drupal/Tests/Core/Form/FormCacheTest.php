@@ -235,7 +235,7 @@ class FormCacheTest extends UnitTestCase {
       ->willReturn($cached_form_state);
 
     $this->formCache->getCache($form_build_id, $form_state);
-    $this->assertSame($cached_form_state['storage'], $form_state['storage']);
+    $this->assertSame($cached_form_state['storage'], $form_state->getStorage());
   }
 
   /**

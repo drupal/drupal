@@ -17,12 +17,14 @@ use Drupal\Core\Ajax\AjaxResponse;
  */
 function views_ajax_form_wrapper($form_class, FormStateInterface &$form_state) {
   // This won't override settings already in.
-  $form_state->setIfNotExists('rerender', FALSE);
-  $form_state->setIfNotExists('no_redirect', !empty($form_state['ajax']));
-  $form_state->setIfNotExists('no_cache', TRUE);
-  $form_state->setIfNotExists('build_info', array(
-    'args' => array(),
-  ));
+  if (!$form_state->has('rerender')) {
+    $form_state->set('rerender', FALSE);
+  }
+  // Do not overwrite if the redirect has been disabled.
+  if (!$form_state->isRedirectDisabled()) {
+    $form_state->disableRedirect(!empty($form_state['ajax']));
+  }
+  $form_state->disableCache();
 
   $form = \Drupal::formBuilder()->buildForm($form_class, $form_state);
   $output = drupal_render($form);

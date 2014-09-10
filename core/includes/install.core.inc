@@ -806,12 +806,9 @@ function install_tasks_to_display($install_state) {
 function install_get_form($form_id, array &$install_state) {
   // Ensure the form will not redirect, since install_run_tasks() uses a custom
   // redirection logic.
-  $form_state = new FormState(array(
-    'build_info' => array(
-      'args' => array(&$install_state),
-    ),
-    'no_redirect' => TRUE,
-  ));
+  $form_state = (new FormState())
+    ->addBuildInfo('args', [&$install_state])
+    ->disableRedirect();
   $form_builder = \Drupal::formBuilder();
   if ($install_state['interactive']) {
     $form = $form_builder->buildForm($form_id, $form_state);
@@ -827,7 +824,7 @@ function install_get_form($form_id, array &$install_state) {
     // values taken from the installation state.
     $install_form_id = $form_builder->getFormId($form_id, $form_state);
     if (!empty($install_state['forms'][$install_form_id])) {
-      $form_state->set('values', $install_state['forms'][$install_form_id]);
+      $form_state->setValues($install_state['forms'][$install_form_id]);
     }
     $form_builder->submitForm($form_id, $form_state);
 

@@ -95,8 +95,9 @@ class FormCache implements FormCacheInterface {
 
       // If the original form is contained in include files, load the files.
       // @see \Drupal\Core\Form\FormStateInterface::loadInclude()
-      $form_state['build_info'] += array('files' => array());
-      foreach ($form_state['build_info']['files'] as $file) {
+      $build_info = $form_state->getBuildInfo();
+      $build_info += ['files' => []];
+      foreach ($build_info['files'] as $file) {
         if (is_array($file)) {
           $file += array('type' => 'inc', 'name' => $file['module']);
           $this->moduleHandler->loadInclude($file['module'], $file['type'], $file['name']);
@@ -109,9 +110,10 @@ class FormCache implements FormCacheInterface {
       // for this request.
       // @todo Ensure we are not storing an excessively large string list
       //   in: https://www.drupal.org/node/2295823
-      $form_state['build_info'] += array('safe_strings' => array());
-      SafeMarkup::setMultiple($form_state['build_info']['safe_strings']);
-      unset($form_state['build_info']['safe_strings']);
+      $build_info += ['safe_strings' => []];
+      SafeMarkup::setMultiple($build_info['safe_strings']);
+      unset($build_info['safe_strings']);
+      $form_state->setBuildInfo($build_info);
     }
   }
 

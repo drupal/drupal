@@ -147,14 +147,13 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
    * Tests that default handlers are added even if custom are specified.
    */
   public function testPathElement() {
-    $form_state = new FormState(array(
-      'values' => array(
+    $form_state = (new FormState())
+      ->setValues([
         'required_validate' => 'user/' . $this->testUser->id(),
         'required_non_validate' => 'magic-ponies',
         'required_validate_route' => 'user/' . $this->testUser->id(),
         'required_validate_url' => 'user/' . $this->testUser->id(),
-      ),
-    ));
+      ]);
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 
@@ -175,13 +174,12 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     ));
 
     // Test #required.
-    $form_state = new FormState(array(
-      'values' => array(
+    $form_state = (new FormState())
+      ->setValues([
         'required_non_validate' => 'magic-ponies',
         'required_validate_route' => 'user/' . $this->testUser->id(),
         'required_validate_url' => 'user/' . $this->testUser->id(),
-      ),
-    ));
+      ]);
     $form_builder->submitForm($this, $form_state);
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
@@ -189,14 +187,13 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $this->assertEqual($errors, array('required_validate' => t('!name field is required.', array('!name' => 'required_validate'))));
 
     // Test invalid parameters.
-    $form_state = new FormState(array(
-      'values' => array(
+    $form_state = (new FormState())
+      ->setValues([
         'required_validate' => 'user/74',
         'required_non_validate' => 'magic-ponies',
         'required_validate_route' => 'user/74',
         'required_validate_url' => 'user/74',
-      ),
-    ));
+      ]);
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 

@@ -45,7 +45,7 @@ class FormSubmitterTest extends UnitTestCase {
     $form_state = new FormState();
 
     $return = $form_submitter->doSubmitForm($form, $form_state);
-    $this->assertFalse($form_state['executed']);
+    $this->assertFalse($form_state->isExecuted());
     $this->assertNull($return);
   }
 
@@ -55,13 +55,12 @@ class FormSubmitterTest extends UnitTestCase {
   public function testHandleFormSubmissionNoRedirect() {
     $form_submitter = $this->getFormSubmitter();
     $form = array();
-    $form_state = new FormState(array(
-      'submitted' => TRUE,
-      'no_redirect' => TRUE,
-    ));
+    $form_state = (new FormState())
+      ->setSubmitted()
+      ->disableRedirect();
 
     $return = $form_submitter->doSubmitForm($form, $form_state);
-    $this->assertTrue($form_state['executed']);
+    $this->assertTrue($form_state->isExecuted());
     $this->assertNull($return);
   }
 
@@ -78,10 +77,9 @@ class FormSubmitterTest extends UnitTestCase {
       ->method('prepare')
       ->will($this->returnValue($response));
 
-    $form_state = new FormState(array(
-      'submitted' => TRUE,
-      $form_state_key => $response,
-    ));
+    $form_state = (new FormState())
+      ->setSubmitted()
+      ->setFormState([$form_state_key => $response]);
 
     $form_submitter = $this->getFormSubmitter();
     $form = array();
@@ -202,7 +200,7 @@ class FormSubmitterTest extends UnitTestCase {
    */
   public function testExecuteSubmitHandlers() {
     $form_submitter = $this->getFormSubmitter();
-    $mock = $this->getMock('stdClass', array('submit_handler', 'hash_submit', 'simple_string_submit'));
+    $mock = $this->getMockForAbstractClass('Drupal\Core\Form\FormBase', [], '', TRUE, TRUE, TRUE, ['submit_handler', 'hash_submit', 'simple_string_submit']);
     $mock->expects($this->once())
       ->method('submit_handler')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
@@ -221,13 +219,13 @@ class FormSubmitterTest extends UnitTestCase {
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
     // $form_state submit handlers will supersede $form handlers.
-    $form_state['submit_handlers'][] = array($mock, 'submit_handler');
+    $form_state->setSubmitHandlers([[$mock, 'submit_handler']]);
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
     // Methods directly on the form object can be specified as a string.
-    $form_state = new FormState();
-    $form_state['build_info']['callback_object'] = $mock;
-    $form_state['submit_handlers'][] = '::simple_string_submit';
+    $form_state = (new FormState())
+      ->setFormObject($mock)
+      ->setSubmitHandlers(['::simple_string_submit']);
     $form_submitter->executeSubmitHandlers($form, $form_state);
   }
 

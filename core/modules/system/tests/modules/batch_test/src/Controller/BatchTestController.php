@@ -85,9 +85,9 @@ class BatchTestController {
    *   Render array containing markup.
    */
   function testProgrammatic($value = 1) {
-    $form_state = new FormState(array(
-      'values' => array('value' => $value)
-    ));
+    $form_state = (new FormState())->setValues([
+      'value' => $value,
+    ]);
     \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestChainedForm', $form_state);
     return array(
       'success' => array(

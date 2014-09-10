@@ -356,9 +356,8 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
 
     foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
       // Allow the condition to validate the form.
-      $condition_values = new FormState(array(
-        'values' => $form_state->getValue(array('visibility', $condition_id)),
-      ));
+      $condition_values = (new FormState())
+        ->setValues($form_state->getValue(['visibility', $condition_id]));
       $condition->validateConfigurationForm($form, $condition_values);
       // Update the original form values.
       $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);
@@ -389,9 +388,8 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       $this->configuration['cache'] = $form_state->getValue('cache');
       foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
         // Allow the condition to submit the form.
-        $condition_values = new FormState(array(
-          'values' => $form_state->getValue(array('visibility', $condition_id)),
-        ));
+        $condition_values = (new FormState())
+          ->setValues($form_state->getValue(['visibility', $condition_id]));
         $condition->submitConfigurationForm($form, $condition_values);
         // Update the original form values.
         $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);

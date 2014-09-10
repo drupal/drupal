@@ -29,7 +29,7 @@ class FormStateTest extends UnitTestCase {
    * @dataProvider providerTestGetRedirect
    */
   public function testGetRedirect($form_state_additions, $expected) {
-    $form_state = new FormState($form_state_additions);
+    $form_state = (new FormState())->setFormState($form_state_additions);
     $redirect = $form_state->getRedirect();
     $this->assertEquals($expected, $redirect);
   }
@@ -82,9 +82,9 @@ class FormStateTest extends UnitTestCase {
    */
   public function testGetError($errors, $parents, $error = NULL) {
     $element['#parents'] = $parents;
-    $form_state = new FormState(array(
+    $form_state = (new FormState())->setFormState([
       'errors' => $errors,
-    ));
+    ]);
     $this->assertSame($error, $form_state->getError($element));
   }
 
@@ -110,9 +110,9 @@ class FormStateTest extends UnitTestCase {
    */
   public function testSetErrorByName($limit_validation_errors, $expected_errors, $set_message = FALSE) {
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setConstructorArgs(array(array('limit_validation_errors' => $limit_validation_errors)))
       ->setMethods(array('drupalSetMessage'))
       ->getMock();
+    $form_state->setLimitValidationErrors($limit_validation_errors);
     $form_state->clearErrors();
     $form_state->expects($set_message ? $this->once() : $this->never())
       ->method('drupalSetMessage');
@@ -122,7 +122,7 @@ class FormStateTest extends UnitTestCase {
     $form_state->setErrorByName('options');
 
     $this->assertSame(!empty($expected_errors), $form_state::hasAnyErrors());
-    $this->assertSame($expected_errors, $form_state['errors']);
+    $this->assertSame($expected_errors, $form_state->getErrors());
   }
 
   public function providerTestSetErrorByName() {
@@ -147,9 +147,9 @@ class FormStateTest extends UnitTestCase {
    */
   public function testFormErrorsDuringSubmission() {
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setConstructorArgs(array(array('validation_complete' => TRUE)))
       ->setMethods(array('drupalSetMessage'))
       ->getMock();
+    $form_state->setValidationComplete();
     $form_state->setErrorByName('test', 'message');
   }
 
@@ -183,12 +183,12 @@ class FormStateTest extends UnitTestCase {
    * @dataProvider providerTestGetValue
    */
   public function testGetValue($key, $expected, $default = NULL) {
-    $form_state = new FormState(array('values' => array(
+    $form_state = (new FormState())->setValues([
       'foo' => 'one',
       'bar' => array(
         'baz' => 'two',
       ),
-    )));
+    ]);
     $this->assertSame($expected, $form_state->getValue($key, $default));
   }
 
@@ -215,7 +215,9 @@ class FormStateTest extends UnitTestCase {
    * @dataProvider providerTestSetValue
    */
   public function testSetValue($key, $value, $expected) {
-    $form_state = new FormState(array('values' => array('bar' => 'wrong')));
+    $form_state = (new FormState())->setValues([
+      'bar' => 'wrong',
+    ]);
     $form_state->setValue($key, $value);
     $this->assertSame($expected, $form_state->getValues());
   }
@@ -225,9 +227,9 @@ class FormStateTest extends UnitTestCase {
    */
   public function testPrepareCallbackValidMethod() {
     $form_state = new FormState();
-    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
+    $form_state->setFormObject(new PrepareCallbackTestForm());
     $processed_callback = $form_state->prepareCallback('::buildForm');
-    $this->assertEquals(array($form_state['build_info']['callback_object'], 'buildForm'), $processed_callback);
+    $this->assertEquals([$form_state->getFormObject(), 'buildForm'], $processed_callback);
   }
 
   /**
@@ -235,7 +237,7 @@ class FormStateTest extends UnitTestCase {
    */
   public function testPrepareCallbackInValidMethod() {
     $form_state = new FormState();
-    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
+    $form_state->setFormObject(new PrepareCallbackTestForm());
     $processed_callback = $form_state->prepareCallback('not_a_method');
     // The callback was not changed as no such method exists.
     $this->assertEquals('not_a_method', $processed_callback);
@@ -246,8 +248,8 @@ class FormStateTest extends UnitTestCase {
    */
   public function testPrepareCallbackArray() {
     $form_state = new FormState();
-    $form_state['build_info']['callback_object'] = new PrepareCallbackTestForm();
-    $callback = array($form_state['build_info']['callback_object'], 'buildForm');
+    $form_state->setFormObject(new PrepareCallbackTestForm());
+    $callback = [$form_state->getFormObject(), 'buildForm'];
     $processed_callback = $form_state->prepareCallback($callback);
     $this->assertEquals($callback, $processed_callback);
   }
@@ -272,7 +274,7 @@ class FormStateTest extends UnitTestCase {
    * @dataProvider providerTestHasValue
    */
   public function testHasValue($key, $expected) {
-    $form_state = new FormState(array('values' => array(
+    $form_state = (new FormState())->setValues([
       'foo' => 'one',
       'bar' => array(
         'baz' => 'two',
@@ -280,7 +282,7 @@ class FormStateTest extends UnitTestCase {
       'true' => TRUE,
       'false' => FALSE,
       'null' => NULL,
-    )));
+    ]);
     $this->assertSame($expected, $form_state->hasValue($key));
   }
 
@@ -313,7 +315,7 @@ class FormStateTest extends UnitTestCase {
    * @dataProvider providerTestIsValueEmpty
    */
   public function testIsValueEmpty($key, $expected) {
-    $form_state = new FormState(array('values' => array(
+    $form_state = (new FormState())->setValues([
       'foo' => 'one',
       'bar' => array(
         'baz' => 'two',
@@ -321,7 +323,7 @@ class FormStateTest extends UnitTestCase {
       'true' => TRUE,
       'false' => FALSE,
       'null' => NULL,
-    )));
+    ]);
     $this->assertSame($expected, $form_state->isValueEmpty($key));
   }
 
@@ -405,20 +407,111 @@ class FormStateTest extends UnitTestCase {
     $module = 'some_module';
     $name = 'some_name';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setConstructorArgs([['build_info' => ['files' => [
-        'some_module:some_name.some_type' => [
-          'type' => $type,
-          'module' => $module,
-          'name' => $name,
-        ],
-      ]]]])
       ->setMethods(array('moduleLoadInclude'))
       ->getMock();
 
+    $form_state->addBuildInfo('files', [
+      'some_module:some_name.some_type' => [
+        'type' => $type,
+        'module' => $module,
+        'name' => $name,
+      ],
+    ]);
     $form_state->expects($this->never())
       ->method('moduleLoadInclude');
 
     $this->assertFalse($form_state->loadInclude($module, $type, $name));
+  }
+
+  /**
+   * @covers ::isCached
+   *
+   * @dataProvider providerTestIsCached
+   */
+  public function testIsCached($cache_key, $no_cache_key, $expected) {
+    $form_state = (new FormState())->setFormState([
+      'cache' => $cache_key,
+      'no_cache' => $no_cache_key,
+    ]);
+    $this->assertSame($expected, $form_state->isCached());
+  }
+
+  /**
+   * Provides test data for testIsCached().
+   */
+  public function providerTestIsCached() {
+    $data = [];
+    $data[] = [
+      TRUE,
+      TRUE,
+      FALSE,
+    ];
+    $data[] = [
+      FALSE,
+      TRUE,
+      FALSE,
+    ];
+    $data[] = [
+      FALSE,
+      FALSE,
+      FALSE,
+    ];
+    $data[] = [
+      TRUE,
+      FALSE,
+      TRUE,
+    ];
+    $data[] = [
+      TRUE,
+      NULL,
+      TRUE,
+    ];
+    $data[] = [
+      FALSE,
+      NULL,
+      FALSE,
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::isMethodType
+   * @covers ::setMethod
+   *
+   * @dataProvider providerTestIsMethodType
+   */
+  public function testIsMethodType($set_method_type, $input, $expected) {
+    $form_state = (new FormState())
+      ->setMethod($set_method_type);
+    $this->assertSame($expected, $form_state->isMethodType($input));
+  }
+
+  /**
+   * Provides test data for testIsMethodType().
+   */
+  public function providerTestIsMethodType() {
+    $data = [];
+    $data[] = [
+      'get',
+      'get',
+      TRUE,
+    ];
+    $data[] = [
+      'get',
+      'GET',
+      TRUE,
+    ];
+    $data[] = [
+      'GET',
+      'GET',
+      TRUE,
+    ];
+    $data[] = [
+      'post',
+      'get',
+      FALSE,
+    ];
+    return $data;
   }
 
 }

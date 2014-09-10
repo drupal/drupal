@@ -52,7 +52,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
     foreach ($this->values as $form_key => $data) {
       $values[$form_key] = $data['#value'];
     }
-    $form_state = new FormState(array('values' => $values));
+    $form_state = (new FormState())->setValues($values);
     \Drupal::formBuilder()->submitForm($this->form, $form_state);
 
     // Check that the form returns an error when expected, and vice versa.

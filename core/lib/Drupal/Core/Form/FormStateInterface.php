@@ -96,18 +96,6 @@ interface FormStateInterface {
   public function setFormState(array $form_state_additions);
 
   /**
-   * Sets a value to an arbitrary property if it does not exist yet.
-   *
-   * @param string $property
-   *   The property to use for the value.
-   * @param mixed $value
-   *   The data to store.
-   *
-   * @return $this
-   */
-  public function setIfNotExists($property, $value);
-
-  /**
    * Sets a response for this form.
    *
    * If a response is set, it will be used during processing and returned
@@ -119,6 +107,17 @@ interface FormStateInterface {
    * @return $this
    */
   public function setResponse(Response $response);
+
+  /**
+   * Gets a response for this form.
+   *
+   * If a response is set, it will be used during processing and returned
+   * directly. The form will not be rebuilt or redirected.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response|null
+   *   The response to return, or NULL.
+   */
+  public function getResponse();
 
   /**
    * Sets the redirect for the form.
@@ -165,10 +164,31 @@ interface FormStateInterface {
   public function getRedirect();
 
   /**
+   * Sets the entire set of arbitrary data.
+   *
+   * @param array $storage
+   *   The entire set of arbitrary data to store for this form.
+   *
+   * @return $this
+   */
+  public function setStorage(array $storage);
+
+  /**
+   * Returns the entire set of arbitrary data.
+   *
+   * @return array
+   *   The entire set of arbitrary data to store for this form.
+   */
+  public function &getStorage();
+
+  /**
    * Gets any arbitrary property.
    *
-   * @param string $property
-   *   The property to retrieve.
+   * @param string|array $property
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $property is a string, it will return $storage[$property]. If $property
+   *   is an array, each element of the array will be used as a nested key. If
+   *   $property = ['foo', 'bar'] it will return $storage['foo']['bar'].
    *
    * @return mixed
    *   A reference to the value for that property, or NULL if the property does
@@ -179,8 +199,12 @@ interface FormStateInterface {
   /**
    * Sets a value to an arbitrary property.
    *
-   * @param string $property
-   *   The property to use for the value.
+   * @param string|array $property
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $property is a string, it will use $storage[$property] = $value. If
+   *   $property is an array, each element of the array will be used as a nested
+   *   key. If $property = ['foo', 'bar'] it will use
+   *   $storage['foo']['bar'] = $value.
    * @param mixed $value
    *   The value to set.
    *
@@ -189,10 +213,38 @@ interface FormStateInterface {
   public function set($property, $value);
 
   /**
+   * Determines if an arbitrary property is present.
+   *
    * @param string $property
-   *   The property to use for the value.
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $property is a string, it will return isset($storage[$property]). If
+   *   $property is an array, each element of the array will be used as a nested
+   *   key. If $property = ['foo', 'bar'] it will return
+   *   isset($storage['foo']['bar']).
    */
   public function has($property);
+
+  /**
+   * Sets the build info for the form.
+   *
+   * @param array $build_info
+   *   An array of build info.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormState::$build_info
+   */
+  public function setBuildInfo(array $build_info);
+
+  /**
+   * Returns the build info for the form.
+   *
+   * @return array
+   *   An array of build info.
+   *
+   * @see \Drupal\Core\Form\FormState::$build_info
+   */
+  public function getBuildInfo();
 
   /**
    * Adds a value to the build info.
@@ -251,6 +303,19 @@ interface FormStateInterface {
    *   The value for the given key, or NULL.
    */
   public function &getValue($key, $default = NULL);
+
+  /**
+   * Sets the submitted form values.
+   *
+   * This should be avoided, since these values have been validated already. Use
+   * self::setUserInput() instead.
+   *
+   * @param array $values
+   *   The multi-dimensional associative array of form values.
+   *
+   * @return $this
+   */
+  public function setValues(array $values);
 
   /**
    * Sets the submitted form value for a specific key.
@@ -335,7 +400,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setValueForElement($element, $value);
+  public function setValueForElement(array $element, $value);
 
   /**
    * Determines if any forms have any errors.
@@ -448,7 +513,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setError(&$element, $message = '');
+  public function setError(array &$element, $message = '');
 
   /**
    * Clears all errors against all form elements made by self::setErrorByName().
@@ -475,7 +540,7 @@ interface FormStateInterface {
    * @return string|null
    *   Either the error message for this element or NULL if there are no errors.
    */
-  public function getError($element);
+  public function getError(array $element);
 
   /**
    * Sets the form to be rebuilt after processing.
@@ -486,6 +551,14 @@ interface FormStateInterface {
    * @return $this
    */
   public function setRebuild($rebuild = TRUE);
+
+  /**
+   * Determines if the form should be rebuilt after processing.
+   *
+   * @return bool
+   *   TRUE if the form should be rebuilt, FALSE otherwise.
+   */
+  public function isRebuilding();
 
   /**
    * Converts support notations for a form callback to a valid callable.
@@ -508,5 +581,410 @@ interface FormStateInterface {
    *   The form object.
    */
   public function getFormObject();
+
+  /**
+   * Sets the form object that is responsible for building this form.
+   *
+   * @param \Drupal\Core\Form\FormInterface $form_object
+   *   The form object.
+   *
+   * @return $this
+   */
+  public function setFormObject(FormInterface $form_object);
+
+  /**
+   * Sets this form to always be processed.
+   *
+   * This should only be used on RESTful GET forms that do NOT write data, as
+   * this could lead to security issues. It is useful so that searches do not
+   * need to have a form_id in their query arguments to trigger the search.
+   *
+   * @param bool $always_process
+   *   TRUE if the form should always be processed, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setAlwaysProcess($always_process = TRUE);
+
+  /**
+   * Determines if this form should always be processed.
+   *
+   * @return bool
+   *   TRUE if the form should always be processed, FALSE otherwise.
+   */
+  public function getAlwaysProcess();
+
+  /**
+   * Stores the submit and button elements for the form.
+   *
+   * @param array $buttons
+   *   The submit and button elements.
+   *
+   * @return $this
+   */
+  public function setButtons(array $buttons);
+
+  /**
+   * Returns the submit and button elements for the form.
+   *
+   * @return array
+   *   The submit and button elements.
+   */
+  public function getButtons();
+
+  /**
+   * Sets this form to be cached.
+   *
+   * @param bool $cache
+   *   TRUE if the form should be cached, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setCached($cache = TRUE);
+
+  /**
+   * Determines if the form should be cached.
+   *
+   * @return bool
+   *   TRUE if the form should be cached, FALSE otherwise.
+   */
+  public function isCached();
+
+  /**
+   * Prevents the form from being cached.
+   *
+   * @return $this
+   */
+  public function disableCache();
+
+  /**
+   * Sets that the form was submitted and has been processed and executed.
+   *
+   * @return $this
+   */
+  public function setExecuted();
+
+  /**
+   * Determines if the form was submitted and has been processed and executed.
+   *
+   * @return bool
+   *   TRUE if the form was submitted and has been processed and executed.
+   */
+  public function isExecuted();
+
+  /**
+   * Sets references to details elements to render them within vertical tabs.
+   *
+   * @param array $groups
+   *   References to details elements to render them within vertical tabs.
+   *
+   * @return $this
+   */
+  public function setGroups(array $groups);
+
+  /**
+   * Returns references to details elements to render them within vertical tabs.
+   *
+   * @return array
+   */
+  public function getGroups();
+
+  /**
+   * Sets that this form has a file element.
+   *
+   * @param bool $has_file_element
+   *   Whether this form has a file element.
+   *
+   * @return $this
+   */
+  public function setHasFileElement($has_file_element = TRUE);
+
+  /**
+   * Returns whether this form has a file element.
+   *
+   * @return bool
+   *   Whether this form has a file element.
+   */
+  public function hasFileElement();
+
+  /**
+   * Sets the limited validation error sections.
+   *
+   * @param array|null $limit_validation_errors
+   *   The limited validation error sections.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormState::$limit_validation_errors
+   */
+  public function setLimitValidationErrors($limit_validation_errors);
+
+  /**
+   * Retrieves the limited validation error sections.
+   *
+   * @return array|null
+   *   The limited validation error sections.
+   *
+   * @see \Drupal\Core\Form\FormState::$limit_validation_errors
+   */
+  public function getLimitValidationErrors();
+
+  /**
+   * Sets the HTTP form method.
+   *
+   * @param string $method
+   *   The HTTP form method.
+   *
+   * @see \Drupal\Core\Form\FormState::$method
+   *
+   * @return $this
+   */
+  public function setMethod($method);
+
+  /**
+   * Returns the HTTP form method.
+   *
+   * @param string
+   *   The HTTP form method.
+   *
+   * @return bool
+   *   TRUE if the HTTP form method matches.
+   *
+   * @see \Drupal\Core\Form\FormState::$method
+   */
+  public function isMethodType($method_type);
+
+  /**
+   * Enforces that validation is run.
+   *
+   * @param bool $must_validate
+   *   If TRUE, validation will always be run.
+   *
+   * @return $this
+   */
+  public function setValidationEnforced($must_validate = TRUE);
+
+  /**
+   * Checks if validation is enforced.
+   *
+   * @return bool
+   *   If TRUE, validation will always be run.
+   */
+  public function isValidationEnforced();
+
+  /**
+   * Prevents the form from redirecting.
+   *
+   * @param bool $no_redirect
+   *   If TRUE, the form will not redirect.
+   *
+   * @return $this
+   */
+  public function disableRedirect($no_redirect = TRUE);
+
+  /**
+   * Determines if redirecting has been prevented.
+   *
+   * @return bool
+   *   If TRUE, the form will not redirect.
+   */
+  public function isRedirectDisabled();
+
+  /**
+   * Sets that the form should process input.
+   *
+   * @param bool $process_input
+   *   If TRUE, the form input will be processed.
+   *
+   * @return $this
+   */
+  public function setProcessInput($process_input = TRUE);
+
+  /**
+   * Determines if the form input will be processed.
+   *
+   * @return bool
+   *   If TRUE, the form input will be processed.
+   */
+  public function isProcessingInput();
+
+  /**
+   * Sets that this form was submitted programmatically.
+   *
+   * @param bool $programmed
+   *   If TRUE, the form was submitted programmatically.
+   *
+   * @return $this
+   */
+  public function setProgrammed($programmed = TRUE);
+
+  /**
+   * Returns if this form was submitted programmatically.
+   *
+   * @return bool
+   *   If TRUE, the form was submitted programmatically.
+   */
+  public function isProgrammed();
+
+  /**
+   * Sets if this form submission should bypass #access.
+   *
+   * @param bool $programmed_bypass_access_check
+   *   If TRUE, programmatic form submissions are processed without taking
+   *   #access into account.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormState::$programmed_bypass_access_check
+   */
+  public function setProgrammedBypassAccessCheck($programmed_bypass_access_check = TRUE);
+
+  /**
+   * Determines if this form submission should bypass #access.
+   *
+   * @return bool
+   *
+   * @see \Drupal\Core\Form\FormState::$programmed_bypass_access_check
+   */
+  public function isBypassingProgrammedAccessChecks();
+
+  /**
+   * Sets the rebuild info.
+   *
+   * @param array $rebuild_info
+   *   The rebuild info.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormState::$rebuild_info
+   */
+  public function setRebuildInfo(array $rebuild_info);
+
+  /**
+   * Gets the rebuild info.
+   *
+   * @return array
+   *   The rebuild info.
+   *
+   * @see \Drupal\Core\Form\FormState::$rebuild_info
+   */
+  public function getRebuildInfo();
+
+  /**
+   * Adds a value to the rebuild info.
+   *
+   * @param string $property
+   *   The property to use for the value.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return $this
+   */
+  public function addRebuildInfo($property, $value);
+
+  /**
+   * Sets the submit handlers.
+   *
+   * @param array $submit_handlers
+   *   An array of submit handlers.
+   *
+   * @return $this
+   */
+  public function setSubmitHandlers(array $submit_handlers);
+
+  /**
+   * Gets the submit handlers.
+   *
+   * @return array
+   *   An array of submit handlers.
+   */
+  public function getSubmitHandlers();
+
+  /**
+   * Sets that the form has been submitted.
+   *
+   * @return $this
+   */
+  public function setSubmitted();
+
+  /**
+   * Determines if the form has been submitted.
+   *
+   * @return bool
+   *   TRUE if the form has been submitted, FALSE otherwise.
+   */
+  public function isSubmitted();
+
+  /**
+   * Sets temporary data.
+   *
+   * @param array $temporary
+   *   Temporary data accessible during the current page request only.
+   *
+   * @return $this
+   */
+  public function setTemporary(array $temporary);
+
+  /**
+   * Gets temporary data.
+   *
+   * @return array
+   *   Temporary data accessible during the current page request only.
+   */
+  public function getTemporary();
+
+  /**
+   * Sets the form element that triggered submission.
+   *
+   * @param array|null $triggering_element
+   *   The form element that triggered submission, of NULL if there is none.
+   *
+   * @return $this
+   */
+  public function setTriggeringElement($triggering_element);
+
+  /**
+   * Gets the form element that triggered submission.
+   *
+   * @return array|null
+   *   The form element that triggered submission, of NULL if there is none.
+   */
+  public function &getTriggeringElement();
+
+  /**
+   * Sets the validate handlers.
+   *
+   * @param array $validate_handlers
+   *   An array of validate handlers.
+   *
+   * @return $this
+   */
+  public function setValidateHandlers(array $validate_handlers);
+
+  /**
+   * Gets the validate handlers.
+   *
+   * @return array
+   *   An array of validate handlers.
+   */
+  public function getValidateHandlers();
+
+  /**
+   * Sets that validation has been completed.
+   *
+   * @param bool $validation_complete
+   *   TRUE if validation is complete, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setValidationComplete($validation_complete = TRUE);
+
+  /**
+   * Determines if validation has been completed.
+   *
+   * @return bool
+   *   TRUE if validation is complete, FALSE otherwise.
+   */
+  public function isValidationComplete();
 
 }

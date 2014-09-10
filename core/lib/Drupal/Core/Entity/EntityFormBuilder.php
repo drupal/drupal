@@ -49,11 +49,7 @@ class EntityFormBuilder implements EntityFormBuilderInterface {
     $form_object = $this->entityManager->getFormObject($entity->getEntityTypeId(), $operation);
     $form_object->setEntity($entity);
 
-    $form_state = new FormState($form_state_additions);
-    $form_state['build_info']['callback_object'] = $form_object;
-    $form_state['build_info']['base_form_id'] = $form_object->getBaseFormID();
-    $form_state['build_info'] += array('args' => array());
-
+    $form_state = (new FormState())->setFormState($form_state_additions);
     return $this->formBuilder->buildForm($form_object, $form_state);
   }
 

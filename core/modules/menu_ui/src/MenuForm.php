@@ -214,7 +214,10 @@ class MenuForm extends EntityForm {
     // section.
     $form['#tree'] = TRUE;
     $form['#theme'] = 'menu_overview_form';
-    $form_state->setIfNotExists('menu_overview_form_parents', array());
+
+    if (!$form_state->has('menu_overview_form_parents')) {
+      $form_state->set('menu_overview_form_parents', []);
+    }
 
     $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/css/menu.admin.css');
 

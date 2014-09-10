@@ -46,7 +46,7 @@ class FormBuilderTest extends FormTestBase {
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
 
     $this->assertSame('test_form', $form_id);
-    $this->assertSame($form_arg, get_class($form_state['build_info']['callback_object']));
+    $this->assertSame($form_arg, get_class($form_state->getFormObject()));
   }
 
   /**
@@ -62,7 +62,7 @@ class FormBuilderTest extends FormTestBase {
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
 
     $this->assertSame('test_form', $form_id);
-    $this->assertSame($form_arg, get_class($form_state['build_info']['callback_object']));
+    $this->assertSame($form_arg, get_class($form_state->getFormObject()));
   }
 
   /**
@@ -77,7 +77,7 @@ class FormBuilderTest extends FormTestBase {
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
 
     $this->assertSame($expected_form_id, $form_id);
-    $this->assertSame($form_arg, $form_state['build_info']['callback_object']);
+    $this->assertSame($form_arg, $form_state->getFormObject());
   }
 
   /**
@@ -99,8 +99,8 @@ class FormBuilderTest extends FormTestBase {
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
 
     $this->assertSame($expected_form_id, $form_id);
-    $this->assertSame($form_arg, $form_state['build_info']['callback_object']);
-    $this->assertSame($base_form_id, $form_state['build_info']['base_form_id']);
+    $this->assertSame($form_arg, $form_state->getFormObject());
+    $this->assertSame($base_form_id, $form_state->getBuildInfo()['base_form_id']);
   }
 
   /**
@@ -123,7 +123,7 @@ class FormBuilderTest extends FormTestBase {
     $form_arg->expects($this->any())
       ->method('submitForm')
       ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $form_state_key) {
-        $form_state->set($form_state_key, $response);
+        $form_state->setFormState([$form_state_key => $response]);
       }));
 
     $form_state = new FormState();
@@ -136,7 +136,7 @@ class FormBuilderTest extends FormTestBase {
     catch (\Exception $e) {
       $this->assertSame('exit', $e->getMessage());
     }
-    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $form_state->get('response'));
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $form_state->getResponse());
   }
 
   /**
@@ -190,7 +190,7 @@ class FormBuilderTest extends FormTestBase {
     catch (\Exception $e) {
       $this->assertSame('exit', $e->getMessage());
     }
-    $this->assertSame($response, $form_state->get('response'));
+    $this->assertSame($response, $form_state->getResponse());
   }
 
   /**
@@ -279,7 +279,7 @@ class FormBuilderTest extends FormTestBase {
     $form_state = new FormState();
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame($form_id, $form_state['build_info']['form_id']);
+    $this->assertSame($form_id, $form_state->getBuildInfo()['form_id']);
     $this->assertArrayHasKey('#id', $form);
   }
 
@@ -305,15 +305,15 @@ class FormBuilderTest extends FormTestBase {
     $original_build_id = $form['#build_id'];
 
     // Rebuild the form, and assert that the build ID has not changed.
-    $form_state['rebuild'] = TRUE;
+    $form_state->setRebuild();
     $input['form_id'] = $form_id;
     $form_state->setUserInput($input);
-    $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
+    $form_state->addRebuildInfo('copy', ['#build_id' => TRUE]);
     $this->formBuilder->processForm($form_id, $form, $form_state);
     $this->assertSame($original_build_id, $form['#build_id']);
 
     // Rebuild the form again, and assert that there is a new build ID.
-    $form_state['rebuild_info'] = array();
+    $form_state->setRebuildInfo([]);
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertNotSame($original_build_id, $form['#build_id']);
   }
@@ -337,10 +337,9 @@ class FormBuilderTest extends FormTestBase {
       ->will($this->returnValue($expected_form));
 
     // Do an initial build of the form and track the build ID.
-    $form_state = new FormState();
-    $form_state['build_info']['args'] = array();
-    $form_state['build_info']['files'] = array(array('module' => 'node', 'type' => 'pages.inc'));
-    $form_state['cache'] = TRUE;
+    $form_state = (new FormState())
+      ->addBuildInfo('files', [['module' => 'node', 'type' => 'pages.inc']])
+      ->setCached();
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
 
     $cached_form = $form;
@@ -353,12 +352,12 @@ class FormBuilderTest extends FormTestBase {
 
     // The final form build will not trigger any actual form building, but will
     // use the form cache.
-    $form_state['executed'] = TRUE;
+    $form_state->setExecuted();
     $input['form_id'] = $form_id;
     $input['form_build_id'] = $form['#build_id'];
     $form_state->setUserInput($input);
     $this->formBuilder->buildForm($form_arg, $form_state);
-    $this->assertEmpty($form_state['errors']);
+    $this->assertEmpty($form_state->getErrors());
   }
 
   /**

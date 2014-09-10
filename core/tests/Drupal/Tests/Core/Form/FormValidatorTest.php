@@ -33,9 +33,9 @@ class FormValidatorTest extends UnitTestCase {
 
     $form = array();
     $form_state = new FormState();
-    $this->assertFalse($form_state['validation_complete']);
+    $this->assertFalse($form_state->isValidationComplete());
     $form_validator->validateForm('test_form_id', $form, $form_state);
-    $this->assertTrue($form_state['validation_complete']);
+    $this->assertTrue($form_state->isValidationComplete());
   }
 
   /**
@@ -52,8 +52,8 @@ class FormValidatorTest extends UnitTestCase {
       ->method('doValidateForm');
 
     $form = array();
-    $form_state = new FormState();
-    $form_state['validation_complete'] = TRUE;
+    $form_state = (new FormState())
+      ->setValidationComplete();
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertArrayNotHasKey('#errors', $form);
   }
@@ -72,9 +72,9 @@ class FormValidatorTest extends UnitTestCase {
       ->method('doValidateForm');
 
     $form = array();
-    $form_state = new FormState();
-    $form_state['validation_complete'] = TRUE;
-    $form_state['must_validate'] = TRUE;
+    $form_state = (new FormState())
+      ->setValidationComplete()
+      ->setValidationEnforced();
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertArrayHasKey('#errors', $form);
   }
@@ -110,7 +110,7 @@ class FormValidatorTest extends UnitTestCase {
       ->with('form_token', 'The form has become outdated. Copy any unsaved work in the form below and then <a href="/test/example?foo=bar">reload this page</a>.');
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
-    $this->assertTrue($form_state['validation_complete']);
+    $this->assertTrue($form_state->isValidationComplete());
   }
 
   /**
@@ -141,7 +141,7 @@ class FormValidatorTest extends UnitTestCase {
       ->method('setErrorByName');
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
-    $this->assertTrue($form_state['validation_complete']);
+    $this->assertTrue($form_state->isValidationComplete());
   }
 
   /**
@@ -182,10 +182,9 @@ class FormValidatorTest extends UnitTestCase {
 
     $triggering_element['#limit_validation_errors'] = $sections;
     $form = array();
-    $form_state = new FormState(array(
-      'values' => $values,
-      'triggering_element' => $triggering_element,
-    ));
+    $form_state = (new FormState())
+      ->setValues($values)
+      ->setTriggeringElement($triggering_element);
 
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertSame($expected, $form_state->getValues());
@@ -292,7 +291,8 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->executeValidateHandlers($form, $form_state);
 
     // $form_state validate handlers will supersede $form handlers.
-    $form_state['validate_handlers'][] = array($mock, 'validate_handler');
+    $validate_handlers[] = [$mock, 'validate_handler'];
+    $form_state->setValidateHandlers($validate_handlers);
     $form_validator->executeValidateHandlers($form, $form_state);
   }
 

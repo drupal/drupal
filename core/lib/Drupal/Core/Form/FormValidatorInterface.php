@@ -47,7 +47,7 @@ interface FormValidatorInterface {
    *   an explicit copy of the values for the sake of simplicity. Validation
    *   handlers can also use $form_state to pass information on to submit
    *   handlers. For example:
-   *     $form_state['data_for_submission'] = $data;
+   *     $form_state->set('data_for_submission', $data);
    *   This technique is useful when validation requires file parsing,
    *   web service requests, or other expensive requests that should
    *   not be repeated in the submission step.

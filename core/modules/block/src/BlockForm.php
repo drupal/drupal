@@ -149,9 +149,7 @@ class BlockForm extends EntityForm {
 
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
-    $settings = new FormState(array(
-      'values' => $form_state->getValue('settings')
-    ));
+    $settings = (new FormState())->setValues($form_state->getValue('settings'));
     // Call the plugin validate handler.
     $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
     // Update the original form values.
@@ -168,9 +166,7 @@ class BlockForm extends EntityForm {
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for submission.
     // @todo Find a way to avoid this manipulation.
-    $settings = new FormState(array(
-      'values' => $form_state->getValue('settings'),
-    ));
+    $settings = (new FormState())->setValues($form_state->getValue('settings'));
 
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);

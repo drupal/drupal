@@ -271,7 +271,7 @@ class SimpletestResultsForm extends FormBase {
     }
 
     $form_execute = array();
-    $form_state_execute = new FormState(array('values' => array()));
+    $form_state_execute = new FormState();
     foreach ($classes as $class) {
       $form_state_execute['values']['tests'][$class] = $class;
     }

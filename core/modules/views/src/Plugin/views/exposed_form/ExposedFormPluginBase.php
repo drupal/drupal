@@ -129,14 +129,15 @@ abstract class ExposedFormPluginBase extends PluginBase {
    */
   public function renderExposedForm($block = FALSE) {
     // Deal with any exposed filters we may have, before building.
-    $form_state = new FormState(array(
-      'view' => &$this->view,
-      'display' => &$this->view->display_handler->display,
-      'method' => 'get',
-      'rerender' => TRUE,
-      'no_redirect' => TRUE,
-      'always_process' => TRUE,
-    ));
+    $form_state = (new FormState())
+      ->setStorage([
+        'view' => $this->view,
+        'display' => &$this->view->display_handler->display,
+        'rerender' => TRUE,
+      ])
+      ->setMethod('get')
+      ->setAlwaysProcess()
+      ->disableRedirect();
 
     // Some types of displays (eg. attachments) may wish to use the exposed
     // filters of their parent displays instead of showing an additional

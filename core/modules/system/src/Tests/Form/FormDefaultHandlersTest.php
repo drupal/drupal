@@ -75,7 +75,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
    * Tests that default handlers are added even if custom are specified.
    */
   function testDefaultAndCustomHandlers() {
-    $form_state = new FormState(array('values' => array()));
+    $form_state = new FormState();
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 

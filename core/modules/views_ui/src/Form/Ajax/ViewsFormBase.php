@@ -66,20 +66,16 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
   public function getFormState(ViewStorageInterface $view, $display_id, $js) {
     // $js may already have been converted to a Boolean.
     $ajax = is_string($js) ? $js === 'ajax' : $js;
-    return new FormState(array(
-      'form_id' => $this->getFormId(),
-      'form_key' => $this->getFormKey(),
-      'ajax' => $ajax,
-      'display_id' => $display_id,
-      'view' => $view,
-      'type' => $this->type,
-      'id' => $this->id,
-      'no_redirect' => TRUE,
-      'build_info' => array(
-        'args' => array(),
-        'callback_object' => $this,
-      ),
-    ));
+    return (new FormState())
+      ->set('form_id', $this->getFormId())
+      ->set('form_key', $this->getFormKey())
+      ->set('ajax', $ajax)
+      ->set('display_id', $display_id)
+      ->set('view', $view)
+      ->set('type', $this->type)
+      ->set('id', $this->id)
+      ->disableRedirect()
+      ->addBuildInfo('callback_object', $this);
   }
 
   /**

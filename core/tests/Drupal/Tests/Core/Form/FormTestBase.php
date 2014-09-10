@@ -215,23 +215,20 @@ abstract class FormTestBase extends UnitTestCase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param bool $programmed
-   *   Whether $form_state['programmed'] should be set to TRUE or not. If it is
-   *   not set to TRUE, you must provide additional data in $form_state for the
-   *   submission to take place.
+   *   Whether $form_state->setProgrammed() should be passed TRUE or not. If it
+   *   is not set to TRUE, you must provide additional data in $form_state for
+   *   the submission to take place.
    *
    * @return array
    *   The built form.
    */
   protected function simulateFormSubmission($form_id, FormInterface $form_arg, FormStateInterface $form_state, $programmed = TRUE) {
-    $form_state['build_info']['callback_object'] = $form_arg;
-    $form_state['build_info']['args'] = array();
-
     $input = $form_state->getUserInput();
     $input['op'] = 'Submit';
-    $form_state->setUserInput($input);
-
-    $form_state['programmed'] = $programmed;
-    $form_state['submitted'] = TRUE;
+    $form_state
+      ->setUserInput($input)
+      ->setProgrammed($programmed)
+      ->setSubmitted();
     return $this->formBuilder->buildForm($form_arg, $form_state);
   }
 

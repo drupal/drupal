@@ -123,10 +123,10 @@ class ConfigSingleExportForm extends FormBase {
       '#suffix' => '</div>',
     );
     if ($config_type && $config_name) {
-      $fake_form_state = new FormState(array('values' => array(
+      $fake_form_state = (new FormState())->setValues([
         'config_type' => $config_type,
         'config_name' => $config_name,
-      )));
+      ]);
       $form['export'] = $this->updateExport($form, $fake_form_state);
     }
     return $form;
