@@ -5,13 +5,7 @@
  *
  * Available variables:
  * - content: The content for this region, typically blocks.
- * - attributes: HTML attributes for the region div, including:
- *   - class: Classes that can be used to style contextually through CSS,
- *     including:
- *     - region: The current template type (also know as "theming hook").
- *     - region-[name]: The name of the region with underscores replaced with
- *       dashes. For example, page_top region would have a region-page-top
- *       class.
+ * - attributes: HTML attributes for the region div.
  * - region: The name of the region variable as defined in the theme's
  *   .info.yml file.
  *
@@ -20,8 +14,14 @@
  * @ingroup themeable
  */
 #}
+{%
+  set classes = [
+    'region',
+    'region-' ~ region|clean_class,
+  ]
+%}
 {% if content %}
-  <div{{ attributes }}>
+  <div{{ attributes.addClass(classes) }}>
     {{ content }}
   </div>
 {% endif %}

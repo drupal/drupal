@@ -2046,9 +2046,6 @@ function template_preprocess_region(&$variables) {
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
-
-  $variables['attributes']['class'][] = 'region';
-  $variables['attributes']['class'][] = drupal_html_class('region-' . $variables['region']);
 }
 
 /**
