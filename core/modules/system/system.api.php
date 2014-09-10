@@ -203,7 +203,6 @@ function callback_queue_worker($queue_item_data) {
  *   \Drupal\Core\Render\Element\ElementInterface.
  *
  * @see hook_element_info_alter()
- * @see system_element_info()
  */
 function hook_element_info() {
   $types['filter_format'] = array(

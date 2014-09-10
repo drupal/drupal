@@ -47,8 +47,8 @@ class Table extends FormElement {
       ),
       // Properties for tabledrag support.
       // The value is a list of arrays that are passed to
-      // drupal_attach_tabledrag(). drupal_pre_render_table() prepends the HTML
-      // ID of the table to each set of options.
+      // drupal_attach_tabledrag(). Table::preRenderTable() prepends the HTML ID
+      // of the table to each set of options.
       // @see drupal_attach_tabledrag()
       '#tabledrag' => array(),
       // Render properties.
@@ -124,9 +124,9 @@ class Table extends FormElement {
       foreach (Element::children($element) as $key) {
         $row = &$element[$key];
         // Prepare the element #parents for the tableselect form element.
-        // Their values have to be located in child keys (#tree is ignored), since
-        // form_validate_table() has to be able to validate whether input (for the
-        // parent #type 'table' element) has been submitted.
+        // Their values have to be located in child keys (#tree is ignored),
+        // since Table::validateTable() has to be able to validate whether input
+        // (for the parent #type 'table' element) has been submitted.
         $element_parents = array_merge($element['#parents'], array($key));
 
         // Since the #parents of the tableselect form element will equal the

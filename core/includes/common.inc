@@ -237,7 +237,7 @@ function drupal_get_profile() {
  * @return
  *   An array of all stored HEAD elements.
  *
- * @see drupal_pre_render_html_tag()
+ * @see \Drupal\Core\Render\Element\HtmlTag::preRenderHtmlTag()
  */
 function drupal_add_html_head($data = NULL, $key = NULL) {
   $stored_head = &drupal_static(__FUNCTION__, array());
@@ -1802,7 +1802,6 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *   browser.
  *
  * @see _drupal_add_js()
- * @see drupal_pre_render_scripts()
  */
 function drupal_merge_js_settings($settings_items) {
   return NestedArray::mergeDeepArray($settings_items, TRUE);

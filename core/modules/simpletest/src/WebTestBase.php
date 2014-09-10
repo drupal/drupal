@@ -959,8 +959,9 @@ abstract class WebTestBase extends TestBase {
               'pass2' => $this->root_user->pass_raw,
             ),
           ),
-          // form_type_checkboxes_value() requires NULL instead of FALSE values
-          // for programmatic form submissions to disable a checkbox.
+          // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
+          // NULL instead of FALSE values for programmatic form submissions to
+          // disable a checkbox.
           'update_status_module' => array(
             1 => NULL,
             2 => NULL,

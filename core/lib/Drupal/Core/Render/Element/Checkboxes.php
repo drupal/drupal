@@ -55,9 +55,9 @@ class Checkboxes extends FormElement {
       $weight = 0;
       foreach ($element['#options'] as $key => $choice) {
         // Integer 0 is not a valid #return_value, so use '0' instead.
-        // @see form_type_checkbox_value().
+        // @see \Drupal\Core\Render\Element\Checkbox::valueCallback().
         // @todo For Drupal 8, cast all integer keys to strings for consistency
-        //   with form_process_radios().
+        //   with \Drupal\Core\Render\Element\Radios::processRadios().
         if ($key === 0) {
           $key = '0';
         }

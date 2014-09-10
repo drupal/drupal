@@ -128,7 +128,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
    * @param $form_state
    *   The current state of the form for the form this element belongs to.
    *
-   * @see form_process_pattern()
+   * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);

@@ -132,12 +132,12 @@ class Select extends FormElement {
           return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : array();
         }
       }
-      // Non-multiple select elements may have an empty option preprended to them
-      // (see form_process_select()). When this occurs, usually #empty_value is
-      // an empty string, but some forms set #empty_value to integer 0 or some
-      // other non-string constant. PHP receives all submitted form input as
-      // strings, but if the empty option is selected, set the value to match the
-      // empty value exactly.
+      // Non-multiple select elements may have an empty option prepended to them
+      // (see \Drupal\Core\Render\Element\Select::processSelect()). When this
+      // occurs, usually #empty_value is an empty string, but some forms set
+      // #empty_value to integer 0 or some other non-string constant. PHP
+      // receives all submitted form input as strings, but if the empty option
+      // is selected, set the value to match the empty value exactly.
       elseif (isset($element['#empty_value']) && $input === (string) $element['#empty_value']) {
         return $element['#empty_value'];
       }

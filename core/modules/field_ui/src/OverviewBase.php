@@ -141,7 +141,7 @@ abstract class OverviewBase extends FormBase {
    *     $options array.
    *
    * @see drupal_render()
-   * @see drupal_pre_render_table()
+   * @see \Drupal\Core\Render\Element\Table::preRenderTable()
    */
   public function tablePreRender($elements) {
     $js_settings = array();
@@ -215,7 +215,7 @@ abstract class OverviewBase extends FormBase {
 
     // If the custom #tabledrag is set and there is a HTML ID, add the table's
     // HTML ID to the options and attach the behavior.
-    // @see drupal_pre_render_table()
+    // @see \Drupal\Core\Render\Element\Table::preRenderTable()
     if (!empty($elements['#tabledrag']) && isset($elements['#attributes']['id'])) {
       foreach ($elements['#tabledrag'] as $options) {
         $options['table_id'] = $elements['#attributes']['id'];

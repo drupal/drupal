@@ -338,7 +338,7 @@ class FormValidator implements FormValidatorInterface {
       // get an additional, first empty option. In case the submitted value
       // is identical to the empty option's value, we reset the element's
       // value to NULL to trigger the regular #required handling below.
-      // @see form_process_select()
+      // @see \Drupal\Core\Render\Element\Select::processSelect()
       elseif ($elements['#type'] == 'select' && !$elements['#multiple'] && $elements['#required'] && !isset($elements['#default_value']) && $elements['#value'] === $elements['#empty_value']) {
         $elements['#value'] = NULL;
         $form_state->setValueForElement($elements, NULL);
@@ -380,9 +380,8 @@ class FormValidator implements FormValidatorInterface {
     // by default, which is particularly useful during an Ajax submission
     // triggered by a non-button. An element can override this default by
     // setting the #limit_validation_errors property. For button element
-    // types, #limit_validation_errors defaults to FALSE (via
-    // system_element_info()), so that full validation is their default
-    // behavior.
+    // types, #limit_validation_errors defaults to FALSE, so that full
+    // validation is their default behavior.
     elseif ($triggering_element && !isset($triggering_element['#limit_validation_errors']) && !$form_state->isSubmitted()) {
       return array();
     }

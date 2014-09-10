@@ -1684,8 +1684,6 @@ function drupal_pre_render_html(array $element) {
  * @param array $variables
  *   An associative array containing:
  *   - page: A render element representing the page.
- *
- * @see system_element_info()
  */
 function template_preprocess_html(&$variables) {
   /** @var $page \Drupal\Core\Page\HtmlPage */

@@ -30,7 +30,7 @@ class CheckboxTest extends WebTestBase {
     foreach (array(FALSE, NULL, TRUE, 0, '0', '', 1, '1', 'foobar', '1foobar') as $default_value) {
       // Only values that can be used for array indices are supported for
       // #return_value, with the exception of integer 0, which is not supported.
-      // @see form_process_checkbox().
+      // @see \Drupal\Core\Render\Element\Checkbox::processCheckbox().
       foreach (array('0', '', 1, '1', 'foobar', '1foobar') as $return_value) {
         $form_array = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestCheckboxTypeJugglingForm', $default_value, $return_value);
         $form = drupal_render($form_array);

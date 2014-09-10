@@ -1064,7 +1064,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * array as index. While doing that, create a container element underneath
    * each option, which contains the settings related to that option.
    *
-   * @see form_process_radios()
+   * @see \Drupal\Core\Render\Element\Radios::processRadios()
    */
   public static function processContainerRadios($element) {
     if (count($element['#options']) > 0) {
