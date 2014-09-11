@@ -6,7 +6,7 @@ effects:
     data:
       width: 480
       height: 480
-      upscale: true
+      upscale: false
     weight: 0
     uuid: ddd73aa7-4bd6-4c85-b600-bdf2b1628d1d
 langcode: en

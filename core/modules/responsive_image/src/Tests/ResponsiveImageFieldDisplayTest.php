@@ -165,7 +165,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $fallback_image = array(
       '#theme' => 'responsive_image_source',
       '#src' => $large_style->buildUrl($image_uri),
-      '#dimensions' => array('width' => 480, 'height' => 240),
+      '#dimensions' => array('width' => 40, 'height' => 20),
     );
     $default_output = drupal_render($fallback_image);
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');

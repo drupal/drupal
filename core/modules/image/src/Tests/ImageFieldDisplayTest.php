@@ -143,8 +143,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image_style = array(
       '#theme' => 'image_style',
       '#uri' => $image_uri,
-      '#width' => 100,
-      '#height' => 50,
+      '#width' => 40,
+      '#height' => 20,
       '#style_name' => 'thumbnail',
     );
     $default_output = drupal_render($image_style);
@@ -199,8 +199,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image_style = array(
       '#theme' => 'image_style',
       '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
-      '#width' => 220,
-      '#height' => 110,
+      '#width' => 40,
+      '#height' => 20,
       '#style_name' => 'medium',
     );
     $default_output = drupal_render($image_style);
