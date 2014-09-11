@@ -176,4 +176,11 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
     // External links don't have a route_name value.
     return empty($this->route_name);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mainPropertyName() {
+    return 'url';
+  }
 }
