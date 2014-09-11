@@ -13,8 +13,6 @@
   }
   .layout-column {
     float: left;  /* LTR */
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
   [dir="rtl"] .layout-column {

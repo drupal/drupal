@@ -136,8 +136,6 @@ input.form-file,
 input.form-date,
 input.form-time,
 textarea.form-textarea {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing:    border-box;
   box-sizing:         border-box;
   padding: .3em .4em .3em .5em;
   max-width: 100%;
@@ -151,7 +149,6 @@ textarea.form-textarea {
   font-size: 1em;
   color: #595959;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 .form-text:focus,
@@ -205,6 +202,7 @@ textarea.form-textarea {
       -webkit-linear-gradient(top, #f6f6f3, #e7e7df); /* LTR */
     text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
     font-size: 0.875rem;
+    -webkit-transition: all 0.1s;
     transition: all 0.1s;
     -webkit-font-smoothing: antialiased;
   }
@@ -279,8 +277,6 @@ textarea.form-textarea {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
   .password-strength {

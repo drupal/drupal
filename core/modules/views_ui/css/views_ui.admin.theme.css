@@ -51,12 +51,6 @@
 .views-admin a.icon {
   background-image:
     url(../images/sprites.png),
-    -moz-linear-gradient(
-      -90deg,
-      #fff 0,
-      #e8e8e8 100%);
-  background-image:
-    url(../images/sprites.png),
     -webkit-gradient(
       linear,
       left top,

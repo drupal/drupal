@@ -14,7 +14,6 @@
   box-shadow: 0 1px 0 white inset;
   background: #cfd1cf;
   background-image: -webkit-linear-gradient(top, whiteSmoke, #cfd1cf);
-  background-image: -moz-linear-gradient(top, whiteSmoke, #cfd1cf);
   background-image: linear-gradient(top, whiteSmoke, #cfd1cf);
   margin: 5px 0;
   /* Disallow any user selections in the drag-and-drop toolbar config UI. */
@@ -112,7 +111,6 @@
   border: 1px solid white;
   border-radius: 5px;
   background-image: -webkit-linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
-  background-image: -moz-linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
   background-image: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
   margin: 3px 6px;
   padding: 3px;
@@ -122,8 +120,6 @@
 }
 .ckeditor-toolbar-disabled .ckeditor-toolbar-available,
 .ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .ckeditor-toolbar-disabled .ckeditor-toolbar-available {
@@ -164,7 +160,6 @@
 .ckeditor-buttons li a,
 .ckeditor-add-new-group button {
   background: #e4e4e4;
-  background-image: -moz-linear-gradient(top, white, #e4e4e4);
   background-image: -webkit-linear-gradient(top, white, #e4e4e4);
   background-image: linear-gradient(top, white, #e4e4e4);
   color: #474747;
@@ -262,7 +257,6 @@
 ul.ckeditor-buttons li.ckeditor-button-separator a {
   background: #e4e4e4;
   background-image: -webkit-linear-gradient(#e4e4e4, #b4b4b4);
-  background-image: -moz-linear-gradient(#e4e4e4, #b4b4b4);
   background-image: linear-gradient(#e4e4e4, #b4b4b4);
   height: 24px;
   margin: 1px 0 0;

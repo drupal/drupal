@@ -20,9 +20,7 @@
   padding-right: 1.3333em;
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item.active {
-  background-image:-moz-linear-gradient(rgb(78,159,234) 0%,rgb(69,132,221) 100%);
-  background-image:-webkit-gradient(linear,color-stop(0, rgb(78,159,234)),color-stop(1, rgb(69,132,221)));
-  background-image: -webkit-linear-gradient(top,  rgb(78,159,234) 0%, rgb(69,132,221) 100%);
+  background-image:-webkit-linear-gradient(rgb(78,159,234) 0%, rgb(69,132,221) 100%);
   background-image:linear-gradient(rgb(78,159,234) 0%,rgb(69,132,221) 100%);
 }
 

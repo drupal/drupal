@@ -18,8 +18,6 @@
 }
 .toolbar .tour-toolbar-tab button.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
 .tour-toolbar-tab button:focus {

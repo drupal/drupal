@@ -83,6 +83,7 @@ small .admin-link:after {
 #system-modules details[open] summary .text {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
+  -ms-hyphens: auto;
   hyphens: auto;
   text-transform: none;
 }
@@ -270,8 +271,6 @@ table.system-status-report .status-title {
     margin-top: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-disabled .theme-selector {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 31.25%;
     float: left; /* LTR */
@@ -305,8 +304,6 @@ table.system-status-report .status-title {
     margin-top: 0;
   }
   .toolbar-vertical .system-themes-list-disabled .theme-selector {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 31.25%;
     float: left; /* LTR */

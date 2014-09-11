@@ -62,6 +62,7 @@ th > a:after {
   left: 0;
   right: 0;
   border-bottom: 2px solid transparent;
+  -webkit-transition: all 0.1s;
   transition: all 0.1s;
 }
 th.active > a {

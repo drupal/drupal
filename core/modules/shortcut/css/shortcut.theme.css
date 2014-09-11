@@ -37,23 +37,18 @@
   margin-left: 0.3em;
   opacity: 0;
   -ms-transform: translateY(-12px);
-  -moz-transform: translateY(-12px);
   -webkit-transform: translateY(-12px);
   transform: translateY(-12px);
   -webkit-transition: all 200ms ease-out;
-  -moz-transition: all 200ms ease-out;
   transition: all 200ms ease-out;
   -ms-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 .add-or-remove-shortcuts a:hover .text,
 .add-or-remove-shortcuts a:focus .text {
   opacity: 1;
-  -o-transform: translateY(-2px);
   -ms-transform: translateY(-2px);
-  -moz-transform: translateY(-2px);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
 }

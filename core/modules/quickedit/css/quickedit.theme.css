@@ -107,11 +107,7 @@
 }
 .quickedit-toolbar-container > .quickedit-toolbar-content {
   background-image: -webkit-linear-gradient(top, #fff, #e4e4e4);
-  background-image:    -moz-linear-gradient(top, #fff, #e4e4e4);
-  background-image:      -o-linear-gradient(top, #fff, #e4e4e4);
   background-image:   linear-gradient(to bottom, #fff, #e4e4e4);
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: black;
   padding: 0.1667em;
@@ -130,8 +126,8 @@
   height: 16px;
   left: 18px; /* LTR */
   position: absolute;
-  -moz-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   transform: rotate(45deg);
   width: 16px;
   z-index: 1;
@@ -237,8 +233,6 @@
   color: white;
   background-color: #50a0e9;
   background-image: -webkit-linear-gradient(top, #50a0e9, #4481dc);
-  background-image:    -moz-linear-gradient(top, #50a0e9, #4481dc);
-  background-image:      -o-linear-gradient(top, #50a0e9, #4481dc);
   background-image:   linear-gradient(to bottom, #50a0e9, #4481dc);
   border: 1px solid transparent;
 }

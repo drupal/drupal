@@ -36,8 +36,6 @@
   position: relative;
   display: block;
   overflow: hidden;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
   padding: 9px 2em 7px 1em;
@@ -107,8 +105,6 @@ li.tabs__tab a {
 
 /* JS dependent styling */
  .is-collapse-enabled .tabs__trigger {
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
   display: block;
   position: absolute;
@@ -232,7 +228,6 @@ li.tabs__tab a {
   margin-left: -1px;
   color: #0074bd;
   -webkit-transition: border-color 0.2s, background-color 0.2s;
-  -moz-transition: border-color 0.2s, background-color 0.2s;
   transition: border-color 0.2s, background-color 0.2s;
 }
 .tabs.secondary .tabs__tab + .tabs__tab {

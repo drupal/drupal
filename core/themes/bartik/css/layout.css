@@ -51,16 +51,12 @@ body,
   padding: 35px 0 30px;
 }
 #footer-wrapper .section {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 15px;
 }
 .region-triptych-first,
 .region-triptych-middle,
 .region-triptych-last {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 20px 0;
 }
@@ -68,8 +64,6 @@ body,
 .region-footer-secondcolumn,
 .region-footer-thirdcolumn,
 .region-footer-fourthcolumn {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 10px;
 }
@@ -121,8 +115,6 @@ body,
   .region-triptych-first,
   .region-triptych-middle,
   .region-triptych-last {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 20px 15px 30px;
     width: 33%;
@@ -132,16 +124,12 @@ body,
   }
   .region-footer-firstcolumn,
   .region-footer-secondcolumn {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0 10px;
     width: 50%;
   }
   .region-footer-thirdcolumn,
   .region-footer-fourthcolumn {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0 10px;
     width: 50%;
@@ -239,8 +227,6 @@ body,
   .region-footer-secondcolumn,
   .region-footer-thirdcolumn,
   .region-footer-fourthcolumn {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0 10px;
     width: 25%;

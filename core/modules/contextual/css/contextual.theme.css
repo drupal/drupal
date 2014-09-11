@@ -108,6 +108,6 @@
 }
 .no-touch .contextual-region .contextual .contextual-links li a:hover {
   color: white;
-  background-image: -webkit-linear-gradient(rgb(78,159,234) 0%,rgb(65,126,210) 100%);
+  background-image: -webkit-linear-gradient(rgb(78,159,234) 0%, rgb(65,126,210) 100%);
   background-image: linear-gradient(rgb(78,159,234) 0%,rgb(65,126,210) 100%);
 }

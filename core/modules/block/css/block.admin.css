@@ -23,8 +23,6 @@ a.block-demo-backlink:hover {
 }
 
 .layout-region {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .block-list-secondary {
@@ -89,8 +87,6 @@ screen and (min-width: 780px),
   .block-list-secondary .form-number,
   .block-list-secondary .form-color,
   .block-list-secondary textarea {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing:    border-box;
     box-sizing:         border-box;
     width: 100%;
     max-width: 100%;
