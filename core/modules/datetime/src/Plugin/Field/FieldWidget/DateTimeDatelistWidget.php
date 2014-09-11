@@ -7,9 +7,7 @@
 namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 
 /**
  * Plugin implementation of the 'datetime_datelist' widget.
@@ -22,7 +20,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
  *   }
  * )
  */
-class DateTimeDatelistWidget extends WidgetBase {
+class DateTimeDatelistWidget extends DateTimeWidgetBase {
 
   /**
    * {@inheritdoc}
@@ -39,31 +37,11 @@ class DateTimeDatelistWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+
     $date_order = $this->getSetting('date_order');
     $time_type = $this->getSetting('time_type');
     $increment = $this->getSetting('increment');
-
-    // We're nesting some sub-elements inside the parent, so we
-    // need a wrapper. We also need to add another #title attribute
-    // at the top level for ease in identifying this item in error
-    // messages. We don't want to display this title because the
-    // actual title display is handled at a higher level by the Field
-    // module.
-
-    $element['#theme_wrappers'][] = 'datetime_wrapper';
-    $element['#attributes']['class'][] = 'container-inline';
-    $element['#element_validate'][] = 'datetime_datelist_widget_validate';
-
-    // Identify the type of date and time elements to use.
-    switch ($this->getFieldSetting('datetime_type')) {
-      case DateTimeItem::DATETIME_TYPE_DATE:
-        $storage_format = DATETIME_DATE_STORAGE_FORMAT;
-        break;
-
-      default:
-        $storage_format = DATETIME_DATETIME_STORAGE_FORMAT;
-        break;
-    }
 
     // Set up the date part order array.
     switch ($date_order) {
@@ -94,29 +72,10 @@ class DateTimeDatelistWidget extends WidgetBase {
 
     $element['value'] = array(
       '#type' => 'datelist',
-      '#default_value' => NULL,
       '#date_increment' => $increment,
       '#date_part_order'=> $date_part_order,
-      '#date_timezone' => drupal_get_user_timezone(),
-      '#required' => $element['#required'],
-    );
+    ) + $element['value'];
 
-    // Set the storage and widget options so the validation can use them. The
-    // validator will not have access to the field definition.
-    $element['value']['#date_storage_format'] = $storage_format;
-
-    if ($items[$delta]->date) {
-      $date = $items[$delta]->date;
-      // The date was created and verified during field_load(), so it is safe to
-      // use without further inspection.
-      $date->setTimezone( new \DateTimeZone($element['value']['#date_timezone']));
-      if ($this->getFieldSetting('datetime_type') == 'date') {
-        // A date without time will pick up the current time, use the default
-        // time.
-        datetime_date_default_time($date);
-      }
-      $element['value']['#default_value'] = $date;
-    }
     return $element;
   }
 
