@@ -8,7 +8,6 @@
 namespace Drupal\views\Form;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -68,7 +67,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * Constructs a ViewsForm object.
    *
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $controller_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver to get the subform form objects.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator to generate the form action.
@@ -79,8 +78,8 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    * @param string $view_display_id
    *   The ID of the active view's display.
    */
-  public function __construct(ClassResolverInterface $controller_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id) {
-    $this->classResolver = $controller_resolver;
+  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id) {
+    $this->classResolver = $class_resolver;
     $this->urlGenerator = $url_generator;
     $this->requestStack = $requestStack;
     $this->viewId = $view_id;
@@ -92,7 +91,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container, $view_id = NULL, $view_display_id = NULL) {
     return new static(
-      $container->get('controller_resolver'),
+      $container->get('class_resolver'),
       $container->get('url_generator'),
       $container->get('request_stack'),
       $view_id,
@@ -116,7 +115,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = []) {
     $form_state['step'] = isset($form_state['step']) ? $form_state['step'] : 'views_form_views_form';
     $form_state['step_controller']['views_form_views_form'] = 'Drupal\views\Form\ViewsFormMainForm';
 

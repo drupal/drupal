@@ -86,8 +86,8 @@ class CounterTest extends UnitTestCase {
     $this->view->display_handler = $this->display;
     $this->view->pager = $this->pager;
 
-    foreach (ViewTestData::dataSet() as $set) {
-      $this->testData[] = new ResultRow($set);
+    foreach (ViewTestData::dataSet() as $index => $set) {
+      $this->testData[] = new ResultRow($set + ['index' => $index]);
     }
 
     $this->definition = array('title' => 'counter field', 'plugin_type' => 'field');

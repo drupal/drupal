@@ -142,8 +142,8 @@ abstract class CachePluginBase extends PluginBase {
         \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
-        $this->storage['output'] = $this->view->display_handler->output;
-        $this->gatherHeaders();
+        $this->gatherHeaders($this->view->display_handler->output);
+        $this->storage['output'] = drupal_render($this->view->display_handler->output, TRUE);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
@@ -177,8 +177,13 @@ abstract class CachePluginBase extends PluginBase {
         if ($cache = \Drupal::cache($this->outputBin)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
-            $this->view->display_handler->output = $cache->data['output'];
+
             $this->restoreHeaders();
+            $this->view->display_handler->output = array(
+              '#attached' => &$this->view->element['#attached'],
+              '#markup' => $cache->data['output'],
+            );
+
             return TRUE;
           }
         }
@@ -233,9 +238,12 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Gather the JS/CSS from the render array, the html head from the band data.
+   * Gather the JS/CSS from the render array and the html head from band data.
+   *
+   * @param array $render_array
+   *   The view render array to collect data from.
    */
-  protected function gatherHeaders() {
+  protected function gatherHeaders(array $render_array = []) {
     // Simple replacement for head
     if (isset($this->storage['head'])) {
       $this->storage['head'] = str_replace($this->storage['head'], '', drupal_add_html_head());
@@ -244,9 +252,8 @@ abstract class CachePluginBase extends PluginBase {
       $this->storage['head'] = '';
     }
 
-    $attached = $this->storage['output']['#attached'];
-    $this->storage['css'] = $attached['css'];
-    $this->storage['js'] = $attached['js'];
+    $this->storage['css'] = $render_array['#attached']['css'];
+    $this->storage['js'] = $render_array['#attached']['js'];
   }
 
   /**

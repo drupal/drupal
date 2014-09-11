@@ -86,7 +86,7 @@ class ContextualLinks extends FieldPluginBase {
   public function render(ResultRow $values) {
     $links = array();
     foreach ($this->options['fields'] as $field) {
-      $rendered_field = $this->view->style_plugin->getField($this->view->row_index, $field);
+      $rendered_field = $this->view->style_plugin->getField($values->index, $field);
       if (empty($rendered_field)) {
         continue;
       }

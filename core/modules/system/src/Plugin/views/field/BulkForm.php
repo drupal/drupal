@@ -134,7 +134,7 @@ class BulkForm extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    return '<!--form-item-' . $this->options['id'] . '--' . $this->view->row_index . '-->';
+    return '<!--form-item-' . $this->options['id'] . '--' . $values->index . '-->';
   }
 
   /**

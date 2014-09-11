@@ -128,7 +128,21 @@ function views_theme($existing, $type, $theme, $path) {
     // For displays, we pass in a dummy array as the first parameter, since
     // $view is an object but the core contextual_preprocess() function only
     // attaches contextual links when the primary theme argument is an array.
-    'display' => array('view_array' => array(), 'view' => NULL),
+    'display' => array(
+      'view_array' => array(),
+      'view' => NULL,
+      'rows' => array(),
+      'header' => array(),
+      'footer' => array(),
+      'empty' => array(),
+      'exposed' => array(),
+      'more' => array(),
+      'feed_icon' => array(),
+      'pager' => array(),
+      'title' => '',
+      'attachment_before' => array(),
+      'attachment_after' => array(),
+    ),
     'style' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
     'row' => array('view' => NULL, 'options' => NULL, 'row' => NULL, 'field_alias' => NULL),
     'exposed_form' => array('view' => NULL, 'options' => NULL),
@@ -771,11 +785,12 @@ function views_pre_render_views_form_views_form($element) {
   }
 
   // Apply substitutions to the rendered output.
-  $element['output']['#markup'] = str_replace($search, $replace, $element['output']['#markup']);
+  $element['output'] = array('#markup' => str_replace($search, $replace, drupal_render($element['output'])));
 
   // Sort, render and add remaining form fields.
   $children = Element::children($element, TRUE);
   $element['#children'] = drupal_render_children($element, $children);
+
   return $element;
 }
 

@@ -80,7 +80,7 @@ class Feed extends PathPluginBase {
 
     $response = $this->view->getResponse();
 
-    $response->setContent($output);
+    $response->setContent(drupal_render($output));
 
     return $response;
   }
@@ -94,7 +94,7 @@ class Feed extends PathPluginBase {
     if (!empty($this->view->live_preview)) {
       $output = array(
         '#prefix' => '<pre>',
-        '#markup' => String::checkPlain($output),
+        '#markup' => String::checkPlain(drupal_render($output)),
         '#suffix' => '</pre>',
       );
     }
@@ -253,9 +253,9 @@ class Feed extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::attachTo().
+   * {@inheritdoc}
    */
-  public function attachTo(ViewExecutable $clone, $display_id) {
+  public function attachTo(ViewExecutable $clone, $display_id, array &$build) {
     $displays = $this->getOption('displays');
     if (empty($displays[$display_id])) {
       return;
@@ -266,7 +266,7 @@ class Feed extends PathPluginBase {
     $clone->setDisplay($this->display['id']);
     $clone->buildTitle();
     if ($plugin = $clone->display_handler->getPlugin('style')) {
-      $plugin->attachTo($display_id, $this->getPath(), $clone->getTitle());
+      $plugin->attachTo($build, $display_id, $this->getPath(), $clone->getTitle());
     }
 
     // Clean up.

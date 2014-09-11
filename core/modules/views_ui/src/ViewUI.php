@@ -590,7 +590,6 @@ class ViewUI implements ViewStorageInterface {
     if (empty($errors)) {
       $this->ajax = TRUE;
       $this->executable->live_preview = TRUE;
-      $this->views_ui_context = TRUE;
 
       // AJAX happens via HTTP POST but everything expects exposed data to
       // be in GET. Copy stuff but remove ajax-framework specific keys.

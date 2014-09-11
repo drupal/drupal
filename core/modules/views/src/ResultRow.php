@@ -27,6 +27,13 @@ class ResultRow {
   public $_relationship_entities = array();
 
   /**
+   * An incremental number which represents the row in the entire result.
+   *
+   * @var integer
+   */
+  public $index;
+
+  /**
    * Constructs a ResultRow object.
    *
    * @param array $values

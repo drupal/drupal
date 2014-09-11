@@ -30,8 +30,6 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $view = Views::getView('test_views_handler_field_user_name');
     $this->executeView($view);
 
-    $view->row_index = 0;
-
     $view->field['name']->options['link_to_user'] = TRUE;
     $username = $view->result[0]->users_field_data_name = $this->randomMachineName();
     $view->result[0]->users_field_data_uid = 1;

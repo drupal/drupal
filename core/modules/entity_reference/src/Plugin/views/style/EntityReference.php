@@ -88,17 +88,14 @@ class EntityReference extends StylePluginBase {
     // @todo We don't display grouping info for now. Could be useful for select
     // widget, though.
     $results = array();
-    $this->view->row_index = 0;
     foreach ($sets as $records) {
       foreach ($records as $values) {
         // Sanitize HTML, remove line breaks and extra whitespace.
         $output = $this->view->rowPlugin->render($values);
         $output = drupal_render($output);
         $results[$values->{$id_field_alias}] = Xss::filterAdmin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $output)));
-        $this->view->row_index++;
       }
     }
-    unset($this->view->row_index);
     return $results;
   }
 

@@ -22,6 +22,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -720,9 +721,15 @@ class Field extends FieldPluginBase {
   }
 
   /**
-   * Return an array of items for the field.
+   * Gets an array of items for the field.
+   *
+   * @param \Drupal\views\ResultRow $values
+   *   The result row object containing the values.
+   *
+   * @return array
+   *   An array of items for the field.
    */
-  public function getItems($values) {
+  public function getItems(ResultRow $values) {
     $original_entity = $this->getEntity($values);
     if (!$original_entity) {
       return array();
@@ -739,7 +746,7 @@ class Field extends FieldPluginBase {
       // Pass the View object in the display so that fields can act on it.
       'views_view' => $this->view,
       'views_field' => $this,
-      'views_row_id' => $this->view->row_index,
+      'views_row_id' => $values->index,
     );
     $render_array = $entity->get($this->definition['field_name'])->view($display);
 

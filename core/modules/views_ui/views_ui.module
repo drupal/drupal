@@ -13,6 +13,7 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Implements hook_help().
@@ -130,6 +131,12 @@ function views_ui_theme() {
  */
 function views_ui_preprocess_views_view(&$variables) {
   $view = $variables['view'];
+
+  // Render title for the admin preview.
+  if (!empty($view->live_preview)) {
+    $variables['title'] = Xss::filterAdmin($view->getTitle());
+  }
+
   if (!empty($view->live_preview) && \Drupal::moduleHandler()->moduleExists('contextual')) {
     $view->setShowAdminLinks(FALSE);
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {

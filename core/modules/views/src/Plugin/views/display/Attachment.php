@@ -232,9 +232,9 @@ class Attachment extends DisplayPluginBase {
   }
 
   /**
-   * Attach to another view.
+   * {@inheritdoc}
    */
-  public function attachTo(ViewExecutable $view, $display_id) {
+  public function attachTo(ViewExecutable $view, $display_id, array &$build) {
     $displays = $this->getOption('displays');
 
     if (empty($displays[$display_id])) {

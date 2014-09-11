@@ -1314,6 +1314,7 @@ class ViewExecutable {
       $cache = $this->display_handler->getPlugin('cache');
     }
 
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
     if ($cache && $cache->cacheGet('output')) {
     }
     else {
@@ -1508,7 +1509,7 @@ class ViewExecutable {
       // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
       $cloned_view = new static($this->storage, $this->user);
       $cloned_view->setRequest($this->getRequest());
-      $this->displayHandlers->get($id)->attachTo($cloned_view, $this->current_display);
+      $this->displayHandlers->get($id)->attachTo($cloned_view, $this->current_display, $this->element);
     }
     $this->is_attachment = FALSE;
   }

@@ -492,9 +492,7 @@ abstract class StylePluginBase extends PluginBase {
         if ($this->usesRowPlugin()) {
           foreach ($set['rows'] as $index => $row) {
             $this->view->row_index = $index;
-            $render = $this->view->rowPlugin->render($row);
-            // Row render arrays cannot be contained by style render arrays.
-            $set['rows'][$index] = drupal_render($render);
+            $set['rows'][$index] = $this->view->rowPlugin->render($row);
           }
         }
 

@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
+use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
@@ -419,8 +420,15 @@ abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * Allow displays to attach to other views.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   The views executable.
+   * @param string $display_id
+   *   The display to attach to.
+   * @param array $build
+   *   The parent view render array.
    */
-  public function attachTo(ViewExecutable $view, $display_id) { }
+  public function attachTo(ViewExecutable $view, $display_id, array &$build) { }
 
   /**
    * Static member function to list which sections are defaultable
@@ -2125,11 +2133,86 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render this display.
    */
   public function render() {
+    $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render($this->view->result) : array();
+
     $element = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
+      // Assigned by reference so anything added in $element['#attached'] will
+      // be available on the view.
+      '#attached' => &$this->view->element['#attached'],
+      '#pre_render' => [[$this, 'elementPreRender']],
+      '#rows' => $rows,
     );
-    $element['#attached'] = &$this->view->element['#attached'];
+
+    return $element;
+  }
+
+  /**
+   * #pre_render callback for view display rendering.
+   *
+   * @see self::render()
+   *
+   * @param array $element
+   *   The element to #pre_render
+   *
+   * @return array
+   *   The processed element.
+   */
+  public function elementPreRender(array $element) {
+    $view = $element['#view'];
+    $empty = empty($view->result);
+
+    // Force a render array so CSS/JS can be attached.
+    if (!is_array($element['#rows'])) {
+      $element['#rows'] = array('#markup' => $element['#rows']);
+    }
+
+    $element['#header'] = $view->display_handler->renderArea('header', $empty);
+    $element['#footer'] = $view->display_handler->renderArea('footer', $empty);
+    $element['#empty'] = $empty ? $view->display_handler->renderArea('empty', $empty) : array();
+    $element['#exposed'] = !empty($view->exposed_widgets) ? $view->exposed_widgets : array();
+    $element['#more'] = $view->display_handler->renderMoreLink();
+    $element['#feed_icon'] = !empty($view->feed_icon) ? $view->feed_icon : array();
+
+    if ($view->display_handler->renderPager()) {
+      $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
+      $element['#pager'] = $view->renderPager($exposed_input);
+    }
+
+    if (!empty($view->attachment_before)) {
+      $element['#attachment_before'] = $view->attachment_before;
+    }
+    if (!empty($view->attachment_after)) {
+      $element['#attachment_after'] = $view->attachment_after;
+    }
+
+    // If form fields were found in the view, reformat the view output as a form.
+    if ($view->hasFormElements()) {
+      // Only render row output if there are rows. Otherwise, render the empty
+      // region.
+      if (!empty($element['#rows'])) {
+        $output = $element['#rows'];
+      }
+      else {
+        $output = $element['#empty'];
+      }
+
+      $form_object = ViewsForm::create(\Drupal::getContainer(), $view->storage->id(), $view->current_display);
+      $form = \Drupal::formBuilder()->getForm($form_object, $view, $output);
+      // The form is requesting that all non-essential views elements be hidden,
+      // usually because the rendered step is not a view result.
+      if ($form['show_view_elements']['#value'] == FALSE) {
+        $element['#header'] = array();
+        $element['#exposed'] = array();
+        $element['#pager'] = array();
+        $element['#footer'] = array();
+        $element['#more'] = array();
+        $element['#feed_icon'] = array();
+      }
+
+      $element['#rows'] = $form;
+    }
 
     return $element;
   }
