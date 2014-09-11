@@ -51,6 +51,7 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
         'body',
         'teaser',
         'format',
+        'timestamp',
       ));
     $query->innerJoin('node', 'n', static::JOIN);
 
@@ -78,6 +79,7 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
       'log' => $this->t('Revision Log message'),
       'language' => $this->t('Language (fr, en, ...)'),
       'tnid' => $this->t('The translation set id for this node'),
+      'timestamp' => $this->t('The timestamp the latest revision of this node was created.'),
     );
     return $fields;
   }

@@ -40,6 +40,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 1',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279051598,
       'created' => 1279051598,
       'changed' => 1279051598,
       'comment' => 2,
@@ -62,6 +63,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 2',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -84,6 +86,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 5',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -104,7 +107,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
    */
   protected function setUp() {
     foreach ($this->expectedResults as $k => $row) {
-      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format') as $i => $field) {
+      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp') as $i => $field) {
         $this->databaseContents['node_revisions'][$k][$field] = $row[$field];
         // Keep nid and vid.
         if ($i > 1) {

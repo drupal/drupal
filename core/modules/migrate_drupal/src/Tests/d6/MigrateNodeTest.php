@@ -45,7 +45,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertEqual($node->getCreatedTime(), 1388271197, 'Node has the correct created time.');
     $this->assertEqual($node->isSticky(), FALSE);
     $this->assertEqual($node->getOwnerId(), 1);
-    //$this->assertEqual($node->getRevisionCreationTime(), 1390095701, 'Node has the correct revision timestamp.');
+    $this->assertEqual($node->getRevisionCreationTime(), 1390095701, 'Node has the correct revision timestamp.');
 
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {
