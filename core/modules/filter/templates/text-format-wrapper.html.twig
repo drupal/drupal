@@ -7,6 +7,8 @@
  * - children: Text format element children.
  * - description: Text format element description.
  * - attributes: HTML attributes for the containing element.
+ * - aria_description: Flag for whether or not an ARIA description has been
+ *   added to the description container.
  *
  * @see template_preprocess_text_format_wrapper()
  *
@@ -16,6 +18,11 @@
 <div class="text-format-wrapper form-item">
   {{ children }}
   {% if description %}
-    <div{{ attributes }}>{{ description }}</div>
+    {%
+      set classes = [
+        aria_description ? 'description',
+      ]
+    %}
+    <div{{ attributes.addClass(classes) }}>{{ description }}</div>
   {% endif %}
 </div>

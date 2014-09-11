@@ -733,9 +733,6 @@ function _filter_tips($format_id, $long = FALSE) {
  */
 function template_preprocess_filter_guidelines(&$variables) {
   $format = $variables['format'];
-  $variables['attributes']['class'][] = 'filter-guidelines-item';
-  $variables['attributes']['class'][] = 'filter-guidelines-' . $format->format;
-
   $variables['tips'] = array(
     '#theme' => 'filter_tips',
     '#tips' => _filter_tips($format->format, FALSE),
@@ -752,9 +749,10 @@ function template_preprocess_filter_guidelines(&$variables) {
  *   - attributes: An associative array containing properties of the element.
  */
 function template_preprocess_text_format_wrapper(&$variables) {
+  $variables['aria_description'] = FALSE;
   // Add element class and id for screen readers.
   if (isset($variables['attributes']['aria-describedby'])) {
-    $variables['attributes']['class'][] = 'description';
+    $variables['aria_description'] = TRUE;
     $variables['attributes']['id'] = $variables['attributes']['aria-describedby'];
     // Remove aria-describedby attribute as it shouldn't be visible here.
     unset($variables['attributes']['aria-describedby']);
@@ -788,25 +786,14 @@ function template_preprocess_text_format_wrapper(&$variables) {
  */
 function template_preprocess_filter_tips(&$variables) {
   $tips = $variables['tips'];
-  $long = $variables['long'];
 
   foreach ($variables['tips'] as $name => $tiplist) {
     foreach ($tiplist as $tip_key => $tip) {
-      $tiplist[$tip_key]['attributes'] = new Attribute(array());
-      if ($long) {
-        $tiplist[$tip_key]['attributes']['class'] = array('filter-' . str_replace("/", "-", $tip['id']));
-      }
+      $tiplist[$tip_key]['attributes'] = new Attribute();
     }
 
-    $attributes = array(
-      'class' => array(
-        'filter-type',
-        'filter-' . drupal_html_class($name),
-      ),
-    );
-
     $variables['tips'][$name] = array(
-      'attributes' => new Attribute($attributes),
+      'attributes' => new Attribute(),
       'name' => String::checkPlain($name),
       'list' => $tiplist,
     );
