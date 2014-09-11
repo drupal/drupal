@@ -1,8 +1,17 @@
-base_field: nid
-base_table: node
-core: '8'
-description: 'Content belonging to a certain taxonomy term.'
+langcode: en
 status: false
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: taxonomy_term
+label: 'Taxonomy term'
+module: taxonomy
+description: 'Content belonging to a certain taxonomy term.'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     id: default
@@ -159,6 +168,48 @@ display:
             operator: '0'
           plugin_id: node_status
           provider: node
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+          operator: in
+          value:
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: language
+          provider: views
       style:
         type: default
         options:
@@ -178,6 +229,8 @@ display:
       empty: {  }
       relationships: {  }
       fields: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     id: page_1
     display_title: Page
@@ -189,6 +242,8 @@ display:
         options: {  }
         provider: views
       path: taxonomy/term/%
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   feed_1:
     id: feed_1
     display_title: Feed
@@ -238,12 +293,5 @@ display:
           relationship: none
           view_mode: default
         provider: views
-label: 'Taxonomy term'
-module: taxonomy
-id: taxonomy_term
-tag: default
-langcode: en
-dependencies:
-  module:
-    - node
-    - taxonomy
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

@@ -1,8 +1,17 @@
-base_field: nid
-base_table: node
-core: '8'
-description: 'All content, by letter.'
+langcode: en
 status: false
+dependencies:
+  module:
+    - node
+    - user
+id: glossary
+label: Glossary
+module: node
+description: 'All content, by letter.'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     id: default
@@ -301,6 +310,51 @@ display:
       footer: {  }
       empty: {  }
       sorts: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+      filters:
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          dependencies:
+            module:
+              - views
+          operator: in
+          value:
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: language
+          provider: views
   page_1:
     id: page_1
     display_title: Page
@@ -315,6 +369,8 @@ display:
         type: normal
         title: Glossary
         weight: 0
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   attachment_1:
     id: attachment_1
     display_title: Attachment
@@ -373,12 +429,5 @@ display:
         default: default
         page_1: page_1
       inherit_arguments: false
-label: Glossary
-module: node
-id: glossary
-tag: default
-langcode: en
-dependencies:
-  module:
-    - node
-    - user
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
