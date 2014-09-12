@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\views\Unit\Routing;
 
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Routing\ViewPageController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -85,9 +86,10 @@ class ViewPageControllerTest extends UnitTestCase {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'default');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(''));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test', ['view_id' => 'test_page_view', 'display_id' => 'default']));
+    $route_match = RouteMatch::createFromRequest($request);
 
-    $output = $this->pageController->handle($request);
+    $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
     $this->assertInternalType('array', $output);
     $this->assertEquals(array('#markup' => 'example output'), $output);
   }
@@ -132,9 +134,10 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('arg_0', 'test-argument');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(''));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{arg_0}', ['view_id' => 'test_page_view', 'display_id' => 'default']));
+    $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($request);
+    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
   }
 
   /**
@@ -179,11 +182,12 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('parameter', 'test-argument');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('', array(), array(), array('_view_argument_map' => array(
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{parameter}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], ['_view_argument_map' => [
       'arg_0' => 'parameter',
-    ))));
+    ]]));
+    $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($request);
+    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
   }
 
   /**
@@ -231,12 +235,12 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('test_entity', $this->getMock('Drupal\Core\Entity\EntityInterface'));
     $raw_variables = new ParameterBag(array('test_entity' => 'example_id'));
     $request->attributes->set('_raw_variables', $raw_variables);
-
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('', array(), array(), array('_view_argument_map' => array(
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{test_entity}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], ['_view_argument_map' => [
       'arg_0' => 'test_entity',
-    ))));
+    ]]));
+    $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($request);
+    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
   }
 
   /**
@@ -251,7 +255,9 @@ class ViewPageControllerTest extends UnitTestCase {
     $request = new Request();
     $request->attributes->set('view_id', $random_view_id);
     $request->attributes->set('display_id', 'default');
-    $this->pageController->handle($request);
+    $route_match = RouteMatch::createFromRequest($request);
+
+    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
   }
 
 }

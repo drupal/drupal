@@ -13,6 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,13 +110,15 @@ class ConfigTranslationController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Page request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    * @param string $plugin_id
    *   The plugin ID of the mapper.
    *
    * @return array
    *   Page render array.
    */
-  public function itemPage(Request $request, $plugin_id) {
+  public function itemPage(Request $request, RouteMatchInterface $route_match, $plugin_id) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
     $mapper->populateFromRequest($request);
@@ -164,7 +167,7 @@ class ConfigTranslationController extends ControllerBase {
 
         // Check access for the path/route for editing, so we can decide to
         // include a link to edit or not.
-        $edit_access = $this->accessManager->checkNamedRoute($mapper->getBaseRouteName(), $request->attributes->get('_raw_variables')->all(), $this->account);
+        $edit_access = $this->accessManager->checkNamedRoute($mapper->getBaseRouteName(), $route_match->getRawParameters()->all(), $this->account);
 
         // Build list of operations.
         $operations = array();

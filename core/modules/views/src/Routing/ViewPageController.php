@@ -10,8 +10,8 @@ namespace Drupal\views\Routing;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\ViewExecutableFactory;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -59,12 +59,19 @@ class ViewPageController implements ContainerInjectionInterface {
   }
 
   /**
-   * Handles a response for a view.
+   * Handler a response for a given view and display.
+   *
+   * @param string $view_id
+   *   The ID of the view
+   * @param string $display_id
+   *   The ID of the display.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @return null|void
    */
-  public function handle(Request $request) {
-    $view_id = $request->attributes->get('view_id');
-    $display_id = $request->attributes->get('display_id');
-
+  public function handle($view_id, $display_id, Request $request, RouteMatchInterface $route_match) {
     $entity = $this->storage->load($view_id);
     if (empty($entity)) {
       throw new NotFoundHttpException(String::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
@@ -75,7 +82,7 @@ class ViewPageController implements ContainerInjectionInterface {
     $view->initHandlers();
 
     $args = array();
-    $map = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getOption('_view_argument_map', array());
+    $map = $route_match->getRouteObject()->getOption('_view_argument_map', array());
     $arguments_length = count($view->argument);
     for ($argument_index = 0; $argument_index < $arguments_length; $argument_index++) {
       // Allow parameters be pulled from the request.
@@ -85,18 +92,11 @@ class ViewPageController implements ContainerInjectionInterface {
       $attribute = 'arg_' . $argument_index;
       if (isset($map[$attribute])) {
         $attribute = $map[$attribute];
-
-        // First try to get from the original values then on the not converted
-        // ones.
-        if ($request->attributes->has('_raw_variables')) {
-          $arg = $request->attributes->get('_raw_variables')->get($attribute);
-        }
-        else {
-          $arg = $request->attributes->get($attribute);
-        }
+      }
+      if ($arg = $route_match->getRawParameter($attribute)) {
       }
       else {
-        $arg = $request->attributes->get($attribute);
+        $arg = $route_match->getParameter($attribute);
       }
 
       if (isset($arg)) {

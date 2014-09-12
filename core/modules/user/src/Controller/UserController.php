@@ -10,7 +10,6 @@ namespace Drupal\user\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\user\UserInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Datetime\DateFormatter;
@@ -132,14 +131,11 @@ class UserController extends ControllerBase {
    * Displays user profile if user is logged in, or login form for anonymous
    * users.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   Returns either a redirect to the user page or the render
    *   array of the login form.
    */
-  public function userPage(Request $request) {
+  public function userPage() {
     $user = $this->currentUser();
     if ($user->id()) {
       $response = $this->redirect('entity.user.canonical', array('user' => $user->id()));

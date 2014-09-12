@@ -7,7 +7,7 @@
 
 namespace Drupal\rest;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,15 +27,17 @@ class RequestHandler implements ContainerAwareInterface {
   /**
    * Handles a web API request.
    *
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function handle(Request $request) {
+  public function handle(RouteMatchInterface $route_match, Request $request) {
 
-    $plugin = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getDefault('_plugin');
+    $plugin = $route_match->getRouteObject()->getDefault('_plugin');
     $method = strtolower($request->getMethod());
 
     $resource = $this->container
@@ -87,7 +89,7 @@ class RequestHandler implements ContainerAwareInterface {
     // All REST routes are restricted to exactly one format, so instead of
     // parsing it out of the Accept headers again, we can simply retrieve the
     // format requirement. If there is no format associated, just pick JSON.
-    $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'json';
+    $format = $route_match->getRouteObject()->getRequirement('_format') ?: 'json';
     try {
       $response = call_user_func_array(array($resource, $method), array_merge($parameters, array($unserialized, $request)));
     }

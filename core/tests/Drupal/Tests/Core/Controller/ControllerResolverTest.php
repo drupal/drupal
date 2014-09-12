@@ -11,6 +11,8 @@ use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,7 +61,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @see \Drupal\Core\Controller\ControllerResolver::doGetArguments()
    */
   public function testGetArguments() {
-    $controller = function(EntityInterface $entity, $user) {
+    $controller = function(EntityInterface $entity, $user, RouteMatchInterface $route_match) {
     };
     $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
       ->disableOriginalConstructor()
@@ -74,6 +76,7 @@ class ControllerResolverTest extends UnitTestCase {
 
     $this->assertEquals($mock_entity, $arguments[0], 'Type hinted variables should use upcasted values.');
     $this->assertEquals(1, $arguments[1], 'Not type hinted variables should use not upcasted values.');
+    $this->assertEquals(RouteMatch::createFromRequest($request), $arguments[2], 'Ensure that the route match object is passed along as well');
   }
 
   /**
@@ -203,12 +206,30 @@ class ControllerResolverTest extends UnitTestCase {
     $this->assertSame($output, call_user_func($controller));
   }
 
+  /**
+   * Tests getArguments with a route match and a request.
+   *
+   * @covers ::getArguments
+   * @covers ::doGetArguments
+   */
+  public function testGetArgumentsWithRouteMatchAndRequest() {
+    $request = Request::create('/test');
+    $mock_controller = new MockController();
+    $arguments = $this->controllerResolver->getArguments($request, [$mock_controller, 'getControllerWithRequestAndRouteMatch']);
+    $this->assertEquals([RouteMatch::createFromRequest($request), $request], $arguments);
+  }
+
 }
 
 class MockController {
   public function getResult() {
     return 'This is a regular controller.';
   }
+
+  public function getControllerWithRequestAndRouteMatch(RouteMatchInterface $route_match, Request $request) {
+    return 'this is another example controller';
+  }
+
 }
 class MockContainerInjection implements ContainerInjectionInterface {
   protected $result;

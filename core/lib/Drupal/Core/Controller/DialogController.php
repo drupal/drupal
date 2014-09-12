@@ -10,7 +10,7 @@ namespace Drupal\Core\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Page\HtmlPage;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -51,14 +51,16 @@ class DialogController {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    * @param mixed $_content
    *   A controller definition string, or a callable object/closure.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a modal dialog.
    */
-  public function modal(Request $request, $_content) {
-    return $this->dialog($request, $_content, TRUE);
+  public function modal(Request $request, RouteMatchInterface $route_match, $_content) {
+    return $this->dialog($request, $route_match, $_content, TRUE);
   }
 
   /**
@@ -66,6 +68,8 @@ class DialogController {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    * @param mixed $_content
    *   A controller definition string, or a callable object/closure.
    * @param bool $modal
@@ -74,7 +78,7 @@ class DialogController {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a dialog.
    */
-  public function dialog(Request $request, $_content, $modal = FALSE) {
+  public function dialog(Request $request, RouteMatchInterface $route_match, $_content, $modal = FALSE) {
     $page_content = $this->getContentResult($request, $_content);
 
     // Allow controllers to return a HtmlPage or a Response object directly.
@@ -94,7 +98,7 @@ class DialogController {
 
     $content = drupal_render($page_content);
     drupal_process_attached($page_content);
-    $title = isset($page_content['#title']) ? $page_content['#title'] : $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+    $title = isset($page_content['#title']) ? $page_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
     $response = new AjaxResponse();
     // Fetch any modal options passed in from data-dialog-options.
     $options = $request->request->get('dialogOptions', array());
@@ -117,7 +121,7 @@ class DialogController {
       }
       else {
         // Generate a target based on the route id.
-        $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+        $route_name = $route_match->getRouteName();
         $target = '#' . drupal_html_id("drupal-dialog-$route_name");
       }
     }

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\Routing\RouteMatch;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
@@ -136,7 +137,35 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    * {@inheritdoc}
    */
   protected function doGetArguments(Request $request, $controller, array $parameters) {
-    $arguments = parent::doGetArguments($request, $controller, $parameters);
+    $attributes = $request->attributes->all();
+    $arguments = array();
+    foreach ($parameters as $param) {
+      if (array_key_exists($param->name, $attributes)) {
+        $arguments[] = $attributes[$param->name];
+      }
+      elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
+        $arguments[] = $request;
+      }
+      elseif ($param->getClass() && ($param->getClass()->name == 'Drupal\Core\Routing\RouteMatchInterface' || is_subclass_of($param->getClass()->name, 'Drupal\Core\Routing\RouteMatchInterface'))) {
+        $arguments[] = RouteMatch::createFromRequest($request);
+      }
+      elseif ($param->isDefaultValueAvailable()) {
+        $arguments[] = $param->getDefaultValue();
+      }
+      else {
+        if (is_array($controller)) {
+          $repr = sprintf('%s::%s()', get_class($controller[0]), $controller[1]);
+        }
+        elseif (is_object($controller)) {
+          $repr = get_class($controller);
+        }
+        else {
+          $repr = $controller;
+        }
+
+        throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
+      }
+    }
 
     // The parameter converter overrides the raw request attributes with the
     // upcasted objects. However, it keeps a backup copy of the original, raw
