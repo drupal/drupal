@@ -14,11 +14,6 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 /**
  * Upgrade node types to node.type.*.yml.
  *
- * @todo https://www.drupal.org/node/2283977 adds an new config entity that
- *   allows customisations on the bundle level for base fields. Node status,
- *   promote and sticky are a case in point. We need to add the ability for
- *   migrate to create these fields and test it here.
- *
  * @group migrate_drupal
  */
 class MigrateNodeTypeTest extends MigrateDrupalTestBase {
@@ -52,6 +47,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     // Test the test_page content type.
     $node_type_page = entity_load('node_type', 'test_page');
     $this->assertEqual($node_type_page->id(), 'test_page', 'Node type test_page loaded');
+
     $this->assertEqual($node_type_page->displaySubmitted(), TRUE);
     $this->assertEqual($node_type_page->isNewRevision(), FALSE);
     $this->assertEqual($node_type_page->getPreviewMode(), DRUPAL_OPTIONAL);
@@ -64,6 +60,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     // Test the test_story content type.
     $node_type_story = entity_load('node_type', 'test_story');
     $this->assertEqual($node_type_story->id(), 'test_story', 'Node type test_story loaded');
+
     $this->assertEqual($node_type_story->displaySubmitted(), TRUE);
     $this->assertEqual($node_type_story->isNewRevision(), FALSE);
     $this->assertEqual($node_type_story->getPreviewMode(), DRUPAL_OPTIONAL);
@@ -76,6 +73,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     // Test the test_event content type.
     $node_type_event = entity_load('node_type', 'test_event');
     $this->assertEqual($node_type_event->id(), 'test_event', 'Node type test_event loaded');
+
     $this->assertEqual($node_type_event->displaySubmitted(), TRUE);
     $this->assertEqual($node_type_event->isNewRevision(), TRUE);
     $this->assertEqual($node_type_event->getPreviewMode(), DRUPAL_OPTIONAL);
@@ -85,4 +83,5 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $instance = FieldInstanceConfig::loadByName('node', 'test_event', 'body');
     $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
   }
+
 }

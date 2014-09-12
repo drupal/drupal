@@ -1,0 +1,16 @@
+id: d6_node_setting_status
+label: Drupal 6 node type 'status' setting
+migration_groups:
+  - Drupal 6
+source:
+  plugin: d6_node_type
+  constants:
+    entity_type: node
+    field_name: status
+process:
+  entity_type: 'constants/entity_type'
+  bundle: type
+  field_name: 'constants/field_name'
+  default_value: 'options/status'
+destination:
+  plugin: entity:base_field_override

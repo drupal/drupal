@@ -183,15 +183,8 @@ migrate.source.d6_node_type:
   label: 'Drupal 6 node type'
   mapping:
     constants:
-      type: mapping
+      type: migrate_entity_constant
       label: 'Constants'
-      mapping:
-        preview:
-          type: integer
-          label: 'Preview'
-        create_body:
-          type: boolean
-          label: 'create body'
 
 migrate.source.d6_upload_instance:
   type: migrate_source
@@ -300,6 +293,12 @@ migrate_entity_constant:
     name:
       type: string
       label: 'Name'
+    preview:
+      type: integer
+      label: 'Preview'
+    create_body:
+      type: boolean
+      label: 'create body'
     required:
       type: boolean
       label: 'Required'
