@@ -532,7 +532,7 @@ views_field:
           label: 'Add "…" at the end of trimmed text'
         more_link:
           type: boolean
-          label: 'Add a read-more link if output is trimmed.'
+          label: 'Add a read-more link if output is trimmed'
         more_link_text:
           type: label
           label: 'More link label'

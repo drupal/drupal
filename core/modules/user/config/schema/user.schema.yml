@@ -12,7 +12,7 @@ user.settings:
       label: 'Name'
     verify_mail:
       type: boolean
-      label: 'Require email verification when a visitor creates an account.'
+      label: 'Require email verification when a visitor creates an account'
     notify:
       type: mapping
       label: 'Notify user'
@@ -25,7 +25,7 @@ user.settings:
           label: 'Notify user when password reset'
         status_activated:
           type: boolean
-          label: 'Notify user when account is activated.'
+          label: 'Notify user when account is activated'
         status_blocked:
           type: boolean
           label: 'Account blocked'
@@ -46,7 +46,7 @@ user.settings:
       label: 'Who can register accounts?'
     signatures:
       type: boolean
-      label: 'Enable signatures.'
+      label: 'Enable signatures'
     cancel_method:
       type: string
       label: 'When cancelling a user account'

@@ -64,7 +64,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $form['reset_button'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Include reset button (resets all applied exposed filters).'),
+      '#title' => t('Include reset button (resets all applied exposed filters)'),
       '#default_value' => $this->options['reset_button'],
     );
 

@@ -441,8 +441,8 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPostForm('admin/people', $edit, t('Apply'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
-    $this->assertText(t('Require email confirmation to cancel account.'), 'Allows to send confirmation mail.');
-    $this->assertText(t('Notify user when account is canceled.'), 'Allows to send notification mail.');
+    $this->assertText(t('Require email confirmation to cancel account'), 'Allows to send confirmation mail.');
+    $this->assertText(t('Notify user when account is canceled'), 'Allows to send notification mail.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));

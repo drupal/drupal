@@ -608,7 +608,7 @@ function content_translation_form_field_ui_field_instance_edit_form_alter(array 
 
   $form['instance']['translatable'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Users may translate this field.'),
+    '#title' => t('Users may translate this field'),
     '#default_value' => $instance->isTranslatable(),
     '#weight' => -1,
     '#disabled' => !$bundle_is_translatable,

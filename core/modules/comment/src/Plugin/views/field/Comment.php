@@ -69,7 +69,7 @@ class Comment extends FieldPluginBase {
       '#default_value' => $this->options['link_to_comment'],
     );
     $form['link_to_entity'] = array(
-      '#title' => t('Link field to the entity if there is no comment.'),
+      '#title' => t('Link field to the entity if there is no comment'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_entity'],
     );

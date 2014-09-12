@@ -10,7 +10,7 @@ entity_view_display.field.telephone_link:
       mapping:
         title:
           type: label
-          label: 'Title to replace basic numeric telephone number display.'
+          label: 'Title to replace basic numeric telephone number display'
 
 entity_form_display.field.telephone_default:
   type: entity_field_form_display_base

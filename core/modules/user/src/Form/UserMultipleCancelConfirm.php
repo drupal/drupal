@@ -148,14 +148,14 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     // Allow to send the account cancellation confirmation mail.
     $form['user_cancel_confirm'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Require email confirmation to cancel account.'),
+      '#title' => $this->t('Require email confirmation to cancel account'),
       '#default_value' => FALSE,
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     );
     // Also allow to send account canceled notification mail, if enabled.
     $form['user_cancel_notify'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Notify user when account is canceled.'),
+      '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => FALSE,
       '#access' => $this->config('user.settings')->get('notify.status_canceled'),
       '#description' => $this->t('When enabled, the user will receive an email notification after the account has been canceled.'),

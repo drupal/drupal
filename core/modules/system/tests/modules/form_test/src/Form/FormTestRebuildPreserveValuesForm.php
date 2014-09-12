@@ -31,12 +31,12 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
     $form = array(
       'checkbox_1_default_off' => array(
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to unchecked.'),
+        '#title' => t('This checkbox defaults to unchecked'),
         '#default_value' => FALSE,
       ),
       'checkbox_1_default_on' => array(
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to checked.'),
+        '#title' => t('This checkbox defaults to checked'),
         '#default_value' => TRUE,
       ),
       'text_1' => array(
@@ -60,12 +60,12 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
       $form += array(
         'checkbox_2_default_off' => array(
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to unchecked.'),
+          '#title' => t('This checkbox defaults to unchecked'),
           '#default_value' => FALSE,
         ),
         'checkbox_2_default_on' => array(
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to checked.'),
+          '#title' => t('This checkbox defaults to checked'),
           '#default_value' => TRUE,
         ),
         'text_2' => array(

@@ -128,7 +128,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['registration_cancellation']['user_email_verification'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Require email verification when a visitor creates an account.'),
+      '#title' => $this->t('Require email verification when a visitor creates an account'),
       '#default_value' => $config->get('verify_mail'),
       '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
     );
@@ -163,7 +163,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['personalization']['user_signatures'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable signatures.'),
+      '#title' => $this->t('Enable signatures'),
       '#default_value' => $filter_exists ? $config->get('signatures') : 0,
       '#access' => $filter_exists,
     );
@@ -293,7 +293,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['email_activated']['user_mail_status_activated_notify'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Notify user when account is activated.'),
+      '#title' => $this->t('Notify user when account is activated'),
       '#default_value' => $config->get('notify.status_activated'),
     );
     $form['email_activated']['settings'] = array(
@@ -326,7 +326,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['email_blocked']['user_mail_status_blocked_notify'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Notify user when account is blocked.'),
+      '#title' => $this->t('Notify user when account is blocked'),
       '#default_value' => $config->get('notify.status_blocked'),
     );
     $form['email_blocked']['settings'] = array(
@@ -378,7 +378,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['email_canceled']['user_mail_status_canceled_notify'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Notify user when account is canceled.'),
+      '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => $config->get('notify.status_canceled'),
     );
     $form['email_canceled']['settings'] = array(

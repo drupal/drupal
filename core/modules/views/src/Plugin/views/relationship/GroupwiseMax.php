@@ -149,7 +149,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     $form['subquery_regenerate'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Generate subquery each time view is run.'),
+      '#title' => t('Generate subquery each time view is run'),
       '#default_value' => $this->options['subquery_regenerate'],
       '#description' => t('Will re-generate the subquery for this relationship every time the view is run, instead of only when these options are saved. Use for testing if you are making changes elsewhere. WARNING: seriously impairs performance.'),
     );

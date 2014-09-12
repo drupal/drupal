@@ -209,7 +209,7 @@ function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form
   );
   $form['contact']['contact_default_status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable the personal contact form by default for new users.'),
+    '#title' => t('Enable the personal contact form by default for new users'),
     '#description' => t('Changing this setting will not affect existing users.'),
     '#default_value' => \Drupal::config('contact.settings')->get('user_default_enabled'),
   );

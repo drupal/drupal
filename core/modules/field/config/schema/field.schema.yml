@@ -81,7 +81,7 @@ entity_view_display.field.number_decimal:
           label: 'Scale'
         prefix_suffix:
           type: boolean
-          label: 'Display prefix and suffix.'
+          label: 'Display prefix and suffix'
 
 entity_view_display.field.number_integer:
   type: entity_field_view_display_base
@@ -96,7 +96,7 @@ entity_view_display.field.number_integer:
           label: 'Thousand marker'
         prefix_suffix:
           type: boolean
-          label: 'Display prefix and suffix.'
+          label: 'Display prefix and suffix'
 
 entity_view_display.field.number_unformatted:
   type: entity_field_view_display_base

@@ -63,7 +63,7 @@ class ContactFormEditForm extends EntityForm {
     );
     $form['selected'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Make this the default form.'),
+      '#title' => $this->t('Make this the default form'),
       '#default_value' => $default_form === $contact_form->id(),
     );
 

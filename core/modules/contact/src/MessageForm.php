@@ -140,7 +140,7 @@ class MessageForm extends ContentEntityForm {
 
     $form['copy'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Send yourself a copy.'),
+      '#title' => $this->t('Send yourself a copy'),
       // Do not allow anonymous users to send themselves a copy, because it can
       // be abused to spam people.
       '#access' => $user->isAuthenticated(),

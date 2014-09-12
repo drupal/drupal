@@ -182,7 +182,7 @@ class NodeTypeForm extends EntityForm {
     );
     $form['display']['display_submitted'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display author and date information.'),
+      '#title' => t('Display author and date information'),
       '#default_value' => $type->displaySubmitted(),
       '#description' => t('Author username and publish date will be displayed.'),
     );

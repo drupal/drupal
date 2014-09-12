@@ -13,7 +13,7 @@ views.field.comment:
       label: 'Link this field to its comment'
     link_to_entity:
       type: boolean
-      label: 'Link field to the entity if there is no comment.'
+      label: 'Link field to the entity if there is no comment'
 
 views.field.comment_depth:
   type: views_field
@@ -40,7 +40,7 @@ views.field.comment_link:
       label: 'Text to display'
     link_to_entity:
       type: views_field
-      label: 'Link field to the entity if there is no comment.'
+      label: 'Link field to the entity if there is no comment'
 
 views.field.comment_link_approve:
   type: views.field.comment_link

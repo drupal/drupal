@@ -968,7 +968,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
       $form['alter']['more_link'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Add a read-more link if output is trimmed.'),
+        '#title' => t('Add a read-more link if output is trimmed'),
         '#default_value' => $this->options['alter']['more_link'],
         '#states' => array(
           'visible' => array(

@@ -152,7 +152,7 @@ class PerformanceForm extends ConfigFormBase {
 
     $form['bandwidth_optimization']['page_compression'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Compress cached pages.'),
+      '#title' => t('Compress cached pages'),
       '#default_value' => $config->get('response.gzip'),
       '#states' => array(
         'visible' => array(
@@ -162,13 +162,13 @@ class PerformanceForm extends ConfigFormBase {
     );
     $form['bandwidth_optimization']['preprocess_css'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Aggregate CSS files.'),
+      '#title' => t('Aggregate CSS files'),
       '#default_value' => $config->get('css.preprocess'),
       '#disabled' => $disabled,
     );
     $form['bandwidth_optimization']['preprocess_js'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Aggregate JavaScript files.'),
+      '#title' => t('Aggregate JavaScript files'),
       '#default_value' => $config->get('js.preprocess'),
       '#disabled' => $disabled,
     );

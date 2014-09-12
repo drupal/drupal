@@ -38,7 +38,7 @@ abstract class NumericFormatterBase extends FormatterBase {
 
     $elements['prefix_suffix'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display prefix and suffix.'),
+      '#title' => t('Display prefix and suffix'),
       '#default_value' => $this->getSetting('prefix_suffix'),
       '#weight' => 10,
     );

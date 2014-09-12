@@ -103,7 +103,7 @@ class RegionalForm extends ConfigFormBase {
     $configurable_timezones = $system_date->get('timezone.user.configurable');
     $form['timezone']['configurable_timezones'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Users may set their own time zone.'),
+      '#title' => t('Users may set their own time zone'),
       '#default_value' => $configurable_timezones,
     );
 
@@ -119,7 +119,7 @@ class RegionalForm extends ConfigFormBase {
     );
     $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Remind users at login if their time zone is not set.'),
+      '#title' => t('Remind users at login if their time zone is not set'),
       '#default_value' => $system_date->get('timezone.user.warn'),
       '#description' => t('Only applied if users may set their own time zone.')
     );
@@ -129,9 +129,9 @@ class RegionalForm extends ConfigFormBase {
       '#title' => t('Time zone for new users'),
       '#default_value' => $system_date->get('timezone.user.default'),
       '#options' => array(
-        DRUPAL_USER_TIMEZONE_DEFAULT => t('Default time zone.'),
-        DRUPAL_USER_TIMEZONE_EMPTY   => t('Empty time zone.'),
-        DRUPAL_USER_TIMEZONE_SELECT  => t('Users may set their own time zone at registration.'),
+        DRUPAL_USER_TIMEZONE_DEFAULT => t('Default time zone'),
+        DRUPAL_USER_TIMEZONE_EMPTY   => t('Empty time zone'),
+        DRUPAL_USER_TIMEZONE_SELECT  => t('Users may set their own time zone at registration'),
       ),
       '#description' => t('Only applied if users may set their own time zone.')
     );
