@@ -72,7 +72,7 @@ interface LockBackendInterface {
    * Acquires a lock.
    *
    * @param string $name
-   *   Lock name.
+   *   Lock name. Limit of name's length is 255 characters.
    * @param float $timeout = 30.0
    *   (optional) Lock lifetime in seconds.
    *
