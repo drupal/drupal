@@ -33,6 +33,8 @@ interface AliasStorageInterface {
    *   - alias (string): The URL alias.
    *   - pid (int): Unique path alias identifier.
    *   - langcode (string): The language code of the alias.
+   *   - original: For updates, an array with source, alias and langcode with
+   *     the previous values.
    */
   public function save($source, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $pid = NULL);
 

@@ -63,11 +63,15 @@ class AliasStorage implements AliasStorageInterface {
       $operation = 'insert';
     }
     else {
+      // Fetch the current values so that an update hook can identify what
+      // exactly changed.
+      $original = $this->connection->query('SELECT source, alias, langcode FROM {url_alias} WHERE pid = :pid', array(':pid' => $pid))->fetchAssoc();
       $fields['pid'] = $pid;
       $query = $this->connection->update('url_alias')
         ->fields($fields)
         ->condition('pid', $pid);
       $pid = $query->execute();
+      $fields['original'] = $original;
       $operation = 'update';
     }
     if ($pid) {

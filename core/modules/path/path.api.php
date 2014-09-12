@@ -31,23 +31,25 @@ function hook_path_insert($path) {
 /**
  * Respond to a path being updated.
  *
- * @param $path
+ * @param array $path
  *   The array structure is identical to that of the return value of
  *   \Drupal\Core\Path\PathInterface::save().
  *
  * @see \Drupal\Core\Path\PathInterface::save()
  */
 function hook_path_update($path) {
-  db_update('mytable')
-    ->fields(array('alias' => $path['alias']))
-    ->condition('pid', $path['pid'])
-    ->execute();
+  if ($path['alias'] != $path['original']['alias']) {
+    db_update('mytable')
+      ->fields(array('alias' => $path['alias']))
+      ->condition('pid', $path['pid'])
+      ->execute();
+  }
 }
 
 /**
  * Respond to a path being deleted.
  *
- * @param $path
+ * @param array $path
  *   The array structure is identical to that of the return value of
  *   \Drupal\Core\Path\PathInterface::save().
  *

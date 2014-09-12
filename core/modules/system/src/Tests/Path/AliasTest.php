@@ -52,7 +52,9 @@ class AliasTest extends PathUnitTestBase {
 
     //Update a few aliases
     foreach ($aliases as $alias) {
-      $aliasStorage->save($alias['source'], $alias['alias'] . '_updated', $alias['langcode'], $alias['pid']);
+      $fields = $aliasStorage->save($alias['source'], $alias['alias'] . '_updated', $alias['langcode'], $alias['pid']);
+
+      $this->assertEqual($alias['alias'], $fields['original']['alias']);
 
       $result = $connection->query('SELECT pid FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', array(':source' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']));
       $pid = $result->fetchField();
