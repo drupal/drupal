@@ -152,4 +152,60 @@ class ImageThemeFunctionTest extends WebTestBase {
     $this->assertEqual(count($elements), 1, 'theme_image_style() renders an image correctly with a NULL value for the alt option.');
   }
 
+  /**
+   * Tests image alt attribute functionality.
+   */
+  function testImageAltFunctionality() {
+    // Test using alt directly with alt attribute.
+    $image_with_alt_property = array(
+      '#theme' => 'image',
+      '#uri' => '/core/themes/bartik/logo.png',
+      '#alt' => 'Regular alt',
+      '#title' => 'Test title',
+      '#width' => '50%',
+      '#height' => '50%',
+      '#attributes' => array('class' => 'image-with-regular-alt', 'id' => 'my-img'),
+    );
+
+    $this->drupalSetContent(drupal_render($image_with_alt_property));
+    $elements = $this->xpath('//img[contains(@class, class) and contains(@alt, :alt)]', array(":class" => "image-with-regular-alt", ":alt" => "Regular alt"));
+    $this->assertEqual(count($elements), 1, 'Regular alt displays correctly');
+
+    // Test using alt attribute inside attributes.
+    $image_with_alt_attribute_alt_attribute = array(
+      '#theme' => 'image',
+      '#uri' => '/core/themes/bartik/logo.png',
+      '#width' => '50%',
+      '#height' => '50%',
+      '#attributes' => array(
+        'class' => 'image-with-attribute-alt',
+        'id' => 'my-img',
+        'title' => 'New test title',
+        'alt' => 'Attribute alt',
+      ),
+    );
+
+    $this->drupalSetContent(drupal_render($image_with_alt_attribute_alt_attribute));
+    $elements = $this->xpath('//img[contains(@class, class) and contains(@alt, :alt)]', array(":class" => "image-with-attribute-alt", ":alt" => "Attribute alt"));
+    $this->assertEqual(count($elements), 1, 'Attribute alt displays correctly');
+
+    // Test using alt attribute as property and inside attributes.
+    $image_with_alt_attribute_both = array(
+      '#theme' => 'image',
+      '#uri' => '/core/themes/bartik/logo.png',
+      '#width' => '50%',
+      '#height' => '50%',
+      '#alt' => 'Kitten sustainable',
+      '#attributes' => array(
+        'class' => 'image-with-attribute-alt',
+        'id' => 'my-img',
+        'title' => 'New test title',
+        'alt' => 'Attribute alt',
+      ),
+    );
+
+    $this->drupalSetContent(drupal_render($image_with_alt_attribute_both));
+    $elements = $this->xpath('//img[contains(@class, class) and contains(@alt, :alt)]', array(":class" => "image-with-attribute-alt", ":alt" => "Attribute alt"));
+    $this->assertEqual(count($elements), 1, 'Attribute alt overrides alt property if both set.');
+  }
 }

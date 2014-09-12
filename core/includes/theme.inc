@@ -1122,6 +1122,11 @@ function template_preprocess_image(&$variables) {
 
   foreach (array('width', 'height', 'alt', 'title') as $key) {
     if (isset($variables[$key])) {
+      // If the property has already been defined in the attributes,
+      // do not override, including NULL.
+      if (array_key_exists($key, $variables['attributes'])) {
+        continue;
+      }
       $variables['attributes'][$key] = $variables[$key];
     }
   }
