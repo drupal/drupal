@@ -939,7 +939,7 @@ function views_element_validate_tags($element, FormStateInterface $form_state) {
   $values = array_map('trim', explode(',', $element['#value']));
   foreach ($values as $value) {
     if (preg_match("/[^a-z_]/", $value)) {
-      form_error($element, $form_state, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
+      $form_state->setError($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
       return;
     }
   }

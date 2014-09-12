@@ -1339,19 +1339,19 @@ function file_managed_file_validate(&$element, FormStateInterface $form_state) {
         if ($file->isPermanent()) {
           $references = \Drupal::service('file.usage')->listUsage($file);
           if (empty($references)) {
-            form_error($element, $form_state, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
+            $form_state->setError($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
           }
         }
       }
       else {
-        form_error($element, $form_state, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
+        $form_state->setError($element, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
       }
     }
   }
 
   // Check required property based on the FID.
   if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, array('upload_button', 'remove_button'))) {
-    form_error($element['upload'], $form_state, t('!name field is required.', array('!name' => $element['#title'])));
+    $form_state->setError($element['upload'], t('!name field is required.', array('!name' => $element['#title'])));
   }
 
   // Consolidate the array value of this field to array of FIDs.

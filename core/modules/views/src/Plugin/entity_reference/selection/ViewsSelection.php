@@ -222,7 +222,7 @@ class ViewsSelection implements SelectionInterface {
       list($view, $display) = explode(':', $element['view_and_display']['#value']);
     }
     else {
-      form_error($element, $form_state, t('The views entity selection mode requires a view.'));
+      $form_state->setError($element, t('The views entity selection mode requires a view.'));
       return;
     }
 

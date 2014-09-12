@@ -71,7 +71,6 @@ class DataFieldRow extends RowPluginBase {
     return $options;
   }
 
-
   /**
    * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
    */
@@ -114,7 +113,7 @@ class DataFieldRow extends RowPluginBase {
    */
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
-      form_error($element, $form_state, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
+      $form_state->setError($element, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
     }
   }
 

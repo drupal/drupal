@@ -85,18 +85,6 @@ function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
 }
 
 /**
- * Flags an element as having an error.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use $form_state->setError().
- *
- * @see \Drupal\Core\Form\FormStateInterface::setError().
- */
-function form_error(&$element, FormStateInterface $form_state, $message = '') {
-  $form_state->setError($element, $message);
-}
-
-/**
  * Builds and processes all elements in the structured form array.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

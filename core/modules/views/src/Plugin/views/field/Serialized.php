@@ -57,7 +57,7 @@ class Serialized extends FieldPluginBase {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Require a key if the format is key.
     if ($form_state->getValue(array('options', 'format')) == 'key' && $form_state->getValue(array('options', 'key')) == '') {
-      form_error($form['key'], $form_state, t('You have to enter a key if you want to display a key of the data.'));
+      $form_state->setError($form['key'], t('You have to enter a key if you want to display a key of the data.'));
     }
   }
 

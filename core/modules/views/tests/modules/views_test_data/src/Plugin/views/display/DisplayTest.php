@@ -100,7 +100,7 @@ class DisplayTest extends DisplayPluginBase {
     switch ($form_state->get('section')) {
       case 'test_option':
         if (!trim($form_state->getValue('test_option'))) {
-          form_error($form['test_option'], $form_state, t('You cannot have an empty option.'));
+          $form_state->setError($form['test_option'], t('You cannot have an empty option.'));
         }
         break;
     }

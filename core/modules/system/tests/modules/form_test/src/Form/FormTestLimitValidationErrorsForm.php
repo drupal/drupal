@@ -90,7 +90,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
    */
   public function elementValidateLimitValidationErrors($element, FormStateInterface $form_state) {
     if ($element['#value'] == 'invalid') {
-      form_error($element, $form_state, t('@label element is invalid', array('@label' => $element['#title'])));
+      $form_state->setError($element, t('@label element is invalid', array('@label' => $element['#title'])));
     }
   }
 

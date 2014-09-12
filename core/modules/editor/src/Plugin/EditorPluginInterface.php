@@ -57,7 +57,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * Validates the settings form for an editor.
    *
    * The contents of the editor settings are located in
-   * $form_state->getValue(array('editor', 'settings')). Calls to form_error()
+   * $form_state->getValue(array('editor', 'settings')). Calls to $form_state->setError()
    * should reflect this location in the settings form.
    *
    * @param array $form

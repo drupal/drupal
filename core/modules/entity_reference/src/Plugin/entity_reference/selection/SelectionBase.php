@@ -243,13 +243,13 @@ class SelectionBase implements SelectionInterface {
     if (empty($entities)) {
       if ($strict) {
         // Error if there are no entities available for a required field.
-        form_error($element, $form_state, t('There are no entities matching "%value".', $params));
+        $form_state->setError($element, t('There are no entities matching "%value".', $params));
       }
     }
     elseif (count($entities) > 5) {
       $params['@id'] = key($entities);
       // Error if there are more than 5 matching entities.
-      form_error($element, $form_state, t('Many entities are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
+      $form_state->setError($element, t('Many entities are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
     }
     elseif (count($entities) > 1) {
       // More helpful error if there are only a few matching entities.
@@ -258,7 +258,7 @@ class SelectionBase implements SelectionInterface {
         $multiples[] = $name . ' (' . $id . ')';
       }
       $params['@id'] = $id;
-      form_error($element, $form_state, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples))));
+      $form_state->setError($element, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples))));
     }
     else {
       // Take the one and only matching entity.

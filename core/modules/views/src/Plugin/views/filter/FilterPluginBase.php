@@ -620,14 +620,14 @@ abstract class FilterPluginBase extends HandlerBase {
   public function validateExposeForm($form, FormStateInterface $form_state) {
     $identifier = $form_state->getValue(array('options', 'expose', 'identifier'));
     if (empty($identifier)) {
-      form_error($form['expose']['identifier'], $form_state, t('The identifier is required if the filter is exposed.'));
+      $form_state->setError($form['expose']['identifier'], t('The identifier is required if the filter is exposed.'));
     }
     elseif ($identifier == 'value') {
-      form_error($form['expose']['identifier'], $form_state, t('This identifier is not allowed.'));
+      $form_state->setError($form['expose']['identifier'], t('This identifier is not allowed.'));
     }
 
     if (!$this->view->display_handler->isIdentifierUnique($form_state->get('id'), $identifier)) {
-      form_error($form['expose']['identifier'], $form_state, t('This identifier is used by another handler.'));
+      $form_state->setError($form['expose']['identifier'], t('This identifier is used by another handler.'));
     }
   }
 
@@ -638,15 +638,15 @@ abstract class FilterPluginBase extends HandlerBase {
     if (!$form_state->isValueEmpty(array('options', 'group_info'))) {
       $identifier = $form_state->getValue(array('options', 'group_info', 'identifier'));
       if (empty($identifier)) {
-        form_error($form['group_info']['identifier'], $form_state, t('The identifier is required if the filter is exposed.'));
+        $form_state->setError($form['group_info']['identifier'], t('The identifier is required if the filter is exposed.'));
       }
 
       elseif ($identifier == 'value') {
-        form_error($form['group_info']['identifier'], $form_state, t('This identifier is not allowed.'));
+        $form_state->setError($form['group_info']['identifier'], t('This identifier is not allowed.'));
       }
 
       if (!$this->view->display_handler->isIdentifierUnique($form_state->get('id'), $identifier)) {
-        form_error($form['group_info']['identifier'], $form_state, t('This identifier is used by another handler.'));
+        $form_state->setError($form['group_info']['identifier'], t('This identifier is used by another handler.'));
       }
     }
 
@@ -660,8 +660,7 @@ abstract class FilterPluginBase extends HandlerBase {
           if (!empty($group['title']) && $operators[$group['operator']]['values'] > 0) {
             if ((!is_array($group['value']) && trim($group['value']) == "") ||
                 (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) == 0)) {
-              form_error($form['group_info']['group_items'][$id]['value'], $form_state,
-                         t('The value is required if title for this item is defined.'));
+              $form_state->setError($form['group_info']['group_items'][$id]['value'], t('The value is required if title for this item is defined.'));
             }
           }
 
@@ -669,8 +668,7 @@ abstract class FilterPluginBase extends HandlerBase {
           if ((!is_array($group['value']) && trim($group['value']) != "") ||
               (is_array($group['value']) && count(array_filter($group['value'], 'static::arrayFilterZero')) > 0)) {
             if (empty($group['title'])) {
-              form_error($form['group_info']['group_items'][$id]['title'], $form_state,
-                         t('The title is required if value for this item is defined.'));
+              $form_state->setError($form['group_info']['group_items'][$id]['title'], t('The title is required if value for this item is defined.'));
             }
           }
         }
