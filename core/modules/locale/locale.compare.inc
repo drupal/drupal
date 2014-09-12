@@ -62,11 +62,14 @@ function locale_translation_build_projects() {
   foreach ($projects as $name => $data) {
     if (isset($project_updates[$name]['releases']) && $project_updates[$name]['project_status'] != 'not-fetched') {
       // Find out if a dev version is installed.
-      if (preg_match("/^[0-9]+\.x-([0-9]+)\..*-dev$/", $data['info']['version'], $matches)) {
+      if (preg_match("/^\d+\.x-(\d+)\..*-dev$/", $data['info']['version'], $matches) ||
+          preg_match("/^(\d+)\.\d+\.\d+.*-dev$/", $data['info']['version'], $matches)) {
         // Find a suitable release to use as alternative translation.
         foreach ($project_updates[$name]['releases'] as $project_release) {
           // The first release with the same major release number which is not a
           // dev release is the one. Releases are sorted the most recent first.
+          // For example the major release number for a contrib module
+          // 8.x-2.x-dev is "2", for core 8.1.0-dev is "8".
           // @todo http://drupal.org/node/1774024 Make a helper function.
           if ($project_release['version_major'] == $matches[1] &&
               (!isset($project_release['version_extra']) || $project_release['version_extra'] != 'dev')) {

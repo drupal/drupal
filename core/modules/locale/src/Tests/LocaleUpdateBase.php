@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\locale\Tests\LocaleUpdateTest.
+ * Contains Drupal\locale\Tests\LocaleUpdateBase.
  */
 
 namespace Drupal\locale\Tests;
@@ -42,13 +42,19 @@ abstract class LocaleUpdateBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('update', 'locale', 'locale_test');
+  public static $modules = array('update', 'update_test', 'locale', 'locale_test');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    // Update module should not go out to d.o to check for updates. We override
+    // the url to the default update_test xml path. But without providing
+    // a mock xml file, no update data will be found.
+    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+
     // Setup timestamps to identify old and new translation sources.
     $this->timestampOld = REQUEST_TIME - 300;
     $this->timestampMedium = REQUEST_TIME - 200;

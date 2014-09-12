@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Simulate a Drupal version.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * Change the core version number to a development one for testing.
+ * 8.0.0-alpha102-dev is the simulated version.
+ */
+function locale_test_not_development_release_system_info_alter(&$info, Extension $file, $type) {
+  if (isset($info['package']) && $info['package'] == 'Core') {
+    $info['version'] = '8.0.0-alpha102-dev';
+  }
+}
