@@ -82,11 +82,16 @@ label.option {
 }
 
 .form-required:after {
-  color: #e00;
-  /* Use a Unicode symbol to prevent screen readers from announcing the text. */
-  content: " \204E ";
-  line-height: 1;
+  content: '';
   vertical-align: super;
+  display: inline-block;
+  /* Use a background image to prevent screen readers from announcing the text. */
+  background-image: url(../../../misc/icons/ee0000/required.svg);
+  background-repeat: no-repeat;
+  background-size: 6px 6px;
+  width: 6px;
+  height: 6px;
+  margin: 0 0.3em;
 }
 
 abbr.tabledrag-changed,

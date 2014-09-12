@@ -80,10 +80,10 @@ label[for] {
   background-color: #fcf4f2;
 }
 .form-required:after {
-  font-weight: bold;
-  color: #e62600;
-  font-size: 1.1em;
-  padding-left: 2px;
+  background-image: url(../../images/required.svg);
+  background-size: 7px 7px;
+  width: 7px;
+  height: 7px;
 }
 
 

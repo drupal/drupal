@@ -439,8 +439,7 @@ h1.site-name {
   background: rgba(255, 255, 255, 0.8);
 }
 .region-header .form-required:after {
-  color: #eee;
-  color: rgba(255, 255, 255, 0.7);
+  background-image: url(../images/required.svg);
 }
 /* Region header block menus. */
 .region-header .block-menu {
