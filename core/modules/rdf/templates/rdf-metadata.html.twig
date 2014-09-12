@@ -13,5 +13,5 @@
  */
 #}
 {% for attributes in metadata %}
-  <span{{ attributes }}></span>
+  <span{{ attributes.addClass('rdf-meta', 'hidden') }}></span>
 {% endfor %}
