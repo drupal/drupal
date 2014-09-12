@@ -41,6 +41,13 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   protected $connection;
 
   /**
+   * An associative array of obsolete sessions with session id as key, and db-key as value.
+   *
+   * @var array
+   */
+  protected $obsoleteSessionIds = array();
+
+  /**
    * Constructs a new SessionHandler instance.
    *
    * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
@@ -94,9 +101,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         // Fallback and try to load the anonymous non-HTTPS session. Use the
         // non-HTTPS session id as the key.
         if ($cookies->has($insecure_session_name)) {
-          $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.sid = :sid AND s.uid = 0", array(
-            ':sid' => Crypt::hashBase64($cookies->get($insecure_session_name)),
-          ))->fetchAssoc();
+          $insecure_session_id = $cookies->get($insecure_session_name);
+          $args = array(':sid' => Crypt::hashBase64($insecure_session_id));
+          $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.sid = :sid AND s.uid = 0", $args)->fetchAssoc();
+          if ($values) {
+            $this->sessionSetObsolete($insecure_session_id);
+          }
         }
       }
     }
@@ -181,6 +191,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->fields($fields)
         ->execute();
 
+      // Remove obsolete sessions.
+      $this->cleanupObsoleteSessions();
+
       // Likewise, do not update access time more than once per 180 seconds.
       if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
         /** @var \Drupal\user\UserStorageInterface $storage */
@@ -237,6 +250,10 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     elseif ($this->sessionManager->isMixedMode()) {
       $this->deleteCookie('S' . $this->getName(), TRUE);
     }
+
+    // Remove obsolete sessions.
+    $this->cleanupObsoleteSessions();
+
     return TRUE;
   }
 
@@ -272,6 +289,24 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       }
       setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
       $cookies->remove($name);
+    }
+  }
+
+  /**
+   * Mark a session for garbage collection upon session save.
+   */
+  protected function sessionSetObsolete($sid, $https = FALSE) {
+    $this->obsoleteSessionIds[$sid] = $https ? 'ssid' : 'sid';
+  }
+
+  /**
+   * Remove sessions marked for garbage collection.
+   */
+  protected function cleanupObsoleteSessions() {
+    foreach ($this->obsoleteSessionIds as $sid => $key) {
+      $this->connection->delete('sessions')
+        ->condition($key, Crypt::hashBase64($sid))
+        ->execute();
     }
   }
 

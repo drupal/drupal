@@ -241,9 +241,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     if ($is_https && $this->isMixedMode()) {
       $insecure_session_name = $this->getInsecureName();
-      if ($this->isStarted() && $cookies->has($insecure_session_name)) {
-        $old_insecure_session_id = $cookies->get($insecure_session_name);
-      }
       $params = session_get_cookie_params();
       $session_id = Crypt::randomBytesBase64();
       // If a session cookie lifetime is set, the session will expire
@@ -279,16 +276,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
         ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($old_session_id))
         ->execute();
     }
-    elseif (isset($old_insecure_session_id)) {
-      // If logging in to the secure site, and there was no active session on
-      // the secure site but a session was active on the insecure site, update
-      // the insecure session with the new session identifiers.
-      $this->connection->update('sessions')
-        ->fields(array('sid' => Crypt::hashBase64($session_id), 'ssid' => Crypt::hashBase64($this->getId())))
-        ->condition('sid', Crypt::hashBase64($old_insecure_session_id))
-        ->execute();
-    }
-    else {
+
+    if (!$this->isStarted()) {
       // Start the session when it doesn't exist yet.
       // Preserve the logged in user, as it will be reset to anonymous
       // by \Drupal\Core\Session\SessionHandler::read().
