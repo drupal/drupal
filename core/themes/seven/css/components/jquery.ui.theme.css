@@ -11,7 +11,6 @@
   background: none;
 }
 .ui-widget-content {
-  background: #fff;
   border: none;
 }
 
@@ -381,4 +380,11 @@
   background: #E4E4E4;
   border-color: #D2D2D2;
   color: #000;
+}
+
+/**
+ * Autocomplete
+ */
+.ui-autocomplete {
+  background: #fff;
 }
