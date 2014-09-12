@@ -35,18 +35,16 @@ abstract class NumericItemBase extends FieldItemBase {
     $settings = $this->getSettings();
 
     $element['min'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Minimum'),
       '#default_value' => $settings['min'],
       '#description' => t('The minimum value that should be allowed in this field. Leave blank for no minimum.'),
-      '#element_validate' => array('form_validate_number'),
     );
     $element['max'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Maximum'),
       '#default_value' => $settings['max'],
       '#description' => t('The maximum value that should be allowed in this field. Leave blank for no maximum.'),
-      '#element_validate' => array('form_validate_number'),
     );
     $element['prefix'] = array(
       '#type' => 'textfield',
