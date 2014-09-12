@@ -122,8 +122,8 @@ class AreaEntityTest extends ViewTestBase {
 
     // Test the available view mode options.
     $form = array();
-    $form_state = new FormState();
-    $form_state['type'] = 'header';
+    $form_state = (new FormState())
+      ->set('type', 'header');
     $view->display_handler->getHandler('header', 'entity_entity_test')->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');

@@ -31,7 +31,7 @@ class Date extends Numeric {
    * Add a type selector to the value form
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    if (empty($form_state['exposed'])) {
+    if (!$form_state->get('exposed')) {
       $form['value']['type'] = array(
         '#type' => 'radios',
         '#title' => t('Value type'),

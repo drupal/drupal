@@ -71,7 +71,7 @@ class OverviewTerms extends FormBase {
     // @todo Remove global variables when http://drupal.org/node/2044435 is in.
     global $pager_page_array, $pager_total, $pager_total_items;
 
-    $form_state['taxonomy']['vocabulary'] = $taxonomy_vocabulary;
+    $form_state->set(['taxonomy', 'vocabulary'], $taxonomy_vocabulary);
     $parent_fields = FALSE;
 
     $page = $this->getRequest()->query->get('page') ?: 0;
@@ -369,7 +369,7 @@ class OverviewTerms extends FormBase {
     // Sort term order based on weight.
     uasort($form_state->getValue('terms'), array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
 
-    $vocabulary = $form_state['taxonomy']['vocabulary'];
+    $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     // Update the current hierarchy type as we go.
     $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
@@ -452,7 +452,7 @@ class OverviewTerms extends FormBase {
    */
   public function submitReset(array &$form, FormStateInterface $form_state) {
     /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
-    $vocabulary = $form_state['taxonomy']['vocabulary'];
+    $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $form_state->setRedirectUrl($vocabulary->urlInfo('reset-form'));
   }
 

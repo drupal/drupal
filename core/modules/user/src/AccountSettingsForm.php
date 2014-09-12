@@ -106,7 +106,7 @@ class AccountSettingsForm extends ConfigFormBase {
         '#open' => TRUE,
         '#tree' => TRUE,
       );
-      $form_state['content_translation']['key'] = 'language';
+      $form_state->set(['content_translation', 'key'], 'language');
       $form['language'] += content_translation_enable_widget('user', 'user', $form, $form_state);
     }
 

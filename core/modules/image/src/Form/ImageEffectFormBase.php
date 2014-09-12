@@ -109,7 +109,7 @@ abstract class ImageEffectFormBase extends FormBase {
     $effect_data = (new FormState())->setValues($form_state->getValue('data'));
     $this->imageEffect->validateConfigurationForm($form, $effect_data);
     // Update the original form values.
-    $form_state->setValue('data', $effect_data['values']);
+    $form_state->setValue('data', $effect_data->getValues());
   }
 
   /**
@@ -123,7 +123,7 @@ abstract class ImageEffectFormBase extends FormBase {
     $effect_data = (new FormState())->setValues($form_state->getValue('data'));
     $this->imageEffect->submitConfigurationForm($form, $effect_data);
     // Update the original form values.
-    $form_state->setValue('data', $effect_data['values']);
+    $form_state->setValue('data', $effect_data->getValues());
 
     $this->imageEffect->setWeight($form_state->getValue('weight'));
     if (!$this->imageEffect->getUuid()) {

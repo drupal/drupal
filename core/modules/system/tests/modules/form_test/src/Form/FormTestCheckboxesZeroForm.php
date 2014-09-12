@@ -27,7 +27,7 @@ class FormTestCheckboxesZeroForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $json = TRUE) {
-    $form_state['json'] = $json;
+    $form_state->set('json', $json);
     $form['checkbox_off'] = array(
       '#title' => t('Checkbox off'),
       '#type' => 'checkboxes',
@@ -56,11 +56,11 @@ class FormTestCheckboxesZeroForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state['json'])) {
+    if ($form_state->has('json')) {
       $form_state->setResponse(new JsonResponse($form_state->getValues()));
     }
     else {
-      $form_state['no_redirect'] = TRUE;
+      $form_state->disableRedirect();
     }
   }
 

@@ -363,7 +363,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // have no data in POST so their defaults get wiped out. This prevents
     // these defaults from getting wiped out. This setting will only be TRUE
     // during a 2nd pass rerender.
-    if (!empty($form_state['force_build_group_options'])) {
+    if ($form_state->get('force_build_group_options')) {
       foreach (Element::children($form['group_info']) as $id) {
         if (isset($form['group_info'][$id]['#default_value']) && !isset($form['group_info'][$id]['#value'])) {
           $form['group_info'][$id]['#value'] = $form['group_info'][$id]['#default_value'];
@@ -437,14 +437,18 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->buildGroupOptions();
     }
 
-    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
+    $view->getExecutable()->setHandler($display_id, $type, $id, $item);
 
-    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
+    $view->addFormToStack($form_state->get('form_key'), $display_id, $type, $id, TRUE, TRUE);
 
-    $form_state['view']->cacheSet();
-    $form_state['rerender'] = TRUE;
-    $form_state['rebuild'] = TRUE;
-    $form_state['force_build_group_options'] = TRUE;
+    $view->cacheSet();
+    $form_state->set('rerender', TRUE);
+    $form_state->setRebuild();
+    $form_state->get('force_build_group_options', TRUE);
   }
 
   /**
@@ -622,7 +626,7 @@ abstract class FilterPluginBase extends HandlerBase {
       form_error($form['expose']['identifier'], $form_state, t('This identifier is not allowed.'));
     }
 
-    if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $identifier)) {
+    if (!$this->view->display_handler->isIdentifierUnique($form_state->get('id'), $identifier)) {
       form_error($form['expose']['identifier'], $form_state, t('This identifier is used by another handler.'));
     }
   }
@@ -641,7 +645,7 @@ abstract class FilterPluginBase extends HandlerBase {
         form_error($form['group_info']['identifier'], $form_state, t('This identifier is not allowed.'));
       }
 
-      if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $identifier)) {
+      if (!$this->view->display_handler->isIdentifierUnique($form_state->get('id'), $identifier)) {
         form_error($form['group_info']['identifier'], $form_state, t('This identifier is used by another handler.'));
       }
     }
@@ -1090,12 +1094,14 @@ abstract class FilterPluginBase extends HandlerBase {
       'hidden' => TRUE,
       'limit' => 0,
     );
-    if (!empty($form_state['js settings']) && is_array($js)) {
-      $form_state['js settings'] = array_merge($form_state['js settings'], $js);
+    $js_settings = $form_state->get('js settings');
+    if ($js_settings && is_array($js)) {
+      $js_settings = array_merge($js_settings, $js);
     }
     else {
-      $form_state['js settings'] = $js;
+      $js_settings = $js;
     }
+    $form_state->set('js settings', $js_settings);
   }
 
   /**
@@ -1107,12 +1113,16 @@ abstract class FilterPluginBase extends HandlerBase {
     // Add a new row.
     $item['group_info']['group_items'][] = array();
 
-    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
+    $view->getExecutable()->setHandler($display_id, $type, $id, $item);
 
-    $form_state['view']->cacheSet();
-    $form_state['rerender'] = TRUE;
-    $form_state['rebuild'] = TRUE;
-    $form_state['force_build_group_options'] = TRUE;
+    $view->cacheSet();
+    $form_state->set('rerender', TRUE);
+    $form_state->setRebuild();
+    $form_state->get('force_build_group_options', TRUE);
   }
 
 

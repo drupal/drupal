@@ -414,7 +414,7 @@ class FieldOverview extends OverviewBase {
         $destinations[] = array('route_name' => 'field_ui.instance_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
-        $form_state['fields_added']['_add_new_field'] = $values['field_name'];
+        $form_state->set(['fields_added', '_add_new_field'], $values['field_name']);
       }
       catch (\Exception $e) {
         $error = TRUE;
@@ -464,7 +464,7 @@ class FieldOverview extends OverviewBase {
             ),
           );
           // Store new field information for any additional submit handlers.
-          $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
+          $form_state->set(['fields_added', '_add_existing_field'], $instance['field_name']);
         }
         catch (\Exception $e) {
           $error = TRUE;

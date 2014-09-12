@@ -162,14 +162,14 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $unique_values[$data['browser_langcode']] = $data['drupal_langcode'];
     }
 
-    $form_state['mappings'] = $unique_values;
+    $form_state->set('mappings', $unique_values);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $mappings = $form_state['mappings'];
+    $mappings = $form_state->get('mappings');
     if (!empty($mappings)) {
       $config = $this->config('language.mappings');
       $config->setData($mappings);

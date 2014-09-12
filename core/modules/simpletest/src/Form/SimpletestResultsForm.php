@@ -273,13 +273,13 @@ class SimpletestResultsForm extends FormBase {
     $form_execute = array();
     $form_state_execute = new FormState();
     foreach ($classes as $class) {
-      $form_state_execute['values']['tests'][$class] = $class;
+      $form_state_execute->setValue(['tests', $class], $class);
     }
 
     // Submit the simpletest test form to rerun the tests.
     // Under normal circumstances, a form object's submitForm() should never be
     // called directly, FormBuilder::submitForm() should be called instead.
-    // However, it sets $form_state['programmed'], which disables the Batch API.
+    // However, it calls $form_state->setProgrammed(), which disables the Batch API.
     $simpletest_test_form = new SimpletestTestForm();
     $simpletest_test_form->buildForm($form_execute, $form_state_execute);
     $simpletest_test_form->submitForm($form_execute, $form_state_execute);

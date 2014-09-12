@@ -76,7 +76,7 @@ abstract class FormController {
 
     // Remove $form and $form_state from the arguments, and re-index them.
     unset($args[0], $args[1]);
-    $form_state['build_info']['args'] = array_values($args);
+    $form_state->addBuildInfo('args', array_values($args));
 
     return $this->formBuilder->buildForm($form_object, $form_state);
   }

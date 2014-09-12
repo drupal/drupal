@@ -112,7 +112,7 @@ class RegisterForm extends AccountForm {
     // Assume save has gone through correctly.
     $account->save();
 
-    $form_state['user'] = $account;
+    $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
 
     $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state->getValue('name'), '%email' => '<' . $form_state->getValue('mail') . '>', 'type' => l($this->t('Edit'), 'user/' . $account->id() . '/edit')));

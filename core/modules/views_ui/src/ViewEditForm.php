@@ -82,15 +82,15 @@ class ViewEditForm extends ViewFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
     $display_id = $this->displayID;
-    // Do not allow the form to be cached, because $form_state['view'] can become
+    // Do not allow the form to be cached, because $form_state->get('view') can become
     // stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
     // @todo To remove this and allow the form to be cacheable:
-    //   - Change $form_state['view'] to $form_state['temporary']['view'].
-    //   - Add a #process function to initialize $form_state['temporary']['view']
+    //   - Change $form_state->get('view') to $form_state->getTemporary()['view'].
+    //   - Add a #process function to initialize $form_state->getTemporary()['view']
     //     on cached form submissions.
     //   - Use \Drupal\Core\Form\FormStateInterface::loadInclude().
-    $form_state['no_cache'] = TRUE;
+    $form_state->disableCache();
 
     if ($display_id) {
       if (!$view->getExecutable()->setDisplay($display_id)) {
@@ -177,7 +177,7 @@ class ViewEditForm extends ViewFormBase {
 
     // The rest requires a display to be selected.
     if ($display_id) {
-      $form_state['display_id'] = $display_id;
+      $form_state->set('display_id', $display_id);
 
       // The part of the page where editing will take place.
       $form['displays']['settings'] = array(
@@ -581,7 +581,7 @@ class ViewEditForm extends ViewFormBase {
   public function submitDisplayUndoDelete($form, FormStateInterface $form_state) {
     $view = $this->entity;
     // Create the new display
-    $id = $form_state['display_id'];
+    $id = $form_state->get('display_id');
     $displays = $view->get('display');
     $displays[$id]['deleted'] = FALSE;
     $view->set('display', $displays);
@@ -601,7 +601,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public function submitDisplayEnable($form, FormStateInterface $form_state) {
     $view = $this->entity;
-    $id = $form_state['display_id'];
+    $id = $form_state->get('display_id');
     // setOption doesn't work because this would might affect upper displays
     $view->getExecutable()->displayHandlers->get($id)->setOption('enabled', TRUE);
 
@@ -620,7 +620,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public function submitDisplayDisable($form, FormStateInterface $form_state) {
     $view = $this->entity;
-    $id = $form_state['display_id'];
+    $id = $form_state->get('display_id');
     $view->getExecutable()->displayHandlers->get($id)->setOption('enabled', FALSE);
 
     // Store in cache
@@ -638,7 +638,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public function submitDisplayDelete($form, FormStateInterface $form_state) {
     $view = $this->entity;
-    $display_id = $form_state['display_id'];
+    $display_id = $form_state->get('display_id');
 
     // Mark the display for deletion.
     $displays = $view->get('display');
@@ -772,7 +772,7 @@ class ViewEditForm extends ViewFormBase {
    * Submit handler for form buttons that do not complete a form workflow.
    *
    * The Edit View form is a multistep form workflow, but with state managed by
-   * the TempStore rather than $form_state['rebuild']. Without this
+   * the TempStore rather than $form_state->setRebuild(). Without this
    * submit handler, buttons that add or remove displays would redirect to the
    * destination parameter (e.g., when the Edit View form is linked to from a
    * contextual link). This handler can be added to buttons whose form submission
@@ -837,7 +837,7 @@ class ViewEditForm extends ViewFormBase {
   public function submitDisplayAdd($form, FormStateInterface $form_state) {
     $view = $this->entity;
     // Create the new display.
-    $parents = $form_state['triggering_element']['#parents'];
+    $parents = $form_state->getTriggeringElement()['#parents'];
     $display_type = array_pop($parents);
     $display = $view->getExecutable()->newDisplay($display_type);
     $display_id = $display->display['id'];
@@ -861,7 +861,7 @@ class ViewEditForm extends ViewFormBase {
     $display_id = $this->displayID;
 
     // Create the new display.
-    $parents = $form_state['triggering_element']['#parents'];
+    $parents = $form_state->getTriggeringElement()['#parents'];
     $display_type = array_pop($parents);
     $display = $view->getExecutable()->newDisplay($display_type);
     $new_display_id = $display->display['id'];

@@ -1380,8 +1380,9 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    if ($this->defaultableSections($form_state['section'])) {
-      views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
+    $section = $form_state->get('section');
+    if ($this->defaultableSections($section)) {
+      views_ui_standard_display_dropdown($form, $form_state, $section);
     }
     $form['#title'] = String::checkPlain($this->display['display_title']) . ': ';
 
@@ -1389,14 +1390,14 @@ abstract class DisplayPluginBase extends PluginBase {
     // If it's the item we're looking at is pulling from the default display,
     // reflect that. Don't use is_defaulted since we want it to show up even
     // on the default display.
-    if (!empty($this->options['defaults'][$form_state['section']])) {
-      $form['#section'] = 'default-' . $form_state['section'];
+    if (!empty($this->options['defaults'][$section])) {
+      $form['#section'] = 'default-' . $section;
     }
     else {
-      $form['#section'] = $this->display['id'] . '-' . $form_state['section'];
+      $form['#section'] = $this->display['id'] . '-' . $section;
     }
 
-    switch ($form_state['section']) {
+    switch ($section) {
       case 'display_id':
         $form['#title'] .= t('The machine name of this display');
         $form['display_id'] = array(
@@ -1683,10 +1684,10 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         $plugin = $this->getPlugin(empty($style) ? 'row' : 'style', $name);
         if ($plugin) {
-          $form[$form_state['section']] = array(
+          $form[$section] = [
             '#tree' => TRUE,
-          );
-          $plugin->buildOptionsForm($form[$form_state['section']], $form_state);
+          ];
+          $plugin->buildOptionsForm($form[$section], $form_state);
         }
         break;
       case 'row':
@@ -1866,7 +1867,8 @@ abstract class DisplayPluginBase extends PluginBase {
    * Validate the options form.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    switch ($form_state['section']) {
+    $section = $form_state->get('section');
+    switch ($section) {
       case 'display_title':
         if ($form_state->isValueEmpty('display_title')) {
           form_error($form['display_title'], $form_state, t('Display title may not be empty.'));
@@ -1900,11 +1902,11 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Validate plugin options. Every section with "_options" in it, belongs to
     // a plugin type, like "style_options".
-    if (strpos($form_state['section'], '_options') !== FALSE) {
-      $plugin_type = str_replace('_options', '', $form_state['section']);
+    if (strpos($section, '_options') !== FALSE) {
+      $plugin_type = str_replace('_options', '', $section);
       // Load the plugin and let it handle the validation.
       if ($plugin = $this->getPlugin($plugin_type)) {
-        $plugin->validateOptionsForm($form[$form_state['section']], $form_state);
+        $plugin->validateOptionsForm($form[$section], $form_state);
       }
     }
 
@@ -1924,7 +1926,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $cache_plugin->cacheFlush();
     }
 
-    $section = $form_state['section'];
+    $section = $form_state->get('section');
     switch ($section) {
       case 'display_id':
         if ($form_state->hasValue('display_id')) {
@@ -1988,7 +1990,7 @@ abstract class DisplayPluginBase extends PluginBase {
             );
             $this->setOption($plugin_type, $plugin_options);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], $plugin_type . '_options');
+              $form_state->get('view')->addFormToStack('display', $this->display['id'], $plugin_type . '_options');
             }
           }
         }
@@ -2002,7 +2004,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'style_options':
         // Submit plugin options. Every section with "_options" in it, belongs to
         // a plugin type, like "style_options".
-        $plugin_type = str_replace('_options', '', $form_state['section']);
+        $plugin_type = str_replace('_options', '', $section);
         if ($plugin = $this->getPlugin($plugin_type)) {
           $plugin_options = $this->getOption($plugin_type);
           $plugin->submitOptionsForm($form[$plugin_type . '_options'], $form_state);
@@ -2021,7 +2023,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * If override/revert was clicked, perform the proper toggle.
    */
   public function optionsOverride($form, FormStateInterface $form_state) {
-    $this->setOverride($form_state['section']);
+    $this->setOverride($form_state->get('section'));
   }
 
   /**

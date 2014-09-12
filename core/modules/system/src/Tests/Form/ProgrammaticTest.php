@@ -86,9 +86,8 @@ class ProgrammaticTest extends WebTestBase {
 
     // We check submitted values only if we have a valid input.
     if ($valid_input) {
-      // By fetching the values from $form_state['storage'] we ensure that the
-      // submission handler was properly executed.
-      $stored_values = $form_state['storage']['programmatic_form_submit'];
+      // Fetching the values that were set in the submission handler.
+      $stored_values = $form_state->get('programmatic_form_submit');
       foreach ($values as $key => $value) {
         $this->assertEqual($stored_values[$key], $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
       }
@@ -108,16 +107,16 @@ class ProgrammaticTest extends WebTestBase {
     // Since programmed_bypass_access_check is set to TRUE by default, the
     // field is accessible and can be set.
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);
-    $values = $form_state['storage']['programmatic_form_submit'];
+    $values = $form_state->get('programmatic_form_submit');
     $this->assertEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is stored correctly.');
 
     // Programmatically submit the form with a value for the restricted field
     // with programmed_bypass_access_check set to FALSE. Since access
     // restrictions apply, the restricted field is inaccessible, and the value
     // should not be stored.
-    $form_state['programmed_bypass_access_check'] = FALSE;
+    $form_state->setProgrammedBypassAccessCheck(FALSE);
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);
-    $values = $form_state['storage']['programmatic_form_submit'];
+    $values = $form_state->get('programmatic_form_submit');
     $this->assertNotEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is not stored.');
 
   }

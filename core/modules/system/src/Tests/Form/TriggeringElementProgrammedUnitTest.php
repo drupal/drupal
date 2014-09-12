@@ -62,7 +62,7 @@ class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements 
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Verify that the only submit button was recognized as triggering_element.
-    $this->assertEqual($form['actions']['submit']['#array_parents'], $form_state['triggering_element']['#array_parents']);
+    $this->assertEqual($form['actions']['submit']['#array_parents'], $form_state->getTriggeringElement()['#array_parents']);
   }
 
   /**

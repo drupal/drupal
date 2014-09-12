@@ -236,7 +236,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If this form has not yet been confirmed, store the values and rebuild.
     if (!$this->data) {
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
       $this->data = $form_state->getValues();
       return;
     }

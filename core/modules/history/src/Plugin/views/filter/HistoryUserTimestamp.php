@@ -44,7 +44,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     // Only present a checkbox for the exposed filter itself. There's no way
     // to tell the difference between not checked and the default value, so
     // specifying the default value via the views UI is meaningless.
-    if (!empty($form_state['exposed'])) {
+    if ($form_state->get('exposed')) {
       if (isset($this->options['expose']['label'])) {
         $label = $this->options['expose']['label'];
       }

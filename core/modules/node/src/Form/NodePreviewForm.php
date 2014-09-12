@@ -118,8 +118,8 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('entity.node.preview', array(
-      'node_preview' => $form_state['values']['uuid'],
-      'view_mode_id' => $form_state['values']['view_mode'],
+      'node_preview' => $form_state->getValue('uuid'),
+      'view_mode_id' => $form_state->getValue('view_mode'),
     ));
   }
 

@@ -101,7 +101,7 @@ use Drupal\Core\Render\Element;
  * @code
  * $format_value = \Drupal\Component\Utility\NestedArray::getValue(
  *   $form_state->getValues(),
- *   $form_state['triggering_element']['#array_parents']);
+ *   $form_state->getTriggeringElement()['#array_parents']);
  * @endcode
  *
  * Once you have processed the input, you have your choice of returning HTML

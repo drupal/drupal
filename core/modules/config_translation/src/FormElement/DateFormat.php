@@ -58,7 +58,7 @@ class DateFormat implements ElementInterface {
   public static function ajaxSample(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
-    $format_value = NestedArray::getValue($form_state->getValues(), $form_state['triggering_element']['#array_parents']);
+    $format_value = NestedArray::getValue($form_state->getValues(), $form_state->getTriggeringElement()['#array_parents']);
     if (!empty($format_value)) {
       // Format the date with a custom date format with the given pattern.
       // The object is not instantiated in an Ajax context, so $this->t()

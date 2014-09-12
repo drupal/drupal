@@ -814,7 +814,7 @@ function install_get_form($form_id, array &$install_state) {
     $form = $form_builder->buildForm($form_id, $form_state);
     // If the form submission was not successful, the form needs to be rendered,
     // which means the task is not complete yet.
-    if (empty($form_state['executed'])) {
+    if (!$form_state->isExecuted()) {
       $install_state['task_not_complete'] = TRUE;
       return $form;
     }

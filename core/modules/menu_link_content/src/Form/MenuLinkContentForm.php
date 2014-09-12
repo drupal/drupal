@@ -340,7 +340,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     }
     else {
       drupal_set_message($this->t('There was an error saving the menu link.'), 'error');
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
     }
   }
 

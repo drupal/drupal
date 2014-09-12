@@ -99,7 +99,7 @@ function form_test_form_form_test_state_persist_alter(&$form, FormStateInterface
   // Simulate a form alter implementation inserting form elements that enable
   // caching of the form, e.g. elements having #ajax.
   if (\Drupal::request()->get('cache')) {
-    $form_state['cache'] = TRUE;
+    $form_state->setCached();
   }
 }
 
@@ -119,5 +119,5 @@ function form_test_form_user_register_form_alter(&$form, FormStateInterface $for
  */
 function form_test_user_register_form_rebuild($form, FormStateInterface $form_state) {
   drupal_set_message('Form rebuilt.');
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }

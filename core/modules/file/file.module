@@ -1331,7 +1331,7 @@ function file_managed_file_validate(&$element, FormStateInterface $form_state) {
   // If referencing an existing file, only allow if there are existing
   // references. This prevents unmanaged files from being deleted if this
   // item were to be deleted.
-  $clicked_button = end($form_state['triggering_element']['#parents']);
+  $clicked_button = end($form_state->getTriggeringElement()['#parents']);
   if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
     $fids = $element['fids']['#value'];
     foreach ($fids as $fid) {
@@ -1368,7 +1368,7 @@ function file_managed_file_validate(&$element, FormStateInterface $form_state) {
 function file_managed_file_submit($form, FormStateInterface $form_state) {
   // Determine whether it was the upload or the remove button that was clicked,
   // and set $element to the managed_file element that contains that button.
-  $parents = $form_state['triggering_element']['#array_parents'];
+  $parents = $form_state->getTriggeringElement()['#array_parents'];
   $button_key = array_pop($parents);
   $element = NestedArray::getValue($form, $parents);
 
@@ -1418,10 +1418,10 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
   // Set the form to rebuild so that $form is correctly updated in response to
   // processing the file removal. Since this function did not change $form_state
   // if the upload button was clicked, a rebuild isn't necessary in that
-  // situation and setting $form_state['no_redirect'] to TRUE would suffice.
+  // situation and calling $form_state->disableRedirect() would suffice.
   // However, we choose to always rebuild, to keep the form processing workflow
   // consistent between the two buttons.
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**

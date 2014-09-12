@@ -85,7 +85,7 @@ abstract class AreaPluginBase extends HandlerBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    if ($form_state['type'] != 'empty') {
+    if ($form_state->get('type') != 'empty') {
       $form['empty'] = array(
         '#type' => 'checkbox',
         '#title' => t('Display even if view has no result'),

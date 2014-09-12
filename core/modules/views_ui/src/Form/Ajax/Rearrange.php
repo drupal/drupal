@@ -49,9 +49,9 @@ class Rearrange extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
-    $type = $form_state['type'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
 
     $types = ViewExecutable::getHandlerTypes();
     $executable = $view->getExecutable();
@@ -61,8 +61,9 @@ class Rearrange extends ViewsFormBase {
     $form['#section'] = $display_id . 'rearrange-item';
 
     if ($display->defaultableSections($types[$type]['plural'])) {
-      $form_state['section'] = $types[$type]['plural'];
-      views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
+      $section = $types[$type]['plural'];
+      $form_state->set('section', $section);
+      views_ui_standard_display_dropdown($form, $form_state, $section);
     }
 
     $count = 0;
@@ -136,10 +137,14 @@ class Rearrange extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $types = ViewExecutable::getHandlerTypes();
-    $display = &$form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id']);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
 
-    $old_fields = $display->getOption($types[$form_state['type']]['plural']);
+    $types = ViewExecutable::getHandlerTypes();
+    $display = &$view->getExecutable()->displayHandlers->get($display_id);
+
+    $old_fields = $display->getOption($types[$type]['plural']);
     $new_fields = $order = array();
 
     // Make an array with the weights
@@ -158,10 +163,10 @@ class Rearrange extends ViewsFormBase {
     foreach (array_keys($order) as $field) {
       $new_fields[$field] = $old_fields[$field];
     }
-    $display->setOption($types[$form_state['type']]['plural'], $new_fields);
+    $display->setOption($types[$type]['plural'], $new_fields);
 
     // Store in cache
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 
 }

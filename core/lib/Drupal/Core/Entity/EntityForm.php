@@ -89,7 +89,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // During the initial form build, add this form object to the form state and
     // allow for initial preparation before form building and processing.
-    if (!isset($form_state['entity_form_initialized'])) {
+    if (!$form_state->has('entity_form_initialized')) {
       $this->init($form_state);
     }
 
@@ -110,7 +110,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   protected function init(FormStateInterface $form_state) {
     // Flag that this form has been initialized.
-    $form_state['entity_form_initialized'] = TRUE;
+    $form_state->set('entity_form_initialized', TRUE);
 
     // Prepare the entity to be presented in the entity form.
     $this->prepareEntity();
@@ -235,7 +235,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     $this->updateFormLangcode($form_state);
     // @todo Remove this.
     // Execute legacy global validation handlers.
-    unset($form_state['validate_handlers']);
+    $form_state->setValidateHandlers([]);
     form_execute_handlers('validate', $form, $form_state);
   }
 
@@ -293,7 +293,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   protected function updateFormLangcode(FormStateInterface $form_state) {
     // Update the form language as it might have changed.
     if ($form_state->hasValue('langcode') && $this->isDefaultFormLangcode($form_state)) {
-      $form_state['langcode'] = $form_state->getValue('langcode');
+      $form_state->set('langcode', $form_state->getValue('langcode'));
     }
   }
 

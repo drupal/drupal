@@ -30,8 +30,8 @@ interface EntityFormBuilderInterface {
    *   langcode. Defaults to an empty array.
    *
    * @code
-   *   $form_state['langcode'] = $langcode;
-   *   $form = \Drupal::service('entity.form_builder')->getForm($entity, 'default', $form_state);
+   *   $form_state_additions['langcode'] = $langcode;
+   *   $form = \Drupal::service('entity.form_builder')->getForm($entity, 'default', $form_state_additions);
    * @endcode
    *
    * @return array

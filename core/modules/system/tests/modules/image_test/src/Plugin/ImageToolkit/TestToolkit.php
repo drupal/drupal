@@ -112,7 +112,7 @@ class TestToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['test']['test_parameter'] == 0) {
+    if ($form_state->getValue(['test', 'test_parameter']) == 0) {
       $form_state->setErrorByName('test][test_parameter', $this->t('Test parameter should be different from 0.'));
     }
   }

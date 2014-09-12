@@ -52,10 +52,10 @@ class ConfigHandler extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
-    $type = $form_state['type'];
-    $id = $form_state['id'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
 
     $form = array(
       'options' => array(
@@ -80,8 +80,9 @@ class ConfigHandler extends ViewsFormBase {
         // If this item can come from the default display, show a dropdown
         // that lets the user choose which display the changes should apply to.
         if ($executable->display_handler->defaultableSections($types[$type]['plural'])) {
-          $form_state['section'] = $types[$type]['plural'];
-          views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
+          $section = $types[$type]['plural'];
+          $form_state->set('section', $section);
+          views_ui_standard_display_dropdown($form, $form_state, $section);
         }
 
         // A whole bunch of code to figure out what relationships are valid for
@@ -104,7 +105,7 @@ class ConfigHandler extends ViewsFormBase {
           // If this relationship is valid for this type, add it to the list.
           $data = Views::viewsData()->get($relationship['table']);
           if (isset($data[$relationship['field']]['relationship']['base']) && $base = $data[$relationship['field']]['relationship']['base']) {
-            $base_fields = Views::viewsDataHelper()->fetchFields($base, $form_state['type'], $executable->display_handler->useGroupBy());
+            $base_fields = Views::viewsDataHelper()->fetchFields($base, $type, $executable->display_handler->useGroupBy());
             if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
               $relationship_handler->init($executable, $executable->display_handler, $relationship);
               $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
@@ -115,7 +116,7 @@ class ConfigHandler extends ViewsFormBase {
         if (!empty($relationship_options)) {
           // Make sure the existing relationship is even valid. If not, force
           // it to none.
-          $base_fields = Views::viewsDataHelper()->fetchFields($view->get('base_table'), $form_state['type'], $executable->display_handler->useGroupBy());
+          $base_fields = Views::viewsDataHelper()->fetchFields($view->get('base_table'), $type, $executable->display_handler->useGroupBy());
           if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
             $relationship_options = array_merge(array('none' => $this->t('Do not use a relationship')), $relationship_options);
           }
@@ -159,13 +160,10 @@ class ConfigHandler extends ViewsFormBase {
 
         // Get form from the handler.
         $handler->buildOptionsForm($form['options'], $form_state);
-        $form_state['handler'] = $handler;
+        $form_state->set('handler', $handler);
       }
 
-      $name = NULL;
-      if (isset($form_state['update_name'])) {
-        $name = $form_state['update_name'];
-      }
+      $name = $form_state->get('update_name');
 
       $view->getStandardButtons($form, $form_state, 'views_ui_config_item_form', $name);
       // Add a 'remove' button.
@@ -191,10 +189,10 @@ class ConfigHandler extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['handler']->validateOptionsForm($form['options'], $form_state);
+    $form_state->get('handler')->validateOptionsForm($form['options'], $form_state);
 
     if ($form_state->getErrors()) {
-      $form_state['rerender'] = TRUE;
+      $form_state->set('rerender', TRUE);
     }
   }
 
@@ -202,20 +200,25 @@ class ConfigHandler extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $id = $form_state->get('id');
+    $handler = $form_state->get('handler');
+
     // Run it through the handler's submit function.
-    $form_state['handler']->submitOptionsForm($form['options'], $form_state);
-    $item = $form_state['handler']->options;
+    $handler->submitOptionsForm($form['options'], $form_state);
+    $item = $handler->options;
     $types = ViewExecutable::getHandlerTypes();
 
     // For footer/header $handler_type is area but $type is footer/header.
     // For all other handle types it's the same.
-    $handler_type = $type = $form_state['type'];
+    $handler_type = $type = $form_state->get('type');
     if (!empty($types[$type]['type'])) {
       $handler_type = $types[$type]['type'];
     }
 
     $override = NULL;
-    $executable = $form_state['view']->getExecutable();
+    $executable = $view->getExecutable();
     if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
       if (empty($executable->query)) {
         $executable->initQuery();
@@ -233,7 +236,7 @@ class ConfigHandler extends ViewsFormBase {
 
     // Add the incoming options to existing options because items using
     // the extra form may not have everything in the form here.
-    $options = $form_state->getValue('options') + $form_state['handler']->options;
+    $options = $form_state->getValue('options') + $handler->options;
 
     // This unpacks only options that are in the definition, ensuring random
     // extra stuff on the form is not sent through.
@@ -248,33 +251,37 @@ class ConfigHandler extends ViewsFormBase {
     $handler->options['dependencies']['module'][] = $handler->definition['provider'];
 
     // Store the item back on the view
-    $executable->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
+    $executable->setHandler($display_id, $type, $id, $handler->options);
 
     // Ensure any temporary options are removed.
-    if (isset($form_state['view']->temporary_options[$type][$form_state['id']])) {
-      unset($form_state['view']->temporary_options[$type][$form_state['id']]);
+    if (isset($view->temporary_options[$type][$id])) {
+      unset($view->temporary_options[$type][$id]);
     }
 
     // Write to cache
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 
   /**
    * Submit handler for removing an item from a view
    */
   public function remove(&$form, FormStateInterface $form_state) {
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
     // Store the item back on the view
-    list($was_defaulted, $is_defaulted) = $form_state['view']->getOverrideValues($form, $form_state);
-    $executable = $form_state['view']->getExecutable();
+    list($was_defaulted, $is_defaulted) = $view->getOverrideValues($form, $form_state);
+    $executable = $view->getExecutable();
     // If the display selection was changed toggle the override value.
     if ($was_defaulted != $is_defaulted) {
-      $display = &$executable->displayHandlers->get($form_state['display_id']);
+      $display = &$executable->displayHandlers->get($display_id);
       $display->optionsOverride($form, $form_state);
     }
-    $executable->removeHandler($form_state['display_id'], $form_state['type'], $form_state['id']);
+    $executable->removeHandler($display_id, $type, $id);
 
     // Write to cache
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 
 }

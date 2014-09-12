@@ -35,7 +35,7 @@ class Analyze extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
+    $view = $form_state->get('view');
 
     $form['#title'] = $this->t('View analysis');
     $form['#section'] = 'analyze';
@@ -50,7 +50,7 @@ class Analyze extends ViewsFormBase {
     );
 
     // Inform the standard button function that we want an OK button.
-    $form_state['ok_button'] = TRUE;
+    $form_state->set('ok_button', TRUE);
     $view->getStandardButtons($form, $form_state, 'views_ui_analyze_view_form');
     return $form;
   }
@@ -60,7 +60,7 @@ class Analyze extends ViewsFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views_ui\ViewUI */
-    $view = $form_state['view'];
+    $view = $form_state->get('view');
     $form_state->setRedirectUrl($view->urlInfo('edit-form'));
   }
 

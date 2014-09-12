@@ -360,7 +360,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
         ->setValues($form_state->getValue(['visibility', $condition_id]));
       $condition->validateConfigurationForm($form, $condition_values);
       // Update the original form values.
-      $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);
+      $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
     }
 
     $this->blockValidate($form, $form_state);
@@ -392,7 +392,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
           ->setValues($form_state->getValue(['visibility', $condition_id]));
         $condition->submitConfigurationForm($form, $condition_values);
         // Update the original form values.
-        $form_state->setValue(array('visibility', $condition_id), $condition_values['values']);
+        $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
       }
       $this->blockSubmit($form, $form_state);
     }

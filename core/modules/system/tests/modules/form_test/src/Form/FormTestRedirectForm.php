@@ -58,7 +58,7 @@ class FormTestRedirectForm extends FormBase {
       }
     }
     else {
-      $form_state['no_redirect'] = TRUE;
+      $form_state->disableRedirect();
     }
   }
 

@@ -92,7 +92,7 @@ class Search extends FilterPluginBase {
       '#size' => 15,
       '#default_value' => $this->value,
       '#attributes' => array('title' => $this->t('Search keywords')),
-      '#title' => empty($form_state['exposed']) ? $this->t('Keywords') : '',
+      '#title' => !$form_state->get('exposed') ? $this->t('Keywords') : '',
     );
   }
 

@@ -95,7 +95,7 @@ interface SearchInterface extends PluginInspectionInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form. The arguments that
    *   \Drupal::formBuilder()->getForm() was originally called with are
-   *   available in the array $form_state['build_info']['args'].
+   *   available in the array $form_state->getBuildInfo()['args'].
    *
    * @see SearchInterface::buildSearchUrlQuery()
    */

@@ -98,8 +98,9 @@ class CommentForm extends ContentEntityForm {
       $form['#action'] = url('comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name);
     }
 
-    if (isset($form_state['comment_preview'])) {
-      $form += $form_state['comment_preview'];
+    $comment_preview = $form_state->get('comment_preview');
+    if (isset($comment_preview)) {
+      $form += $comment_preview;
     }
 
     $form['author'] = array();
@@ -115,7 +116,7 @@ class CommentForm extends ContentEntityForm {
     if ($is_admin) {
       $author = $comment->getAuthorName();
       $status = $comment->getStatus();
-      if (empty($form_state['comment_preview'])) {
+      if (empty($comment_preview)) {
         $form['#title'] = $this->t('Edit comment %title', array(
           '%title' => $comment->getSubject(),
         ));
@@ -238,7 +239,7 @@ class CommentForm extends ContentEntityForm {
 
     // Only show the save button if comment previews are optional or if we are
     // already previewing the submission.
-    $element['submit']['#access'] = ($comment->id() && $this->currentUser->hasPermission('administer comments')) || $preview_mode != DRUPAL_REQUIRED || isset($form_state['comment_preview']);
+    $element['submit']['#access'] = ($comment->id() && $this->currentUser->hasPermission('administer comments')) || $preview_mode != DRUPAL_REQUIRED || $form_state->get('comment_preview');
 
     $element['preview'] = array(
       '#type' => 'submit',
@@ -348,10 +349,10 @@ class CommentForm extends ContentEntityForm {
    *   The current state of the form.
    */
   public function preview(array &$form, FormStateInterface $form_state) {
-    $comment = $this->entity;
-    $form_state['comment_preview'] = comment_preview($comment, $form_state);
-    $form_state['comment_preview']['#title'] = $this->t('Preview comment');
-    $form_state['rebuild'] = TRUE;
+    $comment_preview = comment_preview($this->entity, $form_state);
+    $comment_preview['#title'] = $this->t('Preview comment');
+    $form_state->set('comment_preview', $comment_preview);
+    $form_state->setRebuild();
   }
 
   /**

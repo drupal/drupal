@@ -37,11 +37,11 @@ class EditorImageDialog extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, FilterFormat $filter_format = NULL) {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
-    if (!isset($form_state['image_element'])) {
+    if (!$image_element = $form_state->get('image_element')) {
       $user_input = $form_state->getUserInput();
-      $form_state['image_element'] = isset($user_input['editor_object']) ? $user_input['editor_object'] : array();
+      $image_element = isset($user_input['editor_object']) ? $user_input['editor_object'] : [];
+      $form_state->set('image_element', $image_element);
     }
-    $image_element = $form_state['image_element'];
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'editor/drupal.editor.dialog';

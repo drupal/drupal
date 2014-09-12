@@ -1564,7 +1564,7 @@ function hook_entity_display_build_alter(&$build, $context) {
 function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
-    $form_state['mymodule']['label_altered'] = TRUE;
+    $form_state->set('label_altered', TRUE);
   }
 }
 
@@ -1590,7 +1590,7 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
 function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
-    $form_state['mymodule']['label_altered'] = TRUE;
+    $form_state->set('label_altered', TRUE);
   }
 }
 

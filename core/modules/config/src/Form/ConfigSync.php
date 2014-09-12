@@ -179,7 +179,7 @@ class ConfigSync extends FormBase {
     }
     else {
       // Store the comparer for use in the submit.
-      $form_state['storage_comparer'] = $storage_comparer;
+      $form_state->set('storage_comparer', $storage_comparer);
     }
 
     // Add the AJAX library to the form for dialog support.
@@ -273,7 +273,7 @@ class ConfigSync extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config_importer = new ConfigImporter(
-      $form_state['storage_comparer'],
+      $form_state->get('storage_comparer'),
       $this->eventDispatcher,
       $this->configManager,
       $this->lock,

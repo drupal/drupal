@@ -166,9 +166,9 @@ class ViewAddForm extends ViewFormBase {
   public function validate(array $form, FormStateInterface $form_state) {
     $wizard_type = $form_state->getValue(array('show', 'wizard_key'));
     $wizard_instance = $this->wizardManager->createInstance($wizard_type);
-    $form_state['wizard'] = $wizard_instance->getPluginDefinition();
-    $form_state['wizard_instance'] = $wizard_instance;
-    $errors = $form_state['wizard_instance']->validateView($form, $form_state);
+    $form_state->set('wizard', $wizard_instance->getPluginDefinition());
+    $form_state->set('wizard_instance', $wizard_instance);
+    $errors = $wizard_instance->validateView($form, $form_state);
 
     foreach ($errors as $display_errors) {
       foreach ($display_errors as $name => $message) {
@@ -183,7 +183,7 @@ class ViewAddForm extends ViewFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
       /** @var $wizard \Drupal\views\Plugin\views\wizard\WizardInterface */
-      $wizard = $form_state['wizard_instance'];
+      $wizard = $form_state->get('wizard_instance');
       $this->entity = $wizard->createView($form, $form_state);
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.

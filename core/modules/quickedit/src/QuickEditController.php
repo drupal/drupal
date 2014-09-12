@@ -184,7 +184,7 @@ class QuickEditController extends ControllerBase {
       ->addBuildInfo('args', [$entity, $field_name]);
     $form = $this->formBuilder()->buildForm('Drupal\quickedit\Form\QuickEditFieldForm', $form_state);
 
-    if (!empty($form_state['executed'])) {
+    if ($form_state->isExecuted()) {
       // The form submission saved the entity in TempStore. Return the
       // updated view of the field from the TempStore copy.
       $entity = $this->tempStoreFactory->get('quickedit')->get($entity->uuid());

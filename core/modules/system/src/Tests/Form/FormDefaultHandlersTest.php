@@ -47,28 +47,36 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
    * {@inheritdoc}
    */
   public function customValidateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['test_handlers']['validate'][] = __FUNCTION__;
+    $test_handlers = $form_state->get('test_handlers');
+    $test_handlers['validate'][] = __FUNCTION__;
+    $form_state->set('test_handlers', $test_handlers);
   }
 
   /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['test_handlers']['validate'][] = __FUNCTION__;
+    $test_handlers = $form_state->get('test_handlers');
+    $test_handlers['validate'][] = __FUNCTION__;
+    $form_state->set('test_handlers', $test_handlers);
   }
 
   /**
    * {@inheritdoc}
    */
   public function customSubmitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['test_handlers']['submit'][] = __FUNCTION__;
+    $test_handlers = $form_state->get('test_handlers');
+    $test_handlers['submit'][] = __FUNCTION__;
+    $form_state->set('test_handlers', $test_handlers);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['test_handlers']['submit'][] = __FUNCTION__;
+    $test_handlers = $form_state->get('test_handlers');
+    $test_handlers['submit'][] = __FUNCTION__;
+    $form_state->set('test_handlers', $test_handlers);
   }
 
   /**
@@ -79,7 +87,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
 
-    $handlers = $form_state['test_handlers'];
+    $handlers = $form_state->get('test_handlers');
 
     $this->assertIdentical(count($handlers['validate']), 2);
     $this->assertIdentical($handlers['validate'][0], 'customValidateForm');

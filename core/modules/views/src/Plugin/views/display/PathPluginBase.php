@@ -380,7 +380,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    switch ($form_state['section']) {
+    switch ($form_state->get('section')) {
       case 'path':
         $form['#title'] .= t('The menu path or URL of this view');
         $form['path'] = array(
@@ -404,7 +404,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
-    if ($form_state['section'] == 'path') {
+    if ($form_state->get('section') == 'path') {
       $errors = $this->validatePath($form_state->getValue('path'));
       foreach ($errors as $error) {
         $form_state->setError($form['path'], $error);
@@ -421,7 +421,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
-    if ($form_state['section'] == 'path') {
+    if ($form_state->get('section') == 'path') {
       $this->setOption('path', $form_state->getValue('path'));
     }
   }

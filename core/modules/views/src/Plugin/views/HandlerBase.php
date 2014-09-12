@@ -338,9 +338,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Provide a form for aggregation settings.
    */
   public function buildGroupByForm(&$form, FormStateInterface $form_state) {
-    $display_id = $form_state['display_id'];
-    $type = $form_state['type'];
-    $id = $form_state['id'];
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
@@ -364,7 +364,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * There is no need for this function to actually store the data.
    */
   public function submitGroupByForm(&$form, FormStateInterface $form_state) {
-    $form_state['handler']->options['group_type'] = $form_state->getValue(array('options', 'group_type'));
+    $form_state->get('handler')->options['group_type'] = $form_state->getValue(['options', 'group_type']);
   }
 
   /**
@@ -460,7 +460,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // have no data in POST so their defaults get wiped out. This prevents
     // these defaults from getting wiped out. This setting will only be TRUE
     // during a 2nd pass rerender.
-    if (!empty($form_state['force_expose_options'])) {
+    if ($form_state->get('force_expose_options')) {
       foreach (Element::children($form['expose']) as $id) {
         if (isset($form['expose'][$id]['#default_value']) && !isset($form['expose'][$id]['#value'])) {
           $form['expose'][$id]['#value'] = $form['expose'][$id]['#default_value'];
@@ -761,14 +761,18 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       $this->defaultExposeOptions();
     }
 
-    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
+    $view->getExecutable()->setHandler($display_id, $type, $id, $item);
 
-    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
+    $view->addFormToStack($form_state->get('form_key'), $display_id, $type, $id, TRUE, TRUE);
 
-    $form_state['view']->cacheSet();
-    $form_state['rerender'] = TRUE;
-    $form_state['rebuild'] = TRUE;
-    $form_state['force_expose_options'] = TRUE;
+    $view->cacheSet();
+    $form_state->set('rerender', TRUE);
+    $form_state->setRebuild();
+    $form_state->set('force_expose_options', TRUE);
   }
 
   /**
@@ -783,13 +787,14 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     // For footer/header $handler_type is area but $type is footer/header.
     // For all other handle types it's the same.
-    $handler_type = $type = $form_state['type'];
+    $handler_type = $type = $form_state->get('type');
     if (!empty($types[$type]['type'])) {
       $handler_type = $types[$type]['type'];
     }
 
     $override = NULL;
-    $executable = $form_state['view']->getExecutable();
+    $view = $form_state->get('view');
+    $executable = $view->getExecutable();
     if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
       if (empty($executable->query)) {
         $executable->initQuery();
@@ -814,19 +819,19 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
     // Store the item back on the view.
-    $executable = $form_state['view']->getExecutable();
-    $executable->temporary_options[$type][$form_state['id']] = $handler->options;
+    $executable = $view->getExecutable();
+    $executable->temporary_options[$type][$form_state->get('id')] = $handler->options;
 
     // @todo Decide if \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() is
     //   perhaps the better place to fix the issue.
     // \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() drops the current
     // form from the stack, even if it's an #ajax. So add the item back to the top
     // of the stack.
-    $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $type, $item['id'], TRUE);
+    $view->addFormToStack($form_state->get('form_key'), $form_state->get('display_id'), $type, $item['id'], TRUE);
 
-    $form_state['rerender'] = TRUE;
-    $form_state['rebuild'] = TRUE;
+    $form_state->get('rerender', TRUE);
+    $form_state->setRebuild();
     // Write to cache
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 }

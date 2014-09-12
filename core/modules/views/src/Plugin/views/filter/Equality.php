@@ -42,7 +42,7 @@ class Equality extends FilterPluginBase {
       '#default_value' => $this->value,
     );
 
-    if (!empty($form_state['exposed'])) {
+    if ($exposed = $form_state->get('exposed')) {
       $identifier = $this->options['expose']['identifier'];
       $user_input = $form_state->getUserInput();
       if (!isset($user_input[$identifier])) {

@@ -26,12 +26,14 @@ class BatchTestMultiStepForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if (empty($form_state['storage']['step'])) {
-      $form_state['storage']['step'] = 1;
+    $step = $form_state->get('step');
+    if (empty($step)) {
+      $step = 1;
+      $form_state->set('step', $step);
     }
 
     $form['step_display'] = array(
-      '#markup' => 'step ' . $form_state['storage']['step'] . '<br/>',
+      '#markup' => 'step ' . $step . '<br/>',
     );
     $form['submit'] = array(
       '#type' => 'submit',
@@ -47,7 +49,8 @@ class BatchTestMultiStepForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     batch_test_stack(NULL, TRUE);
 
-    switch ($form_state['storage']['step']) {
+    $step = $form_state->get('step');
+    switch ($step) {
       case 1:
         batch_set(_batch_test_batch_1());
         break;
@@ -56,9 +59,9 @@ class BatchTestMultiStepForm extends FormBase {
         break;
     }
 
-    if ($form_state['storage']['step'] < 2) {
-      $form_state['storage']['step']++;
-      $form_state['rebuild'] = TRUE;
+    if ($step < 2) {
+      $form_state->set('step', ++$step);
+      $form_state->setRebuild();
     }
 
     $form_state->setRedirect('batch_test.redirect');

@@ -25,8 +25,8 @@ class TermForm extends ContentEntityForm {
     $vocabulary = $vocab_storage->load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));
-    $form_state['taxonomy']['parent'] = $parent;
-    $form_state['taxonomy']['vocabulary'] = $vocabulary;
+    $form_state->set(['taxonomy', 'parent'], $parent);
+    $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
     $language_configuration = $this->moduleHandler->moduleExists('language') ? language_get_default_configuration('taxonomy_term', $vocabulary->id()) : FALSE;
     $form['langcode'] = array(
@@ -146,7 +146,7 @@ class TermForm extends ContentEntityForm {
     }
 
     $current_parent_count = count($form_state->getValue('parent'));
-    $previous_parent_count = count($form_state['taxonomy']['parent']);
+    $previous_parent_count = count($form_state->get(['taxonomy', 'parent']));
     // Root doesn't count if it's the only parent.
     if ($current_parent_count == 1 && $form_state->hasValue(array('parent', 0))) {
       $current_parent_count = 0;
@@ -155,18 +155,19 @@ class TermForm extends ContentEntityForm {
 
     // If the number of parents has been reduced to one or none, do a check on the
     // parents of every term in the vocabulary value.
+    $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     if ($current_parent_count < $previous_parent_count && $current_parent_count < 2) {
-      taxonomy_check_vocabulary_hierarchy($form_state['taxonomy']['vocabulary'], $form_state->getValues());
+      taxonomy_check_vocabulary_hierarchy($vocabulary, $form_state->getValues());
     }
     // If we've increased the number of parents and this is a single or flat
     // hierarchy, update the vocabulary immediately.
-    elseif ($current_parent_count > $previous_parent_count && $form_state['taxonomy']['vocabulary']->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE) {
-      $form_state['taxonomy']['vocabulary']->hierarchy = $current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE;
-      $form_state['taxonomy']['vocabulary']->save();
+    elseif ($current_parent_count > $previous_parent_count && $vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE) {
+      $vocabulary->hierarchy = $current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE;
+      $vocabulary->save();
     }
 
     $form_state->setValue('tid', $term->id());
-    $form_state['tid'] = $term->id();
+    $form_state->set('tid', $term->id());
   }
 
 }

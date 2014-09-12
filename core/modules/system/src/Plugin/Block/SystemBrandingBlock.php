@@ -85,7 +85,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function blockForm($form, FormStateInterface $form_state) {
     // Get the theme.
-    $theme = $form_state['block_theme'];
+    $theme = $form_state->get('block_theme');
 
     // Get permissions.
     $url_system_theme_settings = new Url('system.theme_settings');

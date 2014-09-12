@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -90,11 +89,11 @@ function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $for
  * Implements hook_form_BASE_FORM_ID_alter() for 'filter_format_form'.
  */
 function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_state) {
-  if (!isset($form_state['editor'])) {
+  if (!$editor = $form_state->get('editor')) {
     $format_id = $form_state->getFormObject()->getEntity()->id();
-    $form_state['editor'] = editor_load($format_id);
+    $editor = editor_load($format_id);
+    $form_state->set('editor', $editor);
   }
-  $editor = $form_state['editor'];
 
   // Associate a text editor with this text format.
   $manager = \Drupal::service('plugin.manager.editor');
@@ -167,20 +166,20 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
  * Button submit handler for filter_format_form()'s 'editor_configure' button.
  */
 function editor_form_filter_admin_format_editor_configure($form, FormStateInterface $form_state) {
-  $editor = $form_state['editor'];
+  $editor = $form_state->get('editor');
   if ($editor_value = $form_state->getValue(array('editor', 'editor'))) {
     if ($editor_value === '') {
-      $form_state['editor'] = FALSE;
+      $form_state->set('editor', FALSE);
     }
     elseif (empty($editor) || $editor_value !== $editor->getEditor()) {
       $editor = entity_create('editor', array(
         'format' => $form_state->getFormObject()->getEntity()->id(),
         'editor' => $editor_value,
       ));
-      $form_state['editor'] = $editor;
+      $form_state->set('editor', $editor);
     }
   }
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**
@@ -195,7 +194,7 @@ function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_stat
  */
 function editor_form_filter_admin_format_validate($form, FormStateInterface $form_state) {
   // This validate handler is not applicable when using the 'Configure' button.
-  if ($form_state['triggering_element']['#name'] === 'editor_configure') {
+  if ($form_state->getTriggeringElement()['#name'] === 'editor_configure') {
     return;
   }
 
@@ -203,7 +202,7 @@ function editor_form_filter_admin_format_validate($form, FormStateInterface $for
   // 'Configure' button won't be clicked automatically. So, when the user has
   // selected a text editor and has then clicked 'Save configuration', we should
   // point out that the user must still configure the text editor.
-  if ($form_state->getValue(array('editor', 'editor')) !== '' && empty($form_state['editor'])) {
+  if ($form_state->getValue(['editor', 'editor']) !== '' && !$form_state->get('editor')) {
     $form_state->setErrorByName('editor][editor', t('You must configure the selected text editor.'));
   }
 }
@@ -220,12 +219,12 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
   }
 
   // Create a new editor or update the existing editor.
-  if (!empty($form_state['editor'])) {
+  if ($editor = $form_state->get('editor')) {
     // Ensure the text format is set: when creating a new text format, this
     // would equal the empty string.
-    $form_state['editor']->set('format', $format_id);
-    $form_state['editor']->setSettings($form_state->getValue(array('editor', 'settings')));
-    $form_state['editor']->save();
+    $editor->set('format', $format_id);
+    $editor->setSettings($form_state->getValue(['editor', 'settings']));
+    $editor->save();
   }
 }
 

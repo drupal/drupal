@@ -136,7 +136,7 @@ function form_state_values_clean(FormStateInterface $form_state) {
   // Remove button values.
   // form_builder() collects all button elements in a form. We remove the button
   // value separately for each button element.
-  foreach ($form_state['buttons'] as $button) {
+  foreach ($form_state->getButtons() as $button) {
     // Remove this button's value from the submitted form values by finding
     // the value corresponding to this button.
     // We iterate over the #parents of this button and move a reference to

@@ -13,10 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Stores information about the state of a form.
- *
- * @todo Remove usage of \ArrayAccess in https://www.drupal.org/node/2310255.
  */
-class FormState implements FormStateInterface, \ArrayAccess {
+class FormState implements FormStateInterface {
 
   /**
    * Tracks if any errors have been set on any form.
@@ -806,61 +804,6 @@ class FormState implements FormStateInterface, \ArrayAccess {
    */
   public function &getCompleteForm() {
     return $this->complete_form;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
-   */
-  public function offsetExists($offset) {
-    return isset($this->{$offset}) || isset($this->storage[$offset]);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
-   */
-  public function &offsetGet($offset) {
-    if (property_exists($this, $offset)) {
-      $value = &$this->{$offset};
-    }
-    else {
-      if (!isset($this->storage[$offset])) {
-        $this->storage[$offset] = NULL;
-      }
-      $value = &$this->get($offset);
-    }
-    return $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
-   */
-  public function offsetSet($offset, $value) {
-    if (property_exists($this, $offset)) {
-      $this->{$offset} = $value;
-    }
-    else {
-      $this->set($offset, $value);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @deprecated in Drupal 8.0.x, might be removed before Drupal 8.0.0.
-   */
-  public function offsetUnset($offset) {
-    if (property_exists($this, $offset)) {
-      $this->{$offset} = NULL;
-    }
-    else {
-      unset($this->storage[$offset]);
-    }
   }
 
   /**

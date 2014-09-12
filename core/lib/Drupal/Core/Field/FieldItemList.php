@@ -368,7 +368,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *   A Widget object.
    */
   protected function defaultValueWidget(FormStateInterface $form_state) {
-    if (!isset($form_state['default_value_widget'])) {
+    if (!$form_state->has('default_value_widget')) {
       $entity = $this->getEntity();
 
       // Force a non-required widget.
@@ -383,10 +383,10 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
         $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(array('field_definition' => $this->getFieldDefinition()));
       }
 
-      $form_state['default_value_widget'] = $widget;
+      $form_state->set('default_value_widget', $widget);
     }
 
-    return $form_state['default_value_widget'];
+    return $form_state->get('default_value_widget');
   }
 
 }

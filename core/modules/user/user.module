@@ -498,7 +498,7 @@ function _user_language_selector_langcode_value($element, $input, FormStateInter
  * @see AccountForm::form()
  */
 function user_validate_current_pass(&$form, FormStateInterface $form_state) {
-  $account = $form_state['user'];
+  $account = $form_state->get('user');
   foreach ($form_state->getValue('current_pass_required_values') as $key => $name) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation

@@ -30,7 +30,7 @@ class TestCurrentPassword extends FormBase {
    *   The user account.
    */
   public function buildForm(array $form, FormStateInterface $form_state, UserInterface $user = NULL) {
-    $form_state['user'] = $user ;
+    $form_state->set('user', $user);
     $form['user_form_test_field'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Test field'),

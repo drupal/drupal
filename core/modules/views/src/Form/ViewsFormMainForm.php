@@ -106,7 +106,7 @@ class ViewsFormMainForm implements FormInterface {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $view = $form_state['build_info']['args'][0];
+    $view = $form_state->getBuildInfo()['args'][0];
 
     // Call the validation method on every field handler that has it.
     foreach ($view->field as $field) {
@@ -129,7 +129,7 @@ class ViewsFormMainForm implements FormInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $view = $form_state['build_info']['args'][0];
+    $view = $form_state->getBuildInfo()['args'][0];
 
     // Call the submit method on every field handler that has it.
     foreach ($view->field as $field) {

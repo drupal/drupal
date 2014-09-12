@@ -137,7 +137,7 @@ class BooleanOperator extends FilterPluginBase {
       // Initialize the array of possible values for this filter.
       $this->getValueOptions();
     }
-    if (!empty($form_state['exposed'])) {
+    if ($exposed = $form_state->get('exposed')) {
       // Exposed filter: use a select box to save space.
       $filter_form_type = 'select';
     }
@@ -154,12 +154,12 @@ class BooleanOperator extends FilterPluginBase {
     if (!empty($this->options['exposed'])) {
       $identifier = $this->options['expose']['identifier'];
       $user_input = $form_state->getUserInput();
-      if (!empty($form_state['exposed']) && !isset($user_input[$identifier])) {
+      if ($exposed && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $this->value;
         $form_state->setUserInput($user_input);
       }
       // If we're configuring an exposed filter, add an - Any - option.
-      if (empty($form_state['exposed']) || empty($this->options['expose']['required'])) {
+      if (!$exposed || empty($this->options['expose']['required'])) {
         $form['value']['#options'] = array('All' => t('- Any -')) + $form['value']['#options'];
       }
     }

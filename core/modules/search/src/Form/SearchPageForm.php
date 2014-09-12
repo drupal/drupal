@@ -40,7 +40,7 @@ class SearchPageForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $plugin = $this->entity->getPlugin();
-    $form_state['search_page_id'] = $this->entity->id();
+    $form_state->set('search_page_id', $this->entity->id());
 
     $form['basic'] = array(
       '#type' => 'container',
@@ -90,7 +90,7 @@ class SearchPageForm extends EntityForm {
     // into the GET as well. If so, make sure to put 'keys' into the GET
     // parameters so that the search results generation is triggered.
     $query = $this->entity->getPlugin()->buildSearchUrlQuery($form_state);
-    $route = 'search.view_' . $form_state['search_page_id'];
+    $route = 'search.view_' . $form_state->get('search_page_id');
     $form_state->setRedirect(
       $route,
       array(),

@@ -178,7 +178,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
    * {@inheritdoc}
    */
   public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
-    $instance = $form_state['instance'];
+    $instance = $form_state->get('instance');
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getSetting('target_type'));
@@ -251,7 +251,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   public static function instanceSettingsFormValidate(array $form, FormStateInterface $form_state) {
     if ($form_state->hasValue('instance')) {
       $form_state->unsetValue(array('instance', 'settings', 'handler_submit'));
-      $form_state['instance']->settings = $form_state->getValue(array('instance', 'settings'));
+      $form_state->get('instance')->settings = $form_state->getValue(['instance', 'settings']);
     }
   }
 

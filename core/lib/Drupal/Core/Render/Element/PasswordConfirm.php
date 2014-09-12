@@ -82,7 +82,7 @@ class PasswordConfirm extends FormElement {
         $form_state->setError($element, t('The specified passwords do not match.'));
       }
     }
-    elseif ($element['#required'] && !empty($form_state['input'])) {
+    elseif ($element['#required'] && $form_state->getUserInput()) {
       $form_state->setError($element, t('Password field is required.'));
     }
 

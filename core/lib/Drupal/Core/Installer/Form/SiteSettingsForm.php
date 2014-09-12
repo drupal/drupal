@@ -126,7 +126,7 @@ class SiteSettingsForm extends FormBase {
     $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
     $database['driver'] = $driver;
 
-    $form_state['storage']['database'] = $database;
+    $form_state->set('database', $database);
     $errors = install_database_errors($database, $form_state->getValue('settings_file'));
     foreach ($errors as $name => $message) {
       $form_state->setErrorByName($name, $message);
@@ -141,7 +141,7 @@ class SiteSettingsForm extends FormBase {
 
     // Update global settings array and save.
     $settings = array();
-    $database = $form_state['storage']['database'];
+    $database = $form_state->get('database');
     $settings['databases']['default']['default'] = (object) array(
       'value'    => $database,
       'required' => TRUE,

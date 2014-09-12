@@ -141,7 +141,7 @@ class Block extends DisplayPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    switch ($form_state['section']) {
+    switch ($form_state->get('section')) {
       case 'block_description':
         $form['#title'] .= t('Block admin description');
         $form['block_description'] = array(
@@ -201,12 +201,13 @@ class Block extends DisplayPluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
-    switch ($form_state['section']) {
+    $section = $form_state->get('section');
+    switch ($section) {
       case 'block_description':
       case 'block_category':
       case 'allow':
       case 'block_hide_empty':
-        $this->setOption($form_state['section'], $form_state->getValue($form_state['section']));
+        $this->setOption($section, $form_state->getValue($section));
         break;
     }
   }

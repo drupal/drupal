@@ -603,7 +603,7 @@ function content_translation_entity_extra_field_info() {
  * Implements hook_form_FORM_ID_alter() for 'field_ui_instance_edit_form'.
  */
 function content_translation_form_field_ui_field_instance_edit_form_alter(array &$form, FormStateInterface $form_state) {
-  $instance = $form_state['instance'];
+  $instance = $form_state->get('instance');
   $bundle_is_translatable = content_translation_enabled($instance->entity_type, $instance->bundle);
 
   $form['instance']['translatable'] = array(
@@ -674,11 +674,10 @@ function content_translation_element_info_alter(&$type) {
  *   The current state of the form.
  */
 function content_translation_enable_widget($entity_type, $bundle, array &$form, FormStateInterface $form_state) {
-  $key = $form_state['content_translation']['key'];
-  if (!isset($form_state['language'][$key])) {
-    $form_state['language'][$key] = array();
-  }
-  $form_state['language'][$key] += array('entity_type' => $entity_type, 'bundle' => $bundle);
+  $key = $form_state->get(['content_translation', 'key']);
+  $context = $form_state->get(['language', $key]) ?: [];
+  $context += ['entity_type' => $entity_type, 'bundle' => $bundle];
+  $form_state->set(['language', $key], $context);
   $element = content_translation_language_configuration_element_process(array('#name' => $key), $form_state, $form);
   unset($element['content_translation']['#element_validate']);
   return $element;
@@ -695,8 +694,9 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
   if (empty($element['#content_translation_skip_alter']) && \Drupal::currentUser()->hasPermission('administer content translation')) {
-    $form_state['content_translation']['key'] = $element['#name'];
-    $context = $form_state['language'][$element['#name']];
+    $key = $element['#name'];
+    $form_state->set(['content_translation', 'key'], $key);
+    $context = $form_state->get(['language', $key]);
 
     $element['content_translation'] = array(
       '#type' => 'checkbox',
@@ -721,7 +721,7 @@ function content_translation_language_configuration_element_process(array $eleme
  * @see content_translation_language_configuration_element_submit()
  */
 function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
-  $key = $form_state['content_translation']['key'];
+  $key = $form_state->get(['content_translation', 'key']);
   $values = $form_state->getValue($key);
   if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
     foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
@@ -742,8 +742,8 @@ function content_translation_language_configuration_element_validate($element, F
  * @see content_translation_language_configuration_element_validate()
  */
 function content_translation_language_configuration_element_submit(array $form, FormStateInterface $form_state) {
-  $key = $form_state['content_translation']['key'];
-  $context = $form_state['language'][$key];
+  $key = $form_state->get(['content_translation', 'key']);
+  $context = $form_state->get(['language', $key]);
   $enabled = $form_state->getValue(array($key, 'content_translation'));
 
   if (content_translation_enabled($context['entity_type'], $context['bundle']) != $enabled) {

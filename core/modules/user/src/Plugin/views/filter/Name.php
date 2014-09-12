@@ -47,7 +47,7 @@ class Name extends InOperator {
     );
 
     $user_input = $form_state->getUserInput();
-    if (!empty($form_state['exposed']) && !isset($user_input[$this->options['expose']['identifier']])) {
+    if ($form_state->get('exposed') && !isset($user_input[$this->options['expose']['identifier']])) {
       $user_input[$this->options['expose']['identifier']] = $default_value;
       $form_state->setUserInput($user_input);
     }

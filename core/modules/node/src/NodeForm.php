@@ -79,10 +79,11 @@ class NodeForm extends ContentEntityForm {
     }
 
     if ($preview = $store->get($uuid)) {
+      /** @var $preview \Drupal\Core\Form\FormStateInterface */
       $form_state = $preview;
 
       // Rebuild the form.
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
       $this->entity = $preview->getFormObject()->getEntity();
       unset($this->entity->in_preview);
     }
@@ -215,7 +216,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $preview_mode = $node->type->entity->getPreviewMode();
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!$form_state->getErrors() && isset($form_state['node_preview']));
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!$form_state->getErrors() && $form_state->get('node_preview'));
 
     // If saving is an option, privileged users get dedicated form submit
     // buttons to adjust the publishing status while saving in one go.
@@ -422,7 +423,7 @@ class NodeForm extends ContentEntityForm {
 
     if ($node->id()) {
       $form_state->setValue('nid', $node->id());
-      $form_state['nid'] = $node->id();
+      $form_state->set('nid', $node->id());
       if ($node->access('view')) {
         $form_state->setRedirect(
           'entity.node.canonical',
@@ -443,7 +444,7 @@ class NodeForm extends ContentEntityForm {
       // In the unlikely case something went wrong on save, the node will be
       // rebuilt and node form redisplayed the same way as in preview.
       drupal_set_message(t('The post could not be saved.'), 'error');
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
     }
   }
 

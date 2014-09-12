@@ -76,7 +76,8 @@ class FieldStorageEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, FieldInstanceConfigInterface $field_instance_config = NULL) {
-    $this->instance = $form_state['instance'] = $field_instance_config;
+    $this->instance = $field_instance_config;
+    $form_state->set('instance', $field_instance_config);
     $form['#title'] = $this->instance->label();
 
     $field_storage = $this->instance->getFieldStorageDefinition();

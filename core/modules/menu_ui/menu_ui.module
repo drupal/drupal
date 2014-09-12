@@ -226,7 +226,7 @@ function menu_ui_node_predelete(EntityInterface $node) {
  * Implements hook_node_prepare_form().
  */
 function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
-  if (empty($form_state['menu_link_definition'])) {
+  if (!$form_state->get('menu_link_definition')) {
     // Prepare the node for the edit form so that $node->menu always exists.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = $node->type->entity;
@@ -285,7 +285,7 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       );
     }
     // Set default values.
-    $form_state['menu_link_definition'] = $definition;
+    $form_state->set('menu_link_definition', $definition);
   }
 }
 
@@ -300,7 +300,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
-  $definition = $form_state['menu_link_definition'];
+  $definition = $form_state->get('menu_link_definition');
   /** @var \Drupal\node\NodeTypeInterface $node_type */
   $node_type = $node->type->entity;
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */

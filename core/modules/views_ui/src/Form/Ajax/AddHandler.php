@@ -50,9 +50,9 @@ class AddHandler extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
-    $type = $form_state['type'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
 
     $form = array(
       'options' => array(
@@ -81,7 +81,7 @@ class AddHandler extends ViewsFormBase {
 
     // Figure out all the base tables allowed based upon what the relationships provide.
     $base_tables = $executable->getBaseTables();
-    $options = Views::viewsDataHelper()->fetchFields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
+    $options = Views::viewsDataHelper()->fetchFields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state->get('type'));
 
     if (!empty($options)) {
       $form['override']['controls'] = array(

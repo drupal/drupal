@@ -34,7 +34,7 @@ class EditDetails extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
+    $view = $form_state->get('view');
 
     $form['#title'] = $this->t('Name and description');
     $form['#section'] = 'details';
@@ -75,7 +75,7 @@ class EditDetails extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
+    $view = $form_state->get('view');
     foreach ($form_state->getValues() as $key => $value) {
       // Only save values onto the view if they're actual view properties
       // (as opposed to 'op' or 'form_build_id').
@@ -84,11 +84,11 @@ class EditDetails extends ViewsFormBase {
       }
     }
     $bases = Views::viewsData()->fetchBaseTables();
-    $form_state['#page_title'] = $view->label();
-
+    $page_title = $view->label();
     if (isset($bases[$view->get('base_table')])) {
-      $form_state['#page_title'] .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
+      $page_title .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
     }
+    $form_state->set('#page_title', $page_title);
 
     $view->cacheSet();
   }

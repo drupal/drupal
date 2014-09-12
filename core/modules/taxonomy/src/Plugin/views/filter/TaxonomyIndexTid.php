@@ -161,7 +161,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
       $default_value = (array) $this->value;
 
-      if (!empty($form_state['exposed'])) {
+      if ($exposed = $form_state->get('exposed')) {
         $identifier = $this->options['expose']['identifier'];
 
         if (!empty($this->options['expose']['reduce'])) {
@@ -201,13 +201,13 @@ class TaxonomyIndexTid extends ManyToOne {
       );
 
       $user_input = $form_state->getUserInput();
-      if (!empty($form_state['exposed']) && isset($identifier) && !isset($user_input[$identifier])) {
+      if ($exposed && isset($identifier) && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $default_value;
         $form_state->setUserInput($user_input);
       }
     }
 
-    if (empty($form_state['exposed'])) {
+    if (!$form_state->get('exposed')) {
       // Retain the helper option
       $this->helper->buildOptionsForm($form, $form_state);
     }

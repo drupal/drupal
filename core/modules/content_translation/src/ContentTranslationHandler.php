@@ -77,7 +77,10 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * {@inheritdoc}
    */
   public function getSourceLangcode(FormStateInterface $form_state) {
-    return isset($form_state['content_translation']['source']) ? $form_state['content_translation']['source']->id : FALSE;
+    if ($source = $form_state->get(['content_translation', 'source'])) {
+      return $source->id;
+    }
+    return FALSE;
   }
 
   /**
@@ -315,7 +318,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
           // If we are displaying a multilingual entity form we need to provide
           // translatability clues, otherwise the shared form elements should be
           // hidden.
-          if (empty($form_state['content_translation']['translation_form'])) {
+          if (!$form_state->get(['content_translation', 'translation_form'])) {
             $this->addTranslatabilityClue($element[$key]);
           }
           else {

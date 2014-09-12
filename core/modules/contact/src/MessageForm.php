@@ -168,7 +168,7 @@ class MessageForm extends ContentEntityForm {
   public function preview(array $form, FormStateInterface $form_state) {
     $message = $this->entity;
     $message->preview = TRUE;
-    $form_state['rebuild'] = TRUE;
+    $form_state->setRebuild();
   }
 
   /**

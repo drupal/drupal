@@ -64,7 +64,7 @@ class StorageTest extends WebTestBase {
   }
 
   /**
-   * Tests using the form with an activated $form_state['cache'] property.
+   * Tests using the form after calling $form_state->setCached().
    */
   function testFormCached() {
     $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));

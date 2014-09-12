@@ -93,8 +93,9 @@ class SelectLanguageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $install_state = &$form_state['build_info']['args'][0];
-    $install_state['parameters']['langcode'] = $form_state->getValue('langcode');
+    $build_info = $form_state->getBuildInfo();
+    $build_info['args'][0]['parameters']['langcode'] = $form_state->getValue('langcode');
+    $form_state->setBuildInfo($build_info);
   }
 
 }

@@ -47,7 +47,8 @@ function color_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function color_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
-  if (isset($form_state['build_info']['args'][0]) && ($theme = $form_state['build_info']['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
+  $build_info = $form_state->getBuildInfo();
+  if (isset($build_info['args'][0]) && ($theme = $build_info['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
     $form['color'] = array(
       '#type' => 'details',
       '#title' => t('Color scheme'),
@@ -303,7 +304,8 @@ function color_palette_color_value($element, $input = FALSE, FormStateInterface 
     // Start with the provided value for this textfield, and validate that if
     // necessary, falling back on the default value.
     $value = Textfield::valueCallback($element, $input, $form_state);
-    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $form_state['complete form']['#token'])) {
+    $complete_form = $form_state->getCompleteForm();
+    if (!$value || !isset($complete_form['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
       return $value;
     }
     else {

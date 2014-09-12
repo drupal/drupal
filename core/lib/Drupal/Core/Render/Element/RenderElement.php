@@ -128,7 +128,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
   public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
     $element = ajax_pre_render_element($element);
     if (!empty($element['#ajax_processed'])) {
-      $form_state['cache'] = TRUE;
+      $form_state->setCached();
     }
     return $element;
   }
@@ -156,14 +156,15 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
 
     // Each details element forms a new group. The #type 'vertical_tabs' basically
     // only injects a new details element.
-    $form_state['groups'][$parents]['#group_exists'] = TRUE;
-    $element['#groups'] = &$form_state['groups'];
+    $groups = &$form_state->getGroups();
+    $groups[$parents]['#group_exists'] = TRUE;
+    $element['#groups'] = &$groups;
 
     // Process vertical tabs group member details elements.
     if (isset($element['#group'])) {
       // Add this details element to the defined group (by reference).
       $group = $element['#group'];
-      $form_state['groups'][$group][] = &$element;
+      $groups[$group][] = &$element;
     }
 
     return $element;

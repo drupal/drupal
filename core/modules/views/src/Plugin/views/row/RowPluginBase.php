@@ -82,7 +82,7 @@ abstract class RowPluginBase extends PluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     if (isset($this->base_table)) {
-      $executable = $form_state['view']->getExecutable();
+      $executable = $form_state->get('view')->getExecutable();
 
       // A whole bunch of code to figure out what relationships are valid for
       // this item.

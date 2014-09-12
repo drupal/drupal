@@ -156,7 +156,7 @@ abstract class AccountForm extends ContentEntityForm {
           '#attributes' => array('autocomplete' => 'off'),
         );
 
-        $form_state['user'] = $account;
+        $form_state->set('user', $account);
         $form['#validate'][] = 'user_validate_current_pass';
       }
     }

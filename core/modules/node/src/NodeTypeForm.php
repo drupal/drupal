@@ -237,15 +237,16 @@ class NodeTypeForm extends EntityForm {
     $fields = $this->entityManager->getFieldDefinitions('node', $type->id());
     // Update title field definition.
     $title_field = $fields['title'];
-    if ($title_field->getLabel() != $form_state['values']['title_label']) {
-      $title_field->getConfig($type->id())->setLabel($form_state['values']['title_label'])->save();
+    $title_label = $form_state->getValue('title_label');
+    if ($title_field->getLabel() != $title_label) {
+      $title_field->getConfig($type->id())->setLabel($title_label)->save();
     }
     // Update workflow options.
     // @todo Make it possible to get default values without an entity.
     //   https://www.drupal.org/node/2318187
     $node = $this->entityManager->getStorage('node')->create(array('type' => $type->id()));
     foreach (array('status', 'promote', 'sticky')  as $field_name) {
-      $value = (bool) $form_state['values']['options'][$field_name];
+      $value = (bool) $form_state->getValue(['options', $field_name]);
       if ($node->$field_name->value != $value) {
         $fields[$field_name]->getConfig($type->id())->setDefaultValue($value)->save();
       }

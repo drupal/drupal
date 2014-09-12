@@ -34,8 +34,8 @@ class ReorderDisplays extends ViewsFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views\ViewStorageInterface */
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
 
     $form['#title'] = $this->t('Reorder displays');
     $form['#section'] = 'reorder';
@@ -151,7 +151,7 @@ class ReorderDisplays extends ViewsFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views_ui\ViewUI */
-    $view = $form_state['view'];
+    $view = $form_state->get('view');
     $order = array();
 
     $user_input = $form_state->getUserInput();

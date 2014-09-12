@@ -93,7 +93,7 @@ class EntityTestForm extends ContentEntityForm {
     else {
       // Error on save.
       drupal_set_message(t('The entity could not be saved.'), 'error');
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
     }
   }
 

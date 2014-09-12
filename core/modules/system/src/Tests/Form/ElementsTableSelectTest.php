@@ -218,7 +218,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     $edit['form_id'] = $form_id;
     $form_state->setUserInput($edit);
-    $form_state['build_info']['callback_object'] = new StubForm($form_id, $form);
+    $form_state->setFormObject(new StubForm($form_id, $form));
 
     \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
 
@@ -228,7 +228,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     // Clear errors and messages.
     drupal_get_messages();
-    $form_state['errors'] = array();
+    $form_state->clearErrors();
 
     // Return the processed form together with form_state and errors
     // to allow the caller lowlevel access to the form.

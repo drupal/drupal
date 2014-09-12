@@ -61,7 +61,7 @@ class BlockForm extends EntityForm {
     if (!$theme = $entity->get('theme')) {
       $theme = $this->config('system.theme')->get('default');
     }
-    $form_state['block_theme'] = $theme;
+    $form_state->set('block_theme', $theme);
 
     $form['#tree'] = TRUE;
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
@@ -153,7 +153,7 @@ class BlockForm extends EntityForm {
     // Call the plugin validate handler.
     $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
     // Update the original form values.
-    $form_state->setValue('settings', $settings['values']);
+    $form_state->setValue('settings', $settings->getValues());
   }
 
   /**
@@ -171,7 +171,7 @@ class BlockForm extends EntityForm {
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);
     // Update the original form values.
-    $form_state->setValue('settings', $settings['values']);
+    $form_state->setValue('settings', $settings->getValues());
 
     // Save the settings of the plugin.
     $entity->save();

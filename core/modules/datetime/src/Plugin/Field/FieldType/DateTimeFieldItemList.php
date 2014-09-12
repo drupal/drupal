@@ -69,7 +69,7 @@ class DateTimeFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function defaultValuesFormValidate(array $element, array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['default_value_input']['default_date_type'] == static::DEFAULT_VALUE_CUSTOM) {
+    if ($form_state->getValue(['default_value_input', 'default_date_type']) == static::DEFAULT_VALUE_CUSTOM) {
       $is_strtotime = @strtotime($form_state->getValue(array('default_value_input', 'default_date')));
       if (!$is_strtotime) {
         $form_state->setErrorByName('default_value_input][default_date', t('The relative date value entered is invalid.'));

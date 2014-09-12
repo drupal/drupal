@@ -173,9 +173,9 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     $this->languageManager->setConfigOverrideLanguage($this->language);
 
     // Add some information to the form state for easier form altering.
-    $form_state['config_translation_mapper'] = $this->mapper;
-    $form_state['config_translation_language'] = $this->language;
-    $form_state['config_translation_source_language'] = $this->sourceLanguage;
+    $form_state->set('config_translation_mapper', $this->mapper);
+    $form_state->set('config_translation_language', $this->language);
+    $form_state->set('config_translation_source_language', $this->sourceLanguage);
 
     $form['#attached']['library'][] = 'config_translation/drupal.config_translation.admin';
 

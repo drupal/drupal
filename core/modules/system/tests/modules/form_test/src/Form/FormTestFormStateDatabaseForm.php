@@ -38,10 +38,10 @@ class FormTestFormStateDatabaseForm extends FormBase {
     );
 
     $db = Database::getConnection('default');
-    $form_state['storage']['database'] = $db;
-    $form_state['storage']['database_class'] = get_class($db);
+    $form_state->set('database', $db);
+    $form_state->set('database_class', get_class($db));
 
-    if (isset($form_state['storage']['database_connection_found'])) {
+    if ($form_state->has('database_connection_found')) {
       $form['database']['#markup'] = 'Database connection found';
     }
 
@@ -52,11 +52,12 @@ class FormTestFormStateDatabaseForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['cache'] = TRUE;
-    $form_state['rebuild'] = TRUE;
+    $form_state->setCached();
+    $form_state->setRebuild();
 
-    if ($form_state['storage']['database'] instanceof $form_state['storage']['database_class']) {
-      $form_state['storage']['database_connection_found'] = TRUE;
+    $database_class = $form_state->get('database_class');
+    if ($form_state->get('database') instanceof $database_class) {
+      $form_state->set('database_connection_found', TRUE);
     }
   }
 

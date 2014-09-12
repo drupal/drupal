@@ -170,7 +170,8 @@ class InOperator extends FilterPluginBase {
     $form['value'] = array();
     $options = array();
 
-    if (empty($form_state['exposed'])) {
+    $exposed = $form_state->get('exposed');
+    if (!$exposed) {
       // Add a select all option to the value form.
       $options = array('all' => t('Select all'));
     }
@@ -183,7 +184,7 @@ class InOperator extends FilterPluginBase {
     if (!empty($form['operator'])) {
       $source = ':input[name="options[operator]"]';
     }
-    if (!empty($form_state['exposed'])) {
+    if ($exposed) {
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
@@ -228,13 +229,13 @@ class InOperator extends FilterPluginBase {
         '#size' => count($options) > 8 ? 8 : count($options),
       );
       $user_input = $form_state->getUserInput();
-      if (!empty($form_state['exposed']) && !isset($user_input[$identifier])) {
+      if ($exposed && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $default_value;
         $form_state->setUserInput($user_input);
       }
 
       if ($which == 'all') {
-        if (empty($form_state['exposed']) && (in_array($this->valueFormType, array('checkbox', 'checkboxes', 'radios', 'select')))) {
+        if (!$exposed && (in_array($this->valueFormType, ['checkbox', 'checkboxes', 'radios', 'select']))) {
           $form['value']['#prefix'] = '<div id="edit-options-value-wrapper">';
           $form['value']['#suffix'] = '</div>';
         }

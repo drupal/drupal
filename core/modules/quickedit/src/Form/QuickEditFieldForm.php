@@ -85,12 +85,12 @@ class QuickEditFieldForm extends FormBase {
    * Builds a form for a single entity field.
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity = NULL, $field_name = NULL) {
-    if (!isset($form_state['entity'])) {
+    if (!$form_state->has('entity')) {
       $this->init($form_state, $entity, $field_name);
     }
 
     // Add the field form.
-    $form_state['form_display']->buildForm($entity, $form, $form_state);
+    $form_state->get('form_display')->buildForm($entity, $form, $form_state);
 
     // Add a dummy changed timestamp field to attach form errors to.
     if ($entity instanceof EntityChangedInterface) {
@@ -126,8 +126,8 @@ class QuickEditFieldForm extends FormBase {
       $entity->revision_log = NULL;
     }
 
-    $form_state['entity'] = $entity;
-    $form_state['field_name'] = $field_name;
+    $form_state->set('entity', $entity);
+    $form_state->set('field_name', $field_name);
 
     // Fetch the display used by the form. It is the display for the 'default'
     // form mode, with only the current field visible.
@@ -137,7 +137,7 @@ class QuickEditFieldForm extends FormBase {
         $display->removeComponent($name);
       }
     }
-    $form_state['form_display'] = $display;
+    $form_state->set('form_display', $display);
   }
 
   /**
@@ -146,7 +146,7 @@ class QuickEditFieldForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity = $this->buildEntity($form, $form_state);
 
-    $form_state['form_display']->validateFormValues($entity, $form, $form_state);
+    $form_state->get('form_display')->validateFormValues($entity, $form, $form_state);
 
     // Do validation on the changed field as well and assign the error to the
     // dummy form element we added for this. We don't know the name of this
@@ -165,10 +165,11 @@ class QuickEditFieldForm extends FormBase {
    * Saves the entity with updated values for the edited field.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['entity'] = $this->buildEntity($form, $form_state);
+    $entity = $this->buildEntity($form, $form_state);
+    $form_state->set('entity', $entity);
 
     // Store entity in tempstore with its UUID as tempstore key.
-    $this->tempStoreFactory->get('quickedit')->set($form_state['entity']->uuid(), $form_state['entity']);
+    $this->tempStoreFactory->get('quickedit')->set($entity->uuid(), $entity);
   }
 
   /**
@@ -179,10 +180,10 @@ class QuickEditFieldForm extends FormBase {
    */
   protected function buildEntity(array $form, FormStateInterface $form_state) {
     /** @var $entity \Drupal\Core\Entity\EntityInterface */
-    $entity = clone $form_state['entity'];
-    $field_name = $form_state['field_name'];
+    $entity = clone $form_state->get('entity');
+    $field_name = $form_state->get('field_name');
 
-    $form_state['form_display']->extractFormValues($entity, $form, $form_state);
+    $form_state->get('form_display')->extractFormValues($entity, $form, $form_state);
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.
@@ -207,7 +208,7 @@ class QuickEditFieldForm extends FormBase {
    *   The current state of the form.
    */
   protected function simplify(array &$form, FormStateInterface $form_state) {
-    $field_name = $form_state['field_name'];
+    $field_name = $form_state->get('field_name');
     $widget_element =& $form[$field_name]['widget'];
 
     // Hide the field label from displaying within the form, because JavaScript

@@ -250,9 +250,10 @@ class ViewUI implements ViewStorageInterface {
 
     // Based on the user's choice in the display dropdown, determine which display
     // these changes apply to.
+    $display_id = $form_state->get('display_id');
     if ($revert) {
       // If it's revert just change the override and return.
-      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
+      $display = &$this->executable->displayHandlers->get($display_id);
       $display->optionsOverride($form, $form_state);
 
       // Don't execute the normal submit handling but still store the changed view into cache.
@@ -266,7 +267,7 @@ class ViewUI implements ViewStorageInterface {
     elseif ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
-      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
+      $display = &$this->executable->displayHandlers->get($display_id);
       // optionsOverride toggles the override of this section.
       $display->optionsOverride($form, $form_state);
       $display->submitOptionsForm($form, $form_state);
@@ -276,22 +277,14 @@ class ViewUI implements ViewStorageInterface {
       // to go back to the default display.
       // Overwrite the default display with the current form values, and make
       // the current display use the new default values.
-      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
+      $display = &$this->executable->displayHandlers->get($display_id);
       // optionsOverride toggles the override of this section.
       $display->optionsOverride($form, $form_state);
       $display->submitOptionsForm($form, $form_state);
     }
 
-    $submit_handler = $form['#form_id'] . '_submit';
-    if (isset($form_state['build_info']['callback_object'])) {
-      $submit_handler = array($form_state['build_info']['callback_object'], 'submitForm');
-    }
-    if (is_callable($submit_handler)) {
-      // The submit handler might be a function or a method on the
-      // callback_object. Additional note that we have to pass the parameters
-      // by reference, as php 5.4 requires us to do that.
-      call_user_func_array($submit_handler, array(&$form, &$form_state));
-    }
+    $submit_handler = [$form_state->getFormObject(), 'submitForm'];
+    call_user_func_array($submit_handler, [&$form, $form_state]);
   }
 
   /**
@@ -330,11 +323,11 @@ class ViewUI implements ViewStorageInterface {
     // Views provides its own custom handling of AJAX form submissions. Usually
     // this happens at the same path, but custom paths may be specified in
     // $form_state.
-    $form_path = empty($form_state['path']) ? current_path() : $form_state['path'];
+    $form_path = $form_state->get('path') ?: current_path();
 
     // Forms that are purely informational set an ok_button flag, so we know not
     // to create an "Apply" button for them.
-    if (empty($form_state['ok_button'])) {
+    if (!$form_state->get('ok_button')) {
       $form['actions']['submit'] = array(
         '#type' => 'submit',
         '#value' => $name,
@@ -364,19 +357,14 @@ class ViewUI implements ViewStorageInterface {
         $form['actions']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['actions']['submit']['#type'], '#process', array()));
       }
       // If a validation handler exists for the form, assign it to this button.
-      if (isset($form_state['build_info']['callback_object'])) {
-        $form['actions']['submit']['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
-      }
-      if (function_exists($form_id . '_validate')) {
-        $form['actions']['submit']['#validate'][] = $form_id . '_validate';
-      }
+      $form['actions']['submit']['#validate'][] = [$form_state->getFormObject(), 'validateForm'];
     }
 
     // Create a "Cancel" button. For purely informational forms, label it "OK".
     $cancel_submit = function_exists($form_id . '_cancel') ? $form_id . '_cancel' : array($this, 'standardCancel');
     $form['actions']['cancel'] = array(
       '#type' => 'submit',
-      '#value' => empty($form_state['ok_button']) ? t('Cancel') : t('Ok'),
+      '#value' => !$form_state->get('ok_button') ? t('Cancel') : t('Ok'),
       '#submit' => array($cancel_submit),
       '#validate' => array(),
       '#ajax' => array(
@@ -388,10 +376,10 @@ class ViewUI implements ViewStorageInterface {
     // Compatibility, to be removed later: // TODO: When is "later"?
     // We used to set these items on the form, but now we want them on the $form_state:
     if (isset($form['#title'])) {
-      $form_state['title'] = $form['#title'];
+      $form_state->set('title', $form['#title']);
     }
     if (isset($form['#section'])) {
-      $form_state['#section'] = $form['#section'];
+      $form_state->set('#section', $form['#section']);
     }
     // Finally, we never want these cached -- our object cache does that for us.
     $form['#no_cache'] = TRUE;
@@ -413,7 +401,7 @@ class ViewUI implements ViewStorageInterface {
       if ($was_defaulted !== $is_defaulted && isset($form['#section'])) {
         // We're changing which display these values apply to.
         // Update the #section so it knows what to mark changed.
-        $form['#section'] = str_replace('default-', $form_state['display_id'] . '-', $form['#section']);
+        $form['#section'] = str_replace('default-', $form_state->get('display_id') . '-', $form['#section']);
       }
     }
     else {
@@ -477,16 +465,17 @@ class ViewUI implements ViewStorageInterface {
    * Submit handler for adding new item(s) to a view.
    */
   public function submitItemAdd($form, FormStateInterface $form_state) {
-    $type = $form_state['type'];
+    $type = $form_state->get('type');
     $types = ViewExecutable::getHandlerTypes();
     $section = $types[$type]['plural'];
+    $display_id = $form_state->get('display_id');
 
     // Handle the override select.
     list($was_defaulted, $is_defaulted) = $this->getOverrideValues($form, $form_state);
     if ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
-      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
+      $display = &$this->executable->displayHandlers->get($display_id);
       // setOverride toggles the override of this section.
       $display->setOverride($section);
     }
@@ -495,7 +484,7 @@ class ViewUI implements ViewStorageInterface {
       // to go back to the default display.
       // Overwrite the default display with the current form values, and make
       // the current display use the new default values.
-      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
+      $display = &$this->executable->displayHandlers->get($display_id);
       // optionsOverride toggles the override of this section.
       $display->setOverride($section);
     }
@@ -508,7 +497,7 @@ class ViewUI implements ViewStorageInterface {
         if ($cut = strpos($field, '$')) {
           $field = substr($field, 0, $cut);
         }
-        $id = $this->executable->addHandler($form_state['display_id'], $type, $table, $field);
+        $id = $this->executable->addHandler($display_id, $type, $table, $field);
 
         // check to see if we have group by settings
         $key = $type;
@@ -522,15 +511,15 @@ class ViewUI implements ViewStorageInterface {
         );
         $handler = Views::handlerManager($key)->getHandler($item);
         if ($this->executable->displayHandlers->get('default')->useGroupBy() && $handler->usesGroupBy()) {
-          $this->addFormToStack('handler-group', $form_state['display_id'], $type, $id);
+          $this->addFormToStack('handler-group', $display_id, $type, $id);
         }
 
         // check to see if this type has settings, if so add the settings form first
         if ($handler && $handler->hasExtraOptions()) {
-          $this->addFormToStack('handler-extra', $form_state['display_id'], $type, $id);
+          $this->addFormToStack('handler-extra', $display_id, $type, $id);
         }
         // Then add the form to the stack
-        $this->addFormToStack('handler', $form_state['display_id'], $type, $id);
+        $this->addFormToStack('handler', $display_id, $type, $id);
       }
     }
 

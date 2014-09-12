@@ -144,7 +144,7 @@ class MenuForm extends EntityForm {
       // equally separated yet. Therefore, we use a $form_state key to point to
       // the parents of the form section.
       // @see self::submitOverviewForm()
-      $form_state['menu_overview_form_parents'] = array('links');
+      $form_state->set('menu_overview_form_parents', ['links']);
       $form['links'] = array();
       $form['links'] = $this->buildOverviewForm($form['links'], $form_state);
     }
@@ -359,7 +359,7 @@ class MenuForm extends EntityForm {
     // within forms, but does not allow to handle the form section's submission
     // equally separated yet. Therefore, we use a $form_state key to point to
     // the parents of the form section.
-    $parents = $form_state['menu_overview_form_parents'];
+    $parents = $form_state->get('menu_overview_form_parents');
     $input = NestedArray::getValue($form_state->getUserInput(), $parents);
     $form = &NestedArray::getValue($complete_form, $parents);
 

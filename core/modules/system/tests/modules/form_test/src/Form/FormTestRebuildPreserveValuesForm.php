@@ -49,7 +49,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
     // checkboxes and a textfield. The test is to make sure that the rebuild
     // triggered by this button preserves the user input values for the initial
     // elements and initializes the new elements with the correct default values.
-    if (empty($form_state['storage']['add_more'])) {
+    if (!$form_state->has('add_more')) {
       $form['add_more'] = array(
         '#type' => 'submit',
         '#value' => 'Add more',
@@ -88,8 +88,8 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
    */
   public function addMoreSubmitForm(array &$form, FormStateInterface $form_state) {
     // Rebuild, to test preservation of input values.
-    $form_state['storage']['add_more'] = TRUE;
-    $form_state['rebuild'] = TRUE;
+    $form_state->set('add_more', TRUE);
+    $form_state->setRebuild();
   }
 
   /**

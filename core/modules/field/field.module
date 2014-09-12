@@ -349,10 +349,11 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
   // Only display the message when there is a storage comparer available and the
   // form is not submitted.
   $user_input = $form_state->getUserInput();
-  if (isset($form_state['storage_comparer']) && empty($user_input)) {
+  $storage_comparer = $form_state->get('storage_comparer');
+  if ($storage_comparer && empty($user_input)) {
     $field_storages = \Drupal\field\ConfigImporterFieldPurger::getFieldStoragesToPurge(
-      $form_state['storage_comparer']->getSourceStorage()->read('core.extension'),
-      $form_state['storage_comparer']->getChangelist('delete')
+      $storage_comparer->getSourceStorage()->read('core.extension'),
+      $storage_comparer->getChangelist('delete')
     );
     if ($field_storages) {
       foreach ($field_storages as $field) {

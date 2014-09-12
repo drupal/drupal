@@ -153,7 +153,7 @@ class Page extends PathPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    switch ($form_state['section']) {
+    switch ($form_state->get('section')) {
       case 'menu':
         $form['#title'] .= t('Menu item entry');
         $form['menu'] = array(
@@ -383,7 +383,7 @@ class Page extends PathPluginBase {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
-    if ($form_state['section'] == 'menu') {
+    if ($form_state->get('section') == 'menu') {
       $path = $this->getOption('path');
       $menu_type = $form_state->getValue(array('menu', 'type'));
       if ($menu_type == 'normal' && strpos($path, '%') !== FALSE) {
@@ -410,14 +410,14 @@ class Page extends PathPluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
-    switch ($form_state['section']) {
+    switch ($form_state->get('section')) {
       case 'menu':
         $menu = $form_state->getValue('menu');
         list($menu['menu_name'], $menu['parent']) = explode(':', $menu['parent'], 2);
         $this->setOption('menu', $menu);
         // send ajax form to options page if we use it.
         if ($form_state->getValue(array('menu', 'type')) == 'default tab') {
-          $form_state['view']->addFormToStack('display', $this->display['id'], 'tab_options');
+          $form_state->get('view')->addFormToStack('display', $this->display['id'], 'tab_options');
         }
         break;
       case 'tab_options':

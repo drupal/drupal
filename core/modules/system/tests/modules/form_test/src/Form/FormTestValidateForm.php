@@ -51,7 +51,7 @@ class FormTestValidateForm extends FormBase {
 
     // To simplify this test, enable form caching and use form storage to
     // remember our alteration.
-    $form_state['cache'] = TRUE;
+    $form_state->setCached();
 
     return $form;
   }

@@ -73,8 +73,9 @@ class FormAjaxController implements ContainerInjectionInterface {
     // button) that triggered the Ajax request to determine what needs to be
     // rendered.
     $callback = NULL;
-    if (!empty($form_state['triggering_element'])) {
-      $callback = $form_state['triggering_element']['#ajax']['callback'];
+    /** @var $form_state \Drupal\Core\Form\FormStateInterface */
+    if ($triggering_element = $form_state->getTriggeringElement()) {
+      $callback = $triggering_element['#ajax']['callback'];
     }
     $callback = $form_state->prepareCallback($callback);
     if (empty($callback) || !is_callable($callback)) {
@@ -118,13 +119,15 @@ class FormAjaxController implements ContainerInjectionInterface {
     }
 
     // Since some of the submit handlers are run, redirects need to be disabled.
-    $form_state['no_redirect'] = TRUE;
+    $form_state->disableRedirect();
 
     // When a form is rebuilt after Ajax processing, its #build_id and #action
     // should not change.
     // @see \Drupal\Core\Form\FormBuilderInterface::rebuildForm()
-    $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
-    $form_state['rebuild_info']['copy']['#action'] = TRUE;
+    $form_state->addRebuildInfo('copy', [
+      '#build_id' => TRUE,
+      '#action' => TRUE,
+    ]);
 
     // The form needs to be processed; prepare for that by setting a few internal
     // variables.

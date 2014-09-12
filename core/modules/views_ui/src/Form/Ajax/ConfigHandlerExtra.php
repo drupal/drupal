@@ -51,10 +51,10 @@ class ConfigHandlerExtra extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
-    $type = $form_state['type'];
-    $id = $form_state['id'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $type = $form_state->get('type');
+    $id = $form_state->get('id');
 
     $form = array(
       'options' => array(
@@ -82,7 +82,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
 
         // Get form from the handler.
         $handler->buildExtraOptionsForm($form['options'], $form_state);
-        $form_state['handler'] = $handler;
+        $form_state->set('handler', $handler);
       }
 
       $view->getStandardButtons($form, $form_state, 'views_ui_config_item_extra_form');
@@ -94,16 +94,18 @@ class ConfigHandlerExtra extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['handler']->validateExtraOptionsForm($form['options'], $form_state);
+    $form_state->get('handler')->validateExtraOptionsForm($form['options'], $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $view = $form_state->get('view');
+    $handler = $form_state->get('handler');
     // Run it through the handler's submit function.
-    $form_state['handler']->submitExtraOptionsForm($form['options'], $form_state);
-    $item = $form_state['handler']->options;
+    $handler->submitExtraOptionsForm($form['options'], $form_state);
+    $item = $handler->options;
 
     // Store the data we're given.
     foreach ($form_state->getValue('options') as $key => $value) {
@@ -111,10 +113,10 @@ class ConfigHandlerExtra extends ViewsFormBase {
     }
 
     // Store the item back on the view
-    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $view->getExecutable()->setHandler($form_state->get('display_id'), $form_state->get('type'), $form_state->get('id'), $item);
 
     // Write to cache
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 
 }

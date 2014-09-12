@@ -32,12 +32,12 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    *
-   * @todo Remove this and switch all usage of $form_state['section'] to
-   *   $form_state['type'].
+   * @todo Remove this and switch all usage of $form_state->get('section') to
+   *   $form_state->get('type').
    */
   public function getFormState(ViewStorageInterface $view, $display_id, $js) {
     $form_state = parent::getFormState($view, $display_id, $js);
-    $form_state['section'] = $this->type;
+    $form_state->set('section', $this->type);
     return $form_state;
   }
 
@@ -60,8 +60,8 @@ class Display extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $view = $form_state['view'];
-    $display_id = $form_state['display_id'];
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
 
     $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
@@ -84,11 +84,7 @@ class Display extends ViewsFormBase {
       unset($form['options']['override']);
     }
 
-    $name = NULL;
-    if (isset($form_state['update_name'])) {
-      $name = $form_state['update_name'];
-    }
-
+    $name = $form_state->get('update_name');
     $view->getStandardButtons($form, $form_state, 'views_ui_edit_display_form', $name);
     return $form;
   }
@@ -97,10 +93,12 @@ class Display extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id'])->validateOptionsForm($form['options'], $form_state);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $view->getExecutable()->displayHandlers->get($display_id)->validateOptionsForm($form['options'], $form_state);
 
     if ($form_state->getErrors()) {
-      $form_state['rerender'] = TRUE;
+      $form_state->set('rerender', TRUE);
     }
   }
 
@@ -108,9 +106,11 @@ class Display extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id'])->submitOptionsForm($form['options'], $form_state);
+    $view = $form_state->get('view');
+    $display_id = $form_state->get('display_id');
+    $view->getExecutable()->displayHandlers->get($display_id)->submitOptionsForm($form['options'], $form_state);
 
-    $form_state['view']->cacheSet();
+    $view->cacheSet();
   }
 
 }

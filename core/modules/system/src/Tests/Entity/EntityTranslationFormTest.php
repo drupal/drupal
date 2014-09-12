@@ -73,8 +73,8 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Explicitly set form langcode.
     $langcode = $this->langcodes[0];
-    $form_state['langcode'] = $langcode;
-    \Drupal::service('entity.form_builder')->getForm($node, 'default', $form_state);
+    $form_state_additions['langcode'] = $langcode;
+    \Drupal::service('entity.form_builder')->getForm($node, 'default', $form_state_additions);
     $form_langcode = \Drupal::state()->get('entity_test.form_langcode');
     $this->assertTrue($langcode == $form_langcode, 'Form language is the same as the language parameter.');
 

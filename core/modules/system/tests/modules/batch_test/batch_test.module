@@ -11,9 +11,9 @@ use Drupal\Core\Form\FormState;
  * Batch operation: Submits form_test_mock_form() using drupal_form_submit().
  */
 function _batch_test_nested_drupal_form_submit_callback($value) {
-  $state = new FormState();
-  $state['values']['test_value'] = $value;
-  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $state);
+  $form_state = (new FormState())
+    ->setValue('test_value', $value);
+  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
 }
 
 /**

@@ -219,7 +219,7 @@ function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStat
 function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
   $node->book = $form_state->getValue('book');
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**

@@ -251,7 +251,7 @@ class BulkForm extends FieldPluginBase {
    *   The current state of the form.
    */
   public function viewsFormSubmit(&$form, FormStateInterface $form_state) {
-    if ($form_state['step'] == 'views_form_views_form') {
+    if ($form_state->get('step') == 'views_form_views_form') {
       // Filter only selected checkboxes.
       $selected = array_filter($form_state->getValue($this->options['id']));
       $entities = array();

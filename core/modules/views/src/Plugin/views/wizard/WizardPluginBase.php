@@ -741,7 +741,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // Display: REST export.
-    if (!empty($form_state['values']['rest_export']['create'])) {
+    if (!$form_state->isValueEmpty(['rest_export', 'create'])) {
       $display_options['rest_export'] = $this->restExportDisplayOptions($form, $form_state);
     }
 
@@ -1117,7 +1117,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function restExportDisplayOptions(array $form, FormStateInterface $form_state) {
     $display_options = array();
-    $display_options['path'] = $form_state['values']['rest_export']['path'];
+    $display_options['path'] = $form_state->getValue(['rest_export', 'path']);
     $display_options['style'] = array('type' => 'serializer');
 
     return $display_options;

@@ -85,8 +85,8 @@ class FormTestClickedButtonForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (isset($form_state['triggering_element'])) {
-      drupal_set_message(t('The clicked button is %name.', array('%name' => $form_state['triggering_element']['#name'])));
+    if ($triggering_element = $form_state->getTriggeringElement()) {
+      drupal_set_message(t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
     }
     else {
       drupal_set_message('There is no clicked button.');

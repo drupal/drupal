@@ -116,14 +116,17 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = []) {
-    $form_state['step'] = isset($form_state['step']) ? $form_state['step'] : 'views_form_views_form';
-    $form_state['step_controller']['views_form_views_form'] = 'Drupal\views\Form\ViewsFormMainForm';
+    if (!$step = $form_state->get('step')) {
+      $step = 'views_form_views_form';
+      $form_state->set('step', $step);
+    }
+    $form_state->set(['step_controller', 'views_form_views_form'], 'Drupal\views\Form\ViewsFormMainForm');
 
     // Cache the built form to prevent it from being rebuilt prior to validation
     // and submission, which could lead to data being processed incorrectly,
     // because the views rows (and thus, the form elements as well) have changed
     // in the meantime.
-    $form_state['cache'] = TRUE;
+    $form_state->setCached();
 
     $form = array();
 
@@ -134,7 +137,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     // Tell the preprocessor whether it should hide the header, footer, pager...
     $form['show_view_elements'] = array(
       '#type' => 'value',
-      '#value' => ($form_state['step'] == 'views_form_views_form') ? TRUE : FALSE,
+      '#value' => ($step == 'views_form_views_form') ? TRUE : FALSE,
     );
 
     $form_object = $this->getFormObject($form_state);
@@ -170,7 +173,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    */
   protected function getFormObject(FormStateInterface $form_state) {
     // If this is a class, instantiate it.
-    $form_step_class = isset($form_state['step_controller'][$form_state['step']]) ? $form_state['step_controller'][$form_state['step']] : 'Drupal\views\Form\ViewsFormMainForm';
+    $form_step_class = $form_state->get(['step_controller', $form_state->get('step')]) ?: 'Drupal\views\Form\ViewsFormMainForm';
     return $this->classResolver->getInstanceFromDefinition($form_step_class);
   }
 

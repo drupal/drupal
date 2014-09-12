@@ -64,7 +64,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
 
     // @todo Remove this.
     // Execute legacy global validation handlers.
-    unset($form_state['validate_handlers']);
+    $form_state->setValidateHandlers([]);
     form_execute_handlers('validate', $form, $form_state);
   }
 
@@ -87,13 +87,13 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * {@inheritdoc}
    */
   public function getFormLangcode(FormStateInterface $form_state) {
-    if (empty($form_state['langcode'])) {
+    if (!$form_state->has('langcode')) {
       // Imply a 'view' operation to ensure users edit entities in the same
       // language they are displayed. This allows to keep contextual editing
       // working also for multilingual entities.
-      $form_state['langcode'] = $this->entityManager->getTranslationFromContext($this->entity)->language()->id;
+      $form_state->set('langcode', $this->entityManager->getTranslationFromContext($this->entity)->language()->id);
     }
-    return $form_state['langcode'];
+    return $form_state->get('langcode');
   }
 
   /**
@@ -124,14 +124,14 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * {@inheritdoc}
    */
   public function getFormDisplay(FormStateInterface $form_state) {
-    return isset($form_state['form_display']) ? $form_state['form_display'] : NULL;
+    return $form_state->get('form_display');
   }
 
   /**
    * {@inheritdoc}
    */
   public function setFormDisplay(EntityFormDisplayInterface $form_display, FormStateInterface $form_state) {
-    $form_state['form_display'] = $form_display;
+    $form_state->set('form_display', $form_display);
     return $this;
   }
 

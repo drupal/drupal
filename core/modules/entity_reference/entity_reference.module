@@ -159,8 +159,7 @@ function _entity_reference_element_validate_filter(&$element, FormStateInterface
  * @see entity_reference_field_instance_settings_form()
  */
 function entity_reference_settings_ajax($form, FormStateInterface $form_state) {
-  $trigger = $form_state['triggering_element'];
-  return NestedArray::getValue($form, $trigger['#ajax']['element']);
+  return NestedArray::getValue($form, $form_state->getTriggeringElement()['#ajax']['element']);
 }
 
 /**
@@ -169,7 +168,7 @@ function entity_reference_settings_ajax($form, FormStateInterface $form_state) {
  * @see entity_reference_field_instance_settings_form()
  */
 function entity_reference_settings_ajax_submit($form, FormStateInterface $form_state) {
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**

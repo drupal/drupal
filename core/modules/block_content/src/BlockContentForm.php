@@ -202,7 +202,7 @@ class BlockContentForm extends ContentEntityForm {
 
     if ($block->id()) {
       $form_state->setValue('id', $block->id());
-      $form_state['id'] = $block->id();
+      $form_state->set('id', $block->id());
       if ($insert) {
         if (!$theme = $block->getTheme()) {
           $theme = $this->config('system.theme')->get('default');
@@ -223,7 +223,7 @@ class BlockContentForm extends ContentEntityForm {
       // In the unlikely case something went wrong on save, the block will be
       // rebuilt and block form redisplayed.
       drupal_set_message($this->t('The block could not be saved.'), 'error');
-      $form_state['rebuild'] = TRUE;
+      $form_state->setRebuild();
     }
   }
 

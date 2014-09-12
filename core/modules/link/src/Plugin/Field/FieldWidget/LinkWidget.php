@@ -84,7 +84,7 @@ class LinkWidget extends WidgetBase {
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field
     // settings cannot be saved otherwise.
-    if (empty($form_state['default_value_widget']) && $this->getFieldSetting('title') == DRUPAL_REQUIRED) {
+    if (!$form_state->get('default_value_widget') && $this->getFieldSetting('title') == DRUPAL_REQUIRED) {
       $element['#element_validate'][] = array($this, 'validateTitle');
     }
 
