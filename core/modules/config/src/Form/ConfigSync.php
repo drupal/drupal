@@ -199,7 +199,7 @@ class ConfigSync extends FormBase {
         '#type' => 'table',
         '#header' => array('Name', 'Operations'),
         '#rows' => array(),
-        '#empty' => $this->t('There are no configuration changes.'),
+        '#empty' => $this->t('There are no configuration changes to import.'),
       );
       $form['actions']['#access'] = FALSE;
       return $form;

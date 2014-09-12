@@ -124,7 +124,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
 
     // Run the import.
     $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
-    $this->assertText(t('There are no configuration changes.'));
+    $this->assertText(t('There are no configuration changes to import.'));
 
     $this->assertFalse(entity_load('node_type', $active_type), 'The content no longer exists with the old name.');
     $content_type = entity_load('node_type', $staged_type);

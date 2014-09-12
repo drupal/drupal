@@ -193,7 +193,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes.'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
     $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test1')));
     $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test2')));
     $this->assertText('config_test.create');
@@ -210,7 +210,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
     $this->drupalPostForm(NULL, array(), 'Import all');
-    $this->assertText(t('There are no configuration changes.'));
+    $this->assertText(t('There are no configuration changes to import.'));
 
     // Test data in collections.
     $data = $test1_storage->read('config_test.create');

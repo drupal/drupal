@@ -40,7 +40,7 @@ class ConfigImportUITest extends WebTestBase {
     $staging = $this->container->get('config.storage.staging');
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText('There are no configuration changes.');
+    $this->assertText('There are no configuration changes to import.');
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Create updated configuration object.
@@ -122,7 +122,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
     // Verify that there are no further changes to import.
-    $this->assertText(t('There are no configuration changes.'));
+    $this->assertText(t('There are no configuration changes to import.'));
 
     // Verify site name has changed.
     $this->assertIdentical($new_site_name, \Drupal::config('system.site')->get('name'));
@@ -223,7 +223,7 @@ class ConfigImportUITest extends WebTestBase {
 
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes.'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
@@ -313,7 +313,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->prepareSiteNameUpdate($new_site_name);
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes.'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
     $this->drupalPostForm(NULL, array(), t('Import all'));
 
     // Verify that the validation messages appear.
@@ -388,14 +388,14 @@ class ConfigImportUITest extends WebTestBase {
     $staging->write($name_secondary, $values_secondary);
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes.'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, array(), t('Import all'));
     $this->assertText(String::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
     $this->assertText(t('The configuration was imported with errors.'));
     $this->assertNoText(t('The configuration was imported successfully.'));
-    $this->assertText(t('There are no configuration changes.'));
+    $this->assertText(t('There are no configuration changes to import.'));
   }
 
 }
