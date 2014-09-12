@@ -15,7 +15,6 @@ use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\State\StateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -65,13 +64,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   protected $searchSettings;
 
   /**
-   * The Drupal state object used to set 'node.cron_last'.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * The Drupal account to use for checking for access to advanced search.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -117,7 +109,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('config.factory')->get('search.settings'),
-      $container->get('state'),
       $container->get('current_user')
     );
   }
@@ -139,17 +130,14 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   A module manager object.
    * @param \Drupal\Core\Config\Config $search_settings
    *   A config object for 'search.settings'.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The Drupal state object used to set 'node.cron_last'.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The $account object to use for checking for access to advanced search.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, StateInterface $state, AccountInterface $account = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, AccountInterface $account = NULL) {
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->searchSettings = $search_settings;
-    $this->state = $state;
     $this->account = $account;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -348,10 +336,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   The node to index.
    */
   protected function indexNode(NodeInterface $node) {
-    // Save the changed time of the most recent indexed node, for the search
-    // results half-life calculation.
-    $this->state->set('node.cron_last', $node->getChangedTime());
-
     $languages = $node->getTranslationLanguages();
     $node_render = $this->entityManager->getViewBuilder('node');
 
