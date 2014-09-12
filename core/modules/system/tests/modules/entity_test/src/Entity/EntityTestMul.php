@@ -24,7 +24,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
+ *     "views_data" = "Drupal\views\EntityViewsData"
  *   },
  *   base_table = "entity_test_mul",
  *   data_table = "entity_test_mul_property_data",

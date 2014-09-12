@@ -7,118 +7,47 @@
 
 namespace Drupal\file;
 
-use Drupal\views\EntityViewsDataInterface;
+use Drupal\views\EntityViewsData;
 
 /**
  * Provides views data for the file entity type.
  */
-class FileViewsData implements EntityViewsDataInterface {
+class FileViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}
    */
   public function getViewsData() {
-    $data = array();
-    // Sets 'group' index for file_managed table.
-    $data['file_managed']['table']['group']  = t('File');
+    $data = parent::getViewsData();
 
-    // Advertise this table as a possible base table.
-    $data['file_managed']['table']['base'] = array(
-      'field' => 'fid',
-      'title' => t('File'),
-      'help' => t("Files maintained by Drupal and various modules."),
-      'defaults' => array(
-        'field' => 'filename'
-      ),
-    );
-    $data['file_managed']['table']['entity type'] = 'file';
+    // @TODO There is no corresponding information in entity metadata.
+    $data['file_managed']['table']['base']['help'] = t('Files maintained by Drupal and various modules.');
+    $data['file_managed']['table']['base']['defaults']['field'] = 'filename';
     $data['file_managed']['table']['wizard_id'] = 'file_managed';
 
-    // Describes fid field in file_managed table.
-    $data['file_managed']['fid'] = array(
-      'title' => t('File ID'),
-      'help' => t('The ID of the file.'),
-      'field' => array(
-        'id' => 'file',
-      ),
-      'argument' => array(
-        'id' => 'file_fid',
-        // The field to display in the summary.
-        'name field' => 'filename',
-        'numeric' => TRUE,
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'relationship' => array(
-        'title' => t('File usage'),
-        'help' => t('Relate file entities to their usage.'),
-        'id' => 'standard',
-        'base' => 'file_usage',
-        'base field' => 'fid',
-        'field' => 'fid',
-        'label' => t('File usage'),
-      ),
+    $data['file_managed']['fid']['field']['id'] ='file';
+    $data['file_managed']['fid']['argument'] = array(
+      'id' => 'file_fid',
+      // The field to display in the summary.
+      'name field' => 'filename',
+      'numeric' => TRUE,
+    );
+    $data['file_managed']['fid']['relationship'] = array(
+      'title' => t('File usage'),
+      'help' => t('Relate file entities to their usage.'),
+      'id' => 'standard',
+      'base' => 'file_usage',
+      'base field' => 'fid',
+      'field' => 'fid',
+      'label' => t('File usage'),
     );
 
-    // Describes filename field in file_managed table.
-    $data['file_managed']['filename'] = array(
-      'title' => t('Name'),
-      'help' => t('The name of the file.'),
-      'field' => array(
-        'id' => 'file',
-       ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['file_managed']['filename']['field']['id'] = 'file';
 
-    // Describes uri field in file_managed table.
-    $data['file_managed']['uri'] = array(
-      'title' => t('Path'),
-      'help' => t('The path of the file.'),
-      'field' => array(
-        'id' => 'file_uri',
-       ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['file_managed']['uri']['field']['id'] = 'file_uri';
 
-    // Describes filemime field in file_managed table.
-    $data['file_managed']['filemime'] = array(
-      'title' => t('Mime type'),
-      'help' => t('The mime type of the file.'),
-      'field' => array(
-        'id' => 'file_filemime',
-       ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['file_managed']['filemime']['field']['id'] = 'file_filemime';
 
-    // Describes extension field in file_managed table.
     $data['file_managed']['extension'] = array(
       'title' => t('Extension'),
       'help' => t('The extension of the file.'),
@@ -129,79 +58,14 @@ class FileViewsData implements EntityViewsDataInterface {
        ),
     );
 
-    // Describes filesize field in file_managed table.
-    $data['file_managed']['filesize'] = array(
-      'title' => t('Size'),
-      'help' => t('The size of the file.'),
-      'field' => array(
-        'id' => 'file_size',
-       ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-    );
+    $data['file_managed']['filesize']['field']['id'] = 'file_size';
 
-    // Describes status field in file_managed table.
-    $data['file_managed']['status'] = array(
-      'title' => t('Status'),
-      'help' => t('The status of the file.'),
-      'field' => array(
-        'id' => 'file_status',
-       ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'file_status',
-      ),
-    );
+    $data['file_managed']['status']['field']['id'] = 'file_status';
+    $data['file_managed']['status']['filter']['id'] = 'file_status';
 
-    // Describes created field in file_managed table.
-    $data['file_managed']['created'] = array(
-      'title' => t('Upload date'),
-      'help' => t('The date the file was uploaded.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date',
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
+    $data['file_managed']['uid']['relationship']['title'] = t('User who uploaded');
+    $data['file_managed']['uid']['relationship']['label'] = t('User who uploaded');
 
-    // Describes changed field in file_managed table.
-    $data['file_managed']['changed'] = array(
-      'title' => t('Modified date'),
-      'help' => t('The date the file was last changed.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date',
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
-
-    // Describes uid field in file_managed table.
-    $data['file_managed']['uid'] = array(
-      'title' => t('User who uploaded'),
-      'help' => t('The user that uploaded the file.'),
-      'relationship' => array(
-        'title' => t('User who uploaded'),
-        'label' => t('User who uploaded'),
-        'base' => 'users',
-        'base field' => 'uid',
-      ),
-    );
-
-    // Sets 'group' index for file_usage table.
     $data['file_usage']['table']['group']  = t('File Usage');
 
     // Provide field-type-things to several base tables; on the core files table
@@ -499,4 +363,3 @@ class FileViewsData implements EntityViewsDataInterface {
   }
 
 }
-

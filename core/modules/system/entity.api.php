@@ -310,7 +310,8 @@ use Drupal\Core\Render\Element;
  *     config entities will use \Drupal\Core\Config\Entity\ConfigEntityStorage.
  *     You can extend one of these classes to provide custom behavior.
  *   - views_data: A class implementing \Drupal\views\EntityViewsDataInterface
- *     to provide views data for the entity type.
+ *     to provide views data for the entity type. You can autogenerate most of
+ *     the views data by extending \Drupal\views\EntityViewsData.
  * - For content entities, the annotation will refer to a number of database
  *   tables and their fields. These annotation properties, such as 'base_table',
  *   'data_table', 'entity_keys', etc., are documented on

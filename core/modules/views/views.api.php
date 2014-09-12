@@ -26,9 +26,10 @@ use Drupal\Core\Language\LanguageInterface;
  *   by implementing hook_views_data_alter(). To provide views data for an
  *   entity, create a class implementing
  *   \Drupal\views\EntityViewsDataInterface and reference this in the
- *   "views_data" annotation in the entity class. See the
- *   @link entity_api Entity API topic @endlink for more information about
- *   entities.
+ *   "views_data" annotation in the entity class. You can autogenerate big parts
+ *   of the ingration if you extend the \Drupal\views\EntityViewsData base
+ *   class. See the @link entity_api Entity API topic @endlink for more
+ *   information about entities.
  * - Implement hooks: A few operations in Views can be influenced by hooks.
  *   See the @link Views hooks topic @endlink for a list.
  * - Theming: See the @link views_templates Views templates topic @endlink

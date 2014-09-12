@@ -28,7 +28,7 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
   /**
    * The storage field definitions for this entity type.
    *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface[]
+   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */
   protected $fieldStorageDefinitions;
 
