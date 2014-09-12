@@ -374,7 +374,7 @@ function hook_ajax_render_alter(array &$data) {
  *   Nested array of renderable elements that make up the page.
  *
  * @see hook_page_alter()
- * @see drupal_render_page()
+ * @see DefaultHtmlFragmentRenderer::render()
  */
 function hook_page_build(&$page) {
   $path = drupal_get_path('module', 'foo');
@@ -659,7 +659,7 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *   Nested array of renderable elements that make up the page.
  *
  * @see hook_page_build()
- * @see drupal_render_page()
+ * @see DefaultHtmlFragmentRenderer::render()
  */
 function hook_page_alter(&$page) {
   // Add help text to the user login block.

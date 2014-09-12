@@ -1793,7 +1793,7 @@ function template_preprocess_html(&$variables) {
  * inside "modules/system/page.html.twig". Look in there for the full list of
  * variables.
  *
- * @see drupal_render_page()
+ * @see DefaultHtmlFragmentRenderer::render()
  */
 function template_preprocess_page(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();

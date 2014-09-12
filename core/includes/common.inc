@@ -2571,28 +2571,6 @@ function drupal_prepare_page($page) {
 }
 
 /**
- * Renders the page, including all theming.
- *
- * @param string|array $page
- *   A string or array representing the content of a page. The array consists of
- *   the following keys:
- *   - #type: Value is always 'page'. This pushes the theming through
- *     the page template (required).
- *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
- *     API (optional).
- *
- * @return string
- *   Returns the rendered string.
- *
- * @see hook_page_alter()
- * @see element_info()
- */
-function drupal_render_page($page) {
-  $page = drupal_prepare_page($page);
-  return drupal_render($page);
-}
-
-/**
  * Renders HTML given a structured array tree.
  *
  * Renderable arrays have two kinds of key/value pairs: properties and children.
@@ -2945,7 +2923,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // Let the theme functions in #theme_wrappers add markup around the rendered
   // children.
   // #states and #attached have to be processed before #theme_wrappers, because
-  // the #type 'page' render array from drupal_render_page() would render the
+  // the #type 'page' render array from drupal_prepare_page() would render the
   // $page and wrap it into the html.html.twig template without the attached
   // assets otherwise.
   // If the internal #render_children property is set, do not call the
