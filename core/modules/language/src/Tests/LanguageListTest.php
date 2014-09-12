@@ -155,6 +155,10 @@ class LanguageListTest extends WebTestBase {
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'English', '%langcode' => 'en');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The English language has been removed.');
+
+    // Ensure we can't delete a locked language.
+    $this->drupalGet('admin/config/regional/language/delete/und');
+    $this->assertResponse(403, 'Can not delete locked language');
   }
 
   /**
