@@ -18,7 +18,7 @@ stylesheets:
     - css/components/buttons.css
     - css/components/buttons.theme.css
     - css/components/comments.css
-    - css/components/console.css
+    - css/components/messages.css
     - css/components/dropbutton.component.css
     - css/components/entity-meta.css
     - css/components/field-ui.css
