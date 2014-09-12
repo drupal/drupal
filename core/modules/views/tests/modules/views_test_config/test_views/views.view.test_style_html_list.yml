@@ -1,0 +1,51 @@
+base_field: id
+base_table: views_test_data
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: none
+        options: {  }
+      query:
+        type: views_query
+        options: {  }
+      exposed_form:
+        type: basic
+        options: {  }
+      pager:
+        type: full
+        options: {  }
+      style:
+        type: html_list
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          type: ul
+          wrapper_class: ''
+          class: ''
+        provider: views
+      row:
+        type: fields
+        options: {  }
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          provider: views_test_data
+label: ''
+module: views
+id: test_style_html_list
+tag: ''
+langcode: en

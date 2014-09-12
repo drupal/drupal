@@ -829,20 +829,20 @@ function template_preprocess_views_view_list(&$variables) {
   $handler  = $variables['view']->style_plugin;
 
   // Fetch classes from handler options.
-  $class = explode(' ', $handler->options['class']);
-  $class = array_map('drupal_clean_css_identifier', $class);
+  if ($handler->options['class']) {
+    $class = explode(' ', $handler->options['class']);
+    $class = array_map('drupal_clean_css_identifier', $class);
 
-  // Fetch wrapper classes from handler options.
-  $wrapper_class = explode(' ', $handler->options['wrapper_class']);
-  $wrapper_class = array_map('drupal_clean_css_identifier', $wrapper_class);
-
-  // Initialize a new attribute class for $wrapper_class.
-  if ($wrapper_class) {
-    $variables['attributes']['class'] = $wrapper_class;
+    // Initialize a new attribute class for $class.
+    $variables['list']['attributes'] = new Attribute(array('class' => $class));
   }
 
-  // Initialize a new attribute class for $class.
-  $variables['list']['attributes'] = new Attribute(array('class' => $class));
+  // Fetch wrapper classes from handler options.
+  if ($handler->options['wrapper_class']) {
+    $wrapper_class = explode(' ', $handler->options['wrapper_class']);
+    $variables['attributes']['class'] = array_map('drupal_clean_css_identifier', $wrapper_class);
+  }
+
   $variables['list']['type'] = $handler->options['type'];
 
   template_preprocess_views_view_unformatted($variables);
