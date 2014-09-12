@@ -19,6 +19,7 @@ class TourViewBuilder extends EntityViewBuilder {
    * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
+    /** @var \Drupal\tour\TourInterface[] $entities */
     $build = array();
     foreach ($entities as $entity_id => $entity) {
       $tips = $entity->getTips();
@@ -63,6 +64,9 @@ class TourViewBuilder extends EntityViewBuilder {
               'hidden',
             ),
           ),
+          '#cache' => [
+            'tags' => $entity->getCacheTag(),
+          ],
         );
       }
     }

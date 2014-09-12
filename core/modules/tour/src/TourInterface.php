@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\tour\Entity\TourInterface.
+ * Contains \Drupal\tour\TourInterface.
  */
 
 namespace Drupal\tour;
