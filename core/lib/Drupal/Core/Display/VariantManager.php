@@ -16,6 +16,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @see \Drupal\Core\Display\Annotation\DisplayVariant
  * @see \Drupal\Core\Display\VariantInterface
+ * @see \Drupal\Core\Display\VariantBase
+ * @see plugin_api
  */
 class VariantManager extends DefaultPluginManager {
 

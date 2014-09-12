@@ -23,10 +23,17 @@ use Drupal\Component\Annotation\Plugin;
  * object.
  *
  * @todo: Revise description when/if Displays are added to core:
- * https://www.drupal.org/node/2292733 
+ *   https://www.drupal.org/node/2292733
+ *
+ * Plugin namespace: Plugin\DisplayVariant
+ *
+ * For a working example, see
+ * \Drupal\block\Plugin\DisplayVariant\FullPageVariant
  *
  * @see \Drupal\Core\Display\VariantInterface
+ * @see \Drupal\Core\Display\VariantBase
  * @see \Drupal\Core\Display\VariantManager
+ * @see plugin_api
  *
  * @Annotation
  */
