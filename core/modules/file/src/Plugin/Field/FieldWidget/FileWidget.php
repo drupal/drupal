@@ -97,7 +97,7 @@ class FileWidget extends WidgetBase {
     }
 
     $title = String::checkPlain($this->fieldDefinition->getLabel());
-    $description = field_filter_xss($this->fieldDefinition->getDescription());
+    $description = $this->fieldFilterXss($this->fieldDefinition->getDescription());
 
     $elements = array();
 

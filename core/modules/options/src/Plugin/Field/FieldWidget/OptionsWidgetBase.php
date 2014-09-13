@@ -219,9 +219,9 @@ abstract class OptionsWidgetBase extends WidgetBase {
    * @param string $label
    *   The label to sanitize.
    */
-  static protected function sanitizeLabel(&$label) {
+  protected function sanitizeLabel(&$label) {
     // Allow a limited set of HTML tags.
-    $label = field_filter_xss($label);
+    $label = $this->fieldFilterXss($label);
   }
 
   /**

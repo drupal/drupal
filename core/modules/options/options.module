@@ -51,7 +51,8 @@ function options_field_storage_config_delete(FieldStorageConfigInterface $field_
  * Returns the array of allowed values for a list field.
  *
  * The strings are not safe for output. Keys and values of the array should be
- * sanitized through field_filter_xss() before being displayed.
+ * sanitized through \Drupal\Core\Field\AllowedTagsXssTrait::fieldFilterXss()
+ * before being displayed.
  *
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
  *   The field definition.

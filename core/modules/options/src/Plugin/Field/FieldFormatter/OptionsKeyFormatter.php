@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -25,6 +26,8 @@ use Drupal\Core\Field\FieldItemListInterface;
  */
 class OptionsKeyFormatter extends FormatterBase {
 
+  use AllowedTagsXssTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -32,7 +35,7 @@ class OptionsKeyFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => field_filter_xss($item->value));
+      $elements[$delta] = array('#markup' => $this->fieldFilterXss($item->value));
     }
 
     return $elements;

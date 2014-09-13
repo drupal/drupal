@@ -4,9 +4,6 @@
  * Attach custom data fields to Drupal entities.
  */
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Extension;
@@ -241,41 +238,6 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   foreach ($instances as $instance) {
     $instance->delete();
   }
-}
-
-/**
- * Filters an HTML string to prevent cross-site-scripting (XSS) vulnerabilities.
- *
- * Like \Drupal\Component\Utility\Xss::filterAdmin(), but with a shorter list
- * of allowed tags.
- *
- * Used for items entered by administrators, like field descriptions, allowed
- * values, where some (mainly inline) mark-up may be desired (so
- * drupal_htmlspecialchars() is not acceptable).
- *
- * @param $string
- *   The string with raw HTML in it.
- *
- * @return
- *   An XSS safe version of $string, or an empty string if $string is not valid
- *   UTF-8.
- */
-function field_filter_xss($string) {
-  return SafeMarkup::set(Html::normalize(Xss::filter($string, _field_filter_xss_allowed_tags())));
-}
-
-/**
- * Returns a list of tags allowed by field_filter_xss().
- */
-function _field_filter_xss_allowed_tags() {
-  return array('a', 'b', 'big',  'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img');
-}
-
-/**
- * Returns a human-readable list of allowed tags for display in help texts.
- */
-function _field_filter_xss_display_allowed_tags() {
-  return '<' . implode('> <', _field_filter_xss_allowed_tags()) . '>';
 }
 
 /**

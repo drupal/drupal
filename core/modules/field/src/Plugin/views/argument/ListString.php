@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\views\argument;
 
 use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -22,6 +23,8 @@ use Drupal\views\Plugin\views\argument\String;
  * @ViewsArgument("field_list_string")
  */
 class ListString extends String {
+
+  use AllowedTagsXssTrait;
 
   /**
    * Stores the allowed values of this field.
@@ -69,7 +72,7 @@ class ListString extends String {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
-      return $this->caseTransform(field_filter_xss($this->allowed_values[$value]), $this->options['case']);
+      return $this->caseTransform($this->fieldfilterXss($this->allowed_values[$value]), $this->options['case']);
     }
     // else fallback to the key.
     else {

@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -25,6 +26,8 @@ use Drupal\Core\Field\FieldItemListInterface;
  */
 class OptionsDefaultFormatter extends FormatterBase {
 
+  use AllowedTagsXssTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -36,11 +39,11 @@ class OptionsDefaultFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       if (isset($allowed_values[$item->value])) {
-        $output = field_filter_xss($allowed_values[$item->value]);
+        $output = $this->fieldFilterXss($allowed_values[$item->value]);
       }
       else {
         // If no match was found in allowed values, fall back to the key.
-        $output = field_filter_xss($item->value);
+        $output = $this->fieldFilterXss($item->value);
       }
       $elements[$delta] = array('#markup' => $output);
     }

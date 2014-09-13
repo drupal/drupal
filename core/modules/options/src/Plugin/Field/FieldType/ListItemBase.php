@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,6 +19,8 @@ use Drupal\Core\TypedData\AllowedValuesInterface;
  * Plugin base class inherited by the options field types.
  */
 abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterface {
+
+  use AllowedTagsXssTrait;
 
   /**
    * {@inheritdoc}

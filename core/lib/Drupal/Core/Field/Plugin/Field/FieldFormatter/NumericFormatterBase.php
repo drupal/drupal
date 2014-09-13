@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,6 +16,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Parent plugin for decimal and integer formatters.
  */
 abstract class NumericFormatterBase extends FormatterBase {
+
+  use AllowedTagsXssTrait;
 
   /**
    * {@inheritdoc}
@@ -72,8 +75,8 @@ abstract class NumericFormatterBase extends FormatterBase {
 
       // Account for prefix and suffix.
       if ($this->getSetting('prefix_suffix')) {
-        $prefixes = isset($settings['prefix']) ? array_map('field_filter_xss', explode('|', $settings['prefix'])) : array('');
-        $suffixes = isset($settings['suffix']) ? array_map('field_filter_xss', explode('|', $settings['suffix'])) : array('');
+        $prefixes = isset($settings['prefix']) ? array_map(array($this, 'fieldFilterXss'), explode('|', $settings['prefix'])) : array('');
+        $suffixes = isset($settings['suffix']) ? array_map(array($this, 'fieldFilterXss'), explode('|', $settings['suffix'])) : array('');
         $prefix = (count($prefixes) > 1) ? format_plural($item->value, $prefixes[0], $prefixes[1]) : $prefixes[0];
         $suffix = (count($suffixes) > 1) ? format_plural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
         $output = $prefix . $output . $suffix;

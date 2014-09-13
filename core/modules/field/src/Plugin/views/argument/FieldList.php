@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\views\argument;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -22,6 +23,8 @@ use Drupal\views\Plugin\views\argument\Numeric;
  * @ViewsArgument("field_list")
  */
 class FieldList extends Numeric {
+
+  use AllowedTagsXssTrait;
 
   /**
    * Stores the allowed values of this field.
@@ -67,7 +70,7 @@ class FieldList extends Numeric {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
-      return field_filter_xss($this->allowed_values[$value]);
+      return $this->fieldFilterXss($this->allowed_values[$value]);
     }
     // else fallback to the key.
     else {

@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
@@ -19,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form for the field instance settings form.
  */
 class FieldInstanceEditForm extends FormBase {
+
+  use AllowedTagsXssTrait;
 
   /**
    * The field instance being edited.
@@ -124,7 +127,7 @@ class FieldInstanceEditForm extends FormBase {
       '#title' => $this->t('Help text'),
       '#default_value' => $this->instance->getDescription(),
       '#rows' => 5,
-      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '<br />' . $this->t('This field supports tokens.'),
+      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => $this->displayAllowedTags())) . '<br />' . $this->t('This field supports tokens.'),
       '#weight' => -10,
     );
 
