@@ -214,6 +214,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
     }
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
+      $this->processPlugins[$index] = array();
       foreach ($this->getProcessNormalized($process) as $property => $configurations) {
         $this->processPlugins[$index][$property] = array();
         foreach ($configurations as $configuration) {
