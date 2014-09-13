@@ -121,6 +121,12 @@ class ConfigExportImportUITest extends WebTestBase {
 
     $this->drupalGet('node/add');
     $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
+
+    \Drupal::config('system.site')
+      ->set('slogan', $this->originalSlogan)
+      ->save();
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
   }
 
   /**
