@@ -567,11 +567,6 @@ function rdf_preprocess_image(&$variables) {
  */
 function template_preprocess_rdf_metadata(&$variables) {
   foreach ($variables['metadata'] as $key => $attributes) {
-    // The XHTML+RDFa doctype allows either <span></span> or <span /> syntax to
-    // be used, but for maximum browser compatibility, W3C recommends the
-    // former when serving pages using the text/html media type, see
-    // http://www.w3.org/TR/xhtml1/#C_3.
-
     if (!is_null($attributes)) {
       $variables['metadata'][$key] = new Attribute($attributes);
     }
