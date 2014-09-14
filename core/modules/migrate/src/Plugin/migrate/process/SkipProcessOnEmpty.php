@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\Process\d6\FlagSkipProcess.
+ * Contains \Drupal\migrate\Plugin\migrate\process\d6\SkipProcessOnEmpty.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

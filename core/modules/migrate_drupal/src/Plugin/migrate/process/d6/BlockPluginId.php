@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\BlockAggregator.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockAggregator.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\Process\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

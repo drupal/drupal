@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\FieldIdGenerator.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldIdGenerator.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

@@ -4,7 +4,7 @@
  * Contains Drupal\migrate_drupal\Plugin\migrate\d6\FieldInstanceDefaults
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\Process\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\ProcessPluginBase;

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\FieldInstanceWidgetSettings
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldInstanceWidgetSettings
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\Process\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\ProcessPluginBase;

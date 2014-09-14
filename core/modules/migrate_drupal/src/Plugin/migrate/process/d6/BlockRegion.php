@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\BlockRegion.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockRegion.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\Process\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\migrate\MigrateExecutable;

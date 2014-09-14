@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\system_update_7000.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\system_update_7000.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

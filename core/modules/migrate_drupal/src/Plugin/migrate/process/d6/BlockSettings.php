@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\Process\d6\BlockSettings.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockSettings.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\Process\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\ProcessPluginBase;
