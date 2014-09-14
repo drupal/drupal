@@ -8,9 +8,9 @@
 namespace Drupal\node\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -38,11 +38,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a new language.
-    $language = new Language(array(
-      'id' => 'it',
-      'name' => 'Italian',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => '1');

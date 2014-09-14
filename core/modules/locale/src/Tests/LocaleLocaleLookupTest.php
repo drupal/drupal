@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -31,15 +32,9 @@ class LocaleLocaleLookupTest extends WebTestBase {
     parent::setUp();
 
     // Change the language default object to different values.
-    $new_language_default = new Language(array(
-      'id' => 'fr',
-      'name' => 'French',
-      'direction' => LANGUAGE::DIRECTION_LTR,
-      'weight' => 0,
-      'method_id' => 'language-default',
-      'default' => TRUE,
-    ));
-    language_save($new_language_default);
+    $language = ConfigurableLanguage::createFromLangcode('fr');
+    $language->set('default', TRUE);
+    $language->save();
     $this->drupalLogin($this->root_user);
   }
 

@@ -7,8 +7,8 @@
 
 namespace Drupal\language\Tests\Views;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Tests\ViewUnitTestBase;
-use Drupal\Core\Language\Language;
 
 /**
  * Defines the base class for all Language handler tests.
@@ -26,11 +26,8 @@ abstract class LanguageTestBase extends ViewUnitTestBase {
     parent::setUp();
     $this->installConfig(array('language'));
 
-    // Create English and another language beside English.
-    $language = new Language(array('id' => 'en'));
-    language_save($language);
-    $language = new Language(array('id' => 'xx-lolspeak', 'name' => 'Lolspeak'));
-    language_save($language);
+    // Create another language beside English.
+    ConfigurableLanguage::create(array('id' => 'xx-lolspeak', 'label' => 'Lolspeak'))->save();
   }
 
   /**

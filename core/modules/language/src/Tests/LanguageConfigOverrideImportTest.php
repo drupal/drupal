@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -28,10 +28,7 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
    * Tests that language can be enabled and overrides are created during a sync.
    */
   public function testConfigOverrideImport() {
-    language_save(new Language(array(
-      'name' => 'French',
-      'id' => 'fr',
-    )));
+    ConfigurableLanguage::createFromLangcode('fr')->save();
     /* @var \Drupal\Core\Config\StorageInterface $staging */
     $staging = \Drupal::service('config.storage.staging');
     $this->copyConfig(\Drupal::service('config.storage'), $staging);
@@ -72,10 +69,8 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
     \Drupal::moduleHandler()->install(array('config_events_test'));
     $this->rebuildContainer();
 
-    language_save(new Language(array(
-      'name' => 'French',
-      'id' => 'fr',
-    )));
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+
     /* @var \Drupal\Core\Config\StorageInterface $staging */
     $staging = \Drupal::service('config.storage.staging');
     $this->copyConfig(\Drupal::service('config.storage'), $staging);

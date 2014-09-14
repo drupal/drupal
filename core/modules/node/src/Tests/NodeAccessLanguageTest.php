@@ -7,8 +7,8 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests node_access and db_select() with node_access tag functionality with
@@ -36,19 +36,10 @@ class NodeAccessLanguageTest extends NodeTestBase {
     // Enable the private node feature of the node_access_test module.
     \Drupal::state()->set('node_access_test.private', TRUE);
 
-    // Add Hungarian and Catalan.
-    $language = new Language(array(
-      'id' => 'hu',
-    ));
-    language_save($language);
-    $language = new Language(array(
-      'id' => 'ca',
-    ));
-    language_save($language);
-    $language = new Language(array(
-      'id' => 'hr',
-    ));
-    language_save($language);
+    // Add Hungarian, Catalan and Croatian.
+    ConfigurableLanguage::createFromLangcode('hu')->save();
+    ConfigurableLanguage::createFromLangcode('ca')->save();
+    ConfigurableLanguage::createFromLangcode('hr')->save();
   }
 
   /**

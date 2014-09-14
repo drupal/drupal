@@ -7,8 +7,8 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests advanced search with different languages added.
@@ -32,11 +32,7 @@ class SearchLanguageTest extends SearchTestBase {
     $this->drupalLogin($test_user);
 
     // Add a new language.
-    $language = new Language(array(
-      'id' => 'es',
-      'name' => 'Spanish',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Make the body field translatable. The title is already translatable by
     // definition. The parent class has already created the article and page

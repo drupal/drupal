@@ -10,6 +10,8 @@ namespace Drupal\language\Entity;
 use Drupal\Core\Language\Language as LanguageObject;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
@@ -187,6 +189,10 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     if (!$this->preSaveMultilingual && !$update && $language_manager instanceof ConfigurableLanguageManagerInterface) {
       $language_manager::rebuildServices();
     }
+    if (!$update) {
+      // Install any available language configuration overrides for the language.
+      \Drupal::service('language.config_factory_override')->installLanguageOverrides($this->id());
+    }
   }
 
   /**
@@ -222,6 +228,23 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
       if ($entity->id() == $default_langcode && !$entity->isUninstalling()) {
         throw new DeleteDefaultLanguageException('Can not delete the default language');
       }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+    $language_manager = \Drupal::languageManager();
+    $language_manager->reset();
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+      $language_manager->updateLockedLanguageWeights();
+    }
+    // If after deleting this language the site will become monolingual, we need
+    // to rebuild language services.
+    if (!\Drupal::languageManager()->isMultilingual()) {
+      ConfigurableLanguageManager::rebuildServices();
     }
   }
 
@@ -317,6 +340,36 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     $this->methodId = $method_id;
 
     return $this;
+  }
+
+  /**
+   * Creates a configurable language object from a langcode.
+   *
+   * @param string $langcode
+   *   The language code to use to create the object.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Language\LanguageManager::getStandardLanguageList()
+   */
+  public static function createFromLangcode($langcode) {
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    if (!isset($standard_languages[$langcode])) {
+      // Drupal does not know about this language, so we set its values with the
+      // best guess. The user will be able to edit afterwards.
+      return static::create(array(
+        'id' => $langcode,
+        'label' => $langcode,
+      ));
+    }
+    else {
+      // A known predefined language, details will be filled in properly.
+      return static::create(array(
+        'id' => $langcode,
+        'label' => $standard_languages[$langcode][0],
+        'direction' => isset($standard_languages[$langcode][2]) ? $standard_languages[$langcode][2] : static::DIRECTION_LTR,
+      ));
+    }
   }
 
 }

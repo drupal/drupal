@@ -7,8 +7,8 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests node access functionality with multiple languages and two node access
@@ -78,14 +78,8 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     node_access_rebuild();
 
     // Add Hungarian and Catalan.
-    $language = new Language(array(
-      'id' => 'hu',
-    ));
-    language_save($language);
-    $language = new Language(array(
-      'id' => 'ca',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('hu')->save();
+    ConfigurableLanguage::createFromLangcode('ca')->save();
 
     // Create a normal authenticated user.
     $this->web_user = $this->drupalCreateUser(array('access content'));

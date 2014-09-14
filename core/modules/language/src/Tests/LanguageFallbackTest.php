@@ -7,8 +7,8 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the language fallback behavior.
@@ -25,11 +25,9 @@ class LanguageFallbackTest extends LanguageTestBase {
 
     $i = 0;
     foreach (array('af', 'am', 'ar') as $langcode) {
-      $language = new Language(array(
-        'id' => $langcode,
-        'weight' => $i--,
-      ));
-      language_save($language);
+      $language = ConfigurableLanguage::createFromLangcode($langcode);
+      $language->set('weight', $i--);
+      $language->save();
     }
   }
 
@@ -60,12 +58,13 @@ class LanguageFallbackTest extends LanguageTestBase {
     $this->assertEqual(array_values($candidates), $expected, 'Language fallback candidates are alterable for specific operations.');
 
     // Check that when the site is monolingual no language fallback is applied.
-    $default_langcode = $this->languageManager->getDefaultLanguage()->id;
+    $langcodes_to_delete = array();
     foreach ($language_list as $langcode => $language) {
-      if ($langcode != $default_langcode) {
-        language_delete($langcode);
+      if (!$language->isDefault()) {
+        $langcodes_to_delete[] = $langcode;
       }
     }
+    entity_delete_multiple('configurable_language', $langcodes_to_delete);
     $candidates = $this->languageManager->getFallbackCandidates();
     $this->assertEqual(array_values($candidates), array(LanguageInterface::LANGCODE_DEFAULT), 'Language fallback is not applied when the Language module is not enabled.');
   }

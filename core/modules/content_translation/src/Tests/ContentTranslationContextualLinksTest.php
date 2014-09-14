@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
@@ -65,7 +65,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     parent::setUp();
     // Set up an additional language.
     $this->langcodes = array(language_default()->id, 'es');
-    language_save(new Language(array('id' => 'es')));
+    ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a content type.
     $this->bundle = $this->randomMachineName();

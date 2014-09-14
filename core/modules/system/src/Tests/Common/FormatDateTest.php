@@ -7,8 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -49,8 +48,7 @@ class FormatDateTest extends WebTestBase {
       'Long month name' => array('March' => 'marzo'),
     ));
 
-    $language = new Language(array('id' => static::LANGCODE));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode(static::LANGCODE)->save();
     $this->resetAll();
   }
 
@@ -98,8 +96,9 @@ class FormatDateTest extends WebTestBase {
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Monday, 26-Mar-07 01:00:00 BST', 'Test a different time zone.');
 
     // Change the default language and timezone.
-    $language = new Language(array('id' => static::LANGCODE, 'name' => self::LANGCODE, 'default' => TRUE));
-    language_save($language);
+    $language = ConfigurableLanguage::load(static::LANGCODE);
+    $language->set('default', TRUE);
+    $language->save();
     date_default_timezone_set('America/Los_Angeles');
 
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test a different language.');

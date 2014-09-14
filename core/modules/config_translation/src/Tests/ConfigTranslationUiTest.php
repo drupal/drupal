@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -78,8 +79,7 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Add languages.
     foreach ($this->langcodes as $langcode) {
-      $language = new Language(array('id' => $langcode));
-      language_save($language);
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
     $this->localeStorage = $this->container->get('locale.storage');
   }
@@ -570,7 +570,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));

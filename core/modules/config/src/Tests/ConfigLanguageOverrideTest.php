@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -44,14 +44,8 @@ class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
     $raw = $config->getRawData();
     $this->assertIdentical($raw['foo'], 'bar');
 
-    language_save(new Language(array(
-      'name' => 'French',
-      'id' => 'fr',
-    )));
-    language_save(new Language(array(
-      'name' => 'German',
-      'id' => 'de',
-    )));
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    ConfigurableLanguage::createFromLangcode('de')->save();
 
     \Drupal::languageManager()->setConfigOverrideLanguage(language_load('fr'));
     $config = \Drupal::config('config_test.system');

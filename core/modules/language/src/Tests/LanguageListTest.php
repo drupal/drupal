@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -48,7 +49,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -79,7 +80,7 @@ class LanguageListTest extends WebTestBase {
     // Edit a language.
     $name = $this->randomMachineName(16);
     $edit = array(
-      'name' => $name,
+      'label' => $name,
     );
     $this->drupalPostForm('admin/config/regional/language/edit/' . $langcode, $edit, t('Save language'));
     $this->assertRaw($name, 'The language has been updated.');
@@ -132,7 +133,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -166,10 +167,10 @@ class LanguageListTest extends WebTestBase {
    */
   function testLanguageStates() {
     // Add some languages, and also lock some of them.
-    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l1')));
-    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l2', 'locked' => TRUE)));
-    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l3')));
-    language_save(new Language(array('name' => $this->randomMachineName(), 'id' => 'l4', 'locked' => TRUE)));
+    ConfigurableLanguage::create(array('label' => $this->randomMachineName(), 'id' => 'l1'))->save();
+    ConfigurableLanguage::create(array('label' => $this->randomMachineName(), 'id' => 'l2', 'locked' => TRUE))->save();
+    ConfigurableLanguage::create(array('label' => $this->randomMachineName(), 'id' => 'l3'))->save();
+    ConfigurableLanguage::create(array('label' => $this->randomMachineName(), 'id' => 'l4', 'locked' => TRUE))->save();
     $expected_locked_languages = array('l4' => 'l4', 'l2' => 'l2', 'und' => 'und', 'zxx' => 'zxx');
     $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx');
     $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');

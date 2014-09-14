@@ -7,8 +7,8 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\LocaleConfigManager;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Config\StorageException;
 use Drupal\simpletest\DrupalUnitTestBase;
 
@@ -33,7 +33,8 @@ class LocaleConfigManagerTest extends DrupalUnitTestBase {
     $this->installConfig(array('locale_test'));
     $locale_config_manager = \Drupal::service('locale.config.typed');
 
-    $language = language_save(new Language(array('id' => 'de')));
+    $language = ConfigurableLanguage::createFromLangcode('de');
+    $language->save();
     $result = $locale_config_manager->hasTranslation('locale_test.no_translation', $language);
     $this->assertFalse($result, 'There is no translation for locale_test.no_translation configuration.');
 

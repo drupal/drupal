@@ -297,7 +297,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $this->randomMachineName(16),
+      'label' => $this->randomMachineName(16),
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));

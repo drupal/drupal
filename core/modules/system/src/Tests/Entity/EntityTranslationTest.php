@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests entity translation functionality.
@@ -477,8 +478,9 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that language fallback respects language weight by default.
     $languages = $this->languageManager->getLanguages();
-    $languages[$langcode]->weight = -1;
-    language_save($languages[$langcode]);
+    $language = ConfigurableLanguage::load($languages[$langcode]->getId());
+    $language->set('weight', -1);
+    $language->save();
     $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
     $this->assertEqual($translation->language()->id, $langcode, 'The current translation language matches the expected one.');
 

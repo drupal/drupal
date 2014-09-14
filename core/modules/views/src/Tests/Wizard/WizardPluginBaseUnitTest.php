@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views_ui\ViewUI;
 
@@ -56,12 +56,9 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
     $random_description = $this->randomMachineName();
 
     // Add a new language and mark it as default.
-    $language = new Language(array(
-      'id' => 'it',
-      'name' => 'Italian',
-      'default' => TRUE,
-    ));
-    language_save($language);
+    $language = ConfigurableLanguage::createFromLangcode('it');
+    $language->set('default', TRUE);
+    $language->save();
 
     $form_state->setValues([
       'id' => $random_id,

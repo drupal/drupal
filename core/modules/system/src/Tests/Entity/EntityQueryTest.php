@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -105,21 +105,8 @@ class EntityQueryTest extends EntityUnitTestBase {
       'format' => 'format-pl'
     ));
     // Make these languages available to the greetings field.
-    $langcode = new Language(array(
-      'id' => 'en',
-      'name' => $this->randomString(),
-    ));
-    language_save($langcode);
-    $langcode = new Language(array(
-      'id' => 'tr',
-      'name' => $this->randomString(),
-    ));
-    language_save($langcode);
-    $langcode = new Language(array(
-      'id' => 'pl',
-      'name' => $this->randomString(),
-    ));
-    language_save($langcode);
+    ConfigurableLanguage::createFromLangcode('tr')->save();
+    ConfigurableLanguage::createFromLangcode('pl')->save();
     // Calculate the cartesian product of the unit array by looking at the
     // bits of $i and add the unit at the bits that are 1. For example,
     // decimal 13 is binary 1101 so unit 3,2 and 0 will be added to the

@@ -10,8 +10,8 @@ namespace Drupal\locale\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -174,11 +174,9 @@ class ImportForm extends FormBase {
     // Add language, if not yet supported.
     $language = $this->languageManager->getLanguage($form_state->getValue('langcode'));
     if (empty($language)) {
-      $language = new Language(array(
-        'id' => $form_state->getValue('langcode'),
-      ));
-      $language = language_save($language);
-      drupal_set_message($this->t('The language %language has been created.', array('%language' => $this->t($language->name))));
+      $language = ConfigurableLanguage::createFromLangcode($form_state->getValue('langcode'));
+      $language->save();
+      drupal_set_message($this->t('The language %language has been created.', array('%language' => $this->t($language->label()))));
     }
     $options = array(
       'langcode' => $form_state->getValue('langcode'),

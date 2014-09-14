@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 
 /**
@@ -39,8 +39,7 @@ class StorageTest extends UITestBase {
   public function testDetails() {
     $view_name = 'test_view';
 
-    $language = new Language(array('name' => 'French', 'id' => 'fr'));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $edit = array(
       'label' => $this->randomMachineName(),

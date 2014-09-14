@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests search integration filters with multilingual nodes.
@@ -40,7 +40,7 @@ class SearchMultilingualTest extends ViewTestBase {
     $this->drupalLogin($user);
 
     // Add Spanish language programmatically.
-    language_save(new Language(array('id' => 'es')));
+    ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a content type and make it translatable.
     $type = $this->drupalCreateContentType();

@@ -107,13 +107,11 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // @todo This should be replaced with $this->entity->delete() when the
-    //   additional logic in language_delete() is ported.
-    $success = language_delete($this->entity->id());
+    $this->entity->delete();
+    $t_args = array('%language' => $this->entity->label(), '%langcode' => $this->entity->id());
+    $this->logger('language')->notice('The %language (%langcode) language has been removed.', $t_args);
 
-    if ($success) {
-      drupal_set_message($this->t('The %language (%langcode) language has been removed.', array('%language' => $this->entity->label(), '%langcode' => $this->entity->id())));
-    }
+    drupal_set_message($this->t('The %language (%langcode) language has been removed.', $t_args));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

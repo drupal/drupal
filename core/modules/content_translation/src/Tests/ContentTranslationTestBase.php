@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -101,7 +101,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   protected function setupLanguages() {
     $this->langcodes = array('it', 'fr');
     foreach ($this->langcodes as $langcode) {
-      language_save(new Language(array('id' => $langcode)));
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
     array_unshift($this->langcodes, \Drupal::languageManager()->getDefaultLanguage()->id);
   }

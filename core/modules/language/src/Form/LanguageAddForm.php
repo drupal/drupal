@@ -7,7 +7,10 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Form\LanguageFormBase;
 use Drupal\Core\Language\Language;
 
@@ -50,7 +53,7 @@ class LanguageAddForm extends LanguageFormBase {
         ),
       ),
       '#validate' => array('::validatePredefined'),
-      '#submit' => array('::submitForm'),
+      '#submit' => array('::submitForm', '::save'),
     );
 
     $custom_language_states_conditions = array(
@@ -66,14 +69,14 @@ class LanguageAddForm extends LanguageFormBase {
     $form['custom_language']['langcode']['#states'] = array(
       'required' => $custom_language_states_conditions,
     );
-    $form['custom_language']['name']['#states'] = array(
+    $form['custom_language']['label']['#states'] = array(
       'required' => $custom_language_states_conditions,
     );
     $form['custom_language']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add custom language'),
       '#validate' => array('::validateCustom'),
-      '#submit' => array('::submitForm'),
+      '#submit' => array('::submitForm', '::save'),
     );
 
     return $form;
@@ -82,24 +85,12 @@ class LanguageAddForm extends LanguageFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $form_state->getValue('predefined_langcode');
-    if ($langcode == 'custom') {
-      $langcode = $form_state->getValue('langcode');
-      // Custom language form.
-      $language = new Language(array(
-        'id' => $langcode,
-        'name' => $form_state->getValue('name'),
-        'direction' => $form_state->getValue('direction'),
-      ));
-    }
-    else {
-      $language = new Language(array('id' => $langcode));
-    }
-    // Save the language and inform the user that it happened.
-    $language = language_save($language);
+  public function save(array $form, FormStateInterface $form_state) {
+    parent::save($form, $form_state);
 
-    drupal_set_message($this->t('The language %language has been created and can now be used.', array('%language' => $language->name)));
+    $t_args = array('%language' => $this->entity->label(), '%langcode' => $this->entity->id());
+    $this->logger('language')->notice('The %language (%langcode) language has been created.', $t_args);
+    drupal_set_message($this->t('The language %language has been created and can now be used.', $t_args));
 
     // Tell the user they have the option to add a language switcher block
     // to their theme so they can switch between the languages.
@@ -146,6 +137,26 @@ class LanguageAddForm extends LanguageFormBase {
         $form_state->setErrorByName('predefined_langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    $langcode = $form_state->getValue('predefined_langcode');
+    if ($langcode == 'custom') {
+      $langcode = $form_state->getValue('langcode');
+      $label = $form_state->getValue('label');
+      $direction = $form_state->getValue('direction');
+    }
+    else {
+      $standard_languages = LanguageManager::getStandardLanguageList();
+      $label = $standard_languages[$langcode][0];
+      $direction = isset($standard_languages[$langcode][2]) ? $standard_languages[$langcode][2] : ConfigurableLanguage::DIRECTION_LTR;
+    }
+    $entity->set('id', $langcode);
+    $entity->set('label', $label);
+    $entity->set('direction', $direction);
   }
 
 }

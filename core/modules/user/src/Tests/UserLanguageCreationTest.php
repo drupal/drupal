@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -35,8 +35,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     // Add predefined language.
     $langcode = 'fr';
-    $language = new Language(array('id' => $langcode));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // Set language negotiation.
     $edit = array(

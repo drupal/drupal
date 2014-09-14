@@ -7,7 +7,7 @@
 
 namespace Drupal\basic_auth\Tests\Authentication;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -119,8 +119,7 @@ class BasicAuthTest extends WebTestBase {
    * Tests compatibility with locale/UI translation.
    */
   function testLocale() {
-    $language = new Language(array('id' => 'de', 'default' => TRUE));
-    language_save($language);
+    ConfigurableLanguage::create(array('id' => 'de', 'label' => 'German', 'default' => TRUE))->save();
 
     $account = $this->drupalCreateUser();
 

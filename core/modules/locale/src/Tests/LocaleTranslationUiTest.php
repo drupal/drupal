@@ -7,8 +7,8 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
 
@@ -59,7 +59,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -215,7 +215,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -285,7 +285,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -335,7 +335,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
-      'name' => $name,
+      'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -343,7 +343,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => 'yy',
-      'name' => $this->randomMachineName(16),
+      'label' => $this->randomMachineName(16),
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -462,8 +462,7 @@ class LocaleTranslationUiTest extends WebTestBase {
   public function testUICustomizedStrings() {
     $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
     $this->drupalLogin($user);
-    $language = new Language(array('id' => 'de'));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('de')->save();
 
     // Create test source string.
     $string = $this->container->get('locale.storage')->createString(array(

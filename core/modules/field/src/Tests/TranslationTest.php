@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests multilanguage fields logic.
@@ -97,11 +97,10 @@ class TranslationTest extends FieldUnitTestBase {
     $this->instance->save();
 
     for ($i = 0; $i < 3; ++$i) {
-      $language = new Language(array(
+      ConfigurableLanguage::create(array(
         'id' => 'l' . $i,
-        'name' => $this->randomString(),
-      ));
-      language_save($language);
+        'label' => $this->randomString(),
+      ))->save();
     }
   }
 

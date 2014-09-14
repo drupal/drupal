@@ -6,11 +6,8 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\language\ConfigurableLanguageManager;
-use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -410,78 +407,6 @@ function language_get_default_langcode($entity_type, $bundle) {
 }
 
 /**
- * API function to add or update a language.
- *
- * @param $language
- *   Language object with properties corresponding to the 'language'
- *   configuration properties.
- */
-function language_save($language) {
-  $configurable_language = entity_load('configurable_language', $language->id);
-  if (!$configurable_language) {
-    $configurable_language = entity_create('configurable_language', array(
-      'id' => $language->id,
-    ));
-  }
-  $language->is_new = $configurable_language->isNew();
-
-  // Assign language properties to language entity.
-  $configurable_language->label = isset($language->name) ? $language->name : '';
-  $configurable_language->direction = isset($language->direction) ? $language->direction : '0';
-  $configurable_language->locked = !empty($language->locked);
-  $configurable_language->weight = isset($language->weight) ? $language->weight : 0;
-  $configurable_language->setDefault(!empty($language->default));
-  $configurable_language->save();
-  $t_args = array('%language' => $language->name, '%langcode' => $language->id);
-  if ($language->is_new) {
-    // Install any available language configuration overrides for the language.
-    \Drupal::service('language.config_factory_override')->installLanguageOverrides($language->getId());
-    \Drupal::logger('language')->notice('The %language (%langcode) language has been created.', $t_args);
-  }
-  else {
-    \Drupal::logger('language')->notice('The %language (%langcode) language has been updated.', $t_args);
-  }
-
-  return $language;
-}
-
-/**
- * Delete a language.
- *
- * @param $langcode
- *   Language code of the language to be deleted.
- *
- * @return
- *   TRUE if language is successfully deleted. Otherwise FALSE.
- */
-function language_delete($langcode) {
-  $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
-  if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
-    $language = $languages[$langcode];
-
-    // Remove the language.
-    entity_delete_multiple('configurable_language', array($language->id));
-
-    $language_manager = \Drupal::languageManager();
-    $language_manager->reset();
-    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-      $language_manager->updateLockedLanguageWeights();
-    }
-
-    // If after deleting this language the site will become monolingual, we need
-    // to rebuild language services.
-    if (!\Drupal::languageManager()->isMultilingual()) {
-      ConfigurableLanguageManager::rebuildServices();
-    }
-
-    $t_args = array('%language' => $language->name, '%langcode' => $language->id);
-    \Drupal::logger('language')->notice('The %language (%langcode) language has been removed.', $t_args);
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/**
  * Implements hook_language_types_info().
  *
  * Defines the three core language types:
@@ -678,10 +603,9 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
  * @see language_form_system_regional_settings_alter()
  */
 function language_system_regional_settings_form_submit($form, FormStateInterface $form_state) {
-  $languages = \Drupal::languageManager()->getLanguages();
-  $language = $languages[$form_state->getValue('site_default_language')];
-  $language->default = TRUE;
-  language_save($language);
+  $default_language = ConfigurableLanguage::load($form_state->getValue('site_default_language'));
+  $default_language->set('default', TRUE);
+  $default_language->save();
 }
 
 /**

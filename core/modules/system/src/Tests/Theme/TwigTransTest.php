@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -69,9 +70,9 @@ class TwigTransTest extends WebTestBase {
     $this->installLanguages();
 
     // Assign Lolspeak (xx) to be the default language.
-    $language = \Drupal::languageManager()->getLanguage('xx');
-    $language->default = TRUE;
-    language_save($language);
+    $language = ConfigurableLanguage::load('xx');
+    $language->set('default', TRUE);
+    $language->save();
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.
@@ -218,7 +219,7 @@ class TwigTransTest extends WebTestBase {
         $edit = array(
           'predefined_langcode' => 'custom',
           'langcode' => $langcode,
-          'name' => $name,
+          'label' => $name,
           'direction' => LanguageInterface::DIRECTION_LTR,
         );
 

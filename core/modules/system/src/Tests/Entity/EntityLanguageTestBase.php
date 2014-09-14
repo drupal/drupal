@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Base class for language-aware entity tests.
@@ -111,13 +111,13 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     // Create test languages.
     $this->langcodes = array();
     for ($i = 0; $i < 3; ++$i) {
-      $language = new Language(array(
+      $language = ConfigurableLanguage::create(array(
         'id' => 'l' . $i,
-        'name' => $this->randomString(),
+        'label' => $this->randomString(),
         'weight' => $i,
       ));
-      $this->langcodes[$i] = $language->id;
-      language_save($language);
+      $this->langcodes[$i] = $language->id();
+      $language->save();
     }
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -40,8 +40,7 @@ class LocaleStringTest extends WebTestBase {
     $this->storage = $this->container->get('locale.storage');
     // Create two languages: Spanish and German.
     foreach (array('es', 'de') as $langcode) {
-      $language = new Language(array('id' => $langcode));
-      $languages[$langcode] = language_save($language);
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
   }
 

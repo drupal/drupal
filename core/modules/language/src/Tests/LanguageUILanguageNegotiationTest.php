@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -88,15 +89,10 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     $default_language = \Drupal::languageManager()->getDefaultLanguage();
-    $language = new Language(array(
-      'id' => $langcode_browser_fallback,
-      'default' => TRUE,
-    ));
-    language_save($language);
-    $language = new Language(array(
-      'id' => $langcode,
-    ));
-    language_save($language);
+    $language = ConfigurableLanguage::createFromLangcode($langcode_browser_fallback);
+    $language->set('default', TRUE);
+    $language->save();
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // We will look for this string in the admin/config screen to see if the
     // corresponding translated string is shown.
@@ -108,7 +104,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Now the t()'ed string is in db so switch the language back to default.
     // This will rebuild the container so we need to rebuild the container in
     // the test environment.
-    language_save($default_language);
+    $default_language = ConfigurableLanguage::load($default_language->getId());
+    $default_language->set('default', TRUE);
+    $default_language->save();
     \Drupal::config('language.negotiation')->set('url.prefixes.en', '')->save();
     $this->rebuildContainer();
 
@@ -349,10 +347,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   function testUrlLanguageFallback() {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
-    $language = new Language(array(
-      'id' => $langcode_browser_fallback,
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
     $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable the path prefix for the default language: this way any unprefixed
@@ -400,11 +395,8 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    */
   function testLanguageDomain() {
     // Add the Italian language.
-    $langcode = 'it';
-    $language = new Language(array(
-      'id' => $langcode,
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('it')->save();
+
     $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable browser and URL language detection.

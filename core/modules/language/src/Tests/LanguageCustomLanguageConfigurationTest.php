@@ -50,7 +50,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => 'white space',
-      'name' => '<strong>evil markup</strong>',
+      'label' => '<strong>evil markup</strong>',
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -62,7 +62,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'custom',
       'langcode' => 'de',
-      'name' => 'German',
+      'label' => 'German',
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
 
@@ -70,7 +70,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t(
       'The language %language has been created and can now be used.',
-      array('%language' => $edit['name'])
+      array('%language' => $edit['label'])
     ));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
 
@@ -78,7 +78,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t(
       'The language %language (%langcode) already exists.',
-      array('%language' => $edit['name'], '%langcode' => $edit['langcode'])
+      array('%language' => $edit['label'], '%langcode' => $edit['langcode'])
     ));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
   }

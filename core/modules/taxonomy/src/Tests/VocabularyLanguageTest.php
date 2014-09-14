@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the language functionality for vocabularies.
@@ -26,17 +26,15 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Add some custom languages.
-    $language = new Language(array(
+    ConfigurableLanguage::create(array(
       'id' => 'aa',
-      'name' => $this->randomMachineName(),
-    ));
-    language_save($language);
+      'label' => $this->randomMachineName(),
+    ))->save();
 
-    $language = new Language(array(
+    ConfigurableLanguage::create(array(
       'id' => 'bb',
-      'name' => $this->randomMachineName(),
-    ));
-    language_save($language);
+      'label' => $this->randomMachineName(),
+    ))->save();
   }
 
   /**

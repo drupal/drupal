@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -52,8 +52,7 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
 
     // Add languages.
     foreach ($this->langcodes as $langcode) {
-      $language = new Language(array('id' => $langcode));
-      language_save($language);
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
   }
 

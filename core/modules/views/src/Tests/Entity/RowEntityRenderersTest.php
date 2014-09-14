@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Entity;
 
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
@@ -59,8 +59,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     for ($i = 0; $i < 2; $i++) {
       $langcode = 'l' . $i;
       $this->langcodes[] = $langcode;
-      $language = new Language(array('id' => $langcode));
-      language_save($language);
+      ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
 
     // Make sure we do not try to render non-existing user data.

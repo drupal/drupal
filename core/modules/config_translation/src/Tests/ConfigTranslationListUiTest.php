@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -325,8 +325,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doLanguageListTest() {
     // Create a test language to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $language = new Language(array('id' => 'ga', 'name' => 'Irish'));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('ga')->save();
 
     // Get the language listing.
     $this->drupalGet('admin/config/regional/language');

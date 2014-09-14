@@ -7,8 +7,8 @@
 
 namespace Drupal\comment\Tests\Views;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests comment field filters with translations.
@@ -40,17 +40,8 @@ class CommentFieldFilterTest extends CommentTestBase {
     parent::setUp();
 
     // Add two new languages.
-    $language = new Language(array(
-      'id' => 'fr',
-      'name' => 'French',
-    ));
-    language_save($language);
-
-    $language = new Language(array(
-      'id' => 'es',
-      'name' => 'Spanish',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Make the comment body field translatable. The title is already
     // translatable by definition.

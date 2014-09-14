@@ -8,7 +8,7 @@
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Entity\Menu;
 
 /**
@@ -38,11 +38,10 @@ class MenuLanguageTest extends MenuWebTestBase {
 
     // Add some custom languages.
     foreach (array('aa', 'bb', 'cc', 'cs') as $language_code) {
-      $language = new Language(array(
+      ConfigurableLanguage::create(array(
         'id' => $language_code,
-        'name' => $this->randomMachineName(),
-      ));
-      language_save($language);
+        'label' => $this->randomMachineName(),
+      ))->save();
     }
   }
 
@@ -151,10 +150,10 @@ class MenuLanguageTest extends MenuWebTestBase {
 
     // Remove English language. To do that another language has to be set as
     // default.
-    $language = language_load('cs');
-    $language->default = TRUE;
-    language_save($language);
-    language_delete('en');
+    $language = ConfigurableLanguage::load('cs');
+    $language->set('default', TRUE);
+    $language->save();
+    entity_delete_multiple('configurable_language', array('en'));
 
     // Save the menu again and check if the language is still the same.
     $this->drupalPostForm("admin/structure/menu/manage/$menu_name", array(), t('Save'));

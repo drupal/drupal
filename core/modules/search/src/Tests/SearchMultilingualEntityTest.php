@@ -7,8 +7,8 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests entities with multilingual fields.
@@ -51,17 +51,8 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertIndexCounts(0, 0, 'before adding nodes');
 
     // Add two new languages.
-    $language = new Language(array(
-      'id' => 'hu',
-      'name' => 'Hungarian',
-    ));
-    language_save($language);
-
-    $language = new Language(array(
-      'id' => 'sv',
-      'name' => 'Swedish',
-    ));
-    language_save($language);
+    ConfigurableLanguage::createFromLangcode('hu')->save();
+    ConfigurableLanguage::createFromLangcode('sv')->save();
 
     // Make the body field translatable. The title is already translatable by
     // definition. The parent class has already created the article and page
