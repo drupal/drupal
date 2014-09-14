@@ -202,7 +202,7 @@ interface LanguageManagerInterface {
   /**
    * Gets the current configuration override language.
    *
-   * @return \Drupal\Core\Language\LanguageInterface $language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The current configuration override language.
    */
   public function getConfigOverrideLanguage();
