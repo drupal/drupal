@@ -11,11 +11,14 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 
 /**
  * Provides a common base class for entity view and form displays.
  */
 abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDisplayInterface {
+
+  use ThirdPartySettingsTrait;
 
   /**
    * Unique ID for the config entity.

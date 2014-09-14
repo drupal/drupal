@@ -77,6 +77,11 @@ core.entity_view_display.*.*.*:
       sequence:
         - type: boolean
           label: 'Value'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: entity_view_display.third_party.[%key]
 
 # Overview configuration information for form mode displays.
 core.entity_form_display.*.*.*:
@@ -109,9 +114,11 @@ core.entity_form_display.*.*.*:
       sequence:
         - type: boolean
           label: 'Component'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: entity_form_display.third_party.[%key]
 
 # Default schema for entity display field with undefined type.
 entity_view_display.field.*:

@@ -369,6 +369,10 @@ function entity_test_entity_presave(EntityInterface $entity) {
   if (isset($GLOBALS['entity_test_throw_exception'])) {
     throw new Exception('Entity presave exception', 1);
   }
+
+  if ($entity->getEntityType()->id() == 'entity_view_display') {
+    $entity->setThirdPartySetting('entity_test', 'foo', 'bar');
+  }
 }
 
 /**

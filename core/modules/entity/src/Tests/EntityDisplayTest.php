@@ -8,14 +8,14 @@
 namespace Drupal\entity\Tests;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the entity display configuration entities.
  *
  * @group entity
  */
-class EntityDisplayTest extends DrupalUnitTestBase {
+class EntityDisplayTest extends KernelTestBase {
 
   public static $modules = array('entity', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system');
 
@@ -57,6 +57,11 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     foreach (array('component_1', 'component_2', 'component_3') as $name) {
       $this->assertEqual($display->getComponent($name), $expected[$name]);
     }
+
+    // Ensure that third party settings were added to the config entity.
+    // These are added by entity_test_entity_presave() implemented in
+    // entity_test module.
+    $this->assertEqual('bar', $display->getThirdPartySetting('entity_test', 'foo'), 'Third party settings were added to the entity view display.');
 
     // Check that getComponents() returns options for all components.
     $expected['name'] = array(
@@ -288,7 +293,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
 
     $expected_view_dependencies = array(
       'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
-      'module' => array('text', 'user')
+      'module' => array('entity_test', 'text', 'user')
     );
     // Check that the display has dependencies on the bundle, fields and the
     // modules that provide the formatters.

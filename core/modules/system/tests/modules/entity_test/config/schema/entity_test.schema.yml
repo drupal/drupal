@@ -1,0 +1,7 @@
+entity_view_display.third_party.entity_test:
+  type: mapping
+  label: 'Schema for entity_test module additions to entity_view_display entity'
+  mapping:
+    foo:
+      type: string
+      label: 'Label for foo'
