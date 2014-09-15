@@ -36,6 +36,7 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
     $this->migrateExecutable = $this->getMockBuilder('Drupal\migrate\MigrateExecutable')
       ->disableOriginalConstructor()
       ->getMock();
+
     parent::setUp();
   }
 

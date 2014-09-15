@@ -99,7 +99,8 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
         break;
       }
     }
-    if (!$destination_ids && (($self && empty($this->configuration['no stub'])) || isset($this->configuration['stub_id']) || count($migrations) == 1))  {
+
+    if (!$destination_ids && ($self && empty($this->configuration['no_stub']) || isset($this->configuration['stub_id']) || count($migrations) == 1)) {
       // If the lookup didn't succeed, figure out which migration will do the
       // stubbing.
       if ($self) {
