@@ -35,6 +35,7 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertText(t('Add new view mode'));
     $this->assertLinkByHref('admin/structure/display-modes/view/add');
+    $this->assertLinkByHref('admin/structure/display-modes/view/add/entity_test');
 
     $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mulrev');
     $this->assertResponse(404);
