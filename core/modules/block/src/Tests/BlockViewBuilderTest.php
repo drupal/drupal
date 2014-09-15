@@ -83,7 +83,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $entity = Block::load('test_block1');
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div class="block block-block-test" id="block-test-block1">';
+    $expected[] = '<div id="block-test-block1" class="block block-block-test">';
     $expected[] = '  ';
     $expected[] = '    ';
     $expected[] = '';
@@ -110,7 +110,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $entity->save();
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div class="block block-block-test" id="block-test-block2">';
+    $expected[] = '<div id="block-test-block2" class="block block-block-test">';
     $expected[] = '  ';
     $expected[] = '      <h2>Powered by Bananas</h2>';
     $expected[] = '    ';

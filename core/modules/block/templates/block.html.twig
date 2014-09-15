@@ -21,13 +21,6 @@
  * - content: The content of this block.
  * - attributes: HTML attributes for the containing element.
  *   - id: A valid HTML ID and guaranteed unique.
- *   - class: Classes that can be used to style contextually through
- *     CSS. These can be manipulated through preprocess functions. The default
- *     values can be one or more of the following:
- *     - block: The current template type, i.e., "theming hook".
- *     - block-[module]: The module generating the block. For example, the user
- *       module is responsible for handling the default user navigation block.
- *       In that case the class would be 'block-user'.
  * - title_attributes: HTML attributes for the title element.
  * - content_attributes: HTML attributes for the content element.
  * - title_prefix: Additional output populated by modules, intended to be
@@ -41,14 +34,20 @@
  */
  @todo Remove the div around content as per http://drupal.org/node/1972122.
 #}
-<div{{ attributes }}>
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if label %}
     <h2{{ title_attributes }}>{{ label }}</h2>
   {% endif %}
   {{ title_suffix }}
 
-  <div{{ content_attributes }}>
+  <div{{ content_attributes.addClass('content') }}>
     {% block content %}
       {{ content }}
     {% endblock %}

@@ -50,7 +50,7 @@ class BlockPreprocessUnitTest extends WebTestBase {
     // Test adding a class to the block content.
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);
-    $this->assertEqual($variables['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes');
+    $this->assertEqual($variables['content_attributes']['class'], array('test-class'), 'Test-class class added to block content_attributes');
   }
 
 }

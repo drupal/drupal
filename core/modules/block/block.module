@@ -274,12 +274,6 @@ function template_preprocess_block(&$variables) {
     $variables['label'] = $variables['elements']['content']['#title'];
   }
 
-  $variables['attributes']['class'][] = 'block';
-  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['provider']);
-
-  // Add default class for block content.
-  $variables['content_attributes']['class'][] = 'content';
-
   // Create a valid HTML ID and make sure it is unique.
   if (!empty($variables['elements']['#id'])) {
     $variables['attributes']['id'] = drupal_html_id('block-' . $variables['elements']['#id']);
