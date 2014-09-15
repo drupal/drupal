@@ -10,6 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Drupal error utility class.
@@ -48,7 +49,7 @@ class Error {
 
     // For PDOException errors, we try to return the initial caller,
     // skipping internal functions of the database layer.
-    if ($exception instanceof \PDOException) {
+    if ($exception instanceof \PDOException || $exception instanceof DatabaseExceptionWrapper) {
       // The first element in the stack is the call, the second element gives us
       // the caller. We skip calls that occurred in one of the classes of the
       // database layer or in one of its global functions.

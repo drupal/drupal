@@ -1827,6 +1827,10 @@ abstract class WebTestBase extends TestBase {
     // XPath allows for finding wrapper nodes better than DOM does.
     $xpath = new \DOMXPath($dom);
     foreach ($ajax_response as $command) {
+      // Error messages might be not commands.
+      if (!is_array($command)) {
+        continue;
+      }
       switch ($command['command']) {
         case 'settings':
           $drupal_settings = drupal_merge_js_settings(array($drupal_settings, $command['settings']));

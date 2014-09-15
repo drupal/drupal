@@ -130,6 +130,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestMaintenance', 30);
+    $events[KernelEvents::EXCEPTION][] = array('onKernelRequestMaintenance');
     return $events;
   }
 

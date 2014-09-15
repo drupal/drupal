@@ -70,8 +70,8 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * Cookie provider to send all relevant session data to the user.
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('onRespond', 0);
-    $events[KernelEvents::EXCEPTION][] = array('onException', 0);
+    $events[KernelEvents::RESPONSE][] = ['onRespond', 0];
+    $events[KernelEvents::EXCEPTION][] = ['onException', 75];
     return $events;
   }
 }

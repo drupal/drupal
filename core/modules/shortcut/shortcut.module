@@ -320,15 +320,9 @@ function shortcut_preprocess_page(&$variables) {
   // shortcuts and if the page's actual content is being shown (for example,
   // we do not want to display it on "access denied" or "page not found"
   // pages).
-  $item = array();
-  if (\Drupal::routeMatch()->getRouteObject()) {
-    // @todo What should be done on a 404/403 page?
-    $item['access'] = TRUE;
-  }
-
-  if (shortcut_set_edit_access() && !empty($item['access'])) {
+  if (shortcut_set_edit_access() && !\Drupal::request()->attributes->has('exception')) {
     $link = current_path();
-    if (!($url = Url::createFromPath($link))) {
+    if (!($url = \Drupal::pathValidator()->getUrlIfValid($link))) {
       // Bail out early if we couldn't find a matching route.
       return;
     }

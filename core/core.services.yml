@@ -196,6 +196,11 @@ services:
     factory_method: get
     factory_service: logger.factory
     arguments: ['system']
+  logger.channel.php:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['php']
   logger.channel.image:
     class: Drupal\Core\Logger\LoggerChannel
     factory_method: get
@@ -736,16 +741,44 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
-  exception_controller:
-    class: Drupal\Core\Controller\ExceptionController
-    arguments: ['@content_negotiation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer', '@string_translation', '@url_generator', '@logger.factory']
-    calls:
-      - [setContainer, ['@service_container']]
-  exception_listener:
-    class: Drupal\Core\EventSubscriber\ExceptionListener
+  exception.default_json:
+    class: Drupal\Core\EventSubscriber\ExceptionJsonSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: [['@exception_controller', execute]]
+  exception.default_html:
+    class: Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@html_fragment_renderer', '@html_page_renderer']
+  exception.default:
+    class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@html_fragment_renderer', '@html_page_renderer', '@config.factory']
+  exception.logger:
+    class: Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@logger.factory']
+  exception.custom_page_json:
+    class: Drupal\Core\EventSubscriber\ExceptionJsonSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@config.factory', '@path.alias_manager', '@http_kernel']
+  exception.custom_page_html:
+    class: Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@config.factory', '@path.alias_manager', '@http_kernel', '@logger.channel.php']
+  exception.fast_404_html:
+    class: Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@config.factory', '@http_kernel']
+  exception.test_site:
+    class: Drupal\Core\EventSubscriber\ExceptionTestSiteSubscriber
+    tags:
+      - { name: event_subscriber }
   route_processor_manager:
     class: Drupal\Core\RouteProcessor\RouteProcessorManager
     tags:

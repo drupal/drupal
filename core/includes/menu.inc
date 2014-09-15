@@ -573,7 +573,7 @@ function menu_local_tasks($level = 0) {
     $data['actions'] = array();
 
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if (!empty($route_name)) {
+    if (!\Drupal::request()->attributes->has('exception') && !empty($route_name)) {
       $manager = \Drupal::service('plugin.manager.menu.local_task');
       $local_tasks = $manager->getTasksBuild($route_name);
       foreach ($local_tasks as $level => $items) {

@@ -23,7 +23,7 @@ class ContentNegotiation {
    * The normalized type is a short, lowercase version of the format, such as
    * 'html', 'json' or 'atom'.
    *
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object from which to extract the content type.
    *
    * @return string
