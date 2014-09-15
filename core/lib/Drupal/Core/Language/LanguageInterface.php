@@ -105,16 +105,6 @@ interface LanguageInterface {
   public function getName();
 
   /**
-   * Sets the name of the language.
-   *
-   * @param string $name
-   *   The human-readable English name of the language.
-   *
-   * @return $this
-   */
-  public function setName($name);
-
-  /**
    * Gets the ID (language code).
    *
    * @return string
@@ -131,16 +121,6 @@ interface LanguageInterface {
   public function getDirection();
 
   /**
-   * Sets the direction of the language.
-   *
-   * @param int $direction
-   *   Either self::DIRECTION_LTR or self::DIRECTION_RTL.
-   *
-   * @return $this
-   */
-  public function setDirection($direction);
-
-  /**
    * Gets the weight of the language.
    *
    * @return int
@@ -150,52 +130,11 @@ interface LanguageInterface {
   public function getWeight();
 
   /**
-   * Sets the weight of the language.
-   *
-   * @param int $weight
-   *   The weight, used to order languages with larger positive weights sinking
-   *   items toward the bottom of lists.
-   *
-   * @return $this
-   */
-  public function setWeight($weight);
-
-  /**
    * Returns whether this language is the default language.
    *
    * @return bool
    *   Whether the language is the default language.
    */
   public function isDefault();
-
-  /**
-   * Sets whether this language is the default language.
-   *
-   * @param bool $default
-   *   TRUE if it is the default language.
-   *
-   * @return $this
-   */
-  public function setDefault($default);
-
-  /**
-   * Gets the language negotiation method ID for this language.
-   *
-   * @return string
-   *   The method ID, for example
-   *   \Drupal\language\LanguageNegotiatorInterface::METHOD_ID.
-   */
-  public function getNegotiationMethodId();
-
-  /**
-   * Sets the language negotiation method ID for this language.
-   *
-   * @param string $method_id
-   *   The method ID, for example
-   *   \Drupal\language\LanguageNegotiatorInterface::METHOD_ID.
-   *
-   * @return $this
-   */
-  public function setNegotiationMethodId($method_id);
 
 }

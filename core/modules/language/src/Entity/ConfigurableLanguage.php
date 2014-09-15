@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\ConfigurableLanguageManager;
+use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
@@ -91,7 +92,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @see \Drupal\language\Entity\ConfigurableLanguage::postSave()
    * @see \Drupal\language\Entity\ConfigurableLanguage::isDefault()
-   * @see \Drupal\language\Entity\ConfigurableLanguage::setDefault()
    *
    * @var bool
    */
@@ -118,17 +118,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var string
    */
-  public $methodId;
-
-  /**
-   * Sets the default flag on the language entity.
-   *
-   * @param bool $default
-   *   TRUE if the language entity is the site default language, FALSE if not.
-   */
-  public function setDefault($default) {
-    $this->default = $default;
-  }
+  public $method_id;
 
   /**
    * Checks if the language entity is the site default language.
@@ -281,15 +271,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    */
-  public function setName($name) {
-    $this->label = $name;
-
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getId() {
     return $this->id();
   }
@@ -304,42 +285,8 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    */
-  public function setDirection($direction) {
-    $this->direction = $direction;
-
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getWeight() {
     return $this->weight;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setWeight($weight) {
-    $this->weight = $weight;
-
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getNegotiationMethodId() {
-    return $this->methodId;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setNegotiationMethodId($method_id) {
-    $this->methodId = $method_id;
-
-    return $this;
   }
 
   /**

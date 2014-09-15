@@ -37,7 +37,7 @@ class Language extends User {
       $lang = $lang[$data];
     }
 
-    return $this->sanitizeValue($lang->name);
+    return $this->sanitizeValue($lang->getName());
   }
 
   /**

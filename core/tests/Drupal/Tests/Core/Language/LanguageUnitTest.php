@@ -18,34 +18,16 @@ use Drupal\Tests\UnitTestCase;
 class LanguageUnitTest extends UnitTestCase {
 
   /**
-   * The language under test.
-   *
-   * @var \Drupal\Core\Language\Language
-   */
-  protected $language;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    $this->language = new Language();
-  }
-
-  /**
-   * Tests name getter and setter methods.
-   *
    * @covers ::getName()
-   * @covers ::setName()
    */
   public function testGetName() {
     $name = $this->randomMachineName();
-    $this->assertSame($this->language, $this->language->setName($name));
-    $this->assertSame($name, $this->language->getName());
+    $language_code = $this->randomMachineName(2);
+    $language = new Language(array('id' => $language_code, 'name' => $name));
+    $this->assertSame($name, $language->getName());
   }
 
   /**
-   * Tests langcode ID getter and setter methods.
-   *
    * @covers ::getId()
    */
   public function testGetLangcode() {
@@ -55,39 +37,21 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests direction getter and setter methods.
-   *
    * @covers ::getDirection()
-   * @covers ::setDirection()
    */
   public function testGetDirection() {
-    $direction = LanguageInterface::DIRECTION_RTL;
-    $this->assertSame($this->language, $this->language->setDirection($direction));
-    $this->assertSame($direction, $this->language->getDirection());
+    $language_code = $this->randomMachineName(2);
+    $language = new Language(array('id' => $language_code, 'direction' => LanguageInterface::DIRECTION_RTL));
+    $this->assertSame(LanguageInterface::DIRECTION_RTL, $language->getDirection());
   }
 
   /**
-   * Tests isDefault() and default setter.
-   *
    * @covers ::isDefault()
-   * @covers ::setDefault()
    */
   public function testIsDefault() {
-    $default = TRUE;
-    $this->assertSame($this->language, $this->language->setDefault($default));
-    $this->assertSame($default, $this->language->isDefault());
-  }
-
-  /**
-   * Tests negotiationMethodId getter and setter methods.
-   *
-   * @covers ::getNegotiationMethodId()
-   * @covers ::setNegotiationMethodId()
-   */
-  public function testGetNegotiationMethodId() {
-    $method_id = $this->randomMachineName();
-    $this->assertSame($this->language, $this->language->setNegotiationMethodId($method_id));
-    $this->assertSame($method_id, $this->language->getNegotiationMethodId());
+    $language_code = $this->randomMachineName(2);
+    $language = new Language(array('id' => $language_code, 'default' => TRUE));
+    $this->assertTrue($language->isDefault());
   }
 
   /**
@@ -114,17 +78,9 @@ class LanguageUnitTest extends UnitTestCase {
    *   An array of test data.
    */
   public function providerTestSortArrayOfLanguages() {
-    $language9A = new Language(array('id' => 'dd'));
-    $language9A->setName('A');
-    $language9A->setWeight(9);
-
-    $language10A = new Language(array('id' => 'ee'));
-    $language10A->setName('A');
-    $language10A->setWeight(10);
-
-    $language10B = new Language(array('id' => 'ff'));
-    $language10B->setName('B');
-    $language10B->setWeight(10);
+    $language9A = new Language(array('id' => 'dd', 'name' => 'A', 'weight' => 9));
+    $language10A = new Language(array('id' => 'ee', 'name' => 'A', 'weight' => 10));
+    $language10B = new Language(array('id' => 'ff', 'name' => 'B', 'weight' => 10));
 
     return array(
       // Set up data set #0, already ordered by weight.
