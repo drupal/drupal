@@ -26,7 +26,7 @@ class Language implements LanguageInterface {
     'name' => 'English',
     'direction' => self::DIRECTION_LTR,
     'weight' => 0,
-    'locked' => 0,
+    'locked' => FALSE,
     'default' => TRUE,
   );
 
