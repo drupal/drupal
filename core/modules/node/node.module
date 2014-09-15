@@ -650,25 +650,6 @@ function template_preprocess_node(&$variables) {
 
   // Add article ARIA role.
   $variables['attributes']['role'] = 'article';
-
-  // Gather node classes.
-  $variables['attributes']['class'][] = 'node';
-  $variables['attributes']['class'][] = drupal_html_class('node--type-' . $node->bundle());
-  if ($node->isPromoted()) {
-    $variables['attributes']['class'][] = 'node--promoted';
-  }
-  if ($node->isSticky()) {
-    $variables['attributes']['class'][] = 'node--sticky';
-  }
-  if (!$node->isPublished()) {
-    $variables['attributes']['class'][] = 'node--unpublished';
-  }
-  if ($variables['view_mode']) {
-    $variables['attributes']['class'][] = drupal_html_class('node--view-mode-' . $variables['view_mode']);
-  }
-  if (isset($node->preview)) {
-    $variables['attributes']['class'][] = 'node--preview';
-  }
 }
 
 /**

@@ -11,14 +11,10 @@
  *   - createdtime: Formatted creation date. Preprocess functions can
  *     reformat it by calling format_date() with the desired parameters on
  *     $variables['node']->getCreatedTime().
- *   - promoted: Whether the node is promoted to the front page.
- *   - sticky: Whether the node is 'sticky'. Sticky nodes are ordered above
- *     other non-sticky nodes in teaser listings
- *   - published: Whether the node is published.
  * - label: The title of the node.
  * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') %} to temporarily suppress the printing
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
  *   of a given child element.
  * - author_picture: The node author user entity, rendered using the "compact"
  *   view mode.
@@ -31,8 +27,8 @@
  *   The attributes.class element may contain one or more of the following
  *   classes:
  *   - node: The current template type (also known as a "theming hook").
- *   - node--[type]: The current node type. For example, if the node is a
- *     "Article" it would result in "node--article". Note that the machine
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
  *     name will often be in a short form of the human readable label.
  *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
  *     teaser would result in: "node--view-mode-teaser", and
@@ -74,7 +70,17 @@
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
   {% if not page %}
@@ -87,14 +93,14 @@
   {% if display_submitted %}
     <footer class="node__meta">
       {{ author_picture }}
-      <div class="node__submitted {{ author_attributes.class }}"{{ author_attributes|without('class') }}>
+      <div{{ author_attributes.addClass('node__submitted') }}>
         {% trans %}Submitted by {{ author_name|passthrough }} on {{ date|passthrough }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>
   {% endif %}
 
-  <div class="node__content {{ content_attributes.class }}"{{ content_attributes|without('class') }}>
+  <div{{ content_attributes.addClass('node__content') }}>
     {{ content|without('links') }}
   </div>
 
