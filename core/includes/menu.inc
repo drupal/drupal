@@ -323,11 +323,6 @@ function template_preprocess_menu_tree(&$variables) {
       'level' => 'h2',
       'attributes' => array(),
     );
-    // @todo Remove backwards compatibility for $heading['class'].
-    //   https://www.drupal.org/node/2310341
-    if (isset($heading['class'])) {
-      $heading['attributes']['class'] = $heading['class'];
-    }
     // Convert the attributes array into an Attribute object.
     $heading['attributes'] = new Attribute($heading['attributes']);
     $heading['text'] = String::checkPlain($heading['text']);
