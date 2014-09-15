@@ -18,6 +18,19 @@ use Drupal\taxonomy\VocabularyInterface;
 class TaxonomyController extends ControllerBase {
 
   /**
+   * Title callback for term pages.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   A taxonomy term entity.
+   *
+   * @return
+   *   The term name to be used as the page title.
+   */
+  public function getTitle(TermInterface $term) {
+    return $term->label();
+  }
+
+  /**
    * Returns a rendered edit form to create a new term associated to the given vocabulary.
    *
    * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
@@ -29,15 +42,6 @@ class TaxonomyController extends ControllerBase {
   public function addForm(VocabularyInterface $taxonomy_vocabulary) {
     $term = $this->entityManager()->getStorage('taxonomy_term')->create(array('vid' => $taxonomy_vocabulary->id()));
     return $this->entityFormBuilder()->getForm($term);
-  }
-
-  /**
-   * @todo Remove taxonomy_term_page().
-   */
-  public function termPage(TermInterface $taxonomy_term) {
-    module_load_include('pages.inc', 'taxonomy');
-    return taxonomy_term_page($taxonomy_term);
-
   }
 
   /**
@@ -64,14 +68,6 @@ class TaxonomyController extends ControllerBase {
    */
   public function termTitle(TermInterface $taxonomy_term) {
     return Xss::filter($taxonomy_term->getName());
-  }
-
-  /**
-   * @todo Remove taxonomy_term_feed().
-   */
-  public function termFeed(TermInterface $taxonomy_term) {
-    module_load_include('pages.inc', 'taxonomy');
-    return taxonomy_term_feed($taxonomy_term);
   }
 
 }

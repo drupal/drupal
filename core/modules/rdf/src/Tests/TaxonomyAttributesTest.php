@@ -21,7 +21,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf');
+  public static $modules = array('rdf', 'views');
 
   protected function setUp() {
     parent::setUp();

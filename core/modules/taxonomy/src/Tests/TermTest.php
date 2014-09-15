@@ -347,6 +347,7 @@ class TermTest extends TaxonomyTestBase {
    * Save, edit and delete a term using the user interface.
    */
   function testTermInterface() {
+    \Drupal::moduleHandler()->install(array('views'));
     $edit = array(
       'name[0][value]' => $this->randomMachineName(12),
       'description[0][value]' => $this->randomMachineName(100),

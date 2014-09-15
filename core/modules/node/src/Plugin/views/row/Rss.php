@@ -85,7 +85,6 @@ class Rss extends RowPluginBase {
   }
 
   public function render($row) {
-    // For the most part, this code is taken from node_feed() in node.module
     global $base_url;
 
     $nid = $row->{$this->field_alias};

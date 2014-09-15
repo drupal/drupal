@@ -87,6 +87,10 @@ class RouteSubscriber extends RouteSubscriberBase {
     $events = parent::getSubscribedEvents();
     $events[KernelEvents::VIEW][] = array('onHtmlPage', 75);
     $events[RoutingEvents::FINISHED] = array('routeRebuildFinished');
+    // Ensure to run after the entity resolver subscriber
+    // @see \Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -175];
+
     return $events;
   }
 
@@ -168,7 +172,9 @@ class RouteSubscriber extends RouteSubscriberBase {
             $view_route_names = $display->alterRoutes($collection);
             $this->viewRouteNames = $view_route_names + $this->viewRouteNames;
             foreach ($view_route_names as $id_display => $route_name) {
+              $view_route_name = $this->viewsDisplayPairs[$id_display];
               unset($this->viewsDisplayPairs[$id_display]);
+              $collection->remove("views.$view_route_name");
             }
           }
         }

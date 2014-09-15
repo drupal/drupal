@@ -88,6 +88,7 @@ class RouteSubscriberTest extends UnitTestCase {
    */
   public function testOnAlterRoutes() {
     $collection = new RouteCollection();
+    // The first route will be overridden later.
     $collection->add('test_route', new Route('test_route', array('_controller' => 'Drupal\Tests\Core\Controller\TestController')));
     $route_2 = new Route('test_route/example', array('_controller' => 'Drupal\Tests\Core\Controller\TestController'));
     $collection->add('test_route_2', $route_2);
@@ -99,28 +100,39 @@ class RouteSubscriberTest extends UnitTestCase {
     // The page_1 display overrides an existing route, so the dynamicRoutes
     // should only call the second display.
     $display_1->expects($this->once())
+      ->method('collectRoutes')
+      ->willReturnCallback(function() use ($collection) {
+        $collection->add('views.test_id.page_1', new Route('test_route', ['_content' => 'Drupal\views\Routing\ViewPageController']));
+        return ['test_id.page_1' => 'views.test_id.page_1'];
+      });
+    $display_1->expects($this->once())
       ->method('alterRoutes')
-      ->will($this->returnValue(array('test_id.page_1' => 'test_route')));
-    $display_1->expects($this->never())
-      ->method('collectRoutes');
+      ->willReturn(['test_id.page_1' => 'test_route']);
 
-    $display_2->expects($this->once())
-      ->method('alterRoutes')
-      ->will($this->returnValue(array()));
     $display_2->expects($this->once())
       ->method('collectRoutes')
-      ->will($this->returnValue(array('test_id.page_2' => 'views.test_id.page_2')));
+      ->willReturnCallback(function() use ($collection) {
+        $collection->add('views.test_id.page_2', new Route('test_route', ['_content' => 'Drupal\views\Routing\ViewPageController']));
+        return ['test_id.page_2' => 'views.test_id.page_2'];
+      });
+    $display_2->expects($this->once())
+      ->method('alterRoutes')
+      ->willReturn([]);
 
-    $this->assertNull($this->routeSubscriber->onAlterRoutes($route_event));
-
-    // Ensure that after the alterRoutes the collectRoutes method is just called
-    // once (not for page_1 anymore).
+    // Ensure that even both the collectRoutes() and alterRoutes() methods
+    // are called on the displays, we ensure that the route first defined by
+    // views is dropped.
 
     $this->routeSubscriber->routes();
+    $this->assertNull($this->routeSubscriber->onAlterRoutes($route_event));
 
     $this->state->expects($this->once())
       ->method('set')
       ->with('views.view_route_names', array('test_id.page_1' => 'test_route', 'test_id.page_2' => 'views.test_id.page_2'));
+
+    $collection = $route_event->getRouteCollection();
+    $this->assertEquals(['test_route', 'test_route_2', 'views.test_id.page_2'], array_keys($collection->all()));
+
     $this->routeSubscriber->routeRebuildFinished();
   }
 

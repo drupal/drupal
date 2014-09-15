@@ -205,7 +205,7 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests alter routes with parameters in the overriding route.
+   * Tests altering routes with parameters in the overridden route.
    */
   public function testAlterRoutesWithParameters() {
     $collection = new RouteCollection();
@@ -213,7 +213,7 @@ class PathPluginBaseTest extends UnitTestCase {
 
     list($view) = $this->setupViewExecutableAccessPlugin();
 
-    // Manually setup an argument handler.
+    // Manually set up an argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
       ->disableOriginalConstructor()
       ->getMock();
@@ -237,6 +237,77 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     // Ensure that the path did not changed and placeholders are respected.
     $this->assertEquals('/test_route/{parameter}', $route->getPath());
+    $this->assertEquals(array('arg_0' => 'parameter'), $route->getOption('_view_argument_map'));
+  }
+
+  /**
+   * Tests altering routes with parameters and upcasting information
+   */
+  public function testAlterRoutesWithParametersAndUpcasting() {
+    $collection = new RouteCollection();
+    $collection->add('test_route', new Route('test_route/{parameter}', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content'], [], ['parameters' => ['taxonomy_term' => 'entity:entity_test']]));
+
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    // Manually set up an argument handler.
+    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $view->argument['test_id'] = $argument;
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = [
+      'path' => 'test_route/%',
+    ];
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $view_route_names = $this->pathPlugin->alterRoutes($collection);
+    $this->assertEquals(['test_id.page_1' => 'test_route'], $view_route_names);
+
+    // Ensure that the test_route is overridden.
+    $route = $collection->get('test_route');
+    $this->assertInstanceOf('\Symfony\Component\Routing\Route', $route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals(['taxonomy_term' => 'entity:entity_test'], $route->getOption('parameters'));
+    // Ensure that the path did not changed and placeholders are respected  kk.
+    $this->assertEquals('/test_route/{parameter}', $route->getPath());
+    $this->assertEquals(['arg_0' => 'parameter'], $route->getOption('_view_argument_map'));
+  }
+
+  /**
+   * Tests altering routes with optional parameters in the overridden route.
+   */
+  public function testAlterRoutesWithOptionalParameters() {
+    $collection = new RouteCollection();
+    $collection->add('test_route', new Route('test_route/{parameter}', array('_controller' => 'Drupal\Tests\Core\Controller\TestController::content')));
+
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route/%',
+    );
+    $display['display_options']['arguments'] = array(
+      'test_id' => array(),
+      'test_id2' => array(),
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $view_route_names = $this->pathPlugin->alterRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'test_route'), $view_route_names);
+
+    // Ensure that the test_route is overridden.
+    $route = $collection->get('test_route');
+    $this->assertInstanceOf('\Symfony\Component\Routing\Route', $route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    // Ensure that the path did not changed and placeholders are respected.
+    $this->assertEquals('/test_route/{parameter}/{arg_1}', $route->getPath());
     $this->assertEquals(array('arg_0' => 'parameter'), $route->getOption('_view_argument_map'));
   }
 

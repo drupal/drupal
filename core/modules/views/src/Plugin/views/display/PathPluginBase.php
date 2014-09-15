@@ -239,6 +239,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // requirements).
 
         // Replace the existing route with a new one based on views.
+        $original_route = $collection->get($name);
         $collection->remove($name);
 
         $view_id = $this->view->storage->id();
@@ -251,9 +252,13 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // We assume that the numeric ids of the parameters match the one from
         // the view argument handlers.
         foreach ($parameters as $position => $parameter_name) {
-          $path = str_replace('arg_' . $position, $parameter_name, $path);
+          $path = str_replace('{arg_' . $position . '}', '{' . $parameter_name . '}', $path);
           $argument_map['arg_' . $position] = $parameter_name;
         }
+        // Copy the original options from the route, so for example we ensure
+        // that parameter conversion options is carried over.
+        $route->setOptions($route->getOptions() + $original_route->getOptions());
+
         // Set the corrected path and the mapping to the route object.
         $route->setOption('_view_argument_map', $argument_map);
         $route->setPath($path);

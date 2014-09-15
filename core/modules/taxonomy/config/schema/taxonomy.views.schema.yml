@@ -1,18 +1,8 @@
 # Schema for the views plugins of the Taxonomy module.
 
 views.argument.taxonomy_index_tid:
-  type: views_argument
+  type: views.argument.many_to_one
   label: 'Taxonomy term ID'
-  mapping:
-    break_phrase:
-      type: boolean
-      label: 'Allow multiple values'
-    add_table:
-      type: boolean
-      label: 'Allow multiple filter values to work together'
-    require_value:
-      type: boolean
-      label: 'Do not display items with no value in summary'
 
 views.argument.taxonomy_index_tid_depth:
   type: views_argument

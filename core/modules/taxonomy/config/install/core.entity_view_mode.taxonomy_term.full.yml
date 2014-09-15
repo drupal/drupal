@@ -1,6 +1,6 @@
 id: taxonomy_term.full
 label: 'Taxonomy term page'
-status: false
+status: true
 cache: true
 targetEntityType: taxonomy_term
 dependencies:

@@ -91,16 +91,7 @@ entity.taxonomy_vocabulary.overview_form:
 entity.taxonomy_term.canonical:
   path: '/taxonomy/term/{taxonomy_term}'
   defaults:
-    _content: '\Drupal\taxonomy\Controller\TaxonomyController::termPage'
-    _title: 'Taxonomy term'
-    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
-  requirements:
-    _entity_access: 'taxonomy_term.view'
-
-taxonomy.term_feed:
-  path: '/taxonomy/term/{taxonomy_term}/feed'
-  defaults:
-    _content: '\Drupal\taxonomy\Controller\TaxonomyController::termFeed'
+    _entity_view: 'taxonomy_term.full'
     _title: 'Taxonomy term'
     _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:

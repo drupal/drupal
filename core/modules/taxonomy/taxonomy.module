@@ -16,6 +16,7 @@ use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
 use Drupal\Component\Utility\String;
 
@@ -68,8 +69,8 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Before you can use a new vocabulary to classify your content, a new Taxonomy term field must be added to a <a href="@ctedit">content type</a> on its <em>manage fields</em> page. When adding a taxonomy field, you choose a <em>widget</em> to use to enter the taxonomy information on the content editing page: a select list, checkboxes, radio buttons, or an auto-complete field (to build a free-tagging vocabulary). After choosing the field type and widget, on the subsequent <em>field settings</em> page you can choose the desired vocabulary, whether one or multiple terms can be chosen from the vocabulary, and other settings. The same vocabulary can be added to multiple content types, by using the "Re-use existing field" section on the manage fields page.', array('@ctedit' => url('admin/structure/types'))) . '</dd>';
       $output .= '<dt>' . t('Classifying content') . '</dt>';
       $output .= '<dd>' . t('After the vocabulary is assigned to the content type, you can start classifying content. The field with terms will appear on the content editing screen when you edit or <a href="@addnode">add new content</a>.', array('@addnode' => url('node/add'))) . '</dd>';
-      $output .= '<dt>' . t('Viewing listings and RSS feeds by term') . '</dt>';
-      $output .= '<dd>' . t("Each taxonomy term automatically provides a page listing content that has its classification, and a corresponding RSS feed. For example, if the taxonomy term <em>country rock</em> has the ID 123 (you can see this by looking at the URL when hovering on the linked term, which you can click to navigate to the listing page), then you will find this list at the path <em>taxonomy/term/123</em>. The RSS feed will use the path <em>taxonomy/term/123/feed</em> (the RSS icon for this term's listing will automatically display in your browser's address bar when viewing the listing page).") . '</dd>';
+      $output .= '<dt>' . t('Viewing listings') . '</dt>';
+      $output .= '<dd>' . t("Each taxonomy term automatically provides a page listing content that has its classification. For example, if the taxonomy term <em>country rock</em> has the ID 123 (you can see this by looking at the URL when hovering on the linked term, which you can click to navigate to the listing page), then you will find this list at the path <em>taxonomy/term/123</em>.") . '</dd>';
       $output .= '<dt>' . t('Extending Taxonomy module') . '</dt>';
       $output .= '<dd>' . t('There are <a href="@taxcontrib">many contributed modules</a> that extend the behavior of the Taxonomy module for both display and organization of terms.', array('@taxcontrib' => 'http://drupal.org/project/modules?filters=tid:71&solrsort=sis_project_release_usage%20desc'));
       $output .= '</dl>';
@@ -123,6 +124,37 @@ function taxonomy_term_uri($term) {
   return new Url('entity.taxonomy_term.canonical', array(
     'taxonomy_term' => $term->id(),
   ));
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function taxonomy_page_build(&$page) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
+    foreach ($term->uriRelationships() as $rel) {
+      // Set the URI relationships, like canonical.
+      $page['#attached']['drupal_add_html_head_link'][] = array(
+        array(
+          'rel' => $rel,
+          'href' => $term->url($rel),
+        ),
+        TRUE,
+      );
+
+      // Set the term path as the canonical URL to prevent duplicate content.
+      if ($rel == 'canonical') {
+        // Set the non-aliased canonical path as a default shortlink.
+        $page['#attached']['drupal_add_html_head_link'][] = array(
+          array(
+            'rel' => 'shortlink',
+            'href' => $term->url($rel, array('alias' => TRUE)),
+          ),
+          TRUE,
+        );
+      }
+    }
+  }
 }
 
 /**
@@ -328,8 +360,8 @@ function template_preprocess_taxonomy_term(&$variables) {
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
-  if ($page_term = \Drupal::routeMatch()->getParameter('taxonomy_term')) {
-    return $page_term->id() == $term->id();
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.taxonomy_term.canonical' && $page_term_id = \Drupal::routeMatch()->getRawParameter('taxonomy_term')) {
+    return $page_term_id == $term->id();
   }
   return FALSE;
 }

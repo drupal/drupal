@@ -17,6 +17,9 @@ views.argument.many_to_one:
     require_value:
       type: boolean
       label: 'Do not display items with no value in summary'
+    reduce_duplicates:
+      type: boolean
+      label: 'Reduce duplicates'
 
 views.argument.null:
   type: views_argument

@@ -313,6 +313,32 @@ class TermViewsData implements EntityViewsDataInterface {
       ),
     );
 
+
+  $data['taxonomy_index']['sticky'] = [
+    'title' => t('Sticky status'),
+    'help' => t('Whether or not the content related to a term is sticky.'),
+    'filter' => [
+      'id' => 'boolean',
+      'label' => t('Sticky status'),
+      'type' => 'yes-no',
+    ],
+    'sort' => [
+      'id' => 'standard',
+      'help' => t('Whether or not the content related to a term is sticky. To list sticky content first, set this to descending.'),
+    ],
+  ];
+
+  $data['taxonomy_index']['created'] = [
+    'title' => t('Post date'),
+    'help' => t('The date the content related to a term was posted.'),
+    'sort' => [
+      'id' => 'date'
+    ],
+    'filter' => [
+      'id' => 'date',
+    ],
+  ];
+
     $data['taxonomy_term_hierarchy']['table']['group']  = t('Taxonomy term');
 
     $data['taxonomy_term_hierarchy']['table']['join'] = array(

@@ -894,100 +894,6 @@ function node_get_recent($number = 10) {
 }
 
 /**
- * Page callback: Generates and prints an RSS feed.
- *
- * Generates an RSS feed from an array of node IDs, and prints it with an HTTP
- * header, with Content Type set to RSS/XML.
- *
- * @param $nids
- *   (optional) An array of node IDs (nid). Defaults to FALSE so empty feeds can
- *   be generated with passing an empty array, if no items are to be added
- *   to the feed.
- * @param $channel
- *   (optional) An associative array containing 'title', 'link', 'description',
- *   and other keys, to be parsed by format_rss_channel() and
- *   format_xml_elements(). A list of channel elements can be found at the
- *   @link http://cyber.law.harvard.edu/rss/rss.html RSS 2.0 Specification. @endlink
- *   The link should be an absolute URL.
- *
- * @todo Convert taxonomy_term_feed() to a view, so this method is not needed
- *   anymore.
- *
- * @return Symfony\Component\HttpFoundation\Response
- *   A response object.
- *
- * @see node_menu()
- */
-function node_feed($nids = FALSE, $channel = array()) {
-  global $base_url;
-  $language_content = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-  $rss_config = \Drupal::config('system.rss');
-
-  if ($nids === FALSE) {
-    $nids = \Drupal::entityQuery('node')
-      ->condition('status', 1)
-      ->condition('promote', 1)
-      ->sort('created', 'DESC')
-      ->range(0, $rss_config->get('items.limit'))
-      ->addTag('node_access')
-      ->execute();
-  }
-
-  $view_mode = $rss_config->get('items.view_mode');
-  $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
-
-  // Load all nodes to be rendered.
-  /** @var \Drupal\node\NodeInterface[] $nodes */
-  $nodes = node_load_multiple($nids);
-  $items = '';
-  foreach ($nodes as $node) {
-    $item_text = '';
-
-    $node->link = url('node/' . $node->id(), array('absolute' => TRUE));
-    $node->rss_namespaces = array();
-    $node->rss_elements = array(
-      array('key' => 'pubDate', 'value' => gmdate('r', $node->getCreatedTime())),
-      array('key' => 'dc:creator', 'value' => $node->getOwner()->label()),
-      array('key' => 'guid', 'value' => $node->id() . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))
-    );
-
-    // The node gets built and modules add to or modify $node->rss_elements
-    // and $node->rss_namespaces.
-    $build = node_view($node, 'rss');
-    unset($build['#theme']);
-
-    if (!empty($node->rss_namespaces)) {
-      $namespaces = array_merge($namespaces, $node->rss_namespaces);
-    }
-
-    if ($view_mode != 'title') {
-      // We render node contents and force links to be last.
-      $build['links']['#weight'] = 1000;
-      $item_text .= drupal_render($build);
-    }
-
-    $items .= format_rss_item($node->label(), $node->link, $item_text, $node->rss_elements);
-  }
-
-  $channel_defaults = array(
-    'version'     => '2.0',
-    'title'       => \Drupal::config('system.site')->get('name'),
-    'link'        => $base_url,
-    'description' => $rss_config->get('channel.description'),
-    'language'    => $language_content->id
-  );
-  $channel_extras = array_diff_key($channel, $channel_defaults);
-  $channel = array_merge($channel_defaults, $channel);
-
-  $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<rss version=\"" . $channel["version"] . "\" xml:base=\"" . $base_url . "\" " . new Attribute($namespaces) . ">\n";
-  $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language'], $channel_extras);
-  $output .= "</rss>\n";
-
-  return new Response($output, 200, array('Content-Type' =>  'application/rss+xml; charset=utf-8'));
-}
-
-/**
  * Generates an array for rendering the given node.
  *
  * @param \Drupal\node\NodeInterface $node
@@ -1049,7 +955,6 @@ function node_page_build(&$page) {
  * default setting for number of posts to show on node listing pages.
  *
  * @see node_page_default()
- * @see taxonomy_term_page()
  * @see node_form_system_site_information_settings_form_submit()
  */
 function node_form_system_site_information_settings_form_alter(&$form, FormStateInterface $form_state, $form_id) {
