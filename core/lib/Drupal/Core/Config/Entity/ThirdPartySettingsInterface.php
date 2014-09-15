@@ -44,7 +44,7 @@ interface ThirdPartySettingsInterface {
    * @return mixed
    *   The value.
    */
-  public function getThirdPartySetting($module, $key, $default);
+  public function getThirdPartySetting($module, $key, $default = NULL);
 
   /**
    * Unsets a third-party setting.
