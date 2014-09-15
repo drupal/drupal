@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\image\Tests;
+use Drupal\file\Entity\File;
 
 /**
  * Tests setting up default images both to the field and field instance.
@@ -245,6 +246,11 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       )
     );
 
+    // Confirm the default image is shown on the node form.
+    $file = File::load($default_images['instance_new']->id());
+    $this->drupalGet('node/add/article');
+    $this->assertRaw($file->getFilename());
+
     // Remove the instance default from articles.
     $instance->settings['default_image']['fid'] = 0;
     $instance->save();
@@ -282,6 +288,11 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $non_image = $this->drupalGetTestFiles('text');
     $this->drupalPostForm(NULL, array('files[instance_settings_default_image_fid]' => drupal_realpath($non_image[0]->uri)), t("Upload"));
     $this->assertText(t('The specified file text-0.txt could not be uploaded. Only files with the following extensions are allowed: png gif jpg jpeg.'), 'Non-image file cannot be used as default image.');
+
+    // Confirm the default image is shown on the node form.
+    $file = File::load($default_images['field_new']->id());
+    $this->drupalGet('node/add/article');
+    $this->assertRaw($file->getFilename());
   }
 
   /**
