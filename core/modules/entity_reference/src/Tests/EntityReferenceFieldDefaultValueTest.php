@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
 class EntityReferenceFieldDefaultValueTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

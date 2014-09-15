@@ -20,7 +20,7 @@ use Drupal\field\Tests\FieldUnitTestBase;
 class EntityReferenceItemTest extends FieldUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

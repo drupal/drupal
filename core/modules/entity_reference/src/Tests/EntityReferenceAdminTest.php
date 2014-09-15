@@ -18,7 +18,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class EntityReferenceAdminTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * Enable path module to ensure that the selection handler does not fail for
    * entities with a path field.

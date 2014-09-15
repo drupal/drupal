@@ -46,7 +46,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
   protected $fieldName = 'field_test';
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

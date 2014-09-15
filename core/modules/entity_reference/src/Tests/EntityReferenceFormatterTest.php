@@ -45,7 +45,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   protected $referencedEntity = NULL;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

@@ -38,7 +38,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
   protected $fieldName;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

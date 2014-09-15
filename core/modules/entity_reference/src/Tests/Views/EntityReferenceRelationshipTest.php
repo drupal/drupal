@@ -30,7 +30,7 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
   public static $testViews = array('test_entity_reference_view');
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
