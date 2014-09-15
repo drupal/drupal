@@ -111,7 +111,7 @@ class ManyToOne extends InOperator {
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
 
-    if ($form_state->get('exposed')) {
+    if (!$form_state->get('exposed')) {
       $this->helper->buildOptionsForm($form, $form_state);
     }
   }
