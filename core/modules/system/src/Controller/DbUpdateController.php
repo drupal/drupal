@@ -9,6 +9,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
@@ -61,6 +62,13 @@ class DbUpdateController extends ControllerBase {
   protected $account;
 
   /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected $entityDefinitionUpdateManager;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
@@ -73,13 +81,16 @@ class DbUpdateController extends ControllerBase {
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $entity_definition_update_manager
+   *   The entity definition update manager.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account) {
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, EntityDefinitionUpdateManagerInterface $entity_definition_update_manager) {
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
     $this->state = $state;
     $this->moduleHandler = $module_handler;
     $this->account = $account;
+    $this->entityDefinitionUpdateManager = $entity_definition_update_manager;
   }
 
   /**
@@ -91,7 +102,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('cache.default'),
       $container->get('state'),
       $container->get('module_handler'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('entity.definition_update_manager')
     );
   }
 
@@ -283,6 +295,23 @@ class DbUpdateController extends ControllerBase {
     // Warn the user if any updates were incompatible.
     if ($incompatible_updates_exist) {
       drupal_set_message($this->t('Some of the pending updates cannot be applied because their dependencies were not met.'), 'warning');
+    }
+
+    // If there are entity definition updates, display their summary.
+    if ($this->entityDefinitionUpdateManager->needsUpdates()) {
+      $entity_build = array();
+      $summary = $this->entityDefinitionUpdateManager->getChangeSummary();
+      foreach ($summary as $entity_type_id => $items) {
+        $entity_update_key = 'entity_type_updates_' . $entity_type_id;
+        $entity_build[$entity_update_key] = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+          '#title' => $entity_type_id . ' entity type',
+        );
+        $count++;
+      }
+      // Display these above the module updates, since they will be run first.
+      $build['start'] = $entity_build + $build['start'];
     }
 
     if (empty($count)) {
@@ -501,9 +530,18 @@ class DbUpdateController extends ControllerBase {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 
-    $start = $this->getModuleUpdates();
+    $operations = array();
+
+    // First of all perform entity definition updates, which will update
+    // storage schema if needed, so that module update functions work with
+    // the correct entity schema.
+    if ($this->entityDefinitionUpdateManager->needsUpdates()) {
+      $operations[] = array('update_entity_definitions', array('system', '0 - Update entity definitions'));
+    }
+
     // Resolve any update dependencies to determine the actual updates that will
     // be run and the order they will be run in.
+    $start = $this->getModuleUpdates();
     $updates = update_resolve_dependencies($start);
 
     // Store the dependencies for each update function in an array which the
@@ -515,7 +553,7 @@ class DbUpdateController extends ControllerBase {
       $dependency_map[$function] = !empty($update['reverse_paths']) ? array_keys($update['reverse_paths']) : array();
     }
 
-    $operations = array();
+    // Determine updates to be performed.
     foreach ($updates as $update) {
       if ($update['allowed']) {
         // Set the installed version of each module so updates will start at the

@@ -82,7 +82,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * The controller resolver.
    *
-   * @var \Drupal\Core\Handler\HandlerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $controllerResolver;
 
@@ -92,6 +92,13 @@ class EntityManagerTest extends UnitTestCase {
    * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedDataManager;
+
+  /**
+   * The keyvalue collection for tracking installed definitions.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $installedDefinitions;
 
   /**
    * {@inheritdoc}
@@ -128,6 +135,8 @@ class EntityManagerTest extends UnitTestCase {
     $this->typedDataManager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
       ->disableOriginalConstructor()
       ->getMock();
+
+    $this->installedDefinitions = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
   }
 
   /**
@@ -158,7 +167,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub(), $this->typedDataManager);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub(), $this->typedDataManager, $this->installedDefinitions);
     $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }

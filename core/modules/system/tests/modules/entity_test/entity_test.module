@@ -71,6 +71,14 @@ function entity_test_entity_type_alter(array &$entity_types) {
       $entity_types[$entity_type]->set('translation', $translation);
     }
   }
+
+  // Optionally allow testing an entity type definition being updated from
+  // revisable to not or vice versa.
+  if (\Drupal::state()->get('entity_test.entity_test_rev.disable_revisable')) {
+    $keys = $entity_types['entity_test_rev']->getKeys();
+    unset($keys['revision']);
+    $entity_types['entity_test_rev']->set('entity_keys', $keys);
+  }
 }
 
 /**

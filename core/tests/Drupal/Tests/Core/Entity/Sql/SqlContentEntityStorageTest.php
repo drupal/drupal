@@ -590,10 +590,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     // This allows to re-use the data provider.
     $entity_keys['langcode'] = 'langcode';
 
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -650,10 +650,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
     $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -712,13 +712,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       'langcode' => 'langcode',
     );
 
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('isRevisionable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->atLeastOnce())
       ->method('getDataTable')
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
@@ -833,13 +833,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $revisionable_field_names = array('description', 'owner');
       $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, $revision_metadata_field_names), array('isRevisionable' => TRUE));
 
-      $this->entityType->expects($this->exactly(2))
+      $this->entityType->expects($this->atLeastOnce())
         ->method('isRevisionable')
         ->will($this->returnValue(TRUE));
-      $this->entityType->expects($this->exactly(2))
+      $this->entityType->expects($this->atLeastOnce())
         ->method('isTranslatable')
         ->will($this->returnValue(TRUE));
-      $this->entityType->expects($this->exactly(2))
+      $this->entityType->expects($this->atLeastOnce())
         ->method('getDataTable')
         ->will($this->returnValue('entity_test_field_data'));
       $this->entityType->expects($this->any())

@@ -286,10 +286,18 @@ services:
     arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@entity.definitions.installed']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
+  entity.definitions.installed:
+    class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
+    factory_method: get
+    factory_service: keyvalue
+    arguments: ['entity.definitions.installed']
+  entity.definition_update_manager:
+    class: Drupal\Core\Entity\EntityDefinitionUpdateManager
+    arguments: ['@entity.manager']
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']

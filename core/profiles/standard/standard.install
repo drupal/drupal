@@ -14,6 +14,12 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
  * @see system_install()
  */
 function standard_install() {
+  // Now that all modules are installed, make sure the entity storage and other
+  // handlers are up to date with the current entity and field definitions. For
+  // example, Path module adds a base field to nodes and taxonomy terms after
+  // those modules are already installed.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+
   // Set front page to "node".
   \Drupal::config('system.site')->set('page.front', 'node')->save();
 

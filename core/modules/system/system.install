@@ -452,6 +452,11 @@ function system_requirements($phase) {
         }
       }
     }
+    if (!isset($requirements['update']['severity']) && \Drupal::service('entity.definition_update_manager')->needsUpdates()) {
+      $requirements['update']['severity'] = REQUIREMENT_ERROR;
+      $requirements['update']['value'] = t('Out of date');
+      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'update.php'));
+    }
   }
 
   // Verify the update.php access setting

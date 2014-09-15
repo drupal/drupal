@@ -7,16 +7,19 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Schema\EntitySchemaHandlerInterface;
+use Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines a schema handler that supports revisionable, translatable entities.
  */
-class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
+class SqlContentEntityStorageSchema implements FieldableEntityStorageSchemaInterface {
 
   /**
    * The entity type this schema builder is responsible for.
@@ -75,7 +78,69 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function requiresEntityStorageSchemaChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    return
+      $entity_type->getStorageClass() != $original->getStorageClass() ||
+      $entity_type->getKeys() != $original->getKeys() ||
+      $entity_type->isRevisionable() != $original->isRevisionable() ||
+      $entity_type->isTranslatable() != $original->isTranslatable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresFieldStorageSchemaChanges(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    return
+      $storage_definition->hasCustomStorage() != $original->hasCustomStorage() ||
+      $storage_definition->getSchema() != $original->getSchema() ||
+      $storage_definition->isRevisionable() != $original->isRevisionable() ||
+      $storage_definition->isTranslatable() != $original->isTranslatable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    // If we're updating from NULL storage, then there's no stored data that
+    // requires migration.
+    // @todo Remove in https://www.drupal.org/node/2335879.
+    $original_storage_class = $original->getStorageClass();
+    $null_storage_class = 'Drupal\Core\Entity\ContentEntityNullStorage';
+    if ($original_storage_class == $null_storage_class || is_subclass_of($original_storage_class, $null_storage_class)) {
+      return FALSE;
+    }
+
+    return
+      // If the original storage class is different, then there might be
+      // existing entities in that storage even if the new storage's base
+      // table is empty.
+      // @todo Ask the old storage handler rather than assuming:
+      //   https://www.drupal.org/node/2335879.
+      $entity_type->getStorageClass() != $original_storage_class ||
+      !$this->tableIsEmpty($this->storage->getBaseTable());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresFieldDataMigration(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    // If the base table is empty, there are no entities, and therefore, no
+    // field data that we care about preserving.
+    // @todo We might be returning TRUE here in cases where it would be safe
+    //   to return FALSE (for example, if the field is in a dedicated table
+    //   and that table is empty), and thereby preventing automatic updates
+    //   that should be possible, but determining that requires refactoring
+    //   SqlContentEntityStorage::_fieldSqlSchema(), and in the meantime,
+    //   it's safer to return false positives than false negatives:
+    //   https://www.drupal.org/node/1498720.
+    return !$this->tableIsEmpty($this->storage->getBaseTable());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    $this->checkEntityType($entity_type);
     $schema_handler = $this->database->schema();
     $schema = $this->getEntitySchema($entity_type, TRUE);
     foreach ($schema as $table_name => $table_schema) {
@@ -89,11 +154,39 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    * {@inheritdoc}
    */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
-    // @todo Implement proper updates: https://www.drupal.org/node/1498720.
-    //   Meanwhile, treat a change from non-SQL storage to SQL storage as
-    //   identical to creation with respect to SQL schema handling.
-    if (!is_subclass_of($original->getStorageClass(), '\Drupal\Core\Entity\Sql\SqlEntityStorageInterface')) {
-      $this->onEntityTypeCreate($entity_type);
+    $this->checkEntityType($entity_type);
+    $this->checkEntityType($original);
+
+    // If no schema changes are needed, we don't need to do anything.
+    if (!$this->requiresEntityStorageSchemaChanges($entity_type, $original)) {
+      return;
+    }
+
+    // If we have no data just recreate the entity schema from scratch.
+    if (!$this->requiresEntityDataMigration($entity_type, $original)) {
+      if ($this->database->supportsTransactionalDDL()) {
+        // If the database supports transactional DDL, we can go ahead and rely
+        // on it. If not, we will have to rollback manually if something fails.
+        $transaction = $this->database->startTransaction();
+      }
+      try {
+        $this->onEntityTypeDelete($original);
+        $this->onEntityTypeCreate($entity_type);
+      }
+      catch (\Exception $e) {
+        if ($this->database->supportsTransactionalDDL()) {
+          $transaction->rollback();
+        }
+        else {
+          // Recreate original schema.
+          $this->onEntityTypeCreate($original);
+        }
+        throw $e;
+      }
+    }
+    // Otherwise, throw an exception.
+    else {
+      throw new EntityStorageException(String::format('The SQL storage cannot change the schema for an existing entity type with data.'));
     }
   }
 
@@ -101,13 +194,58 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    * {@inheritdoc}
    */
   public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    $this->checkEntityType($entity_type);
     $schema_handler = $this->database->schema();
-    $schema = $this->getEntitySchema($entity_type, TRUE);
-    foreach ($schema as $table_name => $table_schema) {
+    foreach ($this->getEntitySchemaTables() as $table_name) {
       if ($schema_handler->tableExists($table_name)) {
         $schema_handler->dropTable($table_name);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+    // @todo Move implementation from
+    //   SqlContentEntityStorage::onFieldStorageDefinitionCreate()
+    //   into here: https://www.drupal.org/node/1498720
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    // @todo Move implementation from
+    //   SqlContentEntityStorage::onFieldStorageDefinitionUpdate()
+    //   into here: https://www.drupal.org/node/1498720
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+    // @todo Move implementation from
+    //   SqlContentEntityStorage::onFieldStorageDefinitionDelete()
+    //   into here: https://www.drupal.org/node/1498720
+  }
+
+  /**
+   * Checks that we are dealing with the correct entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to be checked.
+   *
+   * @return bool
+   *   TRUE if the entity type matches the current one.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function checkEntityType(EntityTypeInterface $entity_type) {
+    if ($entity_type->id() != $this->entityType->id()) {
+      throw new EntityStorageException(String::format('Unsupported entity type @id', array('@id' => $entity_type->id())));
+    }
+    return TRUE;
   }
 
   /**
@@ -128,7 +266,7 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
 
     if (!isset($this->schema[$entity_type_id]) || $reset) {
       // Initialize the table schema.
-      $tables = $this->getTables();
+      $tables = $this->getEntitySchemaTables();
       $schema[$tables['base_table']] = $this->initializeBaseTable();
       if (isset($tables['revision_table'])) {
         $schema[$tables['revision_table']] = $this->initializeRevisionTable();
@@ -180,7 +318,7 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    * @return array
    *   A list of entity type tables, keyed by table key.
    */
-  protected function getTables() {
+  protected function getEntitySchemaTables() {
     return array_filter(array(
       'base_table' => $this->storage->getBaseTable(),
       'revision_table' => $this->storage->getRevisionTable(),
@@ -617,6 +755,26 @@ class SqlContentEntityStorageSchema implements EntitySchemaHandlerInterface {
    */
   protected function getEntityIndexName($index) {
     return $this->entityType->id() . '__' . $index;
+  }
+
+  /**
+   * Checks whether a database table is non-existent or empty.
+   *
+   * Empty tables can be dropped and recreated without data loss.
+   *
+   * @param string $table_name
+   *   The database table to check.
+   *
+   * @return bool
+   *   TRUE if the table is empty, FALSE otherwise.
+   */
+  protected function tableIsEmpty($table_name) {
+    return !$this->database->schema()->tableExists($table_name) ||
+      !$this->database->select($table_name)
+        ->countQuery()
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
   }
 
 }

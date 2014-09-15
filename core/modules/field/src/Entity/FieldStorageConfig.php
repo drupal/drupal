@@ -290,8 +290,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // definition is passed to the various hooks and written to config.
      $this->settings += $field_type_manager->getDefaultSettings($this->type);
 
-    // Notify the entity storage.
-    $entity_manager->getStorage($this->entity_type)->onFieldStorageDefinitionCreate($this);
+    // Notify the entity manager.
+    $entity_manager->onFieldStorageDefinitionCreate($this);
   }
 
   /**
@@ -334,19 +334,16 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // invokes hook_field_storage_config_update_forbid().
     $module_handler->invokeAll('field_storage_config_update_forbid', array($this, $this->original));
 
-    // Notify the storage. The controller can reject the definition
+    // Notify the entity manager. A listener can reject the definition
     // update as invalid by raising an exception, which stops execution before
     // the definition is written to config.
-    $entity_manager->getStorage($this->entity_type)->onFieldStorageDefinitionUpdate($this, $this->original);
+    $entity_manager->onFieldStorageDefinitionUpdate($this, $this->original);
   }
 
   /**
    * {@inheritdoc}
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    // Clear the cache.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
-
     if ($update) {
       // Invalidate the render cache for all affected entities.
       $entity_manager = \Drupal::entityManager();
@@ -406,13 +403,10 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Notify the storage.
     foreach ($fields as $field) {
       if (!$field->deleted) {
-        \Drupal::entityManager()->getStorage($field->entity_type)->onFieldStorageDefinitionDelete($field);
+        \Drupal::entityManager()->onFieldStorageDefinitionDelete($field);
         $field->deleted = TRUE;
       }
     }
-
-    // Clear the cache.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
   /**

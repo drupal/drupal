@@ -17,9 +17,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeListenerInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -39,7 +39,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup entity_api
  */
-class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, EntityTypeListenerInterface {
+class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, FieldableEntityStorageSchemaInterface {
 
   /**
    * The mapping of field columns to SQL tables.
@@ -109,7 +109,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * The entity schema handler.
    *
-   * @var \Drupal\Core\Entity\Schema\EntitySchemaHandlerInterface
+   * @var \Drupal\Core\Entity\Schema\EntityStorageSchemaInterface
    */
   protected $schemaHandler;
 
@@ -269,11 +269,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       ), $all_fields);
 
       $revisionable = $this->entityType->isRevisionable();
-      // @todo Remove the data table check once all entity types are using
-      // entity query and we have a views data handler. See:
-      // - https://drupal.org/node/2068325
-      // - https://drupal.org/node/1740492
-      $translatable = $this->entityType->getDataTable() && $this->entityType->isTranslatable();
+      $translatable = $this->entityType->isTranslatable();
       if (!$revisionable && !$translatable) {
         // The base layout stores all the base field values in the base table.
         $this->tableMapping->setFieldNames($this->baseTable, $all_fields);
@@ -1361,6 +1357,34 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Everything that is not provided by the entity type is stored in a
     // dedicated table.
     return $definition->getProvider() != $this->entityType->getProvider() && !$definition->hasCustomStorage();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresEntityStorageSchemaChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    return $this->schemaHandler()->requiresEntityStorageSchemaChanges($entity_type, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresFieldStorageSchemaChanges(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    return $this->schemaHandler()->requiresFieldStorageSchemaChanges($storage_definition, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    return $this->schemaHandler()->requiresEntityDataMigration($entity_type, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresFieldDataMigration(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    return $this->schemaHandler()->requiresFieldDataMigration($storage_definition, $original);
   }
 
   /**

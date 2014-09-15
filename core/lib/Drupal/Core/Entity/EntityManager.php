@@ -17,9 +17,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -113,6 +116,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $languageManager;
 
   /**
+   * The keyvalue collection for tracking installed definitions.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $installedDefinitions;
+
+  /**
    * Static cache of bundle information.
    *
    * @var array
@@ -169,8 +179,12 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The string translationManager.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   *   The typed data manager.
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $installed_definitions
+   *   The keyvalue collection for tracking installed definitions.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueStoreInterface $installed_definitions) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface', 'Drupal\Core\Entity\Annotation\EntityType');
 
     $this->setCacheBackend($cache, 'entity_type', array('entity_types' => TRUE));
@@ -180,6 +194,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->translationManager = $translation_manager;
     $this->classResolver = $class_resolver;
     $this->typedDataManager = $typed_data_manager;
+    $this->installedDefinitions = $installed_definitions;
   }
 
   /**
@@ -190,6 +205,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->clearCachedBundles();
     $this->clearCachedFieldDefinitions();
     $this->classNameEntityTypeMap = array();
+    $this->handlers = array();
   }
 
   /**
@@ -961,11 +977,18 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    $entity_type_id = $entity_type->id();
+
     // @todo Forward this to all interested handlers, not only storage, once
     //   iterating handlers is possible: https://www.drupal.org/node/2332857.
-    $storage = $this->getStorage($entity_type->id());
+    $storage = $this->getStorage($entity_type_id);
     if ($storage instanceof EntityTypeListenerInterface) {
       $storage->onEntityTypeCreate($entity_type);
+    }
+
+    $this->setLastInstalledDefinition($entity_type);
+    if ($entity_type->isFieldable()) {
+      $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->getFieldStorageDefinitions($entity_type_id));
     }
   }
 
@@ -973,24 +996,83 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    $entity_type_id = $entity_type->id();
+
     // @todo Forward this to all interested handlers, not only storage, once
     //   iterating handlers is possible: https://www.drupal.org/node/2332857.
-    $storage = $this->getStorage($entity_type->id());
+    $storage = $this->getStorage($entity_type_id);
     if ($storage instanceof EntityTypeListenerInterface) {
       $storage->onEntityTypeUpdate($entity_type, $original);
     }
+
+    $this->setLastInstalledDefinition($entity_type);
   }
 
   /**
    * {@inheritdoc}
    */
   public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+    $entity_type_id = $entity_type->id();
+
     // @todo Forward this to all interested handlers, not only storage, once
     //   iterating handlers is possible: https://www.drupal.org/node/2332857.
-    $storage = $this->getStorage($entity_type->id());
+    $storage = $this->getStorage($entity_type_id);
     if ($storage instanceof EntityTypeListenerInterface) {
       $storage->onEntityTypeDelete($entity_type);
     }
+
+    $this->deleteLastInstalledDefinition($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+    $entity_type_id = $storage_definition->getTargetEntityTypeId();
+
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type_id);
+    if ($storage instanceof FieldStorageDefinitionListenerInterface) {
+      $storage->onFieldStorageDefinitionCreate($storage_definition);
+    }
+
+    $this->setLastInstalledFieldStorageDefinition($storage_definition);
+    $this->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+    $entity_type_id = $storage_definition->getTargetEntityTypeId();
+
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type_id);
+    if ($storage instanceof FieldStorageDefinitionListenerInterface) {
+      $storage->onFieldStorageDefinitionUpdate($storage_definition, $original);
+    }
+
+    $this->setLastInstalledFieldStorageDefinition($storage_definition);
+    $this->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+    $entity_type_id = $storage_definition->getTargetEntityTypeId();
+
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->getStorage($entity_type_id);
+    if ($storage instanceof FieldStorageDefinitionListenerInterface) {
+      $storage->onFieldStorageDefinitionDelete($storage_definition);
+    }
+
+    $this->deleteLastInstalledFieldStorageDefinition($storage_definition);
+    $this->clearCachedFieldDefinitions();
   }
 
   /**
@@ -1045,6 +1127,83 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Invoke hook_entity_bundle_delete() hook.
     $this->moduleHandler->invokeAll('entity_bundle_delete', array($entity_type_id, $bundle));
     $this->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastInstalledDefinition($entity_type_id) {
+    return $this->installedDefinitions->get($entity_type_id . '.entity_type');
+  }
+
+  /**
+   * Stores the entity type definition in the application state.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   */
+  protected function setLastInstalledDefinition(EntityTypeInterface $entity_type) {
+    $entity_type_id = $entity_type->id();
+    $this->installedDefinitions->set($entity_type_id . '.entity_type', $entity_type);
+  }
+
+  /**
+   * Deletes the entity type definition from the application state.
+   *
+   * @param string $entity_type_id
+   *   The entity type definition identifier.
+   */
+  protected function deleteLastInstalledDefinition($entity_type_id) {
+    $this->installedDefinitions->delete($entity_type_id . '.entity_type');
+    // Clean up field storage definitions as well. Even if the entity type
+    // isn't currently fieldable, there might be legacy definitions or an
+    // empty array stored from when it was.
+    $this->installedDefinitions->delete($entity_type_id . '.field_storage_definitions');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
+    return $this->installedDefinitions->get($entity_type_id . '.field_storage_definitions');
+  }
+
+  /**
+   * Stores the entity type's field storage definitions in the application state.
+   *
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
+   *   An array of field storage definitions.
+   */
+  protected function setLastInstalledFieldStorageDefinitions($entity_type_id, array $storage_definitions) {
+    $this->installedDefinitions->set($entity_type_id . '.field_storage_definitions', $storage_definitions);
+  }
+
+  /**
+   * Stores the field storage definition in the application state.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   */
+  protected function setLastInstalledFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
+    $entity_type_id = $storage_definition->getTargetEntityTypeId();
+    $definitions = $this->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    $definitions[$storage_definition->getName()] = $storage_definition;
+    $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $definitions);
+  }
+
+  /**
+   * Deletes the field storage definition from the application state.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   */
+  protected function deleteLastInstalledFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
+    $entity_type_id = $storage_definition->getTargetEntityTypeId();
+    $definitions = $this->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    unset($definitions[$storage_definition->getName()]);
+    $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $definitions);
   }
 
 }

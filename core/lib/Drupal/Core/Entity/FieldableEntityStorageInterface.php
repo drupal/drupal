@@ -9,42 +9,9 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 
-interface FieldableEntityStorageInterface extends EntityStorageInterface {
-
-  /**
-   * Reacts to the creation of a field storage definition.
-   *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
-   *   The definition being created.
-   */
-  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition);
-
-  /**
-   * Reacts to the update of a field storage definition.
-   *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
-   *   The field being updated.
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $original
-   *   The original storage definition; i.e., the definition before the update.
-   *
-   * @throws \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException
-   *   Thrown when the update to the field is forbidden.
-   */
-  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original);
-
-  /**
-   * Reacts to the deletion of a field storage definition.
-   *
-   * Stored values should not be wiped at once, but marked as 'deleted' so that
-   * they can go through a proper purge process later on.
-   *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
-   *   The field being deleted.
-   *
-   * @see purgeFieldData()
-   */
-  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition);
+interface FieldableEntityStorageInterface extends EntityStorageInterface, FieldStorageDefinitionListenerInterface {
 
   /**
    * Reacts to the creation of a field.
@@ -59,7 +26,7 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition being updated.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $original
    *   The original field definition; i.e., the definition before the update.
    */
   public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original);
