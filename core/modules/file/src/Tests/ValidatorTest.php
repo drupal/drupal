@@ -140,12 +140,6 @@ class ValidatorTest extends FileManagedUnitTestBase {
    * Test file_validate_size().
    */
   function testFileValidateSize() {
-    // Run these tests as a regular user.
-    $user = entity_create('user', array('uid' => 2, 'name' => $this->randomMachineName()));
-    $user->enforceIsNew();
-    $user->save();
-    \Drupal::currentUser()->setAccount($user);
-
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = entity_create('file', array('filesize' => 1000));
     $errors = file_validate_size($file, 0, 0);
