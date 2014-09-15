@@ -8,7 +8,7 @@
 namespace Drupal\language;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\LanguageInterface as BaseLanguageInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -60,6 +60,6 @@ interface LanguageNegotiationMethodInterface {
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   The accepted language.
    */
-  public function persist(BaseLanguageInterface $language);
+  public function persist(LanguageInterface $language);
 
 }

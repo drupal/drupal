@@ -10,7 +10,7 @@ namespace Drupal\language;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use Drupal\Core\Language\LanguageInterface as BaseLanguageInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -82,7 +82,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     //   container has finished building.
     $config_storage = BootstrapConfigStorageFactory::get();
     $config_ids = array_filter($config_storage->listAll($prefix), function($config_id) use ($prefix) {
-      return $config_id != $prefix . BaseLanguageInterface::LANGCODE_NOT_SPECIFIED && $config_id != $prefix . BaseLanguageInterface::LANGCODE_NOT_APPLICABLE;
+      return $config_id != $prefix . LanguageInterface::LANGCODE_NOT_SPECIFIED && $config_id != $prefix . LanguageInterface::LANGCODE_NOT_APPLICABLE;
     });
     return count($config_ids) > 1;
   }
