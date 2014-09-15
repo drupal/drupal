@@ -638,7 +638,7 @@ class ConfigImporter {
     // The import is now complete.
     $this->lock->release(static::LOCK_ID);
     $this->reset();
-    $context['message'] = t('Finalising configuration synchronisation.');
+    $context['message'] = t('Finalizing configuration synchronization.');
     $context['finished'] = 1;
   }
 
