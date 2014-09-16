@@ -34,9 +34,9 @@ class ConfigEntityDependency {
    * @param string $name
    *   The configuration entity's configuration object name.
    * @param array $values
-   *   The configuration entity's values.
+   *   (optional) The configuration entity's values.
    */
-  public function __construct($name, $values) {
+  public function __construct($name, $values = array()) {
     $this->name = $name;
     if (isset($values['dependencies'])) {
       $this->dependencies = $values['dependencies'];

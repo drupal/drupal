@@ -170,12 +170,12 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // synchronization.
     $this->entity->set('dependencies', array('module' => array('node')));
     $this->entity->preSave($storage);
-    $this->assertEmpty($this->entity->get('dependencies'));
+    $this->assertEmpty($this->entity->getDependencies());
 
     $this->entity->setSyncing(TRUE);
     $this->entity->set('dependencies', array('module' => array('node')));
     $this->entity->preSave($storage);
-    $dependencies = $this->entity->get('dependencies');
+    $dependencies = $this->entity->getDependencies();
     $this->assertContains('node', $dependencies['module']);
   }
 
@@ -188,19 +188,19 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $method->invoke($this->entity, 'module', $this->provider);
     $method->invoke($this->entity, 'module', 'core');
     $method->invoke($this->entity, 'module', 'node');
-    $dependencies = $this->entity->get('dependencies');
+    $dependencies = $this->entity->getDependencies();
     $this->assertNotContains($this->provider, $dependencies['module']);
     $this->assertNotContains('core', $dependencies['module']);
     $this->assertContains('node', $dependencies['module']);
 
     // Test sorting of dependencies.
     $method->invoke($this->entity, 'module', 'action');
-    $dependencies = $this->entity->get('dependencies');
+    $dependencies = $this->entity->getDependencies();
     $this->assertEquals(array('action', 'node'), $dependencies['module']);
 
     // Test sorting of dependency types.
     $method->invoke($this->entity, 'entity', 'system.action.id');
-    $dependencies = $this->entity->get('dependencies');
+    $dependencies = $this->entity->getDependencies();
     $this->assertEquals(array('entity', 'module'), array_keys($dependencies));
   }
 

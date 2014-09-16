@@ -219,4 +219,46 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     $this->assertFalse($display->getComponent($field_name));
   }
 
+  /**
+   * Tests \Drupal\entity\EntityDisplayBase::onDependencyRemoval().
+   */
+  public function testOnDependencyRemoval() {
+    $this->enableModules(array('field_plugins_test'));
+
+    $field_name = 'test_field';
+    // Create a field and an instance.
+    $field = entity_create('field_storage_config', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'text'
+    ));
+    $field->save();
+    $instance = entity_create('field_instance_config', array(
+      'field_storage' => $field,
+      'bundle' => 'entity_test',
+    ));
+    $instance->save();
+
+    entity_create('entity_form_display', array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ))->setComponent($field_name, array('type' => 'field_plugins_test_text_widget'))->save();
+
+    // Check the component exists and is of the correct type.
+    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertEqual($display->getComponent($field_name)['type'], 'field_plugins_test_text_widget');
+
+    // Removing the field_plugins_test module should change the component to use
+    // the default widget for test fields.
+    \Drupal::service('config.manager')->uninstall('module', 'field_plugins_test');
+    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertEqual($display->getComponent($field_name)['type'], 'text_textfield');
+
+    // Removing the text module should remove the field from the form display.
+    \Drupal::service('config.manager')->uninstall('module', 'text');
+    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertFalse($display->getComponent($field_name));
+  }
+
 }

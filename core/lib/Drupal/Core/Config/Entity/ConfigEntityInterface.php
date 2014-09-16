@@ -157,4 +157,37 @@ interface ConfigEntityInterface extends EntityInterface {
    */
   public function getConfigDependencyName();
 
+  /**
+   * Informs the entity that entities it depends on will be deleted.
+   *
+   * This method allows configuration entities to remove dependencies instead
+   * of being deleted themselves. Configuration entities can use this method to
+   * avoid being unnecessarily deleted during an extension uninstallation.
+   * Implementations should save the entity if dependencies have been
+   * successfully removed. For example, entity displays remove references to
+   * widgets and formatters if the plugin that supplies them depends on a
+   * module that is being uninstalled.
+   *
+   * @todo https://www.drupal.org/node/2336727 this method is only fired during
+   *   extension uninstallation but it could be used during config entity
+   *   deletion too.
+   *
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *   Dependency types are, for example, entity, module and theme.
+   *
+   * @see \Drupal\Core\Config\ConfigManager::uninstall()
+   * @see \Drupal\Core\Entity\EntityDisplayBase::onDependencyRemoval()
+   */
+  public function onDependencyRemoval(array $dependencies);
+
+  /**
+   * Gets the configuration dependencies.
+   *
+   * @return array
+   *   An array of dependencies. If $type not set all dependencies will be
+   *   returned keyed by $type.
+   */
+  public function getDependencies();
+
 }

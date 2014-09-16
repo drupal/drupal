@@ -375,8 +375,21 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
+  public function getDependencies() {
+    return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfigDependencyName() {
     return $this->getEntityType()->getConfigPrefix() . '.' . $this->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
   }
 
 }

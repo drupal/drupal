@@ -1102,6 +1102,20 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function onDependencyRemoval(array $dependencies) {
+    return $this->storage->onDependencyRemoval($dependencies);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDependencies() {
+    return $this->storage->getDependencies();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheTag() {
     $this->storage->getCacheTag();
   }

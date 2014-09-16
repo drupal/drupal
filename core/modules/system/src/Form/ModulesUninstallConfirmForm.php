@@ -147,8 +147,8 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
 
     $form['entities'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Configuration deletions'),
-      '#description' => $this->t('The listed configuration will be deleted.'),
+      '#title' => $this->t('Affected configuration'),
+      '#description' => $this->t('The listed configuration will be updated if possible, or deleted.'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#access' => FALSE,

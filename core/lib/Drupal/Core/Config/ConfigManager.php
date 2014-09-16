@@ -10,6 +10,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Diff\Diff;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -178,14 +179,47 @@ class ConfigManager implements ConfigManagerInterface {
    */
   public function uninstall($type, $name) {
     // Remove all dependent configuration entities.
-    $dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
+    $extension_dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
 
+    // Give config entities a chance to become independent of the entities we
+    // are going to delete.
+    foreach ($extension_dependent_entities as $entity) {
+      $entity_dependencies = $entity->getDependencies();
+      if (empty($entity_dependencies)) {
+        // No dependent entities nothing to do.
+        continue;
+      }
+      // Work out if any of the entity's dependencies are going to be affected
+      // by the uninstall.
+      $affected_dependencies = array(
+        'entity' => array(),
+        'module' => array(),
+        'theme' => array(),
+      );
+      if (isset($entity_dependencies['entity'])) {
+        foreach ($extension_dependent_entities as $extension_dependent_entity) {
+          if (in_array($extension_dependent_entity->getConfigDependencyName(), $entity_dependencies['entity'])) {
+            $affected_dependencies['entity'][] = $extension_dependent_entity;
+          }
+        }
+      }
+      // Check if the extension being uninstalled is a dependency of the entity.
+      if (isset($entity_dependencies[$type]) && in_array($name, $entity_dependencies[$type])) {
+        $affected_dependencies[$type] = array($name);
+      }
+      // Inform the entity.
+      $entity->onDependencyRemoval($affected_dependencies);
+    }
+
+    // Recalculate the dependencies, some config entities may have fixed their
+    // dependencies on the to-be-removed entities.
+    $extension_dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
     // Reverse the array to that entities are removed in the correct order of
     // dependence. For example, this ensures that field instances are removed
     // before fields.
-    foreach (array_reverse($dependent_entities) as $entity) {
-      $entity->setUninstalling(TRUE);
-      $entity->delete();
+    foreach (array_reverse($extension_dependent_entities) as $extension_dependent_entity) {
+      $extension_dependent_entity->setUninstalling(TRUE);
+      $extension_dependent_entity->delete();
     }
 
     $config_names = $this->configFactory->listAll($name . '.');
