@@ -24,7 +24,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_content_test', 'dblog', 'entity');
+  public static $modules = array('block_content_test', 'dblog', 'field_ui');
 
   /**
    * Sets the test up.

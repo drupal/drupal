@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Form\EntityDisplayModeFormBase.
+ * Contains \Drupal\field_ui\Form\EntityDisplayModeFormBase.
  */
 
-namespace Drupal\entity\Form;
+namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -125,7 +125,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
     drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
     $this->entity->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $form_state->setRedirect('entity.' . $this->entity->getEntityTypeId() . '_list');
+    $form_state->setRedirect('field_ui.' . $this->entity->getEntityTypeId() . '_list');
   }
 
 }

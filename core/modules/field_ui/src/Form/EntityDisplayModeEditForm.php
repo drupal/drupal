@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Form\EntityDisplayModeEditForm.
+ * Contains \Drupal\field_ui\Form\EntityDisplayModeEditForm.
  */
 
-namespace Drupal\entity\Form;
+namespace Drupal\field_ui\Form;
 
 /**
  * Provides the edit form for entity display modes.

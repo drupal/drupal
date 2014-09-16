@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Form\EntityDisplayModeAddForm.
+ * Contains \Drupal\field_ui\Form\EntityDisplayModeAddForm.
  */
 
-namespace Drupal\entity\Form;
+namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

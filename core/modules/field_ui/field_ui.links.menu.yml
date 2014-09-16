@@ -3,3 +3,21 @@ field_ui.list:
   description: 'Overview of fields on all entity types.'
   route_name: field_ui.list
   parent: system.admin_reports
+
+field_ui.display_mode:
+  title: 'Display modes'
+  description: 'Configure what displays are available for your content and forms.'
+  route_name: field_ui.display_mode
+  parent: system.admin_structure
+
+field_ui.entity_view_mode_list:
+  title: 'View modes'
+  description: 'Manage custom view modes.'
+  route_name: field_ui.entity_view_mode_list
+  parent: field_ui.display_mode
+
+field_ui.entity_form_mode_list:
+  title: 'Form modes'
+  description: 'Manage custom form modes.'
+  route_name: field_ui.entity_form_mode_list
+  parent: field_ui.display_mode

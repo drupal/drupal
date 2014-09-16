@@ -2,6 +2,27 @@ field_ui.list:
   title: Entities
   route_name: field_ui.list
   base_route: field_ui.list
+
 field_ui.fields:
   class: \Drupal\Core\Menu\LocalTaskDefault
   deriver: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask
+
+field_ui.entity_view_mode.edit_form:
+  title: 'Edit'
+  route_name: field_ui.entity_view_mode.edit_form
+  base_route: field_ui.entity_view_mode.edit_form
+
+field_ui.entity_form_mode.edit_form:
+  title: 'Edit'
+  route_name: field_ui.entity_form_mode.edit_form
+  base_route: field_ui.entity_form_mode.edit_form
+
+field_ui.entity_view_mode_list:
+  title: List
+  route_name: field_ui.entity_view_mode_list
+  base_route: field_ui.entity_view_mode_list
+
+field_ui.entity_form_mode_list:
+  title: List
+  route_name: field_ui.entity_form_mode_list
+  base_route: field_ui.entity_form_mode_list

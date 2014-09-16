@@ -21,7 +21,7 @@ class KernelTestBaseTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'entity_test');
+  public static $modules = array('entity_test');
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests expected behavior of setUp().
    */
   function testSetUp() {
-    $modules = array('entity', 'entity_test');
+    $modules = array('entity_test');
     $table = 'entity_test';
 
     // Verify that specified $modules have been loaded.
@@ -222,7 +222,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Load some additional modules; entity_test should still exist.
-    $this->enableModules(array('entity', 'field', 'text', 'entity_test'));
+    $this->enableModules(array('field', 'text', 'entity_test'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
@@ -237,7 +237,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Set the weight of a module; entity_test should still exist.
-    module_set_weight('entity', -1);
+    module_set_weight('field', -1);
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 

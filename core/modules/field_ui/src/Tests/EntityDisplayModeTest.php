@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Tests\EntityDisplayModeTest.
+ * Contains \Drupal\field_ui\Tests\EntityDisplayModeTest.
  */
 
-namespace Drupal\entity\Tests;
+namespace Drupal\field_ui\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the entity display modes UI.
  *
- * @group entity
+ * @group field_ui
  */
 class EntityDisplayModeTest extends WebTestBase {
 
@@ -21,7 +21,7 @@ class EntityDisplayModeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'entity');
+  public static $modules = array('entity_test', 'field_ui');
 
   /**
    * Tests the EntityViewMode user interface.

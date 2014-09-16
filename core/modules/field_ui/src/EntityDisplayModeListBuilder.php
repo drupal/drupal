@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityDisplayModeListBuilder.
+ * Contains \Drupal\field_ui\EntityDisplayModeListBuilder.
  */
 
-namespace Drupal\entity;
+namespace Drupal\field_ui;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;

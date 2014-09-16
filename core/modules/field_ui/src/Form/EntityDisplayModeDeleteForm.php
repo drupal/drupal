@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Form\EntityDisplayModeDeleteForm.
+ * Contains \Drupal\field_ui\Form\EntityDisplayModeDeleteForm.
  */
 
-namespace Drupal\entity\Form;
+namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,7 +20,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.' . $this->entity->getEntityTypeId() . '_list');
+    return new Url('field_ui.' . $this->entity->getEntityTypeId() . '_list');
   }
 
   /**

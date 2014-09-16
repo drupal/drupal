@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Tests\EntityDisplayTest.
+ * Contains \Drupal\field_ui\Tests\EntityDisplayTest.
  */
 
-namespace Drupal\entity\Tests;
+namespace Drupal\field_ui\Tests;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\simpletest\KernelTestBase;
@@ -13,11 +13,11 @@ use Drupal\simpletest\KernelTestBase;
 /**
  * Tests the entity display configuration entities.
  *
- * @group entity
+ * @group field_ui
  */
 class EntityDisplayTest extends KernelTestBase {
 
-  public static $modules = array('entity', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system');
+  public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system');
 
   protected function setUp() {
     parent::setUp();

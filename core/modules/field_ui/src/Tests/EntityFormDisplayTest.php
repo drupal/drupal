@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Tests\EntityFormDisplayTest.
+ * Contains \Drupal\field_ui\Tests\EntityFormDisplayTest.
  */
 
-namespace Drupal\entity\Tests;
+namespace Drupal\field_ui\Tests;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the entity display configuration entities.
  *
- * @group entity
+ * @group field_ui
  */
-class EntityFormDisplayTest extends DrupalUnitTestBase {
+class EntityFormDisplayTest extends KernelTestBase {
 
-  public static $modules = array('entity', 'field', 'entity_test', 'field_test', 'user', 'text');
+  public static $modules = array('field_ui', 'field', 'entity_test', 'field_test', 'user', 'text');
 
   protected function setUp() {
     parent::setUp();

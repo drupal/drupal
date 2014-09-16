@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityFormModeListBuilder.
+ * Contains \Drupal\field_ui\EntityFormModeListBuilder.
  */
 
-namespace Drupal\entity;
+namespace Drupal\field_ui;
 
 /**
  * Defines a class to build a listing of form mode entities.
