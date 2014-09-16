@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,16 +42,26 @@ abstract class PathFormBase extends FormBase {
   protected $aliasManager;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a new PathController.
    *
    * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
    *   The path alias storage.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The path alias manager.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
    */
-  public function __construct(AliasStorageInterface $alias_storage, AliasManagerInterface $alias_manager) {
+  public function __construct(AliasStorageInterface $alias_storage, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator) {
     $this->aliasStorage = $alias_storage;
     $this->aliasManager = $alias_manager;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -59,7 +70,8 @@ abstract class PathFormBase extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('path.alias_storage'),
-      $container->get('path.alias_manager')
+      $container->get('path.alias_manager'),
+      $container->get('path.validator')
     );
   }
 
@@ -146,7 +158,7 @@ abstract class PathFormBase extends FormBase {
     if ($this->aliasStorage->aliasExists($alias, $langcode, $source)) {
       $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
     }
-    if (!drupal_valid_path($source)) {
+    if (!$this->pathValidator->isValid($source)) {
       $form_state->setErrorByName('source', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
     }
   }

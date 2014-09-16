@@ -96,20 +96,3 @@ function path_is_admin($path) {
     return FALSE;
   }
 }
-
-/**
- * Checks a path exists and the current user has access to it.
- *
- * @param string $path
- *   The path to check.
- *
- * @return bool
- *   TRUE if it is a valid path AND the current user has access permission,
- *   FALSE otherwise.
- *
- * @deprecated Use \Drupal::service('path.validator')->isValid($path) service
- *   instead.
- */
-function drupal_valid_path($path) {
-  return \Drupal::service('path.validator')->isValid($path);
-}
