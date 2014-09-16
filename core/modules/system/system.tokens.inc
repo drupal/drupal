@@ -64,7 +64,7 @@ function system_token_info() {
   );
   $date['custom'] = array(
     'name' => t("Custom format"),
-    'description' => t("A date in a custom format. See !php-date for details.", array('!php-date' => l(t('the PHP documentation'), 'http://php.net/manual/function.date.php'))),
+    'description' => t('A date in a custom format. See <a href="http://php.net/manual/function.date.php">the PHP documentation</a> for details.'),
   );
   $date['since'] = array(
     'name' => t("Time-since"),
