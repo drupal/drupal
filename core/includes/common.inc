@@ -404,46 +404,6 @@ function check_url($uri) {
  */
 
 /**
- * Formats an RSS channel.
- *
- * Arbitrary elements may be added using the $args associative array.
- */
-function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
-
-  $output = "<channel>\n";
-  $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
-  $output .= ' <link>' . check_url($link) . "</link>\n";
-
-  // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
-  // We strip all HTML tags, but need to prevent double encoding from properly
-  // escaped source data (such as &amp becoming &amp;amp;).
-  $output .= ' <description>' . String::checkPlain(decode_entities(strip_tags($description))) . "</description>\n";
-  $output .= ' <language>' . String::checkPlain($langcode) . "</language>\n";
-  $output .= format_xml_elements($args);
-  $output .= $items;
-  $output .= "</channel>\n";
-
-  return $output;
-}
-
-/**
- * Formats a single RSS item.
- *
- * Arbitrary elements may be added using the $args associative array.
- */
-function format_rss_item($title, $link, $description, $args = array()) {
-  $output = "<item>\n";
-  $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
-  $output .= ' <link>' . check_url($link) . "</link>\n";
-  $output .= ' <description>' . String::checkPlain($description) . "</description>\n";
-  $output .= format_xml_elements($args);
-  $output .= "</item>\n";
-
-  return $output;
-}
-
-/**
  * Formats XML elements.
  *
  * Note: It is the caller's responsibility to sanitize any input parameters.
