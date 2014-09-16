@@ -67,8 +67,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
    * check that language prefixes are not added to it and that the prefixed URL
    * is actually not working.
    *
-   * @param string $language
-   *   The language prefix, e.g. 'es'.
+   * @param \Drupal\Core\Language\LanguageInterface $language
+   *   The language object.
    * @param string $message1
    *   Message to display in assertion that language prefixes are not added.
    * @param string $message2
