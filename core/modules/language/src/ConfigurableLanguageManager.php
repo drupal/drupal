@@ -112,15 +112,15 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    *   The module handler service.
    * @param \Drupal\language\Config\LanguageConfigFactoryOverrideInterface $config_override
    *   The language configuration override service.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The configuration storage engine.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    */
-  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $requestStack) {
+  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $request_stack) {
     $this->defaultLanguage = $default_language;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->configFactoryOverride = $config_override;
-    $this->requestStack = $requestStack;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -185,7 +185,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   }
 
   /**
-   * Stores language types configuration.
+   * {@inheritdoc}
    */
   public function saveLanguageTypesConfiguration(array $values) {
     $config = $this->configFactory->get('language.types');
