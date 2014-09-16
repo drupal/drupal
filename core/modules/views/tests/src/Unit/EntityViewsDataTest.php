@@ -1,12 +1,11 @@
 <?php
-use Drupal\Core\Entity\EntityType;
 
 /**
  * @file
- * Contains \Drupal\views\Tests\EntityViewsDataTest.
+ * Contains \Drupal\Tests\views\Unit\EntityViewsDataTest.
  */
 
-namespace Drupal\views\Tests {
+namespace Drupal\Tests\views\Unit {
 
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\ContentEntityType;
