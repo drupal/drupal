@@ -168,7 +168,7 @@ abstract class PathFormBase extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove unnecessary values.
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
 
     $pid = $form_state->getValue('pid', 0);
     $source = &$form_state->getValue('source');

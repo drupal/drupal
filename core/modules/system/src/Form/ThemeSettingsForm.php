@@ -383,7 +383,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     $config = $this->config($form_state->getValue('config_key'));
 
     // Exclude unnecessary elements before saving.
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
     $form_state->unsetValue('var');
     $form_state->unsetValue('config_key');
 

@@ -116,7 +116,7 @@ abstract class ImageEffectFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
 
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for submission.

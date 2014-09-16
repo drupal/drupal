@@ -91,7 +91,7 @@ class RegisterForm extends AccountForm {
     }
 
     // Remove unneeded values.
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
 
     $form_state->setValue('pass', $pass);
     $form_state->setValue('init', $form_state->getValue('mail'));

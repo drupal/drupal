@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests proper removal of submitted form values using
- * form_state_values_clean().
+ * \Drupal\Core\Form\FormState::cleanValues().
  *
  * @group Form
  */
@@ -26,7 +26,7 @@ class StateValuesCleanTest extends WebTestBase {
   public static $modules = array('form_test');
 
   /**
-   * Tests form_state_values_clean().
+   * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
   function testFormStateValuesClean() {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', array(), t('Submit')));

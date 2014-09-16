@@ -1129,6 +1129,50 @@ class FormState implements FormStateInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function cleanValues() {
+    // Remove internal Form API values.
+    $this
+      ->unsetValue('form_id')
+      ->unsetValue('form_token')
+      ->unsetValue('form_build_id')
+      ->unsetValue('op');
+
+    // Remove button values.
+    // form_builder() collects all button elements in a form. We remove the button
+    // value separately for each button element.
+    foreach ($this->getButtons() as $button) {
+      // Remove this button's value from the submitted form values by finding
+      // the value corresponding to this button.
+      // We iterate over the #parents of this button and move a reference to
+      // each parent in self::getValues(). For example, if #parents is:
+      //   array('foo', 'bar', 'baz')
+      // then the corresponding self::getValues() part will look like this:
+      // array(
+      //   'foo' => array(
+      //     'bar' => array(
+      //       'baz' => 'button_value',
+      //     ),
+      //   ),
+      // )
+      // We start by (re)moving 'baz' to $last_parent, so we are able unset it
+      // at the end of the iteration. Initially, $values will contain a
+      // reference to self::getValues(), but in the iteration we move the
+      // reference to self::getValue('foo'), and finally to
+      // self::getValue(array('foo', 'bar')), which is the level where we
+      // can unset 'baz' (that is stored in $last_parent).
+      $parents = $button['#parents'];
+      $last_parent = array_pop($parents);
+      $key_exists = NULL;
+      $values = &NestedArray::getValue($this->getValues(), $parents, $key_exists);
+      if ($key_exists && is_array($values)) {
+        unset($values[$last_parent]);
+      }
+    }
+  }
+
+  /**
    * Wraps drupal_set_message().
    *
    * @return array|null

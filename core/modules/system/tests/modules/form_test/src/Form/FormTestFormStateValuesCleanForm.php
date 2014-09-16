@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form builder for form_state_values_clean() test.
+ * Form builder for \Drupal\Core\Form\FormState::cleanValues() test.
  */
 class FormTestFormStateValuesCleanForm extends FormBase {
 
@@ -20,7 +20,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'form_test_form_state_values_clean_form';
+    return 'form_test_form_state_clean_values_form';
   }
 
   /**
@@ -43,7 +43,7 @@ class FormTestFormStateValuesCleanForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
     // This won't have a proper JSON header, but Drupal doesn't check for that
     // anyway so this is fine until it's replaced with a JsonResponse.
     print Json::encode($form_state->getValues());

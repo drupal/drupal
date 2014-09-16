@@ -987,4 +987,22 @@ interface FormStateInterface {
    */
   public function isValidationComplete();
 
+  /**
+   * Removes internal Form API elements and buttons from submitted form values.
+   *
+   * This function can be used when a module wants to store all submitted form
+   * values, for example, by serializing them into a single database column. In
+   * such cases, all internal Form API values and all form button elements
+   * should not be contained, and this function allows to remove them before the
+   * module proceeds to storage. Next to button elements, the following internal
+   * values are removed:
+   * - form_id
+   * - form_token
+   * - form_build_id
+   * - op
+   *
+   * @return $this
+   */
+  public function cleanValues();
+
 }

@@ -99,59 +99,11 @@ function form_builder($form_id, &$element, FormStateInterface $form_state) {
 /**
  * Removes internal Form API elements and buttons from submitted form values.
  *
- * This function can be used when a module wants to store all submitted form
- * values, for example, by serializing them into a single database column. In
- * such cases, all internal Form API values and all form button elements should
- * not be contained, and this function allows to remove them before the module
- * proceeds to storage. Next to button elements, the following internal values
- * are removed:
- * - form_id
- * - form_token
- * - form_build_id
- * - op
- *
- * @param $form_state
- *   The current state of the form, including submitted form values.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use $form_state->cleanValues().
  */
 function form_state_values_clean(FormStateInterface $form_state) {
-  // Remove internal Form API values.
-  $form_state
-    ->unsetValue('form_id')
-    ->unsetValue('form_token')
-    ->unsetValue('form_build_id')
-    ->unsetValue('op');
-
-  // Remove button values.
-  // form_builder() collects all button elements in a form. We remove the button
-  // value separately for each button element.
-  foreach ($form_state->getButtons() as $button) {
-    // Remove this button's value from the submitted form values by finding
-    // the value corresponding to this button.
-    // We iterate over the #parents of this button and move a reference to
-    // each parent in $form_state->getValues(). For example, if #parents is:
-    //   array('foo', 'bar', 'baz')
-    // then the corresponding $form_state->getValues() part will look like this:
-    // array(
-    //   'foo' => array(
-    //     'bar' => array(
-    //       'baz' => 'button_value',
-    //     ),
-    //   ),
-    // )
-    // We start by (re)moving 'baz' to $last_parent, so we are able unset it
-    // at the end of the iteration. Initially, $values will contain a
-    // reference to $form_state->getValues(), but in the iteration we move the
-    // reference to $form_state->getValue('foo'), and finally to
-    // $form_state->getValue(array('foo', 'bar')), which is the level where we
-    // can unset 'baz' (that is stored in $last_parent).
-    $parents = $button['#parents'];
-    $last_parent = array_pop($parents);
-    $key_exists = NULL;
-    $values = &NestedArray::getValue($form_state->getValues(), $parents, $key_exists);
-    if ($key_exists && is_array($values)) {
-      unset($values[$last_parent]);
-    }
-  }
+  $form_state->cleanValues();
 }
 
 /**

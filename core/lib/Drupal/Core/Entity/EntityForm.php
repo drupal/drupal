@@ -258,7 +258,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove button and internal Form API values from submitted values.
-    form_state_values_clean($form_state);
+    $form_state->cleanValues();
     $this->entity = $this->buildEntity($form, $form_state);
   }
 
