@@ -86,7 +86,12 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function fields(MigrationInterface $migration = NULL) {
-    // TODO: Implement fields() method.
+    return [
+      'pid' => 'The path id',
+      'source' => 'The source path.',
+      'alias' => 'The url alias.',
+      'langcode' => 'The language code for the url.',
+    ];
   }
 
 }
