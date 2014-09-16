@@ -17,13 +17,6 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
   protected $batchOutput = array();
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('update', 'locale', 'locale_test');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

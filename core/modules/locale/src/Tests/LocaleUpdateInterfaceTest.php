@@ -7,8 +7,6 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests for the user interface of project interface translations.
  *
@@ -21,7 +19,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
    *
    * @var array
    */
-  public static $modules = array('update', 'locale', 'locale_test_translate');
+  public static $modules = array('locale_test_translate');
 
   /**
    * {@inheritdoc}

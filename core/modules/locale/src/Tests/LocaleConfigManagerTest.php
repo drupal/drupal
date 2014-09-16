@@ -8,8 +8,6 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\LocaleConfigManager;
-use Drupal\Core\Config\StorageException;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**

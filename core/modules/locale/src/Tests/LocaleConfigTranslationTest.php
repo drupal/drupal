@@ -8,7 +8,6 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\locale\LocaleTypedConfig;
 use Drupal\core\language\languageInterface;
 
 /**
