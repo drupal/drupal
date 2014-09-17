@@ -7,6 +7,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,24 +24,23 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\user\EntityOwnerInterface $entity */
+
+    if ($account->hasPermission('administer comments')) {
+      $access = AccessResult::allowed()->cachePerRole();
+      return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
+    }
+
     switch ($operation) {
       case 'view':
-        if ($account->hasPermission('access comments') && $entity->isPublished() || $account->hasPermission('administer comments')) {
-          return $entity->getCommentedEntity()->access($operation, $account);
-        }
-        break;
+        return AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerRole()->cacheUntilEntityChanges($entity)
+          ->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
 
       case 'update':
-        return ($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments')) || $account->hasPermission('administer comments');
-        break;
+        return AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($entity);
 
-      case 'delete':
-        return $account->hasPermission('administer comments');
-        break;
-
-      case 'approve':
-        return $account->hasPermission('administer comments');
-        break;
+      default:
+        // No opinion.
+        return AccessResult::create()->cachePerRole();
     }
   }
 
@@ -48,7 +48,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('post comments');
+    return AccessResult::allowedIfHasPermission($account, 'post comments');
   }
 
 }

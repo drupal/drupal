@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
@@ -61,30 +62,6 @@ const NODE_NOT_STICKY = 0;
  * Denotes that the node is sticky at the top of the page.
  */
 const NODE_STICKY = 1;
-
-/**
- * Denotes that access is allowed for a node.
- *
- * Modules should return this value from hook_node_access() to allow access to a
- * node.
- */
-const NODE_ACCESS_ALLOW = TRUE;
-
-/**
- * Denotes that access is denied for a node.
- *
- * Modules should return this value from hook_node_access() to deny access to a
- * node.
- */
-const NODE_ACCESS_DENY = FALSE;
-
-/**
- * Denotes that access is unaffected for a node.
- *
- * Modules should return this value from hook_node_access() to indicate no
- * effect on node access.
- */
-const NODE_ACCESS_IGNORE = NULL;
 
 /**
  * Implements hook_help().
@@ -1001,8 +978,8 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * check.
  *
  * Next, all implementations of hook_node_access() will be called. Each
- * implementation may explicitly allow, explicitly deny, or ignore the access
- * request. If at least one module says to deny the request, it will be
+ * implementation may explicitly allow, explicitly forbid, or ignore the access
+ * request. If at least one module says to forbid the request, it will be
  * rejected. If no modules deny the request and at least one says to allow it,
  * the request will be permitted.
  *
@@ -1026,11 +1003,13 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * @link entity_api Entity API topic @endlink for more information on entity
  * queries.
  *
- * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
- * will block access to the node. Therefore, implementers should take care to
- * not deny access unless they really intend to. Unless a module wishes to
- * actively deny access it should return NODE_ACCESS_IGNORE (or simply return
- * nothing) to allow other modules or the node_access table to control access.
+ * Note: Even a single module returning an AccessResultInterface object from
+ * hook_node_access() whose isForbidden() method equals TRUE will block access
+ * to the node. Therefore, implementers should take care to not deny access
+ * unless they really intend to. Unless a module wishes to actively forbid
+ * access it should return an AccessResultInterface object whose isAllowed() nor
+ * isForbidden() methods return TRUE, to allow other modules or the node_access
+ * table to control access.
  *
  * To see how to write a node access module of your own, see
  * node_access_example.module.
@@ -1042,23 +1021,30 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
 function node_node_access(NodeInterface $node, $op, $account) {
   $type = $node->bundle();
 
-  if ($op == 'create' && $account->hasPermission('create ' . $type . ' content', $account)) {
-    return NODE_ACCESS_ALLOW;
-  }
+  switch ($op) {
+    case 'create':
+      return AccessResult::allowedIfHasPermission($account, 'create ' . $type . ' content');
 
-  if ($op == 'update') {
-    if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
-      return NODE_ACCESS_ALLOW;
-    }
-  }
+    case 'update':
+      if ($account->hasPermission('edit any ' . $type . ' content', $account)) {
+        return AccessResult::allowed()->cachePerRole();
+      }
+      else {
+        return AccessResult::allowedIf($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($node);
+      }
 
-  if ($op == 'delete') {
-    if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
-      return NODE_ACCESS_ALLOW;
-    }
-  }
+    case 'delete':
+      if ($account->hasPermission('delete any ' . $type . ' content', $account)) {
+        return AccessResult::allowed()->cachePerRole();
+      }
+      else {
+        return AccessResult::allowedIf($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($node);
+      }
 
-  return NODE_ACCESS_IGNORE;
+    default:
+      // No opinion.
+      return AccessResult::create();
+  }
 }
 
 /**

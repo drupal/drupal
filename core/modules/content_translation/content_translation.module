@@ -5,6 +5,7 @@
  * Allows entities to be translated into different languages.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -218,11 +219,15 @@ function _content_translation_menu_strip_loaders($path) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity whose translation overview should be displayed.
+ *
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  */
 function content_translation_translate_access(EntityInterface $entity) {
   $account = \Drupal::currentUser();
-  return $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
+  $condition = $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
     ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations'));
+  return AccessResult::allowedIf($condition)->cachePerRole()->cacheUntilEntityChanges($entity);
 }
 
 /**
@@ -346,8 +351,8 @@ function content_translation_controller($entity_type_id) {
  *   - "delete"
  *   - "create"
  *
- * @return
- *   TRUE if the current user is allowed to view the translation.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  *
  * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */

@@ -5,6 +5,7 @@
  * Allows users to manage customizable lists of shortcut links.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -73,27 +74,21 @@ function shortcut_permission() {
  *   (optional) The shortcut set to be edited. If not set, the current user's
  *   shortcut set will be used.
  *
- * @return bool
- *   TRUE if the current user has access to edit the shortcut set, FALSE
- *   otherwise.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  */
 function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
   $account = \Drupal::currentUser();
 
   // Shortcut administrators can edit any set.
   if ($account->hasPermission('administer shortcuts')) {
-    return TRUE;
+    return AccessResult::allowed()->cachePerRole();
   }
-  // Access to shortcuts is required for non-administrators.
-  if (!$account->hasPermission('access shortcuts')) {
-    return FALSE;
-  }
+
   // Sufficiently-privileged users can edit their currently displayed shortcut
-  // set, but not other sets.
-  if ($account->hasPermission('customize shortcut links')) {
-    return !isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set();
-  }
-  return FALSE;
+  // set, but not other sets. They must also be able to access shortcuts.
+  $may_edit_current_shortcut_set = $account->hasPermission('customize shortcut links') && (!isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set()) && $account->hasPermission('access shortcuts');
+  return AccessResult::allowedIf($may_edit_current_shortcut_set)->cachePerRole();
 }
 
 /**
@@ -104,35 +99,38 @@ function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
  *   permissions will be checked for switching the logged-in user's own
  *   shortcut set.
  *
- * @return bool
- *   TRUE if the current user has access to switch the shortcut set of the
- *   provided account, FALSE otherwise.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  */
 function shortcut_set_switch_access($account = NULL) {
   $user = \Drupal::currentUser();
 
   if ($user->hasPermission('administer shortcuts')) {
     // Administrators can switch anyone's shortcut set.
-    return TRUE;
+    return AccessResult::allowed()->cachePerRole();
   }
 
   if (!$user->hasPermission('access shortcuts')) {
     // The user has no permission to use shortcuts.
-    return FALSE;
+    return AccessResult::create()->cachePerRole();
   }
 
   if (!$user->hasPermission('switch shortcut sets')) {
     // The user has no permission to switch anyone's shortcut set.
-    return FALSE;
+    return AccessResult::create()->cachePerRole();
   }
 
-  if (!isset($account) || $user->id() == $account->id()) {
-    // Users with the 'switch shortcut sets' permission can switch their own
-    // shortcuts sets.
-    return TRUE;
+  // Users with the 'switch shortcut sets' permission can switch their own
+  // shortcuts sets.
+  if (!isset($account)) {
+    return AccessResult::allowed()->cachePerRole();
+  }
+  else if ($user->id() == $account->id()) {
+    return AccessResult::allowed()->cachePerRole()->cachePerUser();
   }
 
-  return FALSE;
+  // No opinion.
+  return AccessResult::create()->cachePerRole();
 }
 
 /**
@@ -320,7 +318,7 @@ function shortcut_preprocess_page(&$variables) {
   // shortcuts and if the page's actual content is being shown (for example,
   // we do not want to display it on "access denied" or "page not found"
   // pages).
-  if (shortcut_set_edit_access() && !\Drupal::request()->attributes->has('exception')) {
+  if (shortcut_set_edit_access()->isAllowed() && !\Drupal::request()->attributes->has('exception')) {
     $link = current_path();
     if (!($url = \Drupal::pathValidator()->getUrlIfValid($link))) {
       // Bail out early if we couldn't find a matching route.
@@ -346,13 +344,13 @@ function shortcut_preprocess_page(&$variables) {
     $link_mode = isset($shortcut_id) ? "remove" : "add";
 
     if ($link_mode == "add") {
-      $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Add to shortcuts');
+      $link_text = shortcut_set_switch_access()->isAllowed() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Add to shortcuts');
       $route_name = 'shortcut.link_add_inline';
       $route_parameters = array('shortcut_set' => $shortcut_set->id());
     }
     else {
       $query['id'] = $shortcut_id;
-      $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Remove from shortcuts');
+      $link_text = shortcut_set_switch_access()->isAllowed() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Remove from shortcuts');
       $route_name = 'entity.shortcut.link_delete_inline';
       $route_parameters = array('shortcut' => $shortcut_id);
     }
@@ -387,7 +385,7 @@ function shortcut_toolbar() {
     $links = shortcut_renderable_links();
     $shortcut_set = shortcut_current_displayed_set();
     $configure_link = NULL;
-    if (shortcut_set_edit_access($shortcut_set)) {
+    if (shortcut_set_edit_access($shortcut_set)->isAllowed()) {
       $configure_link = array(
         '#type' => 'link',
         '#title' => t('Edit shortcuts'),

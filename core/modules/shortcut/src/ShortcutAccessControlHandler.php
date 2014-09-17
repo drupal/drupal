@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -58,6 +59,9 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
     if ($shortcut_set = $this->shortcutSetStorage->load($entity->bundle())) {
       return shortcut_set_edit_access($shortcut_set, $account);
     }
+    // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
+    // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
+    return AccessResult::create()->cacheUntilEntityChanges($entity);
   }
 
   /**
@@ -67,6 +71,9 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
     if ($shortcut_set = $this->shortcutSetStorage->load($entity_bundle)) {
       return shortcut_set_edit_access($shortcut_set, $account);
     }
+    // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
+    // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
+    return AccessResult::create();
   }
 
 }

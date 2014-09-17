@@ -7,6 +7,7 @@
 
 namespace Drupal\quickedit\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -28,24 +29,24 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    *
    * @todo Use the $account argument: https://drupal.org/node/2266809.
    */
   public function access(EntityInterface $entity, $field_name, $langcode, AccountInterface $account) {
     if (!$this->validateRequestAttributes($entity, $field_name, $langcode)) {
-      return static::KILL;
+      return AccessResult::forbidden();
     }
 
-    return $this->accessEditEntityField($entity, $field_name) ? static::ALLOW : static::DENY;
+    return $this->accessEditEntityField($entity, $field_name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function accessEditEntityField(EntityInterface $entity, $field_name) {
-    return $entity->access('update') && $entity->get($field_name)->access('edit');
+    return $entity->access('update', NULL, TRUE)->andIf($entity->get($field_name)->access('edit', NULL, TRUE));
   }
 
   /**

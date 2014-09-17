@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -50,15 +51,17 @@ class NodeAddAccessCheck implements AccessInterface {
     $access_control_handler = $this->entityManager->getAccessControlHandler('node');
     // If checking whether a node of a particular type may be created.
     if ($node_type) {
-      return $access_control_handler->createAccess($node_type->id(), $account) ? static::ALLOW : static::DENY;
+      return $access_control_handler->createAccess($node_type->id(), $account, [], TRUE);
     }
     // If checking whether a node of any type may be created.
     foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $node_type) {
-      if ($access_control_handler->createAccess($node_type->id(), $account)) {
-        return static::ALLOW;
+      if (($access = $access_control_handler->createAccess($node_type->id(), $account, [], TRUE)) && $access->isAllowed()) {
+        return $access;
       }
     }
-    return static::DENY;
+
+    // No opinion.
+    return AccessResult::create();
   }
 
 }

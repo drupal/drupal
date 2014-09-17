@@ -7,6 +7,7 @@
 
 namespace Drupal\block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -27,13 +28,14 @@ class BlockAccessControlHandler extends EntityAccessControlHandler {
       return parent::checkAccess($entity, $operation, $langcode, $account);
     }
 
-    // Deny access to disabled blocks.
+    // Don't grant access to disabled blocks.
     if (!$entity->status()) {
-      return FALSE;
+      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
-
-    // Delegate to the plugin.
-    return $entity->getPlugin()->access($account);
+    else {
+      // Delegate to the plugin.
+      return $entity->getPlugin()->access($account)->cacheUntilEntityChanges($entity);
+    }
   }
 
 }

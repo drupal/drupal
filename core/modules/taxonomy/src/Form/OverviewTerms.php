@@ -264,7 +264,7 @@ class OverviewTerms extends FormBase {
           'query' => $destination,
         ) + $term->urlInfo('delete-form')->toArray(),
       );
-      if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)) {
+      if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)->isAllowed()) {
         $operations['translate'] = array(
           'title' => $this->t('Translate'),
           'query' => $destination,

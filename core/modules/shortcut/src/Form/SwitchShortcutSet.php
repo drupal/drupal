@@ -8,7 +8,6 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -237,34 +236,11 @@ class SwitchShortcutSet extends FormBase {
    * @param \Drupal\user\UserInterface $user
    *   (optional) The owner of the shortcut set.
    *
-   * @return mixed
-   *   AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function checkAccess(UserInterface $user = NULL) {
-    $account = $this->currentUser();
-    $this->user = $user;
-
-    if ($account->hasPermission('administer shortcuts')) {
-      // Administrators can switch anyone's shortcut set.
-      return AccessInterface::ALLOW;
-    }
-
-    if (!$account->hasPermission('access shortcuts')) {
-      // The user has no permission to use shortcuts.
-      return AccessInterface::DENY;
-    }
-
-    if (!$account->hasPermission('switch shortcut sets')) {
-      // The user has no permission to switch anyone's shortcut set.
-      return AccessInterface::DENY;
-    }
-
-    if ($this->user->id() == $account->id()) {
-      // Users with the 'switch shortcut sets' permission can switch their own
-      // shortcuts sets.
-      return AccessInterface::ALLOW;
-    }
-    return AccessInterface::DENY;
+    return shortcut_set_switch_access($user);
   }
 
 }

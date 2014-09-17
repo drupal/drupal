@@ -7,6 +7,7 @@
 
 namespace Drupal\update\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Site\Settings;
 
@@ -35,11 +36,13 @@ class UpdateManagerAccessCheck implements AccessInterface {
   /**
    * Checks access.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access() {
-    return $this->settings->get('allow_authorize_operations', TRUE) ? static::ALLOW : static::DENY;
+    // Uncacheable because the access result depends on a Settings key-value
+    // pair, and can therefore change at any time.
+    return AccessResult::allowedIf($this->settings->get('allow_authorize_operations', TRUE))->setCacheable(FALSE);
   }
 
 }

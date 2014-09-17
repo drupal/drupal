@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AccountInterface;
@@ -23,7 +24,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation === 'view') {
-      return TRUE;
+      return AccessResult::allowed();
     }
     return parent::checkAccess($entity, $operation, $langcode, $account);
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\config_translation\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -23,7 +24,7 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
     // For the translation forms we have a target language, so we need some
     // checks in addition to the checks performed for the translation overview.
     $base_access = parent::access($route, $request, $account);
-    if ($base_access === static::ALLOW) {
+    if ($base_access->isAllowed()) {
       $target_language = language_load($request->attributes->get('langcode'));
 
       // Make sure that the target language is not locked, and that the target
@@ -35,9 +36,9 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
         !$target_language->locked &&
         $target_language->id != $this->sourceLanguage->id;
 
-      return $access ? static::ALLOW : static::DENY;
+      return $base_access->andIf(AccessResult::allowedIf($access));
     }
-    return static::DENY;
+    return $base_access;
   }
 
 }

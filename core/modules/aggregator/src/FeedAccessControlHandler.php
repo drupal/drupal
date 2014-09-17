@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -24,11 +25,11 @@ class FeedAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'view':
-        return $account->hasPermission('access news feeds');
+        return AccessResult::allowedIfHasPermission($account, 'access news feeds');
         break;
 
       default:
-        return $account->hasPermission('administer news feeds');
+        return AccessResult::allowedIfHasPermission($account, 'administer news feeds');
         break;
     }
   }
@@ -37,7 +38,7 @@ class FeedAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer news feeds');
+    return AccessResult::allowedIfHasPermission($account, 'administer news feeds');
   }
 
 }

@@ -21,18 +21,18 @@ class DefaultAccessCheck implements RoutingAccessInterface {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check against.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route) {
     if ($route->getRequirement('_access') === 'TRUE') {
-      return static::ALLOW;
+      return AccessResult::allowed();
     }
     elseif ($route->getRequirement('_access') === 'FALSE') {
-      return static::KILL;
+      return AccessResult::forbidden();
     }
     else {
-      return static::DENY;
+      return AccessResult::create();
     }
   }
 

@@ -8,13 +8,14 @@
 namespace Drupal\book\Access;
 
 use Drupal\book\BookManagerInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * Determines whether the requested node can be removed from its book.
  */
-class BookNodeIsRemovableAccessCheck implements AccessInterface {
+class BookNodeIsRemovableAccessCheck implements AccessInterface{
 
   /**
    * Book Manager Service.
@@ -39,11 +40,11 @@ class BookNodeIsRemovableAccessCheck implements AccessInterface {
    * @param \Drupal\node\NodeInterface $node
    *   The node requested to be removed from its book.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(NodeInterface $node) {
-    return $this->bookManager->checkNodeIsRemovable($node) ? static::ALLOW : static::DENY;
+    return AccessResult::allowedIf($this->bookManager->checkNodeIsRemovable($node))->cacheUntilEntityChanges($node);
   }
 
 }

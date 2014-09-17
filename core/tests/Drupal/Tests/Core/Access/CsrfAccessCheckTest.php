@@ -7,11 +7,11 @@
 
 namespace Drupal\Tests\Core\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\CsrfAccessCheck;
-use Drupal\Core\Access\AccessInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -66,7 +66,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
     // Set the _controller_request flag so tokens are validated.
     $request->attributes->set('_controller_request', TRUE);
 
-    $this->assertSame(AccessInterface::ALLOW, $this->accessCheck->access($route, $request, $this->account));
+    $this->assertEquals(AccessResult::allowed()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
   }
 
   /**
@@ -84,7 +84,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
     // Set the _controller_request flag so tokens are validated.
     $request->attributes->set('_controller_request', TRUE);
 
-    $this->assertSame(AccessInterface::KILL, $this->accessCheck->access($route, $request, $this->account));
+    $this->assertEquals(AccessResult::forbidden()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
   }
 
   /**
@@ -103,7 +103,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
       'token' => 'test_query',
     ));
 
-    $this->assertSame(AccessInterface::DENY, $this->accessCheck->access($route, $request, $this->account));
+    $this->assertEquals(AccessResult::create()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
   }
 
   /**
@@ -122,7 +122,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
       'token' => 'test_query',
     ));
 
-    $this->assertSame(AccessInterface::ALLOW, $this->accessCheck->access($route, $request, $this->account));
+    $this->assertEquals(AccessResult::allowed()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
   }
 
 }

@@ -7,11 +7,13 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests access to text formats.
  *
+ * @group Access
  * @group filter
  */
 class FilterFormatAccessTest extends WebTestBase {
@@ -121,8 +123,11 @@ class FilterFormatAccessTest extends WebTestBase {
     // which they were granted access.
     $fallback_format = entity_load('filter_format', filter_fallback_format());
     $this->assertTrue($this->allowed_format->access('use', $this->web_user), 'A regular user has access to use a text format they were granted access to.');
+    $this->assertEqual(AccessResult::allowed()->cachePerRole(), $this->allowed_format->access('use', $this->web_user, TRUE), 'A regular user has access to use a text format they were granted access to.');
     $this->assertFalse($this->disallowed_format->access('use', $this->web_user), 'A regular user does not have access to use a text format they were not granted access to.');
+    $this->assertEqual(AccessResult::create()->cachePerRole(), $this->disallowed_format->access('use', $this->web_user, TRUE), 'A regular user does not have access to use a text format they were not granted access to.');
     $this->assertTrue($fallback_format->access('use', $this->web_user), 'A regular user has access to use the fallback format.');
+    $this->assertEqual(AccessResult::allowed(), $fallback_format->access('use', $this->web_user, TRUE), 'A regular user has access to use the fallback format.');
 
     // Perform similar checks as above, but now against the entire list of
     // available formats for this user.

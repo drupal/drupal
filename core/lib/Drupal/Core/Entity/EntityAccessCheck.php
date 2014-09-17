@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
@@ -37,8 +38,8 @@ class EntityAccessCheck implements AccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
     // Split the entity type and the operation.
@@ -48,12 +49,12 @@ class EntityAccessCheck implements AccessInterface {
     if ($request->attributes->has($entity_type)) {
       $entity = $request->attributes->get($entity_type);
       if ($entity instanceof EntityInterface) {
-        return $entity->access($operation, $account) ? static::ALLOW : static::DENY;
+        return $entity->access($operation, $account, TRUE);
       }
     }
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
-    return static::DENY;
+    return AccessResult::create();
   }
 
 }

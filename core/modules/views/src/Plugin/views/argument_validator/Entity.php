@@ -199,7 +199,7 @@ class Entity extends ArgumentValidatorPluginBase {
    */
   protected function validateEntity(EntityInterface $entity) {
     // If access restricted by entity operation.
-    if ($this->options['access'] && ! $entity->access($this->options['operation'])) {
+    if ($this->options['access'] && !$entity->access($this->options['operation'])) {
       return FALSE;
     }
     // If restricted by bundle.

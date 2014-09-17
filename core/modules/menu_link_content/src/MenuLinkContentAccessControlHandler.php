@@ -6,6 +6,7 @@
 
 namespace Drupal\menu_link_content;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
@@ -54,14 +55,27 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
     switch ($operation) {
       case 'view':
         // There is no direct view.
-        return FALSE;
+        return AccessResult::create();
 
       case 'update':
-        // If there is a URL, this is an external link so always accessible.
-        return $account->hasPermission('administer menu') && ($entity->getUrl() || $this->accessManager->checkNamedRoute($entity->getRouteName(), $entity->getRouteParameters(), $account));
+        if (!$account->hasPermission('administer menu')) {
+          return AccessResult::create()->cachePerRole();
+        }
+        else {
+          $access = AccessResult::create()->cachePerRole()->cacheUntilEntityChanges($entity);
+          // If there is a URL, this is an external link so always accessible.
+          if ($entity->getUrl()) {
+            return $access->allow();
+          }
+          else {
+            // We allow access, but only if the link is accessible as well.
+            $link_access = $this->accessManager->checkNamedRoute($entity->getRouteName(), $entity->getRouteParameters(), $account, NULL, TRUE);
+            return $access->allow()->andIf($link_access);
+          }
+        }
 
       case 'delete':
-        return !$entity->isNew() && $account->hasPermission('administer menu');
+        return AccessResult::allowedIf(!$entity->isNew() && $account->hasPermission('administer menu'))->cachePerRole()->cacheUntilEntityChanges($entity);
     }
   }
 

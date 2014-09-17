@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Access;
 
-use Drupal\Core\Access\AccessInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\CustomAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,13 +86,13 @@ class CustomAccessCheckTest extends UnitTestCase {
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessDeny'));
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessInterface::DENY, $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::create(), $this->accessChecker->access($route, $request, $account));
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessAllow'));
-    $this->assertSame(AccessInterface::ALLOW, $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $request, $account));
 
     $route = new Route('/test-route', array('parameter' => 'TRUE'), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessParameter'));
-    $this->assertSame(AccessInterface::ALLOW, $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $request, $account));
   }
 
 }
@@ -100,20 +100,15 @@ class CustomAccessCheckTest extends UnitTestCase {
 class TestController {
 
   public function accessAllow() {
-    return AccessInterface::ALLOW;
+    return AccessResult::allowed();
   }
 
   public function accessDeny() {
-    return AccessInterface::DENY;
+    return AccessResult::create();
   }
 
   public function accessParameter($parameter) {
-    if ($parameter == 'TRUE') {
-      return AccessInterface::ALLOW;
-    }
-    else {
-      return AccessInterface::DENY;
-    }
+    return AccessResult::allowedIf($parameter == 'TRUE');
   }
 
 }

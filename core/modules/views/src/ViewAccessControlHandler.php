@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -22,7 +23,12 @@ class ViewAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    return $operation == 'view' || parent::checkAccess($entity, $operation, $langcode, $account);
+    if ($operation == 'view') {
+      return AccessResult::allowed();
+    }
+    else {
+      return parent::checkAccess($entity, $operation, $langcode, $account);
+    }
   }
 
 }

@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\Search;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
@@ -145,8 +146,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL) {
-    return !empty($account) && $account->hasPermission('access content');
+  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowedIfHasPermission($account, 'access content');
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**

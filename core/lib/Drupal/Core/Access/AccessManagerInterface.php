@@ -18,20 +18,17 @@ use Drupal\Core\Session\AccountInterface;
 interface AccessManagerInterface {
 
   /**
-   * All access checkers have to return AccessInterface::ALLOW.
+   * All access checkers must return an AccessResultInterface object where
+   * ::isAllowed() is TRUE.
    *
    * self::ACCESS_MODE_ALL is the default behavior.
-   *
-   * @see \Drupal\Core\Access\AccessInterface::ALLOW
    */
   const ACCESS_MODE_ALL = 'ALL';
 
   /**
-   * At least one access checker has to return AccessInterface::ALLOW
-   * and none should return AccessInterface::KILL.
-   *
-   * @see \Drupal\Core\Access\AccessInterface::ALLOW
-   * @see \Drupal\Core\Access\AccessInterface::KILL
+   * At least one access checker must return an AccessResultInterface object
+   * where ::isAllowed() is TRUE and none may return one where ::isForbidden()
+   * is TRUE.
    */
   const ACCESS_MODE_ANY = 'ANY';
 
@@ -43,18 +40,24 @@ interface AccessManagerInterface {
    * @param string $route_name
    *   The route to check access to.
    * @param array $parameters
-   *   Optional array of values to substitute into the route path patern.
+   *   Optional array of values to substitute into the route path pattern.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) Run access checks for this account. Defaults to the current
    *   user.
    * @param \Symfony\Component\HttpFoundation\Request $route_request
    *   Optional incoming request object. If not provided, one will be built
    *   using the route information and the current request from the container.
+   * @param bool $return_as_object
+   *   (optional) Defaults to FALSE.
    *
-   * @return bool
-   *   Returns TRUE if the user has access to the route, otherwise FALSE.
+   * @return bool|\Drupal\Core\Access\AccessResultInterface
+   *   The access result. Returns a boolean if $return_as_object is FALSE (this
+   *   is the default) and otherwise an AccessResultInterface object.
+   *   When a boolean is returned, the result of AccessInterface::isAllowed() is
+   *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
+   *   access is either explicitly forbidden or "no opinion".
    */
-  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, Request $route_request = NULL);
+  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, Request $route_request = NULL, $return_as_object = FALSE);
 
   /**
    * For each route, saves a list of applicable access checks to the route.
@@ -89,10 +92,16 @@ interface AccessManagerInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) Run access checks for this account. Defaults to the current
    *   user.
+   * @param bool $return_as_object
+   *   (optional) Defaults to FALSE.
    *
-   * @return bool
-   *   Returns TRUE if the user has access to the route, otherwise FALSE.
+   * @return bool|\Drupal\Core\Access\AccessResultInterface
+   *   The access result. Returns a boolean if $return_as_object is FALSE (this
+   *   is the default) and otherwise an AccessResultInterface object.
+   *   When a boolean is returned, the result of AccessInterface::isAllowed() is
+   *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
+   *   access is either explicitly forbidden or "no opinion".
    */
-  public function check(Route $route, Request $request, AccountInterface $account = NULL);
+  public function check(Route $route, Request $request, AccountInterface $account = NULL, $return_as_object = FALSE);
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\rest\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,8 +49,8 @@ class CSRFAccessCheck implements AccessCheckInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Request $request, AccountInterface $account) {
     $method = $request->getMethod();
@@ -65,10 +66,10 @@ class CSRFAccessCheck implements AccessCheckInterface {
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
       if (!\Drupal::csrfToken()->validate($csrf_token, 'rest')) {
-        return static::KILL;
+        return AccessResult::forbidden()->setCacheable(FALSE);
       }
     }
     // Let other access checkers decide if the request is legit.
-    return static::ALLOW;
+    return AccessResult::allowed()->setCacheable(FALSE);
   }
 }

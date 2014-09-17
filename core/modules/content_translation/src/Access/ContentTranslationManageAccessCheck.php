@@ -7,6 +7,7 @@
 
 namespace Drupal\content_translation\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -66,8 +67,8 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
    * @param string $entity_type_id
    *   (optional) The entity type ID.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request, AccountInterface $account, $source = NULL, $target = NULL, $language = NULL, $entity_type_id = NULL) {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -86,24 +87,26 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
         case 'create':
           $source_language = $this->languageManager->getLanguage($source) ?: $entity->language();
           $target_language = $this->languageManager->getLanguage($target) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-          return ($source_language->getId() != $target_language->getId()
+          $is_new_translation = ($source_language->getId() != $target_language->getId()
             && isset($languages[$source_language->getId()])
             && isset($languages[$target_language->getId()])
-            && !isset($translations[$target_language->getId()])
-            && $handler->getTranslationAccess($entity, $operation))
-            ? static::ALLOW : static::DENY;
+            && !isset($translations[$target_language->getId()]));
+          return AccessResult::allowedIf($is_new_translation)->cachePerRole()->cacheUntilEntityChanges($entity)
+            ->andIf($handler->getTranslationAccess($entity, $operation));
 
         case 'update':
         case 'delete':
           $language = $this->languageManager->getLanguage($language) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-          return isset($languages[$language->getId()])
+          $has_translation = isset($languages[$language->getId()])
             && $language->getId() != $entity->getUntranslated()->language()->getId()
-            && isset($translations[$language->getId()])
-            && $handler->getTranslationAccess($entity, $operation)
-            ? static::ALLOW : static::DENY;
+            && isset($translations[$language->getId()]);
+          return AccessResult::allowedIf($has_translation)->cachePerRole()->cacheUntilEntityChanges($entity)
+            ->andIf($handler->getTranslationAccess($entity, $operation));
       }
     }
-    return static::DENY;
+
+    // No opinion.
+    return AccessResult::create();
   }
 
 }

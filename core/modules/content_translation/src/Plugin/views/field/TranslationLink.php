@@ -61,7 +61,7 @@ class TranslationLink extends FieldPluginBase {
    *   The actual rendered text (without the link) of this field.
    */
   protected function renderLink(EntityInterface $entity, ResultRow $values) {
-    if (content_translation_translate_access($entity)) {
+    if (content_translation_translate_access($entity)->isAllowed()) {
       $text = !empty($this->options['text']) ? $this->options['text'] : t('Translate');
 
       $this->options['alter']['make_link'] = TRUE;

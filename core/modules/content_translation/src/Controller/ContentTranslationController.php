@@ -139,7 +139,7 @@ class ContentTranslationController extends ControllerBase {
               'language' => $language,
             );
           }
-          elseif (!$is_original && $handler->getTranslationAccess($entity, 'update')) {
+          elseif (!$is_original && $handler->getTranslationAccess($entity, 'update')->isAllowed()) {
             $links['edit'] = $edit_url->toArray();
           }
 
@@ -162,7 +162,7 @@ class ContentTranslationController extends ControllerBase {
           }
           else {
             $source_name = isset($languages[$source]) ? $languages[$source]->name : $this->t('n/a');
-            if ($handler->getTranslationAccess($entity, 'delete')) {
+            if ($handler->getTranslationAccess($entity, 'delete')->isAllowed()) {
               $links['delete'] = array(
                 'title' => $this->t('Delete'),
               ) + $delete_url->toArray();
@@ -174,7 +174,7 @@ class ContentTranslationController extends ControllerBase {
           $row_title = $source_name = $this->t('n/a');
           $source = $entity->language()->getId();
 
-          if ($source != $langcode && $handler->getTranslationAccess($entity, 'create')) {
+          if ($source != $langcode && $handler->getTranslationAccess($entity, 'create')->isAllowed()) {
             if ($translatable) {
               $links['add'] = array(
                 'title' => $this->t('Add'),

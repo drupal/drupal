@@ -7,6 +7,7 @@
 
 namespace Drupal\content_translation\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -42,8 +43,8 @@ class ContentTranslationOverviewAccess implements AccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Request $request, AccountInterface $account) {
     $entity_type = $request->attributes->get('entity_type_id');
@@ -56,13 +57,14 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       $definition = $this->entityManager->getDefinition($entity_type);
       $translation = $definition->get('translation');
       $access_callback = $translation['content_translation']['access_callback'];
-      if (call_user_func($access_callback, $entity)) {
-        return static::ALLOW;
+      $access = call_user_func($access_callback, $entity);
+      if ($access->isAllowed()) {
+        return $access;
       }
 
       // Check "translate any entity" permission.
       if ($account->hasPermission('translate any entity')) {
-        return static::ALLOW;
+        return $access->allow()->cachePerRole();
       }
 
       // Check per entity permission.
@@ -70,11 +72,10 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       if ($definition->getPermissionGranularity() == 'bundle') {
         $permission = "translate {$bundle} {$entity_type}";
       }
-      if ($account->hasPermission($permission)) {
-        return static::ALLOW;
-      }
+      return $access->allowIfHasPermission($account, $permission);
     }
 
-    return static::DENY;
+    // No opinion.
+    return AccessResult::create();
   }
 }

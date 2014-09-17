@@ -7,6 +7,7 @@
 
 namespace Drupal\tracker\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
@@ -24,10 +25,10 @@ class ViewOwnTrackerAccessCheck implements AccessInterface {
    * @param \Drupal\user\UserInterface $user
    *   The user whose tracker page is being accessed.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(AccountInterface $account, UserInterface $user) {
-    return ($user && $account->isAuthenticated() && ($user->id() == $account->id())) ? static::ALLOW : static::DENY;
+    return AccessResult::allowedIf($user && $account->isAuthenticated() && ($user->id() == $account->id()))->cachePerUser();
   }
 }

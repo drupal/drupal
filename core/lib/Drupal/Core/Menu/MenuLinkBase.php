@@ -9,6 +9,7 @@ namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Url;
 
@@ -76,7 +77,7 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    * {@inheritdoc}
    */
   public function isResettable() {
-    return FALSE;
+    return AccessResult::forbidden();
   }
 
   /**

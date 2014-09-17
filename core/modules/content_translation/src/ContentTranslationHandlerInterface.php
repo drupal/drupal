@@ -30,8 +30,8 @@ interface ContentTranslationHandlerInterface {
    *   - "update"
    *   - "delete"
    *
-   * @return boolean
-   *   TRUE if the operation may be performed, FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function getTranslationAccess(EntityInterface $entity, $op);
 

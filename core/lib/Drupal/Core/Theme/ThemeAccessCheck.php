@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 
 /**
@@ -20,11 +21,12 @@ class ThemeAccessCheck implements AccessInterface {
    * @param string $theme
    *   The name of a theme.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access($theme) {
-    return $this->checkAccess($theme) ? static::ALLOW : static::DENY;
+    // Cacheable until the theme is modified.
+    return AccessResult::allowedIf($this->checkAccess($theme))->addCacheTags(array('theme' => $theme));
   }
 
   /**

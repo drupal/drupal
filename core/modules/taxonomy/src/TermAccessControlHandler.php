@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -24,16 +25,20 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'view':
-        return $account->hasPermission('access content');
+        return AccessResult::allowedIfHasPermission($account, 'access content');
         break;
 
       case 'update':
-        return $account->hasPermission("edit terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy');
+        return AccessResult::allowedIf($account->hasPermission("edit terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy'))->cachePerRole();
         break;
 
       case 'delete':
-        return $account->hasPermission("delete terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy');
+        return AccessResult::allowedIf($account->hasPermission("delete terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy'))->cachePerRole();
         break;
+
+      default:
+        // No opinion.
+        return AccessResult::create();
     }
   }
 
@@ -41,7 +46,7 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer taxonomy');
+    return AccessResult::allowedIfHasPermission($account, 'administer taxonomy');
   }
 
 }

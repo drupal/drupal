@@ -7,6 +7,7 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AccountInterface;
@@ -23,11 +24,16 @@ class MenuAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation === 'view') {
-      return TRUE;
+      return AccessResult::allowed();
     }
     // Locked menus could not be deleted.
-    elseif ($operation == 'delete' && $entity->isLocked()) {
-      return FALSE;
+    elseif ($operation == 'delete') {
+      if ($entity->isLocked()) {
+        return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      }
+      else {
+        return parent::checkAccess($entity, $operation, $langcode, $account)->cacheUntilEntityChanges($entity);
+      }
     }
 
     return parent::checkAccess($entity, $operation, $langcode, $account);

@@ -7,6 +7,7 @@
 
 namespace Drupal\file;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -27,15 +28,17 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
         foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
           /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
           foreach ($referencing_entities as $referencing_entity) {
-            if ($referencing_entity->access('view', $account) && $referencing_entity->$field_name->access('view', $account)) {
-              return TRUE;
+            $entity_and_field_access = $referencing_entity->access('view', $account, TRUE)->andIf($referencing_entity->$field_name->access('view', $account, TRUE));
+            if ($entity_and_field_access->isAllowed()) {
+              return $entity_and_field_access;
             }
           }
         }
       }
-
-      return FALSE;
     }
+
+    // No opinion.
+    return AccessResult::create();
   }
 
   /**

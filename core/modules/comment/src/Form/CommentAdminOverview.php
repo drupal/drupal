@@ -221,7 +221,7 @@ class CommentAdminOverview extends FormBase {
         'options' => $comment_uri_options,
         'query' => $destination,
       );
-      if ($this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))) {
+      if ($this->moduleHandler->moduleExists('content_translation') && $this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))->isAllowed()) {
         $links['translate'] = array(
           'title' => $this->t('Translate'),
           'route_name' => 'content_translation.translation_overview_comment',

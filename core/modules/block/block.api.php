@@ -5,6 +5,8 @@
  * Hooks provided by the Block module.
  */
 
+use Drupal\Core\Access\AccessResult;
+
 /**
  * @defgroup block_api Block API
  * @{
@@ -139,9 +141,10 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\B
  * @param string $langcode
  *   The language code to perform the access check operation on.
  *
- * @return bool|null
- *   FALSE denies access. TRUE allows access unless another module returns
- *   FALSE. If all modules return NULL, then default access rules from
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result. If all implementations of this hook return
+ *   AccessResultInterface objects whose value is !isAllowed() and
+ *   !isForbidden(), then default access rules from
  *   \Drupal\block\BlockAccessControlHandler::checkAccess() are used.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler::access()
@@ -151,9 +154,12 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\B
 function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\user\Entity\User $account, $langcode) {
   // Example code that would prevent displaying the 'Powered by Drupal' block in
   // a region different than the footer.
-  if ($operation == 'view' && $block->get('plugin') == 'system_powered_by_block' && $block->get('region') != 'footer') {
-    return FALSE;
+  if ($operation == 'view' && $block->get('plugin') == 'system_powered_by_block') {
+    return AccessResult::forbiddenIf($block->get('region') != 'footer')->cacheUntilEntityChanges($block);
   }
+
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**

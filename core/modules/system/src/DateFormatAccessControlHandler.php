@@ -7,6 +7,7 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -24,11 +25,16 @@ class DateFormatAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     // There are no restrictions on viewing a date format.
     if ($operation == 'view') {
-      return TRUE;
+      return AccessResult::allowed();
     }
     // Locked date formats cannot be updated or deleted.
-    elseif (in_array($operation, array('update', 'delete')) && $entity->isLocked()) {
-      return FALSE;
+    elseif (in_array($operation, array('update', 'delete'))) {
+      if ($entity->isLocked()) {
+        return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+      }
+      else {
+        return parent::checkAccess($entity, $operation, $langcode, $account)->cacheUntilEntityChanges($entity);
+      }
     }
 
     return parent::checkAccess($entity, $operation, $langcode, $account);

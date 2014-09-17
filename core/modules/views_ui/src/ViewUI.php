@@ -968,8 +968,8 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL) {
-    return $this->storage->access($operation, $account);
+  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+    return $this->storage->access($operation, $account, $return_as_object);
   }
 
   /**

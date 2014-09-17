@@ -5,6 +5,7 @@
  * Test module for the entity API providing several entity types for testing.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -337,13 +338,15 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
   if ($field_definition->getName() == 'field_test_text') {
     if ($items) {
       if ($items[0]->value == 'no access value') {
-        return FALSE;
+        return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
       elseif ($operation == 'delete' && $items[0]->value == 'no delete access value') {
-        return FALSE;
+        return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
     }
   }
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -353,7 +356,7 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
  */
 function entity_test_entity_field_access_alter(array &$grants, array $context) {
   if ($context['field_definition']->getName() == 'field_test_text' && $context['items'][0]->value == 'access alter value') {
-    $grants[':default'] = FALSE;
+    $grants[':default']->forbid()->cacheUntilEntityChanges($context['items']->getEntity());
   }
 }
 
@@ -486,7 +489,11 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
  */
 function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
   \Drupal::state()->set('entity_test_entity_access', TRUE);
-  return \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), NULL);
+
+  // Uncacheable because the access result depends on a State key-value pair and
+  // might therefore change at any time.
+  $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
+  return AccessResult::allowedIf($condition)->setCacheable(FALSE);
 }
 
 /**
@@ -494,6 +501,9 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
  */
 function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
   \Drupal::state()->set('entity_test_entity_test_access', TRUE);
+
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -501,6 +511,9 @@ function entity_test_entity_test_access(EntityInterface $entity, $operation, Acc
  */
 function entity_test_entity_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_create_access', TRUE);
+
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -508,4 +521,7 @@ function entity_test_entity_create_access(AccountInterface $account, $context, $
  */
 function entity_test_entity_test_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);
+
+  // No opinion.
+  return AccessResult::create();
 }

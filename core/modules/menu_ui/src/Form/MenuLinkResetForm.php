@@ -7,12 +7,12 @@
 
 namespace Drupal\menu_ui\Form;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
-use Drupal\Core\Routing\Access\AccessInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -115,12 +115,11 @@ class MenuLinkResetForm extends ConfirmFormBase {
    * @param \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin
    *   The menu link plugin being checked.
    *
-   * @return string
-   *   AccessInterface::ALLOW when access was granted, otherwise
-   *   AccessInterface::DENY.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function linkIsResettable(MenuLinkInterface $menu_link_plugin) {
-    return $menu_link_plugin->isResettable() ? AccessInterface::ALLOW : AccessInterface::DENY;
+    return AccessResult::allowedIf($menu_link_plugin->isResettable())->setCacheable(FALSE);
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\path\Plugin\Field\FieldType;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Session\AccountInterface;
 
@@ -20,9 +21,9 @@ class PathFieldItemList extends FieldItemList {
    */
   public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
     if ($operation == 'view') {
-      return TRUE;
+      return AccessResult::allowed();
     }
-    return $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases');
+    return AccessResult::allowedIf($account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'))->cachePerRole();
   }
 
 }

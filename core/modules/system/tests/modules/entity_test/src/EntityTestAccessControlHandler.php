@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_test;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Language\LanguageInterface;
@@ -31,20 +32,24 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation === 'view') {
       if ($langcode != LanguageInterface::LANGCODE_DEFAULT) {
-        return $account->hasPermission('view test entity translations');
+        return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
       }
-      return $account->hasPermission('view test entity');
+      return AccessResult::allowedIfHasPermission($account, 'view test entity');
     }
     elseif (in_array($operation, array('update', 'delete'))) {
-      return $account->hasPermission('administer entity_test content');
+      return AccessResult::allowedIfHasPermission($account, 'administer entity_test content');
     }
+
+    // No opinion.
+    return AccessResult::create();
+
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer entity_test content');
+    return AccessResult::allowedIfHasPermission($account, 'administer entity_test content');
   }
 
 }

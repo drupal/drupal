@@ -272,15 +272,15 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL) {
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
       return $this->entityManager()
         ->getAccessControlHandler($this->entityTypeId)
-        ->createAccess($this->bundle(), $account);
+        ->createAccess($this->bundle(), $account, [], $return_as_object);
     }
-    return $this->entityManager()
+    return  $this->entityManager()
       ->getAccessControlHandler($this->entityTypeId)
-      ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account);
+      ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account, $return_as_object);
   }
 
   /**

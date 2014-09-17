@@ -108,6 +108,9 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
 
     $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $this->accessManager->expects($this->any())
+      ->method('checkNamedRoute')
+      ->will($this->returnValue(FALSE));
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
@@ -197,7 +200,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array(),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 0,
         ),
       ),
@@ -232,7 +235,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array(),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 0,
         ),
       ),
@@ -268,7 +271,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array(),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 1,
         ),
         'plugin_id_2' => array(
@@ -279,7 +282,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array(),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 0,
         ),
       ),
@@ -317,7 +320,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array('test1'),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 1,
         ),
         'plugin_id_2' => array(
@@ -328,7 +331,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'route_parameters' => array('test2'),
             'localized_options' => '',
           ),
-          '#access' => NULL,
+          '#access' => FALSE,
           '#weight' => 0,
         ),
       ),

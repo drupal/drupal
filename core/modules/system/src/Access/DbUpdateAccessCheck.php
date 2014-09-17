@@ -7,7 +7,8 @@
 
 namespace Drupal\system\Access;
 
-use Drupal\Core\Access\AccessInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 
@@ -28,9 +29,14 @@ class DbUpdateAccessCheck implements AccessInterface {
   public function access(AccountInterface $account) {
     // Allow the global variable in settings.php to override the access check.
     if (Settings::get('update_free_access')) {
-      return static::ALLOW;
+      return AccessResult::allowed()->setCacheable(FALSE);
     }
 
-    return $account->hasPermission('administer software updates') ? static::ALLOW : static::KILL;
+    if ($account->hasPermission('administer software updates')) {
+      return AccessResult::allowed()->cachePerRole();
+    }
+    else {
+      return AccessResult::forbidden()->cachePerRole();
+    }
   }
 }

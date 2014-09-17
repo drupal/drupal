@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
@@ -77,15 +78,15 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *   is specified. If neither $node_revision nor $node are specified, then
    *   access is denied.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, AccountInterface $account, $node_revision = NULL, NodeInterface $node = NULL) {
     if ($node_revision) {
       $node = $this->nodeStorage->loadRevision($node_revision);
     }
     $operation = $route->getRequirement('_access_node_revision');
-    return ($node && $this->checkAccess($node, $account, $operation)) ? static::ALLOW : static::DENY;
+    return AccessResult::allowedIf($node && $this->checkAccess($node, $account, $operation))->cachePerRole();
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -25,7 +26,7 @@ class RoleAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'delete':
         if ($entity->id() == DRUPAL_ANONYMOUS_RID || $entity->id() == DRUPAL_AUTHENTICATED_RID) {
-          return FALSE;
+          return AccessResult::forbidden();
         }
 
       default:

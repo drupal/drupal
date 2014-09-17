@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\Search;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -97,8 +98,9 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL) {
-    return !empty($account) && $account->hasPermission('access user profiles');
+  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowedIf(!empty($account) && $account->hasPermission('access user profiles'))->cachePerRole();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**

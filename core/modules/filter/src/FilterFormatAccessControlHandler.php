@@ -7,6 +7,7 @@
 
 namespace Drupal\filter;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,23 +27,31 @@ class FilterFormatAccessControlHandler extends EntityAccessControlHandler {
 
     // All users are allowed to use the fallback filter.
     if ($operation == 'use') {
-      return $filter_format->isFallbackFormat() || $account->hasPermission($filter_format->getPermissionName());
+      if ($filter_format->isFallbackFormat()) {
+        return AccessResult::allowed();
+      }
+      else {
+        return AccessResult::allowedIfHasPermission($account, $filter_format->getPermissionName());
+      }
     }
 
     // The fallback format may not be disabled.
     if ($operation == 'disable' && $filter_format->isFallbackFormat()) {
-      return FALSE;
+      return AccessResult::forbidden();
     }
 
     // We do not allow filter formats to be deleted through the UI, because that
     // would render any content that uses them unusable.
     if ($operation == 'delete') {
-      return FALSE;
+      return AccessResult::forbidden();
     }
 
     if (in_array($operation, array('disable', 'update'))) {
       return parent::checkAccess($filter_format, $operation, $langcode, $account);
     }
+
+    // No opinion.
+    return AccessResult::create();
   }
 
 }

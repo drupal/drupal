@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -187,9 +188,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL) {
+  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
     $access_control_handler = \Drupal::entityManager()->getAccessControlHandler($this->getEntity()->getEntityTypeId());
-    return $access_control_handler->fieldAccess($operation, $this->getFieldDefinition(), $account, $this);
+    return $access_control_handler->fieldAccess($operation, $this->getFieldDefinition(), $account, $this, $return_as_object);
   }
 
   /**
@@ -197,7 +198,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
     // Grant access per default.
-    return TRUE;
+    return AccessResult::allowed();
   }
 
   /**

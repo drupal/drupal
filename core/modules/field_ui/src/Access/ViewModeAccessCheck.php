@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -57,8 +58,8 @@ class ViewModeAccessCheck implements AccessInterface {
    *   available via the {node_type} parameter rather than a {bundle}
    *   parameter.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request, AccountInterface $account, $view_mode_name = 'default', $bundle = NULL) {
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
@@ -75,13 +76,21 @@ class ViewModeAccessCheck implements AccessInterface {
         $visibility = $entity_display->status();
       }
 
+      $access = AccessResult::create();
+      if ($view_mode_name != 'default' && $entity_display) {
+        $access->cacheUntilEntityChanges($entity_display);
+      }
+
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_view_mode_access');
-        return $account->hasPermission($permission) ? static::ALLOW : static::DENY;
+        $access->allowIfHasPermission($account, $permission);
       }
+      return $access;
     }
-
-    return static::DENY;
+    else {
+      // No opinion.
+      return AccessResult::create();
+    }
   }
 
 }

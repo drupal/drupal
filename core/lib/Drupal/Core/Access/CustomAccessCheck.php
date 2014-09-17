@@ -62,8 +62,8 @@ class CustomAccessCheck implements RoutingAccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
     $callable = $this->controllerResolver->getControllerFromDefinition($route->getRequirement('_custom_access'));

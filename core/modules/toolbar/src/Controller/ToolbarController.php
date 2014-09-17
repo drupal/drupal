@@ -7,7 +7,7 @@
 
 namespace Drupal\toolbar\Controller;
 
-use Drupal\Core\Access\AccessInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,13 +38,12 @@ class ToolbarController extends ControllerBase {
    * @param string $langcode
    *   The langcode of the requested site, NULL if none given.
    *
-   * @return string
-   *   Returns AccessInterface::ALLOW when access was granted, otherwise
-   *   AccessInterface::DENY.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function checkSubTreeAccess(Request $request, $langcode) {
     $hash = $request->get('hash');
-    return ($this->currentUser()->hasPermission('access toolbar') && ($hash == _toolbar_get_subtrees_hash($langcode))) ? AccessInterface::ALLOW : AccessInterface::DENY;
+    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && $hash == _toolbar_get_subtrees_hash($langcode))->cachePerRole();
   }
 
 }

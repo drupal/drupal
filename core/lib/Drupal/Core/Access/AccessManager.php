@@ -9,6 +9,7 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -42,7 +43,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   /**
    * Array of access check objects keyed by service id.
    *
-   * @var array
+   * @var \Drupal\Core\Routing\Access\AccessInterface[]
    */
   protected $checks;
 
@@ -192,7 +193,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, Request $route_request = NULL) {
+  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, Request $route_request = NULL, $return_as_object = FALSE) {
     try {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
@@ -207,20 +208,25 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
         $parameters[RouteObjectInterface::ROUTE_OBJECT] = $route;
         $route_request->attributes->add($this->paramConverterManager->convert($parameters));
       }
-      return $this->check($route, $route_request, $account);
+      return $this->check($route, $route_request, $account, $return_as_object);
     }
     catch (RouteNotFoundException $e) {
-      return FALSE;
+      // Cacheable until extensions change.
+      $result = AccessResult::forbidden()->addCacheTags(array('extension' => TRUE));
+      return $return_as_object ? $result : $result->isAllowed();
     }
     catch (ParamNotConvertedException $e) {
-      return FALSE;
+      // Uncacheable because conversion of the parameter may not have been
+      // possible due to dynamic circumstances.
+      $result = AccessResult::forbidden()->setCacheable(FALSE);
+      return $return_as_object ? $result : $result->isAllowed();
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function check(Route $route, Request $request, AccountInterface $account = NULL) {
+  public function check(Route $route, Request $request, AccountInterface $account = NULL, $return_as_object = FALSE) {
     if (!isset($account)) {
       $account = $this->currentUser;
     }
@@ -228,11 +234,12 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     $conjunction = $route->getOption('_access_mode') ?: static::ACCESS_MODE_ALL;
 
     if ($conjunction == static::ACCESS_MODE_ALL) {
-      return $this->checkAll($checks, $route, $request, $account);
+      $result = $this->checkAll($checks, $route, $request, $account);
     }
     else {
-      return $this->checkAny($checks, $route, $request, $account);
+      $result = $this->checkAny($checks, $route, $request, $account);
     }
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
@@ -247,30 +254,39 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    *
-   * @return bool
-   *  Returns TRUE if the user has access to the route, else FALSE.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   *
+   * @see \Drupal\Core\Access\AccessResultInterface::andIf()
    */
   protected function checkAll(array $checks, Route $route, Request $request, AccountInterface $account) {
-    $access = FALSE;
-
+    $results = array();
     foreach ($checks as $service_id) {
       if (empty($this->checks[$service_id])) {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->performCheck($service_id, $route, $request, $account);
+      $result = $this->performCheck($service_id, $route, $request, $account);
+      $results[] = $result;
 
-      if ($service_access === AccessInterface::ALLOW) {
-        $access = TRUE;
-      }
-      else {
-        // On both KILL and DENY stop.
-        $access = FALSE;
+      // Stop as soon as the first non-allowed check is encountered.
+      if (!$result->isAllowed()) {
         break;
       }
     }
 
-    return $access;
+    if (empty($results)) {
+      // No opinion.
+      return AccessResult::create();
+    }
+    else {
+      /** @var \Drupal\Core\Access\AccessResultInterface $result */
+      $result = array_shift($results);
+      foreach ($results as $other) {
+        $result->andIf($other);
+      }
+      return $result;
+    }
   }
 
   /**
@@ -285,29 +301,23 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    *
-   * @return bool
-   *  Returns TRUE if the user has access to the route, else FALSE.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   *
+   * @see \Drupal\Core\Access\AccessResultInterface::orIf()
    */
   protected function checkAny(array $checks, $route, $request, AccountInterface $account) {
-    // No checks == deny by default.
-    $access = FALSE;
+    // No opinion by default.
+    $result = AccessResult::create();
 
     foreach ($checks as $service_id) {
       if (empty($this->checks[$service_id])) {
         $this->loadCheck($service_id);
       }
-
-      $service_access = $this->performCheck($service_id, $route, $request, $account);
-
-      if ($service_access === AccessInterface::ALLOW) {
-        $access = TRUE;
-      }
-      if ($service_access === AccessInterface::KILL) {
-        return FALSE;
-      }
+      $result = $result->orIf($this->performCheck($service_id, $route, $request, $account));
     }
 
-    return $access;
+    return $result;
   }
 
   /**
@@ -325,16 +335,17 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    * @throws \Drupal\Core\Access\AccessException
    *   Thrown when the access check returns an invalid value.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   protected function performCheck($service_id, $route, $request, $account) {
     $callable = array($this->checks[$service_id], $this->checkMethods[$service_id]);
     $arguments = $this->argumentsResolver->getArguments($callable, $route, $request, $account);
+    /** @var \Drupal\Core\Access\AccessResultInterface $service_access **/
     $service_access = call_user_func_array($callable, $arguments);
 
-    if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
-      throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
+    if (!$service_access instanceof AccessResultInterface) {
+      throw new AccessException("Access error in $service_id. Access services must return an object that implements AccessResultInterface.");
     }
 
     return $service_access;

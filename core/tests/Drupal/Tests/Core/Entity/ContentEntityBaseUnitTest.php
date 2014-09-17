@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemBase;
@@ -17,6 +18,7 @@ use Drupal\Core\Language\Language;
 /**
  * @coversDefaultClass \Drupal\Core\Entity\ContentEntityBase
  * @group Entity
+ * @group Access
  */
 class ContentEntityBaseUnitTest extends UnitTestCase {
 
@@ -409,13 +411,22 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->with($this->entity, $operation)
       ->will($this->returnValue(TRUE));
     $access->expects($this->at(1))
+      ->method('access')
+      ->with($this->entity, $operation)
+      ->will($this->returnValue(AccessResult::allowed()));
+    $access->expects($this->at(2))
       ->method('createAccess')
       ->will($this->returnValue(TRUE));
-    $this->entityManager->expects($this->exactly(2))
+    $access->expects($this->at(3))
+      ->method('createAccess')
+      ->will($this->returnValue(AccessResult::allowed()));
+    $this->entityManager->expects($this->exactly(4))
       ->method('getAccessControlHandler')
       ->will($this->returnValue($access));
     $this->assertTrue($this->entity->access($operation));
+    $this->assertEquals(AccessResult::allowed(), $this->entity->access($operation, NULL, TRUE));
     $this->assertTrue($this->entity->access('create'));
+    $this->assertEquals(AccessResult::allowed(), $this->entity->access('create', NULL, TRUE));
   }
 
   /**

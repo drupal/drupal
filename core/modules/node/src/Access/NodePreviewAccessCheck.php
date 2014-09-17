@@ -48,10 +48,10 @@ class NodePreviewAccessCheck implements AccessInterface {
   public function access(AccountInterface $account, NodeInterface $node_preview) {
     if ($node_preview->isNew()) {
       $access_controller = $this->entityManager->getAccessControlHandler('node');
-      return $access_controller->createAccess($node_preview->bundle(), $account) ? static::ALLOW : static::DENY;
+      return $access_controller->createAccess($node_preview->bundle(), $account, [], TRUE);
     }
     else {
-      return $node_preview->access('update', $account) ? static::ALLOW : static::DENY;
+      return $node_preview->access('update', $account, TRUE);
     }
   }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -70,7 +71,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     if (!$current_user->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
       $translate_permission = $current_user->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
     }
-    return $translate_permission && $current_user->hasPermission("$op content translations");
+    return AccessResult::allowedIf($translate_permission && $current_user->hasPermission("$op content translations"))->cachePerRole();
   }
 
   /**
@@ -175,7 +176,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
           '#value' => t('Delete translation'),
           '#weight' => $weight,
           '#submit' => array(array($this, 'entityFormDeleteTranslation')),
-          '#access' => $this->getTranslationAccess($entity, 'delete'),
+          '#access' => $this->getTranslationAccess($entity, 'delete')->isAllowed(),
         );
       }
 
@@ -191,7 +192,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
         '#title' => t('Translation'),
         '#tree' => TRUE,
         '#weight' => 10,
-        '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update'),
+        '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update')->isAllowed(),
         '#multilingual' => TRUE,
       );
 

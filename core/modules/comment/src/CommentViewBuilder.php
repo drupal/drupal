@@ -262,7 +262,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     }
 
     // Add translations link for translation-enabled comment bundles.
-    if (\Drupal::moduleHandler()->moduleExists('content_translation') && content_translation_translate_access($entity)) {
+    if (\Drupal::moduleHandler()->moduleExists('content_translation') && content_translation_translate_access($entity)->isAllowed()) {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
         'href' => 'comment/' . $entity->id() . '/translations',

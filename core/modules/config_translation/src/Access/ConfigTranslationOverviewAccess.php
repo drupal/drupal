@@ -8,6 +8,7 @@
 namespace Drupal\config_translation\Access;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,8 +53,8 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
@@ -71,7 +72,7 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
       $mapper->hasTranslatable() &&
       !$this->sourceLanguage->locked;
 
-    return $access ? static::ALLOW : static::DENY;
+    return AccessResult::allowedIf($access)->cachePerRole();
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\Tests\system\Unit\Breadcrumbs;
 
 use Drupal\Core\Link;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
@@ -160,7 +161,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $this->setupAccessManagerWithTrue();
+    $this->setupAccessManagerToAllow();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(0 => new Link('Home', new Url('<front>')), 1 => new Link('Example', new Url('example'))), $links);
@@ -200,7 +201,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $this->setupAccessManagerWithTrue();
+    $this->setupAccessManagerToAllow();
 
     $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(
@@ -310,7 +311,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         }
       }));
 
-    $this->setupAccessManagerWithTrue();
+    $this->setupAccessManagerToAllow();
     $this->titleResolver->expects($this->once())
       ->method('getTitle')
       ->with($this->anything(), $route_1)
@@ -321,12 +322,12 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   }
 
   /**
-   * Setup the access manager to always return TRUE.
+   * Setup the access manager to always allow access to routes.
    */
-  public function setupAccessManagerWithTrue() {
+  public function setupAccessManagerToAllow() {
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()));
   }
 
   protected function setupStubPathProcessor() {

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -106,7 +107,7 @@ class EntityListBuilderTest extends UnitTestCase {
 
     $this->role->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()));
     $this->role->expects($this->any())
       ->method('hasLinkTemplate')
       ->will($this->returnValue(TRUE));

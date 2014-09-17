@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\quickedit\Unit\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Drupal\field\FieldStorageConfigInterface;
@@ -16,6 +16,7 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * @coversDefaultClass \Drupal\quickedit\Access\EditEntityFieldAccessCheck
+ * @group Access
  * @group quickedit
  */
 class EditEntityFieldAccessCheckTest extends UnitTestCase {
@@ -43,31 +44,31 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $editable_entity = $this->createMockEntity();
     $editable_entity->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()->cachePerRole()));
 
     $non_editable_entity = $this->createMockEntity();
     $non_editable_entity->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(FALSE));
+      ->will($this->returnValue(AccessResult::create()->cachePerRole()));
 
     $field_storage_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();
     $field_storage_with_access->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()));
     $field_storage_without_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();
     $field_storage_without_access->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(FALSE));
+      ->will($this->returnValue(AccessResult::create()));
 
     $data = array();
-    $data[] = array($editable_entity, $field_storage_with_access, AccessCheckInterface::ALLOW);
-    $data[] = array($non_editable_entity, $field_storage_with_access, AccessCheckInterface::DENY);
-    $data[] = array($editable_entity, $field_storage_without_access, AccessCheckInterface::DENY);
-    $data[] = array($non_editable_entity, $field_storage_without_access, AccessCheckInterface::DENY);
+    $data[] = array($editable_entity, $field_storage_with_access, AccessResult::allowed()->cachePerRole());
+    $data[] = array($non_editable_entity, $field_storage_with_access, AccessResult::create()->cachePerRole());
+    $data[] = array($editable_entity, $field_storage_without_access, AccessResult::create()->cachePerRole());
+    $data[] = array($non_editable_entity, $field_storage_without_access, AccessResult::create()->cachePerRole());
 
     return $data;
   }
@@ -98,24 +99,24 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $access = $this->editAccessCheck->access($entity_with_field, $field_name, LanguageInterface::LANGCODE_NOT_SPECIFIED, $account);
-    $this->assertSame($expected_result, $access);
+    $this->assertEquals($expected_result, $access);
   }
 
   /**
-   * Tests checking access to routes that result in AccessCheckInterface::KILL.
+   * Tests checking access to routes that result in AccessResult::isForbidden().
    *
-   * @dataProvider providerTestAccessKill
+   * @dataProvider providerTestAccessForbidden
    */
-  public function testAccessKill($field_name, $langcode) {
+  public function testAccessForbidden($field_name, $langcode) {
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $entity = $this->createMockEntity();
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($entity, $field_name, $langcode, $account));
+    $this->assertEquals(AccessResult::forbidden(), $this->editAccessCheck->access($entity, $field_name, $langcode, $account));
   }
 
   /**
-   * Provides test data for testAccessKill.
+   * Provides test data for testAccessForbidden.
    */
-  public function providerTestAccessKill() {
+  public function providerTestAccessForbidden() {
     $data = array();
     // Tests the access method without a field_name.
     $data[] = array(NULL, LanguageInterface::LANGCODE_NOT_SPECIFIED);

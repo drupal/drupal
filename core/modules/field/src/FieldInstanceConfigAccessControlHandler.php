@@ -7,6 +7,7 @@
 
 namespace Drupal\field;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -22,10 +23,16 @@ class FieldInstanceConfigAccessControlHandler extends EntityAccessControlHandler
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    if ($operation == 'delete' && $entity->getFieldStorageDefinition()->isLocked()) {
-      return FALSE;
+    if ($operation == 'delete') {
+      $field_storage_entity = $entity->getFieldStorageDefinition();
+      if ($field_storage_entity->isLocked()) {
+        return AccessResult::forbidden()->cacheUntilEntityChanges($field_storage_entity);
+      }
+      else {
+        return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->entity_type . ' fields')->cacheUntilEntityChanges($field_storage_entity);
+      }
     }
-    return $account->hasPermission('administer ' . $entity->entity_type . ' fields');
+    return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->entity_type . ' fields');
   }
 
 }

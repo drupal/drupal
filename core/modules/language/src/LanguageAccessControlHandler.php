@@ -7,6 +7,7 @@
 
 namespace Drupal\language;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -25,10 +26,13 @@ class LanguageAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'update':
       case 'delete':
-        return !$entity->locked && parent::checkAccess($entity, $operation, $langcode, $account);
-        break;
+        return AccessResult::allowedIf(!$entity->locked)->cacheUntilEntityChanges($entity)
+          ->andIf(parent::checkAccess($entity, $operation, $langcode, $account));
+
+      default:
+        // No opinion.
+        return AccessResult::create();
     }
-    return FALSE;
   }
 
 }

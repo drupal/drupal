@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -27,7 +28,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * The node grant storage.
    *
-   * @var \Drupal\node\NodeGrantStorageInterface
+   * @var \Drupal\node\NodeGrantDatabaseStorageInterface
    */
   protected $grantStorage;
 
@@ -58,32 +59,38 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
-      return TRUE;
+      $result = AccessResult::allowed()->cachePerRole();
+      return $return_as_object ? $result : $result->isAllowed();
     }
     if (!$account->hasPermission('access content')) {
-      return FALSE;
+      $result = AccessResult::forbidden()->cachePerRole();
+      return $return_as_object ? $result : $result->isAllowed();
     }
-    return parent::access($entity, $operation, $langcode, $account);
+    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerRole();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array()) {
+  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
-      return TRUE;
+      $result = AccessResult::allowed()->cachePerRole();
+      return $return_as_object ? $result : $result->isAllowed();
     }
     if (!$account->hasPermission('access content')) {
-      return FALSE;
+      $result = AccessResult::forbidden()->cachePerRole();
+      return $return_as_object ? $result : $result->isAllowed();
     }
 
-    return parent::createAccess($entity_bundle, $account, $context);
+    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerRole();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
@@ -98,31 +105,32 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     $uid = $translation->getOwnerId();
 
     // Check if authors can view their own unpublished nodes.
-    if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content')) {
-
-      if ($account->id() != 0 && $account->id() == $uid) {
-        return TRUE;
-      }
+    if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
+      return AccessResult::allowed()->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($node);
     }
 
-    // If no module specified either allow or deny, we fall back to the
+    // If no module specified either ALLOW or KILL, we fall back to the
     // node_access table.
-    if (($grants = $this->grantStorage->access($node, $operation, $langcode, $account)) !== NULL) {
+    $grants = $this->grantStorage->access($node, $operation, $langcode, $account);
+    if ($grants->isAllowed() || $grants->isForbidden()) {
       return $grants;
     }
 
     // If no modules implement hook_node_grants(), the default behavior is to
     // allow all users to view published nodes, so reflect that here.
     if ($operation === 'view') {
-      return $status;
+      return AccessResult::allowedIf($status)->cacheUntilEntityChanges($node);
     }
+
+    // No opinion.
+    return AccessResult::create();
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('create ' . $entity_bundle . ' content');
+    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' content'))->cachePerRole();
   }
 
   /**
@@ -133,22 +141,22 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // fields.
     $administrative_fields = array('uid', 'status', 'created', 'promote', 'sticky');
     if ($operation == 'edit' && in_array($field_definition->getName(), $administrative_fields)) {
-      return $account->hasPermission('administer nodes');
+      return AccessResult::allowedIfHasPermission($account, 'administer nodes');
     }
 
     // No user can change read only fields.
     $read_only_fields = array('changed', 'revision_timestamp', 'revision_uid');
     if ($operation == 'edit' && in_array($field_definition->getName(), $read_only_fields)) {
-      return FALSE;
+      return AccessResult::forbidden();
     }
 
     // Users have access to the revision_log field either if they have
     // administrative permissions or if the new revision option is enabled.
     if ($operation == 'edit' && $field_definition->getName() == 'revision_log') {
       if ($account->hasPermission('administer nodes')) {
-        return TRUE;
+        return AccessResult::allowed()->cachePerRole();
       }
-      return $items->getEntity()->type->entity->isNewRevision();
+      return AccessResult::allowedIf($items->getEntity()->type->entity->isNewRevision())->cachePerRole();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

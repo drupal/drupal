@@ -45,29 +45,33 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(Route $route, Request $request) {
+    // Not cacheable because the CSRF token is highly dynamic.
+    $access = AccessResult::create()->setCacheable(FALSE);
+
     // If this is the controller request, check CSRF access as normal.
     if ($request->attributes->get('_controller_request')) {
       // @todo Remove dependency on the internal _system_path attribute:
       //   https://www.drupal.org/node/2293501.
-      return $this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path')) ? static::ALLOW : static::KILL;
+      if ($this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path'))) {
+        $access->allow();
+      }
+      else {
+        $access->forbid();
+      }
+      return $access;
     }
 
     // Otherwise, this could be another requested access check that we don't
     // want to check CSRF tokens on.
     $conjunction = $route->getOption('_access_mode') ?: AccessManagerInterface::ACCESS_MODE_ANY;
-    // Return ALLOW if all access checks are needed.
-    if ($conjunction == AccessManagerInterface::ACCESS_MODE_ALL) {
-      return static::ALLOW;
-    }
-    // Return DENY otherwise, as another access checker should grant access
-    // for the route.
-    else {
-      return static::DENY;
-    }
+    // Allow if all access checks are needed. This sets DENY if not all access
+    // checks are needed, because another access checker should explicitly grant
+    // access for the route.
+    return $access->allowIf($conjunction == AccessManagerInterface::ACCESS_MODE_ALL);
   }
 
 }

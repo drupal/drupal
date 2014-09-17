@@ -87,8 +87,8 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * See \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess() for
    * the parameter documentation.
    *
-   * @return bool
-   *   TRUE if access to this field is allowed per default, FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function defaultAccess($operation = 'view', AccountInterface $account = NULL);
 

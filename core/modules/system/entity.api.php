@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
@@ -520,9 +521,8 @@ use Drupal\Core\Render\Element;
  * @param string $langcode
  *    The code of the language $entity is accessed in.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
@@ -531,7 +531,8 @@ use Drupal\Core\Render\Element;
  * @ingroup entity_api
  */
 function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -546,9 +547,8 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @param string $langcode
  *    The code of the language $entity is accessed in.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
@@ -557,7 +557,8 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @ingroup entity_api
  */
 function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -572,9 +573,8 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  * @param string $entity_bundle
  *    The entity bundle name.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_access()
@@ -583,7 +583,8 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  * @ingroup entity_api
  */
 function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -598,9 +599,8 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  * @param string $entity_bundle
  *    The entity bundle name.
  *
- * @return bool|null
- *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
- *   deny access.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *    The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_access()
@@ -609,7 +609,8 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  * @ingroup entity_api
  */
 function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
-  return NULL;
+  // No opinion.
+  return AccessResult::create();
 }
 
 /**
@@ -1828,13 +1829,12 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *   (optional) The entity field object on which the operation is to be
  *   performed.
  *
- * @return bool|null
- *   TRUE if access should be allowed, FALSE if access should be denied and NULL
- *   if the implementation has no opinion.
+ * @return \Drupal\Core\Access\AccessResultInterface
+ *   The access result.
  */
 function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
-    return $account->hasPermission('update field of interest');
+    return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }
 }
 
@@ -1844,10 +1844,10 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
  * Use this hook to override access grants from another module. Note that the
  * original default access flag is masked under the ':default' key.
  *
- * @param array $grants
+ * @param \Drupal\Core\Access\AccessResultInterface[] $grants
  *   An array of grants gathered by hook_entity_field_access(). The array is
  *   keyed by the module that defines the field's access control; the values are
- *   grant responses for each module (Boolean or NULL).
+ *   grant responses for each module (\Drupal\Core\Access\AccessResult).
  * @param array $context
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
@@ -1861,13 +1861,14 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
 function hook_entity_field_access_alter(array &$grants, array $context) {
   /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
   $field_definition = $context['field_definition'];
-  if ($field_definition->getName() == 'field_of_interest' && $grants['node'] === FALSE) {
-    // Override node module's restriction to no opinion. We don't want to
-    // provide our own access hook, we only want to take out node module's part
-    // in the access handling of this field. We also don't want to switch node
-    // module's grant to TRUE, because the grants of other modules should still
-    // decide on their own if this field is accessible or not.
-    $grants['node'] = NULL;
+  if ($field_definition->getName() == 'field_of_interest' && $grants['node']->isForbidden()) {
+    // Override node module's restriction to no opinion (neither allowed nor
+    // forbidden). We don't want to provide our own access hook, we only want to
+    // take out node module's part in the access handling of this field. We also
+    // don't want to switch node module's grant to
+    // AccessResultInterface::isAllowed() , because the grants of other modules
+    // should still decide on their own if this field is accessible or not
+    $grants['node']->resetAccess();
   }
 }
 

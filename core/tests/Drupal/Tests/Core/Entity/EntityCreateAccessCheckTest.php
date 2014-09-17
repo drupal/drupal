@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
  *
+ * @group Access
  * @group Entity
  */
 class EntityCreateAccessCheckTest extends UnitTestCase {
@@ -40,17 +41,21 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAccess() {
+    $no_access = AccessResult::create()->cachePerRole();
+    $access = AccessResult::allowed()->cachePerRole();
+    $no_access_due_to_errors = AccessResult::create();
+
     return array(
-      array('', 'entity_test', FALSE, AccessCheckInterface::DENY),
-      array('', 'entity_test',TRUE, AccessCheckInterface::ALLOW),
-      array('test_entity', 'entity_test:test_entity', TRUE, AccessCheckInterface::ALLOW),
-      array('test_entity', 'entity_test:test_entity', FALSE, AccessCheckInterface::DENY),
-      array('test_entity', 'entity_test:{bundle_argument}', TRUE, AccessCheckInterface::ALLOW),
-      array('test_entity', 'entity_test:{bundle_argument}', FALSE, AccessCheckInterface::DENY),
-      array('', 'entity_test:{bundle_argument}', FALSE, AccessCheckInterface::DENY),
+      array('', 'entity_test', $no_access, $no_access),
+      array('', 'entity_test', $access, $access),
+      array('test_entity', 'entity_test:test_entity', $access, $access),
+      array('test_entity', 'entity_test:test_entity', $no_access, $no_access),
+      array('test_entity', 'entity_test:{bundle_argument}', $access, $access),
+      array('test_entity', 'entity_test:{bundle_argument}', $no_access, $no_access),
+      array('', 'entity_test:{bundle_argument}', $no_access, $no_access_due_to_errors),
       // When the bundle is not provided, access should be denied even if the
       // access control handler would allow access.
-      array('', 'entity_test:{bundle_argument}', TRUE, AccessCheckInterface::DENY),
+      array('', 'entity_test:{bundle_argument}', $access, $no_access_due_to_errors),
     );
   }
 

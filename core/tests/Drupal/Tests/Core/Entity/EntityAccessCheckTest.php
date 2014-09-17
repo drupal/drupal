@@ -9,13 +9,14 @@ namespace Drupal\Tests\Core\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessCheck;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Unit test of entity access checking system.
  *
+ * @group Access
  * @group Entity
  */
 class EntityAccessCheckTest extends UnitTestCase {
@@ -31,12 +32,12 @@ class EntityAccessCheckTest extends UnitTestCase {
       ->getMock();
     $node->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(TRUE));
+      ->will($this->returnValue(AccessResult::allowed()->cachePerRole()));
     $access_check = new EntityAccessCheck();
     $request->attributes->set('node', $node);
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $access = $access_check->access($route, $request, $account);
-    $this->assertSame(AccessCheckInterface::ALLOW, $access);
+    $this->assertEquals(AccessResult::allowed()->cachePerRole(), $access);
   }
 
 }

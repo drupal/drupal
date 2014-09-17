@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -94,7 +95,8 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
    */
   public function isResettable() {
     // The link can be reset if it has an override.
-    return (bool) $this->staticOverride->loadOverride($this->getPluginId());
+    // @todo This will be cacheable after https://www.drupal.org/node/2040135.
+    return AccessResult::allowedIf($this->staticOverride->loadOverride($this->getPluginId()))->setCacheable(FALSE);
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -52,12 +53,12 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
-    if (($access = $this->getCache($entity->uuid(), $operation, $langcode, $account)) !== NULL) {
+    if (($return = $this->getCache($entity->uuid(), $operation, $langcode, $account)) !== NULL) {
       // Cache hit, no work necessary.
-      return $access;
+      return $return_as_object ? $return : $return->isAllowed();
     }
 
     // Invoke hook_entity_access() and hook_ENTITY_TYPE_access(). Hook results
@@ -74,12 +75,14 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
       $this->moduleHandler()->invokeAll($entity->getEntityTypeId() . '_access', array($entity, $operation, $account, $langcode))
     );
 
-    if (($return = $this->processAccessHookResults($access)) === NULL) {
+    $return = $this->processAccessHookResults($access);
+    if (!$return->isAllowed() && !$return->isForbidden()) {
       // No module had an opinion about the access, so let's the access
-      // handler check create access.
-      $return = (bool) $this->checkAccess($entity, $operation, $langcode, $account);
+      // handler check access.
+      $return->orIf($this->checkAccess($entity, $operation, $langcode, $account));
     }
-    return $this->setCache($return, $entity->uuid(), $operation, $langcode, $account);
+    $result = $this->setCache($return, $entity->uuid(), $operation, $langcode, $account);
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
@@ -87,23 +90,27 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * - No modules say to deny access.
    * - At least one module says to grant access.
    *
-   * @param array $access
+   * @param \Drupal\Core\Access\AccessResultInterface[] $access
    *   An array of access results of the fired access hook.
    *
-   * @return bool|null
-   *   Returns FALSE if access should be denied, TRUE if access should be
-   *   granted and NULL if no module denied access.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The combined result of the various access checks' results. All their
+   *   cacheability metadata is merged as well.
+   *
+   * @see \Drupal\Core\Access\AccessResultInterface::orIf()
    */
   protected function processAccessHookResults(array $access) {
-    if (in_array(FALSE, $access, TRUE)) {
-      return FALSE;
+    // No results means no opinion.
+    if (empty($access)) {
+      return AccessResult::create();
     }
-    elseif (in_array(TRUE, $access, TRUE)) {
-      return TRUE;
+
+    /** @var \Drupal\Core\Access\AccessResultInterface $result */
+    $result = array_shift($access);
+    foreach ($access as $other) {
+      $result = $result->orIf($other);
     }
-    else {
-      return;
-    }
+    return $result;
   }
 
   /**
@@ -122,19 +129,19 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user for which to check access.
    *
-   * @return bool|null
-   *   TRUE if access was granted, FALSE if access was denied and NULL if access
-   *   could not be determined.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation == 'delete' && $entity->isNew()) {
-      return FALSE;
+      return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
     }
     if ($admin_permission = $this->entityType->getAdminPermission()) {
-      return $account->hasPermission($admin_permission);
+      return AccessResult::allowedIfHasPermission($account, $this->entityType->getAdminPermission());
     }
     else {
-      return NULL;
+      // No opinion.
+      return AccessResult::create();
     }
   }
 
@@ -152,10 +159,9 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user for which to check access.
    *
-   * @return bool|null
-   *   TRUE if access was granted, FALSE if access was denied and NULL if there
-   *   is no record for the given user, operation, langcode and entity in the
-   *   cache.
+   * @return \Drupal\Core\Access\AccessResultInterface|null
+   *   The cached AccessResult, or NULL if there is no record for the given
+   *   user, operation, langcode and entity in the cache.
    */
   protected function getCache($cid, $operation, $langcode, AccountInterface $account) {
     // Return from cache if a value has been set for it previously.
@@ -167,8 +173,8 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   /**
    * Statically caches whether the given user has access.
    *
-   * @param bool $access
-   *   TRUE if the user has access, FALSE otherwise.
+   * @param \Drupal\Core\Access\AccessResultInterface $access
+   *   The access result.
    * @param string $cid
    *   Unique string identifier for the entity/operation, for example the
    *   entity UUID or a custom string.
@@ -180,12 +186,12 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user for which to check access.
    *
-   * @return bool
-   *   TRUE if access was granted, FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Whether the user has access, plus cacheability metadata.
    */
   protected function setCache($access, $cid, $operation, $langcode, AccountInterface $account) {
     // Save the given value in the static cache and directly return it.
-    return $this->accessCache[$account->id()][$cid][$langcode][$operation] = (bool) $access;
+    return $this->accessCache[$account->id()][$cid][$langcode][$operation] = $access;
   }
 
   /**
@@ -198,7 +204,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array()) {
+  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
     $context += array(
       'langcode' => LanguageInterface::LANGCODE_DEFAULT,
@@ -207,7 +213,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     $cid = $entity_bundle ? 'create:' . $entity_bundle : 'create';
     if (($access = $this->getCache($cid, 'create', $context['langcode'], $account)) !== NULL) {
       // Cache hit, no work necessary.
-      return $access;
+      return $return_as_object ? $access : $access->isAllowed();
     }
 
     // Invoke hook_entity_create_access() and hook_ENTITY_TYPE_create_access().
@@ -224,12 +230,14 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
       $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', array($account, $context, $entity_bundle))
     );
 
-    if (($return = $this->processAccessHookResults($access)) === NULL) {
+    $return = $this->processAccessHookResults($access);
+    if (!$return->isAllowed() && !$return->isForbidden()) {
       // No module had an opinion about the access, so let's the access
       // handler check create access.
-      $return = (bool) $this->checkCreateAccess($account, $context, $entity_bundle);
+      $return->orIf($this->checkCreateAccess($account, $context, $entity_bundle));
     }
-    return $this->setCache($return, $cid, 'create', $context['langcode'], $account);
+    $result = $this->setCache($return, $cid, 'create', $context['langcode'], $account);
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
@@ -246,16 +254,16 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    *   (optional) The bundle of the entity. Required if the entity supports
    *   bundles, defaults to NULL otherwise.
    *
-   * @return bool|null
-   *   TRUE if access was granted, FALSE if access was denied and NULL if access
-   *   could not be determined.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     if ($admin_permission = $this->entityType->getAdminPermission()) {
-      return $account->hasPermission($admin_permission);
+      return AccessResult::allowedIfHasPermission($account, $admin_permission);
     }
     else {
-      return NULL;
+      // No opinion.
+      return AccessResult::create();
     }
   }
 
@@ -278,18 +286,18 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   /**
    * {@inheritdoc}
    */
-  public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL) {
+  public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
     // Get the default access restriction that lives within this field.
-    $default = $items ? $items->defaultAccess($operation, $account) : TRUE;
+    $default = $items ? $items->defaultAccess($operation, $account) : AccessResult::allowed();
 
     // Get the default access restriction as specified by the access control
     // handler.
     $entity_default = $this->checkFieldAccess($operation, $field_definition, $account, $items);
 
     // Combine default access, denying access wins.
-    $default = $default && $entity_default;
+    $default = $default->andIf($entity_default);
 
     // Invoke hook and collect grants/denies for field access from other
     // modules. Our default access flag is masked under the ':default' key.
@@ -308,16 +316,8 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     );
     $this->moduleHandler()->alter('entity_field_access', $grants, $context);
 
-    // One grant being FALSE is enough to deny access immediately.
-    if (in_array(FALSE, $grants, TRUE)) {
-      return FALSE;
-    }
-    // At least one grant has the explicit opinion to allow access.
-    if (in_array(TRUE, $grants, TRUE)) {
-      return TRUE;
-    }
-    // All grants are NULL and have no opinion - deny access in that case.
-    return FALSE;
+    $result = $this->processAccessHookResults($grants);
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
@@ -339,7 +339,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    *   TRUE if access is allowed, FALSE otherwise.
    */
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-    return TRUE;
+    return AccessResult::allowed();
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -21,11 +22,11 @@ class LoginStatusCheck implements AccessInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(AccountInterface $account) {
-    return $account->isAuthenticated() ? static::ALLOW : static::DENY;
+    return AccessResult::allowedIf($account->isAuthenticated())->cachePerRole();
   }
 
 }

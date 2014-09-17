@@ -154,10 +154,10 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->accessManager->expects($this->exactly(4))
       ->method('checkNamedRoute')
       ->will($this->returnValueMap(array(
-        array('example1', array(), $this->currentUser, NULL, FALSE),
-        array('example2', array('foo' => 'bar'), $this->currentUser, NULL, TRUE),
-        array('example3', array('baz' => 'qux'), $this->currentUser, NULL, FALSE),
-        array('example5', array(), $this->currentUser, NULL, TRUE),
+        array('example1', array(), $this->currentUser, NULL, FALSE, FALSE),
+        array('example2', array('foo' => 'bar'), $this->currentUser, NULL, FALSE, TRUE),
+        array('example3', array('baz' => 'qux'), $this->currentUser, NULL, FALSE, FALSE),
+        array('example5', array(), $this->currentUser, NULL, FALSE, TRUE),
       )));
 
     $this->mockTree();

@@ -59,9 +59,9 @@ class EntityTest extends UnitTestCase {
     $mock_entity->expects($this->any())
       ->method('access')
       ->will($this->returnValueMap(array(
-        array('test_op', NULL, TRUE),
-        array('test_op_2', NULL, FALSE),
-        array('test_op_3', NULL, TRUE),
+        array('test_op', NULL, FALSE, TRUE),
+        array('test_op_2', NULL, FALSE, FALSE),
+        array('test_op_3', NULL, FALSE, TRUE),
       )));
 
     $mock_entity_bundle_2 = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(), '', FALSE, TRUE, TRUE, array('bundle', 'access'));
@@ -71,7 +71,9 @@ class EntityTest extends UnitTestCase {
     $mock_entity_bundle_2->expects($this->any())
       ->method('access')
       ->will($this->returnValueMap(array(
-        array('test_op_3', NULL, TRUE),
+        array('test_op', NULL, FALSE, FALSE),
+        array('test_op_2', NULL, FALSE, FALSE),
+        array('test_op_3', NULL, FALSE, TRUE),
       )));
 
 

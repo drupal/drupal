@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AccountInterface;
@@ -25,23 +26,19 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'update':
         if ($account->hasPermission('administer shortcuts')) {
-          return TRUE;
+          return AccessResult::allowed()->cachePerRole();
         }
         if (!$account->hasPermission('access shortcuts')) {
-          return FALSE;
+          return AccessResult::create()->cachePerRole();
         }
-        if ($account->hasPermission('customize shortcut links')) {
-          return $entity == shortcut_current_displayed_set($account);
-        }
-        return FALSE;
-        break;
+        return AccessResult::allowedIf($account->hasPermission('customize shortcut links') && $entity == shortcut_current_displayed_set($account))->cachePerRole()->cacheUntilEntityChanges($entity);
 
       case 'delete':
-        if (!$account->hasPermission('administer shortcuts')) {
-          return FALSE;
-        }
-        return $entity->id() != 'default';
-        break;
+        return AccessResult::allowedIf($account->hasPermission('administer shortcuts') && $entity->id() != 'default')->cachePerRole();
+
+      default:
+        // No opinion.
+        return AccessResult::create();
     }
   }
 
@@ -49,15 +46,8 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    if ($account->hasPermission('administer shortcuts')) {
-      return TRUE;
-    }
-    if (!$account->hasPermission('access shortcuts')) {
-      return FALSE;
-    }
-    if ($account->hasPermission('customize shortcut links')) {
-      return TRUE;
-    }
+    $condition = $account->hasPermission('administer shortcuts') || ($account->hasPermission('access shortcuts') && $account->hasPermission('customize shortcut links'));
+    return AccessResult::allowedIf($condition)->cachePerRole();
   }
 
 }
