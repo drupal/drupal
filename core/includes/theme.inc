@@ -837,11 +837,6 @@ function template_preprocess_time(&$variables) {
       $variables['html'] = FALSE;
     }
   }
-
-  // Add a 'datetime' class.
-  $variables['attributes']['class'][] = 'datetime';
-
-  $variables['attributes'] = new Attribute($variables['attributes']);
 }
 
 /**
@@ -870,7 +865,6 @@ function template_preprocess_datetime_form(&$variables) {
   if (!empty($element['#attributes']['class'])) {
     $variables['attributes']['class'] = (array) $element['#attributes']['class'];
   }
-  $variables['attributes']['class'][] = 'container-inline';
 
   $variables['content'] = $element;
 }
@@ -896,13 +890,12 @@ function template_preprocess_datetime_wrapper(&$variables) {
     $variables['description'] = $element['#description'];
   }
 
-  $title_attributes = array('class' => array('label'));
+  $variables['required'] = FALSE;
   // For required datetime fields a 'form-required' class is appended to the
   // label attributes.
   if (!empty($element['#required'])) {
-    $title_attributes['class'][] = 'form-required';
+    $variables['required'] = TRUE;
   }
-  $variables['title_attributes'] = new Attribute($title_attributes);
   $variables['content'] = $element['#children'];
 }
 
