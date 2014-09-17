@@ -248,8 +248,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * validated and the form state can be updated, this way the subsequently
    * invoked handlers can retrieve a regular entity object to act on. Generally
    * this method should not be overridden unless the entity requires the same
-   * preparation for two actions, see \Drupal\comment\CommentFormController for
-   * an example with the save and preview actions.
+   * preparation for two actions, see \Drupal\comment\CommentForm for an example
+   * with the save and preview actions.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
