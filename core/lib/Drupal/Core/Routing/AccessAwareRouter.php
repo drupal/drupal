@@ -10,7 +10,6 @@ namespace Drupal\Core\Routing;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\RequestContext;
@@ -102,21 +101,8 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    *   The request to access check.
    */
   protected function checkAccess(Request $request) {
-    // The controller is being handled by the HTTP kernel, so add an attribute
-    // to tell us this is the controller request.
-    $request->attributes->set('_controller_request', TRUE);
-    $e = FALSE;
-    try {
-      if (!$this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT), $request, $this->account)) {
-        $e = new AccessDeniedHttpException();
-      }
-    }
-    catch (\Exception $e) {
-    }
-    // @todo Once PHP 5.5 is a requirement refactor this using finally.
-    $request->attributes->remove('_controller_request');
-    if ($e) {
-      throw $e;
+    if (!$this->accessManager->checkRequest($request, $this->account)) {
+      throw new AccessDeniedHttpException();
     }
   }
 

@@ -326,7 +326,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function setupAccessManagerToAllow() {
     $this->accessManager->expects($this->any())
-      ->method('checkNamedRoute')
+      ->method('checkRequest')
       ->will($this->returnValue(AccessResult::allowed()));
   }
 

@@ -10,9 +10,9 @@ namespace Drupal\field_ui\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines an access check for entity form mode routes.
@@ -43,8 +43,8 @@ class FormModeAccessCheck implements AccessInterface {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check against.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The parametrized route.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    * @param string $form_mode_name
@@ -61,11 +61,11 @@ class FormModeAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, Request $request, AccountInterface $account, $form_mode_name = 'default', $bundle = NULL) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, $form_mode_name = 'default', $bundle = NULL) {
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
       if (!isset($bundle)) {
         $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        $bundle = $request->attributes->get('_raw_variables')->get($entity_type->getBundleEntityType());
+        $bundle = $route_match->getRawParameter($entity_type->getBundleEntityType());
       }
 
       $visibility = FALSE;

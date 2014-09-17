@@ -10,7 +10,6 @@ namespace Drupal\toolbar\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a controller for the toolbar module.
@@ -33,16 +32,15 @@ class ToolbarController extends ControllerBase {
   /**
    * Checks access for the subtree controller.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * @param string $hash
+   *   The hash of the toolbar subtrees.
    * @param string $langcode
    *   The langcode of the requested site, NULL if none given.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function checkSubTreeAccess(Request $request, $langcode) {
-    $hash = $request->get('hash');
+  public function checkSubTreeAccess($hash, $langcode) {
     return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && $hash == _toolbar_get_subtrees_hash($langcode))->cachePerRole();
   }
 

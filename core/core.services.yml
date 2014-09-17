@@ -673,11 +673,11 @@ services:
   csrf_token:
     class: Drupal\Core\Access\CsrfTokenGenerator
     arguments: ['@private_key', '@session_manager.metadata_bag']
-  access_arguments_resolver:
-    class: Drupal\Core\Access\AccessArgumentsResolver
+  access_arguments_resolver_factory:
+    class: Drupal\Core\Access\AccessArgumentsResolverFactory
   access_manager:
     class: Drupal\Core\Access\AccessManager
-    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver', '@request_stack', '@current_user']
+    arguments: ['@router.route_provider', '@paramconverter_manager', '@access_arguments_resolver_factory', '@current_user']
     calls:
       - [setContainer, ['@service_container']]
   access_route_subscriber:
@@ -704,13 +704,13 @@ services:
       - { name: access_check, applies_to: _access_theme }
   access_check.custom:
     class: Drupal\Core\Access\CustomAccessCheck
-    arguments: ['@controller_resolver', '@access_arguments_resolver']
+    arguments: ['@controller_resolver', '@access_arguments_resolver_factory']
     tags:
       - { name: access_check, applies_to: _custom_access }
   access_check.csrf:
     class: Drupal\Core\Access\CsrfAccessCheck
     tags:
-      - { name: access_check, applies_to: _csrf_token }
+      - { name: access_check, applies_to: _csrf_token, needs_incoming_request: TRUE }
     arguments: ['@csrf_token']
   maintenance_mode:
     class: Drupal\Core\Site\MaintenanceMode

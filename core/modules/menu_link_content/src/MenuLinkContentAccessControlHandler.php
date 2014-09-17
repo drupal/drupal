@@ -69,7 +69,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
           }
           else {
             // We allow access, but only if the link is accessible as well.
-            $link_access = $this->accessManager->checkNamedRoute($entity->getRouteName(), $entity->getRouteParameters(), $account, NULL, TRUE);
+            $link_access = $this->accessManager->checkNamedRoute($entity->getRouteName(), $entity->getRouteParameters(), $account, TRUE);
             return $access->allow()->andIf($link_access);
           }
         }

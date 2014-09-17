@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\CustomAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -36,9 +35,9 @@ class CustomAccessCheckTest extends UnitTestCase {
   /**
    * The mocked arguments resolver.
    *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $argumentsResolver;
+  protected $argumentsResolverFactory;
 
   /**
    * {@inheritdoc}
@@ -47,52 +46,64 @@ class CustomAccessCheckTest extends UnitTestCase {
     parent::setUp();
 
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
-    $this->argumentsResolver = $this->getMock('Drupal\Core\Access\AccessArgumentsResolverInterface');
-    $this->accessChecker = new CustomAccessCheck($this->controllerResolver, $this->argumentsResolver);
+    $this->argumentsResolverFactory = $this->getMock('Drupal\Core\Access\AccessArgumentsResolverFactoryInterface');
+    $this->accessChecker = new CustomAccessCheck($this->controllerResolver, $this->argumentsResolverFactory);
   }
 
   /**
    * Test the access method.
    */
   public function testAccess() {
-    $request = new Request(array());
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->controllerResolver->expects($this->at(0))
       ->method('getControllerFromDefinition')
       ->with('\Drupal\Tests\Core\Access\TestController::accessDeny')
       ->will($this->returnValue(array(new TestController(), 'accessDeny')));
 
-    $this->argumentsResolver->expects($this->at(0))
+    $resolver0 = $this->getMock('Drupal\Component\Utility\ArgumentsResolverInterface');
+    $resolver0->expects($this->once())
       ->method('getArguments')
       ->will($this->returnValue(array()));
+    $this->argumentsResolverFactory->expects($this->at(0))
+      ->method('getArgumentsResolver')
+      ->will($this->returnValue($resolver0));
 
     $this->controllerResolver->expects($this->at(1))
       ->method('getControllerFromDefinition')
       ->with('\Drupal\Tests\Core\Access\TestController::accessAllow')
       ->will($this->returnValue(array(new TestController(), 'accessAllow')));
 
-    $this->argumentsResolver->expects($this->at(1))
+    $resolver1 = $this->getMock('Drupal\Component\Utility\ArgumentsResolverInterface');
+    $resolver1->expects($this->once())
       ->method('getArguments')
       ->will($this->returnValue(array()));
+    $this->argumentsResolverFactory->expects($this->at(1))
+      ->method('getArgumentsResolver')
+      ->will($this->returnValue($resolver1));
 
     $this->controllerResolver->expects($this->at(2))
       ->method('getControllerFromDefinition')
       ->with('\Drupal\Tests\Core\Access\TestController::accessParameter')
       ->will($this->returnValue(array(new TestController(), 'accessParameter')));
 
-    $this->argumentsResolver->expects($this->at(2))
+    $resolver2 = $this->getMock('Drupal\Component\Utility\ArgumentsResolverInterface');
+    $resolver2->expects($this->once())
       ->method('getArguments')
       ->will($this->returnValue(array('parameter' => 'TRUE')));
+    $this->argumentsResolverFactory->expects($this->at(2))
+      ->method('getArgumentsResolver')
+      ->will($this->returnValue($resolver2));
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessDeny'));
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertEquals(AccessResult::create(), $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::create(), $this->accessChecker->access($route, $route_match, $account));
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessAllow'));
-    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $route_match, $account));
 
     $route = new Route('/test-route', array('parameter' => 'TRUE'), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessParameter'));
-    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $request, $account));
+    $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $route_match, $account));
   }
 
 }

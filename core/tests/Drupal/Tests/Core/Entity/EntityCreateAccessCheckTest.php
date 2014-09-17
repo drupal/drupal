@@ -11,7 +11,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
@@ -91,17 +90,18 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       ->with('_entity_create_access')
       ->will($this->returnValue($requirement));
 
-    $request = new Request();
     $raw_variables = new ParameterBag();
     if ($entity_bundle) {
-      // Add the bundle as a raw variable and an upcasted attribute.
-      $request->attributes->set('bundle_argument', new \stdClass());
       $raw_variables->set('bundle_argument', $entity_bundle);
     }
-    $request->attributes->set('_raw_variables', $raw_variables);
+
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match->expects($this->any())
+      ->method('getRawParameters')
+      ->will($this->returnValue($raw_variables));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertEquals($expected, $applies_check->access($route, $request, $account));
+    $this->assertEquals($expected, $applies_check->access($route, $route_match, $account));
   }
 
 }

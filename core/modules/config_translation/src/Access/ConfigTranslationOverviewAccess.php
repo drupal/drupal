@@ -7,11 +7,11 @@
 
 namespace Drupal\config_translation\Access;
 
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -27,6 +27,13 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
   protected $configMapperManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * The source language.
    *
    * @var \Drupal\Core\Language\LanguageInterface
@@ -39,8 +46,9 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
    *   The mapper plugin discovery service.
    */
-  public function __construct(ConfigMapperManagerInterface $config_mapper_manager) {
+  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, LanguageManagerInterface $language_manager) {
     $this->configMapperManager = $config_mapper_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -48,29 +56,25 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check against.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route, AccountInterface $account) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($route->getDefault('plugin_id'));
-    $mapper->populateFromRequest($request);
-
-    $this->sourceLanguage = $mapper->getLanguageWithFallback();
+    $this->sourceLanguage = $this->languageManager->getLanguage($mapper->getLangcode());
 
     // Allow access to the translation overview if the proper permission is
     // granted, the configuration has translatable pieces, and the source
-    // language is not locked.
+    // language is not locked if it is present.
     $access =
       $account->hasPermission('translate configuration') &&
       $mapper->hasSchema() &&
       $mapper->hasTranslatable() &&
-      !$this->sourceLanguage->locked;
+      empty($this->sourceLanguage->locked);
 
     return AccessResult::allowedIf($access)->cachePerRole();
   }

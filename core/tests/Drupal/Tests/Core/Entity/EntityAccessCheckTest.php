@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessCheck;
@@ -26,7 +26,11 @@ class EntityAccessCheckTest extends UnitTestCase {
    */
   public function testAccess() {
     $route = new Route('/foo', array(), array('_entity_access' => 'node.update'));
-    $request = new Request();
+    $upcasted_arguments = new ParameterBag();
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match->expects($this->once())
+      ->method('getParameters')
+      ->will($this->returnValue($upcasted_arguments));
     $node = $this->getMockBuilder('Drupal\node\Entity\Node')
       ->disableOriginalConstructor()
       ->getMock();
@@ -34,9 +38,9 @@ class EntityAccessCheckTest extends UnitTestCase {
       ->method('access')
       ->will($this->returnValue(AccessResult::allowed()->cachePerRole()));
     $access_check = new EntityAccessCheck();
-    $request->attributes->set('node', $node);
+    $upcasted_arguments->set('node', $node);
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $access = $access_check->access($route, $request, $account);
+    $access = $access_check->access($route, $route_match, $account);
     $this->assertEquals(AccessResult::allowed()->cachePerRole(), $access);
   }
 

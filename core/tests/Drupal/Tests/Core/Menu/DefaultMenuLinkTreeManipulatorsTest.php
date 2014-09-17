@@ -154,10 +154,10 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->accessManager->expects($this->exactly(4))
       ->method('checkNamedRoute')
       ->will($this->returnValueMap(array(
-        array('example1', array(), $this->currentUser, NULL, FALSE, FALSE),
-        array('example2', array('foo' => 'bar'), $this->currentUser, NULL, FALSE, TRUE),
-        array('example3', array('baz' => 'qux'), $this->currentUser, NULL, FALSE, FALSE),
-        array('example5', array(), $this->currentUser, NULL, FALSE, TRUE),
+        array('example1', array(), $this->currentUser,  FALSE, FALSE),
+        array('example2', array('foo' => 'bar'), $this->currentUser, FALSE, TRUE),
+        array('example3', array('baz' => 'qux'), $this->currentUser, FALSE, FALSE),
+        array('example5', array(), $this->currentUser, FALSE, TRUE),
       )));
 
     $this->mockTree();
@@ -343,11 +343,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     // Ensure that the access manager is just called for the non-node routes.
     $this->accessManager->expects($this->at(0))
       ->method('checkNamedRoute')
-      ->with('test_route', [], $this->currentUser, NULL)
+      ->with('test_route', [], $this->currentUser)
       ->willReturn(TRUE);
     $this->accessManager->expects($this->at(1))
       ->method('checkNamedRoute')
-      ->with('test_route', [], $this->currentUser, NULL)
+      ->with('test_route', [], $this->currentUser)
       ->willReturn(FALSE);
     $tree = $this->defaultMenuTreeManipulators->checkAccess($tree);
 

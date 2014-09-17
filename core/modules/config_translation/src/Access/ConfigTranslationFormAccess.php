@@ -9,7 +9,6 @@ namespace Drupal\config_translation\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -20,12 +19,12 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route, AccountInterface $account, $langcode = NULL) {
     // For the translation forms we have a target language, so we need some
     // checks in addition to the checks performed for the translation overview.
-    $base_access = parent::access($route, $request, $account);
+    $base_access = parent::access($route, $account);
     if ($base_access->isAllowed()) {
-      $target_language = language_load($request->attributes->get('langcode'));
+      $target_language = $this->languageManager->getLanguage($langcode);
 
       // Make sure that the target language is not locked, and that the target
       // language is not the original submission language. Although technically
@@ -34,7 +33,7 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
       $access =
         !empty($target_language) &&
         !$target_language->locked &&
-        $target_language->id != $this->sourceLanguage->id;
+        (empty($this->sourceLanguage) || ($target_language->id != $this->sourceLanguage->id));
 
       return $base_access->andIf(AccessResult::allowedIf($access));
     }

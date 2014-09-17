@@ -9,8 +9,8 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -35,39 +35,39 @@ class CustomAccessCheck implements RoutingAccessInterface {
   /**
    * The arguments resolver.
    *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverInterface
+   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface
    */
-  protected $argumentsResolver;
+  protected $argumentsResolverFactory;
 
   /**
    * Constructs a CustomAccessCheck instance.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
-   * @param \Drupal\Core\Access\AccessArgumentsResolverInterface $arguments_resolver
-   *   The arguments resolver.
+   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $arguments_resolver_factory
+   *   The arguments resolver factory.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, AccessArgumentsResolverInterface $arguments_resolver) {
+  public function __construct(ControllerResolverInterface $controller_resolver, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory) {
     $this->controllerResolver = $controller_resolver;
-    $this->argumentsResolver = $arguments_resolver;
+    $this->argumentsResolverFactory = $arguments_resolver_factory;
   }
 
   /**
    * Checks access for the account and route using the custom access checker.
    *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check against.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object to be checked.
    * @param \Drupal\Core\Session\AccountInterface $account
-   *   The currently logged in account.
+   *   The account being checked.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     $callable = $this->controllerResolver->getControllerFromDefinition($route->getRequirement('_custom_access'));
-    $arguments = $this->argumentsResolver->getArguments($callable, $route, $request, $account);
+    $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account);
+    $arguments = $arguments_resolver->getArguments($callable);
+
     return call_user_func_array($callable, $arguments);
   }
 

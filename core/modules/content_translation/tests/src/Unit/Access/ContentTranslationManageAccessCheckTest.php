@@ -11,7 +11,6 @@ use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -78,9 +77,12 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $route = new Route('test_route');
     $route->setRequirement('_access_content_translation_manage', 'create');
 
-    // Set the request attributes.
-    $request = Request::create('node/1');
-    $request->attributes->set('node', $entity);
+    // Set up the route match.
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match->expects($this->once())
+      ->method('getParameter')
+      ->with('node')
+      ->will($this->returnValue($entity));
 
     // Set the mock account.
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
@@ -92,7 +94,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $language = 'en';
     $entity_type_id = 'node';
 
-    $this->assertTrue($check->access($route, $request, $account, $source, $target, $language, $entity_type_id)->isAllowed(), "The access check matches");
+    $this->assertTrue($check->access($route, $route_match, $account, $source, $target, $language, $entity_type_id)->isAllowed(), "The access check matches");
   }
 
 }

@@ -9,9 +9,9 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a generic access checker for entities.
@@ -33,21 +33,22 @@ class EntityAccessCheck implements AccessInterface {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check against.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The parametrized route
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     // Split the entity type and the operation.
     $requirement = $route->getRequirement('_entity_access');
     list($entity_type, $operation) = explode('.', $requirement);
     // If there is valid entity of the given entity type, check its access.
-    if ($request->attributes->has($entity_type)) {
-      $entity = $request->attributes->get($entity_type);
+    $parameters = $route_match->getParameters();
+    if ($parameters->has($entity_type)) {
+      $entity = $parameters->get($entity_type);
       if ($entity instanceof EntityInterface) {
         return $entity->access($operation, $account, TRUE);
       }

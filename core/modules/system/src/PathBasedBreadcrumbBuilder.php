@@ -139,11 +139,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // Copy the path elements for up-casting.
       $route_request = $this->getRequestForPath(implode('/', $path_elements), $exclude);
       if ($route_request) {
-        $route_name = $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-        // Note that the parameters don't really matter here since we're
-        // passing in the request which already has the upcast attributes.
-        $parameters = array();
-        $access = $this->accessManager->checkNamedRoute($route_name, $parameters, $this->currentUser, $route_request);
+        $access = $this->accessManager->checkRequest($route_request, $this->currentUser);
         if ($access) {
           $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
         }

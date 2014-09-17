@@ -72,10 +72,11 @@ class AccessAwareRouterTest extends UnitTestCase {
    */
   public function testMatchRequestAllowed() {
     $this->setupRouter();
-    $this->accessManager->expects($this->once())
-      ->method('check')
-      ->will($this->returnValue(TRUE));
     $request = new Request();
+    $this->accessManager->expects($this->once())
+      ->method('checkRequest')
+      ->with($request)
+      ->will($this->returnValue(TRUE));
     $parameters = $this->router->matchRequest($request);
     $this->assertSame($request->attributes->all(), array(RouteObjectInterface::ROUTE_OBJECT => $this->route));
     $this->assertSame($parameters, array(RouteObjectInterface::ROUTE_OBJECT => $this->route));
@@ -88,10 +89,12 @@ class AccessAwareRouterTest extends UnitTestCase {
    */
   public function testMatchRequestDenied() {
     $this->setupRouter();
+    $request = new Request();
     $this->accessManager->expects($this->once())
-      ->method('check')
+      ->method('checkRequest')
+      ->with($request)
       ->will($this->returnValue(FALSE));
-    $this->router->matchRequest(new Request());
+    $this->router->matchRequest($request);
   }
 
   /**

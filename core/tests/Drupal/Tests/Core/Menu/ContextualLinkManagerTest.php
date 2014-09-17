@@ -343,8 +343,8 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
       ->will($this->returnValueMap(array(
-        array('test_route', array('key' => 'value'), $this->account, NULL, FALSE, TRUE),
-        array('test_route2', array('key' => 'value'), $this->account, NULL, FALSE, FALSE),
+        array('test_route', array('key' => 'value'), $this->account, FALSE, TRUE),
+        array('test_route2', array('key' => 'value'), $this->account, FALSE, FALSE),
       )));
 
     // Set up mocking of the plugin factory.
