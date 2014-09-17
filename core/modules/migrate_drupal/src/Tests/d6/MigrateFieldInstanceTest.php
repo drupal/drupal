@@ -85,7 +85,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     // Test a text field.
     $field = entity_load('field_instance_config', 'node.story.field_test');
     $this->assertEqual($field->label(), 'Text Field');
-    $expected = array('max_length' => 255, 'text_processing' => 1);
+    $expected = array('max_length' => 255);
     $this->assertEqual($field->getSettings(), $expected);
     $this->assertEqual('text for default value', $entity->field_test->value);
 

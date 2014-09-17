@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -396,7 +397,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
 }
 
 /**
- * Records file usage of files referenced by processed text fields.
+ * Records file usage of files referenced by formatted text fields.
  *
  * Every referenced file that does not yet have the FILE_STATUS_PERMANENT state,
  * will be given that state.
@@ -419,7 +420,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
 }
 
 /**
- * Deletes file usage of files referenced by processed text fields.
+ * Deletes file usage of files referenced by formatted text fields.
  *
  * @param array $uuids
  *   An array of file entity UUIDs.
@@ -440,7 +441,7 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
 }
 
 /**
- * Finds all files referenced (data-editor-file-uuid) by processed text fields.
+ * Finds all files referenced (data-editor-file-uuid) by formatted text fields.
  *
  * @param EntityInterface $entity
  *   An entity whose fields to analyze.
@@ -451,32 +452,32 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
 function _editor_get_file_uuids_by_field(EntityInterface $entity) {
   $uuids = array();
 
-  $processed_text_fields = _editor_get_processed_text_fields($entity);
-  foreach ($processed_text_fields as $processed_text_field) {
-    $text = $entity->get($processed_text_field)->value;
-    $uuids[$processed_text_field] = _editor_parse_file_uuids($text);
+  $formatted_text_fields = _editor_get_formatted_text_fields($entity);
+  foreach ($formatted_text_fields as $formatted_text_field) {
+    $text = $entity->get($formatted_text_field)->value;
+    $uuids[$formatted_text_field] = _editor_parse_file_uuids($text);
   }
   return $uuids;
 }
 
 /**
- * Determines the text fields on an entity that have text processing enabled.
+ * Determines the formatted text fields on an entity.
  *
- * @param EntityInterface $entity
+ * @param ContentEntityInterface $entity
  *   An entity whose fields to analyze.
  *
  * @return array
- *   The names of the fields on this entity that have text processing enabled.
+ *   The names of the fields on this entity that support formatted text.
  */
-function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
+function _editor_get_formatted_text_fields(ContentEntityInterface $entity) {
   $field_definitions = $entity->getFieldDefinitions();
   if (empty($field_definitions)) {
     return array();
   }
 
-  // Only return fields that have text processing enabled.
-  return array_keys(array_filter($field_definitions, function ($definition) {
-    return $definition->getSetting('text_processing') === TRUE;
+  // Only return formatted text fields.
+  return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) {
+    return in_array($definition->getType(), array('text', 'text_long', 'text_with_summary'), TRUE);
   }));
 }
 

@@ -29,15 +29,15 @@ class EditorController extends ControllerBase {
   /**
    * Returns an Ajax response to render a text field without transformation filters.
    *
-   * @param int $entity
-   *   The entity of which a processed text field is being rerendered.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity of which a formatted text field is being rerendered.
    * @param string $field_name
-   *   The name of the (processed text) field that that is being rerendered
+   *   The name of the (formatted text) field that that is being rerendered
    * @param string $langcode
-   *   The name of the language for which the processed text field is being
-   *   rererendered.
+   *   The name of the language for which the formatted text field is being
+   *   rerendered.
    * @param string $view_mode_id
-   *   The view mode the processed text field should be rerendered in.
+   *   The view mode the formatted text field should be rerendered in.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The Ajax response.

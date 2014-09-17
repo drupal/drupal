@@ -44,9 +44,6 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
       'label' => $this->randomMachineName() . '_label',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
     ))->save();
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($this->field_name, array(

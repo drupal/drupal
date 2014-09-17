@@ -683,11 +683,6 @@ class EntityFieldTest extends EntityUnitTestBase  {
    *   The entity type to run the tests with.
    */
   protected function assertComputedProperties($entity_type) {
-    // Make the test text field processed.
-    $instance = FieldInstanceConfig::loadByName($entity_type, $entity_type, 'field_test_text');
-    $instance->settings['text_processing'] = 1;
-    $instance->save();
-
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";
     $entity->field_test_text->format = filter_default_format();

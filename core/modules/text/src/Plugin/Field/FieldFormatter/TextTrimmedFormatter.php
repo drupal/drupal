@@ -69,25 +69,6 @@ class TextTrimmedFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-    if ($this->getFieldSetting('text_processing')) {
-      return $this->viewElementsWithTextProcessing($items);
-    }
-    else {
-      return $this->viewElementsWithoutTextProcessing($items);
-    }
-  }
-
-  /**
-   * Builds a renderable array when text processing is enabled.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $items
-   *   The text field values to be rendered.
-   *
-   * @return array
-   *   A renderable array for $items, as an array of child elements keyed by
-   *   consecutive numeric indexes starting from 0.
-   */
-  protected function viewElementsWithTextProcessing(FieldItemListInterface $items) {
     $elements = array();
 
     $render_as_summary = function (&$element) {
@@ -115,35 +96,6 @@ class TextTrimmedFormatter extends FormatterBase {
         $elements[$delta]['#text'] = $item->value;
         $render_as_summary($elements[$delta]);
       }
-    }
-
-    return $elements;
-  }
-
-  /**
-   * Builds a renderable array when text processing is disabled.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $items
-   *   The text field values to be rendered.
-   *
-   * @return array
-   *   A renderable array for $items, as an array of child elements keyed by
-   *   consecutive numeric indexes starting from 0.
-   */
-  protected function viewElementsWithoutTextProcessing(FieldItemListInterface $items) {
-    $elements = array();
-
-    foreach ($items as $delta => $item) {
-      if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item->summary)) {
-        $output = $item->summary_processed;
-      }
-      else {
-        $output = text_summary($item->processed, NULL, $this->getSetting('trim_length'));
-      }
-
-      $elements[$delta] = array(
-        '#markup' => $output,
-      );
     }
 
     return $elements;

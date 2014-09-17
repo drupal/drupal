@@ -55,13 +55,8 @@ class TextProcessed extends TypedData {
     if (!isset($text) || $text === '') {
       $this->processed = '';
     }
-    elseif ($item->getFieldDefinition()->getSetting('text_processing')) {
-      $this->processed = check_markup($text, $item->format, $item->getLangcode());
-    }
     else {
-      // Escape all HTML and retain newlines.
-      // @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter
-      $this->processed = SafeMarkup::set(nl2br(String::checkPlain($text)));
+      $this->processed = check_markup($text, $item->format, $item->getLangcode());
     }
     return $this->processed;
   }

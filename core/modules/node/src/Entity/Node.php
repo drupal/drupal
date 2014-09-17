@@ -366,7 +366,7 @@ class Node extends ContentEntityBase implements NodeInterface {
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);

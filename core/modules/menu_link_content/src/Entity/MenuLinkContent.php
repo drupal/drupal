@@ -293,7 +293,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);
@@ -311,7 +311,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => 0,
       ));
 

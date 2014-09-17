@@ -54,9 +54,8 @@ class TextFormatterTest extends EntityUnitTestBase {
       ),
     ))->save();
 
-    // Set up two fields: one with text processing enabled, the other disabled.
     entity_create('field_storage_config', array(
-      'name' => 'processed_text',
+      'name' => 'formatted_text',
       'entity_type' => $this->entityType,
       'type' => 'text',
       'settings' => array(),
@@ -64,26 +63,8 @@ class TextFormatterTest extends EntityUnitTestBase {
     entity_create('field_instance_config', array(
       'entity_type' => $this->entityType,
       'bundle' => $this->bundle,
-      'field_name' => 'processed_text',
-      'label' => 'Processed text',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
-    ))->save();
-    entity_create('field_storage_config', array(
-      'name' => 'unprocessed_text',
-      'entity_type' => $this->entityType,
-      'type' => 'text',
-      'settings' => array(),
-    ))->save();
-    entity_create('field_instance_config', array(
-      'entity_type' => $this->entityType,
-      'bundle' => $this->bundle,
-      'field_name' => 'unprocessed_text',
-      'label' => 'Unprocessed text',
-      'settings' => array(
-        'text_processing' => FALSE,
-      ),
+      'field_name' => 'formatted_text',
+      'label' => 'Filtered text',
     ))->save();
   }
 
@@ -99,29 +80,21 @@ class TextFormatterTest extends EntityUnitTestBase {
 
     // Create the entity to be referenced.
     $entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
-    $entity->processed_text = array(
+    $entity->formatted_text = array(
       'value' => 'Hello, world!',
       'format' => 'my_text_format',
-    );
-    $entity->unprocessed_text = array(
-      'value' => 'Hello, world!',
     );
     $entity->save();
 
     foreach ($formatters as $formatter) {
-      // Verify the processed text field formatter's render array.
-      $build = $entity->get('processed_text')->view(array('type' => $formatter));
+      // Verify the text field formatter's render array.
+      $build = $entity->get('formatted_text')->view(array('type' => $formatter));
       drupal_render($build[0]);
       $this->assertEqual($build[0]['#markup'], "<p>Hello, world!</p>\n");
       $expected_cache_tags = array(
         'filter_format' => array('my_text_format'),
       );
-      $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags when formatting a processed text field.', array('@formatter' => $formatter)));
-
-      // Verify the unprocessed text field formatter's render array.
-      $build = $entity->get('unprocessed_text')->view(array('type' => $formatter));
-      $this->assertEqual($build[0]['#markup'], 'Hello, world!');
-      $this->assertTrue(!isset($build[0]['#cache']), format_string('The @formatter formatter has the expected cache tags when formatting an unprocessed text field.', array('@formatter' => $formatter)));
+      $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags when formatting a formatted text field.', array('@formatter' => $formatter)));
     }
   }
 

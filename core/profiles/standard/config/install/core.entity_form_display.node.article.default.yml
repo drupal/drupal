@@ -4,7 +4,7 @@ bundle: article
 mode: default
 content:
   title:
-    type: string
+    type: string_textfield
     weight: 0
     settings:
       size: 60

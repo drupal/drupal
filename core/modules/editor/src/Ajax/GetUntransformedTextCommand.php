@@ -11,7 +11,7 @@ use Drupal\Core\Ajax\CommandInterface;
 use Drupal\quickedit\Ajax\BaseCommand;
 
 /**
- * AJAX command to rerender a processed text field without any transformation
+ * AJAX command to rerender a formatted text field without any transformation
  * filters.
  */
 class GetUntransformedTextCommand extends BaseCommand {

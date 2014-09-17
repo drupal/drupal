@@ -127,7 +127,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->drupalGet('admin/config/development/testing');
     $edit = array(
       // A KernalTestBase test.
-      'tests[Drupal\text\Tests\Formatter\TextPlainUnitTest]' => TRUE,
+      'tests[Drupal\field\Tests\String\StringFormatterTest]' => TRUE,
     );
     $this->drupalPostForm(NULL, $edit, t('Run tests'));
     $this->assertText('0 fails, 0 exceptions');

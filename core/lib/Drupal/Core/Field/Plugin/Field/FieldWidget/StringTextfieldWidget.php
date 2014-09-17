@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\StringWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
@@ -12,17 +12,17 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'string' widget.
+ * Plugin implementation of the 'string_textfield' widget.
  *
  * @FieldWidget(
- *   id = "string",
- *   label = @Translation("String field"),
+ *   id = "string_textfield",
+ *   label = @Translation("Textfield"),
  *   field_types = {
  *     "string"
  *   }
  * )
  */
-class StringWidget extends WidgetBase {
+class StringTextfieldWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}

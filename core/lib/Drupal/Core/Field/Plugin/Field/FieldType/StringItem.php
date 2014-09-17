@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -19,10 +20,9 @@ use Drupal\Core\TypedData\DataDefinition;
  *
  * @FieldType(
  *   id = "string",
- *   label = @Translation("String"),
- *   description = @Translation("An entity field containing a string value."),
- *   no_ui = TRUE,
- *   default_widget = "string",
+ *   label = @Translation("Text (plain)"),
+ *   description = @Translation("A field containing a plain string value."),
+ *   default_widget = "string_textfield",
  *   default_formatter = "string"
  * )
  */
@@ -93,6 +93,25 @@ class StringItem extends FieldItemBase {
     $max = $field_definition->getSetting('max_length');
     $values['value'] = $random->word(mt_rand(1, $max));
     return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = array();
+
+    $element['max_length'] = array(
+      '#type' => 'number',
+      '#title' => t('Maximum length'),
+      '#default_value' => $this->getSetting('max_length'),
+      '#required' => TRUE,
+      '#description' => t('The maximum length of the field in characters.'),
+      '#min' => 1,
+      '#disabled' => $has_data,
+    );
+
+    return $element;
   }
 
 }

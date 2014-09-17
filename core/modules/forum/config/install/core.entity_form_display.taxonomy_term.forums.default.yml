@@ -5,7 +5,7 @@ mode: default
 status: true
 content:
   name:
-    type: string
+    type: string_textfield
     weight: -5
     settings:
       size: 60

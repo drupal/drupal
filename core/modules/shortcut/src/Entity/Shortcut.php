@@ -184,7 +184,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setDefaultValue('')
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -10,
         'settings' => array(
           'size' => 40,

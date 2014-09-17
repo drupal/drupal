@@ -8,7 +8,7 @@
 namespace Drupal\text\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldWidget\StringWidget;
+use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -19,12 +19,11 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   id = "text_textfield",
  *   label = @Translation("Text field"),
  *   field_types = {
- *     "text",
- *     "string"
+ *     "text"
  *   },
  * )
  */
-class TextfieldWidget extends StringWidget {
+class TextfieldWidget extends StringTextfieldWidget {
 
   /**
    * {@inheritdoc}
@@ -32,14 +31,11 @@ class TextfieldWidget extends StringWidget {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $main_widget = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    if ($this->getFieldSetting('text_processing')) {
-      $element = $main_widget['value'];
-      $element['#type'] = 'text_format';
-      $element['#format'] = isset($items[$delta]->format) ? $items[$delta]->format : NULL;
-      $element['#base_type'] = $main_widget['value']['#type'];
-      return $element;
-    }
-    return $main_widget;
+    $element = $main_widget['value'];
+    $element['#type'] = 'text_format';
+    $element['#format'] = isset($items[$delta]->format) ? $items[$delta]->format : NULL;
+    $element['#base_type'] = $main_widget['value']['#type'];
+    return $element;
   }
 
   /**

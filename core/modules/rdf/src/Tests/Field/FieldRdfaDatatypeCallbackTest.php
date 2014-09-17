@@ -28,6 +28,8 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
 
     $this->createTestField();
 
+    $this->installConfig(array('filter'));
+
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
     $mapping->setFieldMapping($this->fieldName, array(

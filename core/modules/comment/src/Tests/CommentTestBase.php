@@ -218,7 +218,7 @@ abstract class CommentTestBase extends WebTestBase {
     $form_display = entity_get_form_display('comment', 'comment', 'default');
     if ($enabled) {
       $form_display->setComponent('subject', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
       ));
     }
     else {

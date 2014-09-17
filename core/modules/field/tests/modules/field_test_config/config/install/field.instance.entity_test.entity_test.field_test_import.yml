@@ -8,8 +8,7 @@ description: ''
 required: false
 default_value: {  }
 default_value_function: ''
-settings:
-  text_processing: 0
+settings: { }
 field_type: text
 dependencies:
   entity:

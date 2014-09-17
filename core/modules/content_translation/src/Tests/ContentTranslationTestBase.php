@@ -180,7 +180,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
       }
       entity_create('field_storage_config', array(
         'name' => $this->fieldName,
-        'type' => 'text',
+        'type' => 'string',
         'entity_type' => $this->entityTypeId,
         'cardinality' => 1,
         'translatable' => TRUE,
@@ -193,7 +193,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
       ))->save();
       entity_get_form_display($this->entityTypeId, $this->bundle, 'default')
         ->setComponent($this->fieldName, array(
-          'type' => 'text_textfield',
+          'type' => 'string_textfield',
           'weight' => 0,
         ))
         ->save();

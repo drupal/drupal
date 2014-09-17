@@ -69,9 +69,6 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
       'bundle' => $this->bundle,
       'field_name' => 'body',
       'label' => 'Body',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
     ))->save();
     entity_get_display($this->entityType, $this->bundle, 'default')
       ->setComponent('body', array(

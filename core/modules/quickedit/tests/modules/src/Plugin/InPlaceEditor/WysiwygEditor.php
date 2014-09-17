@@ -30,10 +30,10 @@ class WysiwygEditor extends InPlaceEditorBase {
     if ($field_definition->getFieldStorageDefinition()->getCardinality() != 1) {
       return FALSE;
     }
-    // This editor is compatible with processed ("rich") text fields; but only
+    // This editor is compatible with formatted ("rich") text fields; but only
     // if there is a currently active text format and that text format is the
     // 'full_html' text format.
-    elseif ($field_definition->getSetting('text_processing')) {
+    elseif (in_array($field_definition->getType(), array('text', 'text_long', 'text_with_summary'), TRUE)) {
       if ($items[0]->format === 'full_html') {
         return TRUE;
       }

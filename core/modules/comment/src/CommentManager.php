@@ -234,7 +234,6 @@ class CommentManager implements CommentManagerInterface {
         'label' => 'Comment',
         'entity_type' => 'comment',
         'bundle' => $comment_type_id,
-        'settings' => array('text_processing' => 1),
         'required' => TRUE,
       ));
       $field_instance->save();

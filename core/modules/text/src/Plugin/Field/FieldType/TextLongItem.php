@@ -8,15 +8,14 @@
 namespace Drupal\text\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'text_long' field type.
  *
  * @FieldType(
  *   id = "text_long",
- *   label = @Translation("Long text"),
- *   description = @Translation("This field stores long text in the database."),
+ *   label = @Translation("Text (formatted, long)"),
+ *   description = @Translation("This field stores a long text with a text format."),
  *   default_widget = "text_textarea",
  *   default_formatter = "text_default"
  * )
@@ -44,25 +43,6 @@ class TextLongItem extends TextItemBase {
         'format' => array('format'),
       ),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
-    $element = array();
-
-    $element['text_processing'] = array(
-      '#type' => 'radios',
-      '#title' => t('Text processing'),
-      '#default_value' => $this->getSetting('text_processing'),
-      '#options' => array(
-        t('Plain text'),
-        t('Filtered text (user selects text format)'),
-      ),
-    );
-
-    return $element;
   }
 
 }

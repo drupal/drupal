@@ -20,6 +20,12 @@ display:
           field: field_name_0
           plugin_id: field
           provider: field
+        field_name_5:
+          id: field_name_5
+          table: node__field_name_5
+          field: field_name_5
+          plugin_id: field
+          provider: field
       cache:
         type: none
       exposed_form:

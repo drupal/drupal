@@ -168,7 +168,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);

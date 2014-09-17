@@ -10,7 +10,7 @@ text.settings:
 
 field.text.settings:
   type: mapping
-  label: 'Text settings'
+  label: 'Text (formatted) settings'
   mapping:
     max_length:
       type: integer
@@ -18,11 +18,9 @@ field.text.settings:
 
 field.text.instance_settings:
   type: mapping
-  label: 'Text settings'
-  mapping:
-    text_processing:
-      type: integer
-      label: 'Text processing'
+  label: 'Text (formatted) settings'
+  sequence:
+    - type: string
 
 field.text.value:
   type: sequence
@@ -39,18 +37,14 @@ field.text.value:
           label: 'Text format'
 
 field.text_long.settings:
-  type: sequence
-  label: 'Settings'
-  sequence:
-    - type: string
+  label: 'Text (formatted, long) settings'
+  type: mapping
+  mapping: {  }
 
 field.text_long.instance_settings:
+  label: 'Text (formatted, long) settings'
   type: mapping
-  label: 'Long text settings'
-  mapping:
-    text_processing:
-      type: string
-      label: 'Text processing'
+  mapping: {  }
 
 field.text_long.value:
   type: sequence
@@ -67,18 +61,14 @@ field.text_long.value:
           label: 'Text format'
 
 field.text_with_summary.settings:
-  type: sequence
-  label: 'Default'
-  sequence:
-    - type: string
+  label: 'Text (formatted, long, with summary) settings'
+  type: mapping
+  mapping: {  }
 
 field.text_with_summary.instance_settings:
   type: mapping
-  label: 'Text area with a summary'
+  label: 'Text (formatted, long, with summary) settings'
   mapping:
-    text_processing:
-      type: boolean
-      label: 'Text processing'
     display_summary:
       type: boolean
       label: 'Summary input'
@@ -102,7 +92,7 @@ field.text_with_summary.value:
 
 entity_view_display.field.text_default:
   type: entity_field_view_display_base
-  label: 'Text default display format settings'
+  label: 'Formatted text default display format settings'
   mapping:
     settings:
       type: sequence
@@ -112,7 +102,7 @@ entity_view_display.field.text_default:
 
 entity_view_display.field.text_summary_or_trimmed:
   type: entity_field_view_display_base
-  label: 'Summary or trimmed text display format settings'
+  label: 'Summary or trimmed formatted text display format settings'
   mapping:
     settings:
       type: mapping

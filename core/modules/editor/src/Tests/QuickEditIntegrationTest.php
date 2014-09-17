@@ -75,7 +75,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->createFieldWithInstance(
       $this->field_name, 'text', 1, 'Long text field',
       // Instance settings.
-      array('text_processing' => 1),
+      array(),
       // Widget type & settings.
       'text_textarea',
       array('size' => 42),
@@ -122,7 +122,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
   /**
    * Tests editor selection when the Editor module is present.
    *
-   * Tests a textual field, with text processing, with cardinality 1 and >1,
+   * Tests a textual field, with text filtering, with cardinality 1 and >1,
    * always with a ProcessedTextEditor plug-in present, but with varying text
    * format compatibility.
    */

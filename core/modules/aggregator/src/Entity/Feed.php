@@ -146,7 +146,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ));
 

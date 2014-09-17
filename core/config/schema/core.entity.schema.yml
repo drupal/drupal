@@ -130,7 +130,7 @@ entity_form_display.field.*:
   type: entity_field_form_display_base
   label: 'Entity form display default'
 
-entity_form_display.field.string:
+entity_form_display.field.string_textfield:
   type: entity_field_form_display_base
   label: 'Text field display format settings'
   mapping:

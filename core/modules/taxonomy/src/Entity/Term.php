@@ -134,7 +134,7 @@ class Term extends ContentEntityBase implements TermInterface {
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);
@@ -143,7 +143,6 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setLabel(t('Description'))
       ->setDescription(t('A description of the term.'))
       ->setTranslatable(TRUE)
-      ->setSetting('text_processing', 1)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'text_default',

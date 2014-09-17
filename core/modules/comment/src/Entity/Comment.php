@@ -230,7 +230,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 64)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         // Default comment body field has weight 20.
         'weight' => 10,
       ))

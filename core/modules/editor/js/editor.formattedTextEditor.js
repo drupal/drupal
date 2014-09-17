@@ -1,6 +1,6 @@
 /**
  * @file
- * Text editor-based in-place editor for processed text content in Drupal.
+ * Text editor-based in-place editor for formatted text content in Drupal.
  *
  * Depends on editor.module. Works with any (WYSIWYG) editor that implements the
  * editor.js API, including the optional attachInlineEditor() and onChange()
@@ -78,9 +78,9 @@
           break;
 
         case 'activating':
-          // When transformation filters have been been applied to the processed
-          // text of this field, then we'll need to load a re-processed version of
-          // it without the transformation filters.
+          // When transformation filters have been been applied to the formatted
+          // text of this field, then we'll need to load a re-formatted version
+          // of it without the transformation filters.
           if (this.textFormatHasTransformations) {
             var $textElement = this.$textElement;
             this._getUntransformedText(function (untransformedText) {
@@ -151,7 +151,7 @@
     /**
      * Loads untransformed text for this field.
      *
-     * More accurately: it re-processes processed text to exclude transformation
+     * More accurately: it re-filters formatted text to exclude transformation
      * filters used by the text format.
      *
      * @param Function callback

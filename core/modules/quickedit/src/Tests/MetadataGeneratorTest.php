@@ -67,16 +67,16 @@ class MetadataGeneratorTest extends QuickEditTestBase {
    */
   public function testSimpleEntityType() {
     $field_1_name = 'field_text';
-    $field_1_label = 'Simple text field';
+    $field_1_label = 'Plain text field';
     $this->createFieldWithInstance(
-      $field_1_name, 'text', 1, $field_1_label,
+      $field_1_name, 'string', 1, $field_1_label,
       // Instance settings.
-      array('text_processing' => 0),
+      array(),
       // Widget type & settings.
-      'text_textfield',
+      'string',
       array('size' => 42),
       // 'default' formatter type & settings.
-      'text_default',
+      'string',
       array()
     );
     $field_2_name = 'field_nr';
@@ -105,9 +105,9 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     $metadata_1 = $this->metadataGenerator->generateFieldMetadata($items_1, 'default');
     $expected_1 = array(
       'access' => TRUE,
-      'label' => 'Simple text field',
+      'label' => 'Plain text field',
       'editor' => 'plain_text',
-      'aria' => 'Entity entity_test 1, field Simple text field',
+      'aria' => 'Entity entity_test 1, field Plain text field',
     );
     $this->assertEqual($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');
 
@@ -143,7 +143,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     $this->createFieldWithInstance(
       $field_name, 'text', 1, $field_label,
       // Instance settings.
-      array('text_processing' => 1),
+      array(),
       // Widget type & settings.
       'text_textfield',
       array('size' => 42),

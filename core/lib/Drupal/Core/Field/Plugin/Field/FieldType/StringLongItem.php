@@ -14,11 +14,10 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *
  * @FieldType(
  *   id = "string_long",
- *   label = @Translation("Long string"),
- *   description = @Translation("An entity field containing a long string value."),
+ *   label = @Translation("Text (plain, long)"),
+ *   description = @Translation("A field containing a long string value."),
  *   default_widget = "string_textarea",
  *   default_formatter = "string",
- *   no_ui = TRUE
  * )
  */
 class StringLongItem extends StringItem {

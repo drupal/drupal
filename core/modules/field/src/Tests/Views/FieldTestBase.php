@@ -61,7 +61,7 @@ abstract class FieldTestBase extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }
 
-  function setUpFields($amount = 3) {
+  function setUpFields($amount = 3, $type = 'string') {
     // Create three fields.
     $field_names = array();
     for ($i = 0; $i < $amount; $i++) {
@@ -69,7 +69,7 @@ abstract class FieldTestBase extends ViewTestBase {
       $this->fieldStorages[$i] = entity_create('field_storage_config', array(
         'name' => $field_names[$i],
         'entity_type' => 'node',
-        'type' => 'text',
+        'type' => $type,
       ));
       $this->fieldStorages[$i]->save();
     }

@@ -26,10 +26,6 @@ class FieldInstanceSettings extends ProcessPluginBase {
     list($widget_type, $widget_settings, $field_settings) = $value;
     $settings = array();
     switch ($widget_type) {
-      case 'text_textfield':
-        $settings['text_processing'] = $field_settings['text_processing'];
-        break;
-
       case 'number':
         $settings['min'] = $field_settings['min'];
         $settings['max'] = $field_settings['max'];

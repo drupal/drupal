@@ -96,9 +96,6 @@ class TextFieldTest extends WebTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
@@ -162,9 +159,6 @@ class TextFieldTest extends WebTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(

@@ -72,18 +72,8 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $this->assertTrue($entity->summary_field instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->summary_field[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->summary_field->value, $value);
-    $this->assertEqual($entity->summary_field->processed, $value);
     $this->assertEqual($entity->summary_field->summary, $summary);
-    $this->assertEqual($entity->summary_field->summary_processed, $summary);
     $this->assertNull($entity->summary_field->format);
-
-    // Enable text processing.
-    $this->instance->settings['text_processing'] = 1;
-    $this->instance->save();
-
-    // Re-load the entity.
-    $entity = entity_load($entity_type, $entity->id(), TRUE);
-
     // Even if no format is given, if text processing is enabled, the default
     // format is used.
     $this->assertEqual($entity->summary_field->processed, "<p>$value</p>\n");
@@ -120,9 +110,6 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $this->instance = entity_create('field_instance_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type,
-      'settings' => array(
-        'text_processing' => 0,
-      )
     ));
     $this->instance->save();
   }

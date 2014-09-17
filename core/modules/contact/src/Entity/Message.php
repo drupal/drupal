@@ -162,7 +162,7 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setRequired(TRUE)
       ->setSetting('max_length', 100)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE);
