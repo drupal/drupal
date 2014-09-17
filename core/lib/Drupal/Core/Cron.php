@@ -121,7 +121,7 @@ class Cron implements CronInterface {
     $return = FALSE;
 
     // Try to acquire cron lock.
-    if (!$this->lock->acquire('cron', 240.0)) {
+    if (!$this->lock->acquire('cron', 900.0)) {
       // Cron is still running normally.
       $this->logger->warning('Attempting to re-run cron while it is already running.');
     }
