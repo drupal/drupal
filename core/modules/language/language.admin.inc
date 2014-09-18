@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Prepares variables for language negotiation configuration form.
@@ -84,6 +85,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
       'configurable' => $configurable,
       'table' => $table,
       'children' => $form[$type],
+      'attributes' => new Attribute(),
     );
     // Prevent the type from rendering with the remaining form child elements.
     unset($form[$type]);
