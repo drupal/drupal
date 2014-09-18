@@ -56,18 +56,18 @@ class ThemeTest extends WebTestBase {
    * Test that _theme() returns expected data types.
    */
   function testThemeDataTypes() {
-    // theme_test_false is an implemented theme hook so _theme() should return a
-    // string, even though the theme function itself can return anything.
+    // theme_test_false is an implemented theme hook so \Drupal::theme() service should
+    // return a string, even though the theme function itself can return anything.
     $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo');
     foreach ($foos as $type => $example) {
-      $output = _theme('theme_test_foo', array('foo' => $example));
-      $this->assertTrue(is_string($output), format_string('_theme() returns a string for data type !type.', array('!type' => $type)));
+      $output = \Drupal::theme()->render('theme_test_foo', array('foo' => $example));
+      $this->assertTrue(is_string($output), format_string('\Drupal::theme() returns a string for data type !type.', array('!type' => $type)));
     }
 
-    // suggestionnotimplemented is not an implemented theme hook so _theme()
+    // suggestionnotimplemented is not an implemented theme hook so \Drupal::theme() service
     // should return FALSE instead of a string.
-    $output = _theme(array('suggestionnotimplemented'));
-    $this->assertIdentical($output, FALSE, '_theme() returns FALSE when a hook suggestion is not implemented.');
+    $output = \Drupal::theme()->render(array('suggestionnotimplemented'), array());
+    $this->assertIdentical($output, FALSE, '\Drupal::theme() returns FALSE when a hook suggestion is not implemented.');
   }
 
   /**

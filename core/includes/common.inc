@@ -2851,7 +2851,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // property is set, do not call the #theme function to prevent infinite
   // recursion.
   if ($theme_is_implemented && !isset($elements['#render_children'])) {
-    $elements['#children'] = _theme($elements['#theme'], $elements);
+    $elements['#children'] = \Drupal::theme()->render($elements['#theme'], $elements);
 
     // If _theme() returns FALSE this means that the hook in #theme was not
     // found in the registry and so we need to update our flag accordingly. This
@@ -2906,7 +2906,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
         $wrapper_hook = $value;
       }
 
-      $elements['#children'] = _theme($wrapper_hook, $wrapper_elements);
+      $elements['#children'] = Drupal::theme()->render($wrapper_hook, $wrapper_elements);
     }
   }
 

@@ -56,7 +56,7 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return _theme('theme_test_template_test');
+    return \Drupal::theme()->render('theme_test_template_test', array());
   }
 
   /**
@@ -82,7 +82,7 @@ class ThemeTestController extends ControllerBase {
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return _theme(array('theme_test__suggestion', 'theme_test'), array());
+    return \Drupal::theme()->render(array('theme_test__suggestion', 'theme_test'), array());
   }
 
   /**
