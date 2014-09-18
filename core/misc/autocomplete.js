@@ -12,7 +12,7 @@
    * @return {Array}
    */
   function autocompleteSplitValues(value) {
-    // We will match the value against comma-seperated terms.
+    // We will match the value against comma-separated terms.
     var result = [];
     var quote = false;
     var current = '';

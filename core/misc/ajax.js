@@ -573,7 +573,7 @@
       var settings;
 
       // We don't know what response.data contains: it might be a string of text
-      // without HTML, so don't rely on jQuery correctly iterpreting
+      // without HTML, so don't rely on jQuery correctly interpreting
       // $(response.data) as new HTML rather than a CSS selector. Also, if
       // response.data contains top-level text nodes, they get lost with either
       // $(response.data) or $('<div></div>').replaceWith(response.data).

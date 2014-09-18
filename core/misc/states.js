@@ -176,7 +176,7 @@
      * Triggers change events in case a state changed.
      */
     reevaluate: function () {
-      // Check whether any constraint for this dependent state is satisifed.
+      // Check whether any constraint for this dependent state is satisfied.
       var value = this.verifyConstraints(this.constraints);
 
       // Only invoke a state change event when the value actually changed.

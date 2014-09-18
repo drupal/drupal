@@ -87,7 +87,7 @@
     var displacingElements = document.querySelectorAll('[data-offset-' + edge + ']');
     for (var i = 0, n = displacingElements.length; i < n; i++) {
       var el = displacingElements[i];
-      // If the element is not visble, do consider its dimensions.
+      // If the element is not visible, do consider its dimensions.
       if (el.style.display === 'none') {
         continue;
       }
@@ -135,12 +135,12 @@
       // Left and top elements displace as a sum of their own offset value
       // plus their size.
       case 'top':
-        // Total displacment is the sum of the elements placement and size.
+        // Total displacement is the sum of the elements placement and size.
         displacement = placement + $el.outerHeight();
         break;
 
       case 'left':
-        // Total displacment is the sum of the elements placement and size.
+        // Total displacement is the sum of the elements placement and size.
         displacement = placement + $el.outerWidth();
         break;
 
