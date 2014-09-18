@@ -433,9 +433,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Fetch the created terms in the default alphabetical order, i.e. term1
     // precedes term2 alphabetically, and term2 precedes term3.
-    drupal_static_reset('taxonomy_get_tree');
-    drupal_static_reset('taxonomy_get_treeparent');
-    drupal_static_reset('taxonomy_get_treeterms');
+    \Drupal::entityManager()->getStorage('taxonomy_term')->resetCache();
     list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->id(), 0, NULL, TRUE);
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
@@ -460,9 +458,7 @@ class TermTest extends TaxonomyTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
-    drupal_static_reset('taxonomy_get_tree');
-    drupal_static_reset('taxonomy_get_treeparent');
-    drupal_static_reset('taxonomy_get_treeterms');
+    \Drupal::entityManager()->getStorage('taxonomy_term')->resetCache();
     $terms = taxonomy_get_tree($this->vocabulary->id());
     $this->assertEqual($terms[0]->tid, $term2->id(), 'Term 2 was moved above term 1.');
     $this->assertEqual($terms[1]->parents, array($term2->id()), 'Term 3 was made a child of term 2.');
@@ -474,14 +470,12 @@ class TermTest extends TaxonomyTestBase {
     // Ensure form redirected back to overview.
     $this->assertUrl('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
-    drupal_static_reset('taxonomy_get_tree');
-    drupal_static_reset('taxonomy_get_treeparent');
-    drupal_static_reset('taxonomy_get_treeterms');
+    \Drupal::entityManager()->getStorage('taxonomy_term')->resetCache();
     $terms = taxonomy_get_tree($this->vocabulary->id(), 0, NULL, TRUE);
     $this->assertEqual($terms[0]->id(), $term1->id(), 'Term 1 was moved to back above term 2.');
     $this->assertEqual($terms[1]->id(), $term2->id(), 'Term 2 was moved to back below term 1.');
     $this->assertEqual($terms[2]->id(), $term3->id(), 'Term 3 is still below term 2.');
-    $this->assertEqual($terms[2]->parents, array($term2->id()), 'Term 3 is still a child of term 2.' . var_export($terms[1]->id(), 1));
+    $this->assertEqual($terms[2]->parents, array($term2->id()), 'Term 3 is still a child of term 2.');
   }
 
   /**

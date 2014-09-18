@@ -31,24 +31,14 @@ class Overview extends OverviewTerms {
   /**
    * Constructs a \Drupal\forum\Form\OverviewForm object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInteface $module_handler
-   *   The module handler service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($module_handler);
+  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
+    parent::__construct($module_handler, $entity_manager);
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager'),
-      $container->get('module_handler')
-    );
   }
 
   /**

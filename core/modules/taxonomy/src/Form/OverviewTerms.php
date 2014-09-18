@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Form;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -26,13 +27,23 @@ class OverviewTerms extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The term storage controller.
+   *
+   * @var \Drupal\taxonomy\TermStorageInterface
+   */
+  protected $storageController;
+
+  /**
    * Constructs an OverviewTerms object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
+    $this->storageController = $entity_manager->getStorage('taxonomy_term');
   }
 
   /**
@@ -40,7 +51,8 @@ class OverviewTerms extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('entity.manager')
     );
   }
 
@@ -97,9 +109,7 @@ class OverviewTerms extends FormBase {
 
     $delta = 0;
     $term_deltas = array();
-    // @todo taxonomy_get_tree needs to be converted to a service and injected.
-    //   Will be fixed in http://drupal.org/node/1976298.
-    $tree = taxonomy_get_tree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
+    $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
     $tree_index = 0;
     do {
       // In case this tree is completely empty.

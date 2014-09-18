@@ -463,7 +463,7 @@ class ForumManager implements ForumManagerInterface {
    * {@inheritdoc}
    */
   public function getParents($tid) {
-    return taxonomy_term_load_parents_all($tid);
+    return $this->entityManager->getStorage('taxonomy_term')->loadAllParents($tid);
   }
 
   /**

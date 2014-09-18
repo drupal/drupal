@@ -37,10 +37,21 @@ interface TermStorageInterface extends EntityStorageInterface {
    * @param int $tid
    *   Term ID to retrieve parents for.
    *
-   * @return array
+   * @return \Drupal\taxonomy\TermInterface[]
    *   An array of term objects which are the parents of the term $tid.
    */
   public function loadParents($tid);
+
+  /**
+   * Finds all ancestors of a given term ID.
+   *
+   * @param int $tid
+   *   Term ID to retrieve ancestors for.
+   *
+   * @return \Drupal\taxonomy\TermInterface[]
+   *   An array of term objects which are the ancestors of the term $tid.
+   */
+  public function loadAllParents($tid);
 
   /**
    * Finds all children of a term ID.
@@ -50,7 +61,7 @@ interface TermStorageInterface extends EntityStorageInterface {
    * @param string $vid
    *   An optional vocabulary ID to restrict the child search.
    *
-   * @return array
+   * @return \Drupal\taxonomy\TermInterface[]
    *   An array of term objects that are the children of the term $tid.
    */
   public function loadChildren($tid, $vid = NULL);
@@ -60,11 +71,22 @@ interface TermStorageInterface extends EntityStorageInterface {
    *
    * @param string $vid
    *   Vocabulary ID to retrieve terms for.
+   * @param int $parent
+   *   The term ID under which to generate the tree. If 0, generate the tree
+   *   for the entire vocabulary.
+   * @param int $max_depth
+   *   The number of levels of the tree to return. Leave NULL to return all
+   *   levels.
+   * @param bool $load_entities
+   *   If TRUE, a full entity load will occur on the term objects. Otherwise
+   *   they are partial objects queried directly from the {taxonomy_term_data}
+   *   table to save execution time and memory consumption when listing large
+   *   numbers of terms. Defaults to FALSE.
    *
-   * @return array
+   * @return \Drupal\taxonomy\TermInterface[]
    *   An array of term objects that are the children of the vocabulary $vid.
    */
-  public function loadTree($vid);
+  public function loadTree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE);
 
   /**
    * Count the number of nodes in a given vocabulary ID.

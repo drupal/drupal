@@ -389,41 +389,22 @@ function taxonomy_vocabulary_get_names() {
  * @return
  *   An array of term objects which are the parents of the term $tid, or an
  *   empty array if parents are not found.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\TermStorageController::loadParents()
  */
 function taxonomy_term_load_parents($tid) {
-  $parents = &drupal_static(__FUNCTION__, array());
-
-  if ($tid && !isset($parents[$tid])) {
-    $tids = \Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid);
-    $parents[$tid] = entity_load_multiple('taxonomy_term', $tids);
-  }
-
-  return isset($parents[$tid]) ? $parents[$tid] : array();
+  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid);
 }
 
 /**
  * Find all ancestors of a given term ID.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\TermStorageController::loadAllParents()
  */
 function taxonomy_term_load_parents_all($tid) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  if (isset($cache[$tid])) {
-    return $cache[$tid];
-  }
-
-  $parents = array();
-  if ($term = entity_load('taxonomy_term', $tid)) {
-    $parents[] = $term;
-    $n = 0;
-    while ($parent = taxonomy_term_load_parents($parents[$n]->id())) {
-      $parents = array_merge($parents, $parent);
-      $n++;
-    }
-  }
-
-  $cache[$tid] = $parents;
-
-  return $parents;
+  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($tid);
 }
 
 /**
@@ -435,16 +416,12 @@ function taxonomy_term_load_parents_all($tid) {
  * @return
  *   An array of term objects that are the children of the term $tid, or an
  *   empty array when no children exist.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\TermStorageController::loadChildren()
  */
 function taxonomy_term_load_children($tid) {
-  $children = &drupal_static(__FUNCTION__, array());
-
-  if ($tid && !isset($children[$tid])) {
-    $tids = \Drupal::entityManager()->getStorage('taxonomy_term')->loadChildren($tid);
-    $children[$tid] = entity_load_multiple('taxonomy_term', $tids);
-  }
-
-  return isset($children[$tid]) ? $children[$tid] : array();
+  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadChildren($tid);
 }
 
 /**
@@ -468,91 +445,12 @@ function taxonomy_term_load_children($tid) {
  *   to have "depth" and "parents" attributes in addition to its normal ones.
  *   Results are statically cached. Term objects will be partial or complete
  *   depending on the $load_entities parameter.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\TermStorageController::loadTree()
  */
 function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
-  $children = &drupal_static(__FUNCTION__, array());
-  $parents = &drupal_static(__FUNCTION__ . ':parents', array());
-  $terms = &drupal_static(__FUNCTION__ . ':terms', array());
-
-  // We cache trees, so it's not CPU-intensive to call taxonomy_get_tree() on a
-  // term and its children, too.
-  if (!isset($children[$vid])) {
-    $children[$vid] = array();
-    $parents[$vid] = array();
-    $terms[$vid] = array();
-
-    $result = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid);
-
-    foreach ($result as $term) {
-      $children[$vid][$term->parent][] = $term->tid;
-      $parents[$vid][$term->tid][] = $term->parent;
-      $terms[$vid][$term->tid] = $term;
-    }
-  }
-
-  // Load full entities, if necessary. The entity storage caches the results.
-  if ($load_entities) {
-    $term_entities = entity_load_multiple('taxonomy_term', array_keys($terms[$vid]));
-  }
-
-  $max_depth = (!isset($max_depth)) ? count($children[$vid]) : $max_depth;
-  $tree = array();
-
-  // Keeps track of the parents we have to process, the last entry is used
-  // for the next processing step.
-  $process_parents = array();
-  $process_parents[] = $parent;
-
-  // Loops over the parent terms and adds its children to the tree array.
-  // Uses a loop instead of a recursion, because it's more efficient.
-  while (count($process_parents)) {
-    $parent = array_pop($process_parents);
-    // The number of parents determines the current depth.
-    $depth = count($process_parents);
-    if ($max_depth > $depth && !empty($children[$vid][$parent])) {
-      $has_children = FALSE;
-      $child = current($children[$vid][$parent]);
-      do {
-        if (empty($child)) {
-          break;
-        }
-        $term = $load_entities ? $term_entities[$child] : $terms[$vid][$child];
-        if (isset($parents[$vid][$load_entities ? $term->id() : $term->tid])) {
-          // Clone the term so that the depth attribute remains correct
-          // in the event of multiple parents.
-          $term = clone $term;
-        }
-        $term->depth = $depth;
-        unset($term->parent);
-        $tid = $load_entities ? $term->id() : $term->tid;
-        $term->parents = $parents[$vid][$tid];
-        $tree[] = $term;
-        if (!empty($children[$vid][$tid])) {
-          $has_children = TRUE;
-
-          // We have to continue with this parent later.
-          $process_parents[] = $parent;
-          // Use the current term as parent for the next iteration.
-          $process_parents[] = $tid;
-
-          // Reset pointers for child lists because we step in there more often
-          // with multi parents.
-          reset($children[$vid][$tid]);
-          // Move pointer so that we get the correct term the next time.
-          next($children[$vid][$parent]);
-          break;
-        }
-      } while ($child = next($children[$vid][$parent]));
-
-      if (!$has_children) {
-        // We processed all terms in this hierarchy-level, reset pointer
-        // so that this function works the next time it gets called.
-        reset($children[$vid][$parent]);
-      }
-    }
-  }
-
-  return $tree;
+  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid, $parent, $max_depth, $load_entities);
 }
 
 /**
