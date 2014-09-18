@@ -361,61 +361,6 @@ function content_translation_access(EntityInterface $entity, $op) {
 }
 
 /**
- * Implements hook_permission().
- */
-function content_translation_permission() {
-  $permission = array(
-    'administer content translation' => array(
-      'title' => t('Administer translation settings'),
-      'description' => t('Configure translatability of entities and fields.'),
-    ),
-    'create content translations' => array(
-      'title' => t('Create translations'),
-    ),
-    'update content translations' => array(
-      'title' => t('Edit translations'),
-    ),
-    'delete content translations' => array(
-      'title' => t('Delete translations'),
-    ),
-    'translate any entity' => array(
-      'title' => t('Translate any entity'),
-    ),
-  );
-
-  // Create a translate permission for each enabled entity type and (optionally)
-  // bundle.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($permission_granularity = $entity_type->getPermissionGranularity()) {
-      $t_args = array('@entity_label' => $entity_type->getLowercaseLabel());
-
-      switch ($permission_granularity) {
-        case 'bundle':
-          foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
-            if (content_translation_enabled($entity_type_id, $bundle)) {
-              $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
-              $permission["translate $bundle $entity_type_id"] = array(
-                'title' => t('Translate %bundle_label @entity_label', $t_args),
-              );
-            }
-          }
-          break;
-
-        case 'entity_type':
-          if (content_translation_enabled($entity_type_id)) {
-            $permission["translate $entity_type_id"] = array(
-              'title' => t('Translate @entity_label', $t_args),
-            );
-          }
-          break;
-      }
-    }
-  }
-
-  return $permission;
-}
-
-/**
  * Implements hook_form_alter().
  */
 function content_translation_form_alter(array &$form, FormStateInterface $form_state) {

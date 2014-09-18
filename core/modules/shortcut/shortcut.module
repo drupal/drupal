@@ -46,28 +46,6 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function shortcut_permission() {
-  return array(
-    'administer shortcuts' => array(
-      'title' => t('Administer shortcuts'),
-    ),
-    'customize shortcut links' => array(
-      'title' => t('Edit current shortcut set'),
-      'description' => t('Editing the current shortcut set will affect other users if that set has been assigned to or selected by other users. Granting "Select any shortcut set" permission along with this permission will grant permission to edit any shortcut set.'),
-    ),
-    'switch shortcut sets' => array(
-      'title' => t('Select any shortcut set'),
-      'description' => t('From all shortcut sets, select one to be own active set. Without this permission, an administrator selects shortcut sets for users.'),
-    ),
-    'access shortcuts' => array(
-      'title' => t('Use shortcuts'),
-    ),
-  );
-}
-
-/**
  * Access callback for editing a shortcut set.
  *
  * @param Drupal\shortcut\ShortcutSetInterface $shortcut_set

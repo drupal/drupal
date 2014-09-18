@@ -33,7 +33,7 @@ interface ResourceInterface extends PluginInspectionInterface {
   public function routes();
 
   /**
-   * Provides an array of permissions suitable for hook_permission().
+   * Provides an array of permissions suitable for .permissions.yml files.
    *
    * A resource plugin can define a set of user permissions that are used on the
    * routes for this resource or for other purposes.

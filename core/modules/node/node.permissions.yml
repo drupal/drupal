@@ -1,14 +1,17 @@
 bypass node access:
   title: 'Bypass content access control'
-  description: 'View edit and delete all content regardless of permission restrictions.'
-  'restrict access': TRUE
+  description: 'View, edit and delete all content regardless of permission restrictions.'
+  restrict access: true
 administer content types:
   title: 'Administer content types'
-  description: 'Promote change ownership edit revisions and perform other tasks across all content types.'
-  'restrict access': TRUE
+  description: 'Promote, change ownership, edit revisions, and perform other tasks across all content types.'
+  restrict access: true
 administer nodes:
   title: 'Administer content'
-  'restrict access': TRUE
+  restrict access: true
+access content overview:
+  title: 'Access the Content overview page'
+  description: 'Get an overview of all content.'
 access content:
   title: 'View published content'
 view own unpublished content:

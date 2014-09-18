@@ -34,17 +34,6 @@ function toolbar_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function toolbar_permission() {
-  return array(
-    'access toolbar' => array(
-      'title' => t('Use the administration toolbar'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function toolbar_theme($existing, $type, $theme, $path) {

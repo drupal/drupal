@@ -35,17 +35,6 @@ function action_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function action_permission() {
-  return array(
-    'administer actions' => array(
-      'title' => t('Administer actions'),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function action_entity_type_build(array &$entity_types) {

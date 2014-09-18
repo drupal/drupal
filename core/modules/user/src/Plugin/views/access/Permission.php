@@ -7,9 +7,12 @@
 
 namespace Drupal\user\Plugin\views\access;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\PermissionHandlerInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -31,6 +34,41 @@ class Permission extends AccessPluginBase {
   protected $usesOptions = TRUE;
 
   /**
+   * The permission handler.
+   *
+   * @var \Drupal\user\PermissionHandlerInterface
+   */
+  protected $permissionHandler;
+
+  /**
+   * Constructs a Permission object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   *   The permission handler.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler) {
+    $this->permissionHandler = $permission_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('user.permissions')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
@@ -45,7 +83,7 @@ class Permission extends AccessPluginBase {
   }
 
   public function summaryTitle() {
-    $permissions = \Drupal::service('user.permissions')->getPermissions();
+    $permissions = $this->permissionHandler->getPermissions();
     if (isset($permissions[$this->options['perm']])) {
       return $permissions[$this->options['perm']]['title'];
     }
@@ -63,18 +101,16 @@ class Permission extends AccessPluginBase {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $perms = array();
     $module_info = system_get_info('module');
 
     // Get list of permissions
-    foreach (\Drupal::moduleHandler()->getImplementations('permission') as $module) {
-      $permissions = \Drupal::moduleHandler()->invoke($module, 'permission');
-      foreach ($permissions as $name => $perm) {
-        $perms[$module_info[$module]['name']][$name] = strip_tags($perm['title']);
-      }
+    $perms = [];
+    $permissions = $this->permissionHandler->getPermissions();
+    foreach ($permissions as $perm => $perm_item) {
+      $provider = $perm_item['provider'];
+      $display_name = $module_info[$provider]['name'];
+      $perms[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
     }
-
-    ksort($perms);
 
     $form['perm'] = array(
       '#type' => 'select',

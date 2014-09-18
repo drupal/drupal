@@ -29,18 +29,6 @@ function tour_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function tour_permission() {
-  return array(
-    'access tour' => array(
-      'title' => t('Access tour'),
-      'description' => t('View tour tips.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_toolbar().
  */
 function tour_toolbar() {

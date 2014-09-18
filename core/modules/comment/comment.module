@@ -198,33 +198,6 @@ function comment_field_instance_config_delete(FieldInstanceConfigInterface $inst
 }
 
 /**
- * Implements hook_permission().
- */
-function comment_permission() {
-  return array(
-    'administer comments' => array(
-      'title' => t('Administer comments and comment settings'),
-    ),
-    'administer comment types' => array(
-      'title' => t('Administer comment types and settings'),
-      'restrict access' => TRUE,
-    ),
-    'access comments' => array(
-      'title' => t('View comments'),
-    ),
-    'post comments' => array(
-      'title' => t('Post comments'),
-    ),
-    'skip comment approval' => array(
-      'title' => t('Skip comment approval'),
-    ),
-    'edit own comments' => array(
-      'title' => t('Edit own comments'),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_build_defaults_alter().
  */
 function comment_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {

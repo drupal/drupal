@@ -1,0 +1,3 @@
+access test7:
+  title: 'Access test7 route'
+  description: 'Test permission only.'

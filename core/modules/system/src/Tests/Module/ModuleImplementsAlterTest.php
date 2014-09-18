@@ -39,14 +39,14 @@ class ModuleImplementsAlterTest extends KernelTestBase {
       'The \Drupal::moduleHandler() instance has been replaced during \Drupal::moduleHandler()->install().');
 
     // Assert that module_test.module is now included.
-    $this->assertTrue(function_exists('module_test_permission'),
+    $this->assertTrue(function_exists('module_test_modules_installed'),
       'The file module_test.module was successfully included.');
 
     $this->assertTrue(array_key_exists('module_test', \Drupal::moduleHandler()->getModuleList()),
       'module_test is in the module list.');
 
-    $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('permission')),
-      'module_test implements hook_permission().');
+    $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('modules_installed')),
+      'module_test implements hook_modules_installed().');
 
     $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('module_implements_alter')),
       'module_test implements hook_module_implements_alter().');

@@ -38,18 +38,6 @@ function simpletest_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function simpletest_permission() {
-  return array(
-    'administer unit tests' => array(
-      'title' => t('Administer tests'),
-      'restrict access' => TRUE,
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function simpletest_theme() {

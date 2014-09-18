@@ -1890,20 +1890,6 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
 }
 
 /**
- * Implements hook_permission().
- */
-function file_permission() {
-  $perms = array(
-    'access files overview' => array(
-      'title' => t('Access the Files overview page'),
-      'description' => t('Get an overview of <a href="!url">all files</a>.', array('!url' => url('admin/content/files'))),
-    ),
-  );
-
-  return $perms;
-}
-
-/**
  * Formats human-readable version of file status.
  *
  * @param int $choice

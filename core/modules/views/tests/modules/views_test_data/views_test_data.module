@@ -8,18 +8,6 @@
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_permission().
- */
-function views_test_data_permission() {
-  return array(
-    'views_test_data test permission' => array(
-      'title' => t('Test permission'),
-      'description' => t('views_test_data test permission'),
-    ),
-  );
-}
-
-/**
  * Access callback for the generic handler test.
  *
  * @return bool

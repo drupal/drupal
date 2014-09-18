@@ -8,21 +8,6 @@
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_permission().
- */
-function form_test_permission() {
-  $perms = array(
-    'access vertical_tab_test tabs' => array(
-      'title' => t('Access vertical_tab_test tabs'),
-    ),
-    'access autocomplete test' => array(
-      'title' => t('Access autocomplete test'),
-    ),
-  );
-  return $perms;
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() on behalf of block.module.
  */
 function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {

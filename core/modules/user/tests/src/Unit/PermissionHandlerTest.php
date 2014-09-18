@@ -140,6 +140,7 @@ class PermissionHandlerTest extends UnitTestCase {
    * @covers ::getPermissions
    * @covers ::buildPermissions
    * @covers ::buildPermissionsYaml
+   * @covers ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml() {
     vfsStreamWrapper::register();
@@ -198,6 +199,11 @@ class PermissionHandlerTest extends UnitTestCase {
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
+
+    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_a'));
+    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_b'));
+    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_c'));
+    $this->assertFalse($this->permissionHandler->moduleProvidesPermissions('module_d'));
   }
 
   /**

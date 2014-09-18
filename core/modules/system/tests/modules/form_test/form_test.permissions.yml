@@ -1,0 +1,4 @@
+access vertical_tab_test tabs:
+  title: 'Access vertical_tab_test tabs'
+access autocomplete test:
+  title: 'Access autocomplete test'

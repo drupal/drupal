@@ -174,18 +174,6 @@ function locale_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function locale_permission() {
-  return array(
-    'translate interface' => array(
-      'title' => t('Translate interface texts'),
-      'restrict access' => TRUE,
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function locale_theme() {

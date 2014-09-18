@@ -60,36 +60,6 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function field_ui_permission() {
-  $permissions = array();
-
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($entity_type->isFieldable()) {
-      // Create a permission for each fieldable entity to manage
-      // the fields and the display.
-      $permissions['administer ' . $entity_type_id . ' fields'] = array(
-        'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_type->getLabel())),
-        'restrict access' => TRUE,
-      );
-      $permissions['administer ' . $entity_type_id . ' form display'] = array(
-        'title' => t('%entity_label: Administer form display', array('%entity_label' => $entity_type->getLabel()))
-      );
-      $permissions['administer ' . $entity_type_id . ' display'] = array(
-        'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_type->getLabel()))
-      );
-    }
-  }
-
-  $permissions['administer display modes'] = array(
-    'title' => t('Add, edit, and delete custom display modes.'),
-  );
-
-  return $permissions;
-}
-
-/**
  * Implements hook_theme().
  */
 function field_ui_theme() {

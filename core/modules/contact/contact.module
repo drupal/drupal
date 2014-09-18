@@ -39,23 +39,6 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function contact_permission() {
-  return array(
-    'administer contact forms' => array(
-      'title' => t('Administer contact forms and contact form settings'),
-    ),
-    'access site-wide contact form' => array(
-      'title' => t('Use the site-wide contact form'),
-    ),
-    'access user contact forms' => array(
-      'title' => t("Use users' personal contact forms"),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_type_alter().
  */
 function contact_entity_type_alter(array &$entity_types) {

@@ -1,0 +1,20 @@
+administer permissions:
+  title: Administer permissions
+  restrict access: true
+administer account settings:
+  title: 'Administer account settings'
+  description: 'Configure site-wide settings and behavior for user accounts and registration.'
+  restrict access: true
+administer users:
+  title: 'Administer users'
+  restrict access: true
+access user profiles:
+  title: 'View user information'
+change own username:
+  title: 'Change own username'
+select account cancellation method:
+  title: 'Select method for cancelling own account'
+  restrict access: true
+cancel account:
+  title: 'Cancel own user account'
+  description: 'Note: content may be kept, unpublished, deleted or transferred to the anonymous user depending on the configured user settings.'

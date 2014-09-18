@@ -94,30 +94,6 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function taxonomy_permission() {
-  $permissions = array(
-    'administer taxonomy' => array(
-      'title' => t('Administer vocabularies and terms'),
-    ),
-  );
-  foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
-    $permissions += array(
-      'edit terms in ' . $vocabulary->id() => array(
-        'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
-      ),
-    );
-    $permissions += array(
-       'delete terms in ' . $vocabulary->id() => array(
-         'title' => t('Delete terms from %vocabulary', array('%vocabulary' => $vocabulary->name)),
-      ),
-    );
-  }
-  return $permissions;
-}
-
-/**
  * Entity URI callback.
  */
 function taxonomy_term_uri($term) {

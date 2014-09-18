@@ -344,18 +344,6 @@ function forum_node_storage_load($nodes) {
 }
 
 /**
- * Implements hook_permission().
- */
-function forum_permission() {
-  $perms = array(
-    'administer forums' => array(
-      'title' => t('Administer forums'),
-    ),
-  );
-  return $perms;
-}
-
-/**
  * Implements hook_ENTITY_TYPE_update() for comment entities.
  */
 function forum_comment_update(CommentInterface $comment) {

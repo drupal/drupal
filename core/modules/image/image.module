@@ -153,18 +153,6 @@ function image_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function image_permission() {
-  return array(
-    'administer image styles' => array(
-      'title' => t('Administer image styles'),
-      'description' => t('Create and modify styles for generating image modifications such as thumbnails.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_file_download().
  *
  * Control the access to files underneath the styles directory.

@@ -54,17 +54,6 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function menu_ui_permission() {
-  return array(
-    'administer menu' => array(
-      'title' => t('Administer menus and menu items'),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function menu_ui_entity_type_build(array &$entity_types) {

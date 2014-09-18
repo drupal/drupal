@@ -234,25 +234,6 @@ function entity_test_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_permission().
- */
-function entity_test_permission() {
-  $permissions = array(
-    'administer entity_test content' => array(
-      'title' => t('Administer entity_test content'),
-      'description' => t('Manage entity_test content'),
-    ),
-    'view test entity' => array(
-      'title' => t('View test entities'),
-    ),
-    'view test entity translations' => array(
-      'title' => t('View translations of test entities'),
-    ),
-  );
-  return $permissions;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {

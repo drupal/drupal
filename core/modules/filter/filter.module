@@ -225,32 +225,6 @@ function filter_pre_render_text(array $element) {
 }
 
 /**
- * Implements hook_permission().
- */
-function filter_permission() {
-  $perms['administer filters'] = array(
-    'title' => t('Administer text formats and filters'),
-    'description' => t('Define how text is handled by combining filters into <a href="@url">text formats</a>.', array(
-      '@url' => url('admin/config/content/formats'),
-    )),
-    'restrict access' => TRUE,
-  );
-
-  // Generate permissions for each text format. Warn the administrator that any
-  // of them are potentially unsafe.
-  foreach (filter_formats() as $format) {
-    if ($permission = $format->getPermissionName()) {
-      $format_name_replacement = l($format->label(), 'admin/config/content/formats/manage/' . $format->id());
-      $perms[$permission] = array(
-        'title' => t("Use the !text_format text format", array('!text_format' => $format_name_replacement,)),
-        'description' => String::placeholder(t('Warning: This permission may have security implications depending on how the text format is configured.')),
-      );
-    }
-  }
-  return $perms;
-}
-
-/**
  * Retrieves a list of enabled text formats, ordered by weight.
  *
  * @param \Drupal\Core\Session\AccountInterface|null $account

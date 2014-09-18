@@ -41,17 +41,6 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function responsive_image_permission() {
-  return array(
-    'administer responsive images' => array(
-      'title' => t('Administer responsive images'),
-    ),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function responsive_image_menu() {

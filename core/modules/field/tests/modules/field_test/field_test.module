@@ -21,23 +21,6 @@ require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';
 
 /**
- * Implements hook_permission().
- */
-function field_test_permission() {
-  $perms = array(
-    'view test_view_field content' => array(
-      'title' => t('View test field content'),
-      'description' => t('View published test_view_field content.'),
-    ),
-    'administer field_test content' => array(
-      'title' => t('Administer field_test content'),
-      'description' => t('Manage field_test content'),
-    ),
-  );
-  return $perms;
-}
-
-/**
  * Store and retrieve keyed data for later verification by unit tests.
  *
  * This function is a simple in-memory key-value store with the

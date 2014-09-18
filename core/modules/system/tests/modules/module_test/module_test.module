@@ -3,15 +3,6 @@
 use Drupal\Core\Extension\Extension;
 
 /**
- * Implements hook_permission().
- */
-function module_test_permission() {
-  return array(
-    'module_test perm' => t('example perm for module_test module'),
-  );
-}
-
-/**
  * Implements hook_system_info_alter().
  *
  * Manipulate module dependencies to test dependency chains.

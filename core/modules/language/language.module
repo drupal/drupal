@@ -88,17 +88,6 @@ function language_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function language_permission() {
-  return array(
-    'administer languages' => array(
-      'title' => t('Administer languages'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function language_theme() {

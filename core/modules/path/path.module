@@ -39,20 +39,6 @@ function path_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function path_permission() {
-  return array(
-    'administer url aliases' => array(
-      'title' => t('Administer URL aliases'),
-    ),
-    'create url aliases' => array(
-      'title' => t('Create and edit URL aliases'),
-    ),
-  );
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function path_form_node_form_alter(&$form, FormStateInterface $form_state) {

@@ -217,47 +217,6 @@ function system_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function system_permission() {
-  return array(
-    'administer modules' => array(
-      'title' => t('Administer modules'),
-    ),
-    'administer site configuration' => array(
-      'title' => t('Administer site configuration'),
-      'restrict access' => TRUE,
-    ),
-    'administer themes' => array(
-      'title' => t('Administer themes'),
-    ),
-    'administer software updates' => array(
-      'title' => t('Administer software updates'),
-      'restrict access' => TRUE,
-    ),
-    'access administration pages' => array(
-      'title' => t('Use the administration pages and help'),
-    ),
-    'access site in maintenance mode' => array(
-      'title' => t('Use the site in maintenance mode'),
-    ),
-    'view the administration theme' => array(
-      'title' => t('View the administration theme'),
-      'description' => t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
-    ),
-    'access site reports' => array(
-      'title' => t('View site reports'),
-      'restrict access' => TRUE,
-    ),
-    'link to any page' => [
-      'title' => t('Link to any page'),
-      'description' => t('This allows to bypass access checking when linking to internal paths.'),
-      'restrict access' => TRUE,
-    ],
-  );
-}
-
-/**
  * Implements hook_hook_info().
  */
 function system_hook_info() {
@@ -1118,7 +1077,10 @@ function system_get_module_admin_tasks($module, array $info) {
   }
 
   // Append link for permissions.
-  if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
+  /** @var \Drupal\user\PermissionHandlerInterface $permission_handler */
+  $permission_handler = \Drupal::service('user.permissions');
+
+  if ($permission_handler->moduleProvidesPermissions($module)) {
     /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
     $access_manager = \Drupal::service('access_manager');
     if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {

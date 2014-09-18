@@ -13,7 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Determines access to routes based on permissions defined via hook_permission().
+ * Determines access to routes based on permissions defined via permissions.yml.
  */
 class PermissionAccessCheck implements AccessInterface {
 

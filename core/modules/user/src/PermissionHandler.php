@@ -95,6 +95,22 @@ class PermissionHandler implements PermissionHandlerInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function moduleProvidesPermissions($module_name) {
+    // @TODO Static cache this information, see
+    // https://www.drupal.org/node/2339487
+    $permissions = $this->getPermissions();
+
+    foreach ($permissions as $permission) {
+      if ($permission['provider'] == $module_name) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
    * Builds all permissions provided by .permissions.yml files.
    *
    * @return array[]

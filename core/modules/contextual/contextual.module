@@ -87,18 +87,6 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function contextual_permission() {
-  return array(
-    'access contextual links' => array(
-      'title' => t('Use contextual links'),
-      'description' => t('Use contextual links to perform actions related to elements on a page.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_element_info().
  */
 function contextual_element_info() {

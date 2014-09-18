@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\user\PermissionHandlerInterface;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,11 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Permissions extends ManyToOne {
 
   /**
-   * The module handler.
+   * The permission handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\user\PermissionHandlerInterface
    */
-  protected $moduleHandler;
+  protected $permissionHandler;
 
   /**
    * Constructs a Permissions object.
@@ -37,41 +38,36 @@ class Permissions extends ManyToOne {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   *   The permission handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->moduleHandler = $module_handler;
+    $this->permissionHandler = $permission_handler;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('module_handler'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('user.permissions')
+    );
   }
 
   public function getValueOptions() {
     if (!isset($this->value_options)) {
       $module_info = system_get_info('module');
 
-      // Get a list of all the modules implementing a hook_permission() and sort by
-      // display name.
-      $modules = array();
-      foreach ($this->moduleHandler->getImplementations('permission') as $module) {
-        $modules[$module] = $module_info[$module]['name'];
-      }
-      asort($modules);
-
-      $this->value_options = array();
-      foreach ($modules as $module => $display_name) {
-        if ($permissions = $this->moduleHandler->invoke($module, 'permission')) {
-          foreach ($permissions as $perm => $perm_item) {
-            $this->value_options[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
-          }
-        }
+      $permissions = $this->permissionHandler->getPermissions();
+      foreach ($permissions as $perm => $perm_item) {
+        $provider = $perm_item['provider'];
+        $display_name = $module_info[$provider]['name'];
+        $this->value_options[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
       }
     }
     else {

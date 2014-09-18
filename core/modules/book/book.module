@@ -83,27 +83,6 @@ function book_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function book_permission() {
-  return array(
-    'administer book outlines' => array(
-      'title' => t('Administer book outlines'),
-    ),
-    'create new books' => array(
-      'title' => t('Create new books'),
-    ),
-    'add content to books' => array(
-      'title' => t('Add content and child pages to books'),
-    ),
-    'access printer-friendly version' => array(
-      'title' => t('View printer-friendly books'),
-      'description' => t('View a book page and all of its sub-pages as a single document for ease of printing. Can be performance heavy.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function book_entity_type_build(array &$entity_types) {

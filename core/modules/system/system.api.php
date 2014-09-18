@@ -979,6 +979,8 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *     is specific to the permission you are defining.
  *
  * @ingroup user_api
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use $module.permissions.yml files.
  */
 function hook_permission() {
   return array(

@@ -1,0 +1,6 @@
+view test_view_field content:
+  title: 'View test field content'
+  description: 'View published test_view_field content.'
+administer field_test content:
+  title: 'Administer field_test content'
+  description: 'Manage field_test content'

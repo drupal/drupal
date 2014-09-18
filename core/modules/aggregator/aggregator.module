@@ -93,20 +93,6 @@ function aggregator_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function aggregator_permission() {
-  return array(
-    'administer news feeds' => array(
-      'title' => t('Administer news feeds'),
-    ),
-    'access news feeds' => array(
-      'title' => t('View news feeds'),
-    ),
-  );
-}
-
-/**
  * Implements hook_cron().
  *
  * Queues news feeds for updates once their refresh interval has elapsed.

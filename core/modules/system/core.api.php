@@ -551,10 +551,11 @@
  * appropriately for their particular sites.
  *
  * @section sec_define Defining permissions
- * Modules define permissions by implementing hook_permission(). The return
- * value defines machine names, human-readable names, and optionally
- * descriptions for each permission type. The machine names are the canonical
- * way to refer to permissions for access checking.
+ * Modules define permissions via a $module.permissions.yml file or by
+ * implementing hook_permission(). The return value defines machine names,
+ * human-readable names, and optionally descriptions for each permission type.
+ * The machine names are the canonical way to refer to permissions for access
+ * checking.
  *
  * @section sec_access Access permission checking
  * Depending on the situation, there are several methods for ensuring that

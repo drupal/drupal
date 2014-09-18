@@ -45,7 +45,7 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\node\Tests\NodeQueryAlterTest::testNodeQueryAlterOverride()
  * @see \Drupal\node\Tests\NodeAccessPagerTest
- * @see node_access_test_permission()
+ * @see node_access_test.permissions.yml
  * @see node_access_test_node_access_records()
  */
 function node_access_test_node_grants($account, $op) {
@@ -73,7 +73,7 @@ function node_access_test_node_grants($account, $op) {
  *
  * @see \Drupal\node\Tests\NodeAccessBaseTableTest::setUp()
  * @see node_access_test_node_grants()
- * @see node_access_test_permission()
+ * @see node_access_test.permissions.yml
  */
 function node_access_test_node_access_records(NodeInterface $node) {
   $grants = array();
@@ -110,22 +110,6 @@ function node_access_test_node_access_records(NodeInterface $node) {
   }
 
   return $grants;
-}
-
-/**
- * Implements hook_permission().
- *
- * Provides a 'node test view' permission. By default, all content is
- * restricted, and users without this permission can only view content they
- * have authored. When the 'node_access_test.private' state variable is
- * TRUE, only 'private' nodes are restricted, and this permission grants access
- * to view private nodes.
- *
- * @see node_access_test_node_access_records()
- * @see node_access_test_node_grants()
- */
-function node_access_test_permission() {
-  return array('node test view' => array('title' => 'View content'));
 }
 
 /**

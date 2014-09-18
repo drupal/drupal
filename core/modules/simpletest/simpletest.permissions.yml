@@ -1,0 +1,3 @@
+administer unit tests:
+  title: 'Administer tests'
+  restrict access: true

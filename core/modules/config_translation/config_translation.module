@@ -37,18 +37,6 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
 }
 
 /**
- * Implements hook_permission().
- */
-function config_translation_permission() {
-  return array(
-    'translate configuration' => array(
-      'title' => t('Translate user edited configuration'),
-      'description' => t('Translate any configuration not shipped with modules and themes.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function config_translation_theme() {

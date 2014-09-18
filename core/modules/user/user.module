@@ -434,41 +434,6 @@ function user_is_blocked($name) {
 }
 
 /**
- * Implements hook_permission().
- */
-function user_permission() {
-  return array(
-    'administer permissions' =>  array(
-      'title' => t('Administer permissions'),
-      'restrict access' => TRUE,
-    ),
-    'administer account settings' => array(
-      'title' => t('Administer account settings'),
-      'description' => t('Configure site-wide settings and behavior for <a href="@url">user accounts and registration</a>.', array('@url' => url('admin/config/people'))),
-      'restrict access' => TRUE,
-    ),
-    'administer users' => array(
-      'title' => t('Administer users'),
-      'restrict access' => TRUE,
-    ),
-    'access user profiles' => array(
-      'title' => t('View user information'),
-    ),
-    'change own username' => array(
-      'title' => t('Change own username'),
-    ),
-    'cancel account' => array(
-      'title' => t('Cancel own user account'),
-      'description' => t('Note: content may be kept, unpublished, deleted or transferred to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => \Drupal::config('user.settings')->get('anonymous'), '@user-settings-url' => url('admin/config/people/accounts'))),
-    ),
-    'select account cancellation method' => array(
-      'title' => t('Select method for cancelling own account'),
-      'restrict access' => TRUE,
-    ),
-  );
-}
-
-/**
  * Implements hook_ENTITY_TYPE_view() for user entities.
  */
 function user_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
@@ -1203,23 +1168,6 @@ function user_role_load($rid) {
 }
 
 /**
- * Determine the modules that permissions belong to.
- *
- * @return
- *   An associative array in the format $permission => $module.
- */
-function user_permission_get_modules() {
-  $permissions = array();
-  foreach (\Drupal::moduleHandler()->getImplementations('permission') as $module) {
-    $perms = \Drupal::moduleHandler()->invoke($module, 'permission');
-    foreach ($perms as $key => $value) {
-      $permissions[$key] = $module;
-    }
-  }
-  return $permissions;
-}
-
-/**
  * Change permissions for a user role.
  *
  * This function may be used to grant and revoke multiple permissions at once.
@@ -1424,14 +1372,11 @@ function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
   $rid = \Drupal::config('user.settings')->get('admin_role');
   if ($rid) {
-    $permissions = array();
-    foreach ($modules as $module) {
-      if ($module_permissions = \Drupal::moduleHandler()->invoke($module, 'permission')) {
-        $permissions = array_merge($permissions, array_keys($module_permissions));
-      }
-    }
+    /** @var \Drupal\user\PermissionHandlerInterface $permission_handler */
+    $permission_handler = \Drupal::service('user.permissions');
+    $permissions = $permission_handler->getPermissions();
     if (!empty($permissions)) {
-      user_role_grant_permissions($rid, $permissions);
+      user_role_grant_permissions($rid, array_keys($permissions));
     }
   }
 }

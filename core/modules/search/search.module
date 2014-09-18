@@ -110,23 +110,6 @@ function search_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function search_permission() {
-  return array(
-    'administer search' => array(
-      'title' => t('Administer search'),
-    ),
-    'search content' => array(
-      'title' => t('Use search'),
-    ),
-    'use advanced search' => array(
-      'title' => t('Use advanced search'),
-    ),
-  );
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function search_preprocess_block(&$variables) {

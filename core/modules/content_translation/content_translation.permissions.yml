@@ -1,0 +1,14 @@
+administer content translation:
+  title: 'Administer translation settings'
+  description: 'Configure translatability of entities and fields.'
+create content translations:
+  title: 'Create translations'
+update content translations:
+  title: 'Edit translations'
+delete content translations:
+  title: 'Delete translations'
+translate any entity:
+  title: 'Translate any entity'
+
+permission_callbacks:
+  - \Drupal\content_translation\ContentTranslationPermissions::contentPermissions

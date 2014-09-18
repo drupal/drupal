@@ -1,4 +1,4 @@
-'administer views':
+administer views:
   title: 'Administer views'
   description: 'Access the views administration pages.'
-  'restrict access': TRUE
+  restrict access: true

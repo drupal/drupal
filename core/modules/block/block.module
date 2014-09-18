@@ -63,17 +63,6 @@ function block_theme() {
 }
 
 /**
- * Implements hook_permission().
- */
-function block_permission() {
-  return array(
-    'administer blocks' => array(
-      'title' => t('Administer blocks'),
-    ),
-  );
-}
-
-/**
  * Implements hook_page_build().
  *
  * Renders blocks into their regions.

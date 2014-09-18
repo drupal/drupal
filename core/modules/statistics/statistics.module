@@ -34,20 +34,6 @@ function statistics_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function statistics_permission() {
-  return array(
-    'administer statistics' => array(
-      'title' => t('Administer statistics'),
-    ),
-    'view post access counter' => array(
-      'title' => t('View content hits'),
-    ),
-  );
-}
-
-/**
  * Implements hook_ENTITY_TYPE_view() for node entities.
  */
 function statistics_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {

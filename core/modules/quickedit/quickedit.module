@@ -35,18 +35,6 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
-
-/**
- * Implements hook_permission().
- */
-function quickedit_permission() {
-  return array(
-    'access in-place editing' => array(
-      'title' => t('Access in-place editing'),
-    ),
-  );
-}
-
 /**
  * Implements hook_page_build().
  *

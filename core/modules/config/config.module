@@ -28,25 +28,6 @@ function config_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function config_permission() {
-  $permissions['synchronize configuration'] = array(
-    'title' => t('Synchronize configuration'),
-    'restrict access' => TRUE,
-  );
-  $permissions['export configuration'] = array(
-    'title' => t('Export configuration'),
-    'restrict access' => TRUE,
-  );
-  $permissions['import configuration'] = array(
-    'title' => t('Import configuration'),
-    'restrict access' => TRUE,
-  );
-  return $permissions;
-}
-
-/**
  * Implements hook_file_download().
  */
 function config_file_download($uri) {
