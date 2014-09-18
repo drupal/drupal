@@ -303,7 +303,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertStringField($data['entity_test']['type']);
 
     $this->assertLanguageField($data['entity_test']['langcode']);
-    $this->assertEquals('Translation language', $data['entity_test']['langcode']['title']);
+    $this->assertEquals('Original language', $data['entity_test']['langcode']['title']);
 
     $this->assertStringField($data['entity_test']['name']);
 
@@ -502,7 +502,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertNumericField($data['entity_test_mulrev_property_revision']['id']);
 
     $this->assertLanguageField($data['entity_test_mulrev_property_revision']['langcode']);
-    $this->assertEquals('Original language', $data['entity_test_mulrev_property_revision']['langcode']['title']);
+    $this->assertEquals('Translation language', $data['entity_test_mulrev_property_revision']['langcode']['title']);
 
     $this->assertStringField($data['entity_test_mulrev_property_revision']['name']);
 

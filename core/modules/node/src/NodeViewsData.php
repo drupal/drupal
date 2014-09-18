@@ -303,6 +303,9 @@ class NodeViewsData extends EntityViewsData implements EntityViewsDataInterface 
 
     $data['node_field_revision']['title']['field']['id'] = 'node_revision';
 
+    $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
+    $data['node_field_revision']['langcode']['field']['id'] = 'node_language';
+
     $data['node_revision']['link_to_revision'] = array(
       'field' => array(
         'title' => t('Link to revision'),
