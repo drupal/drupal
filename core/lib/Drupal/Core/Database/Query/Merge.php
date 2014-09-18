@@ -39,7 +39,7 @@ use Drupal\Core\Database\IntegrityConstraintViolationException;
  * MergeQuery::updateFields() and MergeQuery::insertFields() needs to be called
  * instead. MergeQuery::fields() can also be called which calls both of these
  * methods as the common case is to use the same column-value pairs for both
- * INSERT and UPDATE. However, this is not mandatory. Another convinient
+ * INSERT and UPDATE. However, this is not mandatory. Another convenient
  * wrapper is MergeQuery::key() which adds the same column-value pairs to the
  * condition and the INSERT query part.
  *

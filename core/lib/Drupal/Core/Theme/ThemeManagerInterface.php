@@ -69,7 +69,7 @@ interface ThemeManagerInterface {
   /**
    * Passes alterable variables to specific $theme_TYPE_alter() implementations.
    *
-   * $theme specifices the theme name of the active theme and all its base
+   * $theme specifies the theme name of the active theme and all its base
    * themes.
    *
    * This dispatch function hands off the passed-in variables to type-specific

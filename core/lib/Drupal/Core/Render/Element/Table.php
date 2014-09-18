@@ -219,8 +219,8 @@ class Table extends FormElement {
   public static function validateTable(&$element, FormStateInterface $form_state, &$complete_form) {
     // Skip this validation if the button to submit the form does not require
     // selected table row data.
-    $trigerring_element = $form_state->getTriggeringElement();
-    if (empty($trigerring_element['#tableselect'])) {
+    $triggering_element = $form_state->getTriggeringElement();
+    if (empty($triggering_element['#tableselect'])) {
       return;
     }
     if ($element['#multiple']) {

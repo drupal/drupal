@@ -381,7 +381,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!$this->sitePath) {
       throw new \Exception('Kernel does not have site path set before calling boot()');
     }
-    // Intialize the container.
+    // Initialize the container.
     $this->initializeContainer();
 
     // Ensure mt_rand() is reseeded to prevent random values from one page load

@@ -185,7 +185,7 @@ class StorageComparer implements StorageComparerInterface {
     $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);
     if (isset($sort_order)) {
       $count = count($this->changelist[$collection][$op]);
-      // Sort the changlist in the same order as the $sort_order array and
+      // Sort the changelist in the same order as the $sort_order array and
       // ensure the array is keyed from 0.
       $this->changelist[$collection][$op] = array_values(array_intersect($sort_order, $this->changelist[$collection][$op]));
       if ($count != count($this->changelist[$collection][$op])) {

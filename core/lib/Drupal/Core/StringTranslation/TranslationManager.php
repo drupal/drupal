@@ -178,7 +178,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
       }
       else {
         // If the index cannot be computed or there's no translation, use
-        // the second plural form as a fallback (which allows for most flexiblity
+        // the second plural form as a fallback (which allows for most flexibility
         // with the replaceable @count value).
         $return = $translated_array[1];
       }

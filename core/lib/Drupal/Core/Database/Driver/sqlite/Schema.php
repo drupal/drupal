@@ -48,7 +48,7 @@ class Schema extends DatabaseSchema {
    */
   public function createTableSql($name, $table) {
     $sql = array();
-    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumsSql($name, $table) . "\n);\n";
+    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n);\n";
     return array_merge($sql, $this->createIndexSql($name, $table));
   }
 
@@ -74,7 +74,7 @@ class Schema extends DatabaseSchema {
   /**
    * Build the SQL expression for creating columns.
    */
-  protected function createColumsSql($tablename, $schema) {
+  protected function createColumnsSql($tablename, $schema) {
     $sql_array = array();
 
     // Add the SQL statement for each field.
@@ -249,8 +249,8 @@ class Schema extends DatabaseSchema {
     // SQLite doesn't allow you to rename tables outside of the current
     // database. So the syntax '...RENAME TO database.table' would fail.
     // So we must determine the full table name here rather than surrounding
-    // the table with curly braces incase the db_prefix contains a reference
-    // to a database outside of our existsing database.
+    // the table with curly braces in case the db_prefix contains a reference
+    // to a database outside of our existing database.
     $info = $this->getPrefixInfo($new_name);
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
 

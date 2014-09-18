@@ -21,7 +21,7 @@ use Drupal\Core\Database\IntegrityConstraintViolationException;
 class Connection extends DatabaseConnection {
 
   /**
-   * The name by which to obtain a lock for retrive the next insert id.
+   * The name by which to obtain a lock for retrieve the next insert id.
    */
   const POSTGRESQL_NEXTID_LOCK = 1000;
 
@@ -88,7 +88,7 @@ class Connection extends DatabaseConnection {
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // Prepared statements are most effective for performance when queries
       // are recycled (used several times). However, if they are not re-used,
-      // prepared statements become ineffecient. Since most of Drupal's
+      // prepared statements become inefficient. Since most of Drupal's
       // prepared queries are not re-used, it should be faster to emulate
       // the preparation than to actually ready statements for re-use. If in
       // doubt, reset to FALSE and measure performance.
@@ -233,14 +233,14 @@ class Connection extends DatabaseConnection {
   }
 
   /**
-   * Retrive a the next id in a sequence.
+   * Retrieve a the next id in a sequence.
    *
    * PostgreSQL has built in sequences. We'll use these instead of inserting
    * and updating a sequences table.
    */
   public function nextId($existing = 0) {
 
-    // Retrive the name of the sequence. This information cannot be cached
+    // Retrieve the name of the sequence. This information cannot be cached
     // because the prefix may change, for example, like it does in simpletests.
     $sequence_name = $this->makeSequenceName('sequences', 'value');
 
@@ -252,7 +252,7 @@ class Connection extends DatabaseConnection {
     }
 
     // PostgreSQL advisory locks are simply locks to be used by an
-    // application such as Drupal. This will prevent other Drupal proccesses
+    // application such as Drupal. This will prevent other Drupal processes
     // from altering the sequence while we are.
     $this->query("SELECT pg_advisory_lock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
 
@@ -267,7 +267,7 @@ class Connection extends DatabaseConnection {
     // Reset the sequence to a higher value than the existing id.
     $this->query("ALTER SEQUENCE " . $sequence_name . " RESTART WITH " . ($existing + 1));
 
-    // Retrive the next id. We know this will be as high as we want it.
+    // Retrieve the next id. We know this will be as high as we want it.
     $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
 
     $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");

@@ -112,7 +112,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The form validator.
    * @param \Drupal\Core\Form\FormSubmitterInterface $form_submitter
    *   The form submission processor.
-   * @oaram \Drupal\Core\Form\FormCacheInterface $form_cache
+   * @param \Drupal\Core\Form\FormCacheInterface $form_cache
    *   The form cache.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.

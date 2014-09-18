@@ -8,7 +8,7 @@
 namespace Drupal\Component\Plugin\Discovery;
 
 /**
- * Interface for discovery compenents holding a cache of plugin definitions.
+ * Interface for discovery components holding a cache of plugin definitions.
  */
 interface CachedDiscoveryInterface extends DiscoveryInterface {
 

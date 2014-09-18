@@ -372,7 +372,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   }
 
   /**
-   * Passes the route to the processor manager for altering before complation.
+   * Passes the route to the processor manager for altering before compilation.
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route object to process.

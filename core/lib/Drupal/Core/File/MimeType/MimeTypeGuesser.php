@@ -43,7 +43,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
     }
 
     if ($this->sortedGuessers === NULL) {
-      // Sort is not trigerred yet.
+      // Sort is not triggered yet.
       $this->sortedGuessers = $this->sortGuessers();
     }
 

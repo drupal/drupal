@@ -36,7 +36,7 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
    * Renders a page using a custom page theme hook and optional region content.
    *
    * Temporary shim to facilitate modernization progress for special front
-   * contollers (install.php, update.php, authorize.php), maintenance mode, and
+   * controllers (install.php, update.php, authorize.php), maintenance mode, and
    * the exception handler.
    *
    * Do NOT use this method in your code. This method will be removed as soon

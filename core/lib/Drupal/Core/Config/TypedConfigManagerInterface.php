@@ -80,7 +80,7 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
    *   The base type definition array, for which a data definition should be
    *   created.
    * @param $value
-   *   Optional value of the configuraiton element.
+   *   Optional value of the configuration element.
    * @param string $name
    *   Optional name of the configuration element.
    * @param object $parent

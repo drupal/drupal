@@ -39,7 +39,7 @@ interface AliasManagerInterface {
    * Clear internal caches in alias manager.
    *
    * @param $source
-   *   Source path of the alias that is being inserted/updated. Can be ommitted
+   *   Source path of the alias that is being inserted/updated. Can be omitted
    *   if entire cache needs to be flushed.
    */
   public function cacheClear($source = NULL);

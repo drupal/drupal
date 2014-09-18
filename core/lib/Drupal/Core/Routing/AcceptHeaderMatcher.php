@@ -29,7 +29,7 @@ class AcceptHeaderMatcher implements RouteFilterInterface {
   /**
    * Constructs a new AcceptHeaderMatcher.
    *
-   * @param \Drupal\Core\ContentNegotiation $cotent_negotiation
+   * @param \Drupal\Core\ContentNegotiation $content_negotiation
    *   The content negotiation library.
    */
   public function __construct(ContentNegotiation $content_negotiation) {

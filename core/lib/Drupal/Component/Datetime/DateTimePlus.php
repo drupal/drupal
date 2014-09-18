@@ -287,7 +287,7 @@ class DateTimePlus extends \DateTime {
    * Prepares the input timezone value.
    *
    * Changes the timezone before trying to use it, if necessary.
-   * Most imporantly, makes sure there is a valid timezone
+   * Most importantly, makes sure there is a valid timezone
    * object before moving further.
    *
    * @param mixed $timezone

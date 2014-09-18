@@ -29,7 +29,7 @@ class OpCodeCache {
     if (extension_loaded('Zend OPcache')) {
       opcache_invalidate($pathname, TRUE);
     }
-    // If apcu extenstion is enabled in PHP 5.5 or greater it emulates apc.
+    // If apcu extension is enabled in PHP 5.5 or greater it emulates apc.
     // This is to provide an easy upgrade path if you are using apc's user
     // caching however the emulation does not extend to opcode caching.
     // Therefore we need to check if the function exists as well.

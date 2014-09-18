@@ -355,7 +355,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    *
    * Most block plugins should not override this method. To add validation
-   * for a specific block type, override BlockBase::blockValdiate().
+   * for a specific block type, override BlockBase::blockValidate().
    *
    * @see \Drupal\Core\Block\BlockBase::blockValidate()
    */

@@ -438,7 +438,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         return;
       }
       elseif (!strncmp("msgstr", $line, 6)) {
-        // A string pair for an msgidid (with optional context).
+        // A string pair for an msgid (with optional context).
 
         if (($this->_context != 'MSGID') && ($this->_context != 'MSGCTXT')) {
           // Strings are only valid within an id or context scope.

@@ -21,7 +21,7 @@ interface ClassResolverInterface {
    *   A class name or service name.
    *
    * @throws \InvalidArgumentException
-   *   If $class is not a valid service identifer and the class does not exist.
+   *   If $class is not a valid service identifier and the class does not exist.
    *
    * @return object
    *   The instance of the class.

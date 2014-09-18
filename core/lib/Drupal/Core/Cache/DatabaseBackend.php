@@ -220,7 +220,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $transaction = $this->connection->startTransaction();
 
     try {
-      // Delete all items first so we can do one insert. Rather than mulitple
+      // Delete all items first so we can do one insert. Rather than multiple
       // merge queries.
       $this->deleteMultiple(array_keys($items));
 
@@ -361,7 +361,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalideMultiple().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
    */
   public function invalidateMultiple(array $cids) {
     $cids = array_values(array_map(array($this, 'normalizeCid'), $cids));

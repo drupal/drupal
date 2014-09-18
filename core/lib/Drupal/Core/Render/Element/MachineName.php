@@ -133,7 +133,7 @@ class MachineName extends Textfield {
     }
     $element['#attributes'] += array('dir' => 'ltr');
 
-    // The source element defaults to array('name'), but may have been overidden.
+    // The source element defaults to array('name'), but may have been overridden.
     if (empty($element['#machine_name']['source'])) {
       return $element;
     }

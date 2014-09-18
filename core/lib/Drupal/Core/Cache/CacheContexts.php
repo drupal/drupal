@@ -99,13 +99,13 @@ class CacheContexts {
   }
 
   /**
-   * Provides the string representaton of a cache context.
+   * Provides the string representation of a cache context.
    *
    * @param string $context
    *   A cache context token of an available cache context service.
    *
    * @return string
-   *   The string representaton of a cache context.
+   *   The string representation of a cache context.
    */
   protected function getContext($context) {
     return $this->getService($context)->getContext();

@@ -344,7 +344,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         unset($values['add_more']);
 
         // The original delta, before drag-and-drop reordering, is needed to
-        // route errors to the corect form element.
+        // route errors to the correct form element.
         foreach ($values as $delta => &$value) {
           $value['_original_delta'] = $delta;
         }

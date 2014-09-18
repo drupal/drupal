@@ -129,7 +129,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpFoundation\Response $response
    *
    * @return bool
-   *   TRUE when Cache-Control header was set explicitely on the given response.
+   *   TRUE when Cache-Control header was set explicitly on the given response.
    */
   protected function isCacheControlCustomized(Response $response) {
     $cache_control = $response->headers->get('Cache-Control');

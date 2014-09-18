@@ -55,7 +55,7 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
   }
 
   /**
-   * Sets the _controllere on a request based on the request format.
+   * Sets the _controller on a request based on the request format.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.

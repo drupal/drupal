@@ -47,7 +47,7 @@ class AjaxSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::RESPONSE][] = array('onResponse', -100);
-    $events[KernelEvents::REQUEST][] = array('onREquest', 50);
+    $events[KernelEvents::REQUEST][] = array('onRequest', 50);
 
     return $events;
   }

@@ -16,7 +16,7 @@ namespace Drupal\Core\Cache;
  * single web node, and will not require a network round trip to fetch a cache
  * item. The fast backend will also typically be inconsistent (will only see
  * changes from one web node). The slower backend will be something like Mysql,
- * Mecached or Redis, and will be used by all web nodes, thus making it
+ * Memcached or Redis, and will be used by all web nodes, thus making it
  * consistent, but also require a network round trip for each cache get.
  *
  * In addition to being useful for sites running on multiple web nodes, this

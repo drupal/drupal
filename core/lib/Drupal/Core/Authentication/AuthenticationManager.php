@@ -89,7 +89,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
 
     $account = NULL;
 
-    // Iterate the availlable providers.
+    // Iterate the available providers.
     foreach ($this->getSortedProviders() as $provider_id => $provider) {
       if ($provider->applies($request)) {
         // Try to authenticate with this provider, skipping all others.

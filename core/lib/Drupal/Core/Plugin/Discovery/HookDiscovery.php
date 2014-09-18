@@ -47,7 +47,7 @@ class HookDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinitions().
+   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
    */
   public function getDefinitions() {
     $definitions = array();

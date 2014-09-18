@@ -21,7 +21,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @todo Add detailed documentation here explaining the block system's
  *   architecture and the relationships between the various objects, including
- *   brif references to the important components that are not coupled to the
+ *   brief references to the important components that are not coupled to the
  *   interface.
  *
  * @ingroup block_api

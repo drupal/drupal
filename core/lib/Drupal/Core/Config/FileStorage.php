@@ -139,7 +139,7 @@ class FileStorage implements StorageInterface {
     $target = $this->getFilePath($name);
     $status = @file_put_contents($target, $data);
     if ($status === FALSE) {
-      // Try to make sure the directory exists and try witing again.
+      // Try to make sure the directory exists and try writing again.
       $this->ensureStorage();
       $status = @file_put_contents($target, $data);
     }

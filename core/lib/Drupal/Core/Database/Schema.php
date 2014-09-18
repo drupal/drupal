@@ -218,7 +218,7 @@ abstract class Schema implements PlaceholderInterface {
    * Get information about the table name and schema from the prefix.
    *
    * @param
-   *   Name of table to look prefix up for. Defaults to 'default' because thats
+   *   Name of table to look prefix up for. Defaults to 'default' because that's
    *   default key for prefix.
    * @param $add_prefix
    *   Boolean that indicates whether the given table name should be prefixed.
@@ -291,7 +291,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
-    // Retrive the table name and schema
+    // Retrieve the table name and schema
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new Condition('AND');

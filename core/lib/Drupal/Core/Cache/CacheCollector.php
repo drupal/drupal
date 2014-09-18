@@ -200,10 +200,10 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * Resolves a cache miss.
    *
    * When an offset is not found in the object, this is treated as a cache
-   * miss. This method allows classes using this implementatio to look up the
+   * miss. This method allows classes using this implementation to look up the
    * actual value and allow it to be cached.
    *
-   * @param sring $key
+   * @param string $key
    *   The offset that was requested.
    *
    * @return mixed

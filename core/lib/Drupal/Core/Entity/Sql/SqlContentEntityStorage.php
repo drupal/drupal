@@ -533,7 +533,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $entities[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = $value;
         }
       }
-      // If we have no multilingual values we can instantiate entity objecs
+      // If we have no multilingual values we can instantiate entity objects
       // right now, otherwise we need to collect all the field values first.
       if (!$this->dataTable) {
         $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
@@ -1076,7 +1076,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         ->insert($this->revisionTable, array('return' => Database::RETURN_INSERT_ID))
         ->fields((array) $record)
         ->execute();
-      // Even if this is a new revsision, the revision ID key might have been
+      // Even if this is a new revision, the revision ID key might have been
       // set in which case we should not override the provided revision ID.
       if (!isset($record->{$this->revisionKey})) {
         $record->{$this->revisionKey} = $insert_id;
@@ -1261,7 +1261,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $items = $entity->getTranslation($langcode)->get($field_name);
         $items->filterEmptyItems();
         foreach ($items as $delta => $item) {
-          // We now know we have someting to insert.
+          // We now know we have something to insert.
           $do_insert = TRUE;
           $record = array(
             'entity_id' => $id,

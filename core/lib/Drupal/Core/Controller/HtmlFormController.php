@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Controler\HtmlFormController.
+ * Contains \Drupal\Core\Controller\HtmlFormController.
  */
 
 namespace Drupal\Core\Controller;

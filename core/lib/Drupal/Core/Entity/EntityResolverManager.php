@@ -121,7 +121,7 @@ class EntityResolverManager {
       $parameter_name = $parameter->getName();
       // If the parameter name matches with an entity type try to set the
       // upcasting information automatically. Therefore take into account that
-      // the user has specified some interface, so the upasting is intended.
+      // the user has specified some interface, so the upcasting is intended.
       if (isset($entity_types[$parameter_name])) {
         $entity_type = $entity_types[$parameter_name];
         $entity_class = $entity_type->getClass();

@@ -59,7 +59,7 @@ interface ConfigEntityInterface extends EntityInterface {
    *   - Status does not affect the loading of entities. I.e. Disabling
    *     configuration entities should only have UI/access implications.
    *   - It should only take effect when a 'status' key is explicitly declared
-   *     in the entity_keys info of a configuration entitys annotation data.
+   *     in the entity_keys info of a configuration entity's annotation data.
    *   - Each entity implementation (entity/controller) is responsible for
    *     checking and managing the status.
    *

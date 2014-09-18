@@ -68,11 +68,11 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     for ($i = 0; $i < count($css_assets_keys); $i++) {
       $css_asset = $css_assets[$css_assets_keys[$i]];
       switch ($css_asset['type']) {
-        // For file items, there are three possibilites.
+        // For file items, there are three possibilities.
         // - There are up to 31 CSS assets on the page (some of which may be
         //   aggregated). In this case, output a LINK tag for file CSS assets.
         // - There are more than 31 CSS assets on the page, yet we must stay
-        //   below IE<10's limit of 31 total CSS inclussion tags, we handle this
+        //   below IE<10's limit of 31 total CSS inclusion tags, we handle this
         //   in two ways:
         //    - file CSS assets that are not eligible for aggregation (their
         //      'preprocess' flag has been set to FALSE): in this case, output a

@@ -118,7 +118,7 @@ class ArchiveTar // extends PEAR
                     if ($data == "\37\213") {
                         $this->_compress = true;
                         $this->_compress_type = 'gz';
-                    // No sure it's enought for a magic code ....
+                    // No sure it's enough for a magic code ....
                     } elseif ($data == "BZ") {
                         $this->_compress = true;
                         $this->_compress_type = 'bz2';
@@ -617,7 +617,7 @@ class ArchiveTar // extends PEAR
                 break;
 
                 default :
-                    $this->_error('Unknow attribute code '.$v_att_list[$i].'');
+                    $this->_error('Unknown attribute code '.$v_att_list[$i].'');
                     return false;
             }
 
@@ -1826,7 +1826,7 @@ class ArchiveTar // extends PEAR
 
     /**
      * Compress path by changing for example "/dir/foo/../bar" to "/dir/bar",
-     * rand emove double slashes.
+     * rand remove double slashes.
      *
      * @param string $p_dir path to reduce
      *
