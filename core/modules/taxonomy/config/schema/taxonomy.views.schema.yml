@@ -186,3 +186,10 @@ views.filter.taxonomy_index_tid_depth:
 views.relationship.node_term_data:
   type: views_relationship
   label: 'Taxonomy term'
+  mapping:
+    vids:
+      type: sequence
+      label: 'Vocabularies'
+      sequence:
+        - type: string
+          label: 'Vocabulary'
