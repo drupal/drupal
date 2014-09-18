@@ -7,7 +7,9 @@
 
 namespace Drupal\migrate\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
@@ -196,6 +198,13 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   public $migration_dependencies = array();
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * {@inheritdoc}
    */
   public function getSourcePlugin() {
@@ -315,28 +324,39 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   public function checkRequirements() {
     // Check whether the current migration source and destination plugin
     // requirements are met or not.
-    try {
-      if ($this->getSourcePlugin() instanceof RequirementsInterface && !$this->getSourcePlugin()->checkRequirements()) {
-        return FALSE;
-      }
-      if ($this->getDestinationPlugin() instanceof RequirementsInterface && !$this->getDestinationPlugin()->checkRequirements()) {
-        return FALSE;
-      }
-
-      /** @var \Drupal\migrate\Entity\MigrationInterface[] $required_migrations */
-      $required_migrations = \Drupal::entityManager()->getStorage('migration')->loadMultiple($this->requirements);
-      // Check if the dependencies are in good shape.
-      foreach ($required_migrations as $required_migration) {
-        if (!$required_migration->isComplete()) {
-          return FALSE;
-        }
-      }
+    if ($this->getSourcePlugin() instanceof RequirementsInterface) {
+      $this->getSourcePlugin()->checkRequirements();
     }
-    catch (\Exception $e) {
-      return FALSE;
+    if ($this->getDestinationPlugin() instanceof RequirementsInterface) {
+      $this->getDestinationPlugin()->checkRequirements();
     }
 
-    return TRUE;
+    /** @var \Drupal\migrate\Entity\MigrationInterface[] $required_migrations */
+    $required_migrations = $this->getEntityManager()->getStorage('migration')->loadMultiple($this->requirements);
+
+    $missing_migrations = array_diff($this->requirements, array_keys($required_migrations));
+    // Check if the dependencies are in good shape.
+    foreach ($required_migrations as $migration_id => $required_migration) {
+      if (!$required_migration->isComplete()) {
+        $missing_migrations[] = $migration_id;
+      }
+    }
+    if ($missing_migrations) {
+      throw new RequirementsException(String::format('Missing migrations @requirements.', ['@requirements' => implode(', ', $missing_migrations)]), ['requirements' => $missing_migrations]);
+    }
+  }
+
+  /**
+   * Get the entity manager.
+   *
+   * @return \Drupal\Core\Entity\EntityManagerInterface
+   *   The entity manager.
+   */
+  protected function getEntityManager() {
+    if (!isset($this->entityManager)) {
+      $this->entityManager = \Drupal::entityManager();
+    }
+    return $this->entityManager;
   }
 
   /**

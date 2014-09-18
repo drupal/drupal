@@ -10,6 +10,7 @@ namespace Drupal\migrate;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
 /**
@@ -233,11 +234,19 @@ class MigrateExecutable {
    */
   public function import() {
     // Knock off migration if the requirements haven't been met.
-    if (!$this->migration->checkRequirements()) {
+    try {
+      $this->migration->checkRequirements();
+    }
+    catch (RequirementsException $e) {
       $this->message->display(
-        $this->t('Migration @id did not meet the requirements', array('@id' => $this->migration->id())), 'error');
+        $this->t('Migration @id did not meet the requirements. @message @requirements', array(
+          '@id' => $this->migration->id(),
+          '@message' => $e->getMessage(),
+          '@requirements' => $e->getRequirementsString(),
+        )), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
+
     $return = MigrationInterface::RESULT_COMPLETED;
     $source = $this->getSource();
     $id_map = $this->migration->getIdMap();

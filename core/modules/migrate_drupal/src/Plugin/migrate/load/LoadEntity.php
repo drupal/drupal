@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\MigrateLoadInterface;
@@ -79,10 +80,14 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
       $values['source']['bundle'] = $id;
       /** @var \Drupal\migrate_drupal\Entity\MigrationInterface $migration */
       $migration = $storage->create($values);
-      if ($migration->getSourcePlugin()->checkRequirements()) {
+      try {
+        $migration->getSourcePlugin()->checkRequirements();
         $fields = array_keys($migration->getSourcePlugin()->fields());
         $migration->process += array_combine($fields, $fields);
         $migrations[$migration->id()] = $migration;
+      }
+      catch (RequirementsException $e) {
+
       }
     }
 

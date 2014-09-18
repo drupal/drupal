@@ -15,8 +15,8 @@ interface RequirementsInterface {
   /**
    * Checks if requirements for this plugin are OK.
    *
-   * @return bool
-   *   TRUE if it is possible to use the plugin, FALSE if not.
+   * @throws \Drupal\migrate\Exception\RequirementsException
+   *   Thrown when requirements are not met.
    */
   public function checkRequirements();
 
