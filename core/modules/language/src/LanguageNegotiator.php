@@ -73,7 +73,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *
    * @var array
    */
-  protected $negotiatedLanguages;
+  protected $negotiatedLanguages = array();
 
   /**
    * Constructs a new LanguageNegotiator object.
@@ -152,10 +152,10 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     if (!$language) {
       // If no other language was found use the default one.
       $language = $this->languageManager->getDefaultLanguage();
-      $language->method_id = LanguageNegotiatorInterface::METHOD_ID;
+      $method_id = static::METHOD_ID;
     }
 
-    return $language;
+    return array($method_id => $language);
   }
 
   /**

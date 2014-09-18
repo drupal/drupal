@@ -69,8 +69,6 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
    * {@inheritdoc}
    */
   public function persist(LanguageInterface $language) {
-    parent::persist($language);
-
     // We need to update the session parameter with the request value only if we
     // have an authenticated user.
     $langcode = $language->id;

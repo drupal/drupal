@@ -111,16 +111,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   protected $preSaveMultilingual;
 
   /**
-   * The language negotiation method used when a language was detected.
-   *
-   * The method ID, for example
-   * \Drupal\language\LanguageNegotiatorInterface::METHOD_ID.
-   *
-   * @var string
-   */
-  public $method_id;
-
-  /**
    * Checks if the language entity is the site default language.
    *
    * @return bool

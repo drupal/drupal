@@ -81,6 +81,13 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   protected $negotiatedLanguages;
 
   /**
+   * An array of language negotiation method IDs keyed by language type.
+   *
+   * @var array
+   */
+  protected $negotiatedMethods;
+
+  /**
    * Whether or not the language manager has been initialized.
    *
    * @var bool
@@ -209,7 +216,9 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       if ($this->negotiator && $this->isMultilingual()) {
         if (!$this->initializing) {
           $this->initializing = TRUE;
-          $this->negotiatedLanguages[$type] = $this->negotiator->initializeType($type);
+          $negotiation = $this->negotiator->initializeType($type);
+          $this->negotiatedLanguages[$type] = reset($negotiation);
+          $this->negotiatedMethods[$type] = key($negotiation);
           $this->initializing = FALSE;
         }
         // If the current interface language needs to be retrieved during
@@ -234,6 +243,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     if (!isset($type)) {
       $this->initialized = FALSE;
       $this->negotiatedLanguages = array();
+      $this->negotiatedMethods = array();
       $this->languageTypes = NULL;
       $this->languageTypesInfo = NULL;
       $this->languages = NULL;
@@ -243,6 +253,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     }
     elseif (isset($this->negotiatedLanguages[$type])) {
       unset($this->negotiatedLanguages[$type]);
+      unset($this->negotiatedMethods[$type]);
     }
     return $this;
   }
@@ -451,6 +462,15 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     }
     asort($predefined);
     return $predefined;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNegotiatedLanguageMethod($type = LanguageInterface::TYPE_INTERFACE) {
+    if (isset($this->negotiatedLanguages[$type]) && isset($this->negotiatedMethods[$type])) {
+      return $this->negotiatedMethods[$type];
+    }
   }
 
 }

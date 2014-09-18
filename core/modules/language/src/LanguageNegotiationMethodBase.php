@@ -62,8 +62,7 @@ abstract class LanguageNegotiationMethodBase implements LanguageNegotiationMetho
    * {@inheritdoc}
    */
   public function persist(LanguageInterface $language) {
-    // Remember the method ID used to detect the language.
-    $language->method_id = static::METHOD_ID;
+    // Default implementation persists nothing.
   }
 
 }

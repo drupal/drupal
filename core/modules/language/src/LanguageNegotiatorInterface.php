@@ -128,8 +128,10 @@ interface LanguageNegotiatorInterface {
    * @param string $type
    *   The language type to be initialized.
    *
-   * @return \Drupal\Core\Language\LanguageInterface
-   *   Return either the language of the specified type or the default language.
+   * @return \Drupal\Core\Language\LanguageInterface[]
+   *   Returns an array containing a single language keyed by the language
+   *   negotiation method ID used to determine the language of the specified
+   *   type. If negotiation is not possible the default language is returned.
    */
   public function initializeType($type);
 

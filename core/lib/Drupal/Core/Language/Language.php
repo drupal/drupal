@@ -68,16 +68,6 @@ class Language implements LanguageInterface {
   public $default = FALSE;
 
   /**
-   * The language negotiation method used when a language was detected.
-   *
-   * The method ID, for example
-   * \Drupal\language\LanguageNegotiatorInterface::METHOD_ID.
-   *
-   * @var string
-   */
-  public $method_id;
-
-  /**
    * Locked indicates a language used by the system, not an actual language.
    *
    * Examples of locked languages are, LANGCODE_NOT_SPECIFIED, und, and
