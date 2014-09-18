@@ -246,20 +246,27 @@ class PathValidatorTest extends UnitTestCase {
    * Tests the getUrlIfValid() method when there is access.
    */
   public function testGetUrlIfValidWithAccess() {
-    $this->account->expects($this->once())
+    $this->account->expects($this->exactly(2))
       ->method('hasPermission')
       ->with('link to any page')
       ->willReturn(FALSE);
 
-    $this->accessAwareRouter->expects($this->once())
+    $this->accessAwareRouter->expects($this->exactly(2))
       ->method('match')
       ->with('/test-path')
       ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new ParameterBag(['key' => 'value'])]);
-    $this->pathProcessor->expects($this->once())
+    $this->pathProcessor->expects($this->exactly(2))
       ->method('processInbound')
       ->willReturnArgument(0);
 
     $url = $this->pathValidator->getUrlIfValid('test-path');
+    $this->assertInstanceOf('Drupal\Core\Url', $url);
+
+    $this->assertEquals('test_route', $url->getRouteName());
+    $this->assertEquals(['key' => 'value'], $url->getRouteParameters());
+
+    // Test with leading /.
+    $url = $this->pathValidator->getUrlIfValid('/test-path');
     $this->assertInstanceOf('Drupal\Core\Url', $url);
 
     $this->assertEquals('test_route', $url->getRouteName());

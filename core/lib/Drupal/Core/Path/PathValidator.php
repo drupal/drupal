@@ -102,6 +102,7 @@ class PathValidator implements PathValidatorInterface {
       return Url::createFromPath($path);
     }
 
+    $path = ltrim($path, '/');
     $request = Request::create('/' . $path);
     $attributes = $this->getPathAttributes($path, $request);
 
