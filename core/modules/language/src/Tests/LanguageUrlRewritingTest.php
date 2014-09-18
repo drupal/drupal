@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,8 +52,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    */
   function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
-    $non_existing = \Drupal::languageManager()->getDefaultLanguage();
-    $non_existing->id = $this->randomMachineName();
+    $non_existing = new Language(array('id' => $this->randomMachineName()));
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
 
     // Check that URL rewriting is not applied to subrequests.
