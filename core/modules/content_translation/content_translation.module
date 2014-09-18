@@ -718,3 +718,43 @@ function content_translation_preprocess_language_content_settings_table(&$variab
   module_load_include('inc', 'content_translation', 'content_translation.admin');
   _content_translation_preprocess_language_content_settings_table($variables);
 }
+
+/**
+ * Implements hook_page_alter().
+ */
+function content_translation_page_alter(&$page) {
+  $route_match = \Drupal::routeMatch();
+
+  // If the current route has no parameters, return.
+  if (!($route = $route_match->getRouteObject()) || !($parameters = $route->getOption('parameters'))) {
+    return;
+  }
+
+  // Determine if the current route represents an entity.
+  foreach ($parameters as $name => $options) {
+    if (!isset($options['type']) || strpos($options['type'], 'entity:') !== 0) {
+      continue;
+    }
+
+    $entity = $route_match->getParameter($name);
+    if ($entity instanceof ContentEntityInterface) {
+      // Current route represents a content entity. Build hreflang links.
+      foreach ($entity->getTranslationLanguages() as $language) {
+        $url = $entity->urlInfo()
+          ->setOption('language', $language)
+          ->setAbsolute()
+          ->toString();
+        $page['#attached']['drupal_add_html_head_link'][] = array(
+          array(
+            'rel' => 'alternate',
+            'hreflang' => $language->id,
+            'href' => $url,
+          ),
+          TRUE,
+        );
+      }
+    }
+    // Since entity was found, no need to iterate further.
+    return;
+  }
+}

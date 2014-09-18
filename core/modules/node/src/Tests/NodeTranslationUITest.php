@@ -305,6 +305,9 @@ class NodeTranslationUITest extends ContentTranslationUITest {
 
     // Test that the node page displays the correct translations.
     $this->doTestTranslations('node/' . $node->id(), $values);
+
+    // Test that the node page has the correct alternate hreflang links.
+    $this->doTestAlternateHreflangLinks('node/' . $node->id());
   }
 
   /**
@@ -320,6 +323,28 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, array('language' => $languages[$langcode]));
       $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));
+    }
+  }
+
+  /**
+   * Tests that the given path provides the correct alternate hreflang links.
+   *
+   * @param string $path
+   *   The path to be tested.
+   */
+  protected function doTestAlternateHreflangLinks($path) {
+    $languages = $this->container->get('language_manager')->getLanguages();
+    foreach ($this->langcodes as $langcode) {
+      $urls[$langcode] = url($path, array('absolute' => TRUE, 'language' => $languages[$langcode]));
+    }
+    foreach ($this->langcodes as $langcode) {
+      $this->drupalGet($path, array('language' => $languages[$langcode]));
+      foreach ($urls as $alternate_langcode => $url) {
+        // Retrieve desired link elements from the HTML head.
+        $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
+          array(':href' => $url, ':hreflang' => $alternate_langcode));
+        $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url)));
+      }
     }
   }
 
