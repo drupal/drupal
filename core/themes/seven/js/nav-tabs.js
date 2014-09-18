@@ -4,7 +4,7 @@
  * Utilizes jquery.intrinsic.js to calculate if the tabs are larger than their
  * container and toggles the 'is-horizontal' class.
  *
- * This also supports collapsible navigable is the 'is-collasible' class is
+ * This also supports collapsible navigable is the 'is-collapsible' class is
  * added to the main element, and a target element is included.
  */
 (function ($, Drupal) {

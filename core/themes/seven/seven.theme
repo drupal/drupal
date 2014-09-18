@@ -39,7 +39,7 @@ function seven_preprocess_page(&$variables) {
 /**
  * Implements hook_pre_render_HOOK() for menu-local-tasks templates.
  *
- * Use preprocess hook to set #attached to child elemnts
+ * Use preprocess hook to set #attached to child elements
  * because they will be processed by Twig and drupal_render will
  * be invoked.
  */

@@ -156,7 +156,7 @@ function twig_render_var($arg) {
  * Removes child elements from a copy of the original array.
  *
  * Creates a copy of the renderable array and removes child elements by key
- * specified throught filter's arguments. The copy can be printed without these
+ * specified through filter's arguments. The copy can be printed without these
  * elements. The original renderable array is still available and can be used
  * to print child elements in their entirety in the twig template.
  *
