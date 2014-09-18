@@ -60,7 +60,7 @@ class TermSelection extends SelectionBase {
     $options = array();
 
     $bundles = entity_get_bundles('taxonomy_term');
-    $bundle_names = !empty($this->instance['settings']['handler_settings']['target_bundles']) ? $this->instance['settings']['handler_settings']['target_bundles'] : array_keys($bundles);
+    $bundle_names = !empty($this->fieldDefinition->settings['handler_settings']['target_bundles']) ? $this->fieldDefinition->settings['handler_settings']['target_bundles'] : array_keys($bundles);
 
     foreach ($bundle_names as $bundle) {
       if ($vocabulary = entity_load('taxonomy_vocabulary', $bundle)) {
