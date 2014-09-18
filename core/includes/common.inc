@@ -972,7 +972,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     The aggregate group number affects load order and the CSS cascade.
  *     Stylesheets in an aggregate with a lower group number will be output to
  *     the page before stylesheets in an aggregate with a higher group number,
- *     so CSS within higher aggregate groups can take precendence over CSS
+ *     so CSS within higher aggregate groups can take precedence over CSS
  *     within lower aggregate groups.
  *   - 'every_page': For optimal front-end performance when aggregation is
  *     enabled, this should be set to TRUE if the stylesheet is present on every
@@ -1018,7 +1018,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     See http://drupal.org/node/1887922
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
  *     Defaults to 'all'. It is extremely important to leave this set to 'all'
- *     or it will negatively impact front-end peformance. Instead add a @media
+ *     or it will negatively impact front-end performance. Instead add a @media
  *     block to the included CSS file.
  *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
  *     styles will be aggregated and compressed. Defaults to TRUE.
@@ -2912,7 +2912,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
 
   // Filter the outputted content and make any last changes before the
   // content is sent to the browser. The changes are made on $content
-  // which allows the output'ed text to be filtered.
+  // which allows the outputted text to be filtered.
   if (isset($elements['#post_render'])) {
     foreach ($elements['#post_render'] as $callable) {
       if (is_string($callable) && strpos($callable, '::') === FALSE) {

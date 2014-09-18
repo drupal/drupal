@@ -1196,7 +1196,7 @@ function install_select_language(&$install_state) {
     }
     // If we are performing a non-interactive installation. If only one language
     // (English) is available, assume the user knows what he is doing. Otherwise
-    // thow an error.
+    // throw an error.
     else {
       if (count($files) == 1) {
         $install_state['parameters']['langcode'] = current(array_keys($files));
@@ -1210,7 +1210,7 @@ function install_select_language(&$install_state) {
 }
 
 /**
- * Download a translation file for the selected langaguage.
+ * Download a translation file for the selected language.
  *
  * @param array $install_state
  *   An array of information about the current installation state.
@@ -1227,7 +1227,7 @@ function install_download_translation(&$install_state) {
     return $output;
   }
 
-  // The download was successful, reload the page in the new lanagage.
+  // The download was successful, reload the page in the new language.
   install_goto(install_redirect_url($install_state));
 }
 

@@ -652,7 +652,7 @@ function file_htaccess_lines($private = TRUE) {
  *   TRUE if the URI is allowed.
  */
 function file_valid_uri($uri) {
-  // Assert that the URI has an allowed scheme. Barepaths are not allowed.
+  // Assert that the URI has an allowed scheme. Bare paths are not allowed.
   $uri_scheme = file_uri_scheme($uri);
   if (!file_stream_wrapper_valid_scheme($uri_scheme)) {
     return FALSE;

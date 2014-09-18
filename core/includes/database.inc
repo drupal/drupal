@@ -153,7 +153,7 @@ use Drupal\Core\Site\Settings;
  *   ->execute();
  * @endcode
  *
- * @section sec_transaction Tranactions
+ * @section sec_transaction Transactions
  * Drupal supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
  * call @code $txn = db_transaction(); @endcode The transaction will

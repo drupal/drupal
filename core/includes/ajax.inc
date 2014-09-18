@@ -128,7 +128,7 @@ use Drupal\Core\Render\Element;
  * \Drupal\Core\Ajax\CommandInterface. Available commands provide the ability
  * to pop up alerts, manipulate text and markup in various ways, redirect
  * to a new URL, and the generic \Drupal\Core\Ajax\InvokeCommand, which
- * invokes an arbitrary jQuery commnd.
+ * invokes an arbitrary jQuery command.
  *
  * As noted above, status messages are prepended automatically if you use the
  * 'wrapper' method and return HTML markup. This is not the case if you return

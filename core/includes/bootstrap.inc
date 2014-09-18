@@ -958,7 +958,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *   the top-level keys as the message type. The messages returned are
  *   limited to the type specified in the $type parameter, if any. If there
  *   are no messages of the specified type, an empty array is returned. See
- *   drupal_set_message() for the array structure of indivdual messages.
+ *   drupal_set_message() for the array structure of individual messages.
  *
  * @see drupal_set_message()
  * @see theme_status_messages()
@@ -1004,7 +1004,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  * @param $phase
  *   A constant telling which phase to bootstrap to. Possible values:
  *   - DRUPAL_BOOTSTRAP_CONFIGURATION: Initializes configuration.
- *   - DRUPAL_BOOTSTRAP_KERNEL: Initalizes a kernel.
+ *   - DRUPAL_BOOTSTRAP_KERNEL: Initializes a kernel.
  *
  * @return int
  *   The most recently completed phase.
@@ -1487,7 +1487,7 @@ function drupal_classloader_register($name, $path) {
  * static $foo = &drupal_static(__FUNCTION__);
  * @endcode
  * However, the above line of code does not work, because PHP only allows static
- * variables to be initializied by literal values, and does not allow static
+ * variables to be initialized by literal values, and does not allow static
  * variables to be assigned to references.
  * - http://php.net/manual/language.variables.scope.php#language.variables.scope.static
  * - http://php.net/manual/language.variables.scope.php#language.variables.scope.references

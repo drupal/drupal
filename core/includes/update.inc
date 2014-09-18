@@ -315,7 +315,7 @@ function update_get_update_list() {
     // Otherwise, get the list of updates defined by this module.
     $updates = drupal_get_schema_versions($module);
     if ($updates !== FALSE) {
-      // \Drupal::moduleHandler()->invoke() returns NULL for nonexisting hooks,
+      // \Drupal::moduleHandler()->invoke() returns NULL for non-existing hooks,
       // so if no updates are removed, it will == 0.
       $last_removed = \Drupal::moduleHandler()->invoke($module, 'update_last_removed');
       if ($schema_version < $last_removed) {

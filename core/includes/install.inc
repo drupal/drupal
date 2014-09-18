@@ -363,7 +363,7 @@ function _drupal_rewrite_settings_is_simple($type, $value) {
  * Helper for drupal_rewrite_settings().
  *
  * Checks whether this token represents a valid array index: a number or a
- * stirng.
+ * string.
  *
  * @param int $type
  *   The token type
