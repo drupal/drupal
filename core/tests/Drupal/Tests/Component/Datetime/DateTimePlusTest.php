@@ -415,7 +415,7 @@ class DateTimePlusTest extends UnitTestCase {
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
         ),
-        'transorm' => array(
+        'transform' => array(
           'timezone' => 'America/Los_Angeles',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00-08:00',

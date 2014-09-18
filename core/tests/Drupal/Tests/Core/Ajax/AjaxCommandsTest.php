@@ -54,7 +54,7 @@ class AjaxCommandsTest extends UnitTestCase {
   }
 
   /**
-   * Tests that AfterCommand objecst can be constructed and rendered.
+   * Tests that AfterCommand objects can be constructed and rendered.
    */
   public function testAfterCommand() {
     $command = new AfterCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));

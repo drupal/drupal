@@ -61,7 +61,7 @@ class PercentagesTest extends UnitTestCase {
       // The same logic holds for 1/200: we should get 0.5%.
       array(200, 1, '0.5'),
       // Numbers that come out evenly, such as 50/200, should be forced to have
-      // extra digits for consistancy.
+      // extra digits for consistency.
       array(200, 50, '25.0'),
       // Regardless of number of digits we're using, 100% should always just be
       // 100%.

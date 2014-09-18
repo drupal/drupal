@@ -64,12 +64,12 @@ class LogMessageParserTest extends UnitTestCase {
         array('message' => 'User @username created', 'context' => array('@username' => 'Dries')),
         array('message' => 'User @username created', 'context' => array('@username' => 'Dries')),
       ),
-      // Messsage without placeholders but wildcard characters.
+      // Message without placeholders but wildcard characters.
       array(
         array('message' => 'User W-\\};~{&! created @', 'context' => array('' => '')),
         array('message' => 'User W-\\};~{&! created @', 'context' => array()),
       ),
-      // Messsage with double PSR3 style messages.
+      // Message with double PSR3 style messages.
       array(
         array('message' => 'Test {with} two {encapsuled} strings', 'context' => array('with' => 'together', 'encapsuled' => 'awesome')),
         array('message' => 'Test @with two @encapsuled strings', 'context' => array('@with' => 'together', '@encapsuled' => 'awesome')),

@@ -23,7 +23,7 @@ class BlockBaseTest extends UnitTestCase {
    * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion().
    */
   public function testGetMachineNameSuggestion() {
-    $transliteraton = $this->getMockBuilder('Drupal\Core\Transliteration\PHPTransliteration')
+    $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PHPTransliteration')
       // @todo Inject the module handler into PHPTransliteration.
       ->setMethods(array('readLanguageOverrides'))
       ->getMock();
@@ -42,7 +42,7 @@ class BlockBaseTest extends UnitTestCase {
       'provider' => 'block_test',
     );
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
-    $block_base->setTransliteration($transliteraton);
+    $block_base->setTransliteration($transliteration);
     $this->assertEquals('adminlabel', $block_base->getMachineNameSuggestion());
 
     // Test with more unicodes.
@@ -51,7 +51,7 @@ class BlockBaseTest extends UnitTestCase {
       'provider' => 'block_test',
     );
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
-    $block_base->setTransliteration($transliteraton);
+    $block_base->setTransliteration($transliteration);
     $this->assertEquals('uberawesome', $block_base->getMachineNameSuggestion());
   }
 

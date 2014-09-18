@@ -116,7 +116,7 @@ class LoggerChannelTest extends UnitTestCase {
     // No request or account.
     $cases [] = array(
       function ($context) {
-        return $context['channel'] == 'test' && empty($contex['uid']) && empty($context['ip']);
+        return $context['channel'] == 'test' && empty($context['uid']) && empty($context['ip']);
       },
     );
     // With account but not request. Since the request is not available the
@@ -131,7 +131,7 @@ class LoggerChannelTest extends UnitTestCase {
     // With request but not account.
     $cases [] = array(
       function ($context) {
-        return $context['ip'] === '127.0.0.1' && empty($contex['uid']);
+        return $context['ip'] === '127.0.0.1' && empty($context['uid']);
       },
       $request_mock,
     );

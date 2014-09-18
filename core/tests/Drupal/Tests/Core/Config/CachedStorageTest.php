@@ -83,7 +83,7 @@ class CachedStorageTest extends UnitTestCase {
   }
 
   /**
-   * Test fall through to file storage in CachedStorage::readMulitple().
+   * Test fall through to file storage in CachedStorage::readMultiple().
    */
   public function testGetMultipleOnPartiallyPrimedCache() {
     $configNames = array(
