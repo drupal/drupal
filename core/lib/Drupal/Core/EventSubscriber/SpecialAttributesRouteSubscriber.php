@@ -24,7 +24,6 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection) {
     $special_variables = array(
       'system_path',
-      '_maintenance',
       '_legacy',
       '_authentication_provider',
       '_raw_variables',
