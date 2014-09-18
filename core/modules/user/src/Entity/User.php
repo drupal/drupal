@@ -174,8 +174,8 @@ class User extends ContentEntityBase implements UserInterface {
     $roles = array();
 
     foreach ($this->get('roles') as $role) {
-      if (!($exclude_locked_roles && in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)))) {
-        $roles[] = $role->value;
+      if (!($exclude_locked_roles && in_array($role->target_id, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)))) {
+        $roles[] = $role->target_id;
       }
     }
 
@@ -531,13 +531,12 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDescription(t('The email address used for initial account creation.'))
       ->setDefaultValue('');
 
-    // @todo Convert this to entity_reference_field, see
-    // https://drupal.org/node/2044859.
-    $fields['roles'] = BaseFieldDefinition::create('string')
+    $fields['roles'] = BaseFieldDefinition::create('entity_reference')
       ->setCustomStorage(TRUE)
       ->setLabel(t('Roles'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setDescription(t('The roles the user has.'));
+      ->setDescription(t('The roles the user has.'))
+      ->setSetting('target_type', 'user_role');
 
     return $fields;
   }

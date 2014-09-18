@@ -31,7 +31,7 @@ class UserTest extends UserSessionTest {
     $roles = array();
     foreach ($rids as $rid) {
       $roles[] = (object) array(
-        'value' => $rid,
+        'target_id' => $rid,
       );
     }
     $user->expects($this->any())
