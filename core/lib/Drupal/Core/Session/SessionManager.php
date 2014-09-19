@@ -114,7 +114,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function startLazy() {
+  public function start() {
     global $user;
 
     if (($this->started || $this->startedLazy) && !$this->closed) {
@@ -129,53 +129,66 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in
       // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
-      $result = $this->start();
+      $result = $this->startNow();
       if ($user->isAuthenticated() || !$this->isSessionObsolete()) {
         drupal_page_is_cacheable(FALSE);
       }
     }
-    else {
-      // Set a session identifier for this request. This is necessary because
-      // we lazily start sessions at the end of this request, and some
-      // processes (like \Drupal::csrfToken()) needs to know the future
-      // session ID in advance.
+
+    if (empty($result)) {
       $user = new AnonymousUserSession();
+
+      // Randomly generate a session identifier for this request. This is
+      // necessary because \Drupal\user\TempStoreFactory::get() wants to know
+      // the future session ID of a lazily started session in advance.
+      //
+      // @todo: With current versions of PHP there is little reason to generate
+      //   the session id from within application code. Consider using the
+      //   default php session id instead of generating a custom one:
+      //   https://www.drupal.org/node/2238561
       $this->setId(Crypt::randomBytesBase64());
       if ($is_https && $this->isMixedMode()) {
         $session_id = Crypt::randomBytesBase64();
         $cookies->set($insecure_session_name, $session_id);
       }
+
+      // Initialize the session global and attach the Symfony session bags.
+      $_SESSION = array();
+      $this->loadSession();
+
+      // NativeSessionStorage::loadSession() sets started to TRUE, reset it to
+      // FALSE here.
+      $this->started = FALSE;
+      $this->startedLazy = TRUE;
+
       $result = FALSE;
     }
     date_default_timezone_set(drupal_get_user_timezone());
-
-    $this->startedLazy = TRUE;
 
     return $result;
   }
 
   /**
-   * {@inheritdoc}
+   * Forcibly start a PHP session.
+   *
+   * @return boolean
+   *   TRUE if the session is started.
    */
-  public function isStartedLazy() {
-    return $this->startedLazy;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function start() {
+  protected function startNow() {
     if (!$this->isEnabled() || $this->isCli()) {
-      return;
+      return FALSE;
     }
-    // Save current session data before starting it, as PHP will destroy it.
-    $session_data = isset($_SESSION) ? $_SESSION : NULL;
+
+    if ($this->startedLazy) {
+      // Save current session data before starting it, as PHP will destroy it.
+      $session_data = $_SESSION;
+    }
 
     $result = parent::start();
 
     // Restore session data.
-    if (!empty($session_data)) {
-      $_SESSION += $session_data;
+    if ($this->startedLazy) {
+      $_SESSION = $session_data;
     }
 
     return $result;
@@ -203,7 +216,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // There is session data to store. Start the session if it is not already
       // started.
       if (!$this->getSaveHandler()->isActive()) {
-        $this->start();
+        $this->startNow();
         if ($this->requestStack->getCurrentRequest()->isSecure() && $this->isMixedMode()) {
           $insecure_session_name = $this->getInsecureName();
           $params = session_get_cookie_params();
@@ -282,7 +295,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // Preserve the logged in user, as it will be reset to anonymous
       // by \Drupal\Core\Session\SessionHandler::read().
       $account = $user;
-      $this->start();
+      $this->startNow();
       $user = $account;
     }
     date_default_timezone_set(drupal_get_user_timezone());

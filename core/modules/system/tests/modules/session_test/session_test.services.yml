@@ -1,5 +1,6 @@
 services:
   session_test.subscriber:
     class: Drupal\session_test\EventSubscriber\SessionTestSubscriber
+    arguments: ['@session_manager']
     tags:
       - { name: event_subscriber }

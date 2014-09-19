@@ -49,7 +49,7 @@ const MAINTENANCE_MODE = 'update';
  *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
 function authorize_access_allowed() {
-  \Drupal::service('session_manager')->startLazy();
+  \Drupal::service('session_manager')->start();
   return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
 }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\session_test\EventSubscriber;
 
+use Drupal\Core\Session\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -18,10 +19,26 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  */
 class SessionTestSubscriber implements EventSubscriberInterface {
 
-  /*
+  /**
+   * The session manager.
+   *
+   * @var \Drupal\Core\Session\SessionManagerInterface
+   */
+  protected $sessionManager;
+
+  /**
    * Stores whether $_SESSION is empty at the beginning of the request.
+   *
+   * @var bool
    */
   protected $emptySession;
+
+  /**
+   * Constructs a new session test subscriber.
+   */
+  public function __construct(SessionManagerInterface $session_manager) {
+    $this->sessionManager = $session_manager;
+  }
 
   /**
    * Set header for session testing.
@@ -30,12 +47,7 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestSessionTest(GetResponseEvent $event) {
-    // Trigger the authentication in the test to ensure that $_SESSION has the
-    // needed data.
-    // @todo: On the longrun the session will be lazy initialized, so we no
-    // longer have to force it here.
-    \Drupal::currentUser()->getAccount();
-    $this->emptySession = intval(empty($_SESSION));
+    $this->emptySession = (int) !$this->sessionManager->start();
   }
 
   /**

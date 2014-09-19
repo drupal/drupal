@@ -672,16 +672,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function initializeContainer($rebuild = FALSE) {
     $this->containerNeedsDumping = FALSE;
-    $session_manager_state = 0;
+    $session_manager_started = FALSE;
     if (isset($this->container)) {
       // If there is a session manager, close and save the session.
       if ($this->container->initialized('session_manager')) {
         $session_manager = $this->container->get('session_manager');
-        if ($session_manager->isStartedLazy()) {
-          $session_manager_state |= 0x1;
-        }
         if ($session_manager->isStarted()) {
-          $session_manager_state |= 0x2;
+          $session_manager_started = TRUE;
           $session_manager->save();
         }
         unset($session_manager);
@@ -712,10 +709,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->attachSynthetic($container);
 
     $this->container = $container;
-    if ($session_manager_state & 0x1) {
-      $this->container->get('session_manager')->startLazy();
-    }
-    if ($session_manager_state & 0x2) {
+    if ($session_manager_started) {
       $this->container->get('session_manager')->start();
     }
     \Drupal::setContainer($this->container);

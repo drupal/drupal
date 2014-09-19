@@ -15,22 +15,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 interface SessionManagerInterface extends SessionStorageInterface {
 
   /**
-   * Starts a session if appropriate cookies are on the request.
-   *
-   * @return bool
-   *   TRUE if the session was started.
-   */
-  public function startLazy();
-
-  /**
-   * Determines whether the session was started lazily.
-   *
-   * @return bool
-   *   TRUE if the session was started lazily.
-   */
-  public function isStartedLazy();
-
-  /**
    * Ends a specific user's session(s).
    *
    * @param int $uid

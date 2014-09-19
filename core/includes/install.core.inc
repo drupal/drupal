@@ -1453,7 +1453,7 @@ function install_load_profile(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_bootstrap_full() {
-  \Drupal::service('session_manager')->startLazy();
+  \Drupal::service('session_manager')->start();
 }
 
 /**
