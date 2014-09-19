@@ -19,6 +19,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -171,15 +172,12 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed,
-    $message = error_displayable($error) ? 'A fatal error occurred: ' . $exception->getMessage() : '';
+    $data = NULL;
+    if (error_displayable($error) && $message = $exception->getMessage()) {
+      $data = ['error' => sprintf('A fatal error occurred: %s', $message)];
+    }
 
-    // @todo We would prefer to use JsonResponse here, but existing code and
-    // tests are not prepared for parsing a JSON response when there are quotes
-    // or other values that would cause escaping issues. Instead, return a
-    // plain string and mark it as such.
-    $response = new Response($message, Response::HTTP_INTERNAL_SERVER_ERROR, [
-      'Content-type' => 'text/plain'
-    ]);
+    $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
     }

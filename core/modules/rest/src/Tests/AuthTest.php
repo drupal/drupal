@@ -39,7 +39,7 @@ class AuthTest extends RESTTestBase {
     // Try to read the resource as an anonymous user, which should not work.
     $this->httpRequest($entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse('401', 'HTTP response code is 401 when the request is not authenticated and the user is anonymous.');
-    $this->assertText('A fatal error occurred: No authentication credentials provided.');
+    $this->assertRaw(json_encode(['error' => 'A fatal error occurred: No authentication credentials provided.']));
 
     // Ensure that cURL settings/headers aren't carried over to next request.
     unset($this->curlHandle);

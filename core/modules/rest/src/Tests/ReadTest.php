@@ -60,7 +60,9 @@ class ReadTest extends RESTTestBase {
       // Try to read an entity that does not exist.
       $response = $this->httpRequest($entity_type . '/9999', 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse(404);
-      $this->assertText('A fatal error occurred: The "' . $entity_type . '" parameter was not converted for the path', 'Response message is correct.');
+      $path = $entity_type == 'node' ? '/node/{node}' : '/entity_test/{entity_test}';
+      $expected_message = Json::encode(['error' => 'A fatal error occurred: The "' . $entity_type . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . $entity_type . '.GET.hal_json")']);
+      $this->assertIdentical($expected_message, $response, 'Response message is correct.');
 
       // Make sure that field level access works and that the according field is
       // not available in the response. Only applies to entity_test.
@@ -79,14 +81,15 @@ class ReadTest extends RESTTestBase {
       $this->drupalLogout();
       $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse(403);
-      $this->assertNull(Json::decode($response), 'No valid JSON found.');
+      $this->assertIdentical('{}', $response);
     }
     // Try to read a resource which is not REST API enabled.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $response = $this->httpRequest($account->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(404);
-    $this->assertNull(Json::decode($response), 'No valid JSON found.');
+    $expected_message = Json::encode(['error' => 'A fatal error occurred: Unable to find the controller for path "/user/4". Maybe you forgot to add the matching route in your routing configuration?']);
+    $this->assertIdentical($expected_message, $response);
   }
 
   /**

@@ -92,13 +92,11 @@ class QuickEditLoadingTest extends WebTestBase {
     // able to use any of the other endpoints either.
     $post = array('editors[0]' => 'form') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('quickedit/attachments', 'application/vnd.drupal-ajax', $post);
-    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-    // $this->assertIdentical('[]', $response);
+    $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $post);
-    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-    // $this->assertIdentical('[]', $response);
+    $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $edit = array();
     $edit['form_id'] = 'quickedit_field_form';
@@ -109,13 +107,11 @@ class QuickEditLoadingTest extends WebTestBase {
     $edit['body[0][format]'] = 'filtered_html';
     $edit['op'] = t('Save');
     $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $edit);
-    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-    // $this->assertIdentical('[]', $response);
+    $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true');
     $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
-    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-    // $this->assertIdentical('[]', $response);
+    $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
   }
 
@@ -265,8 +261,6 @@ class QuickEditLoadingTest extends WebTestBase {
       );
       $post += $edit + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $post);
-      // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-      // $this->assertIdentical('[]', $response);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
       $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
@@ -276,9 +270,11 @@ class QuickEditLoadingTest extends WebTestBase {
       // Save the entity.
       $post = array('nocssjs' => 'true');
       $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
-      // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-      // $this->assertIdentical('[]', $response);
       $this->assertResponse(200);
+      $ajax_commands = Json::decode($response);
+      $this->assertIdentical(1, count($ajax_commands));
+      $this->assertIdentical('quickeditEntitySaved', $ajax_commands[0]['command'], 'The first AJAX command is an quickeditEntitySaved command.');
+      $this->assertEqual($ajax_commands[0]['data'], ['entity_type' => 'node', 'entity_id' => 1], 'Updated entity type and ID returned');
 
       // Test that a revision was created with the correct log message.
       $vids = \Drupal::entityManager()->getStorage('node')->revisionIds(node_load(1));

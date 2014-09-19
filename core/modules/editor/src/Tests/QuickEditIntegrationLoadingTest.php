@@ -90,8 +90,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
       // Retrieving the untransformed text should result in an empty 403 response.
       $response = $this->drupalPost('editor/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', array());
       $this->assertResponse(403);
-      // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
-      // $this->assertIdentical('[]', $response);
+      $this->assertIdentical('{}', $response);
     }
   }
 
