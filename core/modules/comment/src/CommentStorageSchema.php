@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the comment schema handler.
@@ -21,13 +22,6 @@ class CommentStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['comment_field_data']['fields']['created']['not null'] = TRUE;
-    $schema['comment_field_data']['fields']['thread']['not null'] = TRUE;
-
-    unset($schema['comment_field_data']['indexes']['comment_field__pid__target_id']);
-    unset($schema['comment_field_data']['indexes']['comment_field__entity_id__target_id']);
     $schema['comment_field_data']['indexes'] += array(
       'comment__status_pid' => array('pid', 'status'),
       'comment__num_new' => array(
@@ -45,14 +39,38 @@ class CommentStorageSchema extends SqlContentEntityStorageSchema {
         'comment_type',
         'default_langcode',
       ),
-      'comment__created' => array('created'),
     );
-    $schema['comment_field_data']['foreign keys'] += array(
-      'comment__author' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    );
+
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
+    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
+    $field_name = $storage_definition->getName();
+
+    if ($table_name == 'comment_field_data') {
+      // Remove unneeded indexes.
+      unset($schema['indexes']['comment_field__pid__target_id']);
+      unset($schema['indexes']['comment_field__entity_id__target_id']);
+
+      switch ($field_name) {
+        case 'thread':
+          // Improves the performance of the comment__num_new index defined
+          // in getEntitySchema().
+          $schema['fields'][$field_name]['not null'] = TRUE;
+          break;
+
+        case 'created':
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          break;
+
+        case 'uid':
+          $this->addSharedTableFieldForeignKey($storage_definition, $schema, 'users', 'uid');
+      }
+    }
 
     return $schema;
   }

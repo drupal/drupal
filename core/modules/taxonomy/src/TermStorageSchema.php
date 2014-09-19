@@ -9,6 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the term schema handler.
@@ -21,20 +22,10 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset = FALSE);
 
-    if (isset($schema['taxonomy_term_field_data'])) {
-      // Marking the respective fields as NOT NULL makes the indexes more
-      // performant.
-      $schema['taxonomy_term_field_data']['fields']['weight']['not null'] = TRUE;
-      $schema['taxonomy_term_field_data']['fields']['name']['not null'] = TRUE;
-
-      unset($schema['taxonomy_term_field_data']['indexes']['taxonomy_term_field__vid__target_id']);
-      unset($schema['taxonomy_term_field_data']['indexes']['taxonomy_term_field__description__format']);
-      $schema['taxonomy_term_field_data']['indexes'] += array(
-        'taxonomy_term__tree' => array('vid', 'weight', 'name'),
-        'taxonomy_term__vid_name' => array('vid', 'name'),
-        'taxonomy_term__name' => array('name'),
-      );
-    }
+    $schema['taxonomy_term_field_data']['indexes'] += array(
+      'taxonomy_term__tree' => array('vid', 'weight', 'name'),
+      'taxonomy_term__vid_name' => array('vid', 'name'),
+    );
 
     $schema['taxonomy_term_hierarchy'] = array(
       'description' => 'Stores the hierarchical relationship between terms.',
@@ -112,6 +103,34 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
         ),
       ),
     );
+
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
+    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
+    $field_name = $storage_definition->getName();
+
+    if ($table_name == 'taxonomy_term_field_data') {
+      // Remove unneeded indexes.
+      unset($schema['indexes']['taxonomy_term_field__vid__target_id']);
+      unset($schema['indexes']['taxonomy_term_field__description__format']);
+
+      switch ($field_name) {
+        case 'weight':
+          // Improves the performance of the taxonomy_term__tree index defined
+          // in getEntitySchema().
+          $schema['fields'][$field_name]['not null'] = TRUE;
+          break;
+
+        case 'name':
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          break;
+      }
+    }
 
     return $schema;
   }

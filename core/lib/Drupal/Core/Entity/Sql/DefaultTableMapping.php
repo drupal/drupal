@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 class DefaultTableMapping implements TableMappingInterface {
 
   /**
-   * A list of field storage definitions that are available for this mapping.
+   * The field storage definitions of this mapping.
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */
@@ -101,7 +101,16 @@ class DefaultTableMapping implements TableMappingInterface {
         $this->allColumns[$table_name] = array_merge($this->allColumns[$table_name], array_values($this->getColumnNames($field_name)));
       }
 
-      $this->allColumns[$table_name] = array_merge($this->allColumns[$table_name], $this->getExtraColumns($table_name));
+      // There is just one field for each dedicated storage table, thus
+      // $field_name can only refer to it.
+      if (isset($field_name) && $this->requiresDedicatedTableStorage($this->fieldStorageDefinitions[$field_name])) {
+        // Unlike in shared storage tables, in dedicated ones field columns are
+        // positioned last.
+        $this->allColumns[$table_name] = array_merge($this->getExtraColumns($table_name), $this->allColumns[$table_name]);
+      }
+      else {
+        $this->allColumns[$table_name] = array_merge($this->allColumns[$table_name], $this->getExtraColumns($table_name));
+      }
     }
     return $this->allColumns[$table_name];
   }
@@ -177,6 +186,47 @@ class DefaultTableMapping implements TableMappingInterface {
     // Force the re-computation of the column list.
     unset($this->allColumns[$table_name]);
     return $this;
+  }
+
+  /**
+   * Checks whether the given field can be stored in a shared table.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   *
+   * @return bool
+   *   TRUE if the field can be stored in a dedicated table, FALSE otherwise.
+   */
+  public function allowsSharedTableStorage(FieldStorageDefinitionInterface $storage_definition) {
+    return !$storage_definition->hasCustomStorage() && $storage_definition->isBaseField() && !$storage_definition->isMultiple();
+  }
+
+  /**
+   * Checks whether the given field has to be stored in a dedicated table.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   *
+   * @return bool
+   *   TRUE if the field can be stored in a dedicated table, FALSE otherwise.
+   */
+  public function requiresDedicatedTableStorage(FieldStorageDefinitionInterface $storage_definition) {
+    return !$storage_definition->hasCustomStorage() && !$this->allowsSharedTableStorage($storage_definition);
+  }
+
+  /**
+   * Returns a list of dedicated table names for this mapping.
+   *
+   * @return string[]
+   *   An array of table names.
+   */
+  public function getDedicatedTableNames() {
+    $table_mapping = $this;
+    $definitions = array_filter($this->fieldStorageDefinitions, function($definition) use ($table_mapping) { return $table_mapping->requiresDedicatedTableStorage($definition); });
+    $data_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getDedicatedDataTableName($definition); }, $definitions);
+    $revision_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getDedicatedRevisionTableName($definition); }, $definitions);
+    $dedicated_tables = array_merge(array_values($data_tables), array_values($revision_tables));
+    return $dedicated_tables;
   }
 
   /**

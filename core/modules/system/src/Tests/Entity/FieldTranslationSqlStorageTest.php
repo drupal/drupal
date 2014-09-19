@@ -87,24 +87,19 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
 
     foreach ($fields as $field_name) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
-      $tables = array(
-        $table_mapping->getDedicatedDataTableName($field_storage),
-        $table_mapping->getDedicatedRevisionTableName($field_storage),
-      );
+      $table = $table_mapping->getDedicatedDataTableName($field_storage);
 
-      foreach ($tables as $table) {
-        $record = \Drupal::database()
-          ->select($table, 'f')
-          ->fields('f')
-          ->condition('f.entity_id', $id)
-          ->condition('f.revision_id', $id)
-          ->execute()
-          ->fetchObject();
+      $record = \Drupal::database()
+        ->select($table, 'f')
+        ->fields('f')
+        ->condition('f.entity_id', $id)
+        ->condition('f.revision_id', $id)
+        ->execute()
+        ->fetchObject();
 
-        if ($record->langcode != $langcode) {
-          $status = FALSE;
-          break;
-        }
+      if ($record->langcode != $langcode) {
+        $status = FALSE;
+        break;
       }
     }
 

@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -460,19 +459,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Reload the field schema after the update.
     $schema = $field_storage->getSchema();
 
-    // Retrieve the field definition and check that the foreign key is in place.
-    $field_storage = FieldStorageConfig::loadByName('entity_test', $field_name);
+    // Check that the foreign key is in place.
     $this->assertEqual($schema['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, 'Foreign key table name modified after update');
     $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', 'Foreign key column name modified after update');
-
-    // Verify the SQL schema.
-    $schemas = SqlContentEntityStorage::_fieldSqlSchema($field_storage);
-    $schema = $schemas[$this->table_mapping->getDedicatedDataTableName($field_storage)];
-    $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema');
-    $foreign_key = reset($schema['foreign keys']);
-    $foreign_key_column = $this->table_mapping->getFieldColumnName($field_storage, $foreign_key_name);
-    $this->assertEqual($foreign_key['table'], $foreign_key_name, 'Foreign key table name preserved in the schema');
-    $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'id', 'Foreign key column name preserved in the schema');
   }
 
   /**

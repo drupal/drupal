@@ -553,11 +553,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
         'foreign keys' => array(),
       );
 
-      // Check that the schema does not include forbidden column names.
-      if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
-        throw new FieldException('Illegal field type columns.');
-      }
-
       // Merge custom indexes with those specified by the field type. Custom
       // indexes prevail.
       $schema['indexes'] = $this->indexes + $schema['indexes'];
@@ -583,19 +578,17 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * A list of columns that can not be used as field type columns.
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  public static function getReservedColumns() {
-    return array('deleted');
+  public function hasCustomStorage() {
+    return !empty($this->definition['custom_storage']) || $this->isComputed();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasCustomStorage() {
-    return !empty($this->definition['custom_storage']) || $this->isComputed();
+  public function isBaseField() {
+    return TRUE;
   }
 
   /**

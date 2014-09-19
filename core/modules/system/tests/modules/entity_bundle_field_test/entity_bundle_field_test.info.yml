@@ -1,8 +1,0 @@
-name: 'Entity bundle field test module'
-type: module
-description: 'Provides a bundle field to the test entity.'
-package: Testing
-version: VERSION
-core: 8.x
-dependencies:
-  - entity_test

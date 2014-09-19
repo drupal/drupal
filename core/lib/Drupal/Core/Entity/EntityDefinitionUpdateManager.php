@@ -189,8 +189,13 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         // Detect updated field storage definitions.
         foreach (array_intersect_key($storage_definitions, $original_storage_definitions) as $field_name => $storage_definition) {
           // @todo Support non-storage-schema-changing definition updates too:
-          //   https://www.drupal.org/node/2336895.
-          if ($this->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definitions[$field_name])) {
+          //   https://www.drupal.org/node/2336895. So long as we're checking
+          //   based on schema change requirements rather than definition
+          //   equality, skip the check if the entity type itself needs to be
+          //   updated, since that can affect the schema of all fields, so we
+          //   want to process that update first without reporting false
+          //   positives here.
+          if (!isset($change_list[$entity_type_id]['entity_type']) && $this->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definitions[$field_name])) {
             $field_changes[$field_name] = static::DEFINITION_UPDATED;
           }
         }

@@ -67,4 +67,12 @@ interface FieldableEntityStorageSchemaInterface extends EntityStorageSchemaInter
    */
   public function requiresFieldDataMigration(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original);
 
+  /**
+   * Performs final cleanup after all data of a field has been purged.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field being purged.
+   */
+  public function finalizePurge(FieldStorageDefinitionInterface $storage_definition);
+
 }

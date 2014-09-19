@@ -9,6 +9,7 @@ namespace Drupal\aggregator;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the item schema handler.
@@ -18,22 +19,21 @@ class ItemStorageSchema extends SqlContentEntityStorageSchema {
   /**
    * {@inheritdoc}
    */
-  protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
-    $schema = parent::getEntitySchema($entity_type, $reset);
+  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
+    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
+    $field_name = $storage_definition->getName();
 
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['aggregator_item']['fields']['timestamp']['not null'] = TRUE;
+    if ($table_name == 'aggregator_item') {
+      switch ($field_name) {
+        case 'timestamp':
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          break;
 
-    $schema['aggregator_item']['indexes'] += array(
-      'aggregator_item__timestamp' => array('timestamp'),
-    );
-    $schema['aggregator_item']['foreign keys'] += array(
-      'aggregator_item__aggregator_feed' => array(
-        'table' => 'aggregator_feed',
-        'columns' => array('fid' => 'fid'),
-      ),
-    );
+        case 'fid':
+          $this->addSharedTableFieldForeignKey($storage_definition, $schema, 'aggregator_feed', 'fid');
+          break;
+      }
+    }
 
     return $schema;
   }

@@ -821,6 +821,17 @@ class ModuleHandler implements ModuleHandlerInterface {
           $version = max(max($versions), $version);
         }
 
+        // Notify the entity manager that this module's entity types are new,
+        // so that it can notify all interested handlers. For example, a
+        // SQL-based storage handler can use this as an opportunity to create
+        // the necessary database tables.
+        $entity_manager = \Drupal::entityManager();
+        foreach ($entity_manager->getDefinitions() as $entity_type) {
+          if ($entity_type->getProvider() == $module) {
+            $entity_manager->onEntityTypeCreate($entity_type);
+          }
+        }
+
         // Install default configuration of the module.
         $config_installer = \Drupal::service('config.installer');
         if ($sync_status) {
@@ -843,17 +854,6 @@ class ModuleHandler implements ModuleHandlerInterface {
           $version = max($version, $last_removed);
         }
         drupal_set_installed_schema_version($module, $version);
-
-        // Notify the entity manager that this module's entity types are new,
-        // so that it can notify all interested handlers. For example, a
-        // SQL-based storage handler can use this as an opportunity to create
-        // the necessary database tables.
-        $entity_manager = \Drupal::entityManager();
-        foreach ($entity_manager->getDefinitions() as $entity_type) {
-          if ($entity_type->getProvider() == $module) {
-            $entity_manager->onEntityTypeCreate($entity_type);
-          }
-        }
 
         // Record the fact that it was installed.
         $modules_installed[] = $module;

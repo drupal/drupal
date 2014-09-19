@@ -53,11 +53,11 @@ class DefaultTableMappingTest extends UnitTestCase {
    */
   public function testGetAllColumns() {
     // Set up single-column and multi-column definitions.
-    $definitions['id'] = $this->setUpDefinition(['value']);
-    $definitions['name'] = $this->setUpDefinition(['value']);
-    $definitions['type'] = $this->setUpDefinition(['value']);
-    $definitions['description'] = $this->setUpDefinition(['value', 'format']);
-    $definitions['owner'] = $this->setUpDefinition([
+    $definitions['id'] = $this->setUpDefinition('id', ['value']);
+    $definitions['name'] = $this->setUpDefinition('name', ['value']);
+    $definitions['type'] = $this->setUpDefinition('type', ['value']);
+    $definitions['description'] = $this->setUpDefinition('description', ['value', 'format']);
+    $definitions['owner'] = $this->setUpDefinition('owner', [
       'target_id',
       'target_revision_id',
     ]);
@@ -188,17 +188,17 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getColumnNames()
    */
   public function testGetColumnNames() {
-    $definitions['test'] = $this->setUpDefinition([]);
+    $definitions['test'] = $this->setUpDefinition('test', []);
     $table_mapping = new DefaultTableMapping($definitions);
     $expected = [];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
 
-    $definitions['test'] = $this->setUpDefinition(['value']);
+    $definitions['test'] = $this->setUpDefinition('test', ['value']);
     $table_mapping = new DefaultTableMapping($definitions);
     $expected = ['value' => 'test'];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
 
-    $definitions['test'] = $this->setUpDefinition(['value', 'format']);
+    $definitions['test'] = $this->setUpDefinition('test', ['value', 'format']);
     $table_mapping = new DefaultTableMapping($definitions);
     $expected = ['value' => 'test__value', 'format' => 'test__format'];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
@@ -237,13 +237,21 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Sets up a field storage definition for the test.
    *
+   * @param string $name
+   *   The field name.
    * @param array $column_names
    *   An array of column names for the storage definition.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected function setUpDefinition(array $column_names) {
-    $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+  protected function setUpDefinition($name, array $column_names) {
+    $definition = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    $definition->expects($this->any())
+      ->method('isBaseField')
+      ->will($this->returnValue(TRUE));
+    $definition->expects($this->any())
+      ->method('getName')
+      ->will($this->returnValue($name));
     $definition->expects($this->any())
       ->method('getColumns')
       ->will($this->returnValue(array_fill_keys($column_names, [])));

@@ -1165,7 +1165,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
-    return $this->installedDefinitions->get($entity_type_id . '.field_storage_definitions');
+    return $this->installedDefinitions->get($entity_type_id . '.field_storage_definitions', array());
   }
 
   /**

@@ -298,6 +298,18 @@ interface FieldStorageDefinitionInterface {
   public function hasCustomStorage();
 
   /**
+   * Determines whether the field is a base field.
+   *
+   * Base fields are not specific to a given bundle or a set of bundles. This
+   * excludes configurable fields, as they are always attached to a specific
+   * bundle.
+   *
+   * @return bool
+   *   Whether the field is a base field.
+   */
+  public function isBaseField();
+
+  /**
    * Returns a unique identifier for the field.
    *
    * @return string

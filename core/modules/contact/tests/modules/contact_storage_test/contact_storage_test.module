@@ -13,15 +13,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
 function contact_storage_test_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'contact_message') {
     $fields = array();
+
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Message ID'))
       ->setDescription(t('The message ID.'))
       ->setReadOnly(TRUE)
-      // Explicitly set this to 'contact' so that
-      // SqlContentEntityStorage::usesDedicatedTable() doesn't attempt to
-      // put the ID in a dedicated table.
-      // @todo Remove when https://www.drupal.org/node/1498720 is in.
-      ->setProvider('contact')
       ->setSetting('unsigned', TRUE);
 
     return $fields;

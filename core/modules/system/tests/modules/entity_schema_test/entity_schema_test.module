@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Test module for the entity API providing a bundle field.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\FieldStorageDefinition;
+use Drupal\entity_test\Entity\EntityTestMulRev;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function entity_schema_test_entity_type_alter(array &$entity_types) {
+  if (\Drupal::state()->get('entity_schema_update')) {
+    $entity_type = $entity_types['entity_test'];
+    $entity_type->set('translatable', TRUE);
+    $entity_type->set('data_table', 'entity_test_field_data');
+    $keys = $entity_type->getKeys();
+    $keys['revision'] = 'revision_id';
+    $entity_type->set('entity_keys', $keys);
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function entity_schema_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test') {
+    $definitions['custom_base_field'] = BaseFieldDefinition::create('string')
+      ->setName('custom_base_field')
+      ->setLabel(t('A custom base field'));
+    if (\Drupal::state()->get('entity_schema_update')) {
+      $definitions += EntityTestMulRev::baseFieldDefinitions($entity_type);
+    }
+    return $definitions;
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_schema_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test') {
+    $definitions['custom_bundle_field'] = FieldStorageDefinition::create('string')
+      ->setName('custom_bundle_field')
+      ->setLabel(t('A custom bundle field'))
+      ->setTargetEntityTypeId($entity_type->id());
+    return $definitions;
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function entity_schema_test_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle) {
+  if ($entity_type->id() == 'entity_test' && $bundle == 'custom') {
+    $definitions['custom_bundle_field'] = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type->id())['custom_bundle_field'];
+    return $definitions;
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_delete().
+ */
+function entity_schema_test_entity_bundle_delete($entity_type_id, $bundle) {
+  if ($entity_type_id == 'entity_test' && $bundle == 'custom') {
+    $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+    $field_definitions = entity_schema_test_entity_bundle_field_info($entity_type, $bundle);
+    $field_definitions['custom_bundle_field']
+      ->setTargetEntityTypeId($entity_type_id)
+      ->setBundle($bundle);
+    // Notify the entity storage that our field is gone.
+    \Drupal::entityManager()->getStorage($entity_type_id)
+      ->onFieldDefinitionDelete($field_definitions['custom_bundle_field']);
+  }
+}

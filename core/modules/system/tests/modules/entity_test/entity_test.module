@@ -73,13 +73,8 @@ function entity_test_entity_type_alter(array &$entity_types) {
     }
   }
 
-  // Optionally allow testing an entity type definition being updated from
-  // revisable to not or vice versa.
-  if (\Drupal::state()->get('entity_test.entity_test_rev.disable_revisable')) {
-    $keys = $entity_types['entity_test_rev']->getKeys();
-    unset($keys['revision']);
-    $entity_types['entity_test_rev']->set('entity_keys', $keys);
-  }
+  // Allow entity_test_update tests to override the entity type definition.
+  $entity_types['entity_test_update'] = \Drupal::state()->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
 }
 
 /**
@@ -93,6 +88,15 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
   }
   if ($entity_type->id() == 'node' && Drupal::state()->get('entity_test.node_remove_status_field')) {
     unset($fields['status']);
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_update') {
+    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', array());
   }
 }
 

@@ -7,8 +7,8 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the feed schema handler.
@@ -18,22 +18,25 @@ class FeedStorageSchema extends SqlContentEntityStorageSchema {
   /**
    * {@inheritdoc}
    */
-  protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
-    $schema = parent::getEntitySchema($entity_type, $reset);
+  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
+    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
+    $field_name = $storage_definition->getName();
 
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['aggregator_feed']['fields']['url']['not null'] = TRUE;
-    $schema['aggregator_feed']['fields']['queued']['not null'] = TRUE;
-    $schema['aggregator_feed']['fields']['title']['not null'] = TRUE;
+    if ($table_name == 'aggregator_feed') {
+      switch ($field_name) {
+        case 'url':
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE, 255);
+          break;
 
-    $schema['aggregator_feed']['indexes'] += array(
-      'aggregator_feed__url'  => array(array('url', 255)),
-      'aggregator_feed__queued' => array('queued'),
-    );
-    $schema['aggregator_feed']['unique keys'] += array(
-      'aggregator_feed__title' => array('title'),
-    );
+        case 'queued':
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          break;
+
+        case 'title':
+          $this->addSharedTableFieldUniqueKey($storage_definition, $schema);
+          break;
+      }
+    }
 
     return $schema;
   }
