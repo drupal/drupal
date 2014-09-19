@@ -2906,7 +2906,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
         $wrapper_hook = $value;
       }
 
-      $elements['#children'] = Drupal::theme()->render($wrapper_hook, $wrapper_elements);
+      $elements['#children'] = \Drupal::theme()->render($wrapper_hook, $wrapper_elements);
     }
   }
 
