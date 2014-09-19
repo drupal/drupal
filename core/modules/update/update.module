@@ -231,21 +231,21 @@ function update_cron() {
 }
 
 /**
- * Implements hook_themes_enabled().
+ * Implements hook_themes_installed().
  *
- * If themes are enabled, we invalidate the information of available updates.
+ * If themes are installed, we invalidate the information of available updates.
  */
-function update_themes_enabled($themes) {
+function update_themes_installed($themes) {
   // Clear all update module data.
   update_storage_clear();
 }
 
 /**
- * Implements hook_themes_disabled().
+ * Implements hook_themes_uninstalled().
  *
- * If themes are disabled, we invalidate the information of available updates.
+ * If themes are uninstalled, we invalidate the information of available updates.
  */
-function update_themes_disabled($themes) {
+function update_themes_uninstalled($themes) {
   // Clear all update module data.
   update_storage_clear();
 }

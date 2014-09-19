@@ -23,9 +23,6 @@ function update_fix_compatibility() {
     foreach ($extension_config->get($type) as $name => $weight) {
       if (update_check_incompatibility($name, $type)) {
         $extension_config->clear("$type.$name");
-        if ($type === 'theme') {
-          $extension_config->set("disabled.theme.$name", 0);
-        }
         $save = TRUE;
       }
     }

@@ -57,7 +57,7 @@ class ThemeController extends ControllerBase {
   }
 
   /**
-   * Disables a theme.
+   * Uninstalls a theme.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object containing a theme name and a valid token.
@@ -69,7 +69,7 @@ class ThemeController extends ControllerBase {
    *   Throws access denied when no theme or token is set in the request or when
    *   the token is invalid.
    */
-  public function disable(Request $request) {
+  public function uninstall(Request $request) {
     $theme = $request->get('theme');
     $config = $this->config('system.theme');
 
@@ -79,13 +79,13 @@ class ThemeController extends ControllerBase {
 
       // Check if the specified theme is one recognized by the system.
       if (!empty($themes[$theme])) {
-        // Do not disable the default or admin theme.
+        // Do not uninstall the default or admin theme.
         if ($theme === $config->get('default') || $theme === $config->get('admin')) {
-          drupal_set_message($this->t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
+          drupal_set_message($this->t('%theme is the default theme and cannot be uninstalled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
         }
         else {
-          $this->themeHandler->disable(array($theme));
-          drupal_set_message($this->t('The %theme theme has been disabled.', array('%theme' => $themes[$theme]->info['name'])));
+          $this->themeHandler->uninstall(array($theme));
+          drupal_set_message($this->t('The %theme theme has been uninstalled.', array('%theme' => $themes[$theme]->info['name'])));
         }
       }
       else {
@@ -99,7 +99,7 @@ class ThemeController extends ControllerBase {
   }
 
   /**
-   * Enables a theme.
+   * Installs a theme.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object containing a theme name and a valid token.
@@ -111,13 +111,13 @@ class ThemeController extends ControllerBase {
    *   Throws access denied when no theme or token is set in the request or when
    *   the token is invalid.
    */
-  public function enable(Request $request) {
+  public function install(Request $request) {
     $theme = $request->get('theme');
 
     if (isset($theme)) {
-      if ($this->themeHandler->enable(array($theme))) {
+      if ($this->themeHandler->install(array($theme))) {
         $themes = $this->themeHandler->listInfo();
-        drupal_set_message($this->t('The %theme theme has been enabled.', array('%theme' => $themes[$theme]->info['name'])));
+        drupal_set_message($this->t('The %theme theme has been installed.', array('%theme' => $themes[$theme]->info['name'])));
       }
       else {
         drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
@@ -150,8 +150,8 @@ class ThemeController extends ControllerBase {
       $themes = $this->themeHandler->listInfo();
 
       // Check if the specified theme is one recognized by the system.
-      // Or try to enable the theme.
-      if (isset($themes[$theme]) || $this->themeHandler->enable(array($theme))) {
+      // Or try to install the theme.
+      if (isset($themes[$theme]) || $this->themeHandler->install(array($theme))) {
         $themes = $this->themeHandler->listInfo();
 
         // Set the default theme.

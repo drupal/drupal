@@ -9,11 +9,11 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
- * Builds a list of enabled themes.
+ * Builds a list of installed themes.
  *
  * @param $type
  *   The type of list to return:
- *   - theme: All enabled themes.
+ *   - theme: All installed themes.
  *
  * @return
  *   An associative array of themes, keyed by name.

@@ -49,9 +49,9 @@ function config_translation_theme() {
 }
 
 /**
- * Implements hook_themes_enabled().
+ * Implements hook_themes_installed().
  */
-function config_translation_themes_enabled() {
+function config_translation_themes_installed() {
   // Themes can provide *.config_translation.yml declarations.
   // @todo Make ThemeHandler trigger an event instead and make
   //   ConfigMapperManager plugin manager subscribe to it.
@@ -60,9 +60,9 @@ function config_translation_themes_enabled() {
 }
 
 /**
- * Implements hook_themes_disabled().
+ * Implements hook_themes_uninstalled().
  */
-function config_translation_themes_disabled() {
+function config_translation_themes_uninstalled() {
   // Themes can provide *.config_translation.yml declarations.
   // @todo Make ThemeHandler trigger an event instead and make
   //   ConfigMapperManager plugin manager subscribe to it.

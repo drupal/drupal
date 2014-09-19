@@ -68,14 +68,14 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->typedConfigManager = $typed_config_manager;
 
     // Look at all themes and modules.
-    // @todo If the list of enabled modules and themes is changed, new
+    // @todo If the list of installed modules and themes is changed, new
     //   definitions are not picked up immediately and obsolete definitions are
     //   not removed, because the list of search directories is only compiled
     //   once in this constructor. The current code only works due to
-    //   coincidence: The request that enables e.g. a new theme does not
+    //   coincidence: The request that installs e.g. a new theme does not
     //   instantiate this plugin manager at the beginning of the request; when
     //   routes are being rebuilt at the end of the request, this service only
-    //   happens to get instantiated with the updated list of enabled themes.
+    //   happens to get instantiated with the updated list of installed themes.
     $directories = array();
     foreach ($module_handler->getModuleList() as $name => $module) {
       $directories[$name] = $module->getPath();

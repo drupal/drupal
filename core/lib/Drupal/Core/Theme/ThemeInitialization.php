@@ -64,15 +64,15 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $themes = $this->themeHandler->listInfo();
 
     // If no theme could be negotiated, or if the negotiated theme is not within
-    // the list of enabled themes, fall back to the default theme output of core
-    // and modules (like Stark, but without a theme extension at all). This is
-    // possible, because loadActiveTheme() always loads the Twig theme engine.
-    // This is desired, because missing or malformed theme configuration should
-    // not leave the application in a broken state. By falling back to default
-    // output, the user is able to reconfigure the theme through the UI.
+    // the list of installed themes, fall back to the default theme output of
+    // core and modules (like Stark, but without a theme extension at all). This
+    // is possible, because loadActiveTheme() always loads the Twig theme
+    // engine. This is desired, because missing or malformed theme configuration
+    // should not leave the application in a broken state. By falling back to
+    // default output, the user is able to reconfigure the theme through the UI.
     // Lastly, tests are expected to operate with no theme by default, so as to
     // only assert the original theme output of modules (unless a test manually
-    // enables a specific theme).
+    // installs a specific theme).
     if (empty($themes) || !$theme_name || !isset($themes[$theme_name])) {
       $theme_name = 'core';
       // /core/core.info.yml does not actually exist, but is required because

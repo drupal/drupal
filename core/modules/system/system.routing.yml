@@ -253,18 +253,18 @@ system.modules_list_confirm:
   requirements:
     _permission: 'administer modules'
 
-system.theme_disable:
-  path: '/admin/appearance/disable'
+system.theme_uninstall:
+  path: '/admin/appearance/uninstall'
   defaults:
-    _controller: 'Drupal\system\Controller\ThemeController::disable'
+    _controller: 'Drupal\system\Controller\ThemeController::uninstall'
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'
 
-system.theme_enable:
-  path: '/admin/appearance/enable'
+system.theme_install:
+  path: '/admin/appearance/install'
   defaults:
-    _controller: 'Drupal\system\Controller\ThemeController::enable'
+    _controller: 'Drupal\system\Controller\ThemeController::install'
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'

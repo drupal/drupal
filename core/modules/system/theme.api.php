@@ -468,28 +468,30 @@ function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables
 }
 
 /**
- * Respond to themes being enabled.
+ * Respond to themes being installed.
  *
  * @param array $theme_list
- *   Array containing the names of the themes being enabled.
+ *   Array containing the names of the themes being installed.
  *
- * @see theme_enable()
+ * @see \Drupal\Core\Extension\ThemeHandler::install()
  */
-function hook_themes_enabled($theme_list) {
+function hook_themes_installed($theme_list) {
   foreach ($theme_list as $theme) {
     block_theme_initialize($theme);
   }
 }
 
 /**
- * Respond to themes being disabled.
+ * Respond to themes being uninstalled.
  *
  * @param array $theme_list
- *   Array containing the names of the themes being disabled.
+ *   Array containing the names of the themes being uninstalled.
  *
- * @see theme_disable()
+ * @see \Drupal\Core\Extension\ThemeHandler::uninstall()
  */
-function hook_themes_disabled($theme_list) {
- // Clear all update module caches.
-  update_storage_clear();
+function hook_themes_uninstalled(array $themes) {
+  // Remove some state entries depending on the theme.
+  foreach ($themes as $theme) {
+    \Drupal::state()->delete('example.' . $theme);
+  }
 }

@@ -10,17 +10,7 @@ core.extension:
           label: 'Weight'
     theme:
       type: sequence
-      label: 'Enabled themes'
+      label: 'Installed themes'
       sequence:
         - type: integer
           label: 'Weight'
-    disabled:
-      type: mapping
-      label: 'Disabled extensions'
-      mapping:
-        theme:
-          type: sequence
-          label: 'Disabled themes'
-          sequence:
-            - type: integer
-              label: 'Weight'

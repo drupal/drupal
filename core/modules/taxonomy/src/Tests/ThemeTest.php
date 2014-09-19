@@ -19,7 +19,7 @@ class ThemeTest extends TaxonomyTestBase {
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    theme_enable(array('bartik', 'seven'));
+    \Drupal::service('theme_handler')->install(array('bartik', 'seven'));
     \Drupal::config('system.theme')
       ->set('default', 'bartik')
       ->set('admin', 'seven')

@@ -30,13 +30,13 @@ class ThemeAccessCheck implements AccessInterface {
   }
 
   /**
-   * Indicates whether the theme is accessible based on whether it is enabled.
+   * Indicates whether the theme is accessible based on whether it is installed.
    *
    * @param string $theme
    *   The name of a theme.
    *
    * @return bool
-   *   TRUE if the theme is enabled, FALSE otherwise.
+   *   TRUE if the theme is installed, FALSE otherwise.
    */
   public function checkAccess($theme) {
     $themes = list_themes();

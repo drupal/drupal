@@ -32,9 +32,6 @@ class DefaultConfigTest extends UnitTestCase {
     $expected = array(
       'module' => array(),
       'theme' => array(),
-      'disabled' => array(
-        'theme' => array(),
-      ),
     );
     $this->assertEquals($expected, $config);
   }

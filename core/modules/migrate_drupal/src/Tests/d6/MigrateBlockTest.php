@@ -65,8 +65,8 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $config->set('admin', 'seven');
     $config->save();
 
-    // Enable one of D8's test themes.
-    \Drupal::service('theme_handler')->enable(array('test_theme'));
+    // Install one of D8's test themes.
+    \Drupal::service('theme_handler')->install(array('test_theme'));
 
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_block');

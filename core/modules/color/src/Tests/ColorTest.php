@@ -70,7 +70,7 @@ class ColorTest extends WebTestBase {
         'scheme_color' => '#3b3b3b',
       ),
     );
-    theme_enable(array_keys($this->themes));
+    \Drupal::service('theme_handler')->install(array_keys($this->themes));
 
     // Array filled with valid and not valid color values.
     $this->colorTests = array(

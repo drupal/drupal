@@ -29,7 +29,7 @@ class PageTest extends WebTestBase {
   function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    $this->container->get('theme_handler')->enable(array('seven', 'bartik'));
+    $this->container->get('theme_handler')->install(array('seven', 'bartik'));
     $this->container->get('config.factory')->get('system.theme')
       ->set('default', 'bartik')
       ->set('admin', 'seven')

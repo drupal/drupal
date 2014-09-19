@@ -12,12 +12,13 @@ use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteBuilder;
 use Psr\Log\LoggerInterface;
 
 /**
- * Default theme handler using the config system for enabled/disabled themes.
+ * Default theme handler using the config system to store installation statuses.
  */
 class ThemeHandler implements ThemeHandlerInterface {
 
@@ -46,14 +47,14 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $list;
 
   /**
-   * The config factory to get the enabled themes.
+   * The config factory to get the installed themes.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
-   * The module handler to fire themes_enabled/themes_disabled hooks.
+   * The module handler to fire themes_installed/themes_uninstalled hooks.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
@@ -88,7 +89,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $logger;
 
   /**
-   * The route builder to rebuild the routes if a theme is enabled.
+   * The route builder to rebuild the routes if a theme is installed.
    *
    * @var \Drupal\Core\Routing\RouteBuilder
    */
@@ -109,30 +110,40 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $cssCollectionOptimizer;
 
   /**
+   * The config manager used to uninstall a theme.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   */
+  protected $configManager;
+
+  /**
    * Constructs a new ThemeHandler.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory to get the enabled themes.
+   *   The config factory to get the installed themes.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to fire themes_enabled/themes_disabled hooks.
+   *   The module handler to fire themes_installed/themes_uninstalled hooks.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state store.
    * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
    *   The info parser to parse the theme.info.yml files.
-   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
-   *   The CSS asset collection optimizer service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
+   *   The CSS asset collection optimizer service.
    * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
    *   (optional) The config installer to install configuration. This optional
    *   to allow the theme handler to work before Drupal is installed and has a
    *   database.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The config manager used to uninstall a theme.
    * @param \Drupal\Core\Routing\RouteBuilder $route_builder
-   *   (optional) The route builder to rebuild the routes if a theme is enabled.
+   *   (optional) The route builder to rebuild the routes if a theme is
+   *   installed.
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, ConfigManagerInterface $config_manager = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
@@ -140,6 +151,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     $this->logger = $logger;
     $this->cssCollectionOptimizer = $css_collection_optimizer;
     $this->configInstaller = $config_installer;
+    $this->configManager = $config_manager;
     $this->routeBuilder = $route_builder;
     $this->extensionDiscovery = $extension_discovery;
   }
@@ -157,7 +169,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function setDefault($name) {
     $list = $this->listInfo();
     if (!isset($list[$name])) {
-      throw new \InvalidArgumentException("$name theme is not enabled.");
+      throw new \InvalidArgumentException("$name theme is not installed.");
     }
     $this->configFactory->get('system.theme')
       ->set('default', $name)
@@ -168,12 +180,12 @@ class ThemeHandler implements ThemeHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function enable(array $theme_list, $enable_dependencies = TRUE) {
+  public function install(array $theme_list, $install_dependencies = TRUE) {
     $extension_config = $this->configFactory->get('core.extension');
 
     $theme_data = $this->rebuildThemeData();
 
-    if ($enable_dependencies) {
+    if ($install_dependencies) {
       $theme_list = array_combine($theme_list, $theme_list);
 
       if ($missing = array_diff_key($theme_list, $theme_data)) {
@@ -183,13 +195,12 @@ class ThemeHandler implements ThemeHandlerInterface {
         )));
       }
 
-      // Only process themes that are not enabled currently.
+      // Only process themes that are not installed currently.
       $installed_themes = $extension_config->get('theme') ?: array();
       if (!$theme_list = array_diff_key($theme_list, $installed_themes)) {
-        // Nothing to do. All themes already enabled.
+        // Nothing to do. All themes already installed.
         return TRUE;
       }
-      $installed_themes += $extension_config->get('disabled.theme') ?: array();
 
       while (list($theme) = each($theme_list)) {
         // Add dependencies to the list. The new themes will be processed as
@@ -218,14 +229,13 @@ class ThemeHandler implements ThemeHandlerInterface {
     }
     else {
       $installed_themes = $extension_config->get('theme') ?: array();
-      $installed_themes += $extension_config->get('disabled.theme') ?: array();
     }
 
-    $themes_enabled = array();
+    $themes_installed = array();
     foreach ($theme_list as $key) {
-      // Only process themes that are not already enabled.
-      $enabled = $extension_config->get("theme.$key") !== NULL;
-      if ($enabled) {
+      // Only process themes that are not already installed.
+      $installed = $extension_config->get("theme.$key") !== NULL;
+      if ($installed) {
         continue;
       }
 
@@ -240,7 +250,6 @@ class ThemeHandler implements ThemeHandlerInterface {
       // The value is not used; the weight is ignored for themes currently.
       $extension_config
         ->set("theme.$key", 0)
-        ->clear("disabled.theme.$key")
         ->save();
 
       // Add the theme to the current list.
@@ -263,11 +272,12 @@ class ThemeHandler implements ThemeHandlerInterface {
       // Only install default configuration if this theme has not been installed
       // already.
       if (!isset($installed_themes[$key])) {
-        // The default config installation storage only knows about the currently
-        // enabled list of themes, so it has to be reset in order to pick up the
-        // default config of the newly installed theme. However, do not reset the
-        // source storage when synchronizing configuration, since that would
-        // needlessly trigger a reload of the whole configuration to be imported.
+        // The default config installation storage only knows about the
+        // currently installed list of themes, so it has to be reset in order to
+        // pick up the default config of the newly installed theme. However, do
+        // not reset the source storage when synchronizing configuration, since
+        // that would needlessly trigger a reload of the whole configuration to
+        // be imported.
         if (!$this->configInstaller->isSyncing()) {
           $this->configInstaller->resetSourceStorage();
         }
@@ -276,58 +286,57 @@ class ThemeHandler implements ThemeHandlerInterface {
         $this->configInstaller->installDefaultConfig('theme', $key);
       }
 
-      $themes_enabled[] = $key;
+      $themes_installed[] = $key;
 
-      // Record the fact that it was enabled.
-      $this->logger->info('%theme theme enabled.', array('%theme' => $key));
+      // Record the fact that it was installed.
+      $this->logger->info('%theme theme installed.', array('%theme' => $key));
     }
 
     $this->cssCollectionOptimizer->deleteAll();
     $this->resetSystem();
 
-    // Invoke hook_themes_enabled() after the themes have been enabled.
-    $this->moduleHandler->invokeAll('themes_enabled', array($themes_enabled));
+    // Invoke hook_themes_installed() after the themes have been installed.
+    $this->moduleHandler->invokeAll('themes_installed', array($themes_installed));
 
-    return !empty($themes_enabled);
+    return !empty($themes_installed);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function disable(array $theme_list) {
-    $list = $this->listInfo();
+  public function uninstall(array $theme_list) {
+    $extension_config = $this->configFactory->get('core.extension');
     $theme_config = $this->configFactory->get('system.theme');
-
+    $list = $this->listInfo();
     foreach ($theme_list as $key) {
       if (!isset($list[$key])) {
         throw new \InvalidArgumentException("Unknown theme: $key.");
       }
       if ($key === $theme_config->get('default')) {
-        throw new \InvalidArgumentException("The current default theme $key cannot be disabled.");
+        throw new \InvalidArgumentException("The current default theme $key cannot be uninstalled.");
       }
       if ($key === $theme_config->get('admin')) {
-        throw new \InvalidArgumentException("The current admin theme $key cannot be disabled.");
+        throw new \InvalidArgumentException("The current admin theme $key cannot be uninstalled.");
       }
-      // Base themes cannot be disabled if sub themes are enabled, and if they
-      // are not disabled at the same time.
+      // Base themes cannot be uninstalled if sub themes are installed, and if
+      // they are not uninstalled at the same time.
+      // @todo https://www.drupal.org/node/474684 and
+      //   https://www.drupal.org/node/1297856 themes should leverage the module
+      //   dependency system.
       if (!empty($list[$key]->sub_themes)) {
         foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
           if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
-            throw new \InvalidArgumentException("The base theme $key cannot be disabled, because theme $sub_key depends on it.");
+            throw new \InvalidArgumentException("The base theme $key cannot be uninstalled, because theme $sub_key depends on it.");
           }
         }
       }
     }
 
     $this->cssCollectionOptimizer->deleteAll();
-
-    $extension_config = $this->configFactory->get('core.extension');
     $current_theme_data = $this->state->get('system.theme.data', array());
     foreach ($theme_list as $key) {
       // The value is not used; the weight is ignored for themes currently.
-      $extension_config
-        ->clear("theme.$key")
-        ->set("disabled.theme.$key", 0);
+      $extension_config->clear("theme.$key");
 
       // Remove the theme from the current list.
       unset($this->list[$key]);
@@ -341,14 +350,17 @@ class ThemeHandler implements ThemeHandlerInterface {
 
       // @todo Remove system_list().
       $this->systemListReset();
+
+      // Remove all configuration belonging to the theme.
+      $this->configManager->uninstall('theme', $key);
+
     }
     $extension_config->save();
     $this->state->set('system.theme.data', $current_theme_data);
 
     $this->resetSystem();
 
-    // Invoke hook_themes_disabled after the themes have been disabled.
-    $this->moduleHandler->invokeAll('themes_disabled', array($theme_list));
+    $this->moduleHandler->invokeAll('themes_uninstalled', [$theme_list]);
   }
 
   /**
@@ -400,13 +412,13 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function refreshInfo() {
     $this->reset();
     $extension_config = $this->configFactory->get('core.extension');
-    $enabled = $extension_config->get('theme');
+    $installed = $extension_config->get('theme');
 
     // @todo Avoid re-scanning all themes by retaining the original (unaltered)
     //   theme info somewhere.
     $list = $this->rebuildThemeData();
     foreach ($list as $name => $theme) {
-      if (isset($enabled[$name])) {
+      if (isset($installed[$name])) {
         $this->addTheme($theme);
       }
     }
@@ -429,7 +441,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     $themes = $listing->scan('theme');
     $engines = $listing->scan('theme_engine');
     $extension_config = $this->configFactory->get('core.extension');
-    $enabled = $extension_config->get('theme') ?: array();
+    $installed = $extension_config->get('theme') ?: array();
 
     // Set defaults for theme info.
     $defaults = array(
@@ -458,7 +470,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
       // @todo Remove all code that relies on the $status property.
-      $theme->status = (int) isset($enabled[$key]);
+      $theme->status = (int) isset($installed[$key]);
 
       $theme->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
 

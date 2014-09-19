@@ -82,7 +82,7 @@ class TwigSettingsTest extends WebTestBase {
   function testTwigCacheOverride() {
     $extension = twig_extension();
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->enable(array('test_theme'));
+    $theme_handler->install(array('test_theme'));
     $theme_handler->setDefault('test_theme');
 
     // The registry still works on theme globals, so set them here.

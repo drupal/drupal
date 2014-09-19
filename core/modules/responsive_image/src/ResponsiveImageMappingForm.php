@@ -84,10 +84,10 @@ class ResponsiveImageMappingForm extends EntityForm {
     );
 
     if ((bool) $responsive_image_mapping->id() && $this->operation != 'duplicate') {
-      $description = $this->t('Select a breakpoint group from the enabled themes.') . ' ' . $this->t("Warning: if you change the breakpoint group you lose all your selected mappings.");
+      $description = $this->t('Select a breakpoint group from the installed themes.') . ' ' . $this->t("Warning: if you change the breakpoint group you lose all your selected mappings.");
     }
     else {
-      $description = $this->t('Select a breakpoint group from the enabled themes.');
+      $description = $this->t('Select a breakpoint group from the installed themes.');
     }
     $form['breakpointGroup'] = array(
       '#type' => 'select',

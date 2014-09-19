@@ -19,6 +19,10 @@ class ProjectInfo {
   /**
    * Populates an array of project data.
    *
+   * @todo https://www.drupal.org/node/2338167 update class since extensions can
+   *   no longer be hidden, enabled or disabled. Additionally, base themes have
+   *   to be installed for sub themes to work.
+   *
    * This iterates over a list of the installed modules or themes and groups
    * them by project and status. A few parts of this function assume that
    * enabled modules and themes are always processed first, and if disabled
@@ -51,15 +55,15 @@ class ProjectInfo {
       // projects list.
       if ($status && !empty($file->sub_themes)) {
         foreach ($file->sub_themes as $key => $name) {
-          // Build a list of enabled sub-themes.
+          // Build a list of installed sub-themes.
           if ($list[$key]->status) {
-            $file->enabled_sub_themes[$key] = $name;
+            $file->installed_sub_themes[$key] = $name;
           }
         }
-        // If the theme is disabled and there are no enabled subthemes, we
-        // should ignore this base theme for the enabled case. If the site is
-        // trying to display disabled themes, we'll catch it then.
-        if (!$file->status && empty($file->enabled_sub_themes)) {
+        // If the theme is uninstalled and there are no installed subthemes, we
+        // should ignore this base theme for the installed case. If the site is
+        // trying to display uninstalled themes, we'll catch it then.
+        if (!$file->status && empty($file->installed_sub_themes)) {
           continue;
         }
       }
@@ -73,8 +77,9 @@ class ProjectInfo {
         continue;
       }
 
-      // Skip if it's a hidden module or hidden theme without enabled sub-themes.
-      if (!empty($file->info['hidden']) && empty($file->enabled_sub_themes)) {
+      // Skip if it's a hidden module or hidden theme without installed
+      // sub-themes.
+      if (!empty($file->info['hidden']) && empty($file->installed_sub_themes)) {
         continue;
       }
 
@@ -115,10 +120,10 @@ class ProjectInfo {
       else {
         $project_display_type = $project_type;
       }
-      if (empty($status) && empty($file->enabled_sub_themes)) {
+      if (empty($status) && empty($file->installed_sub_themes)) {
         // If we're processing disabled modules or themes, append a suffix.
-        // However, we don't do this to a a base theme with enabled
-        // subthemes, since we treat that case as if it is enabled.
+        // However, we don't do this to a base theme with installed
+        // subthemes, since we treat that case as if it is installed.
         $project_display_type .= '-disabled';
       }
       // Add a list of sub-themes that "depend on" the project and a list of base
@@ -129,8 +134,8 @@ class ProjectInfo {
         $base_themes = array();
       }
       else {
-        // Add list of enabled sub-themes.
-        $sub_themes = !empty($file->enabled_sub_themes) ? $file->enabled_sub_themes : array();
+        // Add list of installed sub-themes.
+        $sub_themes = !empty($file->installed_sub_themes) ? $file->installed_sub_themes : array();
         // Add list of base themes.
         $base_themes = !empty($file->base_themes) ? $file->base_themes : array();
       }

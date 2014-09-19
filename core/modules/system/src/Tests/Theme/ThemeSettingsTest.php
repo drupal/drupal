@@ -50,7 +50,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertTrue(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
-    $this->container->get('theme_handler')->enable(array($name));
+    $this->container->get('theme_handler')->install(array($name));
     $this->assertIdentical(theme_get_setting('base', $name), 'only');
   }
 
@@ -61,7 +61,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFalse(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
-    $this->container->get('theme_handler')->enable(array($name));
+    $this->container->get('theme_handler')->install(array($name));
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }
 

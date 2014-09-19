@@ -60,14 +60,14 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
    * Tests that theme provided *.config_translation.yml files are found.
    */
   public function testThemeDiscovery() {
-    // Enable the test theme and rebuild routes.
+    // Install the test theme and rebuild routes.
     $theme = 'config_translation_test_theme';
 
     $this->drupalLogin($this->admin_user);
 
     $this->drupalGet('admin/appearance');
     $elements = $this->xpath('//a[normalize-space()=:label and contains(@href, :theme)]', array(
-      ':label' => 'Enable and set as default',
+      ':label' => 'Install and set as default',
       ':theme' => $theme,
     ));
     $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));

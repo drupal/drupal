@@ -12,7 +12,7 @@ use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests installing/enabling, disabling, and uninstalling of themes.
+ * Tests installing and uninstalling of themes.
  *
  * @group Extension
  */
@@ -39,11 +39,10 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Verifies that no themes are installed/enabled/disabled by default.
+   * Verifies that no themes are installed by default.
    */
   function testEmpty() {
     $this->assertFalse($this->extensionConfig()->get('theme'));
-    $this->assertFalse($this->extensionConfig()->get('disabled.theme'));
 
     $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
     $this->assertFalse(array_keys(system_list('theme')));
@@ -56,18 +55,17 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests enabling a theme.
+   * Tests installing a theme.
    */
-  function testEnable() {
+  function testInstall() {
     $name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
 
-    $this->themeHandler()->enable(array($name));
+    $this->themeHandler()->install(array($name));
 
     $this->assertIdentical($this->extensionConfig()->get("theme.$name"), 0);
-    $this->assertNull($this->extensionConfig()->get("disabled.theme.$name"));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
@@ -82,22 +80,22 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests enabling a sub-theme.
+   * Tests installing a sub-theme.
    */
-  function testEnableSubTheme() {
+  function testInstallSubTheme() {
     $name = 'test_subtheme';
     $base_name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(array_keys($themes));
 
-    $this->themeHandler()->enable(array($name));
+    $this->themeHandler()->install(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
     $this->assertTrue(isset($themes[$base_name]));
 
-    $this->themeHandler()->disable(array($name));
+    $this->themeHandler()->uninstall(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -105,17 +103,17 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests enabling a non-existing theme.
+   * Tests installing a non-existing theme.
    */
-  function testEnableNonExisting() {
+  function testInstallNonExisting() {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(array_keys($themes));
 
     try {
-      $message = 'ThemeHandler::enable() throws InvalidArgumentException upon enabling a non-existing theme.';
-      $this->themeHandler()->enable(array($name));
+      $message = 'ThemeHandler::install() throws InvalidArgumentException upon installing a non-existing theme.';
+      $this->themeHandler()->install(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -127,14 +125,14 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests enabling a theme with a too long name.
+   * Tests installing a theme with a too long name.
    */
-  function testEnableNameTooLong() {
+  function testInstallNameTooLong() {
     $name = 'test_theme_having_veery_long_name_which_is_too_long';
 
     try {
-      $message = 'ThemeHandler::enable() throws ExtensionNameLengthException upon enabling a theme with a too long name.';
-      $this->themeHandler()->enable(array($name));
+      $message = 'ThemeHandler::install() throws ExtensionNameLengthException upon installing a theme with a too long name.';
+      $this->themeHandler()->install(array($name));
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {
@@ -143,79 +141,12 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests disabling a theme.
+   * Tests uninstalling the default theme.
    */
-  function testDisable() {
-    $name = 'test_basetheme';
-    $this->themeHandler()->enable(array($name));
-
-    // Prime the relevant drupal_static()s.
-    $this->assertEqual(array_keys(system_list('theme')), array($name));
-    $this->assertIdentical(theme_get_setting('features.favicon', $name), FALSE);
-
-    $this->themeHandler()->disable(array($name));
-
-    $this->assertIdentical($this->extensionConfig()->get('theme'), array());
-    $this->assertIdentical($this->extensionConfig()->get("disabled.theme.$name"), 0);
-
-    $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
-    $this->assertFalse(array_keys(system_list('theme')));
-
-    // Verify that test_basetheme.settings no longer applies, even though the
-    // configuration still exists.
-    $this->assertIdentical(theme_get_setting('features.favicon', $name), TRUE);
-    $this->assertNull(theme_get_setting('base', $name));
-    $this->assertNull(theme_get_setting('override', $name));
-
-    // The theme is not uninstalled, so its configuration must still exist.
-    $this->assertTrue($this->config("$name.settings")->get());
-  }
-
-  /**
-   * Tests disabling and enabling a theme.
-   *
-   * Verifies that
-   * - themes can be re-enabled
-   * - default configuration is not re-imported upon re-enabling an already
-   *   installed theme.
-   */
-  function testDisableEnable() {
-    $name = 'test_basetheme';
-
-    $this->themeHandler()->enable(array($name));
-    $this->themeHandler()->disable(array($name));
-
-    $this->assertIdentical($this->config("$name.settings")->get('base'), 'only');
-    $this->assertIdentical($this->config('core.date_format.fancy')->get('label'), 'Fancy date');
-
-    // Default configuration never overwrites custom configuration, so just
-    // changing values in existing configuration will cause ConfigInstaller to
-    // simply skip those files. To ensure that no default configuration is
-    // re-imported, the custom configuration has to be deleted.
-    $this->configStorage()->delete("$name.settings");
-    $this->configStorage()->delete('core.date_format.fancy');
-    // Reflect direct storage operations in ConfigFactory.
-    $this->container->get('config.factory')->reset();
-
-    $this->themeHandler()->enable(array($name));
-
-    $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertEqual($themes[$name]->getName(), $name);
-
-    $this->assertEqual(array_keys(system_list('theme')), array_keys($themes));
-
-    $this->assertFalse($this->config("$name.settings")->get());
-    $this->assertNull($this->config('core.date_format.fancy')->get('label'));
-  }
-
-  /**
-   * Tests disabling the default theme.
-   */
-  function testDisableDefault() {
+  function testUninstallDefault() {
     $name = 'stark';
     $other_name = 'bartik';
-    $this->themeHandler()->enable(array($name, $other_name));
+    $this->themeHandler()->install(array($name, $other_name));
     $this->themeHandler()->setDefault($name);
 
     $themes = $this->themeHandler()->listInfo();
@@ -223,8 +154,8 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($themes[$other_name]));
 
     try {
-      $message = 'ThemeHandler::disable() throws InvalidArgumentException upon disabling default theme.';
-      $this->themeHandler()->disable(array($name));
+      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon disabling default theme.';
+      $this->themeHandler()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -237,12 +168,12 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests disabling the admin theme.
+   * Tests uninstalling the admin theme.
    */
-  function testDisableAdmin() {
+  function testUninstallAdmin() {
     $name = 'stark';
     $other_name = 'bartik';
-    $this->themeHandler()->enable(array($name, $other_name));
+    $this->themeHandler()->install(array($name, $other_name));
     $this->config('system.theme')->set('admin', $name)->save();
 
     $themes = $this->themeHandler()->listInfo();
@@ -250,8 +181,8 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($themes[$other_name]));
 
     try {
-      $message = 'ThemeHandler::disable() throws InvalidArgumentException upon disabling admin theme.';
-      $this->themeHandler()->disable(array($name));
+      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon disabling admin theme.';
+      $this->themeHandler()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -264,14 +195,14 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests disabling a sub-theme.
+   * Tests uninstalling a sub-theme.
    */
-  function testDisableSubTheme() {
+  function testUninstallSubTheme() {
     $name = 'test_subtheme';
     $base_name = 'test_basetheme';
 
-    $this->themeHandler()->enable(array($name));
-    $this->themeHandler()->disable(array($name));
+    $this->themeHandler()->install(array($name));
+    $this->themeHandler()->uninstall(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -279,17 +210,17 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests disabling a base theme before its sub-theme.
+   * Tests uninstalling a base theme before its sub-theme.
    */
-  function testDisableBaseBeforeSubTheme() {
+  function testUninstallBaseBeforeSubTheme() {
     $name = 'test_basetheme';
     $sub_name = 'test_subtheme';
 
-    $this->themeHandler()->enable(array($sub_name));
+    $this->themeHandler()->install(array($sub_name));
 
     try {
-      $message = 'ThemeHandler::disable() throws InvalidArgumentException upon disabling base theme before sub theme.';
-      $this->themeHandler()->disable(array($name));
+      $message = 'ThemeHandler::install() throws InvalidArgumentException upon uninstalling base theme before sub theme.';
+      $this->themeHandler()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -300,8 +231,8 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($themes[$name]));
     $this->assertTrue(isset($themes[$sub_name]));
 
-    // Verify that disabling both at the same time works.
-    $this->themeHandler()->disable(array($name, $sub_name));
+    // Verify that uninstalling both at the same time works.
+    $this->themeHandler()->uninstall(array($name, $sub_name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -309,17 +240,17 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests disabling a non-existing theme.
+   * Tests uninstalling a non-existing theme.
    */
-  function testDisableNonExisting() {
+  function testUninstallNonExisting() {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(array_keys($themes));
 
     try {
-      $message = 'ThemeHandler::disable() throws InvalidArgumentException upon disabling a non-existing theme.';
-      $this->themeHandler()->disable(array($name));
+      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon uninstalling a non-existing theme.';
+      $this->themeHandler()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -328,6 +259,47 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(array_keys($themes));
+  }
+
+  /**
+   * Tests uninstalling a theme.
+   */
+  function testUninstall() {
+    $name = 'test_basetheme';
+
+    $this->themeHandler()->install(array($name));
+    $this->assertTrue($this->config("$name.settings")->get());
+
+    $this->themeHandler()->uninstall(array($name));
+
+    $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
+    $this->assertFalse(array_keys(system_list('theme')));
+
+    $this->assertFalse($this->config("$name.settings")->get());
+
+    // Ensure that the uninstalled theme can be installed again.
+    $this->themeHandler()->install(array($name));
+    $themes = $this->themeHandler()->listInfo();
+    $this->assertTrue(isset($themes[$name]));
+    $this->assertEqual($themes[$name]->getName(), $name);
+    $this->assertEqual(array_keys(system_list('theme')), array_keys($themes));
+    $this->assertTrue($this->config("$name.settings")->get());
+  }
+
+  /**
+   * Tests uninstalling a theme that is not installed.
+   */
+  function testUninstallNotInstalled() {
+    $name = 'test_basetheme';
+
+    try {
+      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon uninstalling a theme that is not installed.';
+      $this->themeHandler()->uninstall(array($name));
+      $this->fail($message);
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    }
   }
 
   /**
@@ -340,7 +312,7 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $this->container->get('state')->set('module_test.hook_system_info_alter', TRUE);
     $module_handler = $this->container->get('module_handler');
 
-    $this->themeHandler()->enable(array($name));
+    $this->themeHandler()->install(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));

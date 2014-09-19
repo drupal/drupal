@@ -99,7 +99,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * Tests that the "add to shortcut" and "remove from shortcut" links work.
    */
   public function testShortcutQuickLink() {
-    theme_enable(array('seven'));
+    \Drupal::service('theme_handler')->install(array('seven'));
     \Drupal::config('system.theme')->set('admin', 'seven')->save();
     $this->container->get('config.factory')->get('node.settings')->set('use_admin_theme', '1')->save();
     $this->container->get('router.builder')->rebuild();
@@ -202,7 +202,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   public function testNoShortcutLink() {
     // Change to a theme that displays shortcuts.
-    theme_enable(array('seven'));
+    \Drupal::service('theme_handler')->install(array('seven'));
     \Drupal::config('system.theme')
       ->set('default', 'seven')
       ->save();
@@ -233,7 +233,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   public function testAccessShortcutsPermission() {
     // Change to a theme that displays shortcuts.
-    \Drupal::service('theme_handler')->enable(array('seven'));
+    \Drupal::service('theme_handler')->install(array('seven'));
     \Drupal::config('system.theme')
       ->set('default', 'seven')
       ->save();

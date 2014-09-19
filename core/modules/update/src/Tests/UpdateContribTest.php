@@ -162,8 +162,10 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests that subthemes are notified about security updates for base themes.
    */
   function testUpdateBaseThemeSecurityUpdate() {
-    // Only enable the subtheme, not the base theme.
-    theme_enable(array('update_test_subtheme'));
+    // @todo https://www.drupal.org/node/2338175 base themes have to be
+    //  installed.
+    // Only install the subtheme, not the base theme.
+    \Drupal::service('theme_handler')->install(array('update_test_subtheme'));
 
     // Define the initial state for core and the subtheme.
     $system_info = array(
@@ -197,6 +199,9 @@ class UpdateContribTest extends UpdateTestBase {
 
   /**
    * Tests that disabled themes are only shown when desired.
+   *
+   * @todo https://www.drupal.org/node/2338175 extensions can not be hidden and
+   *   base themes have to be installed.
    */
   function testUpdateShowDisabledThemes() {
     $update_settings = \Drupal::config('update.settings');
@@ -244,7 +249,8 @@ class UpdateContribTest extends UpdateTestBase {
     foreach (array(TRUE, FALSE) as $check_disabled) {
       $update_settings->set('check.disabled_extensions', $check_disabled)->save();
       $this->refreshUpdateStatus($xml_mapping);
-      // In neither case should we see the "Themes" heading for enabled themes.
+      // In neither case should we see the "Themes" heading for installed
+      // themes.
       $this->assertNoText(t('Themes'));
       if ($check_disabled) {
         $this->assertText(t('Disabled themes'));
@@ -265,8 +271,8 @@ class UpdateContribTest extends UpdateTestBase {
   function testUpdateHiddenBaseTheme() {
     module_load_include('compare.inc', 'update');
 
-    // Enable the subtheme.
-    theme_enable(array('update_test_subtheme'));
+    // Install the subtheme.
+    \Drupal::service('theme_handler')->install(array('update_test_subtheme'));
 
     // Add a project and initial state for base theme and subtheme.
     $system_info = array(

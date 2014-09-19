@@ -42,10 +42,10 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
       'id' => $default_theme . '_' . strtolower($this->randomMachineName(8)),
     ));
 
-    // Enable a different theme.
+    // Install a different theme.
     $new_theme = 'bartik';
     $this->assertFalse($new_theme == $default_theme, 'The new theme is different from the previous default theme.');
-    theme_enable(array($new_theme));
+    \Drupal::service('theme_handler')->install(array($new_theme));
     \Drupal::config('system.theme')
       ->set('default', $new_theme)
       ->save();

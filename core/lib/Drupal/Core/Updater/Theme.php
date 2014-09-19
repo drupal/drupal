@@ -82,7 +82,7 @@ class Theme extends Updater implements UpdaterInterface {
    */
   public function postInstallTasks() {
     return array(
-      l(t('Enable newly added themes'), 'admin/appearance'),
+      l(t('Install newly added themes'), 'admin/appearance'),
       l(t('Administration pages'), 'admin'),
     );
   }

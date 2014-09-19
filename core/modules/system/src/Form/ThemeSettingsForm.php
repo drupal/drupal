@@ -71,7 +71,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $themes = list_themes();
 
-    // Deny access if the theme is disabled or not found.
+    // Deny access if the theme is not installed or not found.
     if (!empty($theme) && (empty($themes[$theme]) || !$themes[$theme]->status)) {
       throw new NotFoundHttpException();
     }

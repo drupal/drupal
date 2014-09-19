@@ -41,7 +41,7 @@ class ThemeTest extends WebTestBase {
   function testThemeSettings() {
     // Ensure invalid theme settings form URLs return a proper 404.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertResponse(404, 'The theme settings form URL for a disabled theme could not be found.');
+    $this->assertResponse(404, 'The theme settings form URL for a uninstalled theme could not be found.');
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
     $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
 
@@ -179,9 +179,9 @@ class ThemeTest extends WebTestBase {
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
-    $this->container->get('theme_handler')->enable(array('seven'));
+    $this->container->get('theme_handler')->install(array('seven'));
 
-    // Enable an administration theme and show it on the node admin pages.
+    // Install an administration theme and show it on the node admin pages.
     $edit = array(
       'admin_theme' => 'seven',
       'use_admin_theme' => TRUE,
@@ -238,8 +238,8 @@ class ThemeTest extends WebTestBase {
    * Test switching the default theme.
    */
   function testSwitchDefaultTheme() {
-    // Enable Bartik and set it as the default theme.
-    theme_enable(array('bartik'));
+    // Install Bartik and set it as the default theme.
+    \Drupal::service('theme_handler')->install(array('bartik'));
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
     $this->assertEqual(\Drupal::config('system.theme')->get('default'), 'bartik');
@@ -257,7 +257,7 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Test that themes can't be enabled when the base theme or engine is missing.
+   * Test themes can't be installed when the base theme or engine is missing.
    */
   function testInvalidTheme() {
     // theme_page_test_system_info_alter() un-hides all hidden themes.

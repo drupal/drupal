@@ -27,7 +27,7 @@ class ThemeTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    theme_enable(array('test_theme'));
+    \Drupal::service('theme_handler')->install(array('test_theme'));
   }
 
   /**
@@ -199,11 +199,12 @@ class ThemeTest extends WebTestBase {
    */
   function testListThemes() {
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->enable(array('test_subtheme'));
+    $theme_handler->install(array('test_subtheme'));
     $themes = $theme_handler->listInfo();
 
-    // Check if drupal_theme_access() retrieves enabled themes properly from list_themes().
-    $this->assertTrue(drupal_theme_access('test_theme'), 'Enabled theme detected');
+    // Check if drupal_theme_access() retrieves installed themes properly from
+    // list_themes().
+    $this->assertTrue(drupal_theme_access('test_theme'), 'Installed theme detected');
 
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
@@ -221,7 +222,7 @@ class ThemeTest extends WebTestBase {
    * Test the theme_get_setting() function.
    */
   function testThemeGetSetting() {
-    $this->container->get('theme_handler')->enable(array('test_subtheme'));
+    $this->container->get('theme_handler')->install(array('test_subtheme'));
     \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('test_theme'));
     $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
     $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');

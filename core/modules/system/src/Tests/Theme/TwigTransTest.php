@@ -54,7 +54,7 @@ class TwigTransTest extends WebTestBase {
     parent::setUp();
 
     // Setup test_theme.
-    theme_enable(array('test_theme'));
+    \Drupal::service('theme_handler')->install(array('test_theme'));
     \Drupal::config('system.theme')->set('default', 'test_theme')->save();
 
     // Create and log in as admin.

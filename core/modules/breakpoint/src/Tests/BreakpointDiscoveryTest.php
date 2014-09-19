@@ -24,7 +24,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->enable(array('breakpoint_theme_test'));
+    \Drupal::service('theme_handler')->install(array('breakpoint_theme_test'));
   }
 
   /**

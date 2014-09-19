@@ -219,7 +219,7 @@ table.system-status-report .status-title {
 .system-themes-list {
   margin-bottom: 20px;
 }
-.system-themes-list-disabled {
+.system-themes-list-uninstalled {
   border-top: 1px solid #cdcdcd;
   padding-top: 20px;
 }
@@ -241,8 +241,8 @@ table.system-status-report .status-title {
 .theme-default .screenshot {
   border: 1px solid #aaa;
 }
-.system-themes-list-disabled .screenshot,
-.system-themes-list-disabled .no-screenshot {
+.system-themes-list-uninstalled .screenshot,
+.system-themes-list-uninstalled .no-screenshot {
   max-width: 194px;
   height: auto;
 }
@@ -257,31 +257,31 @@ table.system-status-report .status-title {
  * Theme display without vertical toolbar.
  */
 @media screen and (min-width: 45em) {
-  body:not(.toolbar-vertical) .system-themes-list-enabled .screenshot,
-  body:not(.toolbar-vertical) .system-themes-list-enabled .no-screenshot {
+  body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
+  body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
     margin: 0 20px 0 0; /* LTR */
     width: 294px;
   }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-enabled .screenshot,
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-enabled .no-screenshot {
+  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
+  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: right;
     margin: 0 0 0 20px;
   }
-  body:not(.toolbar-vertical) .system-themes-list-enabled h3 {
+  body:not(.toolbar-vertical) .system-themes-list-installed h3 {
     margin-top: 0;
   }
-  body:not(.toolbar-vertical) .system-themes-list-disabled .theme-selector {
+  body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
     box-sizing: border-box;
     width: 31.25%;
     float: left; /* LTR */
     padding: 20px 20px 20px 0; /* LTR */
   }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-disabled .theme-selector {
+  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
     float: right;
     padding: 20px 0 20px 20px;
   }
-  body:not(.toolbar-vertical) .system-themes-list-disabled .theme-info {
+  body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-info {
     min-height: 170px;
   }
 }
@@ -290,35 +290,35 @@ table.system-status-report .status-title {
  * Theme display with vertical toolbar.
  */
 @media screen and (min-width: 60em) {
-  .toolbar-vertical .system-themes-list-enabled .screenshot,
-  .toolbar-vertical .system-themes-list-enabled .no-screenshot {
+  .toolbar-vertical .system-themes-list-installed .screenshot,
+  .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
     margin: 0 20px 0 0; /* LTR */
     width: 294px;
   }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-enabled .screenshot,
-  [dir="rtl"] .toolbar-vertical .system-themes-list-enabled .no-screenshot {
+  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
+  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: right;
     margin: 0 0 0 20px;
   }
-  .toolbar-vertical .system-themes-list-enabled h3 {
+  .toolbar-vertical .system-themes-list-installed h3 {
     margin-top: 0;
   }
-  .toolbar-vertical .system-themes-list-disabled .theme-selector {
+  .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
     box-sizing: border-box;
     width: 31.25%;
     float: left; /* LTR */
     padding: 20px 20px 20px 0; /* LTR */
   }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-disabled .theme-selector {
+  [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
     float: right;
     padding: 20px 0 20px 20px;
   }
-  .toolbar-vertical .system-themes-list-disabled .theme-info {
+  .toolbar-vertical .system-themes-list-uninstalled .theme-info {
     min-height: 170px;
   }
 }
-.system-themes-list-enabled .theme-info {
+.system-themes-list-installed .theme-info {
   max-width: 940px;
 }
 

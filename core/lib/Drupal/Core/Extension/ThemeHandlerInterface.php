@@ -8,49 +8,54 @@
 namespace Drupal\Core\Extension;
 
 /**
- * Manages the list of available themes as well as enable/disable them.
+ * Manages the list of available themes as well as install/uninstall them.
  */
 interface ThemeHandlerInterface {
 
   /**
-   * Enables a given list of themes.
+   * Installs a given list of themes.
    *
    * @param array $theme_list
    *   An array of theme names.
-   * @param bool $enable_dependencies
+   * @param bool $install_dependencies
    *   (optional) If TRUE, dependencies will automatically be installed in the
    *   correct order. This incurs a significant performance cost, so use FALSE
    *   if you know $theme_list is already complete and in the correct order.
    *
    * @return bool
-   *   Whether any of the given themes have been enabled.
+   *   Whether any of the given themes have been installed.
    *
    * @throws \Drupal\Core\Extension\ExtensionNameLengthException
    *   Thrown when the theme name is to long
    */
-  public function enable(array $theme_list, $enable_dependencies = TRUE);
+  public function install(array $theme_list, $install_dependencies = TRUE);
 
   /**
-   * Disables a given list of themes.
+   * Uninstalls a given list of themes.
+   *
+   * Uninstalling a theme removes all related configuration (like blocks) and
+   * invokes the 'themes_uninstalled' hook.
    *
    * @param array $theme_list
-   *   An array of theme names.
+   *   The themes to uninstall.
    *
-   * @return bool
-   *   Whether any of the given themes have been disabled.
+   * @throws \InvalidArgumentException
+   *   Thrown when you uninstall an not installed theme.
+   *
+   * @see hook_themes_uninstalled()
    */
-  public function disable(array $theme_list);
+  public function uninstall(array $theme_list);
 
   /**
-   * Returns a list of currently enabled themes.
+   * Returns a list of currently installed themes.
    *
    * @return \Drupal\Core\Extension\Extension[]
-   *   An associative array of the currently enabled themes. The keys are the
+   *   An associative array of the currently installed themes. The keys are the
    *   themes' machine names and the values are objects having the following
    *   properties:
    *   - filename: The filepath and name of the .info.yml file.
    *   - name: The machine name of the theme.
-   *   - status: 1 for enabled, 0 for disabled themes.
+   *   - status: 1 for installed, 0 for uninstalled themes.
    *   - info: The contents of the .info.yml file.
    *   - stylesheets: A two dimensional array, using the first key for the
    *     media attribute (e.g. 'all'), the second for the name of the file
@@ -83,7 +88,7 @@ interface ThemeHandlerInterface {
   public function listInfo();
 
   /**
-   * Refreshes the theme info data of currently enabled themes.
+   * Refreshes the theme info data of currently installed themes.
    *
    * Modules can alter theme info, so this is typically called after a module
    * has been installed or uninstalled.
@@ -140,7 +145,17 @@ interface ThemeHandlerInterface {
   public function getDefault();
 
   /**
-   * Returns an array of directories for all enabled themes.
+   * Sets a new default theme.
+   *
+   * @param string $theme
+   *   The new default theme.
+   *
+   * @return $this
+   */
+  public function setDefault($theme);
+
+  /**
+   * Returns an array of directories for all installed themes.
    *
    * Useful for tasks such as finding a file that exists in all theme
    * directories.
@@ -150,13 +165,13 @@ interface ThemeHandlerInterface {
   public function getThemeDirectories();
 
   /**
-   * Determines whether a given theme is enabled.
+   * Determines whether a given theme is installed.
    *
    * @param string $theme
    *   The name of the theme (without the .theme extension).
    *
    * @return bool
-   *   TRUE if the theme is both installed and enabled.
+   *   TRUE if the theme is installed.
    */
   public function themeExists($theme);
 

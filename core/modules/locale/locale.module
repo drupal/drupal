@@ -343,20 +343,17 @@ function locale_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_themes_enabled().
- *
- * @todo This is technically wrong. We must not import upon enabling, but upon
- *   initial installation. The theme system is missing an installation hook.
+ * Implements hook_themes_installed().
  */
-function locale_themes_enabled($themes) {
+function locale_themes_installed($themes) {
   $components['theme'] = $themes;
   locale_system_update($components);
 }
 
 /**
- * Implements hook_themes_disabled().
+ * Implements hook_themes_uninstalled().
  */
-function locale_themes_disabled($themes) {
+function locale_themes_uninstalled($themes) {
   $components['theme'] = $themes;
   locale_system_remove($components);
 }

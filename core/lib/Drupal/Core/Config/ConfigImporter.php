@@ -124,7 +124,7 @@ class ConfigImporter {
   protected $themeHandler;
 
   /**
-   * Flag set to import system.theme during processing theme enable and disables.
+   * Flag set to import system.theme during processing theme install and uninstalls.
    *
    * @var bool
    */
@@ -252,8 +252,8 @@ class ConfigImporter {
         'uninstall' => array(),
       ),
       'theme' => array(
-        'enable' => array(),
-        'disable' => array(),
+        'install' => array(),
+        'uninstall' => array(),
       ),
     );
   }
@@ -395,9 +395,9 @@ class ConfigImporter {
     $module_list = array_reverse($module_list);
     $install = array_intersect(array_keys($module_list), $install);
 
-    // Work out what themes to enable and to disable.
-    $enable = array_diff(array_keys($new_extensions['theme']), array_keys($current_extensions['theme']));
-    $disable = array_diff(array_keys($current_extensions['theme']), array_keys($new_extensions['theme']));
+    // Work out what themes to install and to uninstall.
+    $theme_install = array_diff(array_keys($new_extensions['theme']), array_keys($current_extensions['theme']));
+    $theme_uninstall = array_diff(array_keys($current_extensions['theme']), array_keys($new_extensions['theme']));
 
     $this->extensionChangelist = array(
       'module' => array(
@@ -405,8 +405,8 @@ class ConfigImporter {
         'install' => $install,
       ),
       'theme' => array(
-        'enable' => $enable,
-        'disable' => $disable,
+        'install' => $theme_install,
+        'uninstall' => $theme_uninstall,
       ),
     );
   }
@@ -441,20 +441,10 @@ class ConfigImporter {
    */
   protected function getUnprocessedExtensions($type) {
     $changelist = $this->getExtensionChangelist($type);
-
-    if ($type == 'theme') {
-      $unprocessed = array(
-        'enable' => array_diff($changelist['enable'], $this->processedExtensions[$type]['enable']),
-        'disable' => array_diff($changelist['disable'], $this->processedExtensions[$type]['disable']),
-      );
-    }
-    else {
-      $unprocessed = array(
-        'install' => array_diff($changelist['install'], $this->processedExtensions[$type]['install']),
-        'uninstall' => array_diff($changelist['uninstall'], $this->processedExtensions[$type]['uninstall']),
-      );
-    }
-    return $unprocessed;
+    return array(
+      'install' => array_diff($changelist['install'], $this->processedExtensions[$type]['install']),
+      'uninstall' => array_diff($changelist['uninstall'], $this->processedExtensions[$type]['uninstall']),
+    );
   }
 
   /**
@@ -533,7 +523,7 @@ class ConfigImporter {
       $this->totalExtensionsToProcess += count($modules[$op]);
     }
     $themes = $this->getUnprocessedExtensions('theme');
-    foreach (array('enable', 'disable') as $op) {
+    foreach (array('install', 'uninstall') as $op) {
       $this->totalExtensionsToProcess += count($themes[$op]);
     }
 
@@ -576,7 +566,7 @@ class ConfigImporter {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
       $context['message'] = t('Synchronising extensions: @op @name.', array('@op' => $operation['op'], '@name' => $operation['name']));
       $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
-      $processed_count += count($this->processedExtensions['theme']['disable']) + count($this->processedExtensions['theme']['enable']);
+      $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
     }
     else {
@@ -650,24 +640,16 @@ class ConfigImporter {
    *   on. If there is nothing left to do returns FALSE;
    */
   protected function getNextExtensionOperation() {
-    foreach (array('install', 'uninstall') as $op) {
-      $modules = $this->getUnprocessedExtensions('module');
-      if (!empty($modules[$op])) {
-        return array(
-          'op' => $op,
-          'type' => 'module',
-          'name' => array_shift($modules[$op]),
-        );
-      }
-    }
-    foreach (array('enable', 'disable') as $op) {
-      $themes = $this->getUnprocessedExtensions('theme');
-      if (!empty($themes[$op])) {
-        return array(
-          'op' => $op,
-          'type' => 'theme',
-          'name' => array_shift($themes[$op]),
-        );
+    foreach (array('module', 'theme') as $type) {
+      foreach (array('install', 'uninstall') as $op) {
+        $unprocessed = $this->getUnprocessedExtensions($type);
+        if (!empty($unprocessed[$op])) {
+          return array(
+            'op' => $op,
+            'type' => $type,
+            'name' => array_shift($unprocessed[$op]),
+          );
+        }
       }
     }
     return FALSE;
@@ -794,11 +776,11 @@ class ConfigImporter {
       $this->moduleHandler->loadAll();
     }
     if ($type == 'theme') {
-      // Theme disables possible remove default or admin themes therefore we
-      // need to import this before doing any. If there are no disables and
-      // the default or admin theme is change this will be picked up whilst
+      // Theme uninstalls possible remove default or admin themes therefore we
+      // need to import this before doing any. If there are no uninstalls and
+      // the default or admin theme is changing this will be picked up whilst
       // processing configuration.
-      if ($op == 'disable' && $this->processedSystemTheme === FALSE) {
+      if ($op == 'uninstall' && $this->processedSystemTheme === FALSE) {
         $this->importConfig(StorageInterface::DEFAULT_COLLECTION, 'update', 'system.theme');
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;

@@ -50,7 +50,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    */
   public function testThemedViewPage() {
 
-    \Drupal::service('theme_handler')->enable(array('test_basetheme', 'test_subtheme'));
+    \Drupal::service('theme_handler')->install(array('test_basetheme', 'test_subtheme'));
 
     // Make base theme default then test for hook invocations.
     \Drupal::config('system.theme')

@@ -10,7 +10,7 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that a newly enabled theme does not inherit blocks to its hidden
+ * Tests that a newly installed theme does not inherit blocks to its hidden
  * regions.
  *
  * @group block
@@ -45,7 +45,7 @@ class BlockHiddenRegionTest extends WebTestBase {
   }
 
   /**
-   * Tests that hidden regions do not inherit blocks when a theme is enabled.
+   * Tests that hidden regions do not inherit blocks when a theme is installed.
    */
   public function testBlockNotInHiddenRegion() {
 
@@ -53,13 +53,13 @@ class BlockHiddenRegionTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText('Search', 'Block was displayed on the front page.');
 
-    // Enable "block_test_theme" and set it as the default theme.
+    // Install "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
-    theme_enable(array($theme));
+    \Drupal::service('theme_handler')->install(array($theme));
     \Drupal::config('system.theme')
       ->set('default', $theme)
       ->save();
-    // Enabling a theme will cause the kernel terminate event to rebuild the
+    // Installing a theme will cause the kernel terminate event to rebuild the
     // router. Simulate that here.
     \Drupal::service('router.builder')->rebuildIfNeeded();
 

@@ -191,7 +191,7 @@ class SystemController extends ControllerBase {
     uasort($themes, 'system_sort_modules_by_info_name');
 
     $theme_default = $config->get('default');
-    $theme_groups  = array('enabled' => array(), 'disabled' => array());
+    $theme_groups  = array('installed' => array(), 'uninstalled' => array());
     $admin_theme = $config->get('admin');
     $admin_theme_options = array();
 
@@ -251,10 +251,10 @@ class SystemController extends ControllerBase {
           if (!$theme->is_default) {
             if ($theme->getName() != $admin_theme) {
               $theme->operations[] = array(
-                'title' => $this->t('Disable'),
-                'route_name' => 'system.theme_disable',
+                'title' => $this->t('Uninstall'),
+                'route_name' => 'system.theme_uninstall',
                 'query' => $query,
-                'attributes' => array('title' => $this->t('Disable !theme theme', array('!theme' => $theme->info['name']))),
+                'attributes' => array('title' => $this->t('Uninstall !theme theme', array('!theme' => $theme->info['name']))),
               );
             }
             $theme->operations[] = array(
@@ -268,16 +268,16 @@ class SystemController extends ControllerBase {
         }
         else {
           $theme->operations[] = array(
-            'title' => $this->t('Enable'),
-            'route_name' => 'system.theme_enable',
+            'title' => $this->t('Install'),
+            'route_name' => 'system.theme_install',
             'query' => $query,
-            'attributes' => array('title' => $this->t('Enable !theme theme', array('!theme' => $theme->info['name']))),
+            'attributes' => array('title' => $this->t('Install !theme theme', array('!theme' => $theme->info['name']))),
           );
           $theme->operations[] = array(
-            'title' => $this->t('Enable and set as default'),
+            'title' => $this->t('Install and set as default'),
             'route_name' => 'system.theme_set_default',
             'query' => $query,
-            'attributes' => array('title' => $this->t('Enable !theme as default theme', array('!theme' => $theme->info['name']))),
+            'attributes' => array('title' => $this->t('Install !theme as default theme', array('!theme' => $theme->info['name']))),
           );
         }
       }
@@ -294,19 +294,19 @@ class SystemController extends ControllerBase {
         $theme->notes[] = $this->t('admin theme');
       }
 
-      // Sort enabled and disabled themes into their own groups.
-      $theme_groups[$theme->status ? 'enabled' : 'disabled'][] = $theme;
+      // Sort installed and uninstalled themes into their own groups.
+      $theme_groups[$theme->status ? 'installed' : 'uninstalled'][] = $theme;
     }
 
     // There are two possible theme groups.
     $theme_group_titles = array(
-      'enabled' => $this->formatPlural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
+      'installed' => $this->formatPlural(count($theme_groups['installed']), 'Installed theme', 'Installed themes'),
     );
-    if (!empty($theme_groups['disabled'])) {
-      $theme_group_titles['disabled'] = $this->formatPlural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
+    if (!empty($theme_groups['uninstalled'])) {
+      $theme_group_titles['uninstalled'] = $this->formatPlural(count($theme_groups['uninstalled']), 'Uninstalled theme', 'Uninstalled themes');
     }
 
-    uasort($theme_groups['enabled'], 'system_sort_themes');
+    uasort($theme_groups['installed'], 'system_sort_themes');
     $this->moduleHandler()->alter('system_themes_page', $theme_groups);
 
     $build = array();

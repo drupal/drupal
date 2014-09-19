@@ -26,7 +26,7 @@ class CurrentThemeConditionTest extends KernelTestBase {
    * Tests the current theme condition.
    */
   public function testCurrentTheme() {
-    \Drupal::service('theme_handler')->enable(array('test_theme'));
+    \Drupal::service('theme_handler')->install(array('test_theme'));
 
     $manager = \Drupal::service('plugin.manager.condition');
     /** @var $condition \Drupal\Core\Condition\ConditionInterface */

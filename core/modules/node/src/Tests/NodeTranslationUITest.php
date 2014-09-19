@@ -182,7 +182,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
 
     // Set up Seven as the admin theme and use it for node editing.
-    $this->container->get('theme_handler')->enable(array('seven'));
+    $this->container->get('theme_handler')->install(array('seven'));
     $edit = array();
     $edit['admin_theme'] = 'seven';
     $edit['use_admin_theme'] = TRUE;

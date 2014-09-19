@@ -25,7 +25,7 @@ class EngineTwigTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    theme_enable(array('test_theme'));
+    \Drupal::service('theme_handler')->install(array('test_theme'));
   }
 
   /**
