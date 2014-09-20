@@ -34,8 +34,8 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
-    $settings = parent::defaultSettings();
+  public static function defaultStorageSettings() {
+    $settings = parent::defaultStorageSettings();
     // The target bundle is handled by the 'target_bundles' property in the
     // 'handler_settings' instance setting.
     unset($settings['target_bundle']);
@@ -45,10 +45,10 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     return array(
       'handler_settings' => array(),
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
   }
 
   /**
@@ -160,7 +160,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element['target_type'] = array(
       '#type' => 'select',
       '#title' => t('Type of item to reference'),
@@ -177,8 +177,8 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
-    $instance = $form_state->get('instance');
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $field = $form_state->get('field');
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getSetting('target_type'));
@@ -198,9 +198,9 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
     $form = array(
       '#type' => 'container',
       '#process' => array(
-        '_entity_reference_field_instance_settings_ajax_process',
+        '_entity_reference_field_field_settings_ajax_process',
       ),
-      '#element_validate' => array(array(get_class($this), 'instanceSettingsFormValidate')),
+      '#element_validate' => array(array(get_class($this), 'fieldSettingsFormValidate')),
     );
     $form['handler'] = array(
       '#type' => 'details',
@@ -214,7 +214,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
       '#type' => 'select',
       '#title' => t('Reference method'),
       '#options' => $handlers_options,
-      '#default_value' => $instance->getSetting('handler'),
+      '#default_value' => $field->getSetting('handler'),
       '#required' => TRUE,
       '#ajax' => TRUE,
       '#limit_validation_errors' => array(),
@@ -234,8 +234,8 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
       '#attributes' => array('class' => array('entity_reference-settings')),
     );
 
-    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
-    $form['handler']['handler_settings'] += $handler->settingsForm($instance);
+    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field);
+    $form['handler']['handler_settings'] += $handler->settingsForm($field);
 
     return $form;
   }
@@ -248,10 +248,10 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    */
-  public static function instanceSettingsFormValidate(array $form, FormStateInterface $form_state) {
-    if ($form_state->hasValue('instance')) {
-      $form_state->unsetValue(array('instance', 'settings', 'handler_submit'));
-      $form_state->get('instance')->settings = $form_state->getValue(['instance', 'settings']);
+  public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
+    if ($form_state->hasValue('field')) {
+      $form_state->unsetValue(array('field', 'settings', 'handler_submit'));
+      $form_state->get('field')->settings = $form_state->getValue(['field', 'settings']);
     }
   }
 

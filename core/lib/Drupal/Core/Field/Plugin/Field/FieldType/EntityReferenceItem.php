@@ -38,20 +38,20 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'target_type' => \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user',
       'target_bundle' => NULL,
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     return array(
       'handler' => 'default',
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
   }
 
   /**

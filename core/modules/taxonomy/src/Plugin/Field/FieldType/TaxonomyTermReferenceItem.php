@@ -31,7 +31,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'target_type' => 'taxonomy_term',
       'options_list_callback' => NULL,
@@ -41,7 +41,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
           'parent' => 0,
         ),
       ),
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
@@ -120,7 +120,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $options = array();
     foreach ($vocabularies as $vocabulary) {
@@ -152,7 +152,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     return array();
   }
 

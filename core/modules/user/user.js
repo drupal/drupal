@@ -174,25 +174,4 @@
 
   };
 
-  /**
-   * Field instance settings screen: force the 'Display on registration form'
-   * checkbox checked whenever 'Required' is checked.
-   */
-  Drupal.behaviors.fieldUserRegistration = {
-    attach: function (context, settings) {
-      var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
-
-      if ($checkbox.length) {
-        $(context).find('input#edit-instance-required').once('user-register-form-checkbox', function () {
-          $(this).on('change', function (e) {
-            if ($(this).prop('checked')) {
-              $checkbox.prop('checked', true);
-            }
-          });
-        });
-
-      }
-    }
-  };
-
 })(jQuery);

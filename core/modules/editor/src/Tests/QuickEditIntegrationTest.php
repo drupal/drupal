@@ -72,7 +72,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
 
     // Create a field.
     $this->field_name = 'field_textarea';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $this->field_name, 'text', 1, 'Long text field',
       // Instance settings.
       array(),

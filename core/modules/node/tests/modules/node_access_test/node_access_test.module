@@ -21,7 +21,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 
@@ -125,13 +125,13 @@ function node_access_test_add_field(NodeTypeInterface $type) {
     'type' => 'integer',
   ));
   $field_storage->save();
-  $instance = FieldInstanceConfig::create(array(
+  $field = FieldConfig::create(array(
     'field_name' => 'private',
     'entity_type' => 'node',
     'bundle' => $type->id(),
     'label' => 'Private',
   ));
-  $instance->save();
+  $field->save();
 
   // Assign widget settings for the 'default' form mode.
   entity_get_form_display('node', $type->id(), 'default')

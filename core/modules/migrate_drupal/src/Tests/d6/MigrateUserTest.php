@@ -44,7 +44,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       'type' => 'image',
       'translatable' => '0',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'label' => 'User Picture',
       'description' => '',
       'field_name' => 'user_picture',

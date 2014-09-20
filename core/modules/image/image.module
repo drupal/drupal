@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Image style constant for user presets in the database.
@@ -332,15 +332,15 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
 function image_entity_presave(EntityInterface $entity) {
   $field_storage = FALSE;
   $entity_type_id = $entity->getEntityTypeId();
-  if ($entity_type_id == 'field_instance_config') {
+  if ($entity_type_id == 'field_config') {
     $field_storage = $entity->getFieldStorageDefinition();
-    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings('image');
+    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultFieldSettings('image');
   }
   elseif ($entity_type_id == 'field_storage_config') {
     $field_storage = $entity;
-    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultSettings('image');
+    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultStorageSettings('image');
   }
-  // Exit, if not saving an image field or image field instance entity.
+  // Exit, if not saving an image field storage or image field entity.
   if (!$field_storage || $field_storage->type != 'image') {
     return;
   }
@@ -409,18 +409,18 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function image_field_instance_config_update(FieldInstanceConfigInterface $field_instance) {
-  $field_storage = $field_instance->getFieldStorageDefinition();
+function image_field_config_update(FieldConfigInterface $field) {
+  $field_storage = $field->getFieldStorageDefinition();
   if ($field_storage->type != 'image') {
     // Only act on image fields.
     return;
   }
 
-  $prior_instance = $field_instance->original;
+  $prior_instance = $field->original;
 
-  $fid_new = $field_instance->settings['default_image']['fid'];
+  $fid_new = $field->settings['default_image']['fid'];
   $fid_old = $prior_instance->settings['default_image']['fid'];
 
   // If the old and new files do not match, update the default accordingly.
@@ -430,11 +430,11 @@ function image_field_instance_config_update(FieldInstanceConfigInterface $field_
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
       $file_new->save();
-      \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field_instance->uuid());
+      \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field->uuid());
     }
     // Delete the old file, if present.
     if ($fid_old && ($file_old = file_load($fid_old))) {
-      \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field_instance->uuid());
+      \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field->uuid());
     }
   }
 
@@ -463,20 +463,20 @@ function image_field_storage_config_delete(FieldStorageConfigInterface $field) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function image_field_instance_config_delete(FieldInstanceConfigInterface $field_instance) {
-  $field_storage = $field_instance->getFieldStorageDefinition();
+function image_field_config_delete(FieldConfigInterface $field) {
+  $field_storage = $field->getFieldStorageDefinition();
   if ($field_storage->type != 'image') {
     // Only act on image fields.
     return;
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = $field_instance->settings['default_image']['fid'];
+  $fid = $field->settings['default_image']['fid'];
 
   // Remove the default image when the instance is deleted.
   if ($fid && ($file = file_load($fid))) {
-    \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field_instance->uuid());
+    \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
   }
 }

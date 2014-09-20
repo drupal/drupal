@@ -105,7 +105,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       if (!empty($this->original) && $this->id() !== $this->original->id()) {
         // The old image style name needs flushing after a rename.
         $this->original->flush();
-        // Update field instance settings if necessary.
+        // Update field settings if necessary.
         if (!$this->isSyncing()) {
           static::replaceImageStyle($this);
         }
@@ -126,7 +126,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     foreach ($entities as $style) {
       // Flush cached media for the deleted style.
       $style->flush();
-      // Check whether field instance settings need to be updated.
+      // Check whether field settings need to be updated.
       // In case no replacement style was specified, all image fields that are
       // using the deleted style are left in a broken state.
       if (!$style->isSyncing() && $new_id = $style->getReplacementID()) {
@@ -138,7 +138,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   }
 
   /**
-   * Update field instance settings if the image style name is changed.
+   * Update field settings if the image style name is changed.
    *
    * @param \Drupal\image\ImageStyleInterface $style
    *   The image style.

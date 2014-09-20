@@ -52,7 +52,7 @@ interface CommentManagerInterface {
    * @param string $entity_type
    *   The entity type to attach the default comment field to.
    * @param string $bundle
-   *   The bundle to attach the default comment field instance to.
+   *   The bundle to attach the default comment field to.
    * @param string $field_name
    *   (optional) Field name to use for the comment field. Defaults to
    *     'comment'.
@@ -66,7 +66,7 @@ interface CommentManagerInterface {
   public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment');
 
   /**
-   * Creates a comment_body field instance.
+   * Creates a comment_body field.
    *
    * @param string $comment_type
    *   The comment bundle.

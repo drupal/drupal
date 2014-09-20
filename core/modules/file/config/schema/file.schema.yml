@@ -22,7 +22,7 @@ file.settings:
           type: path
           label: 'Directory'
 
-field.file.settings:
+field.file.storage_settings:
   type: base_entity_reference_field_settings
   label: 'File settings'
   mapping:
@@ -43,7 +43,7 @@ field.file.value:
     - type: string
       label: 'Value'
 
-base_file_field_instance_settings:
+base_file_field_field_settings:
   type: mapping
   mapping:
     handler:
@@ -59,8 +59,8 @@ base_file_field_instance_settings:
       type: string
       label: 'Maximum upload size'
 
-field.file.instance_settings:
-  type: base_file_field_instance_settings
+field.file.field_settings:
+  type: base_file_field_field_settings
   label: 'File settings'
   mapping:
     description_field:

@@ -87,7 +87,7 @@ class ConfigImporterFieldPurger {
       }
     }
     // Each field possibly needs one last field_purge_batch() call to remove the
-    // last instance and the field itself.
+    // last field and the field storage itself.
     $context['sandbox']['field']['steps_to_delete'] += count($fields);
 
     $context['sandbox']['field']['current_progress'] = 0;

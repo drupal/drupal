@@ -53,7 +53,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
 
     $this->installEntitySchema('entity_test_rev');
 
-    entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
+    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');

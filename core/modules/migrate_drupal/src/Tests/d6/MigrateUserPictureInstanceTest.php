@@ -52,7 +52,7 @@ class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
    * Tests the Drupal 6 user picture to Drupal 8 picture field instance migration.
    */
   public function testUserPictureFieldInstance() {
-    $field = entity_load('field_instance_config', 'user.user.user_picture');
+    $field = entity_load('field_config', 'user.user.user_picture');
     $settings = $field->getSettings();
     $this->assertEqual($settings['file_extensions'], 'png gif jpg jpeg');
     $this->assertEqual($settings['file_directory'], 'pictures');

@@ -28,13 +28,13 @@ class TelephoneItemTest extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create a telephone field and instance for validation.
+    // Create a telephone field storage and field for validation.
     entity_create('field_storage_config', array(
       'name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',

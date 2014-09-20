@@ -155,7 +155,7 @@ class BaseFieldOverride extends FieldConfigBase {
    */
   public function preSave(EntityStorageInterface $storage) {
     // Set the default instance settings.
-    $this->settings += \Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings($this->getType());
+    $this->settings += \Drupal::service('plugin.manager.field.field_type')->getDefaultFieldSettings($this->getType());
 
     // Call the parent's presave method to perform validate and calculate
     // dependencies.

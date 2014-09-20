@@ -19,7 +19,7 @@ interface FormatterInterface extends PluginSettingsInterface {
   /**
    * Returns a form to configure settings for the formatter.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow
+   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
    * administrators to configure the formatter. The field_ui module takes care
    * of handling submitted form values.
    *

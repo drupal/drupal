@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Form\FieldInstanceConfigDeleteForm.
+ * Contains \Drupal\field_ui\Form\FieldConfigDeleteForm.
  */
 
 namespace Drupal\field_ui\Form;
@@ -14,9 +14,9 @@ use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form for removing a field instance from a bundle.
+ * Provides a form for removing a field from a bundle.
  */
-class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
+class FieldConfigDeleteForm extends EntityConfirmFormBase {
 
   /**
    * The entity manager.
@@ -26,7 +26,7 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
   protected $entityManager;
 
   /**
-   * Constructs a new FieldInstanceConfigDeleteForm object.
+   * Constructs a new FieldConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
@@ -88,7 +88,7 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
     // purged. In the case that a field has minimal or no content, a single call
     // to field_purge_batch() will remove it from the system. Call this with a
     // low batch limit to avoid administrators having to wait for cron runs when
-    // removing instances that meet this criteria.
+    // removing fields that meet this criteria.
     field_purge_batch(10);
   }
 

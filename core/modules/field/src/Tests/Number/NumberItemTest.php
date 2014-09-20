@@ -28,14 +28,14 @@ class NumberItemTest extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create number fields and instances for validation.
+    // Create number field storages and fields for validation.
     foreach (array('integer', 'float', 'decimal') as $type) {
       entity_create('field_storage_config', array(
         'name' => 'field_' . $type,
         'entity_type' => 'entity_test',
         'type' => $type,
       ))->save();
-      entity_create('field_instance_config', array(
+      entity_create('field_config', array(
         'entity_type' => 'entity_test',
         'field_name' => 'field_' . $type,
         'bundle' => 'entity_test',

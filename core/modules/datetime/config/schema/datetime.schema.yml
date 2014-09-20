@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Datetime module.
 
-field.datetime.settings:
+field.datetime.storage_settings:
   type: mapping
   label: 'Datetime settings'
   mapping:
@@ -8,7 +8,7 @@ field.datetime.settings:
       type: string
       label: 'Date type'
 
-field.datetime.instance_settings:
+field.datetime.field_settings:
   type: sequence
   label: 'Settings'
   sequence:

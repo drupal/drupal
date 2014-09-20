@@ -24,16 +24,16 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
   public static $modules = array('user', 'entity', 'system', 'field', 'text', 'entity_test', 'field_test');
 
   /**
-   * Bag of created fields and instances.
+   * Bag of created field storages and fields.
    *
-   * Allows easy access to test field/instance names/IDs/objects via:
-   * - $this->fields->field_name[suffix]
-   * - $this->fields->field_storage[suffix]
-   * - $this->fields->field_storage_uuid[suffix]
-   * - $this->fields->instance[suffix]
-   * - $this->fields->instance_definition[suffix]
+   * Allows easy access to test field storage/field names/IDs/objects via:
+   * - $this->fieldTestData->field_name[suffix]
+   * - $this->fieldTestData->field_storage[suffix]
+   * - $this->fieldTestData->field_storage_uuid[suffix]
+   * - $this->fieldTestData->field[suffix]
+   * - $this->fieldTestData->field_definition[suffix]
    *
-   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithInstance()
+   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
    *
    * @var \ArrayObject
    */
@@ -56,27 +56,27 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
   }
 
   /**
-   * Create a field and an instance of it.
+   * Create a field and an associated field storage.
    *
    * @param string $suffix
    *   (optional) A string that should only contain characters that are valid in
    *   PHP variable names as well.
    * @param string $entity_type
-   *   (optional) The entity type on which the instance should be created.
+   *   (optional) The entity type on which the field should be created.
    *   Defaults to "entity_test".
    * @param string $bundle
-   *   (optional) The entity type on which the instance should be created.
+   *   (optional) The entity type on which the field should be created.
    *   Defaults to the default bundle of the entity type.
    */
-  protected function createFieldWithInstance($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
+  protected function createFieldWithStorage($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
     if (empty($bundle)) {
       $bundle = $entity_type;
     }
     $field_name = 'field_name' . $suffix;
     $field_storage = 'field_storage' . $suffix;
     $field_storage_uuid = 'field_storage_uuid' . $suffix;
-    $instance = 'instance' . $suffix;
-    $instance_definition = 'instance_definition' . $suffix;
+    $field = 'field' . $suffix;
+    $field_definition = 'field_definition' . $suffix;
 
     $this->fieldTestData->$field_name = drupal_strtolower($this->randomMachineName() . '_field_name' . $suffix);
     $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
@@ -87,17 +87,17 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     ));
     $this->fieldTestData->$field_storage->save();
     $this->fieldTestData->$field_storage_uuid = $this->fieldTestData->$field_storage->uuid();
-    $this->fieldTestData->$instance_definition = array(
+    $this->fieldTestData->$field_definition = array(
       'field_storage' => $this->fieldTestData->$field_storage,
       'bundle' => $bundle,
       'label' => $this->randomMachineName() . '_label',
       'description' => $this->randomMachineName() . '_description',
       'settings' => array(
-        'test_instance_setting' => $this->randomMachineName(),
+        'test_field_setting' => $this->randomMachineName(),
       ),
     );
-    $this->fieldTestData->$instance = entity_create('field_instance_config', $this->fieldTestData->$instance_definition);
-    $this->fieldTestData->$instance->save();
+    $this->fieldTestData->$field = entity_create('field_config', $this->fieldTestData->$field_definition);
+    $this->fieldTestData->$field->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($this->fieldTestData->$field_name, array(

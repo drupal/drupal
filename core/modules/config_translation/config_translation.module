@@ -80,9 +80,9 @@ function config_translation_entity_type_alter(array &$entity_types) {
       if ($entity_type_id == 'block') {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListBuilder';
       }
-      elseif ($entity_type_id == 'field_instance_config') {
-        $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListBuilder';
-        // Will be filled in dynamically, see \Drupal\field\Entity\FieldInstanceConfig::linkTemplates().
+      elseif ($entity_type_id == 'field_config') {
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldListBuilder';
+        // Will be filled in dynamically, see \Drupal\field\Entity\FieldConfig::linkTemplates().
         $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.');
       }
       else {
@@ -105,17 +105,17 @@ function config_translation_config_translation_info(&$info) {
   $route_provider = \Drupal::service('router.route_provider');
 
   // If field UI is not enabled, the base routes of the type
-  // "field_ui.instance_edit_$entity_type" are not defined.
+  // "field_ui.field_edit_$entity_type" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
     foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       $base_route = NULL;
       try {
-        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type_id);
+        $base_route = $route_provider->getRouteByName('field_ui.field_edit_' . $entity_type_id);
       }
       catch (RouteNotFoundException $e) {
         if ($collection = \Drupal::service('router.builder')->getCollectionDuringRebuild()) {
-          $base_route = $collection->get('field_ui.instance_edit_' . $entity_type_id);
+          $base_route = $collection->get('field_ui.field_edit_' . $entity_type_id);
         }
         // Ignore non-existent routes.
       }
@@ -123,10 +123,10 @@ function config_translation_config_translation_info(&$info) {
       // Make sure entity type is fieldable and has a base route.
       if ($entity_type->isFieldable() && !empty($base_route)) {
         $info[$entity_type_id . '_fields'] = array(
-          'base_route_name' => 'field_ui.instance_edit_' . $entity_type_id,
-          'entity_type' => 'field_instance_config',
+          'base_route_name' => 'field_ui.field_edit_' . $entity_type_id,
+          'entity_type' => 'field_config',
           'title' => '!label field',
-          'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
+          'class' => '\Drupal\config_translation\ConfigFieldMapper',
           'base_entity_type' => $entity_type_id,
           'weight' => 10,
         );
@@ -145,7 +145,7 @@ function config_translation_config_translation_info(&$info) {
       // Do not record this entity mapper if the entity type does not
       // provide a base route. We'll surely not be able to do anything with
       // it anyway. Configuration entities with a dynamic base path, such as
-      // field instances, need special treatment. See above.
+      // fields, need special treatment. See above.
       continue;
     }
 

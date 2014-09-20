@@ -63,8 +63,8 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->term->save();
 
     // Use the util to create an instance.
-    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
-    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
+    entity_reference_create_field('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
+    entity_reference_create_field('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
   }
 
   /**

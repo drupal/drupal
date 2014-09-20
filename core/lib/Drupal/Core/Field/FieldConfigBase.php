@@ -21,7 +21,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   use ThirdPartySettingsTrait;
 
   /**
-   * The instance ID.
+   * The field ID.
    *
    * The ID consists of 3 parts: the entity type, bundle and the field name.
    *
@@ -32,7 +32,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   public $id;
 
   /**
-   * The name of the field attached to the bundle by this instance.
+   * The name of the field attached to the bundle by this field.
    *
    * @var string
    */
@@ -52,38 +52,38 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   public $field_type;
 
   /**
-   * The name of the entity type the instance is attached to.
+   * The name of the entity type the field is attached to.
    *
    * @var string
    */
   public $entity_type;
 
   /**
-   * The name of the bundle the instance is attached to.
+   * The name of the bundle the field is attached to.
    *
    * @var string
    */
   public $bundle;
 
   /**
-   * The human-readable label for the instance.
+   * The human-readable label for the field.
    *
    * This will be used as the title of Form API elements for the field in entity
    * edit forms, or as the label for the field values in displayed entities.
    *
-   * If not specified, this defaults to the field_name (mostly useful for field
-   * instances created in tests).
+   * If not specified, this defaults to the field_name (mostly useful for fields
+   * created in tests).
    *
    * @var string
    */
   public $label;
 
   /**
-   * The instance description.
+   * The field description.
    *
    * A human-readable description for the field when used with this bundle.
    * For example, the description will be the help text of Form API elements for
-   * this instance in entity edit forms.
+   * this field in entity edit forms.
    *
    * @var string
    */

@@ -49,7 +49,7 @@ class reEnableModuleFieldTest extends WebTestBase {
       'type' => 'telephone',
     ));
     $field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'article',
       'label' => 'Telephone Number',

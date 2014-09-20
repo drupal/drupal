@@ -18,7 +18,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
  * to ensure that implementations have the expected save() method.
  *
  * @see \Drupal\Core\Field\Entity\BaseFieldOverride
- * @see \Drupal\field\Entity\FieldInstanceConfig
+ * @see \Drupal\field\Entity\FieldConfig
  */
 interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInterface, ThirdPartySettingsInterface {
 
@@ -52,10 +52,10 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
   public function allowBundleRename();
 
   /**
-   * Returns the name of the bundle this field instance is attached to.
+   * Returns the name of the bundle this field is attached to.
    *
    * @return string
-   *   The name of the bundle this field instance is attached to.
+   *   The name of the bundle this field is attached to.
    */
   public function targetBundle();
 

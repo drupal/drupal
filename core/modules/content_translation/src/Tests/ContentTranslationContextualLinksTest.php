@@ -86,7 +86,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
       'cardinality' => 1,
       'translatable' => TRUE,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'node',
       'field_name' => 'field_test_text',
       'bundle' => $this->bundle,

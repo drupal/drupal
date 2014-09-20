@@ -431,7 +431,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  *   An array of default values, in the same format as the $default_value
  *   property.
  *
- * @see \Drupal\field\Entity\FieldInstanceConfig::$default_value
+ * @see \Drupal\field\Entity\FieldConfig::$default_value
  */
 function entity_test_field_default_value(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
   return array(array('value' => $definition->getName() . '_' . $entity->language()->id));

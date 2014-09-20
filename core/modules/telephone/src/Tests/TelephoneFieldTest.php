@@ -27,7 +27,7 @@ class TelephoneFieldTest extends WebTestBase {
     'telephone'
   );
 
-  protected $instance;
+  protected $field;
   protected $web_user;
 
   protected function setUp() {
@@ -51,7 +51,7 @@ class TelephoneFieldTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'telephone',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => 'field_telephone',
       'label' => 'Telephone Number',
       'entity_type' => 'node',

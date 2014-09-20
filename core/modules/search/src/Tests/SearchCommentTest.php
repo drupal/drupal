@@ -9,7 +9,7 @@ namespace Drupal\search\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests integration searching comments.
@@ -74,9 +74,9 @@ class SearchCommentTest extends SearchTestBase {
     $comment_body = 'Test comment body';
 
     // Make preview optional.
-    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
-    $instance->settings['preview'] = DRUPAL_OPTIONAL;
-    $instance->save();
+    $field = FieldConfig::loadByName('node', 'article', 'comment');
+    $field->settings['preview'] = DRUPAL_OPTIONAL;
+    $field->save();
 
     // Allow anonymous users to search content.
     $edit = array(
@@ -146,9 +146,9 @@ class SearchCommentTest extends SearchTestBase {
 
     // Create a node.
     // Make preview optional.
-    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
-    $instance->settings['preview'] = DRUPAL_OPTIONAL;
-    $instance->save();
+    $field = FieldConfig::loadByName('node', 'article', 'comment');
+    $field->settings['preview'] = DRUPAL_OPTIONAL;
+    $field->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Post a comment using 'Full HTML' text format.

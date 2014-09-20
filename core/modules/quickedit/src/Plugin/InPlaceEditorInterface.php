@@ -35,7 +35,7 @@ interface InPlaceEditorInterface extends PluginInspectionInterface {
    * Generates metadata that is needed specifically for this editor.
    *
    * Will only be called by \Drupal\quickedit\MetadataGeneratorInterface::generate()
-   * when the passed in field instance & item values will use this editor.
+   * when the passed in field & item values will use this editor.
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values to be in-place edited.

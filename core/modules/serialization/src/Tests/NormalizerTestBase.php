@@ -34,7 +34,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'cardinality' => 1,
       'translatable' => FALSE,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test_mulrev',

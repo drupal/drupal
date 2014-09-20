@@ -11,7 +11,7 @@ use Drupal\migrate\Row;
 
 /**
  * @MigrateDestination(
- *   id = "entity:field_instance_config"
+ *   id = "entity:field_config"
  * )
  */
 class EntityFieldInstance extends EntityConfigBase {

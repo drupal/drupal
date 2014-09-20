@@ -7,8 +7,6 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\field\Tests\FieldUnitTestBase;
-
 /**
  * Tests field validation.
  *
@@ -34,11 +32,11 @@ class FieldValidationTest extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create a field and instance of type 'test_field', on the 'entity_test'
+    // Create a field and storage of type 'test_field', on the 'entity_test'
     // entity type.
     $this->entityType = 'entity_test';
     $this->bundle = 'entity_test';
-    $this->createFieldWithInstance('', $this->entityType, $this->bundle);
+    $this->createFieldWithStorage('', $this->entityType, $this->bundle);
 
     // Create an 'entity_test' entity.
     $this->entity = entity_create($this->entityType, array(
@@ -63,7 +61,7 @@ class FieldValidationTest extends FieldUnitTestBase {
     // Check that the expected constraint violations are reported.
     $this->assertEqual(count($violations), 1);
     $this->assertEqual($violations[0]->getPropertyPath(), '');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: this field cannot hold more than @count values.', array('%name' => $this->fieldTestData->instance->getLabel(), '@count' => $cardinality)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: this field cannot hold more than @count values.', array('%name' => $this->fieldTestData->field->getLabel(), '@count' => $cardinality)));
   }
 
   /**
@@ -85,7 +83,7 @@ class FieldValidationTest extends FieldUnitTestBase {
       }
       else {
         $value = -1;
-        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', array('%name' => $this->fieldTestData->instance->getLabel()));
+        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', array('%name' => $this->fieldTestData->field->getLabel()));
       }
       $entity->{$this->fieldTestData->field_name}->get($delta)->set('value', $value);
     }

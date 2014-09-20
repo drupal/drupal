@@ -29,9 +29,9 @@ require_once __DIR__ . '/field.purge.inc';
  * interface for managing custom fields via a web browser as well as a wide and
  * flexible variety of data type, form element, and display format capabilities.
  *
- * The Field API defines two primary data structures, Field and Instance, and
- * the concept of a Bundle. A Field defines a particular type of data that can
- * be attached to entities. A Field Instance is a Field attached to a single
+ * The Field API defines two primary data structures, FieldStorage and Field,
+ * and the concept of a Bundle. A FieldStorage defines a particular type of data
+ * that can be attached to entities. A Field is attached to a single
  * Bundle. A Bundle is a set of fields that are treated as a group by the Field
  * Attach API and is related to a single fieldable entity type.
  *
@@ -51,7 +51,7 @@ require_once __DIR__ . '/field.purge.inc';
  *   and display formatters.
  *
  * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
- *   bulk deletion operations such as deletion of field or field_instance.
+ *   bulk deletion operations such as deletion of field storage or field.
  */
 
 /**
@@ -182,15 +182,15 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
   if ($entity_type->isFieldable()) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
-    $ids = \Drupal::entityQuery('field_instance_config')
+    $ids = \Drupal::entityQuery('field_config')
       ->condition('id', $entity_type->id() . '.' . $bundle . '.', 'STARTS_WITH')
       ->execute();
 
     // Fetch all fields and key them by field name.
-    $field_instance_configs = entity_load_multiple('field_instance_config', $ids);
+    $field_configs = entity_load_multiple('field_config', $ids);
     $result = array();
-    foreach ($field_instance_configs as $field_instance) {
-      $result[$field_instance->getName()] = $field_instance;
+    foreach ($field_configs as $field) {
+      $result[$field->getName()] = $field;
     }
     return $result;
   }
@@ -200,22 +200,22 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
  * Implements hook_entity_bundle_rename().
  */
 function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
-  $instances = entity_load_multiple_by_properties('field_instance_config', array('entity_type' => $entity_type, 'bundle' => $bundle_old, 'include_deleted' => TRUE));
-  foreach ($instances as $instance) {
-    $id_new = $instance->entity_type . '.' . $bundle_new . '.' . $instance->field_name;
-    $instance->set('id', $id_new);
-    $instance->bundle = $bundle_new;
-    // Save non-deleted instances.
-    if (!$instance->isDeleted()) {
-      $instance->allowBundleRename();
-      $instance->save();
+  $fields = entity_load_multiple_by_properties('field_config', array('entity_type' => $entity_type, 'bundle' => $bundle_old, 'include_deleted' => TRUE));
+  foreach ($fields as $field) {
+    $id_new = $field->entity_type . '.' . $bundle_new . '.' . $field->field_name;
+    $field->set('id', $id_new);
+    $field->bundle = $bundle_new;
+    // Save non-deleted fields.
+    if (!$field->isDeleted()) {
+      $field->allowBundleRename();
+      $field->save();
     }
-    // Update deleted instances directly in the state storage.
+    // Update deleted fields directly in the state storage.
     else {
       $state = \Drupal::state();
-      $deleted_instances = $state->get('field.instance.deleted') ?: array();
-      $deleted_instances[$instance->uuid] = $instance->toArray();
-      $state->set('field.instance.deleted', $deleted_instances);
+      $deleted_fields = $state->get('field.field.deleted') ?: array();
+      $deleted_fields[$field->uuid] = $field->toArray();
+      $state->set('field.field.deleted', $deleted_fields);
     }
   }
 }
@@ -223,20 +223,18 @@ function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
 /**
  * Implements hook_entity_bundle_delete().
  *
- * This deletes the data for the field instances as well as the field instances
- * themselves. This function actually just marks the data and field instances as
- * deleted, leaving the garbage collection for a separate process, because it is
- * not always possible to delete this much data in a single page request
- * (particularly since for some field types, the deletion is more than just a
- * simple DELETE query).
+ * This deletes the data for the field as well as the field themselves. This
+ * function actually just marks the data and fields as deleted, leaving the
+ * garbage collection for a separate process, because it is not always
+ * possible to delete this much data in a single page request (particularly
+ * since for some field types, the deletion is more than just a simple DELETE
+ * query).
  */
 function field_entity_bundle_delete($entity_type, $bundle) {
-  // Get the instances on the bundle. entity_load_multiple_by_properties() must
-  // be used here since field_info_instances() does not return instances for
-  // disabled entity types or bundles.
-  $instances = entity_load_multiple_by_properties('field_instance_config', array('entity_type' => $entity_type, 'bundle' => $bundle));
-  foreach ($instances as $instance) {
-    $instance->delete();
+  // Get the fields on the bundle.
+  $fields = entity_load_multiple_by_properties('field_config', array('entity_type' => $entity_type, 'bundle' => $bundle));
+  foreach ($fields as $field) {
+    $field->delete();
   }
 }
 

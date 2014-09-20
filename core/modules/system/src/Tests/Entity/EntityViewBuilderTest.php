@@ -85,7 +85,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $request->setMethod('GET');
 
     // Create an entity reference field and an entity that will be referenced.
-    entity_reference_create_instance('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
+    entity_reference_create_field('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
     entity_get_display('entity_test', 'entity_test', 'full')->setComponent('reference_field', [
       'settings' => ['link' => FALSE],
     ])->save();

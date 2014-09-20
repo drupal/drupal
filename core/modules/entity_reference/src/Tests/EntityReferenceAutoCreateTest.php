@@ -41,7 +41,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',

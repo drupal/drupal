@@ -81,9 +81,9 @@
         }
       });
 
-      // When a bundle is made translatable all of its field instances should
-      // inherit this setting. Instead when it is made non translatable its field
-      // instances are hidden, since their translatability no longer matters.
+      // When a bundle is made translatable all of its fields should inherit
+      // this setting. Instead when it is made non translatable its fields are
+      // hidden, since their translatability no longer matters.
       $('body').once('translation-entity-admin-bind').on('click', 'table .bundle-settings .translatable :input', function (e) {
         var $target = $(e.target);
         var $bundleSettings = $target.closest('.bundle-settings');

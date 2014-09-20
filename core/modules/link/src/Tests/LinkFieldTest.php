@@ -35,9 +35,9 @@ class LinkFieldTest extends WebTestBase {
   /**
    * The instance used in this test class.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   /**
    * A user with permission to view and manage test entities.
@@ -69,7 +69,7 @@ class LinkFieldTest extends WebTestBase {
       'type' => 'link',
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => array(
@@ -77,7 +77,7 @@ class LinkFieldTest extends WebTestBase {
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
     ));
-    $this->instance->save();
+    $this->field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => 'link_default',
@@ -126,14 +126,14 @@ class LinkFieldTest extends WebTestBase {
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_EXTERNAL.
-    $this->instance->settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
-    $this->instance->save();
+    $this->field->settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
+    $this->field->save();
     $this->assertValidEntries($field_name, $valid_external_entries);
     $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
-    $this->instance->settings['link_type'] = LinkItemInterface::LINK_INTERNAL;
-    $this->instance->save();
+    $this->field->settings['link_type'] = LinkItemInterface::LINK_INTERNAL;
+    $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
   }
@@ -193,7 +193,7 @@ class LinkFieldTest extends WebTestBase {
       'type' => 'link',
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
@@ -202,7 +202,7 @@ class LinkFieldTest extends WebTestBase {
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
     ));
-    $this->instance->save();
+    $this->field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => 'link_default',
@@ -222,8 +222,8 @@ class LinkFieldTest extends WebTestBase {
     // Verify that the link text field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
       // Update the link title field setting.
-      $this->instance->settings['title'] = $title_setting;
-      $this->instance->save();
+      $this->field->settings['title'] = $title_setting;
+      $this->field->save();
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
@@ -312,7 +312,7 @@ class LinkFieldTest extends WebTestBase {
       'cardinality' => 2,
     ));
     $this->fieldStorage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
@@ -454,7 +454,7 @@ class LinkFieldTest extends WebTestBase {
       'cardinality' => 2,
     ));
     $this->fieldStorage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => array(

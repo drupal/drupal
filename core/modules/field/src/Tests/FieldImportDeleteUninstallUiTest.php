@@ -8,8 +8,8 @@
 namespace Drupal\field\Tests;
 
 /**
- * Delete field and instances during config synchronization and uninstall module
- * that provides the field type through the UI.
+ * Delete field storages and fields during config synchronization and uninstall
+ * module that provides the field type through the UI.
  *
  * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger
@@ -33,29 +33,29 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
   }
 
   /**
-   * Tests deleting fields and instances as part of config import.
+   * Tests deleting field storages and fields as part of config import.
    */
   public function testImportDeleteUninstall() {
-    // Create a telephone field and instance.
+    // Create a telephone field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'field_tel',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ));
     $field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ))->save();
 
-    // Create a text field and instance.
+    // Create a text field.
     $text_field_storage = entity_create('field_storage_config', array(
       'name' => 'field_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
     ));
     $text_field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $text_field_storage,
       'bundle' => 'entity_test',
     ))->save();
@@ -90,7 +90,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
     // Stage the field deletion
     $staging->delete('field.storage.entity_test.field_tel');
-    $staging->delete('field.instance.entity_test.entity_test.field_tel');
+    $staging->delete('field.field.entity_test.entity_test.field_tel');
     $this->drupalGet('admin/config/development/configuration');
     // Test that the message for one field being purged during a configuration
     // synchronization is correct.

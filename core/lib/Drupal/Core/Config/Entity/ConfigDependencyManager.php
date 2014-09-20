@@ -16,8 +16,8 @@ use Drupal\Component\Utility\SortArray;
  * Configuration entities can depend on modules, themes and other configuration
  * entities. The dependency system is used during configuration installation to
  * ensure that configuration entities are imported in the correct order. For
- * example, node types are created before their fields and the fields are
- * created before their field instances.
+ * example, node types are created before their field storages and the field
+ * storages are created before their fields.
  *
  * Dependencies are stored to the configuration entity's configuration object so
  * that they can be checked without the module that provides the configuration

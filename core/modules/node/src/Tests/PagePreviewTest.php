@@ -60,7 +60,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $this->term = $term;
 
-    // Set up a field and instance.
+    // Create a field.
     $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
@@ -76,7 +76,7 @@ class PagePreviewTest extends NodeTestBase {
       ),
       'cardinality' => '-1',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',

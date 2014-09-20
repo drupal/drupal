@@ -509,7 +509,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
 
     // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
-      // Retrieve the stored instance settings to merge with the incoming
+      // Retrieve the stored field settings to merge with the incoming
       // values.
       $values = $form_values['fields'][$field_name];
 
@@ -720,7 +720,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * Returns the widget or formatter plugin for a field.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field instance.
+   *   The field.
    * @param array $configuration
    *   The plugin configuration
    *

@@ -11,8 +11,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -171,9 +171,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Create dependencies on both hidden and visible fields.
     $fields = $this->content + $this->hidden;
     foreach ($fields as $field_name => $component) {
-      $field_instance = FieldInstanceConfig::loadByName($this->targetEntityType, $this->bundle, $field_name);
-      if ($field_instance) {
-        $this->addDependency('entity', $field_instance->getConfigDependencyName());
+      $field = FieldConfig::loadByName($this->targetEntityType, $this->bundle, $field_name);
+      if ($field) {
+        $this->addDependency('entity', $field->getConfigDependencyName());
       }
       // Create a dependency on the module that provides the formatter or
       // widget.
@@ -373,7 +373,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * Determines if a field has options for a given display.
    *
    * @param FieldDefinitionInterface $definition
-   *   A field instance definition.
+   *   A field definition.
    * @return array|null
    */
   private function fieldHasDisplayOptions(FieldDefinitionInterface $definition) {
@@ -388,7 +388,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
     foreach ($dependencies['entity'] as $entity) {
-      if ($entity instanceof FieldInstanceConfigInterface) {
+      if ($entity instanceof FieldConfigInterface) {
         // Remove components for fields that are being deleted.
         $this->removeComponent($entity->getName());
         unset($this->hidden[$entity->getName()]);

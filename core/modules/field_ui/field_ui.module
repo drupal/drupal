@@ -87,8 +87,8 @@ function field_ui_element_info() {
  */
 function field_ui_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_types['field_instance_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldInstanceConfigDeleteForm');
-  $entity_types['field_instance_config']->setListBuilderClass('Drupal\field_ui\FieldInstanceConfigListBuilder');
+  $entity_types['field_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldConfigDeleteForm');
+  $entity_types['field_config']->setListBuilderClass('Drupal\field_ui\FieldConfigListBuilder');
   $entity_types['field_storage_config']->setListBuilderClass('Drupal\field_ui\FieldStorageConfigListBuilder');
 
   foreach ($entity_types as $entity_type) {

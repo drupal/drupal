@@ -76,7 +76,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // Options are reset when a new field with the same name is created.
     $this->fieldStorage->delete();
     entity_create('field_storage_config', $this->fieldStorageDefinition)->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',

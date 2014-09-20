@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\node\Tests;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Ensures that node type functions work correctly.
@@ -78,8 +78,8 @@ class NodeTypeTest extends NodeTestBase {
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer node fields'));
     $this->drupalLogin($web_user);
 
-    $instance = FieldInstanceConfig::loadByName('node', 'page', 'body');
-    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
+    $field = FieldConfig::loadByName('node', 'page', 'body');
+    $this->assertEqual($field->getLabel(), 'Body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');

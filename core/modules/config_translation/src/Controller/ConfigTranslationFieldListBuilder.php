@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListBuilder.
+ * Contains \Drupal\config_translation\Controller\ConfigTranslationFieldListBuilder.
  */
 
 namespace Drupal\config_translation\Controller;
@@ -16,12 +16,12 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines the config translation list builder for field instance entities.
+ * Defines the config translation list builder for field entities.
  */
-class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityListBuilder {
+class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuilder {
 
   /**
-   * The name of the entity type the field instances are attached to.
+   * The name of the entity type the fields are attached to.
    *
    * @var string
    */
@@ -61,7 +61,7 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
   }
 
   /**
-   * Constructs a new ConfigTranslationFieldInstanceListBuilder object.
+   * Constructs a new ConfigTranslationFieldListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -90,8 +90,8 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
    */
   public function load() {
     // It is not possible to use the standard load method, because this needs
-    // all field instance entities only for the given baseEntityType.
-    $ids = \Drupal::entityQuery('field_instance_config')
+    // all field entities only for the given baseEntityType.
+    $ids = \Drupal::entityQuery('field_config')
       ->condition('id', $this->baseEntityType . '.', 'STARTS_WITH')
       ->execute();
     return $this->storage->loadMultiple($ids);
@@ -143,7 +143,7 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
   }
 
   /**
-   * Controls the visibility of the bundle column on field instance list pages.
+   * Controls the visibility of the bundle column on field list pages.
    *
    * @return bool
    *   Whenever the bundle is displayed or not.

@@ -58,12 +58,12 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   The node type that this field will be added to.
    * @param $storage_settings
    *   A list of field storage settings that will be added to the defaults.
-   * @param $instance_settings
+   * @param $field_settings
    *   A list of instance settings that will be added to the instance defaults.
    * @param $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function createImageField($name, $type_name, $storage_settings = array(), $instance_settings = array(), $widget_settings = array()) {
+  function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
     entity_create('field_storage_config', array(
       'name' => $name,
       'entity_type' => 'node',
@@ -72,16 +72,16 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
     ))->save();
 
-    $field_instance_config = entity_create('field_instance_config', array(
+    $field_config = entity_create('field_config', array(
       'field_name' => $name,
       'label' => $name,
       'entity_type' => 'node',
       'bundle' => $type_name,
-      'required' => !empty($instance_settings['required']),
-      'description' => !empty($instance_settings['description']) ? $instance_settings['description'] : '',
-      'settings' => $instance_settings,
+      'required' => !empty($field_settings['required']),
+      'description' => !empty($field_settings['description']) ? $field_settings['description'] : '',
+      'settings' => $field_settings,
     ));
-    $field_instance_config->save();
+    $field_config->save();
 
     entity_get_form_display('node', $type_name, 'default')
       ->setComponent($name, array(
@@ -94,7 +94,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       ->setComponent($name)
       ->save();
 
-    return $field_instance_config;
+    return $field_config;
 
   }
 

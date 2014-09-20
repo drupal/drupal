@@ -45,7 +45,7 @@ class FileItemTest extends FieldUnitTestBase {
       'type' => 'file',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'file_test',
       'bundle' => 'entity_test',

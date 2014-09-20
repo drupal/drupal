@@ -89,7 +89,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'label' => 'Tags',

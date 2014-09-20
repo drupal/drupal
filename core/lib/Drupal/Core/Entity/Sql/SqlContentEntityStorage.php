@@ -1554,7 +1554,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // configurable fields, so we use the specific API.
     // @todo Use the unified store of deleted field definitions instead in
     //   https://www.drupal.org/node/2282119
-    $field_definitions += entity_load_multiple_by_properties('field_instance_config', array('entity_type' => $this->entityTypeId, 'bundle' => $bundle, 'deleted' => TRUE, 'include_deleted' => TRUE));
+    $field_definitions += entity_load_multiple_by_properties('field_config', array('entity_type' => $this->entityTypeId, 'bundle' => $bundle, 'deleted' => TRUE, 'include_deleted' => TRUE));
     $table_mapping = $this->getTableMapping();
 
     foreach ($field_definitions as $field_definition) {

@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -85,7 +85,7 @@ function entity_reference_field_storage_config_update(FieldStorageConfigInterfac
   }
 
   if (empty($field_storage->bundles)) {
-    // Field has no instances.
+    // Field storage has no fields.
     return;
   }
 
@@ -93,31 +93,31 @@ function entity_reference_field_storage_config_update(FieldStorageConfigInterfac
 
   foreach ($field_storage->bundles() as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
-      $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
-      $instance->settings['handler_settings'] = array();
-      $instance->save();
+      $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
+      $field->settings['handler_settings'] = array();
+      $field->save();
     }
   }
 }
 
 /**
- * Render API callback: Processes the field instance settings form and allows
- * access to the form state.
+ * Render API callback: Processes the field settings form and allows access to
+ * the form state.
  *
- * @see entity_reference_field_instance_settings_form()
+ * @see entity_reference_field_field_settings_form()
  */
-function _entity_reference_field_instance_settings_ajax_process($form, FormStateInterface $form_state) {
-  _entity_reference_field_instance_settings_ajax_process_element($form, $form);
+function _entity_reference_field_field_settings_ajax_process($form, FormStateInterface $form_state) {
+  _entity_reference_field_field_settings_ajax_process_element($form, $form);
   return $form;
 }
 
 /**
  * Adds entity_reference specific properties to AJAX form elements from the
- * field instance settings form.
+ * field settings form.
  *
- * @see _entity_reference_field_instance_settings_ajax_process()
+ * @see _entity_reference_field_field_settings_ajax_process()
  */
-function _entity_reference_field_instance_settings_ajax_process_element(&$element, $main_form) {
+function _entity_reference_field_field_settings_ajax_process_element(&$element, $main_form) {
   if (!empty($element['#ajax'])) {
     $element['#ajax'] = array(
       'callback' => 'entity_reference_settings_ajax',
@@ -127,7 +127,7 @@ function _entity_reference_field_instance_settings_ajax_process_element(&$elemen
   }
 
   foreach (Element::children($element) as $key) {
-    _entity_reference_field_instance_settings_ajax_process_element($element[$key], $main_form);
+    _entity_reference_field_field_settings_ajax_process_element($element[$key], $main_form);
   }
 }
 
@@ -156,7 +156,7 @@ function _entity_reference_element_validate_filter(&$element, FormStateInterface
 /**
  * Ajax callback for the handler settings form.
  *
- * @see entity_reference_field_instance_settings_form()
+ * @see entity_reference_field_field_settings_form()
  */
 function entity_reference_settings_ajax($form, FormStateInterface $form_state) {
   return NestedArray::getValue($form, $form_state->getTriggeringElement()['#ajax']['element']);
@@ -165,7 +165,7 @@ function entity_reference_settings_ajax($form, FormStateInterface $form_state) {
 /**
  * Submit handler for the non-JS case.
  *
- * @see entity_reference_field_instance_settings_form()
+ * @see entity_reference_field_field_settings_form()
  */
 function entity_reference_settings_ajax_submit($form, FormStateInterface $form_state) {
   $form_state->setRebuild();
@@ -180,17 +180,17 @@ function entity_reference_query_entity_reference_alter(AlterableInterface $query
 }
 
 /**
- * Creates an instance of a entity reference field on the specified bundle.
+ * Creates a field of an entity reference field storage on the specified bundle.
  *
  * @param string $entity_type
- *   The type of entity the field instance will be attached to.
+ *   The type of entity the field will be attached to.
  * @param string $bundle
- *   The bundle name of the entity the field instance will be attached to.
+ *   The bundle name of the entity the field will be attached to.
  * @param string $field_name
  *   The name of the field; if it already exists, a new instance of the existing
  *   field will be created.
  * @param string $field_label
- *   The label of the field instance.
+ *   The label of the field.
  * @param string $target_entity_type
  *   The type of the referenced entity.
  * @param string $selection_handler
@@ -203,10 +203,10 @@ function entity_reference_query_entity_reference_alter(AlterableInterface $query
  *
  * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase::settingsForm()
  */
-function entity_reference_create_instance($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array(), $cardinality = 1) {
+function entity_reference_create_field($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array(), $cardinality = 1) {
   // Look for or add the specified field to the requested entity bundle.
   $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
-  $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
+  $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
 
   if (empty($field_storage)) {
     $field_storage = array(
@@ -221,8 +221,8 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
     entity_create('field_storage_config', $field_storage)->save();
   }
 
-  if (empty($instance)) {
-    $instance = array(
+  if (empty($field)) {
+    $field = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -232,7 +232,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'handler_settings' => $selection_handler_settings,
       ),
     );
-    entity_create('field_instance_config', $instance)->save();
+    entity_create('field_config', $field)->save();
   }
 }
 

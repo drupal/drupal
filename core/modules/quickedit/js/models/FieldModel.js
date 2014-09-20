@@ -53,7 +53,7 @@
       inTempStore: false,
       // The full HTML representation of this field (with the element that has
       // the data-quickedit-field-id as the outer element). Used to propagate
-      // changes from this field instance to other instances of the same field.
+      // changes from this field to other instances of the same field storage.
       html: null,
       // An object containing the full HTML representations (values) of other view
       // modes (keys) of this field, for other instances of this field displayed

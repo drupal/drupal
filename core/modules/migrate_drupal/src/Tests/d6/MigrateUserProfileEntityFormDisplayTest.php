@@ -70,7 +70,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
     ))->save();
     $field_data = Drupal6UserProfileFields::getData('profile_fields');
     foreach ($field_data as $field) {
-      entity_create('field_instance_config', array(
+      entity_create('field_config', array(
         'label' => $field['title'],
         'description' => '',
         'field_name' => $field['name'],

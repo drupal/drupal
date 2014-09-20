@@ -49,7 +49,7 @@ class TermIndexTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name_1,
       'bundle' => 'article',
       'entity_type' => 'node',
@@ -80,7 +80,7 @@ class TermIndexTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name_2,
       'bundle' => 'article',
       'entity_type' => 'node',

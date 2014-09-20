@@ -64,7 +64,7 @@ class EntityReferenceController extends ControllerBase {
    *   Defaults to ''.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Throws access denied when either the field or field instance does not
+   *   Throws access denied when either the field storage or field does not
    *   exists or the user does not have access to edit the field.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse

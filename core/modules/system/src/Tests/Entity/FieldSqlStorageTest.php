@@ -48,11 +48,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   protected $fieldStorage;
 
   /**
-   * A field instance to use in this test class.
+   * A field to use in this test class.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   /**
    * Name of the data table of the field.
@@ -90,11 +90,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'cardinality' => $this->field_cardinality,
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type
     ));
-    $this->instance->save();
+    $this->field->save();
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
@@ -275,7 +275,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $entity_type = $bundle = 'entity_test_label_callback';
     $storage = $this->container->get('entity.manager')->getStorage($entity_type);
 
-    // Create two fields with instances, and generate randome values.
+    // Create two fields and generate random values.
     $name_base = drupal_strtolower($this->randomMachineName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
     $field_names = array();
     $values = array();
@@ -286,7 +286,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
         'entity_type' => $entity_type,
         'type' => 'test_field',
       ))->save();
-      entity_create('field_instance_config', array(
+      entity_create('field_config', array(
         'field_name' => $field_names[$i],
         'entity_type' => $entity_type,
         'bundle' => $bundle,
@@ -318,11 +318,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'settings' => array('precision' => 5, 'scale' => 2),
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => $entity_type,
     ));
-    $instance->save();
+    $field->save();
     $entity = entity_create($entity_type, array(
       'id' => 0,
       'revision_id' => 0,
@@ -388,11 +388,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'type' => 'text',
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => $entity_type,
     ));
-    $instance->save();
+    $field->save();
     $tables = array($this->table_mapping->getDedicatedDataTableName($field_storage), $this->table_mapping->getDedicatedRevisionTableName($field_storage));
 
     // Verify the indexes we will create do not exist yet.

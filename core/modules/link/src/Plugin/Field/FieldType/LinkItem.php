@@ -33,11 +33,11 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     return array(
       'title' => DRUPAL_OPTIONAL,
       'link_type' => LinkItemInterface::LINK_GENERIC
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
   }
 
   /**
@@ -107,7 +107,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $element = array();
 
     $element['link_type'] = array(

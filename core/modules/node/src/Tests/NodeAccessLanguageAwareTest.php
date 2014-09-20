@@ -57,7 +57,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     ));
     $field_storage->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'widget' => array(

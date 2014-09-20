@@ -93,18 +93,18 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
           'base_route' => "field_ui.overview_$entity_type_id",
         );
 
-        // Field instance edit tab.
-        $this->derivatives["instance_edit_$entity_type_id"] = array(
-          'route_name' => "field_ui.instance_edit_$entity_type_id",
+        // Field edit tab.
+        $this->derivatives["field_edit_$entity_type_id"] = array(
+          'route_name' => "field_ui.field_edit_$entity_type_id",
           'title' => $this->t('Edit'),
-          'base_route' => "field_ui.instance_edit_$entity_type_id",
+          'base_route' => "field_ui.field_edit_$entity_type_id",
         );
 
         // Field settings tab.
         $this->derivatives["field_edit_$entity_type_id"] = array(
           'route_name' => "field_ui.storage_edit_$entity_type_id",
           'title' => $this->t('Field settings'),
-          'base_route' => "field_ui.instance_edit_$entity_type_id",
+          'base_route' => "field_ui.field_edit_$entity_type_id",
         );
 
         // View and form modes secondary tabs.

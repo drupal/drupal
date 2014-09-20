@@ -30,10 +30,10 @@ class DateTimeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'datetime_type' => 'datetime',
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
@@ -85,7 +85,7 @@ class DateTimeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     $element['datetime_type'] = array(

@@ -21,14 +21,14 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('entity_test_rev');
-    $this->createFieldWithInstance();
+    $this->createFieldWithStorage();
   }
 
   /**
    * Test rendering fields with EntityDisplay build().
    */
   function testEntityDisplayBuild() {
-    $this->createFieldWithInstance('_2');
+    $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
     $entity_init = entity_create($entity_type);
@@ -66,11 +66,11 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // View all fields.
     $content = $display->build($entity);
     $this->render($content);
-    $this->assertRaw($this->fieldTestData->instance->getLabel(), "First field's label is displayed.");
+    $this->assertRaw($this->fieldTestData->field->getLabel(), "First field's label is displayed.");
     foreach ($values as $delta => $value) {
       $this->assertRaw("$formatter_setting|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
     }
-    $this->assertRaw($this->fieldTestData->instance_2->getLabel(), "Second field's label is displayed.");
+    $this->assertRaw($this->fieldTestData->field_2->getLabel(), "Second field's label is displayed.");
     foreach ($values_2 as $delta => $value) {
       $this->assertRaw("$formatter_setting_2|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
     }
@@ -81,14 +81,14 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $display->setComponent($this->fieldTestData->field_name, $display_options);
     $content = $display->build($entity);
     $this->render($content);
-    $this->assertNoRaw($this->fieldTestData->instance->getLabel(), "Hidden label: label is not displayed.");
+    $this->assertNoRaw($this->fieldTestData->field->getLabel(), "Hidden label: label is not displayed.");
 
     // Field hidden.
     $entity = clone($entity_init);
     $display->removeComponent($this->fieldTestData->field_name);
     $content = $display->build($entity);
     $this->render($content);
-    $this->assertNoRaw($this->fieldTestData->instance->getLabel(), "Hidden field: label is not displayed.");
+    $this->assertNoRaw($this->fieldTestData->field->getLabel(), "Hidden field: label is not displayed.");
     foreach ($values as $delta => $value) {
       $this->assertNoRaw("$formatter_setting|{$value['value']}", "Hidden field: value $delta is not displayed.");
     }
@@ -164,7 +164,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    */
   function testEntityCache() {
     // Initialize random values and a test entity.
-    $entity_init = entity_create('entity_test', array('type' => $this->fieldTestData->instance->bundle));
+    $entity_init = entity_create('entity_test', array('type' => $this->fieldTestData->field->bundle));
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
 
     // Non-cacheable entity type.
@@ -183,7 +183,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Cacheable entity type.
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('_2', $entity_type);
+    $this->createFieldWithStorage('_2', $entity_type);
 
     $entity_init = entity_create($entity_type, array(
       'type' => $entity_type,
@@ -244,19 +244,19 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    * widgets show up.
    */
   function testEntityFormDisplayBuildForm() {
-    $this->createFieldWithInstance('_2');
+    $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->instance->bundle));
+    $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->bundle));
 
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->instance->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
     $form = array();
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
-    $this->assertEqual($form[$this->fieldTestData->field_name]['widget']['#title'], $this->fieldTestData->instance->getLabel(), "First field's form title is {$this->fieldTestData->instance->getLabel()}");
-    $this->assertEqual($form[$this->fieldTestData->field_name_2]['widget']['#title'], $this->fieldTestData->instance_2->getLabel(), "Second field's form title is {$this->fieldTestData->instance_2->getLabel()}");
+    $this->assertEqual($form[$this->fieldTestData->field_name]['widget']['#title'], $this->fieldTestData->field->getLabel(), "First field's form title is {$this->fieldTestData->field->getLabel()}");
+    $this->assertEqual($form[$this->fieldTestData->field_name_2]['widget']['#title'], $this->fieldTestData->field_2->getLabel(), "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage->getCardinality(); $delta++) {
       // field_test_widget uses 'textfield'
       $this->assertEqual($form[$this->fieldTestData->field_name]['widget'][$delta]['value']['#type'], 'textfield', "First field's form delta $delta widget is textfield");
@@ -267,7 +267,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     }
 
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->instance->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
         $display->removeComponent($name);
@@ -278,7 +278,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $display->buildForm($entity, $form, $form_state);
 
     $this->assertFalse(isset($form[$this->fieldTestData->field_name]), 'The first field does not exist in the form');
-    $this->assertEqual($form[$this->fieldTestData->field_name_2]['widget']['#title'], $this->fieldTestData->instance_2->getLabel(), "Second field's form title is {$this->fieldTestData->instance_2->getLabel()}");
+    $this->assertEqual($form[$this->fieldTestData->field_name_2]['widget']['#title'], $this->fieldTestData->field_2->getLabel(), "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
       // field_test_widget uses 'textfield'
       $this->assertEqual($form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
@@ -289,13 +289,13 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    * Tests \Drupal\Core\Entity\Display\EntityFormDisplayInterface::extractFormValues().
    */
   function testEntityFormDisplayExtractFormValues() {
-    $this->createFieldWithInstance('_2');
+    $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->instance->bundle));
+    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->bundle));
 
     // Build the form for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->instance->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
     $form = array();
     $form_state = new FormState();
     $display->buildForm($entity_init, $form, $form_state);

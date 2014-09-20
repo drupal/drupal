@@ -59,7 +59,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_taxonomy',
       'bundle' => 'entity_test',

@@ -47,7 +47,7 @@ class RssTest extends TaxonomyTestBase {
       ),
     ));
     $this->fieldStorage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'article',
     ))->save();

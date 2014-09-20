@@ -64,7 +64,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       $this->fieldName = 'field_test_' . $referenced_entities[0]->getEntityTypeId();
 
       // Create an Entity reference field.
-      entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, $this->fieldName, $referenced_entities[0]->getEntityTypeId(), 'default', array(), 2);
+      entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, $this->fieldName, $referenced_entities[0]->getEntityTypeId(), 'default', array(), 2);
 
       // Test the default 'entity_reference_autocomplete' widget.
       entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName)->save();

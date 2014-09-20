@@ -28,14 +28,14 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     return array();
   }
 
@@ -250,42 +250,42 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function settingsToConfigData(array $settings) {
+  public static function storageSettingsToConfigData(array $settings) {
     return $settings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function settingsFromConfigData(array $settings) {
+  public static function storageSettingsFromConfigData(array $settings) {
     return $settings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function instanceSettingsToConfigData(array $settings) {
+  public static function fieldSettingsToConfigData(array $settings) {
     return $settings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function instanceSettingsFromConfigData(array $settings) {
+  public static function fieldSettingsFromConfigData(array $settings) {
     return $settings;
   }
 

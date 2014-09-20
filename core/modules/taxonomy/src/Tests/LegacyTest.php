@@ -49,7 +49,7 @@ class LegacyTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'node',
       'field_name' => $field_name,
       'bundle' => 'article',

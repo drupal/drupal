@@ -294,19 +294,19 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
 }
 
 /**
- * Acts when a field instance is being purged.
+ * Acts when a field is being purged.
  *
- * In field_purge_instance(), after the instance definition has been removed
+ * In field_purge_field(), after the field definition has been removed
  * from the the system, the entity storage has purged stored field data, and the
  * field info cache has been cleared, this hook is invoked on all modules to
- * allow them to respond to the field instance being purged.
+ * allow them to respond to the field being purged.
  *
- * @param $instance
- *   The instance being purged.
+ * @param $field
+ *   The field being purged.
  */
-function hook_field_purge_instance($instance) {
-  db_delete('my_module_field_instance_info')
-    ->condition('id', $instance['id'])
+function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
+  db_delete('my_module_field_info')
+    ->condition('id', $field->id())
     ->execute();
 }
 

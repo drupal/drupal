@@ -33,11 +33,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   protected $fieldStorage;
 
   /**
-   * Field instance.
+   * Field entity.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
 
   protected function setUp() {
@@ -91,7 +91,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   }
 
   /**
-   * Creates a text_with_summary field and field instance.
+   * Creates a text_with_summary field storage and field.
    *
    * @param string $entity_type
    *   Entity type for which the field should be created.
@@ -107,11 +107,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
       )
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type,
     ));
-    $this->instance->save();
+    $this->field->save();
   }
 
 }

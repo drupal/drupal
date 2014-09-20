@@ -120,7 +120,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => $this->fieldType,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',

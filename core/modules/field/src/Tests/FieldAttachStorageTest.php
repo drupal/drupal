@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\field\Tests;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests storage-related Field Attach API functions.
@@ -29,7 +29,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachSaveLoad() {
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
@@ -102,7 +102,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       $field_storage->save();
       $field_ids[$i] = $field_storage->uuid();
       foreach ($field_bundles_map[$i] as $bundle) {
-        entity_create('field_instance_config', array(
+        entity_create('field_config', array(
           'field_name' => $field_names[$i],
           'entity_type' => $entity_type,
           'bundle' => $bundles[$bundle],
@@ -145,7 +145,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachSaveEmptyData() {
     $entity_type = 'entity_test';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
 
     $entity_init = entity_create($entity_type, array('id' => 1));
 
@@ -191,15 +191,15 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachSaveEmptyDataDefaultValue() {
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
 
     // Add a default value function.
-    $this->fieldTestData->instance->default_value_function = 'field_test_default_value';
-    $this->fieldTestData->instance->save();
+    $this->fieldTestData->field->default_value_function = 'field_test_default_value';
+    $this->fieldTestData->field->save();
 
     // Verify that fields are populated with default values.
     $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1));
-    $default = field_test_default_value($entity_init, $this->fieldTestData->instance);
+    $default = field_test_default_value($entity_init, $this->fieldTestData->field);
     $this->assertEqual($entity_init->{$this->fieldTestData->field_name}->getValue(), $default, 'Default field value correctly populated.');
 
     // Insert: Field is NULL.
@@ -220,9 +220,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testFieldAttachDelete() {
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->instance->bundle));
+    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->bundle));
     $vids = array();
 
     // Create revision 0
@@ -278,19 +278,19 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testEntityCreateRenameBundle() {
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
-    // Add an instance to that bundle.
-    $this->fieldTestData->instance_definition['bundle'] = $new_bundle;
-    entity_create('field_instance_config', $this->fieldTestData->instance_definition)->save();
+    // Add a field to that bundle.
+    $this->fieldTestData->field_definition['bundle'] = $new_bundle;
+    entity_create('field_config', $this->fieldTestData->field_definition)->save();
 
     // Save an entity with data in the field.
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->instance->bundle));
+    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->bundle));
     $values = $this->_generateTestFieldValues($cardinality);
     $entity->{$this->fieldTestData->field_name} = $values;
 
@@ -300,11 +300,11 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Rename the bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
-    entity_test_rename_bundle($this->fieldTestData->instance_definition['bundle'], $new_bundle, $entity_type);
+    entity_test_rename_bundle($this->fieldTestData->field_definition['bundle'], $new_bundle, $entity_type);
 
-    // Check that the instance definition has been updated.
-    $this->fieldTestData->instance = FieldInstanceConfig::loadByName($entity_type, $new_bundle, $this->fieldTestData->field_name);
-    $this->assertIdentical($this->fieldTestData->instance->bundle, $new_bundle, "Bundle name has been updated in the instance.");
+    // Check that the field definition has been updated.
+    $this->fieldTestData->field = FieldConfig::loadByName($entity_type, $new_bundle, $this->fieldTestData->field_name);
+    $this->assertIdentical($this->fieldTestData->field->bundle, $new_bundle, "Bundle name has been updated in the field.");
 
     // Verify the field data is present on load.
     $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
@@ -318,15 +318,15 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    */
   function testEntityDeleteBundle() {
     $entity_type = 'entity_test_rev';
-    $this->createFieldWithInstance('', $entity_type);
+    $this->createFieldWithStorage('', $entity_type);
 
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
-    // Add an instance to that bundle.
-    $this->fieldTestData->instance_definition['bundle'] = $new_bundle;
-    entity_create('field_instance_config', $this->fieldTestData->instance_definition)->save();
+    // Add a field to that bundle.
+    $this->fieldTestData->field_definition['bundle'] = $new_bundle;
+    entity_create('field_config', $this->fieldTestData->field_definition)->save();
 
     // Create a second field for the test bundle
     $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
@@ -337,18 +337,18 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'cardinality' => 1,
     );
     entity_create('field_storage_config', $field_storage)->save();
-    $instance = array(
+    $field = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
-      'bundle' => $this->fieldTestData->instance->bundle,
+      'bundle' => $this->fieldTestData->field->bundle,
       'label' => $this->randomMachineName() . '_label',
       'description' => $this->randomMachineName() . '_description',
       'weight' => mt_rand(0, 127),
     );
-    entity_create('field_instance_config', $instance)->save();
+    entity_create('field_config', $field)->save();
 
     // Save an entity with data for both fields
-    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->instance->bundle));
+    $entity = entity_create($entity_type, array('type' => $this->fieldTestData->field->bundle));
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
     $entity->{$this->fieldTestData->field_name} = $values;
     $entity->{$field_name} = $this->_generateTestFieldValues(1);
@@ -359,7 +359,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertEqual(count($entity->{$field_name}), 1, 'Second field got loaded');
 
     // Delete the bundle.
-    entity_test_delete_bundle($this->fieldTestData->instance->bundle, $entity_type);
+    entity_test_delete_bundle($this->fieldTestData->field->bundle, $entity_type);
 
     // Verify no data gets loaded
     $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
@@ -369,9 +369,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertTrue(empty($entity->{$this->fieldTestData->field_name}), 'No data for first field');
     $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');
 
-    // Verify that the instances are gone.
-    $this->assertFalse(entity_load('field_instance_config', 'entity_test.' . $this->fieldTestData->instance->bundle . '.' . $this->fieldTestData->field_name), "First field is deleted");
-    $this->assertFalse(entity_load('field_instance_config', 'entity_test.' . $instance['bundle']. '.' . $field_name), "Second field is deleted");
+    // Verify that the fields are gone.
+    $this->assertFalse(entity_load('field_config', 'entity_test.' . $this->fieldTestData->field->bundle . '.' . $this->fieldTestData->field_name), "First field is deleted");
+    $this->assertFalse(entity_load('field_config', 'entity_test.' . $field['bundle']. '.' . $field_name), "Second field is deleted");
   }
 
 }

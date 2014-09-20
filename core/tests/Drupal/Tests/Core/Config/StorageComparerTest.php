@@ -63,7 +63,7 @@ class StorageComparerTest extends UnitTestCase {
         'uuid' => $uuid->generate(),
       ),
       // Config entity which requires another config entity.
-      'field.instance.node.article.body' => array(
+      'field.field.node.article.body' => array(
         'id' => 'node.article.body',
         'uuid' => $uuid->generate(),
         'dependencies' => array(
@@ -141,7 +141,7 @@ class StorageComparerTest extends UnitTestCase {
   public function testCreateChangelistCreate() {
     $target_data = $source_data = $this->getConfigData();
     unset($target_data['field.storage.node.body']);
-    unset($target_data['field.instance.node.article.body']);
+    unset($target_data['field.field.node.article.body']);
     unset($target_data['views.view.test_view']);
 
     $this->sourceStorage->expects($this->once())
@@ -170,7 +170,7 @@ class StorageComparerTest extends UnitTestCase {
     $expected = array(
       'field.storage.node.body',
       'views.view.test_view',
-      'field.instance.node.article.body',
+      'field.field.node.article.body',
     );
     $this->assertEquals($expected, $this->storageComparer->getChangelist('create'));
     $this->assertEmpty($this->storageComparer->getChangelist('delete'));
@@ -183,7 +183,7 @@ class StorageComparerTest extends UnitTestCase {
   public function testCreateChangelistDelete() {
     $target_data = $source_data = $this->getConfigData();
     unset($source_data['field.storage.node.body']);
-    unset($source_data['field.instance.node.article.body']);
+    unset($source_data['field.field.node.article.body']);
     unset($source_data['views.view.test_view']);
 
     $this->sourceStorage->expects($this->once())
@@ -210,7 +210,7 @@ class StorageComparerTest extends UnitTestCase {
 
     $this->storageComparer->createChangelist();
     $expected = array(
-      'field.instance.node.article.body',
+      'field.field.node.article.body',
       'views.view.test_view',
       'field.storage.node.body',
     );
@@ -225,7 +225,7 @@ class StorageComparerTest extends UnitTestCase {
   public function testCreateChangelistUpdate() {
     $target_data = $source_data = $this->getConfigData();
     $source_data['system.site']['title'] = 'Drupal New!';
-    $source_data['field.instance.node.article.body']['new_config_key'] = 'new data';
+    $source_data['field.field.node.article.body']['new_config_key'] = 'new data';
     $source_data['field.storage.node.body']['new_config_key'] = 'new data';
 
     $this->sourceStorage->expects($this->once())
@@ -254,7 +254,7 @@ class StorageComparerTest extends UnitTestCase {
     $expected = array(
       'field.storage.node.body',
       'system.site',
-      'field.instance.node.article.body',
+      'field.field.node.article.body',
     );
     $this->assertEquals($expected, $this->storageComparer->getChangelist('update'));
     $this->assertEmpty($this->storageComparer->getChangelist('create'));

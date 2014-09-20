@@ -53,7 +53,7 @@ class TextFieldTest extends WebTestBase {
       )
     ));
     $field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ))->save();
@@ -84,7 +84,7 @@ class TextFieldTest extends WebTestBase {
    * Helper function for testTextfieldWidgets().
    */
   function _testTextfieldWidgets($field_type, $widget_type) {
-    // Setup a field and instance
+    // Create a field.
     $field_name = drupal_strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -92,7 +92,7 @@ class TextFieldTest extends WebTestBase {
       'type' => $field_type
     ));
     $field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
@@ -147,7 +147,7 @@ class TextFieldTest extends WebTestBase {
    * Helper function for testTextfieldWidgetsFormatted().
    */
   function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
-    // Setup a field and instance
+    // Create a field.
     $field_name = drupal_strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -155,7 +155,7 @@ class TextFieldTest extends WebTestBase {
       'type' => $field_type
     ));
     $field_storage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',

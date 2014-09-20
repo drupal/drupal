@@ -34,7 +34,7 @@ class ArbitraryRebuildTest extends WebTestBase {
       'cardinality' => -1,
       'translatable' => FALSE,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'user',
       'field_name' => 'test_multiple',
       'bundle' => 'user',

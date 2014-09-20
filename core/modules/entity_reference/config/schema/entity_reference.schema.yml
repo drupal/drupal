@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Entity Reference module.
 
-field.entity_reference.settings:
+field.entity_reference.storage_settings:
   type: mapping
   label: 'Entity reference settings'
   mapping:
@@ -8,7 +8,7 @@ field.entity_reference.settings:
       type: string
       label: 'Type of item to reference'
 
-field.entity_reference.instance_settings:
+field.entity_reference.field_settings:
   type: mapping
   label: 'Entity reference settings'
   mapping:

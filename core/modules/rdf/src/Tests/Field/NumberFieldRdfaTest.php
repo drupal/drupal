@@ -41,11 +41,11 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
       ),
     );
     $testValue = 3333333.33;
-    $field_instance_settings = array(
+    $field_settings = array(
       'prefix' => '#',
       'suffix' => ' llamas.',
     );
-    $this->createTestField($field_instance_settings);
+    $this->createTestField($field_settings);
     $this->createTestEntity($testValue);
     $this->assertFormatterRdfa($formatter, 'http://schema.org/baseSalary', array('value' => $testValue));
 
@@ -83,11 +83,11 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
       ),
     );
     $testValue = 3333333.33;
-    $field_instance_settings = array(
+    $field_settings = array(
       'prefix' => '$',
       'suffix' => ' more.',
     );
-    $this->createTestField($field_instance_settings);
+    $this->createTestField($field_settings);
     $this->createTestEntity($testValue);
     $this->assertFormatterRdfa($formatter, 'http://schema.org/baseSalary', array('value' => $testValue));
 
@@ -167,11 +167,11 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
       ),
     );
     $testValue = 3333333.33;
-    $field_instance_settings = array(
+    $field_settings = array(
       'prefix' => '$',
       'suffix' => ' more.',
     );
-    $this->createTestField($field_instance_settings);
+    $this->createTestField($field_settings);
     $this->createTestEntity($testValue);
     $this->assertFormatterRdfa($formatter, 'http://schema.org/baseSalary', array('value' => $testValue));
 

@@ -17,15 +17,15 @@ class ApiDataTest extends FieldTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $field_names = $this->setUpFields(1);
+    $field_names = $this->setUpFieldStorages(1);
 
     // Attach the field to nodes only.
-    $instance = array(
+    $field = array(
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'page',
     );
-    entity_create('field_instance_config', $instance)->save();
+    entity_create('field_config', $field)->save();
 
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {

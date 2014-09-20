@@ -68,7 +68,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   public function testSimpleEntityType() {
     $field_1_name = 'field_text';
     $field_1_label = 'Plain text field';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $field_1_name, 'string', 1, $field_1_label,
       // Instance settings.
       array(),
@@ -81,7 +81,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     );
     $field_2_name = 'field_nr';
     $field_2_label = 'Simple number field';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $field_2_name, 'integer', 1, $field_2_label,
       // Instance settings.
       array(),
@@ -140,7 +140,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     // Create a rich text field.
     $field_name = 'field_rich';
     $field_label = 'Rich text field';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $field_name, 'text', 1, $field_label,
       // Instance settings.
       array(),

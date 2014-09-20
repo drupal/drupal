@@ -77,16 +77,16 @@ image.settings:
       type: boolean
       label: 'Suppress the itok query string for image derivatives'
 
-field.image.settings:
-  type: field.file.settings
+field.image.storage_settings:
+  type: field.file.storage_settings
   label: 'Image settings'
   mapping:
     default_image:
       type: field_default_image
       label: 'Default value'
 
-field.image.instance_settings:
-  type: base_file_field_instance_settings
+field.image.field_settings:
+  type: base_file_field_field_settings
   label: 'Image settings'
   mapping:
     max_resolution:

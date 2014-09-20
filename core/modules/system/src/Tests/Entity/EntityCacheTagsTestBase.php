@@ -64,9 +64,9 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // If this is a fieldable entity, then add a configurable field. We will use
     // this configurable field in later tests to ensure that modifications to
-    // field (instance) configuration invalidate render cache entries.
+    // field configuration invalidate render cache entries.
     if ($this->entity->getEntityType()->isFieldable()) {
-      // Add field, so we can modify the Field and FieldInstance entities to
+      // Add field, so we can modify the Field and Field entities to
       // verify that changes to those indeed clear cache tags.
       entity_create('field_storage_config', array(
         'name' => 'configurable_field',
@@ -74,7 +74,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         'type' => 'test_field',
         'settings' => array(),
       ))->save();
-      entity_create('field_instance_config', array(
+      entity_create('field_config', array(
         'entity_type' => $this->entity->getEntityTypeId(),
         'bundle' => $this->entity->bundle(),
         'field_name' => 'configurable_field',
@@ -193,7 +193,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         'target_type' => $referenced_entity->getEntityTypeId(),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
       'bundle' => $bundle,
@@ -402,8 +402,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // Verify that after modifying a configurable field on the entity, there
       // is a cache miss.
       $this->pass("Test modification of referenced entity's configurable field.", 'Debug');
-      $field_name = $this->entity->getEntityTypeId() . '.configurable_field';
-      $field_storage = entity_load('field_storage_config', $field_name);
+      $field_storage_name = $this->entity->getEntityTypeId() . '.configurable_field';
+      $field_storage = entity_load('field_storage_config', $field_storage_name);
       $field_storage->save();
       $this->verifyPageCache($referencing_entity_path, 'MISS');
       $this->verifyPageCache($listing_path, 'MISS');
@@ -414,12 +414,12 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $this->verifyPageCache($listing_path, 'HIT');
 
 
-      // Verify that after modifying a configurable field instance on the
-      // entity, there is a cache miss.
-      $this->pass("Test modification of referenced entity's configurable field instance.", 'Debug');
-      $field_instance_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
-      $field_instance = entity_load('field_instance_config', $field_instance_name);
-      $field_instance->save();
+      // Verify that after modifying a configurable field on the entity, there
+      // is a cache miss.
+      $this->pass("Test modification of referenced entity's configurable field.", 'Debug');
+      $field_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
+      $field = entity_load('field_config', $field_name);
+      $field->save();
       $this->verifyPageCache($referencing_entity_path, 'MISS');
       $this->verifyPageCache($listing_path, 'MISS');
       $this->verifyPageCache($non_referencing_entity_path, 'HIT');

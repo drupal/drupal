@@ -40,14 +40,14 @@ class NestedFormTest extends FieldTestBase {
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     );
 
-    $this->instance = array(
+    $this->field = array(
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
       'description' => '[site:name]_description',
       'weight' => mt_rand(0, 127),
       'settings' => array(
-        'test_instance_setting' => $this->randomMachineName(),
+        'test_field_setting' => $this->randomMachineName(),
       ),
     );
   }
@@ -56,20 +56,20 @@ class NestedFormTest extends FieldTestBase {
    * Tests Field API form integration within a subform.
    */
   function testNestedFieldForm() {
-    // Add two instances on the 'entity_test'
+    // Add two fields on the 'entity_test'
     entity_create('field_storage_config', $this->fieldStorageSingle)->save();
     entity_create('field_storage_config', $this->fieldStorageUnlimited)->save();
-    $this->instance['field_name'] = 'field_single';
-    $this->instance['label'] = 'Single field';
-    entity_create('field_instance_config', $this->instance)->save();
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'])
+    $this->field['field_name'] = 'field_single';
+    $this->field['label'] = 'Single field';
+    entity_create('field_config', $this->field)->save();
+    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+      ->setComponent($this->field['field_name'])
       ->save();
-    $this->instance['field_name'] = 'field_unlimited';
-    $this->instance['label'] = 'Unlimited field';
-    entity_create('field_instance_config', $this->instance)->save();
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'])
+    $this->field['field_name'] = 'field_unlimited';
+    $this->field['label'] = 'Unlimited field';
+    entity_create('field_config', $this->field)->save();
+    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+      ->setComponent($this->field['field_name'])
       ->save();
 
     // Create two entities.

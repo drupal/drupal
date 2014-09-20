@@ -55,7 +55,7 @@ class DefaultViewsTest extends ViewTestBase {
     ));
     $this->vocabulary->save();
 
-    // Setup a field and instance.
+    // Create a field.
     $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
@@ -70,7 +70,7 @@ class DefaultViewsTest extends ViewTestBase {
         ),
       )
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',

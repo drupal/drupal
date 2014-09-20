@@ -56,28 +56,28 @@ class RouteSubscriber extends RouteSubscriberBase {
         }
 
         $route = new Route(
-          "$path/fields/{field_instance_config}",
+          "$path/fields/{field_config}",
           array(
-            '_form' => '\Drupal\field_ui\Form\FieldInstanceEditForm',
-            '_title_callback' => '\Drupal\field_ui\Form\FieldInstanceEditForm::getTitle',
+            '_form' => '\Drupal\field_ui\Form\FieldEditForm',
+            '_title_callback' => '\Drupal\field_ui\Form\FieldEditForm::getTitle',
           ),
-          array('_entity_access' => 'field_instance_config.update'),
+          array('_entity_access' => 'field_config.update'),
           $options
         );
-        $collection->add("field_ui.instance_edit_$entity_type_id", $route);
+        $collection->add("field_ui.field_edit_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/{field_instance_config}/storage",
+          "$path/fields/{field_config}/storage",
           array('_form' => '\Drupal\field_ui\Form\FieldStorageEditForm'),
-          array('_entity_access' => 'field_instance_config.update'),
+          array('_entity_access' => 'field_config.update'),
           $options
         );
         $collection->add("field_ui.storage_edit_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/{field_instance_config}/delete",
-          array('_entity_form' => 'field_instance_config.delete'),
-          array('_entity_access' => 'field_instance_config.delete'),
+          "$path/fields/{field_config}/delete",
+          array('_entity_form' => 'field_config.delete'),
+          array('_entity_access' => 'field_config.delete'),
           $options
         );
         $collection->add("field_ui.delete_$entity_type_id", $route);

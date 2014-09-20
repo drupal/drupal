@@ -79,7 +79,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'text',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test',
@@ -92,7 +92,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'text',
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_translatable_text',
       'bundle' => 'entity_test',
@@ -108,7 +108,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
         'target_type' => 'entity_test',
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_entity_reference',
       'bundle' => 'entity_test',

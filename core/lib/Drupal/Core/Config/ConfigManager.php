@@ -215,8 +215,8 @@ class ConfigManager implements ConfigManagerInterface {
     // dependencies on the to-be-removed entities.
     $extension_dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
     // Reverse the array to that entities are removed in the correct order of
-    // dependence. For example, this ensures that field instances are removed
-    // before fields.
+    // dependence. For example, this ensures that fields are removed before
+    // field storages.
     foreach (array_reverse($extension_dependent_entities) as $extension_dependent_entity) {
       $extension_dependent_entity->setUninstalling(TRUE);
       $extension_dependent_entity->delete();

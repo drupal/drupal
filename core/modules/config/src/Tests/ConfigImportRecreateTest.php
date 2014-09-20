@@ -73,7 +73,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
     $config_name = $content_type->getEntityType()->getConfigPrefix() . '.' . $content_type->id();
     $this->copyConfig($active, $staging);
 
-    // Delete the content type. This will also delete a field, a field instance,
+    // Delete the content type. This will also delete a field storage, a field,
     // an entity view display and an entity form display.
     $content_type->delete();
     $this->assertFalse($active->exists($config_name), 'Content type\'s old name does not exist active store.');
@@ -85,7 +85,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
     $content_type->save();
 
     $this->configImporter->reset();
-    // A node type, a field, a field instance an entity view display and an
+    // A node type, a field storage, a field, an entity view display and an
     // entity form display will be recreated.
     $creates = $this->configImporter->getUnprocessedConfiguration('create');
     $deletes = $this->configImporter->getUnprocessedConfiguration('delete');

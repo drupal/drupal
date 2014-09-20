@@ -12,7 +12,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Returns a form element to configure field synchronization.

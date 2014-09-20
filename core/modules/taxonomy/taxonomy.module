@@ -134,7 +134,7 @@ function taxonomy_page_build(&$page) {
 }
 
 /**
- * Return nodes attached to a term across all field instances.
+ * Return nodes attached to a term across all fields.
  *
  * This function requires taxonomy module to be maintaining its own tables,
  * and will return an empty array if it is not. If using other field storage

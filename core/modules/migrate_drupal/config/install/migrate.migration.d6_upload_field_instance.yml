@@ -17,7 +17,7 @@ process:
   'settings/file_extensions': file_extensions
   'settings/max_filesize': max_filesize
 destination:
-  plugin: entity:field_instance_config
+  plugin: entity:field_config
 migration_dependencies:
   required:
     - d6_upload_field

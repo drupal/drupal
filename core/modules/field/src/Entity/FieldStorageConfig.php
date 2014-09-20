@@ -123,8 +123,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * If TRUE, some actions not available though the UI (but are still possible
    * through direct API manipulation):
    * - field settings cannot be changed,
-   * - new instances cannot be created
-   * - existing instances cannot be deleted.
+   * - new fields cannot be created
+   * - existing fields cannot be deleted.
    * Defaults to FALSE.
    *
    * @var bool
@@ -254,7 +254,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *
    * @throws \Drupal\Core\Field\FieldException If the field definition is invalid.
    */
-   protected function preSaveNew(EntityStorageInterface $storage) {
+  protected function preSaveNew(EntityStorageInterface $storage) {
     $entity_manager = \Drupal::entityManager();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
@@ -288,7 +288,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // Make sure all settings are present, so that a complete field
     // definition is passed to the various hooks and written to config.
-     $this->settings += $field_type_manager->getDefaultSettings($this->type);
+    $this->settings += $field_type_manager->getDefaultStorageSettings($this->type);
 
     // Notify the entity manager.
     $entity_manager->onFieldStorageDefinitionCreate($this);
@@ -328,7 +328,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // Make sure all settings are present, so that a complete field
     // definition is passed to the various hooks and written to config.
-    $this->settings += $field_type_manager->getDefaultSettings($this->type);
+    $this->settings += $field_type_manager->getDefaultStorageSettings($this->type);
 
     // See if any module forbids the update by throwing an exception. This
     // invokes hook_field_storage_config_update_forbid().
@@ -357,39 +357,39 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageInterface $storage, array $fields) {
+  public static function preDelete(EntityStorageInterface $storage, array $field_storages) {
     $state = \Drupal::state();
-    $instance_storage = \Drupal::entityManager()->getStorage('field_instance_config');
+    $field_config_storage = \Drupal::entityManager()->getStorage('field_config');
 
-    // Delete instances first. Note: when deleting a field through
-    // FieldInstanceConfig::postDelete(), the instances have been deleted already, so
-    // no instances will be found here.
-    $instance_ids = array();
-    foreach ($fields as $field) {
-      if (!$field->deleted) {
-        foreach ($field->getBundles() as $bundle) {
-          $instance_ids[] = "{$field->entity_type}.$bundle.{$field->name}";
+    // Delete fields first. Note: when deleting a field storage through
+    // FieldConfig::postDelete(), the fields have been deleted already, so
+    // no fields will be found here.
+    $field_ids = array();
+    foreach ($field_storages as $field_storage) {
+      if (!$field_storage->deleted) {
+        foreach ($field_storage->getBundles() as $bundle) {
+          $field_ids[] = "{$field_storage->entity_type}.$bundle.{$field_storage->name}";
         }
       }
     }
-    if ($instance_ids) {
-      $instances = $instance_storage->loadMultiple($instance_ids);
+    if ($field_ids) {
+      $fields = $field_config_storage->loadMultiple($field_ids);
       // Tag the objects to preserve recursive deletion of the field.
-      foreach ($instances as $instance) {
-        $instance->noFieldDelete = TRUE;
+      foreach ($fields as $field) {
+        $field->noFieldDelete = TRUE;
       }
-      $instance_storage->delete($instances);
+      $field_config_storage->delete($fields);
     }
 
     // Keep the field definitions in the state storage so we can use them later
     // during field_purge_batch().
     $deleted_storages = $state->get('field.storage.deleted') ?: array();
-    foreach ($fields as $field) {
-      if (!$field->deleted) {
-        $config = $field->toArray();
+    foreach ($field_storages as $field_storage) {
+      if (!$field_storage->deleted) {
+        $config = $field_storage->toArray();
         $config['deleted'] = TRUE;
-        $config['bundles'] = $field->getBundles();
-        $deleted_storages[$field->uuid()] = $config;
+        $config['bundles'] = $field_storage->getBundles();
+        $deleted_storages[$field_storage->uuid()] = $config;
       }
     }
 
@@ -495,11 +495,11 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   public function getSettings() {
     // @todo FieldTypePluginManager maintains its own static cache. However, do
     //   some CPU and memory profiling to see if it's worth statically caching
-    //   $field_type_info, or the default field and instance settings, within
-    //   $this.
+    //   $field_type_info, or the default field storage and field settings,
+    //   within $this.
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
-    $settings = $field_type_manager->getDefaultSettings($this->type);
+    $settings = $field_type_manager->getDefaultStorageSettings($this->type);
     return $this->settings + $settings;
   }
 

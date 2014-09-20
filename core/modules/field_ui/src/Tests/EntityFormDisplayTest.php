@@ -48,7 +48,7 @@ class EntityFormDisplayTest extends KernelTestBase {
    * Tests the behavior of a field component within an EntityFormDisplay object.
    */
   public function testFieldComponent() {
-    // Create a field storage and an instance.
+    // Create a field storage and a field.
     $field_name = 'test_field';
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -56,11 +56,11 @@ class EntityFormDisplayTest extends KernelTestBase {
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     $form_display = entity_create('entity_form_display', array(
       'targetEntityType' => 'entity_test',
@@ -173,22 +173,22 @@ class EntityFormDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests deleting field instance.
+   * Tests deleting field.
    */
-  public function testDeleteFieldInstance() {
+  public function testDeleteField() {
     $field_name = 'test_field';
-    // Create a field storage and an instance.
+    // Create a field storage and a field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     // Create default and compact entity display.
     EntityFormMode::create(array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
@@ -209,8 +209,8 @@ class EntityFormDisplayTest extends KernelTestBase {
     $display = entity_get_form_display('entity_test', 'entity_test', 'compact');
     $this->assertTrue($display->getComponent($field_name));
 
-    // Delete the instance.
-    $instance->delete();
+    // Delete the field.
+    $field->delete();
 
     // Check that the component has been removed from the entity displays.
     $display = entity_get_form_display('entity_test', 'entity_test', 'default');
@@ -226,18 +226,18 @@ class EntityFormDisplayTest extends KernelTestBase {
     $this->enableModules(array('field_plugins_test'));
 
     $field_name = 'test_field';
-    // Create a field and an instance.
-    $field = entity_create('field_storage_config', array(
+    // Create a field.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text'
     ));
-    $field->save();
-    $instance = entity_create('field_instance_config', array(
-      'field_storage' => $field,
+    $field_storage->save();
+    $field = entity_create('field_config', array(
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     entity_create('entity_form_display', array(
       'targetEntityType' => 'entity_test',

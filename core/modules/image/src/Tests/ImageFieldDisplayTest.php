@@ -168,7 +168,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $test_image = current($this->drupalGetTestFiles('image'));
     list(, $test_image_extension) = explode('.', $test_image->filename);
     $field_name = strtolower($this->randomMachineName());
-    $instance_settings = array(
+    $field_settings = array(
       'alt_field' => 1,
       'file_extensions' => $test_image_extension,
       'max_filesize' => '50 KB',
@@ -180,7 +180,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $widget_settings = array(
       'preview_image_style' => 'medium',
     );
-    $instance = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
+    $field = $this->createImageField($field_name, 'article', array(), $field_settings, $widget_settings);
 
     $this->drupalGet('node/add/article');
     $this->assertText(t('50 KB limit.'), 'Image widget max file size is displayed on article form.');
@@ -230,7 +230,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][title]' => $this->randomMachineName($test_size),
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
-    $schema = $instance->getFieldStorageDefinition()->getSchema();
+    $schema = $field->getFieldStorageDefinition()->getSchema();
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
       '%max' => $schema['columns']['alt']['length'],
       '%length' => $test_size,
@@ -247,7 +247,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // 1, so we need to make sure the file widget prevents these notices by
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', array('field[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', array('field_storage[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
     $edit = array();
     $edit['files[' . $field_name . '_1][]'] = drupal_realpath($test_image->uri);
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
@@ -280,14 +280,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
 
-    // Add a default image to the public imagefield instance.
+    // Add a default image to the public image field.
     $images = $this->drupalGetTestFiles('image');
     $alt = $this->randomString(512);
     $title = $this->randomString(1024);
     $edit = array(
-      'files[field_settings_default_image_fid]' => drupal_realpath($images[0]->uri),
-      'field[settings][default_image][alt]' => $alt,
-      'field[settings][default_image][title]' => $title,
+      'files[field_storage_settings_default_image_fid]' => drupal_realpath($images[0]->uri),
+      'field_storage[settings][default_image][alt]' => $alt,
+      'field_storage[settings][default_image][title]' => $title,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
@@ -329,7 +329,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove default image from the field and make sure it is no longer used.
     $edit = array(
-      'field[settings][default_image][fid][fids]' => 0,
+      'field_storage[settings][default_image][fid][fids]' => 0,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
@@ -343,9 +343,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
     // Add a default image to the new field.
     $edit = array(
-      'files[field_settings_default_image_fid]' => drupal_realpath($images[1]->uri),
-      'field[settings][default_image][alt]' => $alt,
-      'field[settings][default_image][title]' => $title,
+      'files[field_storage_settings_default_image_fid]' => drupal_realpath($images[1]->uri),
+      'field_storage[settings][default_image][alt]' => $alt,
+      'field_storage[settings][default_image][title]' => $title,
     );
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage', $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.

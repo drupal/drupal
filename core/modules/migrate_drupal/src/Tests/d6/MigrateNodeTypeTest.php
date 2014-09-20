@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -54,8 +54,8 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $this->assertEqual(array('test_page'), $migration->getIdMap()->lookupDestinationID(array('test_page')));
 
     // Test we have a body field.
-    $instance = FieldInstanceConfig::loadByName('node', 'test_page', 'body');
-    $this->assertEqual($instance->getLabel(), 'This is the body field label', 'Body field was found.');
+    $field = FieldConfig::loadByName('node', 'test_page', 'body');
+    $this->assertEqual($field->getLabel(), 'This is the body field label', 'Body field was found.');
 
     // Test the test_story content type.
     $node_type_story = entity_load('node_type', 'test_story');
@@ -67,8 +67,8 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $this->assertEqual(array('test_story'), $migration->getIdMap()->lookupDestinationID(array('test_story')));
 
     // Test we don't have a body field.
-    $instance = FieldInstanceConfig::loadByName('node', 'test_story', 'body');
-    $this->assertEqual($instance, NULL, 'No body field found');
+    $field = FieldConfig::loadByName('node', 'test_story', 'body');
+    $this->assertEqual($field, NULL, 'No body field found');
 
     // Test the test_event content type.
     $node_type_event = entity_load('node_type', 'test_event');
@@ -80,8 +80,8 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $this->assertEqual(array('test_event'), $migration->getIdMap()->lookupDestinationID(array('test_event')));
 
     // Test we have a body field.
-    $instance = FieldInstanceConfig::loadByName('node', 'test_event', 'body');
-    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
+    $field = FieldConfig::loadByName('node', 'test_event', 'body');
+    $this->assertEqual($field->getLabel(), 'Body', 'Body field was found.');
   }
 
 }

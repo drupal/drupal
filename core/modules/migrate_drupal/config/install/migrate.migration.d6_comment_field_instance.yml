@@ -27,7 +27,7 @@ process:
   'settings/form_location': comment_form_location
   'settings/preview': comment_preview
 destination:
-  plugin: entity:field_instance_config
+  plugin: entity:field_config
 migration_dependencies:
   required:
     - d6_comment_field

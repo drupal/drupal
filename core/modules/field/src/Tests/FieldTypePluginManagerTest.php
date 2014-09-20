@@ -21,8 +21,8 @@ class FieldTypePluginManagerTest extends FieldUnitTestBase {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     foreach (array('test_field', 'shape', 'hidden_test_field') as $type) {
       $definition = $field_type_manager->getDefinition($type);
-      $this->assertIdentical($field_type_manager->getDefaultSettings($type), $definition['class']::defaultSettings(), format_string("field settings service returns %type's field settings", array('%type' => $type)));
-      $this->assertIdentical($field_type_manager->getDefaultInstanceSettings($type), $definition['class']::defaultInstanceSettings(), format_string("field instance settings service returns %type's field instance settings", array('%type' => $type)));
+      $this->assertIdentical($field_type_manager->getDefaultStorageSettings($type), $definition['class']::defaultStorageSettings(), format_string("%type storage settings were returned", array('%type' => $type)));
+      $this->assertIdentical($field_type_manager->getDefaultFieldSettings($type), $definition['class']::defaultFieldSettings(), format_string(" %type field settings were returned", array('%type' => $type)));
     }
   }
 

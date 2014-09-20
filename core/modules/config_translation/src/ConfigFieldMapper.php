@@ -2,26 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\ConfigFieldInstanceMapper.
+ * Contains \Drupal\config_translation\ConfigFieldMapper.
  */
 
 namespace Drupal\config_translation;
 
 /**
- * Configuration mapper for field instances.
+ * Configuration mapper for fields.
  *
  * On top of plugin definition values on ConfigEntityMapper, the plugin
- * definition for field instance mappers are required to contain the following
+ * definition for field mappers are required to contain the following
  * additional keys:
- * - base_entity_type: The name of the entity type the field instances are
- *   attached to.
+ * - base_entity_type: The name of the entity type the fields are attached to.
  */
-class ConfigFieldInstanceMapper extends ConfigEntityMapper {
+class ConfigFieldMapper extends ConfigEntityMapper {
 
   /**
    * Loaded entity instance to help produce the translation interface.
    *
-   * @var \Drupal\field\FieldInstanceConfigInterface
+   * @var \Drupal\field\FieldConfigInterface
    */
   protected $entity;
 

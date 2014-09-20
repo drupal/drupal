@@ -25,7 +25,7 @@ interface WidgetInterface extends WidgetBaseInterface {
   /**
    * Returns a form to configure settings for the widget.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow
+   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
    * administrators to configure the widget. The field_ui module takes care of
    * handling submitted form values.
    *
@@ -86,10 +86,9 @@ interface WidgetInterface extends WidgetBaseInterface {
    *       $form_state->getValues(), and is used to access processing
    *       information for the field through the getWidgetState() and
    *       setWidgetState() methods.
-   *   - #title: The sanitized element label for the field instance, ready for
-   *     output.
-   *   - #description: The sanitized element description for the field instance,
-   *     ready for output.
+   *   - #title: The sanitized element label for the field, ready for output.
+   *   - #description: The sanitized element description for the field, ready
+   *     for output.
    *   - #required: A Boolean indicating whether the element value is required;
    *     for required multiple value fields, only the first widget's values are
    *     required.

@@ -89,7 +89,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
       'core.entity_form_display.node.' . $active_type . '.default::core.entity_form_display.node.' . $staged_type . '.default',
       'core.entity_view_display.node.' . $active_type . '.default::core.entity_view_display.node.' . $staged_type . '.default',
       'core.entity_view_display.node.' . $active_type . '.teaser::core.entity_view_display.node.' . $staged_type . '.teaser',
-      'field.instance.node.' . $active_type . '.body::field.instance.node.' . $staged_type . '.body',
+      'field.field.node.' . $active_type . '.body::field.field.node.' . $staged_type . '.body',
     );
     $renames = $this->configImporter()->getUnprocessedConfiguration('rename');
     $this->assertIdentical($expected, $renames);

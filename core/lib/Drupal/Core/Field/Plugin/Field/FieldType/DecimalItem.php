@@ -28,11 +28,11 @@ class DecimalItem extends NumericItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'precision' => 10,
       'scale' => 2,
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
@@ -65,7 +65,7 @@ class DecimalItem extends NumericItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
     $settings = $this->getSettings();
 

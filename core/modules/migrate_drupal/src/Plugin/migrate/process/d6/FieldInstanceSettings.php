@@ -12,7 +12,7 @@ use Drupal\migrate\Row;
 
 /**
  * @MigrateProcessPlugin(
- *   id = "d6_field_instance_settings"
+ *   id = "d6_field_field_settings"
  * )
  */
 class FieldInstanceSettings extends ProcessPluginBase {

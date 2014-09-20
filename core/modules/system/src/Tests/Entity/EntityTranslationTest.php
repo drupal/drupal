@@ -436,14 +436,14 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that per-language defaults are properly populated.
     $entity = $this->reloadEntity($entity);
-    $instance_id = implode('.', array($entity->getEntityTypeId(), $entity->bundle(), $this->field_name));
-    $instance = $this->entityManager->getStorage('field_instance_config')->load($instance_id);
-    $instance->default_value_function = 'entity_test_field_default_value';
-    $instance->save();
+    $field_id = implode('.', array($entity->getEntityTypeId(), $entity->bundle(), $this->field_name));
+    $field = $this->entityManager->getStorage('field_config')->load($field_id);
+    $field->default_value_function = 'entity_test_field_default_value';
+    $field->save();
     $translation = $entity->addTranslation($langcode2);
-    $field = $translation->get($this->field_name);
-    $this->assertEqual($field->value, $this->field_name . '_' . $langcode2, 'Language-aware default values correctly populated.');
-    $this->assertEqual($field->getLangcode(), $langcode2, 'Field object has the expected langcode.');
+    $field_storage = $translation->get($this->field_name);
+    $this->assertEqual($field_storage->value, $this->field_name . '_' . $langcode2, 'Language-aware default values correctly populated.');
+    $this->assertEqual($field_storage->getLangcode(), $langcode2, 'Field object has the expected langcode.');
   }
 
   /**

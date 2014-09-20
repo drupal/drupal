@@ -62,7 +62,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     // settings for the field type.
     // @todo Cleanup in https://drupal.org/node/2116341.
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    $default_settings = $field_type_manager->getDefaultSettings($type) + $field_type_manager->getDefaultInstanceSettings($type);
+    $default_settings = $field_type_manager->getDefaultStorageSettings($type) + $field_type_manager->getDefaultFieldSettings($type);
     $field_definition->itemDefinition->setSettings($default_settings);
     return $field_definition;
   }

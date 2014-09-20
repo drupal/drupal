@@ -44,11 +44,11 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
   protected $fieldStorage;
 
   /**
-   * The list field instance used in the test.
+   * The list field used in the test.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   /**
    * {@inheritdoc}
@@ -69,11 +69,11 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
     $this->fieldStorage = entity_create('field_storage_config', $this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
     ));
-    $this->instance->save();
+    $this->field->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->fieldName, array(

@@ -8,7 +8,7 @@ text.settings:
       type: integer
       label: 'Default summary length'
 
-field.text.settings:
+field.text.storage_settings:
   type: mapping
   label: 'Text (formatted) settings'
   mapping:
@@ -16,7 +16,7 @@ field.text.settings:
       type: integer
       label: 'Maximum length'
 
-field.text.instance_settings:
+field.text.field_settings:
   type: mapping
   label: 'Text (formatted) settings'
   sequence:
@@ -36,12 +36,12 @@ field.text.value:
           type: string
           label: 'Text format'
 
-field.text_long.settings:
+field.text_long.storage_settings:
   label: 'Text (formatted, long) settings'
   type: mapping
   mapping: {  }
 
-field.text_long.instance_settings:
+field.text_long.field_settings:
   label: 'Text (formatted, long) settings'
   type: mapping
   mapping: {  }
@@ -60,12 +60,12 @@ field.text_long.value:
           type: string
           label: 'Text format'
 
-field.text_with_summary.settings:
+field.text_with_summary.storage_settings:
   label: 'Text (formatted, long, with summary) settings'
   type: mapping
   mapping: {  }
 
-field.text_with_summary.instance_settings:
+field.text_with_summary.field_settings:
   type: mapping
   label: 'Text (formatted, long, with summary) settings'
   mapping:

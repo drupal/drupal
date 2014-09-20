@@ -24,7 +24,7 @@ process:
   'settings/max_filesize': max_filesize
   'settings/max_resolution': max_resolution
 destination:
-  plugin: entity:field_instance_config
+  plugin: entity:field_config
 migration_dependencies:
   required:
     - d6_user_picture_field

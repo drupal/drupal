@@ -6,7 +6,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -51,14 +51,14 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     ));
     $this->role2->save();
 
-    entity_reference_create_instance('user', 'user', 'user_reference', 'User reference', 'user');
+    entity_reference_create_field('user', 'user', 'user_reference', 'User reference', 'user');
   }
 
   /**
    * Tests user selection by roles.
    */
   function testUserSelectionByRole() {
-    $field_definition = FieldInstanceConfig::loadByName('user', 'user', 'user_reference');
+    $field_definition = FieldConfig::loadByName('user', 'user', 'user_reference');
     $field_definition->settings['handler_settings']['filter']['role'] = array(
       $this->role1->id() => $this->role1->id(),
       $this->role2->id() => 0,

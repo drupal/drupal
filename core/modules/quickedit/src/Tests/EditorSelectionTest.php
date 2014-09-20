@@ -53,8 +53,8 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   public function testText() {
     $field_name = 'field_text';
-    $this->createFieldWithInstance(
-      $field_name, 'string', 1, 'Plain text field',
+    $this->createFieldWithStorage(
+      $field_name, 'string', 1, 'Simple text field',
       // Instance settings.
       array(),
       // Widget type & settings.
@@ -92,7 +92,7 @@ class EditorSelectionTest extends QuickEditTestBase {
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
 
     $field_name = 'field_textarea';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $field_name, 'text', 1, 'Long text field',
       // Instance settings.
       array(),
@@ -129,7 +129,7 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   public function testNumber() {
     $field_name = 'field_nr';
-    $this->createFieldWithInstance(
+    $this->createFieldWithStorage(
       $field_name, 'integer', 1, 'Simple number field',
       // Instance settings.
       array(),

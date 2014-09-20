@@ -8,7 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -54,7 +54,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   }
 
   /**
-   * Creates a new file field (storage and instance).
+   * Creates a new file field.
    *
    * @param $name
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
@@ -64,12 +64,12 @@ abstract class FileFieldTestBase extends WebTestBase {
    *   The bundle that this field will be added to.
    * @param $storage_settings
    *   A list of field storage settings that will be added to the defaults.
-   * @param $instance_settings
+   * @param $field_settings
    *   A list of instance settings that will be added to the instance defaults.
    * @param $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $instance_settings = array(), $widget_settings = array()) {
+  function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
     $field_storage = entity_create('field_storage_config', array(
       'entity_type' => $entity_type,
       'name' => $name,
@@ -79,7 +79,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     ));
     $field_storage->save();
 
-    $this->attachFileField($name, $entity_type, $bundle, $instance_settings, $widget_settings);
+    $this->attachFileField($name, $entity_type, $bundle, $field_settings, $widget_settings);
     return $field_storage;
   }
 
@@ -94,22 +94,19 @@ abstract class FileFieldTestBase extends WebTestBase {
    *   The bundle this field will be added to.
    * @param $field_settings
    *   A list of field settings that will be added to the defaults.
-   * @param $instance_settings
-   *   A list of instance settings that will be added to the instance defaults.
    * @param $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function attachFileField($name, $entity_type, $bundle, $instance_settings = array(), $widget_settings = array()) {
-    $instance = array(
+  function attachFileField($name, $entity_type, $bundle, $field_settings = array(), $widget_settings = array()) {
+    $field = array(
       'field_name' => $name,
       'label' => $name,
       'entity_type' => $entity_type,
       'bundle' => $bundle,
-      'required' => !empty($instance_settings['required']),
-      'settings' => array(),
+      'required' => !empty($field_settings['required']),
+      'settings' => $field_settings,
     );
-    $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    entity_create('field_instance_config', $instance)->save();
+    entity_create('field_config', $field)->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($name, array(
@@ -122,10 +119,10 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Updates an existing file field with new settings.
    */
-  function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
-    $instance = FieldInstanceConfig::loadByName('node', $type_name, $name);
-    $instance->settings = array_merge($instance->settings, $instance_settings);
-    $instance->save();
+  function updateFileField($name, $type_name, $field_settings = array(), $widget_settings = array()) {
+    $field = FieldConfig::loadByName('node', $type_name, $name);
+    $field->settings = array_merge($field->settings, $field_settings);
+    $field->save();
 
     entity_get_form_display('node', $type_name, 'default')
       ->setComponent($name, array(

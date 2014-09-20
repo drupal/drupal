@@ -39,7 +39,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     parent::setUp();
 
     // Setup basic fields.
-    $this->setUpFields(3);
+    $this->setUpFieldStorages(3);
 
     // Setup a field with cardinality > 1.
     $this->fieldStorages[3] = entity_create('field_storage_config', array(
@@ -66,7 +66,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     ));
     $this->fieldStorages[5]->save();
 
-    $this->setUpInstances();
+    $this->setUpFields();
 
     // Create some nodes.
     $this->nodes = array();

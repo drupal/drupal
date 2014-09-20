@@ -939,8 +939,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $entity_manager = \Drupal::entityManager();
     foreach ($module_list as $module) {
 
-      // Clean up all entity bundles (including field instances) of every entity
-      // type provided by the module that is being uninstalled.
+      // Clean up all entity bundles (including fields) of every entity type
+      // provided by the module that is being uninstalled.
       foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
           foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {

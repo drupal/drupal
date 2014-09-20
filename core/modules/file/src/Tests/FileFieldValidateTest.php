@@ -8,7 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests validation functions such as file type, max file size, max size per
@@ -26,8 +26,8 @@ class FileFieldValidateTest extends FileFieldTestBase {
   function testRequired() {
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
-    $field = $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
-    $instance = FieldInstanceConfig::loadByName('node', $type_name, $field_name);
+    $storage = $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -35,7 +35,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getLabel())), 'Node save failed when required file field was empty.');
+    $this->assertRaw(t('!title field is required.', array('!title' => $field->getLabel())), 'Node save failed when required file field was empty.');
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -48,14 +48,14 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading to the required field.');
 
     // Try again with a multiple value field.
-    $field->delete();
+    $storage->delete();
     $this->createFileField($field_name, 'node', $type_name, array('cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), array('required' => '1'));
 
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getLabel())), 'Node save failed when required multiple value file field was empty.');
+    $this->assertRaw(t('!title field is required.', array('!title' => $field->getLabel())), 'Node save failed when required multiple value file field was empty.');
 
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

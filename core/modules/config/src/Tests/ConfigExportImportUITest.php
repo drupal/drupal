@@ -70,7 +70,7 @@ class ConfigExportImportUITest extends WebTestBase {
       'type' => 'text',
     ));
     $this->fieldStorage->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->content_type->type,
     ))->save();
@@ -96,10 +96,10 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->originalSlogan);
 
     // Delete the custom field.
-    $field_instances = entity_load_multiple('field_instance_config');
-    foreach ($field_instances as $field_instance) {
-      if ($field_instance->field_name == $this->fieldName) {
-        $field_instance->delete();
+    $fields = entity_load_multiple('field_config');
+    foreach ($fields as $field) {
+      if ($field->field_name == $this->fieldName) {
+        $field->delete();
       }
     }
     $field_storages = entity_load_multiple('field_storage_config');

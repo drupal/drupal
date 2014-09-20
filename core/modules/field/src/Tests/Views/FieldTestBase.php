@@ -42,12 +42,12 @@ abstract class FieldTestBase extends ViewTestBase {
   public $fieldStorages;
 
   /**
-   * Stores the instances of the fields. They have
-   * the same keys as the fields.
+   * Stores the fields of the field storage. They have the same keys as the
+   * field storages.
    *
    * @var array
    */
-  public $instances;
+  public $fields;
 
   protected function setUp() {
     parent::setUp();
@@ -61,7 +61,7 @@ abstract class FieldTestBase extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }
 
-  function setUpFields($amount = 3, $type = 'string') {
+  function setUpFieldStorages($amount = 3, $type = 'string') {
     // Create three fields.
     $field_names = array();
     for ($i = 0; $i < $amount; $i++) {
@@ -76,13 +76,13 @@ abstract class FieldTestBase extends ViewTestBase {
     return $field_names;
   }
 
-  function setUpInstances($bundle = 'page') {
+  function setUpFields($bundle = 'page') {
     foreach ($this->fieldStorages as $key => $field_storage) {
-      $this->instances[$key] = entity_create('field_instance_config', array(
+      $this->fields[$key] = entity_create('field_config', array(
         'field_storage' => $field_storage,
         'bundle' => $bundle,
       ));
-      $this->instances[$key]->save();
+      $this->fields[$key]->save();
     }
   }
 

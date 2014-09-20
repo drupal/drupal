@@ -64,18 +64,18 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
    * Tests the Drupal 6 upload settings to Drupal 8 field instance migration.
    */
   public function testUploadFieldInstance() {
-    $field = entity_load('field_instance_config', 'node.page.upload');
+    $field = entity_load('field_config', 'node.page.upload');
     $settings = $field->getSettings();
     $this->assertEqual($field->id(), 'node.page.upload');
     $this->assertEqual($settings['file_extensions'], 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
     $this->assertEqual($settings['max_filesize'], '1MB');
     $this->assertEqual($settings['description_field'], TRUE);
 
-    $field = entity_load('field_instance_config', 'node.story.upload');
+    $field = entity_load('field_config', 'node.story.upload');
     $this->assertEqual($field->id(), 'node.story.upload');
 
     // Shouldn't exist.
-    $field = entity_load('field_instance_config', 'node.article.upload');
+    $field = entity_load('field_config', 'node.article.upload');
     $this->assertTrue(is_null($field));
 
     $this->assertEqual(array('node', 'page', 'upload'), entity_load('migration', 'd6_upload_field_instance')->getIdMap()->lookupDestinationID(array('page')));

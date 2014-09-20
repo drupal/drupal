@@ -49,7 +49,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
       'settings' => array('target_type' => 'node'),
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'reference_content',
       'settings' => array(
@@ -60,20 +60,20 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
         ),
       ),
     ));
-    $this->instance->save();
+    $this->field->save();
 
     // Set created node as default_value.
-    $instance_edit = array(
+    $field_edit = array(
       'default_value_input[' . $this->fieldStorage->name . '][0][target_id]' => $referenced_node->getTitle() . ' (' .$referenced_node->id() . ')',
     );
-    $this->drupalPostForm('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $this->fieldStorage->name, $instance_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $this->fieldStorage->name, $field_edit, t('Save settings'));
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $this->fieldStorage->name);
     $this->assertRaw('name="default_value_input[' . $this->fieldStorage->name . '][0][target_id]" value="' . $referenced_node->getTitle() .' (' .$referenced_node->id() . ')', 'The default value is selected in instance settings page');
 
     // Check if the ID has been converted to UUID in config entity.
-    $config_entity = $this->container->get('config.factory')->get('field.instance.node.reference_content.' . $this->fieldStorage->name)->get();
+    $config_entity = $this->container->get('config.factory')->get('field.field.node.reference_content.' . $this->fieldStorage->name)->get();
     $this->assertTrue(isset($config_entity['default_value'][0]['target_uuid']), 'Default value contains target_uuid property');
     $this->assertEqual($config_entity['default_value'][0]['target_uuid'], $referenced_node->uuid(), 'Content uuid and config entity uuid are the same');
 

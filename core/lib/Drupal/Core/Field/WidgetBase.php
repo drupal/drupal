@@ -463,9 +463,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    */
   protected static function getWidgetStateParents(array $parents, $field_name) {
     // Field processing data is placed at
-    // $form_state->get(['field', '#parents', ...$parents..., '#fields', $field_name]),
+    // $form_state->get(['field_storage', '#parents', ...$parents..., '#fields', $field_name]),
     // to avoid clashes between field names and $parents parts.
-    return array_merge(array('field', '#parents'), $parents, array('#fields', $field_name));
+    return array_merge(array('field_storage', '#parents'), $parents, array('#fields', $field_name));
   }
 
   /**

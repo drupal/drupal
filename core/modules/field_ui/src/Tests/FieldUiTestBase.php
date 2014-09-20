@@ -56,14 +56,14 @@ abstract class FieldUiTestBase extends WebTestBase {
    * @param $initial_edit
    *   $edit parameter for drupalPostForm() on the first step ('Manage fields'
    *   screen).
+   * @param $storage_edit
+   *   $edit parameter for drupalPostForm() on the second step ('Storage
+   *   settings' form).
    * @param $field_edit
-   *   $edit parameter for drupalPostForm() on the second step ('Field settings'
-   *   form).
-   * @param $instance_edit
-   *   $edit parameter for drupalPostForm() on the third step ('Instance settings'
+   *   $edit parameter for drupalPostForm() on the third step ('Field settings'
    *   form).
    */
-  function fieldUIAddNewField($bundle_path, $initial_edit, $field_edit = array(), $instance_edit = array()) {
+  function fieldUIAddNewField($bundle_path, $initial_edit, $storage_edit = array(), $field_edit = array()) {
     // Use 'test_field' field type by default.
     $initial_edit += array(
       'fields[_add_new_field][type]' => 'test_field',
@@ -76,12 +76,12 @@ abstract class FieldUiTestBase extends WebTestBase {
     // Test Breadcrumbs.
     $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
-    // Second step : 'Field settings' form.
-    $this->drupalPostForm(NULL, $field_edit, t('Save field settings'));
-    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), 'Redirected to instance and widget settings page.');
+    // Second step : 'Storage settings' form.
+    $this->drupalPostForm(NULL, $storage_edit, t('Save field settings'));
+    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), 'Redirected to field settings page.');
 
-    // Third step : 'Instance settings' form.
-    $this->drupalPostForm(NULL, $instance_edit, t('Save settings'));
+    // Third step : 'Field settings' form.
+    $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
@@ -96,18 +96,18 @@ abstract class FieldUiTestBase extends WebTestBase {
    * @param $initial_edit
    *   $edit parameter for drupalPostForm() on the first step ('Manage fields'
    *   screen).
-   * @param $instance_edit
-   *   $edit parameter for drupalPostForm() on the second step ('Instance settings'
+   * @param $field_edit
+   *   $edit parameter for drupalPostForm() on the second step ('Field settings'
    *   form).
    */
-  function fieldUIAddExistingField($bundle_path, $initial_edit, $instance_edit = array()) {
+  function fieldUIAddExistingField($bundle_path, $initial_edit, $field_edit = array()) {
     $label = $initial_edit['fields[_add_existing_field][label]'];
 
     // First step : 'Re-use existing field' on the 'Manage fields' page.
     $this->drupalPostForm("$bundle_path/fields", $initial_edit, t('Save'));
 
-    // Second step : 'Instance settings' form.
-    $this->drupalPostForm(NULL, $instance_edit, t('Save settings'));
+    // Second step : 'Field settings' form.
+    $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
@@ -115,10 +115,10 @@ abstract class FieldUiTestBase extends WebTestBase {
   }
 
   /**
-   * Deletes a field instance through the Field UI.
+   * Deletes a field through the Field UI.
    *
    * @param $bundle_path
-   *   Admin path of the bundle that the field instance is to be deleted from.
+   *   Admin path of the bundle that the field is to be deleted from.
    * @param $field_name
    *   The name of the field.
    * @param $label

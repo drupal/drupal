@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeTypeInterface;
@@ -321,16 +321,15 @@ function node_type_load($name) {
  *
  * @param \Drupal\node\NodeTypeInterface $type
  *   A node type object.
- * @param $label
+ * @param string $label
  *   (optional) The label for the body instance.
  *
- * @return
- *   Body field instance.
+ * @return \Drupal\field\Entity\FieldConfig Body field.
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
-  $instance = FieldInstanceConfig::loadByName('node', $type->id(), 'body');
+  $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field_storage)) {
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'body',
@@ -339,14 +338,14 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     ));
     $field_storage->save();
   }
-  if (empty($instance)) {
-    $instance = entity_create('field_instance_config', array(
+  if (empty($field)) {
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => $type->id(),
       'label' => $label,
       'settings' => array('display_summary' => TRUE),
     ));
-    $instance->save();
+    $field->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('node', $type->type, 'default')
@@ -376,7 +375,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     }
   }
 
-  return $instance;
+  return $field;
 }
 
 /**

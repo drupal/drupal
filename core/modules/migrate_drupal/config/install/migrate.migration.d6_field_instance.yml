@@ -30,7 +30,7 @@ process:
   required: required
   status: active
   settings:
-    plugin: d6_field_instance_settings
+    plugin: d6_field_field_settings
     source:
       - widget_type
       - widget_settings
@@ -44,7 +44,7 @@ process:
       - widget_settings
 
 destination:
-  plugin: entity:field_instance_config
+  plugin: entity:field_config
 migration_dependencies:
   required:
     - d6_node_type

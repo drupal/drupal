@@ -17,19 +17,19 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 interface FieldTypePluginManagerInterface extends PluginManagerInterface {
 
   /**
-   * Returns the default instance-level settings for a field type.
+   * Returns the default field-level settings for a field type.
    *
    * @param string $type
    *   A field type name.
    *
    * @return array
-   *   The instance's default settings, as provided by the plugin definition, or
+   *   The field's default settings, as provided by the plugin definition, or
    *   an empty array if type or settings are undefined.
    */
-  public function getDefaultInstanceSettings($type);
+  public function getDefaultFieldSettings($type);
 
   /**
-   * Returns the default field-level settings for a field type.
+   * Returns the default storage-level settings for a field type.
    *
    * @param string $type
    *   A field type name.
@@ -38,7 +38,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface {
    *   The type's default settings, as provided by the plugin definition, or an
    *   empty array if type or settings are undefined.
    */
-  public function getDefaultSettings($type);
+  public function getDefaultStorageSettings($type);
 
   /**
    * Gets the definition of all field types that can be added via UI.

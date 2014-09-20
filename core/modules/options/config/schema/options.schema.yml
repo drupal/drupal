@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Options module.
 
-field.list_integer.settings:
+field.list_integer.storage_settings:
   type: mapping
   label: 'List (integer) settings'
   mapping:
@@ -21,7 +21,7 @@ field.list_integer.settings:
       type: string
       label: 'Allowed values function'
 
-field.list_integer.instance_settings:
+field.list_integer.field_settings:
   label: 'List (integer)'
   type: mapping
   mapping: {  }
@@ -37,7 +37,7 @@ field.list_integer.value:
           type: integer
           label: 'Value'
 
-field.list_float.settings:
+field.list_float.storage_settings:
   type: mapping
   label: 'List (float) settings'
   mapping:
@@ -58,7 +58,7 @@ field.list_float.settings:
       type: string
       label: 'Allowed values function'
 
-field.list_float.instance_settings:
+field.list_float.field_settings:
   label: 'List (float)'
   type: mapping
   mapping: {  }
@@ -74,7 +74,7 @@ field.list_float.value:
           type: string
           label: 'Value'
 
-field.list_text.settings:
+field.list_text.storage_settings:
   type: mapping
   label: 'List (text) settings'
   mapping:
@@ -95,7 +95,7 @@ field.list_text.settings:
       type: string
       label: 'Allowed values function'
 
-field.list_text.instance_settings:
+field.list_text.field_settings:
   label: 'List (float)'
   type: mapping
   mapping: {  }

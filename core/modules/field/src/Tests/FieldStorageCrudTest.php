@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Tests\CrudTest.
+ * Contains \Drupal\field\Tests\FieldStorageCrudTest.
  */
 
 namespace Drupal\field\Tests;
@@ -17,7 +17,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group field
  */
-class CrudTest extends FieldUnitTestBase {
+class FieldStorageCrudTest extends FieldUnitTestBase {
 
   /**
    * Modules to enable.
@@ -63,7 +63,7 @@ class CrudTest extends FieldUnitTestBase {
 
     // Ensure that default settings are present.
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-    $this->assertEqual($field_storage_config['settings'], $field_type_manager->getDefaultSettings($field_storage_definition['type']), 'Default field settings have been written.');
+    $this->assertEqual($field_storage_config['settings'], $field_type_manager->getDefaultStorageSettings($field_storage_definition['type']), 'Default storage settings have been written.');
 
     // Guarantee that the name is unique.
     try {
@@ -212,13 +212,13 @@ class CrudTest extends FieldUnitTestBase {
     $fields = entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['name'], 'type' => 'foo'));
     $this->assertTrue(empty($fields), 'No field was found.');
 
-    // Create an instance of the field.
-    $instance_definition = array(
+    // Create a field from the field storage.
+    $field_definition = array(
       'field_name' => $field_storage_definition['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
-    entity_create('field_instance_config', $instance_definition)->save();
+    entity_create('field_config', $field_definition)->save();
   }
 
   /**
@@ -278,67 +278,67 @@ class CrudTest extends FieldUnitTestBase {
     // TODO: Also test deletion of the data stored in the field ?
 
     // Create two fields (so we can test that only one is deleted).
-    $field = array(
+    $field_storage_definition = array(
       'name' => 'field_1',
       'type' => 'test_field',
       'entity_type' => 'entity_test',
     );
-    entity_create('field_storage_config', $field)->save();
-    $another_field = array(
+    entity_create('field_storage_config', $field_storage_definition)->save();
+    $another_field_storage_definition = array(
       'name' => 'field_2',
       'type' => 'test_field',
       'entity_type' => 'entity_test',
     );
-    entity_create('field_storage_config', $another_field)->save();
+    entity_create('field_storage_config', $another_field_storage_definition)->save();
 
-    // Create instances for each.
-    $instance_definition = array(
-      'field_name' => $field['name'],
+    // Create fields for each.
+    $field_definition = array(
+      'field_name' => $field_storage_definition['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
-    entity_create('field_instance_config', $instance_definition)->save();
-    $another_instance_definition = $instance_definition;
-    $another_instance_definition['field_name'] = $another_field['name'];
-    entity_create('field_instance_config', $another_instance_definition)->save();
+    entity_create('field_config', $field_definition)->save();
+    $another_field_definition = $field_definition;
+    $another_field_definition['field_name'] = $another_field_storage_definition['name'];
+    entity_create('field_config', $another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field['name'], 'include_deleted' => TRUE)));
-    $this->assertTrue(!empty($field_storage) && empty($field_storage->deleted), 'A new field is not marked for deletion.');
-    FieldStorageConfig::loadByName('entity_test', $field['name'])->delete();
+    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['name'], 'include_deleted' => TRUE)));
+    $this->assertTrue(!empty($field_storage) && empty($field_storage->deleted), 'A new storage is not marked for deletion.');
+    FieldStorageConfig::loadByName('entity_test', $field_storage_definition['name'])->delete();
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
-    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field['name'], 'include_deleted' => TRUE)));
-    $this->assertTrue(!empty($field_storage->deleted), 'A deleted field is marked for deletion.');
+    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['name'], 'include_deleted' => TRUE)));
+    $this->assertTrue(!empty($field_storage->deleted), 'A deleted storage is marked for deletion.');
 
-    // Make sure that this field's instance is marked as deleted when it is
+    // Make sure that this field is marked as deleted when it is
     // specifically loaded.
-    $instance = current(entity_load_multiple_by_properties('field_instance_config', array('entity_type' => 'entity_test', 'field_name' => $instance_definition['field_name'], 'bundle' => $instance_definition['bundle'], 'include_deleted' => TRUE)));
-    $this->assertTrue(!empty($instance->deleted), 'An instance for a deleted field is marked for deletion.');
+    $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE)));
+    $this->assertTrue(!empty($field->deleted), 'A field whose storage was deleted is marked for deletion.');
+
+    // Try to load the storage normally and make sure it does not show up.
+    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field_storage_definition['name']);
+    $this->assertTrue(empty($field_storage), 'A deleted storage is not loaded by default.');
 
     // Try to load the field normally and make sure it does not show up.
-    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field['name']);
-    $this->assertTrue(empty($field_storage), 'A deleted field is not loaded by default.');
+    $field = entity_load('field_config', 'entity_test.' . '.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
+    $this->assertTrue(empty($field), 'A field whose storage was deleted is not loaded by default.');
 
-    // Try to load the instance normally and make sure it does not show up.
-    $instance = entity_load('field_instance_config', 'entity_test.' . '.' . $instance_definition['bundle'] . '.' . $instance_definition['field_name']);
-    $this->assertTrue(empty($instance), 'An instance for a deleted field is not loaded by default.');
-
-    // Make sure the other field (and its field instance) are not deleted.
-    $another_field_storage = entity_load('field_storage_config', 'entity_test.' . $another_field['name']);
-    $this->assertTrue(!empty($another_field_storage) && empty($another_field_storage->deleted), 'A non-deleted field is not marked for deletion.');
-    $another_instance = entity_load('field_instance_config', 'entity_test.' . $another_instance_definition['bundle'] . '.' . $another_instance_definition['field_name']);
-    $this->assertTrue(!empty($another_instance) && empty($another_instance->deleted), 'An instance of a non-deleted field is not marked for deletion.');
+    // Make sure the other field and its storage are not deleted.
+    $another_field_storage = entity_load('field_storage_config', 'entity_test.' . $another_field_storage_definition['name']);
+    $this->assertTrue(!empty($another_field_storage) && empty($another_field_storage->deleted), 'A non-deleted storage is not marked for deletion.');
+    $another_field = entity_load('field_config', 'entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
+    $this->assertTrue(!empty($another_field) && empty($another_field->deleted), 'A field whose storage was not deleted is not marked for deletion.');
 
     // Try to create a new field the same name as a deleted field and
     // write data into it.
-    entity_create('field_storage_config', $field)->save();
-    entity_create('field_instance_config', $instance_definition)->save();
-    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field['name']);
-    $this->assertTrue(!empty($field_storage) && empty($field_storage->deleted), 'A new field with a previously used name is created.');
-    $instance = entity_load('field_instance_config', 'entity_test.' . $instance_definition['bundle'] . '.' . $instance_definition['field_name'] );
-    $this->assertTrue(!empty($instance) && empty($instance->deleted), 'A new instance for a previously used field name is created.');
+    entity_create('field_storage_config', $field_storage_definition)->save();
+    entity_create('field_config', $field_definition)->save();
+    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field_storage_definition['name']);
+    $this->assertTrue(!empty($field_storage) && empty($field_storage->deleted), 'A new storage with a previously used name is created.');
+    $field = entity_load('field_config', 'entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name'] );
+    $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field for a previously used field name is created.');
 
     // Save an entity with data for the field
     $entity = entity_create('entity_test');
@@ -386,12 +386,12 @@ class CrudTest extends FieldUnitTestBase {
       'cardinality' => $cardinality,
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     do {
       $entity = entity_create('entity_test');

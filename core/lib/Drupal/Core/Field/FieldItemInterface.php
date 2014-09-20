@@ -55,7 +55,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * This method is static because the field schema information is needed on
    * creation of the field. FieldItemInterface objects instantiated at that
-   * time are not reliable as field instance settings might be missing.
+   * time are not reliable as field settings might be missing.
    *
    * Computed fields having no schema should return an empty array.
    *
@@ -231,20 +231,20 @@ interface FieldItemInterface extends ComplexDataInterface {
   public static function generateSampleValue(FieldDefinitionInterface $field_definition);
 
   /**
+   * Defines the storage-level settings for this plugin.
+   *
+   * @return array
+   *   A list of default settings, keyed by the setting name.
+   */
+  public static function defaultStorageSettings();
+
+  /**
    * Defines the field-level settings for this plugin.
    *
    * @return array
    *   A list of default settings, keyed by the setting name.
    */
-  public static function defaultSettings();
-
-  /**
-   * Defines the instance-level settings for this plugin.
-   *
-   * @return array
-   *   A list of default settings, keyed by the setting name.
-   */
-  public static function defaultInstanceSettings();
+  public static function defaultFieldSettings();
 
   /**
    * Returns a settings array that can be stored as a configuration value.
@@ -278,12 +278,12 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * @see \Drupal\Core\Config\Config::set()
    */
-  public static function settingsToConfigData(array $settings);
+  public static function storageSettingsToConfigData(array $settings);
 
   /**
    * Returns a settings array in the field type's canonical representation.
    *
-   * This function does the inverse of static::settingsToConfigData(). It's
+   * This function does the inverse of static::storageSettingsToConfigData(). It's
    * called when loading a field's settings from a configuration object.
    *
    * @param array $settings
@@ -293,58 +293,56 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   The settings, in the representation expected by the field type and code
    *   that interacts with it.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::settingsToConfigData()
+   * @see \Drupal\Core\Field\FieldItemInterface::storageSettingsToConfigData()
    */
-  public static function settingsFromConfigData(array $settings);
+  public static function storageSettingsFromConfigData(array $settings);
 
   /**
    * Returns a settings array that can be stored as a configuration value.
    *
-   * Same as static::settingsToConfigData(), but for the field's instance
-   * settings.
+   * Same as static::storageSettingsToConfigData(), but for the field's settings.
    *
    * @param array $settings
-   *   The field's instance settings in the field type's canonical
-   *   representation.
+   *   The field's settings in the field type's canonical representation.
    *
    * @return array
    *   An array (either the unmodified $settings or a modified representation)
    *   that is suitable for storing as a deployable configuration value.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::settingsToConfigData()
+   * @see \Drupal\Core\Field\FieldItemInterface::storageSettingsToConfigData()
    */
-  public static function instanceSettingsToConfigData(array $settings);
+  public static function fieldSettingsToConfigData(array $settings);
 
   /**
    * Returns a settings array in the field type's canonical representation.
    *
-   * This function does the inverse of static::instanceSettingsToConfigData().
-   * It's called when loading a field's instance settings from a configuration
+   * This function does the inverse of static::fieldSettingsToConfigData().
+   * It's called when loading a field's settings from a configuration
    * object.
    *
    * @param array $settings
-   *   The field's instance settings, as it is stored within a configuration
+   *   The field's settings, as it is stored within a configuration
    *   object.
    *
    * @return array
-   *   The instance settings, in the representation expected by the field type
+   *   The field settings, in the representation expected by the field type
    *   and code that interacts with it.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::instanceSettingsToConfigData()
+   * @see \Drupal\Core\Field\FieldItemInterface::fieldSettingsToConfigData()
    */
-  public static function instanceSettingsFromConfigData(array $settings);
+  public static function fieldSettingsFromConfigData(array $settings);
 
   /**
-   * Returns a form for the field-level settings.
+   * Returns a form for the storage-level settings.
    *
    * Invoked from \Drupal\field_ui\Form\FieldStorageEditForm to allow
-   * administrators to configure field-level settings.
+   * administrators to configure storage-level settings.
    *
-   * Field storage might reject field definition changes that affect the field
-   * storage schema if the field already has data. When the $has_data parameter
-   * is TRUE, the form should not allow changing the settings that take part in
-   * the schema() method. It is recommended to set #access to FALSE on the
-   * corresponding elements.
+   * Field storage might reject settings changes that affect the field
+   * storage schema if the storage already has data. When the $has_data
+   * parameter is TRUE, the form should not allow changing the settings that
+   * take part in the schema() method. It is recommended to set #access to
+   * FALSE on the corresponding elements.
    *
    * @param array $form
    *   The form where the settings form is being included in.
@@ -356,13 +354,13 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return
    *   The form definition for the field settings.
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data);
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data);
 
   /**
-   * Returns a form for the instance-level settings.
+   * Returns a form for the field-level settings.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow
-   * administrators to configure instance-level settings.
+   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
+   * administrators to configure field-level settings.
    *
    * @param array $form
    *   The form where the settings form is being included in.
@@ -370,8 +368,8 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   The form state of the (entire) configuration form.
    *
    * @return array
-   *   The form definition for the field instance settings.
+   *   The form definition for the field settings.
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state);
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state);
 
 }

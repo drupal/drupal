@@ -111,7 +111,7 @@ function field_test_field_widget_form_alter(&$element, FormStateInterface $form_
       break;
   }
   // Set a message if this is for the form displayed to set default value for
-  // the field instance.
+  // the field.
   if ($context['default']) {
     drupal_set_message('From hook_field_widget_form_alter(): Default form is true.');
   }

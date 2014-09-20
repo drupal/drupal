@@ -23,7 +23,7 @@ function entity_test_install() {
       'type' => 'text',
       'cardinality' => 1,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,

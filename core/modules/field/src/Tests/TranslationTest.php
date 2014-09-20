@@ -43,18 +43,18 @@ class TranslationTest extends FieldUnitTestBase {
 
 
   /**
+   * An array defining the field storage to use in this test.
+   *
+   * @var array
+   */
+  protected $field_storage_definition;
+
+  /**
    * An array defining the field to use in this test.
    *
    * @var array
    */
   protected $field_definition;
-
-  /**
-   * An array defining the field instance to use in this test.
-   *
-   * @var array
-   */
-  protected $instance_definition;
 
   /**
    * The field storage to use in this test.
@@ -64,11 +64,11 @@ class TranslationTest extends FieldUnitTestBase {
   protected $fieldStorage;
 
   /**
-   * The field instance to use in this test.
+   * The field to use in this test.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   protected function setUp() {
     parent::setUp();
@@ -79,22 +79,22 @@ class TranslationTest extends FieldUnitTestBase {
 
     $this->entity_type = 'entity_test';
 
-    $this->field_definition = array(
+    $this->field_storage_definition = array(
       'name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    $this->fieldStorage = entity_create('field_storage_config', $this->field_definition);
+    $this->fieldStorage = entity_create('field_storage_config', $this->field_storage_definition);
     $this->fieldStorage->save();
 
-    $this->instance_definition = array(
+    $this->field_definition = array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
     );
-    $this->instance = entity_create('field_instance_config', $this->instance_definition);
-    $this->instance->save();
+    $this->field = entity_create('field_config', $this->field_definition);
+    $this->field->save();
 
     for ($i = 0; $i < 3; ++$i) {
       ConfigurableLanguage::create(array(
@@ -116,7 +116,7 @@ class TranslationTest extends FieldUnitTestBase {
     // Prepare the field translations.
     $entity_type_id = 'entity_test';
     field_test_entity_info_translatable($entity_type_id, TRUE);
-    $entity = entity_create($entity_type_id, array('type' => $this->instance->bundle));
+    $entity = entity_create($entity_type_id, array('type' => $this->field->bundle));
     $field_translations = array();
     $available_langcodes = array_keys($this->container->get('language_manager')->getLanguages());
     $entity->langcode->value = reset($available_langcodes);
@@ -139,22 +139,22 @@ class TranslationTest extends FieldUnitTestBase {
 
     // Test default values.
     $field_name_default = drupal_strtolower($this->randomMachineName() . '_field_name');
-    $field_definition = $this->field_definition;
-    $field_definition['name'] = $field_name_default;
-    $field_storage = entity_create('field_storage_config', $field_definition);
+    $field_storage_definition = $this->field_storage_definition;
+    $field_storage_definition['name'] = $field_name_default;
+    $field_storage = entity_create('field_storage_config', $field_storage_definition);
     $field_storage->save();
 
-    $instance_definition = $this->instance_definition;
-    $instance_definition['field_storage'] = $field_storage;
-    $instance_definition['default_value'] = array(array('value' => rand(1, 127)));
-    $instance = entity_create('field_instance_config', $instance_definition);
-    $instance->save();
+    $field_definition = $this->field_definition;
+    $field_definition['field_storage'] = $field_storage;
+    $field_definition['default_value'] = array(array('value' => rand(1, 127)));
+    $field = entity_create('field_config', $field_definition);
+    $field->save();
 
     $translation_langcodes = array_slice($available_langcodes, 0, 2);
     asort($translation_langcodes);
     $translation_langcodes = array_values($translation_langcodes);
 
-    $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
+    $values = array('type' => $field->bundle, 'langcode' => $translation_langcodes[0]);
     $entity = entity_create($entity_type_id, $values);
     foreach ($translation_langcodes as $langcode) {
       $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
@@ -168,11 +168,11 @@ class TranslationTest extends FieldUnitTestBase {
     // @todo Test every translation once the Entity Translation API allows for
     //   multilingual defaults.
     $langcode = $entity->language()->id;
-    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $instance->default_value, format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
+    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->default_value, format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
 
     // Check that explicit empty values are not overridden with default values.
     foreach (array(NULL, array()) as $empty_items) {
-      $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
+      $values = array('type' => $field->bundle, 'langcode' => $translation_langcodes[0]);
       $entity = entity_create($entity_type_id, $values);
       foreach ($translation_langcodes as $langcode) {
         $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());

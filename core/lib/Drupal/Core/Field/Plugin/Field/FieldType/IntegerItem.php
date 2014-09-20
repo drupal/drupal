@@ -27,16 +27,16 @@ class IntegerItem extends NumericItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'unsigned' => FALSE,
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     return array(
       'min' => '',
       'max' => '',
@@ -45,7 +45,7 @@ class IntegerItem extends NumericItemBase {
       // Valid size property values include: 'tiny', 'small', 'medium', 'normal'
       // and 'big'.
       'size' => 'normal',
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
   }
 
   /**

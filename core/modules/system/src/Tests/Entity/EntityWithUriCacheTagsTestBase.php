@@ -86,20 +86,20 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
       // Verify that after modifying a configurable field on the entity, there
       // is a cache miss.
       $this->pass("Test modification of entity's configurable field.", 'Debug');
-      $field_name = $this->entity->getEntityTypeId() . '.configurable_field';
-      $field_storage = entity_load('field_storage_config', $field_name);
+      $field_storage_name = $this->entity->getEntityTypeId() . '.configurable_field';
+      $field_storage = entity_load('field_storage_config', $field_storage_name);
       $field_storage->save();
       $this->verifyPageCache($entity_path, 'MISS');
 
       // Verify a cache hit.
       $this->verifyPageCache($entity_path, 'HIT');
 
-      // Verify that after modifying a configurable field instance on the
-      // entity, there is a cache miss.
-      $this->pass("Test modification of entity's configurable field instance.", 'Debug');
-      $field_instance_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
-      $field_instance = entity_load('field_instance_config', $field_instance_name);
-      $field_instance->save();
+      // Verify that after modifying a configurable field on the entity, there
+      // is a cache miss.
+      $this->pass("Test modification of entity's configurable field.", 'Debug');
+      $field_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
+      $field = entity_load('field_config', $field_name);
+      $field->save();
       $this->verifyPageCache($entity_path, 'MISS');
 
       // Verify a cache hit.

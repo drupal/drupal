@@ -44,10 +44,10 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = array(
       'id' => $this->fieldType,
-      'settings' => array(
+      'storage_settings' => array(
         'some_setting' => 'value 1'
       ),
-      'instance_settings' => array(
+      'field_settings' => array(
         'some_instance_setting' => 'value 2',
       ),
     );
@@ -60,13 +60,13 @@ class BaseFieldDefinitionTest extends UnitTestCase {
       ->with($this->fieldType)
       ->will($this->returnValue($this->fieldTypeDefinition));
     $field_type_manager->expects($this->any())
-      ->method('getDefaultSettings')
+      ->method('getDefaultStorageSettings')
       ->with($this->fieldType)
-      ->will($this->returnValue($this->fieldTypeDefinition['settings']));
+      ->will($this->returnValue($this->fieldTypeDefinition['storage_settings']));
     $field_type_manager->expects($this->any())
-      ->method('getDefaultInstanceSettings')
+      ->method('getDefaultFieldSettings')
       ->with($this->fieldType)
-      ->will($this->returnValue($this->fieldTypeDefinition['instance_settings']));
+      ->will($this->returnValue($this->fieldTypeDefinition['field_settings']));
 
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
@@ -120,7 +120,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $value = $this->randomMachineName();
     $definition->setSetting($setting, $value);
     $this->assertEquals($value, $definition->getSetting($setting));
-    $default_settings = $this->fieldTypeDefinition['settings'] + $this->fieldTypeDefinition['instance_settings'];
+    $default_settings = $this->fieldTypeDefinition['storage_settings'] + $this->fieldTypeDefinition['field_settings'];
     $this->assertEquals(array($setting => $value) + $default_settings, $definition->getSettings());
   }
 
@@ -129,7 +129,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   public function testDefaultFieldSettings() {
     $definition = BaseFieldDefinition::create($this->fieldType);
-    $expected_settings = $this->fieldTypeDefinition['settings'] + $this->fieldTypeDefinition['instance_settings'];
+    $expected_settings = $this->fieldTypeDefinition['storage_settings'] + $this->fieldTypeDefinition['field_settings'];
     $this->assertEquals($expected_settings, $definition->getSettings());
     foreach ($expected_settings as $setting => $value) {
       $this->assertEquals($value, $definition->getSetting($setting));

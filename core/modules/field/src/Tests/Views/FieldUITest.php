@@ -47,8 +47,8 @@ class FieldUITest extends FieldTestBase {
     $this->account = $this->drupalCreateUser(array('administer views'));
     $this->drupalLogin($this->account);
 
-    $this->setUpFields(1, 'text');
-    $this->setUpInstances();
+    $this->setUpFieldStorages(1, 'text');
+    $this->setUpFields();
   }
 
   /**

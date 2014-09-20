@@ -317,9 +317,8 @@
  *   entities, and module developers need to consider this so that configuration
  *   can be imported, uninstalled, and synchronized in the right order. For
  *   example, a field display configuration entity would need to depend on
- *   field instance configuration, which depends on field and bundle
- *   configuration. Configuration entity classes expose dependencies by
- *   overriding the
+ *   field configuration, which depends on field and bundle configuration.
+ *   Configuration entity classes expose dependencies by overriding the
  *   \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  *   method.
  *

@@ -36,14 +36,14 @@ class DateTimeItemTest extends FieldUnitTestBase {
       'settings' => array('datetime_type' => 'date'),
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'settings' => array(
         'default_value' => 'blank',
       ),
     ));
-    $instance->save();
+    $field->save();
   }
 
   /**

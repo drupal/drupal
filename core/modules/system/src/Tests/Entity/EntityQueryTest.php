@@ -78,7 +78,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
       entity_test_create_bundle($bundle);
       foreach ($field_storages as $field_storage) {
-        entity_create('field_instance_config', array(
+        entity_create('field_config', array(
           'field_storage' => $field_storage,
           'bundle' => $bundle,
         ))->save();
@@ -421,7 +421,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     ));
     $field_storage->save();
     $bundle = $this->randomMachineName();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => $bundle,
     ))->save();

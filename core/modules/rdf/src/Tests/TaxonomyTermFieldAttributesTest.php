@@ -45,10 +45,8 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
     $this->drupalLogin($web_user);
     $this->vocabulary = $this->createVocabulary();
 
-    // Setup a field and instance.
-    $this->fieldName = 'field_taxonomy_test';
-
     // Create the field.
+    $this->fieldName = 'field_taxonomy_test';
     $this->createTaxonomyTermReferenceField($this->fieldName, $this->vocabulary);
 
     // Set the RDF mapping for the new field.
@@ -163,7 +161,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'article',

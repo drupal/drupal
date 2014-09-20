@@ -8,7 +8,7 @@
 namespace Drupal\field\Tests\Boolean;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -30,14 +30,14 @@ class BooleanFieldTest extends WebTestBase {
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $field;
+  protected $field_storage;
 
   /**
-   * The instance used in this test class.
+   * The field used in this test class.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   /**
    * {@inheritdoc}
@@ -64,7 +64,7 @@ class BooleanFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomMachineName());
-    $this->field = FieldStorageConfig::create(array(
+    $this->field_storage = FieldStorageConfig::create(array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
@@ -73,15 +73,15 @@ class BooleanFieldTest extends WebTestBase {
         'off_label' => $off,
       ),
     ));
-    $this->field->save();
-    $this->instance = FieldInstanceConfig::create(array(
+    $this->field_storage->save();
+    $this->field = FieldConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $label,
       'required' => TRUE,
     ));
-    $this->instance->save();
+    $this->field->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
@@ -132,7 +132,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
     $this->assertNoRaw($on);
-    $this->assertText($this->instance->label());
+    $this->assertText($this->field->label());
 
     // Go to the form display page and check if the default settings works as
     // expected.
@@ -170,8 +170,8 @@ class BooleanFieldTest extends WebTestBase {
 
     // Test the boolean field settings.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name . '/storage');
-    $this->assertFieldById('edit-field-settings-on-label', $on);
-    $this->assertFieldById('edit-field-settings-off-label', $off);
+    $this->assertFieldById('edit-field-storage-settings-on-label', $on);
+    $this->assertFieldById('edit-field-storage-settings-off-label', $off);
   }
 
 }

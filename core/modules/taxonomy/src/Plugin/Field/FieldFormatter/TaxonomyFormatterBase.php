@@ -36,8 +36,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
         $rekey = FALSE;
 
         foreach ($items as $item) {
-          // Check whether the taxonomy term field instance value could be
-          // loaded.
+          // Check whether the taxonomy term field value could be loaded.
           if (isset($terms[$item->target_id])) {
             // Replace the instance value with the term data.
             $item->entity = $terms[$item->target_id];

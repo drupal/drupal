@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldInstanceConfigStorage.
+ * Contains \Drupal\field\FieldConfigStorage.
  */
 
 namespace Drupal\field;
@@ -19,9 +19,9 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
- * Storage class for field instances.
+ * Controller class for fields.
  */
-class FieldInstanceConfigStorage extends FieldConfigStorageBase {
+class FieldConfigStorage extends FieldConfigStorageBase {
 
   /**
    * The entity manager.
@@ -38,7 +38,14 @@ class FieldInstanceConfigStorage extends FieldConfigStorageBase {
   protected $state;
 
   /**
-   * Constructs a FieldInstanceConfigStorage object.
+   * The field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypeManager;
+
+  /**
+   * Constructs a FieldConfigStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -81,8 +88,8 @@ class FieldInstanceConfigStorage extends FieldConfigStorageBase {
    * {@inheritdoc}
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
-    // If the field has been deleted in the same import, the instance will be
-    // deleted by then, and there is nothing left to do. Just return TRUE so
+    // If the field storage has been deleted in the same import, the field will
+    // be deleted by then, and there is nothing left to do. Just return TRUE so
     // that the file does not get written to active store.
     if (!$old_config->get()) {
       return TRUE;
@@ -94,47 +101,47 @@ class FieldInstanceConfigStorage extends FieldConfigStorageBase {
    * {@inheritdoc}
    */
   public function loadByProperties(array $conditions = array()) {
-    // Include deleted instances if specified in the $conditions parameters.
+    // Include deleted fields if specified in the $conditions parameters.
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    $instances = array();
+    $fields = array();
 
-    // Get instances stored in configuration. If we are explicitly looking for
-    // deleted instances only, this can be skipped, because they will be
+    // Get fields stored in configuration. If we are explicitly looking for
+    // deleted fields only, this can be skipped, because they will be
     // retrieved from state below.
     if (empty($conditions['deleted'])) {
       if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
         // Optimize for the most frequent case where we do have a specific ID.
         $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
-        $instances = $this->loadMultiple(array($id));
+        $fields = $this->loadMultiple(array($id));
       }
       else {
-        // No specific ID, we need to examine all existing instances.
-        $instances = $this->loadMultiple();
+        // No specific ID, we need to examine all existing fields.
+        $fields = $this->loadMultiple();
       }
     }
 
-    // Merge deleted instances (stored in state) if needed.
+    // Merge deleted fields (stored in state) if needed.
     if ($include_deleted || !empty($conditions['deleted'])) {
-      $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
+      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
       $deleted_storages = $this->state->get('field.storage.deleted') ?: array();
-      foreach ($deleted_instances as $id => $config) {
-        // If the field itself is deleted, inject it directly in the instance.
+      foreach ($deleted_fields as $id => $config) {
+        // If the field storage itself is deleted, inject it directly in the field.
         if (isset($deleted_storages[$config['field_storage_uuid']])) {
           $config['field_storage'] = $this->entityManager->getStorage('field_storage_config')->create($deleted_storages[$config['field_storage_uuid']]);
         }
-        $instances[$id] = $this->create($config);
+        $fields[$id] = $this->create($config);
       }
     }
 
-    // Collect matching instances.
-    $matching_instances = array();
-    foreach ($instances as $instance) {
+    // Collect matching fields.
+    $matching_fields = array();
+    foreach ($fields as $field) {
       // Some conditions are checked against the field.
-      $field_storage = $instance->getFieldStorageDefinition();
+      $field_storage = $field->getFieldStorageDefinition();
 
-      // Only keep the instance if it matches all conditions.
+      // Only keep the field if it matches all conditions.
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
@@ -148,27 +155,27 @@ class FieldInstanceConfigStorage extends FieldConfigStorageBase {
             break;
 
           case 'uuid';
-            $checked_value = $instance->uuid();
+            $checked_value = $field->uuid();
             break;
 
           default:
-            $checked_value = $instance->$key;
+            $checked_value = $field->$key;
             break;
         }
 
-        // Skip to the next instance as soon as one condition does not match.
+        // Skip to the next field as soon as one condition does not match.
         if ($checked_value != $value) {
           continue 2;
         }
       }
 
-      // When returning deleted instances, key the results by UUID since they
-      // can include several instances with the same ID.
-      $key = $include_deleted ? $instance->uuid() : $instance->id();
-      $matching_instances[$key] = $instance;
+      // When returning deleted fields, key the results by UUID since they
+      // can include several fields with the same ID.
+      $key = $include_deleted ? $field->uuid() : $field->id();
+      $matching_fields[$key] = $field;
     }
 
-    return $matching_instances;
+    return $matching_fields;
   }
 
 }

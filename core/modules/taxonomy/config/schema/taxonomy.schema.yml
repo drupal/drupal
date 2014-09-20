@@ -39,7 +39,7 @@ taxonomy.vocabulary.*:
       sequence:
         - type: taxonomy.vocabulary.third_party.[%key]
 
-field.taxonomy_term_reference.settings:
+field.taxonomy_term_reference.storage_settings:
   type: base_entity_reference_field_settings
   label: 'Taxonomy term reference settings'
   mapping:
@@ -60,7 +60,7 @@ field.taxonomy_term_reference.settings:
               type: integer
               value: 'Parent'
 
-field.taxonomy_term_reference.instance_settings:
+field.taxonomy_term_reference.field_settings:
   type: mapping
   label: 'Taxonomy term reference settings'
   mapping:

@@ -158,10 +158,10 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->fieldTypePluginManager->expects($this->any())
-      ->method('getDefaultSettings')
+      ->method('getDefaultStorageSettings')
       ->will($this->returnValue(array()));
     $this->fieldTypePluginManager->expects($this->any())
-      ->method('getDefaultInstanceSettings')
+      ->method('getDefaultFieldSettings')
       ->will($this->returnValue(array()));
 
     $container = new ContainerBuilder();

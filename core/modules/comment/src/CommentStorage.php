@@ -132,14 +132,14 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    * {@inheritdoc}
    */
   public function getNewCommentPageNumber($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment') {
-    $instance = $entity->getFieldDefinition($field_name);
-    $comments_per_page = $instance->getSetting('per_page');
+    $field = $entity->getFieldDefinition($field_name);
+    $comments_per_page = $field->getSetting('per_page');
 
     if ($total_comments <= $comments_per_page) {
       // Only one page of comments.
       $count = 0;
     }
-    elseif ($instance->getSetting('default_mode') == CommentManagerInterface::COMMENT_MODE_FLAT) {
+    elseif ($field->getSetting('default_mode') == CommentManagerInterface::COMMENT_MODE_FLAT) {
       // Flat comments.
       $count = $total_comments - $new_comments;
     }

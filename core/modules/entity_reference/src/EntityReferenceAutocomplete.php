@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Plugin\Type\SelectionPluginManager;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\field\FieldConfigInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -47,7 +47,7 @@ class EntityReferenceAutocomplete {
   }
 
   /**
-   * Returns matched labels based on a given field, instance and search string.
+   * Returns matched labels based on a given search string.
    *
    * This function can be used by other modules that wish to pass a mocked
    * definition of the field on instance.

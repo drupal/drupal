@@ -33,11 +33,11 @@ class DateTimeFieldTest extends WebTestBase {
   protected $fieldStorage;
 
   /**
-   * The instance used in this test class.
+   * The field used in this test class.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   protected function setUp() {
     parent::setUp();
@@ -59,14 +59,14 @@ class DateTimeFieldTest extends WebTestBase {
       'settings' => array('datetime_type' => 'date'),
     ));
     $this->fieldStorage->save();
-    $this->instance = entity_create('field_instance_config', array(
+    $this->field = entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
-    $this->instance->save();
+    $this->field->save();
 
-    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
+    entity_get_form_display($this->field->entity_type, $this->field->bundle, 'default')
       ->setComponent($this->fieldStorage->name, array(
         'type' => 'datetime_default',
       ))
@@ -77,7 +77,7 @@ class DateTimeFieldTest extends WebTestBase {
       'label' => 'hidden',
       'settings' => array('format_type' => 'medium'),
     );
-    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+    entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
       ->setComponent($this->fieldStorage->name, $this->display_options)
       ->save();
   }
@@ -123,7 +123,7 @@ class DateTimeFieldTest extends WebTestBase {
       foreach ($values as $new_value) {
         // Update the entity display settings.
         $this->display_options['settings'] = array($setting => $new_value);
-        entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+        entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
           ->setComponent($field_name, $this->display_options)
           ->save();
 
@@ -141,7 +141,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
-    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+    entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
       ->setComponent($field_name, $this->display_options)
       ->save();
     $expected = $date->format(DATETIME_DATE_STORAGE_FORMAT);
@@ -190,7 +190,7 @@ class DateTimeFieldTest extends WebTestBase {
       foreach ($values as $new_value) {
         // Update the entity display settings.
         $this->display_options['settings'] = array($setting => $new_value);
-        entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+        entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
           ->setComponent($field_name, $this->display_options)
           ->save();
 
@@ -208,7 +208,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
-    entity_get_display($this->instance->entity_type, $this->instance->bundle, 'full')
+    entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
       ->setComponent($field_name, $this->display_options)
       ->save();
     $expected = $date->format(DATETIME_DATETIME_STORAGE_FORMAT);
@@ -226,7 +226,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->fieldStorage->save();
 
     // Change the widget to a datelist widget.
-    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
+    entity_get_form_display($this->field->entity_type, $this->field->bundle, 'default')
       ->setComponent($field_name, array(
         'type' => 'datetime_datelist',
         'settings' => array(
@@ -297,17 +297,17 @@ class DateTimeFieldTest extends WebTestBase {
     ));
     $field_storage->save();
 
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'date_content',
     ));
-    $instance->save();
+    $field->save();
 
     // Set now as default_value.
-    $instance_edit = array(
+    $field_edit = array(
       'default_value_input[default_date_type]' => 'now',
     );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $instance_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $field_edit, t('Save settings'));
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name);
@@ -315,7 +315,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.instance.node.date_content.' . $field_storage->name)->get();
+    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_storage->name)->get();
     $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'now', 'default_date' => 'now'), 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
@@ -327,20 +327,20 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertEqual($new_node->get($field_storage->name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
     // Set an invalid relative default_value to test validation.
-    $instance_edit = array(
+    $field_edit = array(
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => 'invalid date',
     );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $instance_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $field_edit, t('Save settings'));
 
     $this->assertText('The relative date value entered is invalid.');
 
     // Set a relative default_value.
-    $instance_edit = array(
+    $field_edit = array(
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => '+90 days',
     );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $instance_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $field_edit, t('Save settings'));
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name);
@@ -348,7 +348,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.instance.node.date_content.' . $field_storage->name)->get();
+    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_storage->name)->get();
     $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'relative', 'default_date' => '+90 days'), 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
@@ -360,10 +360,10 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertEqual($new_node->get($field_storage->name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
 
     // Remove default value.
-    $instance_edit = array(
+    $field_edit = array(
       'default_value_input[default_date_type]' => '',
     );
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $instance_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name, $field_edit, t('Save settings'));
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_storage->name);
@@ -371,7 +371,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.instance.node.date_content.' . $field_storage->name)->get();
+    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_storage->name)->get();
     $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.

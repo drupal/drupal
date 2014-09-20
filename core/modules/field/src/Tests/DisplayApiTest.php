@@ -61,7 +61,7 @@ class DisplayApiTest extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create a field and instance.
+    // Create a field and its storage.
     $this->field_name = 'test_field';
     $this->label = $this->randomMachineName();
     $this->cardinality = 4;
@@ -72,7 +72,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       'type' => 'test_field',
       'cardinality' => $this->cardinality,
     );
-    $instance = array(
+    $field = array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -95,14 +95,14 @@ class DisplayApiTest extends FieldUnitTestBase {
     );
 
     entity_create('field_storage_config', $field_storage)->save();
-    entity_create('field_instance_config', $instance)->save();
+    entity_create('field_config', $field)->save();
     // Create a display for the default view mode.
-    entity_get_display($instance['entity_type'], $instance['bundle'], 'default')
+    entity_get_display($field['entity_type'], $field['bundle'], 'default')
       ->setComponent($this->field_name, $this->display_options['default'])
       ->save();
     // Create a display for the teaser view mode.
     EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
-    entity_get_display($instance['entity_type'], $instance['bundle'], 'teaser')
+    entity_get_display($field['entity_type'], $field['bundle'], 'teaser')
       ->setComponent($this->field_name, $this->display_options['teaser'])
       ->save();
 
@@ -253,8 +253,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
-    // View mode: check that display settings specified in the instance are
-    // used.
+    // View mode: check that display settings specified in the field are used.
     $setting = $this->display_options['teaser']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[$delta];

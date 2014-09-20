@@ -63,7 +63,7 @@ class CommentWidget extends WidgetBase {
     // second column on wide-resolutions), place the field as a details element
     // in this tab-set.
     if (isset($form['advanced'])) {
-      // Get default value from the field instance.
+      // Get default value from the field.
       $field_default_values = $this->fieldDefinition->getDefaultValue($entity);
 
       // Override widget title to be helpful for end users.
@@ -72,7 +72,7 @@ class CommentWidget extends WidgetBase {
       $element += array(
         '#type' => 'details',
         // Open the details when the selected value is different to the stored
-        // default values for the field instance.
+        // default values for the field.
         '#open' => ($items->status != $field_default_values[0]['status']),
         '#group' => 'advanced',
         '#attributes' => array(

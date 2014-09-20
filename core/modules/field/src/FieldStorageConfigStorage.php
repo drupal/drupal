@@ -101,7 +101,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    * {@inheritdoc}
    */
   public function loadByProperties(array $conditions = array()) {
-    // Include deleted instances if specified in the $conditions parameters.
+    // Include deleted fields if specified in the $conditions parameters.
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
@@ -171,7 +171,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
   protected function mapFromStorageRecords(array $records) {
     foreach ($records as &$record) {
       $class = $this->fieldTypeManager->getPluginClass($record['type']);
-      $record['settings'] = $class::settingsFromConfigData($record['settings']);
+      $record['settings'] = $class::storageSettingsFromConfigData($record['settings']);
     }
     return parent::mapFromStorageRecords($records);
   }
@@ -182,7 +182,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = parent::mapToStorageRecord($entity);
     $class = $this->fieldTypeManager->getPluginClass($record['type']);
-    $record['settings'] = $class::settingsToConfigData($record['settings']);
+    $record['settings'] = $class::storageSettingsToConfigData($record['settings']);
     return $record;
   }
 

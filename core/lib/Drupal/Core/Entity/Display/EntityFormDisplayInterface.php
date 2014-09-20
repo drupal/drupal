@@ -64,7 +64,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *       // One sub-array per copy of the widget, keyed by delta.
    *       0 => array(
    *         '#title' => The title to be displayed by the widget,
-   *         '#description' => The description text for the field instance,
+   *         '#description' => The description text for the field,
    *         '#required' => Whether the widget should be marked required,
    *         '#delta' => 0,
    *         '#weight' => 0,

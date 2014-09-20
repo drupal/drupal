@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeInterface;
 
 /**
@@ -550,19 +549,19 @@ function content_translation_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for 'field_ui_instance_edit_form'.
+ * Implements hook_form_FORM_ID_alter() for 'field_ui_field_edit_form'.
  */
-function content_translation_form_field_ui_field_instance_edit_form_alter(array &$form, FormStateInterface $form_state) {
-  $instance = $form_state->get('instance');
-  $bundle_is_translatable = content_translation_enabled($instance->entity_type, $instance->bundle);
+function content_translation_form_field_ui_field_edit_form_alter(array &$form, FormStateInterface $form_state) {
+  $field = $form_state->get('field');
+  $bundle_is_translatable = content_translation_enabled($field->entity_type, $field->bundle);
 
-  $form['instance']['translatable'] = array(
+  $form['field']['translatable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Users may translate this field'),
-    '#default_value' => $instance->isTranslatable(),
+    '#default_value' => $field->isTranslatable(),
     '#weight' => -1,
     '#disabled' => !$bundle_is_translatable,
-    '#access' => $instance->getFieldStorageDefinition()->isTranslatable(),
+    '#access' => $field->getFieldStorageDefinition()->isTranslatable(),
   );
 
   // Provide helpful pointers for administrators.
@@ -570,17 +569,17 @@ function content_translation_form_field_ui_field_instance_edit_form_alter(array 
     $toggle_url = url('admin/config/regional/content-language', array(
       'query' => drupal_get_destination(),
     ));
-    $form['instance']['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
+    $form['field']['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
       '@language-settings-url' => $toggle_url,
     ));
   }
 
-  if ($instance->isTranslatable()) {
+  if ($field->isTranslatable()) {
     module_load_include('inc', 'content_translation', 'content_translation.admin');
-    $element = content_translation_field_sync_widget($instance);
+    $element = content_translation_field_sync_widget($field);
     if ($element) {
-      $form['instance']['third_party_settings']['content_translation']['translation_sync'] = $element;
-      $form['instance']['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
+      $form['field']['third_party_settings']['content_translation']['translation_sync'] = $element;
+      $form['field']['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
     }
   }
 }

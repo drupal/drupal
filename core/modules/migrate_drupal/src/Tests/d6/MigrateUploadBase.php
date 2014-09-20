@@ -58,7 +58,7 @@ abstract class MigrateUploadBase extends MigrateDrupalTestBase {
         'display_field' => TRUE,
       ),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => 'upload',
       'entity_type' => 'node',
       'bundle' => 'story',

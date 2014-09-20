@@ -246,13 +246,13 @@ class OptionsFieldUITest extends FieldTestBase {
    *   'list_integer', 'list_float' or 'list_text'
    */
   protected function createOptionsField($type) {
-    // Create a test field and instance.
+    // Create a field.
     entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => $type,
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => $this->type,
@@ -276,7 +276,7 @@ class OptionsFieldUITest extends FieldTestBase {
    *   Message to display.
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
-    $edit = array('field[settings][allowed_values]' => $input_string);
+    $edit = array('field_storage[settings][allowed_values]' => $input_string);
     $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
 
     if (is_string($result)) {
@@ -299,7 +299,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
     $edit = array(
-      'field[settings][allowed_values]' =>
+      'field_storage[settings][allowed_values]' =>
         "1|$on
         0|$off",
     );

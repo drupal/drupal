@@ -21,7 +21,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -476,25 +476,25 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
+ * Implements hook_ENTITY_TYPE_create() for 'field_config'.
  */
-function views_field_instance_config_create(FieldInstanceConfigInterface $field_instance) {
+function views_field_config_create(FieldConfigInterface $field) {
   // @todo: Is this necessary? Use cache tags to only delete Views' cache data?
   \Drupal::cache('discovery')->deleteAll();
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function views_field_instance_config_update(FieldInstanceConfigInterface $field_instance) {
+function views_field_config_update(FieldConfigInterface $field) {
   Cache::deleteTags(array('extension' => 'views'));
   \Drupal::cache('render')->deleteAll();
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function views_field_instance_config_delete(FieldInstanceConfigInterface $field_instance) {
+function views_field_config_delete(FieldConfigInterface $field) {
   Cache::deleteTags(array('extension' => 'views'));
   \Drupal::cache('render')->deleteAll();
 }

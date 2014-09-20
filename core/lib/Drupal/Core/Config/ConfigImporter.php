@@ -822,7 +822,7 @@ class ConfigImporter {
         // result of a secondary configuration write. Change the operation
         // into an update. This is the desired behavior since renames often
         // have to occur together. For example, renaming a node type must
-        // also result in renaming its field instances and entity displays.
+        // also result in renaming its fields and entity displays.
         $this->storageComparer->moveRenameToUpdate($name);
         return FALSE;
       }

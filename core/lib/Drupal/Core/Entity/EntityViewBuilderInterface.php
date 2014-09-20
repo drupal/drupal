@@ -109,7 +109,7 @@ interface EntityViewBuilderInterface {
    * @param array $display_options
    *  Can be either:
    *   - The name of a view mode. The field will be displayed according to the
-   *     display settings specified for this view mode in the $instance
+   *     display settings specified for this view mode in the $field
    *     definition for the field in the entity's bundle. If no display settings
    *     are found for the view mode, the settings for the 'default' view mode
    *     will be used.

@@ -57,8 +57,8 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
 
     $this->installEntitySchema('entity_test_rev');
 
-    // Setup a field and instance.
-    entity_reference_create_instance(
+    // Create a field.
+    entity_reference_create_field(
       $this->entityType,
       $this->bundle,
       $this->fieldName,

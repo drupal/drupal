@@ -29,9 +29,9 @@ class TaggedWithTest extends WizardTestBase {
 
   protected $tag_vocabulary;
 
-  protected $tag_field;
+  protected $tag_field_storage;
 
-  protected $tag_instance;
+  protected $tag_field;
 
   protected function setUp() {
     parent::setUp();
@@ -68,11 +68,11 @@ class TaggedWithTest extends WizardTestBase {
 
     // Create an instance of the tag field on one of the content types, and
     // configure it to display an autocomplete widget.
-    $this->tag_instance = array(
+    $this->tag_field = array(
       'field_storage' => $this->tag_field_storage,
       'bundle' => $this->node_type_with_tags->type,
     );
-    entity_create('field_instance_config', $this->tag_instance)->save();
+    entity_create('field_config', $this->tag_field)->save();
 
     entity_get_form_display('node', $this->node_type_with_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
@@ -181,9 +181,9 @@ class TaggedWithTest extends WizardTestBase {
 
     // If we add an instance of the tagging field to the second node type, the
     // "tagged with" form element should not appear for it too.
-    $instance = $this->tag_instance;
-    $instance['bundle'] = $this->node_type_without_tags->type;
-    entity_create('field_instance_config', $instance)->save();
+    $field = $this->tag_field;
+    $field['bundle'] = $this->node_type_without_tags->type;
+    entity_create('field_config', $field)->save();
     entity_get_form_display('node', $this->node_type_without_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_autocomplete',

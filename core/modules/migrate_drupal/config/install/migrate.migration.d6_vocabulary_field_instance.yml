@@ -15,7 +15,7 @@ process:
     migration: d6_taxonomy_vocabulary
     source: vid
 destination:
-  plugin: entity:field_instance_config
+  plugin: entity:field_config
 migration_dependencies:
   required:
     - d6_vocabulary_field

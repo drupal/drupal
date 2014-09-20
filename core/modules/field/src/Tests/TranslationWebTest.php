@@ -45,33 +45,33 @@ class TranslationWebTest extends FieldTestBase {
   protected $fieldStorage;
 
   /**
-   * The field instance to use in this test.
+   * The field to use in this test.
    *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
+   * @var \Drupal\field\Entity\FieldConfig
    */
-  protected $instance;
+  protected $field;
 
   protected function setUp() {
     parent::setUp();
 
     $this->field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
 
-    $field = array(
+    $field_storage = array(
       'name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    entity_create('field_storage_config', $field)->save();
+    entity_create('field_storage_config', $field_storage)->save();
     $this->fieldStorage = entity_load('field_storage_config', $this->entity_type . '.' . $this->field_name);
 
-    $instance = array(
+    $field = array(
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->entity_type,
     );
-    entity_create('field_instance_config', $instance)->save();
-    $this->instance = entity_load('field_instance_config', $this->entity_type . '.' . $instance['bundle'] . '.' . $this->field_name);
+    entity_create('field_config', $field)->save();
+    $this->field = entity_load('field_config', $this->entity_type . '.' . $field['bundle'] . '.' . $this->field_name);
 
     entity_get_form_display($this->entity_type, $this->entity_type, 'default')
       ->setComponent($this->field_name)

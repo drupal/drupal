@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -73,12 +73,12 @@ function block_content_entity_type_alter(array &$entity_types) {
  *   (optional) The label for the body instance. Defaults to 'Body'
  *
  * @return array()
- *   Body field instance.
+ *   Body field.
  */
 function block_content_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('block_content', 'body');
-  $instance = FieldInstanceConfig::loadByName('block_content', $block_type_id, 'body');
+  $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
   if (empty($field_storage)) {
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'body',
@@ -87,14 +87,14 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
     ));
     $field_storage->save();
   }
-  if (empty($instance)) {
-    $instance = entity_create('field_instance_config', array(
+  if (empty($field)) {
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),
     ));
-    $instance->save();
+    $field->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('block_content', $block_type_id, 'default')
@@ -112,5 +112,5 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
       ->save();
   }
 
-  return $instance;
+  return $field;
 }

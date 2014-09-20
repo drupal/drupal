@@ -48,7 +48,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     return array(
       'default_image' => array(
         'fid' => NULL,
@@ -57,13 +57,13 @@ class ImageItem extends FileItem {
         'width' => NULL,
         'height' => NULL,
       ),
-    ) + parent::defaultSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     $settings = array(
       'file_extensions' => 'png gif jpg jpeg',
       'alt_field' => 0,
@@ -79,7 +79,7 @@ class ImageItem extends FileItem {
         'width' => NULL,
         'height' => NULL,
       ),
-    ) + parent::defaultInstanceSettings();
+    ) + parent::defaultFieldSettings();
 
     unset($settings['description_field']);
     return $settings;
@@ -156,7 +156,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     // We need the field-level 'default_image' setting, and $this->getSettings()
@@ -186,9 +186,9 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
-    // Get base form from FileItem::instanceSettingsForm().
-    $element = parent::instanceSettingsForm($form, $form_state);
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    // Get base form from FileItem.
+    $element = parent::fieldSettingsForm($form, $form_state);
 
     $settings = $this->getSettings();
 

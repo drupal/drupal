@@ -97,10 +97,10 @@ class EntityViewsDataTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $field_type_manager->expects($this->any())
-      ->method('getDefaultSettings')
+      ->method('getDefaultStorageSettings')
       ->willReturn([]);
     $field_type_manager->expects($this->any())
-      ->method('getDefaultInstanceSettings')
+      ->method('getDefaultFieldSettings')
       ->willReturn([]);
 
     $container = new ContainerBuilder();

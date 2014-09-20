@@ -191,7 +191,7 @@ class UserRegistrationTest extends WebTestBase {
    * Tests Field API fields on user registration forms.
    */
   function testRegistrationWithUserFields() {
-    // Create a field, and an instance on 'user' entity type.
+    // Create a field on 'user' entity type.
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_user_field',
       'entity_type' => 'user',
@@ -199,13 +199,13 @@ class UserRegistrationTest extends WebTestBase {
       'cardinality' => 1,
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'label' => 'Some user field',
       'bundle' => 'user',
       'required' => TRUE,
     ));
-    $instance->save();
+    $field->save();
     entity_get_form_display('user', 'user', 'default')
       ->setComponent('test_user_field', array('type' => 'test_field_widget'))
       ->save();
@@ -214,7 +214,7 @@ class UserRegistrationTest extends WebTestBase {
 
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
-    $this->assertNoText($instance->label(), 'The field does not appear on user registration form');
+    $this->assertNoText($field->label(), 'The field does not appear on user registration form');
 
     // Have the field appear on the registration form.
     entity_get_form_display('user', 'user', 'register')
@@ -222,7 +222,7 @@ class UserRegistrationTest extends WebTestBase {
       ->save();
 
     $this->drupalGet('user/register');
-    $this->assertText($instance->label(), 'The field appears on user registration form');
+    $this->assertText($field->label(), 'The field appears on user registration form');
 
     // Check that validation errors are correctly reported.
     $edit = array();
@@ -231,11 +231,11 @@ class UserRegistrationTest extends WebTestBase {
     // Missing input in required field.
     $edit['test_user_field[0][value]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
-    $this->assertRaw(t('@name field is required.', array('@name' => $instance->label())), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('@name field is required.', array('@name' => $field->label())), 'Field validation error was correctly reported.');
     // Invalid input.
     $edit['test_user_field[0][value]'] = '-1';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
-    $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $instance->label())), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $field->label())), 'Field validation error was correctly reported.');
 
     // Submit with valid data.
     $value = rand(1, 255);

@@ -34,7 +34,7 @@ class UserCreateTest extends WebTestBase {
     $this->assertEqual($user->getCreatedTime(), REQUEST_TIME, 'Creating a user sets default "created" timestamp.');
     $this->assertEqual($user->getChangedTime(), REQUEST_TIME, 'Creating a user sets default "changed" timestamp.');
 
-    // Create a field and an instance.
+    // Create a field.
     $field_name = 'test_field';
     entity_create('field_storage_config', array(
       'name' => $field_name,
@@ -49,7 +49,7 @@ class UserCreateTest extends WebTestBase {
       ),
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => 'user',
       'label' => 'Picture',

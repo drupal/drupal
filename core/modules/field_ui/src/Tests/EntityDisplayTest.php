@@ -144,18 +144,18 @@ class EntityDisplayTest extends KernelTestBase {
    */
   public function testFieldComponent() {
     $field_name = 'test_field';
-    // Create a field storage and an instance.
+    // Create a field storage and a field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     $display = entity_create('entity_view_display', array(
       'targetEntityType' => 'entity_test',
@@ -200,7 +200,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Check that the display has dependencies on the field and the module that
     // provides the formatter.
     $dependencies = $display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('field.instance.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
+    $this->assertEqual(array('entity' => array('field.field.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
   }
 
   /**
@@ -292,7 +292,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertEqual('node.article_rename.default', $new_form_display->id);
 
     $expected_view_dependencies = array(
-      'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
+      'entity' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
       'module' => array('entity_test', 'text', 'user')
     );
     // Check that the display has dependencies on the bundle, fields and the
@@ -304,7 +304,7 @@ class EntityDisplayTest extends KernelTestBase {
     // the modules that provide the formatters.
     $dependencies = $new_form_display->calculateDependencies();
     $expected_form_dependencies = array(
-      'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
+      'entity' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
       'module' => array('text')
     );
     $this->assertEqual($expected_form_dependencies, $dependencies);
@@ -318,22 +318,22 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests deleting field instance.
+   * Tests deleting field.
    */
-  public function testDeleteFieldInstance() {
+  public function testDeleteField() {
     $field_name = 'test_field';
-    // Create a field storage and an instance.
+    // Create a field storage and a field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     // Create default and teaser entity display.
     EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
@@ -354,8 +354,8 @@ class EntityDisplayTest extends KernelTestBase {
     $display = entity_get_display('entity_test', 'entity_test', 'teaser');
     $this->assertTrue($display->getComponent($field_name));
 
-    // Delete the instance.
-    $instance->delete();
+    // Delete the field.
+    $field->delete();
 
     // Check that the component has been removed from the entity displays.
     $display = entity_get_display('entity_test', 'entity_test', 'default');
@@ -371,18 +371,18 @@ class EntityDisplayTest extends KernelTestBase {
     $this->enableModules(array('field_plugins_test'));
 
     $field_name = 'test_field';
-    // Create a field and an instance.
-    $field = entity_create('field_storage_config', array(
+    // Create a field.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text'
     ));
-    $field->save();
-    $instance = entity_create('field_instance_config', array(
-      'field_storage' => $field,
+    $field_storage->save();
+    $field = entity_create('field_config', array(
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
-    $instance->save();
+    $field->save();
 
     entity_create('entity_view_display', array(
       'targetEntityType' => 'entity_test',

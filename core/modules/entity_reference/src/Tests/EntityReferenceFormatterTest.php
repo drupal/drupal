@@ -54,7 +54,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
+    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
@@ -64,7 +64,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
       'type' => 'text',
       'settings' => array(),
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'entity_type' => $this->entityType,
       'bundle' => $this->bundle,
       'field_name' => 'body',

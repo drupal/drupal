@@ -9,7 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests fields on comments.
@@ -35,10 +35,10 @@ class CommentFieldsTest extends CommentTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
-    $instance = FieldInstanceConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
+    $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
+    $this->assertTrue(!empty($field), 'The comment_body field is added when a comment bundle is created');
 
-    $instance->delete();
+    $field->delete();
 
     // Check that the 'comment_body' field is deleted.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
@@ -53,13 +53,13 @@ class CommentFieldsTest extends CommentTestBase {
     // new comment bundle.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
     $this->assertTrue($field_storage, 'The comment_body field exists');
-    $instance = FieldInstanceConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertTrue(isset($instance), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
+    $this->assertTrue(isset($field), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
-    $field_storage = entity_load('field_instance_config', 'node.test_node_type.who_likes_ponies');
-    $this->assertEqual($field_storage->default_value[0]['status'], CommentItemInterface::CLOSED);
+    $field = entity_load('field_config', 'node.test_node_type.who_likes_ponies');
+    $this->assertEqual($field->default_value[0]['status'], CommentItemInterface::CLOSED);
   }
 
   /**

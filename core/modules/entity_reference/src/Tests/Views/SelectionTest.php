@@ -33,7 +33,7 @@ class SelectionTest extends WebTestBase {
       $nodes[$node->getType()][$node->id()] = $node->label();
     }
 
-    // Create a field storage and instance.
+    // Create a field.
     $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
@@ -45,7 +45,7 @@ class SelectionTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field_storage->save();
-    $instance = entity_create('field_instance_config', array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
       'settings' => array(
@@ -60,10 +60,10 @@ class SelectionTest extends WebTestBase {
         ),
       ),
     ));
-    $instance->save();
+    $field->save();
 
     // Get values from selection handler.
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
+    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($field);
     $result = $handler->getReferenceableEntities();
 
     $success = FALSE;

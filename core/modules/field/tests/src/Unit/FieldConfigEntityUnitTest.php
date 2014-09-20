@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\field\Unit\FieldInstanceConfigEntityUnitTest.
+ * Contains \Drupal\Tests\field\Unit\FieldConfigEntityUnitTest.
  */
 
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Entity\FieldInstanceConfig
+ * @coversDefaultClass \Drupal\field\Entity\FieldConfig
  * @group field
  */
-class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
+class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * The entity type used for testing.
@@ -125,13 +125,13 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       ->method('getConfigDependencyName')
       ->will($this->returnValue('field.storage.test_entity_type.test_field'));
 
-    $instance = new FieldInstanceConfig(array(
+    $field = new FieldConfig(array(
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
     ), $this->entityTypeId);
-    $dependencies = $instance->calculateDependencies();
+    $dependencies = $field->calculateDependencies();
     $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['entity']);
     $this->assertContains('test.test_entity_type.id', $dependencies['entity']);
   }
@@ -140,7 +140,7 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    * @covers ::toArray()
    */
   public function testToArray() {
-    $instance = new FieldInstanceConfig(array(
+    $field = new FieldConfig(array(
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
@@ -165,9 +165,9 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       'field_type' => 'test_field',
     );
     $this->entityManager->expects($this->any())
-       ->method('getDefinition')
-       ->with($this->entityTypeId)
-       ->will($this->returnValue($this->entityType));
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue($this->entityType));
     $this->entityType->expects($this->once())
       ->method('getKey')
       ->with('id')
@@ -176,7 +176,7 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       ->method('getDefinition')
       ->will($this->returnValue(array('mapping' => array_fill_keys(array_keys($expected), ''))));
 
-    $export = $instance->toArray();
+    $export = $field->toArray();
     $this->assertEquals($expected, $export);
   }
 
@@ -184,21 +184,21 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    * @covers ::getType
    */
   public function testGetType() {
-    // Ensure that FieldInstanceConfig::getType() is not delegated to
+    // Ensure that FieldConfig::getType() is not delegated to
     // FieldStorage.
     $this->entityManager->expects($this->never())
       ->method('getFieldStorageDefinitions');
     $this->fieldStorage->expects($this->never())
       ->method('getType');
 
-    $instance = new FieldInstanceConfig(array(
+    $field = new FieldConfig(array(
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
     ), $this->entityTypeId);
 
-    $this->assertEquals('test_field', $instance->getType());
+    $this->assertEquals('test_field', $field->getType());
   }
 
 }

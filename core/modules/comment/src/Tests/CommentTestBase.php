@@ -10,8 +10,8 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -109,12 +109,12 @@ abstract class CommentTestBase extends WebTestBase {
     $edit['comment_body[0][value]'] = $comment;
 
     if ($entity !== NULL) {
-      $instance = FieldInstanceConfig::loadByName('node', $entity->bundle(), $field_name);
+      $field = FieldConfig::loadByName('node', $entity->bundle(), $field_name);
     }
     else {
-      $instance = FieldInstanceConfig::loadByName('node', 'article', $field_name);
+      $field = FieldConfig::loadByName('node', 'article', $field_name);
     }
-    $preview_mode = $instance->settings['preview'];
+    $preview_mode = $field->settings['preview'];
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
@@ -309,9 +309,9 @@ abstract class CommentTestBase extends WebTestBase {
    *   Defaults to 'comment'.
    */
   public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
-    $instance = FieldInstanceConfig::loadByName('node', 'article', $field_name);
-    $instance->settings[$name] = $value;
-    $instance->save();
+    $field = FieldConfig::loadByName('node', 'article', $field_name);
+    $field->settings[$name] = $value;
+    $field->save();
     // Display status message.
     $this->pass($message);
   }

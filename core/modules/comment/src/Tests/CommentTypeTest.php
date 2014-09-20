@@ -10,7 +10,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 
 /**
@@ -95,8 +95,8 @@ class CommentTypeTest extends CommentTestBase {
   public function testCommentTypeEditing() {
     $this->drupalLogin($this->adminUser);
 
-    $instance = FieldInstanceConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertEqual($instance->getLabel(), 'Comment', 'Comment body field was found.');
+    $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
+    $this->assertEqual($field->getLabel(), 'Comment', 'Comment body field was found.');
 
     // Change the comment type name.
     $this->drupalGet('admin/structure/comment');

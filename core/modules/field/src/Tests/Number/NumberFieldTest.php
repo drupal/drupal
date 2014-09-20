@@ -51,7 +51,7 @@ class NumberFieldTest extends WebTestBase {
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
       )
     ))->save();
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -141,7 +141,7 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'integer',
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -245,7 +245,7 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'float',
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -350,7 +350,7 @@ class NumberFieldTest extends WebTestBase {
       'type' => 'integer',
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $float_field,
       'entity_type' => 'node',
       'bundle' => $type,
@@ -360,7 +360,7 @@ class NumberFieldTest extends WebTestBase {
       ),
     ))->save();
 
-    entity_create('field_instance_config', array(
+    entity_create('field_config', array(
       'field_name' => $integer_field,
       'entity_type' => 'node',
       'bundle' => $type,

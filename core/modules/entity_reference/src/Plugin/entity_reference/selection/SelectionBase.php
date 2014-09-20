@@ -117,7 +117,7 @@ class SelectionBase implements SelectionInterface {
         $bundle_fields = array_filter($entity_manager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
           return !$field_definition->isComputed();
         });
-        foreach ($bundle_fields as $instance_name => $field_definition) {
+        foreach ($bundle_fields as $field_name => $field_definition) {
           /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
           $columns = $field_definition->getFieldStorageDefinition()->getColumns();
           // If there is more than one column, display them all, otherwise just
@@ -125,11 +125,11 @@ class SelectionBase implements SelectionInterface {
           // @todo: Use property labels instead of the column name.
           if (count($columns) > 1) {
             foreach ($columns as $column_name => $column_info) {
-              $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
+              $fields[$field_name . '.' . $column_name] = t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
             }
           }
           else {
-            $fields[$instance_name] = t('@label', array('@label' => $field_definition->getLabel()));
+            $fields[$field_name] = t('@label', array('@label' => $field_definition->getLabel()));
           }
         }
       }
