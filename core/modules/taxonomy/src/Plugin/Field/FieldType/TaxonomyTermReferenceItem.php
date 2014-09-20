@@ -12,7 +12,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * Plugin implementation of the 'term_reference' field type.
@@ -26,7 +26,7 @@ use Drupal\Core\TypedData\AllowedValuesInterface;
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList"
  * )
  */
-class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedValuesInterface {
+class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsProviderInterface {
 
   /**
    * {@inheritdoc}

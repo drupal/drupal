@@ -13,7 +13,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 use Drupal\field\FieldStorageConfigInterface;
@@ -29,7 +29,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *
  * @see entity_reference_field_info_alter().
  */
-class ConfigurableEntityReferenceItem extends EntityReferenceItem implements AllowedValuesInterface {
+class ConfigurableEntityReferenceItem extends EntityReferenceItem implements OptionsProviderInterface {
 
   /**
    * {@inheritdoc}

@@ -18,10 +18,10 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Field types willing to enable one or several of the widgets defined in
  * options.module (select, radios/checkboxes, on/off checkbox) need to
- * implement the AllowedValuesInterface to specify the list of options to
+ * implement the OptionsProviderInterface to specify the list of options to
  * display in the widgets.
  *
- * @see \Drupal\Core\TypedData\AllowedValuesInterface
+ * @see \Drupal\Core\TypedData\OptionsProviderInterface
  */
 abstract class OptionsWidgetBase extends WidgetBase {
 

@@ -12,7 +12,7 @@
  *
  * @param array $options
  *   The array of options for the field, as returned by
- *   \Drupal\Core\TypedData\AllowedValuesInterface::getSettableOptions(). An
+ *   \Drupal\Core\TypedData\OptionsProviderInterface::getSettableOptions(). An
  *   empty option (_none) might have been added, depending on the field
  *   properties.
  *

@@ -8,7 +8,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\filter\Plugin\DataType\FilterFormat;
 use Drupal\filter\Plugin\FilterInterface;
@@ -267,7 +267,7 @@ class FilterAPITest extends EntityUnitTestBase {
     $definition = DataDefinition::create('filter_format');
     $data = \Drupal::typedDataManager()->create($definition);
 
-    $this->assertTrue($data instanceof AllowedValuesInterface, 'Typed data object implements \Drupal\Core\TypedData\AllowedValuesInterface');
+    $this->assertTrue($data instanceof OptionsProviderInterface, 'Typed data object implements \Drupal\Core\TypedData\OptionsProviderInterface');
 
     $filtered_html_user = $this->createUser(array('uid' => 2), array(
       entity_load('filter_format', 'filtered_html')->getPermissionName(),

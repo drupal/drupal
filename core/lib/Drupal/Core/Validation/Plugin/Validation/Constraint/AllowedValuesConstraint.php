@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints\Choice;
  *   label = @Translation("Allowed values", context = "Validation")
  * )
  *
- * @see \Drupal\Core\TypedData\AllowedValuesInterface
+ * @see \Drupal\Core\TypedData\OptionsProviderInterface
  */
 class AllowedValuesConstraint extends Choice {
 

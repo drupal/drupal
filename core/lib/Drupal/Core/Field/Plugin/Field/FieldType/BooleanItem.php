@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -26,7 +26,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_formatter = "boolean",
  * )
  */
-class BooleanItem extends FieldItemBase implements AllowedValuesInterface {
+class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
 
   /**
    * {@inheritdoc}

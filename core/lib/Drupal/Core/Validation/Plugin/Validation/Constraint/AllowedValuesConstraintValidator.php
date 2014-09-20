@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
@@ -23,7 +23,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator {
   public function validate($value, Constraint $constraint) {
     $typed_data = $this->context->getMetadata()->getTypedData();
 
-    if ($typed_data instanceof AllowedValuesInterface) {
+    if ($typed_data instanceof OptionsProviderInterface) {
       $account = \Drupal::currentUser();
       $allowed_values = $typed_data->getSettableValues($account);
       $constraint->choices = $allowed_values;

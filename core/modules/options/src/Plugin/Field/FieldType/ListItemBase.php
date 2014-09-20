@@ -13,12 +13,12 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * Plugin base class inherited by the options field types.
  */
-abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterface {
+abstract class ListItemBase extends FieldItemBase implements OptionsProviderInterface {
 
   use AllowedTagsXssTrait;
 

@@ -263,7 +263,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * An example of a conversion between representations might be an
    * "allowed_values" setting that's structured by the field type as a
-   * \Drupal\Core\TypedData\AllowedValuesInterface::getPossibleOptions()
+   * \Drupal\Core\TypedData\OptionsProviderInterface::getPossibleOptions()
    * result (i.e., values as keys and labels as values). For such a use case,
    * in order to comply with the above, this method could convert that
    * representation to a numerically indexed array whose values are sub-arrays

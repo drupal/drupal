@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\AllowedValuesInterface.
+ * Contains \Drupal\Core\TypedData\OptionsProviderInterface.
  */
 
 namespace Drupal\Core\TypedData;
@@ -31,7 +31,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @see \Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase
  */
-interface AllowedValuesInterface {
+interface OptionsProviderInterface {
 
   /**
    * Returns an array of possible values.
