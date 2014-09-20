@@ -130,9 +130,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // anonymous users not use a session cookie unless something is stored in
       // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
       $result = $this->startNow();
-      if ($user->isAuthenticated() || !$this->isSessionObsolete()) {
-        drupal_page_is_cacheable(FALSE);
-      }
     }
 
     if (empty($result)) {

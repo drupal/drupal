@@ -62,8 +62,8 @@ function drupal_rebuild(ClassLoader $classloader, Request $request) {
     $bin->deleteAll();
   }
 
-  // Disable the page cache.
-  drupal_page_is_cacheable(FALSE);
+  // Disable recording of cached pages.
+  \Drupal::service('page_cache_kill_switch')->trigger();
 
   drupal_flush_all_caches();
 

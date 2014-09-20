@@ -100,6 +100,18 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [discovery]
+  page_cache_request_policy:
+    class: Drupal\Core\PageCache\DefaultRequestPolicy
+    tags:
+      - { name: service_collector, tag: page_cache_request_policy, call: addPolicy}
+  page_cache_response_policy:
+    class: Drupal\Core\PageCache\ChainResponsePolicy
+    tags:
+      - { name: service_collector, tag: page_cache_response_policy, call: addPolicy}
+  page_cache_kill_switch:
+    class: Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+    tags:
+      - { name: page_cache_response_policy }
   config.manager:
     class: Drupal\Core\Config\ConfigManager
     arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher']
@@ -729,7 +741,7 @@ services:
     class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@language_manager', '@config.factory']
+    arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy']
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
     arguments: ['@url_generator']

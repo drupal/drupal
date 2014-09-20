@@ -155,7 +155,6 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     if ($success) {
-      drupal_page_is_cacheable(FALSE);
       $image = $this->imageFactory->get($derivative_uri);
       $uri = $image->getSource();
       $headers += array(

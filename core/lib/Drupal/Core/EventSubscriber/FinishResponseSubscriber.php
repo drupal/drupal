@@ -11,6 +11,8 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\PageCache\RequestPolicyInterface;
+use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,16 +43,36 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $config;
 
   /**
+   * A policy rule determining the cacheability of a request.
+   *
+   * @var \Drupal\Core\PageCache\RequestPolicyInterface
+   */
+  protected $requestPolicy;
+
+  /**
+   * A policy rule determining the cacheability of the response.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicyInterface
+   */
+  protected $responsePolicy;
+
+  /**
    * Constructs a FinishResponseSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager object for retrieving the correct language code.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   A config factory for retrieving required config objects.
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   *   A policy rule determining the cacheability of a request.
+   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
+   *   A policy rule determining the cacheability of a response.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
+    $this->requestPolicy = $request_policy;
+    $this->responsePolicy = $response_policy;
   }
 
   /**
@@ -83,16 +105,21 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response->headers->set($name, $value, FALSE);
     }
 
-    $is_cacheable = drupal_page_is_cacheable();
+    $is_cacheable = ($this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) && ($this->responsePolicy->check($response, $request) !== ResponsePolicyInterface::DENY);
 
     // Add headers necessary to specify whether the response should be cached by
     // proxies and/or the browser.
     if ($is_cacheable && $this->config->get('cache.page.max_age') > 0) {
       if (!$this->isCacheControlCustomized($response)) {
+        // Only add the default Cache-Control header if the controller did not
+        // specify one on the response.
         $this->setResponseCacheable($response, $request);
       }
     }
     else {
+      // If either the policy forbids caching or the sites configuration does
+      // not allow to add a max-age directive, then enforce a Cache-Control
+      // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
 

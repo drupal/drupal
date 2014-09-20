@@ -20,9 +20,6 @@ class NodePreviewController extends EntityViewController {
    * {@inheritdoc}
    */
   public function view(EntityInterface $node_preview, $view_mode_id = 'full', $langcode = NULL) {
-    // Do not cache this page.
-    drupal_page_is_cacheable(FALSE);
-
     $node_preview->preview_view_mode = $view_mode_id;
     $build = array('nodes' => parent::view($node_preview, $view_mode_id));
 

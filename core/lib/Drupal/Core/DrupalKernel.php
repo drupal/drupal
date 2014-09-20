@@ -19,6 +19,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
+use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -466,9 +467,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $cache_enabled = $config->get('cache.page.use_internal');
     }
 
-    // If there is no session cookie and cache is enabled (or forced), try to
-    // serve a cached page.
-    if (!$request->cookies->has(session_name()) && $cache_enabled && drupal_page_is_cacheable()) {
+    $request_policy = \Drupal::service('page_cache_request_policy');
+    if ($cache_enabled && $request_policy->check($request) === RequestPolicyInterface::ALLOW) {
       // Get the page from the cache.
       $response = drupal_page_get_cache($request);
       // If there is a cached page, display it.

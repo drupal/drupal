@@ -96,43 +96,6 @@ function toolbar_element_info() {
 }
 
 /**
- * Use Drupal's page cache for toolbar/subtrees/*, even for authenticated users.
- *
- * This gets invoked after full bootstrap, so must duplicate some of what's
- * done by \Drupal\Core\DrupalKernel::handlePageCache().
- *
- * @todo Replace this hack with something better integrated with DrupalKernel
- *   once Drupal's page caching itself is properly integrated.
- */
-function _toolbar_initialize_page_cache() {
-  $GLOBALS['conf']['system.performance']['cache']['page']['enabled'] = TRUE;
-  drupal_page_is_cacheable(TRUE);
-
-  // If we have a cache, serve it.
-  // @see \Drupal\Core\DrupalKernel::handlePageCache()
-  $request = \Drupal::request();
-  $response = drupal_page_get_cache($request);
-  if ($response) {
-    $response->headers->set('X-Drupal-Cache', 'HIT');
-
-    drupal_serve_page_from_cache($response, $request);
-
-    $response->prepare($request);
-    $response->send();
-    // We are done.
-    exit;
-  }
-
-  // The Expires HTTP header is the heart of the client-side HTTP caching. The
-  // additional server-side page cache only takes effect when the client
-  // accesses the callback URL again (e.g., after clearing the browser cache or
-  // when force-reloading a Drupal page).
-  $max_age = 3600 * 24 * 365;
-  drupal_add_http_header('Expires', gmdate(DateTimePlus::RFC7231, REQUEST_TIME + $max_age));
-  drupal_add_http_header('Cache-Control', 'private, max-age=' . $max_age);
-}
-
-/**
  * Implements hook_page_build().
  *
  * Add admin toolbar to the page_top region automatically.

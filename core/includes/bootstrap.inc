@@ -390,30 +390,6 @@ function drupal_page_get_cache(Request $request) {
 }
 
 /**
- * Determines the cacheability of the current page.
- *
- * Note: we do not serve cached pages to authenticated users, or to anonymous
- * users when $_SESSION is non-empty. $_SESSION may contain status messages
- * from a form submission, the contents of a shopping cart, or other user-
- * specific content that should not be cached and displayed to other users.
- *
- * @param $allow_caching
- *   Set to FALSE if you want to prevent this page to get cached.
- *
- * @return
- *   TRUE if the current page can be cached, FALSE otherwise.
- */
-function drupal_page_is_cacheable($allow_caching = NULL) {
-  $allow_caching_static = &drupal_static(__FUNCTION__, TRUE);
-  if (isset($allow_caching)) {
-    $allow_caching_static = $allow_caching;
-  }
-
-  return $allow_caching_static && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')
-    && PHP_SAPI !== 'cli';
-}
-
-/**
  * Sets an HTTP response header for the current page.
  *
  * Note: When sending a Content-Type header, always include a 'charset' type,
@@ -931,7 +907,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
     }
 
     // Mark this page as being uncacheable.
-    drupal_page_is_cacheable(FALSE);
+    \Drupal::service('page_cache_kill_switch')->trigger();
   }
 
   // Messages not set when DB connection fails.
