@@ -1031,12 +1031,6 @@ class Sql extends QueryPluginBase {
       if (!empty($info['conditions'])) {
         $sub_group = $info['type'] == 'OR' ? db_or() : db_and();
         foreach ($info['conditions'] as $clause) {
-          // DBTNG doesn't support to add the same subquery twice to the main
-          // query and the count query, so clone the subquery to have two instances
-          // of the same object. - http://drupal.org/node/1112854
-          if (is_object($clause['value']) && $clause['value'] instanceof SelectQuery) {
-            $clause['value'] = clone $clause['value'];
-          }
           if ($clause['operator'] == 'formula') {
             $has_condition = TRUE;
             $sub_group->where($clause['field'], $clause['value']);
