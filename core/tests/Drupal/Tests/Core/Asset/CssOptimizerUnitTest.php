@@ -166,7 +166,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       ),
       // File in subfolder. Tests:
       // - CSS import path is properly interpreted. (https://drupal.org/node/1198904)
-      // - Don't adjust the "path" of an inline image (https://drupal.org/node/2142441)
+      // - Don't adjust data URIs (https://drupal.org/node/2142441)
       5 => array(
         array(
           'group' => -100,
