@@ -26,7 +26,8 @@
 }
 .password-strength__meter {
   background-color: #ebeae4;
-  height: 0.5em;
+  height: 0.75em;
+  margin-top: 0.5em;
 }
 .password-strength__indicator {
   height: 100%;
