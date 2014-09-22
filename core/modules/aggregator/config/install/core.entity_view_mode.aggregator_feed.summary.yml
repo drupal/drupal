@@ -1,0 +1,8 @@
+id: aggregator_feed.summary
+label: Summary
+status: true
+cache: true
+targetEntityType: aggregator_feed
+dependencies:
+  module:
+    - aggregator

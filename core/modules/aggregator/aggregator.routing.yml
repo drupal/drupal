@@ -52,7 +52,7 @@ aggregator.feed_add:
 entity.aggregator_feed.canonical:
   path: '/aggregator/sources/{aggregator_feed}'
   defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::viewFeed'
+    _entity_view: 'aggregator_feed'
     _title_callback: '\Drupal\aggregator\Controller\AggregatorController::feedTitle'
   requirements:
     _permission: 'access news feeds'

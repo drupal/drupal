@@ -244,3 +244,23 @@ entity_view_display.field.number_unformatted:
       label: 'Settings'
       sequence:
         - type: string
+
+entity_view_display.field.uri_link:
+  type: entity_field_view_display_base
+  label: 'URI as link display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_view_display.field.timestamp_ago:
+  type: entity_field_view_display_base
+  label: 'Timestamp ago display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string

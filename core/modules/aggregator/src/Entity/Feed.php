@@ -37,6 +37,7 @@ use Drupal\aggregator\FeedInterface;
  *     "edit-form" = "entity.aggregator_feed.edit_form",
  *     "delete-form" = "entity.aggregator_feed.delete_form",
  *   },
+ *   field_ui_base_route = "aggregator.admin_overview",
  *   base_table = "aggregator_feed",
  *   fieldable = TRUE,
  *   render_cache = FALSE,
@@ -148,7 +149,8 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -5,
-      ));
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
@@ -161,7 +163,8 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDisplayOptions('form', array(
         'type' => 'uri',
         'weight' => -3,
-      ));
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
     $period = array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($intervals, $intervals));
@@ -176,12 +179,19 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDisplayOptions('form', array(
         'type' => 'options_select',
         'weight' => -2,
-      ));
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['checked'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Checked'))
       ->setDescription(t('Last time feed was checked for new items, as Unix timestamp.'))
-      ->setDefaultValue(0);
+      ->setDefaultValue(0)
+      ->setDisplayOptions('view', array(
+        'label' => 'inline',
+        'type' => 'timestamp_ago',
+        'weight' => 1,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['queued'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Queued'))
@@ -189,8 +199,13 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDefaultValue(0);
 
     $fields['link'] = BaseFieldDefinition::create('uri')
-      ->setLabel(t('Link'))
-      ->setDescription(t('The link of the feed.'));
+      ->setLabel(t('URL'))
+      ->setDescription(t('The link of the feed.'))
+      ->setDisplayOptions('view', array(
+        'label' => 'inline',
+        'weight' => 4,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))

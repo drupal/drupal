@@ -56,28 +56,18 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
  */
 function aggregator_theme() {
   return array(
-    'aggregator_feed_source' => array(
-      'variables' => array('aggregator_feed' => NULL, 'view_mode' => NULL),
+    'aggregator_feed' => array(
+      'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-feed-source',
+      'template' => 'aggregator-feed',
     ),
     'aggregator_block_item' => array(
       'variables' => array('item' => NULL, 'feed' => 0),
       'file' => 'aggregator.theme.inc',
       'template' => 'aggregator-block-item',
     ),
-    'aggregator_summary_items' => array(
-      'variables' => array('summary_items' => NULL, 'source' => NULL),
-      'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-summary-items',
-    ),
-    'aggregator_summary_item' => array(
-      'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
-      'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-summary-item',
-    ),
     'aggregator_item' => array(
-      'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
+      'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
       'template' => 'aggregator-item',
     ),
@@ -85,11 +75,59 @@ function aggregator_theme() {
       'variables' => array('feeds' => NULL),
       'file' => 'aggregator.theme.inc',
     ),
-    'aggregator_page_rss' => array(
-      'variables' => array('feeds' => NULL),
-      'file' => 'aggregator.theme.inc',
+  );
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function aggregator_entity_extra_field_info() {
+  $extra = array();
+
+  $extra['aggregator_feed']['aggregator_feed'] = array(
+    'display' => array(
+      'items' => array(
+        'label' => t('Items'),
+        'description' => t('Items associated with this feed'),
+        'weight' => 0,
+      ),
+      // @todo Move to a formatter at https://www.drupal.org/node/2339917.
+      'image' => array(
+        'label' => t('Image'),
+        'description' => t('The feed image'),
+        'weight' => 2,
+      ),
+      // @todo Move to a formatter at https://drupal.org/node/2149845.
+      'description' => array(
+        'label' => t('Description'),
+        'description' => t('The description of this feed'),
+        'weight' => 3,
+      ),
+      'more_link' => array(
+        'label' => t('More link'),
+        'description' => t('A more link to the feed detail page'),
+        'weight' => 5,
+      ),
+      'feed_icon' => array(
+        'label' => t('Feed icon'),
+        'description' => t('An icon that links to the feed url'),
+        'weight' => 6,
+      ),
     ),
   );
+
+  $extra['aggregator_item']['aggregator_item'] = array(
+    'display' => array(
+      // @todo Move to a formatter at https://drupal.org/node/2149845.
+      'description' => array(
+        'label' => t('Description'),
+        'description' => t('The description of this feed item'),
+        'weight' => 2,
+      ),
+    ),
+  );
+
+  return $extra;
 }
 
 /**

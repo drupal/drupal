@@ -15,31 +15,18 @@ use Drupal\Core\Render\Element;
  *
  * @param array $variables
  *   An associative array containing:
- *   - aggregator_item: An individual feed item for display on the aggregator
- *     page.
+ *   - elements: An array of elements to display in view mode.
  */
 function template_preprocess_aggregator_item(&$variables) {
-  $item = $variables['aggregator_item'];
+  $item = $variables['elements']['#aggregator_item'];
 
-  $variables['feed_url'] = check_url($item->getLink());
-  $variables['feed_title'] = String::checkPlain($item->getTitle());
-  $variables['content'] = aggregator_filter_xss($item->getDescription());
-
-  $variables['source_url'] = '';
-  $variables['source_title'] = '';
-  $fid = $item->getFeedId();
-  if (isset($item->ftitle) && $fid !== NULL) {
-    $variables['source_url'] = url('aggregator/sources/' . $fid);
-    $variables['source_title'] = String::checkPlain($item->ftitle);
-  }
-  if (date('Ymd', $item->getPostedTime()) == date('Ymd')) {
-    $variables['source_date'] = t('%ago ago', array('%ago' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $item->getPostedTime())));
-  }
-  else {
-    $variables['source_date'] = format_date($item->getPostedTime(), 'medium');
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  $variables['attributes']['class'][] = 'feed-item';
+  $variables['url'] = check_url($item->getLink());
+  $variables['title'] = String::checkPlain($item->label());
 }
 
 /**
@@ -74,104 +61,23 @@ function theme_aggregator_page_opml($variables) {
 }
 
 /**
- * Prepares variables for aggregator summary templates.
+ * Prepares variables for aggregator feed templates.
  *
- * Default template: aggregator-summary-items.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - source: A Drupal\aggregator\FeedInterface object representing the feed
- *     source.
- *   - summary_items: An array of feed items.
- */
-function template_preprocess_aggregator_summary_items(&$variables) {
-  $variables['title'] = String::checkPlain($variables['source']->label());
-  $summary_items = array();
-  foreach (Element::children($variables['summary_items']) as $key) {
-    $summary_items[] = $variables['summary_items'][$key];
-  }
-  $variables['summary_list'] = array(
-    '#theme' => 'item_list',
-    '#items' => $summary_items,
-  );
-  $variables['source_url'] = $variables['source']->getUrl();
-}
-
-/**
- * Processes variables for aggregator summary item templates.
- *
- * Default template: aggregator-summary-item.html.twig.
+ * Default template: aggregator-feed.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
- *   - aggregator_item: The feed item.
- *   - view_mode: How the item is being displayed.
+ *   - elements: An array of elements to display in view mode.
  */
-function template_preprocess_aggregator_summary_item(&$variables) {
-  $item = $variables['aggregator_item'];
+function template_preprocess_aggregator_feed(&$variables) {
+  $feed = $variables['elements']['#aggregator_feed'];
 
-  $variables['url'] = l(String::checkPlain($item->label()), check_url(url($item->getLink(), array('absolute' => TRUE))), array(
-    'attributes' => array(
-      'class' => array('feed-item-url'),
-    ),
-  ));
-  $variables['age'] = array(
-    '#theme' => 'time',
-    '#attributes' => array(
-      'datetime' => format_date($item->getPostedTime(), 'html_datetime', '', 'UTC'),
-      'class' => array('feed-item-age',),
-    ),
-    '#text' => t('%age old', array('%age' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $item->getPostedTime()))),
-    '#html' => TRUE,
-  );
-}
-
-/**
- * Prepares variables for aggregator feed source templates.
- *
- * Default template: aggregator-feed-source.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - aggregator_feed: A Drupal\aggregator\FeedInterface object representing
- *     the feed source.
- */
-function template_preprocess_aggregator_feed_source(&$variables) {
-  $feed = $variables['aggregator_feed'];
-
-  $feed_icon = array(
-    '#theme' => 'feed_icon',
-    '#url' => $feed->getUrl(),
-    '#title' => t('!title feed', array('!title' => $feed->label())),
-  );
-  $variables['source_icon'] = drupal_render($feed_icon);
-
-  if ($feed->getImage() && $feed->label() && $feed->getWebsiteUrl()) {
-    $image = array(
-      '#theme' => 'image',
-      '#path' => $feed->getImage(),
-      '#alt' => $feed->label(),
-    );
-    $variables['source_image'] = l($image, $feed->getWebsiteUrl(), array('html' => TRUE, 'attributes' => array('class' => 'feed-image')));
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
   }
-  else {
-    $variables['source_image'] = '';
-  }
-  $variables['source_description'] = aggregator_filter_xss($feed->getDescription());
-  $variables['source_url'] = check_url(url($feed->getWebsiteUrl(), array('absolute' => TRUE)));
-
-  if ($feed->checked) {
-    $variables['last_checked'] = t('@time ago', array('@time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $feed->getLastCheckedTime())));
-  }
-  else {
-    $variables['last_checked'] = t('never');
-  }
-
-  if (\Drupal::currentUser()->hasPermission('administer news feeds')) {
-    $variables['last_checked'] = l($variables['last_checked'], 'admin/config/services/aggregator');
-  }
-
-  $variables['attributes']['class'][] = 'feed-source';
+  $variables['full'] = $variables['elements']['#view_mode'] == 'full';
+  $variables['title'] = String::checkPlain($feed->label());
 }
 
 /**

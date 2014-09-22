@@ -21,7 +21,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "uri",
  *   label = @Translation("URI"),
  *   description = @Translation("An entity field containing a URI."),
- *   no_ui = TRUE
+ *   no_ui = TRUE,
+ *   default_formatter = "uri_link",
  * )
  */
 class UriItem extends StringItem {

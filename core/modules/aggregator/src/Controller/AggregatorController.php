@@ -61,26 +61,6 @@ class AggregatorController extends ControllerBase {
   }
 
   /**
-   * Displays all the items captured from the particular feed.
-   *
-   * @param \Drupal\aggregator\FeedInterface $aggregator_feed
-   *   The feed for which to display all items.
-   *
-   * @return array
-   *   The rendered list of items for the feed.
-   */
-  public function viewFeed(FeedInterface $aggregator_feed) {
-    $entity_manager = $this->entityManager();
-    $feed_source = $entity_manager->getViewBuilder('aggregator_feed')
-      ->view($aggregator_feed, 'default');
-    // Load aggregator feed item for the particular feed id.
-    $items = $entity_manager->getStorage('aggregator_item')->loadByFeed($aggregator_feed->id(), 20);
-    // Print the feed items.
-    $build = $this->buildPageList($items, $feed_source);
-    return $build;
-  }
-
-  /**
    * Builds a listing of aggregator feed items.
    *
    * @param \Drupal\aggregator\ItemInterface[] $items
@@ -210,35 +190,8 @@ class AggregatorController extends ControllerBase {
 
     $feeds = $entity_manager->getStorage('aggregator_feed')->loadMultiple();
 
-    $build = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('aggregator-wrapper')),
-      '#sorted' => TRUE,
-    );
-
-    foreach ($feeds as $feed) {
-      // Most recent items:
-      $summary_items = array();
-      $aggregator_summary_items = $this->config('aggregator.settings')
-        ->get('source.list_max');
-      if ($aggregator_summary_items) {
-        $items = $entity_manager->getStorage('aggregator_item')
-          ->loadByFeed($feed->id(), 20);
-        if ($items) {
-          $summary_items = $entity_manager->getViewBuilder('aggregator_item')
-            ->viewMultiple($items, 'summary');
-        }
-      }
-      $feed->url = $this->url('entity.aggregator_feed.canonical', array('aggregator_feed' => $feed->id()));
-      $build[$feed->id()] = array(
-        '#theme' => 'aggregator_summary_items',
-        '#summary_items' => $summary_items,
-        '#source' => $feed,
-        '#cache' => array(
-          'tags' => $feed->getCacheTag(),
-        ),
-      );
-    }
+    $build = $entity_manager->getViewBuilder('aggregator_feed')
+      ->viewMultiple($feeds, 'summary');
     $build['feed_icon'] = array(
       '#theme' => 'feed_icon',
       '#url' => 'aggregator/opml',
