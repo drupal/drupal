@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7d34fdcf5f05caf22258954b560e70f6",
+    "hash": "9b3b0c6ca08a325572fdeb2865e85c0a",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -457,6 +457,56 @@
                 "sparql"
             ],
             "time": "2013-12-30 22:31:37"
+        },
+        {
+            "name": "egulias/email-validator",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/EmailValidator.git",
+                "reference": "39b451bb2bb0655d83d82a38a0bba7189298cfc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/39b451bb2bb0655d83d82a38a0bba7189298cfc5",
+                "reference": "39b451bb2bb0655d83d82a38a0bba7189298cfc5",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "~1.0",
+                "php": ">= 5.3.3"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Egulias\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis"
+                }
+            ],
+            "description": "A library for validating emails",
+            "homepage": "https://github.com/egulias/EmailValidator",
+            "keywords": [
+                "email",
+                "validation",
+                "validator"
+            ],
+            "time": "2014-09-01 22:35:48"
         },
         {
             "name": "guzzlehttp/guzzle",
