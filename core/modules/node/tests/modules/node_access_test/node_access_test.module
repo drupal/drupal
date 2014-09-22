@@ -151,5 +151,5 @@ function node_access_test_node_access(\Drupal\node\NodeInterface $node, $op, \Dr
     return AccessResult::forbidden()->setCacheable(FALSE);
   }
   // No opinion.
-  return AccessResult::create()->setCacheable(FALSE);
+  return AccessResult::neutral()->setCacheable(FALSE);
 }

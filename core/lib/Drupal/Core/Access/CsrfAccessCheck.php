@@ -49,17 +49,16 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    *   The access result.
    */
   public function access(Route $route, Request $request) {
-    // Not cacheable because the CSRF token is highly dynamic.
-    $access = AccessResult::create()->setCacheable(FALSE);
     // @todo Remove dependency on the internal _system_path attribute:
     //   https://www.drupal.org/node/2293501.
     if ($this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path'))) {
-      $access->allow();
+      $result = AccessResult::allowed();
     }
     else {
-      $access->forbid();
+      $result = AccessResult::forbidden();
     }
-    return $access;
+    // Not cacheable because the CSRF token is highly dynamic.
+    return $result->setCacheable(FALSE);
   }
 
 }

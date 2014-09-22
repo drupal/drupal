@@ -186,7 +186,7 @@ class AccessManagerTest extends UnitTestCase {
     // Check route access without any access checker defined yet.
     foreach ($route_matches as $route_match) {
       $this->assertEquals(FALSE, $this->accessManager->check($route_match, $this->account));
-      $this->assertEquals(AccessResult::create(), $this->accessManager->check($route_match, $this->account, NULL, TRUE));
+      $this->assertEquals(AccessResult::neutral(), $this->accessManager->check($route_match, $this->account, NULL, TRUE));
     }
 
     $this->setupAccessChecker();
@@ -195,7 +195,7 @@ class AccessManagerTest extends UnitTestCase {
     // setChecks.
     foreach ($route_matches as $route_match) {
       $this->assertEquals(FALSE, $this->accessManager->check($route_match, $this->account));
-      $this->assertEquals(AccessResult::create(), $this->accessManager->check($route_match, $this->account, NULL, TRUE));
+      $this->assertEquals(AccessResult::neutral(), $this->accessManager->check($route_match, $this->account, NULL, TRUE));
     }
 
     // Now applicable access checks have been saved on each route object.
@@ -206,7 +206,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->assertEquals(TRUE, $this->accessManager->check($route_matches['test_route_2'], $this->account));
     $this->assertEquals(FALSE, $this->accessManager->check($route_matches['test_route_3'], $this->account));
     $this->assertEquals(TRUE, $this->accessManager->check($route_matches['test_route_4'], $this->account));
-    $this->assertEquals(AccessResult::create(), $this->accessManager->check($route_matches['test_route_1'], $this->account, NULL, TRUE));
+    $this->assertEquals(AccessResult::neutral(), $this->accessManager->check($route_matches['test_route_1'], $this->account, NULL, TRUE));
     $this->assertEquals(AccessResult::allowed(), $this->accessManager->check($route_matches['test_route_2'], $this->account, NULL, TRUE));
     $this->assertEquals(AccessResult::forbidden(), $this->accessManager->check($route_matches['test_route_3'],  $this->account, NULL, TRUE));
     $this->assertEquals(AccessResult::allowed(), $this->accessManager->check($route_matches['test_route_4'],  $this->account, NULL, TRUE));
@@ -242,7 +242,7 @@ class AccessManagerTest extends UnitTestCase {
    */
   public function providerTestCheckConjunctions() {
     $access_allow = AccessResult::allowed();
-    $access_deny = AccessResult::create();
+    $access_deny = AccessResult::neutral();
     $access_kill = AccessResult::forbidden();
 
     $access_configurations = array();

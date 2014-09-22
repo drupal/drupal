@@ -229,7 +229,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
       $checks = array_diff($checks, $this->checkNeedsRequest);
     }
 
-    $result = AccessResult::create();
+    $result = AccessResult::neutral();
     if (!empty($checks)) {
       $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
       if ($conjunction == static::ACCESS_MODE_ALL) {
@@ -256,34 +256,18 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    * @see \Drupal\Core\Access\AccessResultInterface::andIf()
    */
   protected function checkAll(array $checks, ArgumentsResolverInterface $arguments_resolver) {
-    $results = array();
-
+    // Without checks no opinion can be formed.
+    if (!$checks) {
+      return AccessResult::neutral();
+    }
+    $result = AccessResult::allowed();
     foreach ($checks as $service_id) {
       if (empty($this->checks[$service_id])) {
         $this->loadCheck($service_id);
       }
-
-      $result = $this->performCheck($service_id, $arguments_resolver);
-      $results[] = $result;
-
-      // Stop as soon as the first non-allowed check is encountered.
-      if (!$result->isAllowed()) {
-        break;
-      }
+      $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
     }
-
-    if (empty($results)) {
-      // No opinion.
-      return AccessResult::create();
-    }
-    else {
-      /** @var \Drupal\Core\Access\AccessResultInterface $result */
-      $result = array_shift($results);
-      foreach ($results as $other) {
-        $result->andIf($other);
-      }
-      return $result;
-    }
+    return $result;
   }
 
   /**
@@ -301,7 +285,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    */
   protected function checkAny(array $checks, ArgumentsResolverInterface $arguments_resolver) {
     // No opinion by default.
-    $result = AccessResult::create();
+    $result = AccessResult::neutral();
 
     foreach ($checks as $service_id) {
       if (empty($this->checks[$service_id])) {

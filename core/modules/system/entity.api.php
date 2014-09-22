@@ -532,7 +532,7 @@ use Drupal\Core\Render\Element;
  */
 function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -558,7 +558,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  */
 function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -584,7 +584,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  */
 function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -610,7 +610,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  */
 function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**
@@ -1868,7 +1868,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
     // don't want to switch node module's grant to
     // AccessResultInterface::isAllowed() , because the grants of other modules
     // should still decide on their own if this field is accessible or not
-    $grants['node']->resetAccess();
+    $grants['node'] = AccessResult::neutral()->inheritCacheability($grants['node']);
   }
 }
 

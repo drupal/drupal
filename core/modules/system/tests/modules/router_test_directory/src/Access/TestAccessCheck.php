@@ -24,6 +24,6 @@ class TestAccessCheck implements AccessInterface {
   public function access() {
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
-    return AccessResult::create();
+    return AccessResult::neutral();
   }
 }

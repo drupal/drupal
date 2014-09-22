@@ -52,7 +52,7 @@ class RoleAccessCheck implements AccessInterface {
     }
 
     // If there is no allowed role, give other access checks a chance.
-    return AccessResult::create()->cachePerRole();
+    return AccessResult::neutral()->cachePerRole();
   }
 
 }

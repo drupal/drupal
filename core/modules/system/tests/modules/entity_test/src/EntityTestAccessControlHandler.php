@@ -41,7 +41,7 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
     }
 
     // No opinion.
-    return AccessResult::create();
+    return AccessResult::neutral();
 
   }
 

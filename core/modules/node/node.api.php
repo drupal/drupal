@@ -348,7 +348,7 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Se
 
     default:
       // No opinion.
-      return AccessResult::create();
+      return AccessResult::neutral();
   }
 }
 

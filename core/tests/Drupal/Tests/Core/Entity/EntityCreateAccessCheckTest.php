@@ -40,9 +40,9 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAccess() {
-    $no_access = AccessResult::create()->cachePerRole();
+    $no_access = AccessResult::neutral()->cachePerRole();
     $access = AccessResult::allowed()->cachePerRole();
-    $no_access_due_to_errors = AccessResult::create();
+    $no_access_due_to_errors = AccessResult::neutral();
 
     return array(
       array('', 'entity_test', $no_access, $no_access),

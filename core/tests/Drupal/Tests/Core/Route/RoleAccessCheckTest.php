@@ -155,7 +155,7 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($deny_accounts as $account) {
       $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->getRoles()), $path);
       $has_access = $role_access_check->access($collection->get($path), $account);
-      $this->assertEquals(AccessResult::create()->cachePerRole(), $has_access, $message);
+      $this->assertEquals(AccessResult::neutral()->cachePerRole(), $has_access, $message);
     }
   }
 

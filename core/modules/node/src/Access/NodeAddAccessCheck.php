@@ -61,7 +61,7 @@ class NodeAddAccessCheck implements AccessInterface {
     }
 
     // No opinion.
-    return AccessResult::create();
+    return AccessResult::neutral();
   }
 
 }

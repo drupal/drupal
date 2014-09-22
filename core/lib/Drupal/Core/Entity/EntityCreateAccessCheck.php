@@ -67,7 +67,7 @@ class EntityCreateAccessCheck implements AccessInterface {
       }
       // If we were unable to replace all placeholders, deny access.
       if (strpos($bundle, '{') !== FALSE) {
-        return AccessResult::create();
+        return AccessResult::neutral();
       }
     }
     return $this->entityManager->getAccessControlHandler($entity_type)->createAccess($bundle, $account, [], TRUE);

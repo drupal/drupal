@@ -55,7 +55,7 @@ class EntityAccessCheck implements AccessInterface {
     }
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
-    return AccessResult::create();
+    return AccessResult::neutral();
   }
 
 }

@@ -29,7 +29,7 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowed()->cachePerRole();
         }
         if (!$account->hasPermission('access shortcuts')) {
-          return AccessResult::create()->cachePerRole();
+          return AccessResult::neutral()->cachePerRole();
         }
         return AccessResult::allowedIf($account->hasPermission('customize shortcut links') && $entity == shortcut_current_displayed_set($account))->cachePerRole()->cacheUntilEntityChanges($entity);
 
@@ -38,7 +38,7 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
 
       default:
         // No opinion.
-        return AccessResult::create();
+        return AccessResult::neutral();
     }
   }
 

@@ -123,7 +123,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     }
 
     // No opinion.
-    return AccessResult::create();
+    return AccessResult::neutral();
   }
 
   /**

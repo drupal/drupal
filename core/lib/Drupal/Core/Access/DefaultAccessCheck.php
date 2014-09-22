@@ -32,7 +32,7 @@ class DefaultAccessCheck implements RoutingAccessInterface {
       return AccessResult::forbidden();
     }
     else {
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
   }
 

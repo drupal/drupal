@@ -90,12 +90,12 @@ function shortcut_set_switch_access($account = NULL) {
 
   if (!$user->hasPermission('access shortcuts')) {
     // The user has no permission to use shortcuts.
-    return AccessResult::create()->cachePerRole();
+    return AccessResult::neutral()->cachePerRole();
   }
 
   if (!$user->hasPermission('switch shortcut sets')) {
     // The user has no permission to switch anyone's shortcut set.
-    return AccessResult::create()->cachePerRole();
+    return AccessResult::neutral()->cachePerRole();
   }
 
   // Users with the 'switch shortcut sets' permission can switch their own
@@ -108,7 +108,7 @@ function shortcut_set_switch_access($account = NULL) {
   }
 
   // No opinion.
-  return AccessResult::create()->cachePerRole();
+  return AccessResult::neutral()->cachePerRole();
 }
 
 /**

@@ -159,7 +159,7 @@ function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupa
   }
 
   // No opinion.
-  return AccessResult::create();
+  return AccessResult::neutral();
 }
 
 /**

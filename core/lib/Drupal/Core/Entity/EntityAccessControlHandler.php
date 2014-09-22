@@ -76,10 +76,10 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     );
 
     $return = $this->processAccessHookResults($access);
-    if (!$return->isAllowed() && !$return->isForbidden()) {
+    if ($return->isNeutral()) {
       // No module had an opinion about the access, so let's the access
       // handler check access.
-      $return->orIf($this->checkAccess($entity, $operation, $langcode, $account));
+      $return = $return->orIf($this->checkAccess($entity, $operation, $langcode, $account));
     }
     $result = $this->setCache($return, $entity->uuid(), $operation, $langcode, $account);
     return $return_as_object ? $result : $result->isAllowed();
@@ -102,7 +102,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   protected function processAccessHookResults(array $access) {
     // No results means no opinion.
     if (empty($access)) {
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
 
     /** @var \Drupal\Core\Access\AccessResultInterface $result */
@@ -141,7 +141,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     }
     else {
       // No opinion.
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
   }
 
@@ -231,10 +231,10 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     );
 
     $return = $this->processAccessHookResults($access);
-    if (!$return->isAllowed() && !$return->isForbidden()) {
+    if ($return->isNeutral()) {
       // No module had an opinion about the access, so let's the access
       // handler check create access.
-      $return->orIf($this->checkCreateAccess($account, $context, $entity_bundle));
+      $return = $return->orIf($this->checkCreateAccess($account, $context, $entity_bundle));
     }
     $result = $this->setCache($return, $cid, 'create', $context['langcode'], $account);
     return $return_as_object ? $result : $result->isAllowed();
@@ -263,7 +263,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     }
     else {
       // No opinion.
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
   }
 

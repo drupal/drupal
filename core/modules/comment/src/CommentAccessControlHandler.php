@@ -42,7 +42,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
       default:
         // No opinion.
-        return AccessResult::create()->cachePerRole();
+        return AccessResult::neutral()->cachePerRole();
     }
   }
 

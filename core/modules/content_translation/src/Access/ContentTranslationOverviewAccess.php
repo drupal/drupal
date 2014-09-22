@@ -66,7 +66,7 @@ class ContentTranslationOverviewAccess implements AccessInterface {
 
       // Check "translate any entity" permission.
       if ($account->hasPermission('translate any entity')) {
-        return $access->allow()->cachePerRole();
+        return AccessResult::allowed()->cachePerRole()->inheritCacheability($access);
       }
 
       // Check per entity permission.
@@ -74,10 +74,10 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       if ($definition->getPermissionGranularity() == 'bundle') {
         $permission = "translate {$bundle} {$entity_type_id}";
       }
-      return $access->allowIfHasPermission($account, $permission);
+      return AccessResult::allowedIfHasPermission($account, $permission)->inheritCacheability($access);
     }
 
     // No opinion.
-    return AccessResult::create();
+    return AccessResult::neutral();
   }
 }

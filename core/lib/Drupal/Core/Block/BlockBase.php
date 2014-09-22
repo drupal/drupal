@@ -170,18 +170,13 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     // in order to fix that, we need condition plugins to return cache contexts,
     // otherwise it will be impossible to determine by which cache contexts the
     // result should be varied.
-    $access = AccessResult::create()->setCacheable(FALSE);
-    if ($this->resolveConditions($conditions, 'and', $contexts, $mappings) === FALSE) {
-      $access->forbid();
-      return $access;
-    }
-    if ($this->blockAccess($account)) {
-      $access->allow();
+    if ($this->resolveConditions($conditions, 'and', $contexts, $mappings) !== FALSE && $this->blockAccess($account)) {
+      $access = AccessResult::allowed();
     }
     else {
-      $access->forbid();
+      $access = AccessResult::forbidden();
     }
-    return $access;
+    return $access->setCacheable(FALSE);
   }
 
   /**

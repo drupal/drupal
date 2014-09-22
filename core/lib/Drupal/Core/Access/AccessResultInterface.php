@@ -23,12 +23,10 @@ namespace Drupal\Core\Access;
  * would never enter the else-statement and hence introduce a critical security
  * issue.
  *
- * Note: you can check whether access is neither explicitly allowed nor
- * explicitly forbidden:
- *
- * @code
- * $no_opinion = !$access->isAllowed() && !$access->isForbidden();
- * @endcode
+ * Objects implementing this interface are using Kleene's weak three-valued
+ * logic with the isAllowed() state being TRUE, the isForbidden() state being
+ * the intermediate truth value and isNeutral() being FALSE. See
+ * http://en.wikipedia.org/wiki/Many-valued_logic for more.
  */
 interface AccessResultInterface {
 
@@ -36,43 +34,56 @@ interface AccessResultInterface {
    * Checks whether this access result indicates access is explicitly allowed.
    *
    * @return bool
+   *   When TRUE then isForbidden() and isNeutral() are FALSE.
    */
   public function isAllowed();
 
   /**
    * Checks whether this access result indicates access is explicitly forbidden.
    *
+   * This is a kill switch — both orIf() and andIf() will result in
+   * isForbidden() if either results are isForbidden().
+   *
    * @return bool
+   *   When TRUE then isAllowed() and isNeutral() are FALSE.
    */
   public function isForbidden();
+
+  /**
+   * Checks whether this access result indicates access is not yet determined.
+   *
+   * @return bool
+   *   When TRUE then isAllowed() and isForbidden() are FALSE.
+   */
+  public function isNeutral();
 
   /**
    * Combine this access result with another using OR.
    *
    * When OR-ing two access results, the result is:
    * - isForbidden() in either ⇒ isForbidden()
-   * - isAllowed() in either ⇒ isAllowed()
-   * - neither isForbidden() nor isAllowed() => !isAllowed() && !isForbidden()
+   * - otherwise if isAllowed() in either ⇒ isAllowed()
+   * - otherwise both must be isNeutral() ⇒ isNeutral()
    *
    * @param \Drupal\Core\Access\AccessResultInterface $other
    *   The other access result to OR this one with.
    *
-   * @return $this
+   * @return static
    */
   public function orIf(AccessResultInterface $other);
 
   /**
    * Combine this access result with another using AND.
    *
-   * When OR-ing two access results, the result is:
+   * When AND-ing two access results, the result is:
    * - isForbidden() in either ⇒ isForbidden()
-   * - isAllowed() in both ⇒ isAllowed()
-   * - neither isForbidden() nor isAllowed() => !isAllowed() && !isForbidden()
+   * - otherwise, if isAllowed() in both ⇒ isAllowed()
+   * - otherwise, one of them is isNeutral()  ⇒ isNeutral()
    *
    * @param \Drupal\Core\Access\AccessResultInterface $other
    *   The other access result to AND this one with.
    *
-   * @return $this
+   * @return static
    */
   public function andIf(AccessResultInterface $other);
 

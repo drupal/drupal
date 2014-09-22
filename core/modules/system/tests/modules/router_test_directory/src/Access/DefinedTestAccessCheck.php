@@ -33,7 +33,7 @@ class DefinedTestAccessCheck implements AccessInterface {
       return AccessResult::forbidden();
     }
     else {
-      return AccessResult::create();
+      return AccessResult::neutral();
     }
   }
 

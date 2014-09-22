@@ -38,7 +38,7 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
 
       default:
         // No opinion.
-        return AccessResult::create();
+        return AccessResult::neutral();
     }
   }
 
