@@ -63,4 +63,21 @@ class TestBaseTest extends UnitTestCase {
     $this->assertEquals($expected, $actual);
   }
 
+  /**
+   * Tests that the random string contains a non-alphanumeric character.
+   *
+   * @see \Drupal\simpletest\TestBase::randomString().
+   *
+   * @covers ::randomString
+   */
+  public function testRandomString() {
+    $string = $this->stub->randomString(8);
+    $this->assertEquals(8, strlen($string));
+    $this->assertContains('&', $string);
+
+    // Ensure that we can generate random strings with a length of 1.
+    $string = $this->stub->randomString(1);
+    $this->assertEquals(1, strlen($string));
+  }
+
 }
