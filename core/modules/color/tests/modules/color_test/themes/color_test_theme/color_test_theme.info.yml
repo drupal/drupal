@@ -3,3 +3,5 @@ type: theme
 description: 'Theme for testing the color module'
 version: VERSION
 core: 8.x
+libraries:
+  - color_test_theme/base

@@ -66,7 +66,7 @@ class ColorTest extends WebTestBase {
       ),
       'color_test_theme' => array(
         'palette_input' => 'palette[bg]',
-        'scheme' => '',
+        'scheme' => 'custom',
         'scheme_color' => '#3b3b3b',
       ),
     );

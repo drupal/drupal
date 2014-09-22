@@ -94,6 +94,36 @@ function color_css_alter(&$css) {
 }
 
 /**
+ * Implements hook_library_alter().
+ *
+ * Replaces style sheets declared in libraries with color-altered style sheets.
+ */
+function color_library_alter(&$library, $name) {
+  $active_theme = \Drupal::theme()->getActiveTheme();
+  $theme_key = $active_theme->getName();
+  $theme_libraries = $active_theme->getLibraries();
+  if (in_array($name, $theme_libraries)) {
+    // Override stylesheets.
+    $color_paths = \Drupal::config('color.theme.' . $theme_key)->get('stylesheets');
+    if (!empty($color_paths)) {
+      foreach ($library['css'] as &$css) {
+        // Loop over the path array with recolored CSS files to find matching
+        // paths which could replace the non-recolored paths.
+        foreach ($color_paths as $color_path) {
+          // Color module currently requires unique file names to be used,
+          // which allows us to compare different file paths.
+          if (drupal_basename($css['data']) == drupal_basename($color_path)) {
+            // Replace the path to the new css file.
+            // This keeps the order of the stylesheets intact.
+            $css['data'] = $color_path;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_page().
  *
  * Replace the logo with the colored version if available.
