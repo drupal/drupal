@@ -675,4 +675,14 @@ class Drupal {
     return static::$container->get('path.validator');
   }
 
+  /**
+   * Returns the access manager service.
+   *
+   * @return \Drupal\Core\Access\AccessManagerInterface
+   *   The access manager service.
+   */
+  public static function accessManager() {
+    return static::$container->get('access_manager');
+  }
+
 }

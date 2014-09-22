@@ -336,6 +336,14 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
+   * Tests the accessManager() method.
+   */
+  public function testAccessManager() {
+    $this->setMockContainerService('access_manager');
+    $this->assertNotNull(\Drupal::accessManager());
+  }
+
+  /**
    * Sets up a mock expectation for the container get() method.
    *
    * @param string $service_name
