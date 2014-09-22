@@ -1073,11 +1073,13 @@ function template_preprocess_links(&$variables) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - sizes: The sizes attribute for viewport-based selection of images.
+ *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables) {
   $variables['attributes']['src'] = file_create_url($variables['uri']);
 
-  foreach (array('width', 'height', 'alt', 'title') as $key) {
+  foreach (array('width', 'height', 'alt', 'title', 'sizes') as $key) {
     if (isset($variables[$key])) {
       // If the property has already been defined in the attributes,
       // do not override, including NULL.
@@ -2266,7 +2268,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
+      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL),
       'template' => 'image',
     ),
     'breadcrumb' => array(
