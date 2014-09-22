@@ -37,14 +37,15 @@
   text-decoration: none;
   outline: none;
 }
+.button:hover {
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
+}
 .button:focus {
   border: 1px solid #3AB2FF;
   box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
 }
-.button:hover {
-  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
-}
 .button:active {
+  border: 1px solid #a6a6a6;
   background-color: #dfdfd9;
   background-image: -webkit-linear-gradient(top, #f6f6f3, #e7e7df);
   background-image:   linear-gradient(to bottom, #f6f6f3, #e7e7df);
