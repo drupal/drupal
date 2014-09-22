@@ -67,7 +67,7 @@ class Link extends RenderElement {
       $element['#options']['attributes']['id'] = $element['#id'];
     }
 
-    // Conditionally invoke ajax_pre_render_element(), if #ajax is set.
+    // Conditionally invoke self::preRenderAjaxForm(), if #ajax is set.
     if (isset($element['#ajax']) && !isset($element['#ajax_processed'])) {
       // If no HTML ID was found above, automatically create one.
       if (!isset($element['#id'])) {
@@ -78,7 +78,7 @@ class Link extends RenderElement {
         $element['#ajax']['path'] = $element['#href'];
         $element['#ajax']['options'] = $element['#options'];
       }
-      $element = ajax_pre_render_element($element);
+      $element = static::preRenderAjaxForm($element);
     }
 
     if (isset($element['#route_name'])) {

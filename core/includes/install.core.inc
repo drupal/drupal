@@ -301,7 +301,6 @@ function install_begin_request(&$install_state) {
   require_once __DIR__ . '/database.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/batch.inc';
-  require_once __DIR__ . '/ajax.inc';
 
   // Load module basics (needed for hook invokes).
   include_once __DIR__ . '/module.inc';

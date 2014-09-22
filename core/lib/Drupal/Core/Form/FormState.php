@@ -156,7 +156,8 @@ class FormState implements FormStateInterface {
    * each of these page requests. Often, it is necessary or desired to persist
    * the $form and $form_state variables from the initial page request to the
    * one that processes the submission. 'cache' can be set to TRUE to do this.
-   * A prominent example is an Ajax-enabled form, in which ajax_process_form()
+   * A prominent example is an Ajax-enabled form, in which
+   * \Drupal\Core\Render\Element\RenderElement::processAjaxForm()
    * enables form caching for all forms that include an element with the #ajax
    * property. (The Ajax handler has no way to build the form itself, so must
    * rely on the cached version.) Note that the persistence of $form and

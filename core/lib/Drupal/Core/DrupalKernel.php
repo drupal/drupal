@@ -373,7 +373,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
     require_once DRUPAL_ROOT . '/core/includes/form.inc';
     require_once DRUPAL_ROOT . '/core/includes/mail.inc';
-    require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
     require_once DRUPAL_ROOT . '/core/includes/errors.inc';
     require_once DRUPAL_ROOT . '/core/includes/schema.inc';
     require_once DRUPAL_ROOT . '/core/includes/entity.inc';

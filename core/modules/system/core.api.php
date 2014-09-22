@@ -1618,3 +1618,159 @@ function hook_display_variant_plugin_alter(array &$definitions) {
 /**
  * @} End of "addtogroup hooks".
  */
+
+/**
+ * @defgroup ajax Ajax API
+ * @{
+ * Overview for Drupal's Ajax API.
+ *
+ * @section sec_overview Overview of Ajax
+ * Ajax is the process of dynamically updating parts of a page's HTML based on
+ * data from the server. When a specified event takes place, a PHP callback is
+ * triggered, which performs server-side logic and may return updated markup or
+ * JavaScript commands to run. After the return, the browser runs the JavaScript
+ * or updates the markup on the fly, with no full page refresh necessary.
+ *
+ * Many different events can trigger Ajax responses, including:
+ * - Clicking a button
+ * - Pressing a key
+ * - Moving the mouse
+ *
+ * @section sec_framework Ajax responses in forms
+ * Forms that use the Drupal Form API (see the
+ * @link form_api Form API topic @endlink for more information about forms) can
+ * trigger AJAX responses. Here is an outline of the steps:
+ * - Add property '#ajax' to a form element in your form array, to trigger an
+ *   Ajax response.
+ * - Write an Ajax callback to process the input and respond.
+ * See sections below for details on these two steps.
+ *
+ * @subsection sub_form Adding Ajax triggers to a form
+ * As an example of adding Ajax triggers to a form, consider editing a date
+ * format, where the user is provided with a sample of the generated date output
+ * as they type. To accomplish this, typing in the text field should trigger an
+ * Ajax response. This is done in the text field form array element
+ * in \Drupal\config_translation\FormElement\DateFormat::getFormElement():
+ * @code
+ * '#ajax' => array(
+ *   'callback' => 'Drupal\config_translation\FormElement\DateFormat::ajaxSample',
+ *   'event' => 'keyup',
+ *   'progress' => array(
+ *     'type' => 'throbber',
+ *     'message' => NULL,
+ *   ),
+ * ),
+ * @endcode
+ *
+ * As you can see from this example, the #ajax property for a form element is
+ * an array. Here are the details of its elements, all of which are optional:
+ * - callback: The callback to invoke to handle the server side of the
+ *   Ajax event. More information on callbacks is below in @ref sub_callback.
+ * - path: The URL path to use for the request. If omitted, defaults to
+ *   'system/ajax', which invokes the default Drupal Ajax processing (this will
+ *   call the callback supplied in the 'callback' element). If you supply a
+ *   path, you must set up a routing entry to handle the request yourself and
+ *   return output described in @ref sub_callback below. See the
+ *   @link menu Routing topic @endlink for more information on routing.
+ * - wrapper: The HTML 'id' attribute of the area where the content returned by
+ *   the callback should be placed. Note that callbacks have a choice of
+ *   returning content or JavaScript commands; 'wrapper' is used for content
+ *   returns.
+ * - method: The jQuery method for placing the new content (used with
+ *   'wrapper'). Valid options are 'replaceWith' (default), 'append', 'prepend',
+ *   'before', 'after', or 'html'. See
+ *   http://api.jquery.com/category/manipulation/ for more information on these
+ *   methods.
+ * - effect: The jQuery effect to use when placing the new HTML (used with
+ *   'wrapper'). Valid options are 'none' (default), 'slide', or 'fade'.
+ * - speed: The effect speed to use (used with 'effect' and 'wrapper'). Valid
+ *   options are 'slow' (default), 'fast', or the number of milliseconds the
+ *   effect should run.
+ * - event: The JavaScript event to respond to. This is selected automatically
+ *   for the type of form element; provide a value to override the default.
+ * - prevent: A JavaScript event to prevent when the event is triggered. For
+ *   example, if you use event 'mousedown' on a button, you might want to
+ *   prevent 'click' events from also being triggered.
+ * - progress: An array indicating how to show Ajax processing progress. Can
+ *   contain one or more of these elements:
+ *   - type: Type of indicator: 'throbber' (default) or 'bar'.
+ *   - message: Translated message to display.
+ *   - url: For a bar progress indicator, URL path for determining progress.
+ *   - interval: For a bar progress indicator, how often to update it.
+ *
+ * @subsection sub_callback Setting up a callback to process Ajax
+ * Once you have set up your form to trigger an Ajax response (see @ref sub_form
+ * above), you need to write some PHP code to process the response. If you use
+ * 'path' in your Ajax set-up, your route controller will be triggered with only
+ * the information you provide in the URL. If you use 'callback', your callback
+ * method is a function, which will receive the $form and $form_state from the
+ * triggering form. You can use $form_state to get information about the
+ * data the user has entered into the form. For instance, in the above example
+ * for the date format preview,
+ * \Drupal\config_translation\FormElement\DateFormat\ajaxSample() does this to
+ * get the format string entered by the user:
+ * @code
+ * $format_value = \Drupal\Component\Utility\NestedArray::getValue(
+ *   $form_state->getValues(),
+ *   $form_state->getTriggeringElement()['#array_parents']);
+ * @endcode
+ *
+ * Once you have processed the input, you have your choice of returning HTML
+ * markup or a set of Ajax commands. If you choose to return HTML markup, you
+ * can return it as a string or a renderable array, and it will be placed in
+ * the defined 'wrapper' element (see documentation above in @ref sub_form).
+ * In addition, any messages returned by drupal_get_messages(), themed as in
+ * status-messages.html.twig, will be prepended.
+ *
+ * To return commands, you need to set up an object of class
+ * \Drupal\Core\Ajax\AjaxResponse, and then use its addCommand() method to add
+ * individual commands to it. In the date format preview example, the format
+ * output is calculated, and then it is returned as replacement markup for a div
+ * like this:
+ * @code
+ * $response = new AjaxResponse();
+ * $response->addCommand(new ReplaceCommand(
+ *   '#edit-date-format-suffix',
+ *   '<small id="edit-date-format-suffix">' . $format . '</small>'));
+ * return $response;
+ * @endcode
+ *
+ * The individual commands that you can return implement interface
+ * \Drupal\Core\Ajax\CommandInterface. Available commands provide the ability
+ * to pop up alerts, manipulate text and markup in various ways, redirect
+ * to a new URL, and the generic \Drupal\Core\Ajax\InvokeCommand, which
+ * invokes an arbitrary jQuery command.
+ *
+ * As noted above, status messages are prepended automatically if you use the
+ * 'wrapper' method and return HTML markup. This is not the case if you return
+ * commands, but if you would like to show status messages, you can add
+ * @code
+ * array('#theme' => 'status_messages')
+ * @endcode
+ * to a render array, use drupal_render() to render it, and add a command to
+ * place the messages in an appropriate location.
+ *
+ * @section sec_other Other methods for triggering Ajax
+ * Here are some additional methods you can use to trigger Ajax responses in
+ * Drupal:
+ * - Add class 'use-ajax' to a link. The link will be loaded using an Ajax
+ *   call. When using this method, the href of the link can contain '/nojs/' as
+ *   part of the path. When the Ajax JavaScript processes the page, it will
+ *   convert this to '/ajax/'. The server is then able to easily tell if this
+ *   request was made through an actual Ajax request or in a degraded state, and
+ *   respond appropriately.
+ * - Add class 'use-ajax-submit' to a submit button in a form. The form will
+ *   then be submitted via Ajax to the path specified in the #action.  Like the
+ *   ajax-submit class on links, this path will have '/nojs/' replaced with
+ *   '/ajax/' so that the submit handler can tell if the form was submitted in a
+ *   degraded state or not.
+ * - Add property '#autocomplete_route_name' to a text field in a form. The
+ *   route controller for this route must return an array of options for
+ *   autocomplete, as a \Symfony\Component\HttpFoundation\JsonResponse object.
+ *   See the @link menu Routing topic @endlink for more information about
+ *   routing.
+ */
+
+/**
+ * @} End of "defgroup ajax".
+ */
