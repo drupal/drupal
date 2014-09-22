@@ -6,7 +6,7 @@ services:
       - { name: breadcrumb_builder, priority: 701 }
   book.manager:
     class: Drupal\book\BookManager
-    arguments: ['@database', '@entity.manager', '@string_translation', '@config.factory']
+    arguments: ['@entity.manager', '@string_translation', '@config.factory', '@book.outline_storage']
     tags:
       - { name: backend_overridable }
   book.outline:
@@ -15,7 +15,9 @@ services:
   book.export:
     class: Drupal\book\BookExport
     arguments: ['@entity.manager', '@book.manager']
-
+  book.outline_storage:
+    class: Drupal\book\BookOutlineStorage
+    arguments: ['@database']
   access_check.book.removable:
     class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
     arguments: ['@book.manager']
