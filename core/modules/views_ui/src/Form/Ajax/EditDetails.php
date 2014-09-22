@@ -88,7 +88,7 @@ class EditDetails extends ViewsFormBase {
     if (isset($bases[$view->get('base_table')])) {
       $page_title .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
     }
-    $form_state->set('#page_title', $page_title);
+    $form_state->set('page_title', $page_title);
 
     $view->cacheSet();
   }
