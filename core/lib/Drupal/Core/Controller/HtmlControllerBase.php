@@ -7,9 +7,8 @@
 
 namespace Drupal\Core\Controller;
 
-use Drupal\Core\Page\FeedLinkElement;
 use Drupal\Core\Page\HtmlFragment;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Page\RenderHtmlRendererInterface;
 use Drupal\Core\Utility\Title;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,28 +22,28 @@ class HtmlControllerBase {
   /**
    * The title resolver.
    *
-   * @var \Drupal\Core\Controller\TitleResolver
+   * @var \Drupal\Core\Controller\TitleResolverInterface
    */
   protected $titleResolver;
 
   /**
-   * The url generator.
+   * The render array to HTML fragment renderer.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Page\RenderHtmlRendererInterface
    */
-  protected $urlGenerator;
+  protected $renderHtmlRenderer;
 
   /**
    * Constructs a new HtmlControllerBase object.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator.
+   * @param \Drupal\Core\Page\RenderHtmlRendererInterface $render_html_renderer
+   *   The render array to HTML fragment renderer.
    */
-  public function __construct(TitleResolverInterface $title_resolver, UrlGeneratorInterface $url_generator) {
+  public function __construct(TitleResolverInterface $title_resolver, RenderHtmlRendererInterface $render_html_renderer) {
     $this->titleResolver = $title_resolver;
-    $this->urlGenerator = $url_generator;
+    $this->renderHtmlRenderer = $render_html_renderer;
   }
 
   /**
@@ -65,47 +64,16 @@ class HtmlControllerBase {
     }
 
     if (!is_array($page_content)) {
-      $page_content = array(
-        'main' => array(
-          '#markup' => $page_content,
-        ),
-      );
+      $page_content = ['#markup' => $page_content];
     }
 
-    $content = $this->drupalRender($page_content);
-    if (!empty($page_content)) {
-      drupal_process_attached($page_content);
-    }
-    $cache = !empty($page_content['#cache']['tags']) ? array('tags' => $page_content['#cache']['tags']) : array();
-    $fragment = new HtmlFragment($content, $cache);
+    $fragment = $this->renderHtmlRenderer->render($page_content);
 
-    // A title defined in the return always wins.
-    if (isset($page_content['#title'])) {
-      $fragment->setTitle($page_content['#title'], Title::FILTER_XSS_ADMIN);
-    }
-    else if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
+    if (!$fragment->getTitle() && $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
       $fragment->setTitle($this->titleResolver->getTitle($request, $route), Title::PASS_THROUGH);
     }
 
-    // Add feed links from the page content.
-    $attached = isset($page_content['#attached']) ? $page_content['#attached'] : array();
-    if (!empty($attached['drupal_add_feed'])) {
-      foreach ($attached['drupal_add_feed'] as $feed) {
-        $feed_link = new FeedLinkElement($feed[1], $this->urlGenerator->generateFromPath($feed[0]));
-        $fragment->addLinkElement($feed_link);
-      }
-    }
-
     return $fragment;
-  }
-
-  /**
-   * Wraps drupal_render().
-   *
-   * @todo: Remove as part of https://drupal.org/node/2182149
-   */
-  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
-    return drupal_render($elements, $is_recursive_call);
   }
 
 }

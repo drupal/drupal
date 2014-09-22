@@ -643,7 +643,7 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@controller_resolver', '@title_resolver', '@url_generator']
+    arguments: ['@controller_resolver', '@title_resolver', '@render_html_renderer']
   controller.ajax:
     class: Drupal\Core\Controller\AjaxController
     arguments: ['@controller_resolver', '@ajax_response_renderer']
@@ -669,6 +669,9 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@html_fragment_renderer', '@html_page_renderer']
+  render_html_renderer:
+    class: Drupal\Core\Page\RenderHtmlRenderer
+    arguments: ['@url_generator']
   html_fragment_renderer:
     class: Drupal\Core\Page\DefaultHtmlFragmentRenderer
     arguments: ['@language_manager']
