@@ -8,6 +8,7 @@
 namespace Drupal\Component\Plugin;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 
 /**
  * Base class for plugin managers.
@@ -55,7 +56,20 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array()) {
-    return $this->factory->createInstance($plugin_id, $configuration);
+    // If this PluginManager has fallback capabilities catch
+    // PluginNotFoundExceptions.
+    if ($this instanceof FallbackPluginManagerInterface) {
+      try {
+        return $this->factory->createInstance($plugin_id, $configuration);
+      }
+      catch (PluginNotFoundException $e) {
+        $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
+        return $this->factory->createInstance($fallback_id, $configuration);
+      }
+    }
+    else {
+      return $this->factory->createInstance($plugin_id, $configuration);
+    }
   }
 
   /**

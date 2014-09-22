@@ -7,6 +7,7 @@
 
 namespace Drupal\filter;
 
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -20,7 +21,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\filter\Plugin\FilterBase
  * @see plugin_api
  */
-class FilterPluginManager extends DefaultPluginManager {
+class FilterPluginManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 
   /**
    * Constructs a FilterPluginManager object.
@@ -42,14 +43,8 @@ class FilterPluginManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
-    $definitions = $this->getDefinitions();
-    // Avoid using a ternary that would create a copy of the array.
-    if (isset($definitions[$plugin_id])) {
-      return $definitions[$plugin_id];
-    }
-    // If the requested filter is missing, use the null filter.
-    return $definitions['filter_null'];
+  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+    return 'filter_null';
   }
 
 }
