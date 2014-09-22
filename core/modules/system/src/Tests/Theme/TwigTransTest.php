@@ -70,9 +70,7 @@ class TwigTransTest extends WebTestBase {
     $this->installLanguages();
 
     // Assign Lolspeak (xx) to be the default language.
-    $language = ConfigurableLanguage::load('xx');
-    $language->set('default', TRUE);
-    $language->save();
+    \Drupal::config('system.site')->set('langcode', 'xx')->save();
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.

@@ -53,7 +53,6 @@ class LanguageDefault {
    *   The default language.
    */
   public function set(LanguageInterface $language) {
-    $language->default = TRUE;
     $this->language = $language;
   }
 

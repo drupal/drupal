@@ -76,7 +76,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $t_args = array('%language' => $language->name, '%langcode' => $language->id);
       $form['prefix'][$langcode] = array(
         '#type' => 'textfield',
-        '#title' => $language->default ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
+        '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
         '#maxlength' => 64,
         '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
         '#field_prefix' => $base_url . '/',
@@ -106,7 +106,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $value = $form_state->getValue(array('prefix', $langcode));
 
       if ($value === '') {
-        if (!$language->default && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
+        if (!$language->isDefault() && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
           // although it is required for selected negotiation type.
           $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may only be left blank for the default language.'));
@@ -130,7 +130,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $value = $form_state->getValue(array('domain', $langcode));
 
       if ($value === '') {
-        if (!$language->default && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
+        if (!$language->isDefault() && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
           $form_state->setErrorByName("domain][$langcode", $this->t('The domain may only be left blank for the default language.'));

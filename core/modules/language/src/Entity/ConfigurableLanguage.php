@@ -7,12 +7,10 @@
 
 namespace Drupal\language\Entity;
 
-use Drupal\Core\Language\Language as LanguageObject;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\ConfigurableLanguageManager;
-use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
@@ -83,21 +81,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public $locked = FALSE;
 
   /**
-   * Flag to indicate if the language entity is the default site language.
-   *
-   * This property is not saved to the language entity since there can be only
-   * one default language. It is saved to system.site:langcode and set on the
-   * container using the language.default service in when the entity is saved.
-   * The value is set correctly when a language entity is created or loaded.
-   *
-   * @see \Drupal\language\Entity\ConfigurableLanguage::postSave()
-   * @see \Drupal\language\Entity\ConfigurableLanguage::isDefault()
-   *
-   * @var bool
-   */
-  protected $default;
-
-  /**
    * Used during saving to detect when the site becomes multilingual.
    *
    * This property is not saved to the language entity, but is needed for
@@ -111,16 +94,10 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   protected $preSaveMultilingual;
 
   /**
-   * Checks if the language entity is the site default language.
-   *
-   * @return bool
-   *   TRUE if the language entity is the site default language, FALSE if not.
+   * {@inheritdoc}
    */
   public function isDefault() {
-    if (!isset($this->default)) {
-      return static::getDefaultLangcode() == $this->id();
-    }
-    return $this->default;
+    return static::getDefaultLangcode() == $this->id();
   }
 
   /**
@@ -144,24 +121,14 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Only set the default language and save it to system.site configuration if
-    // it needs to updated.
-    if ($this->isDefault() && static::getDefaultLangcode() != $this->id()) {
-      // Update the config. Saving the configuration fires and event that causes
-      // the container to be rebuilt.
-      \Drupal::config('system.site')->set('langcode', $this->id())->save();
-      \Drupal::service('language.default')->set($this->toLanguageObject());
-    }
-
     $language_manager = \Drupal::languageManager();
     $language_manager->reset();
     if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
       $language_manager->updateLockedLanguageWeights();
     }
 
-    // Update URL Prefixes for all languages after the new default language is
-    // propagated and the LanguageManagerInterface::getLanguages() cache is
-    // flushed.
+    // Update URL Prefixes for all languages after the
+    // LanguageManagerInterface::getLanguages() cache is flushed.
     language_negotiation_url_prefixes_update();
 
     // If after adding this language the site will become multilingual, we need
@@ -173,26 +140,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
       // Install any available language configuration overrides for the language.
       \Drupal::service('language.config_factory_override')->installLanguageOverrides($this->id());
     }
-  }
-
-  /**
-   * Converts the ConfigurableLanguage entity to a Core Language value object.
-   *
-   * @todo fix return type hint after https://drupal.org/node/2246665 and
-   *   https://drupal.org/node/2246679.
-   *
-   * @return \Drupal\Core\Language\LanguageInterface
-   *   The language configuration entity expressed as a Language value object.
-   */
-  protected function toLanguageObject() {
-    return new LanguageObject(array(
-      'id' => $this->id(),
-      'name' => $this->label(),
-      'direction' => $this->direction,
-      'weight' => $this->weight,
-      'locked' => $this->locked,
-      'default' => $this->default,
-    ));
   }
 
   /**
@@ -225,18 +172,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     // to rebuild language services.
     if (!\Drupal::languageManager()->isMultilingual()) {
       ConfigurableLanguageManager::rebuildServices();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get($property_name) {
-    if ($property_name == 'default') {
-      return $this->isDefault();
-    }
-    else {
-      return parent::get($property_name);
     }
   }
 

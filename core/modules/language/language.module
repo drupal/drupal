@@ -444,10 +444,10 @@ function language_negotiation_url_prefixes_update() {
   foreach (\Drupal::languageManager()->getLanguages() as $language) {
     // The prefix for this language should be updated if it's not assigned yet
     // or the prefix is set to the empty string.
-    if (empty($prefixes[$language->id])) {
+    if (empty($prefixes[$language->getId()])) {
       // For the default language, set the prefix to the empty string,
       // otherwise use the langcode.
-      $prefixes[$language->id] = !empty($language->default) ? '' : $language->id;
+      $prefixes[$language->getId()] = $language->isDefault() ? '' : $language->id;
     }
     // Otherwise we keep the configured prefix.
   }
@@ -592,9 +592,7 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
  * @see language_form_system_regional_settings_alter()
  */
 function language_system_regional_settings_form_submit($form, FormStateInterface $form_state) {
-  $default_language = ConfigurableLanguage::load($form_state->getValue('site_default_language'));
-  $default_language->set('default', TRUE);
-  $default_language->save();
+  \Drupal::config('system.site')->set('langcode', $form_state->getValue('site_default_language'))->save();
 }
 
 /**

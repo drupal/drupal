@@ -100,7 +100,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     $system = $config_storage->read('system.site');
     $default_language = $config_storage->read(static::CONFIG_PREFIX . $system['langcode']);
     if (is_array($default_language)) {
-      return $default_language + array('default' => TRUE);
+      return $default_language;
     }
     return FALSE;
   }

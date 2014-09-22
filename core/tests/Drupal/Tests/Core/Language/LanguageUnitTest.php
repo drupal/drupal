@@ -49,9 +49,26 @@ class LanguageUnitTest extends UnitTestCase {
    * @covers ::isDefault()
    */
   public function testIsDefault() {
-    $language_code = $this->randomMachineName(2);
-    $language = new Language(array('id' => $language_code, 'default' => TRUE));
+    $language_default = $this->getMockBuilder('Drupal\Core\Language\LanguageDefault')->disableOriginalConstructor()->getMock();
+    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container->expects($this->any())
+      ->method('get')
+      ->with('language.default')
+      ->will($this->returnValue($language_default));
+    \Drupal::setContainer($container);
+
+    $language = new Language(array('id' => $this->randomMachineName(2)));
+    // Set up the LanguageDefault to return different default languages on
+    // consecutive calls.
+    $language_default->expects($this->any())
+      ->method('get')
+      ->willReturnOnConsecutiveCalls(
+        $language,
+        new Language(array('id' => $this->randomMachineName(2)))
+      );
+
     $this->assertTrue($language->isDefault());
+    $this->assertFalse($language->isDefault());
   }
 
   /**

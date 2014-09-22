@@ -150,9 +150,7 @@ class MenuLanguageTest extends MenuWebTestBase {
 
     // Remove English language. To do that another language has to be set as
     // default.
-    $language = ConfigurableLanguage::load('cs');
-    $language->set('default', TRUE);
-    $language->save();
+    \Drupal::config('system.site')->set('langcode', 'cs')->save();
     entity_delete_multiple('configurable_language', array('en'));
 
     // Save the menu again and check if the language is still the same.

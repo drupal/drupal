@@ -89,9 +89,8 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     $default_language = \Drupal::languageManager()->getDefaultLanguage();
-    $language = ConfigurableLanguage::createFromLangcode($langcode_browser_fallback);
-    $language->set('default', TRUE);
-    $language->save();
+    ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
+    \Drupal::config('system.site')->set('langcode', $langcode_browser_fallback)->save();
     ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // We will look for this string in the admin/config screen to see if the
@@ -104,9 +103,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Now the t()'ed string is in db so switch the language back to default.
     // This will rebuild the container so we need to rebuild the container in
     // the test environment.
-    $default_language = ConfigurableLanguage::load($default_language->getId());
-    $default_language->set('default', TRUE);
-    $default_language->save();
+    \Drupal::config('system.site')->set('langcode', $default_language->getId())->save();
     \Drupal::config('language.negotiation')->set('url.prefixes.en', '')->save();
     $this->rebuildContainer();
 

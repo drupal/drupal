@@ -1550,12 +1550,12 @@ function install_import_translations(&$install_state) {
 
   $langcode = $install_state['parameters']['langcode'];
   $language = ConfigurableLanguage::createFromLangcode($langcode);
-  $language->set('default', TRUE);
   $language->save();
 
-  // If a non-English language was selected, remove English and import the
-  // translations.
+  // If a non-English language was selected, change the default language,
+  // remove English and import the translations.
   if ($langcode != 'en') {
+    \Drupal::config('system.site')->set('langcode', $langcode)->save();
     entity_delete_multiple('configurable_language', array('en'));
 
     // Set up a batch to import translations for the newly added language.

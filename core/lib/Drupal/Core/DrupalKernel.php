@@ -1040,7 +1040,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $default_language_values = Language::$defaultValues;
     if ($system = $this->getConfigStorage()->read('system.site')) {
       if ($default_language_values['id'] != $system['langcode']) {
-        $default_language_values = array('id' => $system['langcode'], 'default' => TRUE);
+        $default_language_values = array('id' => $system['langcode']);
       }
     }
     $container->setParameter('language.default_values', $default_language_values);

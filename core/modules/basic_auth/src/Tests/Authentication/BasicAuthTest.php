@@ -119,7 +119,8 @@ class BasicAuthTest extends WebTestBase {
    * Tests compatibility with locale/UI translation.
    */
   function testLocale() {
-    ConfigurableLanguage::create(array('id' => 'de', 'label' => 'German', 'default' => TRUE))->save();
+    ConfigurableLanguage::createFromLangcode('de')->save();
+    \Drupal::config('system.site')->set('langcode', 'de')->save();
 
     $account = $this->drupalCreateUser();
 
