@@ -1092,14 +1092,14 @@ abstract class FilterPluginBase extends HandlerBase {
       'hidden' => TRUE,
       'limit' => 0,
     );
-    $js_settings = $form_state->get('js settings');
+    $js_settings = $form_state->get('js_settings');
     if ($js_settings && is_array($js)) {
       $js_settings = array_merge($js_settings, $js);
     }
     else {
       $js_settings = $js;
     }
-    $form_state->set('js settings', $js_settings);
+    $form_state->set('js_settings', $js_settings);
   }
 
   /**
