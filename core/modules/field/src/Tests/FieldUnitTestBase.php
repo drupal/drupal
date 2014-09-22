@@ -53,6 +53,17 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
 
     // Set default storage backend and configure the theme system.
     $this->installConfig(array('field', 'system'));
+
+    // Create user 1.
+    $storage = \Drupal::entityManager()->getStorage('user');
+    $storage
+      ->create(array(
+        'uid' => 1,
+        'name' => 'entity-test',
+        'mail' => 'entity@localhost',
+        'status' => TRUE,
+      ))
+      ->save();
   }
 
   /**

@@ -101,8 +101,6 @@ class DateTimeFieldTest extends WebTestBase {
     $time_format = entity_load('date_format', 'html_time')->getPattern();
 
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][value][date]" => $date->format($date_format),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -170,8 +168,6 @@ class DateTimeFieldTest extends WebTestBase {
     $time_format = entity_load('date_format', 'html_time')->getPattern();
 
     $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
       "{$field_name}[0][value][date]" => $date->format($date_format),
       "{$field_name}[0][value][time]" => $date->format($time_format),
     );
@@ -258,10 +254,7 @@ class DateTimeFieldTest extends WebTestBase {
     // Submit a valid date and ensure it is accepted.
     $date_value = array('year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15);
 
-    $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomMachineName(),
-    );
+    $edit = array();
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
     foreach ($date_value as $part => $value) {
