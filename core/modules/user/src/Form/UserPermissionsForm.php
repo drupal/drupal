@@ -137,22 +137,18 @@ class UserPermissionsForm extends FormBase {
           'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
         );
         $options[$perm] = $perm_item['title'];
+        $form['permissions'][$perm]['description'] = array(
+          '#type' => 'inline_template',
+          '#template' => '<div class="permission"><span class="title">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
+          '#context' => array(
+            'title' => $perm_item['title'],
+          ),
+        );
         // Show the permission description.
         if (!$hide_descriptions) {
-          $user_permission_description = $perm_item['description'];
-          // Append warning message.
-          if (!empty($perm_item['warning'])) {
-            $user_permission_description .= ' <em class="permission-warning">' . $perm_item['warning'] . '</em>';
-          }
+          $form['permissions'][$perm]['description']['#context']['description'] = $perm_item['description'];
+          $form['permissions'][$perm]['description']['#context']['warning'] = $perm_item['warning'];
         }
-        $form['permissions'][$perm]['description'] = array(
-          '#wrapper_attributes' => array(
-            'class' => array('permission'),
-          ),
-          '#type' => 'item',
-          '#markup' => $perm_item['title'],
-          '#description' => $user_permission_description,
-        );
         $options[$perm] = '';
         foreach ($role_names as $rid => $name) {
           $form['permissions'][$perm][$rid] = array(
