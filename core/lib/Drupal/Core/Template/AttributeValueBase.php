@@ -17,6 +17,13 @@ use Drupal\Component\Utility\String;
 abstract class AttributeValueBase {
 
   /**
+   * Renders '$name=""' if $value is an empty string.
+   *
+   * @see \Drupal\Core\Template\AttributeValueBase::render()
+   */
+  const RENDER_EMPTY_ATTRIBUTE = TRUE;
+
+  /**
    * The value itself.
    *
    * @var mixed
@@ -48,8 +55,9 @@ abstract class AttributeValueBase {
    *   The string representation of the attribute.
    */
   public function render() {
-    if (isset($this->value)) {
-      return String::checkPlain($this->name) . '="' . $this . '"';
+    $value = (string) $this;
+    if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
+      return String::checkPlain($this->name) . '="' . $value . '"';
     }
   }
 

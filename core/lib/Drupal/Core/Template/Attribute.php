@@ -150,13 +150,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
       if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
         // Merge the values passed in from the class value array.
         $classes = array_merge($this->storage['class']->value(), $classes);
-        // Filter out any duplicate values.
-        $classes = array_unique($classes);
         $this->storage['class']->exchangeArray($classes);
       }
       else {
-        // Filter out any duplicate values.
-        $classes = array_unique($classes);
         $this->offsetSet('class', $classes);
       }
     }
@@ -184,8 +180,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
         $classes = array_merge($classes, (array) $arg);
       }
 
-      // Remove the values passed in from the value array.
-      $classes = array_diff($this->storage['class']->value(), $classes);
+      // Remove the values passed in from the value array. Use array_values() to
+      // ensure that the array index remains sequential.
+      $classes = array_values(array_diff($this->storage['class']->value(), $classes));
       $this->storage['class']->exchangeArray($classes);
     }
     return $this;

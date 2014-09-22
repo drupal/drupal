@@ -69,6 +69,25 @@ class AttributeTest extends UnitTestCase {
     $attribute->addClass();
     $this->assertEmpty($attribute['class']);
 
+    // Test various permutations of adding values to empty Attribute objects.
+    foreach (array(NULL, FALSE, '', []) as $value) {
+      // Single value.
+      $attribute->addClass($value);
+      $this->assertEmpty((string) $attribute);
+
+      // Multiple values.
+      $attribute->addClass($value, $value);
+      $this->assertEmpty((string) $attribute);
+
+      // Single value in array.
+      $attribute->addClass([$value]);
+      $this->assertEmpty((string) $attribute);
+
+      // Single value in arrays.
+      $attribute->addClass([$value], [$value]);
+      $this->assertEmpty((string) $attribute);
+    }
+
     // Add one class on empty attribute.
     $attribute->addClass('banana');
     $this->assertArrayEquals(array('banana'), $attribute['class']->value());
@@ -87,7 +106,7 @@ class AttributeTest extends UnitTestCase {
 
     // Add an array of duplicate classes.
     $attribute->addClass(array('red', 'green', 'blue'), array('aa', 'aa', 'banana'), 'yy');
-    $this->assertArrayEquals(array('banana', 'aa', 'xx', 'yy', 'red', 'green', 'blue'), $attribute['class']->value());
+    $this->assertEquals('banana aa xx yy red green blue', (string) $attribute['class']);
   }
 
   /**
@@ -95,7 +114,8 @@ class AttributeTest extends UnitTestCase {
    * @covers ::removeClass()
    */
   public function testRemoveClasses() {
-    $classes = array('example-class', 'aa', 'xx', 'yy', 'red', 'green', 'blue');
+    // Add duplicate class to ensure that both duplicates are removed.
+    $classes = array('example-class', 'aa', 'xx', 'yy', 'red', 'green', 'blue', 'red');
     $attribute = new Attribute(array('class' => $classes));
 
     // Remove one class.
@@ -109,6 +129,15 @@ class AttributeTest extends UnitTestCase {
     // Remove an array of classes.
     $attribute->removeClass(array('red', 'green', 'blue'));
     $this->assertNotContains(array('red', 'green', 'blue'), $attribute['class']->value());
+
+    // Remove a class that does not exist.
+    $attribute->removeClass('gg');
+    $this->assertNotContains(array('gg'), $attribute['class']->value());
+    // Test that the array index remains sequential.
+    $this->assertArrayEquals(array('aa'), $attribute['class']->value());
+
+    $attribute->removeClass('aa');
+    $this->assertEmpty((string) $attribute);
   }
 
   /**

@@ -30,6 +30,14 @@ use Drupal\Component\Utility\String;
 class AttributeArray extends AttributeValueBase implements \ArrayAccess, \IteratorAggregate {
 
   /**
+   * Ensures empty array as a result of array_filter will not print '$name=""'.
+   *
+   * @see \Drupal\Core\Template\AttributeArray::__toString()
+   * @see \Drupal\Core\Template\AttributeValueBase::render()
+   */
+  const RENDER_EMPTY_ATTRIBUTE = FALSE;
+
+  /**
    * Implements ArrayAccess::offsetGet().
    */
   public function offsetGet($offset) {
@@ -67,7 +75,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
    */
   public function __toString() {
     // Filter out any empty values before printing.
-    $this->value = array_filter($this->value);
+    $this->value = array_unique(array_filter($this->value));
     return String::checkPlain(implode(' ', $this->value));
   }
 
