@@ -1748,7 +1748,7 @@ class ViewExecutable {
   /**
    * Gets the current user.
    *
-   * Views plugins can recieve the current user in order to not need dependency
+   * Views plugins can receive the current user in order to not need dependency
    * injection.
    *
    * @return \Drupal\Core\Session\AccountInterface
