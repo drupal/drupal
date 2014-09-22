@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DeriverInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\views\Views;
 
 /**
@@ -15,19 +15,7 @@ use Drupal\views\Views;
  *
  * @see \Drupal\views\Plugin\Menu\ViewsMenuLink
  */
-class ViewsMenuLink implements DeriverInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
-    if (!isset($this->derivatives)) {
-      $this->getDerivativeDefinitions($base_plugin_definition);
-    }
-    if (isset($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
-  }
+class ViewsMenuLink extends DeriverBase {
 
   /**
    * {@inheritdoc}
