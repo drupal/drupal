@@ -38,6 +38,7 @@ class CommentFieldFilterTest extends CommentTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->drupalLogin($this->drupalCreateUser(['access comments']));
 
     // Add two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();
