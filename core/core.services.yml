@@ -203,30 +203,25 @@ services:
     parent: container.trait
     tags:
       - { name: service_collector, tag: logger, call: addLogger }
-  logger.channel.default:
+  logger.channel_base:
+    abstract: true
     class: Drupal\Core\Logger\LoggerChannel
     factory_method: get
     factory_service: logger.factory
+  logger.channel.default:
+    parent: logger.channel_base
     arguments: ['system']
   logger.channel.php:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['php']
   logger.channel.image:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['image']
   logger.channel.cron:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['cron']
   logger.channel.form:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['form']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser

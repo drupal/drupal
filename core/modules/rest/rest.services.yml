@@ -28,7 +28,5 @@ services:
     tags:
       - { name: 'event_subscriber' }
   logger.channel.rest:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['rest']

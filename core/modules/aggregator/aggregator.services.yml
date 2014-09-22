@@ -12,7 +12,5 @@ services:
     class: Drupal\aggregator\ItemsImporter
     arguments: ['@config.factory', '@plugin.manager.aggregator.fetcher', '@plugin.manager.aggregator.parser', '@plugin.manager.aggregator.processor', '@logger.channel.aggregator']
   logger.channel.aggregator:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    parent: logger.channel_base
     arguments: ['aggregator']
