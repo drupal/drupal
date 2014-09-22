@@ -1,0 +1,18 @@
+{
+    "name": "drupal/plugin",
+    "description": "Base building block for a scalable and extensible plug-in system for PHP components and application framework extensions.",
+    "keywords": ["drupal", "plugin", "plugins"],
+    "homepage": "https://drupal.org/project/drupal",
+    "license": "GPL-2.0+",
+    "require": {
+        "php": ">=5.4.2",
+    },
+    "autoload": {
+        "psr-0": {
+            "Drupal\\Component\\Plugin\\": ""
+        }
+    }
+    "suggest": {
+        "symfony/validator": "Leveraged in the use of context aware plugins."
+    }
+}
