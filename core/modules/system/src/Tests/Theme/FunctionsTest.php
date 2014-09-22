@@ -382,4 +382,17 @@ class FunctionsTest extends WebTestBase {
     $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, '"First child link" link not found.');
     $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, '"Third child link" link not found.');
   }
+
+  /**
+   * Tests theme_image().
+   */
+  function testImage() {
+    // Test that data URIs work with theme_image().
+    $variables = array();
+    $variables['uri'] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+    $variables['alt'] = 'Data URI image of a red dot';
+    $expected = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Data URI image of a red dot" />' . "\n";
+    $this->assertThemeOutput('image', $variables, $expected);
+  }
+
 }

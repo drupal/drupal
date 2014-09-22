@@ -126,6 +126,7 @@ class DownloadTest extends FileManagedTestBase {
       $this->checkUrl('public', '', $basename, $base_path . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . $basename_encoded);
       $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);
     }
+    $this->assertEqual(file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', t('Generated URL matches expected URL.'));
   }
 
   /**
