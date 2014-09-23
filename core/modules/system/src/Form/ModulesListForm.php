@@ -210,6 +210,12 @@ class ModulesListForm extends FormBase {
       );
     }
 
+    // If testing modules are shown, collapse the corresponding package by
+    // default.
+    if (isset($form['modules']['Testing'])) {
+      $form['modules']['Testing']['#open'] = FALSE;
+    }
+
     // Lastly, sort all packages by title.
     uasort($form['modules'], array('\Drupal\Component\Utility\SortArray', 'sortByTitleProperty'));
 
