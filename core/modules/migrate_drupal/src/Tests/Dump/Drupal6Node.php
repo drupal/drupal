@@ -183,6 +183,23 @@ class Drupal6Node extends Drupal6DumpBase {
         'tnid' => 0,
         'translate' => 0,
       ))
+      ->values(array(
+        'nid' => 3,
+        'vid' => 4,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => 'Test planet title 3',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
       ->execute();
     $this->createTable('node_revisions', array(
       'description' => 'Stores information about each saved version of a {node}.',
@@ -285,6 +302,17 @@ class Drupal6Node extends Drupal6DumpBase {
         'timestamp' => 1390095701,
         'format' => 1,
       ))
+      ->values(array(
+        'nid' => 3,
+        'vid' => 4,
+        'uid' => 1,
+        'title' => 'Test page title rev 4',
+        'body' => 'test page body rev 4',
+        'teaser' => 'test page teaser rev 4',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
       ->execute();
 
     $this->createTable('content_type_story', array(
@@ -343,5 +371,36 @@ class Drupal6Node extends Drupal6DumpBase {
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);
+
+    $this->createTable('content_type_test_planet', array(
+      'description' => 'The content type join table.',
+      'fields' => array(
+        'nid' => array(
+          'description' => 'The {node} this version belongs to.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'vid' => array(
+          'description' => 'The primary identifier for this version.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('vid'),
+    ));
+
+    $this->database->insert('content_type_test_planet')->fields(
+      array(
+        'nid',
+        'vid',
+      ))
+      ->values(array(
+        'nid' => 3,
+        'vid' => 4,
+      ))
+      ->execute();
   }
 }

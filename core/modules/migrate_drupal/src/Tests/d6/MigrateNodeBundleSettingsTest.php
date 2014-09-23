@@ -32,6 +32,7 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupalTestBase {
 
     // Setup the bundles.
     entity_create('node_type', array('type' => 'test_page'))->save();
+    entity_create('node_type', array('type' => 'test_planet'))->save();
     entity_create('node_type', array('type' => 'test_story'))->save();
     entity_create('node_type', array('type' => 'test_event'))->save();
     entity_create('node_type', array('type' => 'story'))->save();

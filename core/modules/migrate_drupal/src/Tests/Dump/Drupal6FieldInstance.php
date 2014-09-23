@@ -754,6 +754,42 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       )),
       'description' => 'An example text field using a single on/off checkbox.',
     ))
+    ->values(array(
+      'field_name' => 'field_multivalue',
+      'type_name' => 'test_planet',
+      'weight' => 2,
+      'label' => 'Decimal Field',
+      'widget_type' => 'number',
+      'widget_settings' => serialize(array(
+        'default_value' => array(
+          0 => array(
+            'value' => '',
+            '_error_element' => 'default_value_widget][field_multivalue][0][value',
+          ),
+        ),
+        'default_value_php' => NULL,
+      )),
+      'display_settings' => serialize(array(
+        'weight' => 2,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'default',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'default',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'default',
+          'exclude' => 0,
+        ),
+      )),
+      'description' => 'An example multi-valued decimal field.',
+    ))
     ->execute();
 
     // Create the field table.
@@ -1036,6 +1072,16 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
       'db_columns' => 'a:0:{}',
       'active' => 1,
     ))
+    ->values(array(
+      'field_name' => 'field_multivalue',
+      'module' => 'number',
+      'type' => 'number_decimal',
+      'global_settings' => 'a:9:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:7:"decimal";s:1:".";}',
+      'multiple' => 1,
+      'db_storage' => 0,
+      'db_columns' => 'a:1:{s:5:"value";a:5:{s:4:"type";s:7:"numeric";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:8:"not null";b:0;s:8:"sortable";b:1;}}',
+      'active' => 1,
+    ))
     ->execute();
 
     $this->createTable('content_field_test', array(
@@ -1083,7 +1129,6 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
           'field_test_format' => 1,
         ))
       ->execute();
-
 
     $this->createTable('content_field_test_two', array(
       'description' => 'Table for field_test_two',
@@ -1143,6 +1188,57 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
       'field_test_two_value' => 20,
       'delta' => 1,
       'field_test_two_format' => 1,
+    ))
+    ->execute();
+
+    $this->createTable('content_field_multivalue', array(
+      'description' => 'Table for field_multivalue',
+      'fields' => array(
+        'vid' => array(
+          'description' => 'The primary identifier for this version.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'nid' => array(
+          'description' => 'The {node} this version belongs to.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'field_multivalue_value' => array(
+          'type' => 'numeric',
+          'precision' => '10',
+          'scale' => '2',
+          'not null' => false,
+        ),
+        'delta' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'primary key' => array('vid', 'delta'),
+    ));
+    $this->database->insert('content_field_multivalue')->fields(array(
+      'vid',
+      'nid',
+      'field_multivalue_value',
+      'delta',
+    ))
+    ->values(array(
+      'vid' => 4,
+      'nid' => 3,
+      'field_multivalue_value' => 33,
+      'delta' => 0,
+    ))
+    ->values(array(
+      'vid' => 4,
+      'nid' => 3,
+      'field_multivalue_value' => 44,
+      'delta' => 1,
     ))
     ->execute();
     $this->setModuleVersion('content', '6001');

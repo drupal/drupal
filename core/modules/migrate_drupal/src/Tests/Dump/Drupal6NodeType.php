@@ -66,6 +66,22 @@ class Drupal6NodeType extends Drupal6DumpBase {
         'orig_type' => 'story',
       ))
       ->values(array(
+        'type' => 'test_planet',
+        'name' => 'Migrate test planet',
+        'module' => 'node',
+        'description' => "A <em>story</em>, similar in form to a <em>page</em>, is ideal for creating and displaying content that informs or engages website visitors. Press releases, site announcements, and informal blog-like entries may all be created with a <em>story</em> entry. By default, a <em>story</em> entry is automatically featured on the site's initial home page, and provides the ability to post comments.",
+        'help' => '',
+        'has_title' => 1,
+        'title_label' => 'Title',
+        'has_body' => 0,
+        'body_label' => 'Body',
+        'min_word_count' => 0,
+        'custom' => 1,
+        'modified' => 1,
+        'locked' => 0,
+        'orig_type' => 'test_planet',
+      ))
+      ->values(array(
         'type' => 'test_event',
         'name' => 'Migrate test event',
         'module' => 'node',
@@ -130,6 +146,13 @@ class Drupal6NodeType extends Drupal6DumpBase {
       )),
     ))
     ->values(array(
+      'name' => 'node_options_test_planet',
+      'value' => serialize(array(
+        0 => 'sticky',
+        1 => 'revision',
+      )),
+    ))
+    ->values(array(
       'name' => 'theme_settings',
       'value' => serialize(array(
         'toggle_logo' => 1,
@@ -153,6 +176,7 @@ class Drupal6NodeType extends Drupal6DumpBase {
         'toggle_node_info_test_page' => 1,
         'toggle_node_info_test_story' => 1,
         'toggle_node_info_test_event' => 1,
+        'toggle_node_info_test_planet' => 1,
       )),
     ))
     ->execute();
