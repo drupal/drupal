@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
+use Drupal\migrate\MigrateException;
 
 /**
  * Every migration that uses this destination must have an optional
@@ -32,6 +33,7 @@ class EntityFile extends EntityContentBase {
       'source_path_property' => 'filepath',
       'destination_path_property' => 'uri',
       'move' => FALSE,
+      'urlencode' => FALSE,
     );
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager);
   }
@@ -50,14 +52,54 @@ class EntityFile extends EntityContentBase {
       }
     }
     $dirname = drupal_dirname($destination);
-    file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
+    if (!file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
+      throw new MigrateException(t('Could not create directory %dirname',
+        array('%dirname' => $dirname)));
+    }
     if ($this->configuration['move']) {
-      file_unmanaged_move($source, $destination, $replace);
+      $copied = file_unmanaged_move($source, $destination, $replace);
     }
     else {
-      file_unmanaged_copy($source, $destination, $replace);
+      // Determine whether we can perform this operation based on overwrite rules.
+      $original_destination = $destination;
+      $destination = file_destination($destination, $replace);
+      if ($destination === FALSE) {
+        throw new MigrateException(t('File %file could not be copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $source, '%destination' => $original_destination)));
+      }
+      $source = $this->urlencode($source);
+      $copied = copy($source, $destination);
     }
-    return parent::import($row, $old_destination_id_values);
+    if ($copied) {
+      return parent::import($row, $old_destination_id_values);
+    }
+    else {
+      throw new MigrateException(t('File %source could not be copied to %destination.', array('%source' => $source, '%destination' => $destination)));
+    }
+  }
+
+  /**
+   * Urlencode all the components of a remote filename.
+   *
+   * @param string $filename
+   *   The filename of the file to be urlencoded.
+   *
+   * @return string
+   *   The urlencoded filename.
+   */
+  protected function urlencode($filename) {
+    // Only apply to a full URL
+    if ($this->configuration['urlencode'] && strpos($filename, '://')) {
+      $components = explode('/', $filename);
+      foreach ($components as $key => $component) {
+        $components[$key] = rawurlencode($component);
+      }
+      $filename = implode('/', $components);
+      // Actually, we don't want certain characters encoded
+      $filename = str_replace('%3A', ':', $filename);
+      $filename = str_replace('%3F', '?', $filename);
+      $filename = str_replace('%26', '&', $filename);
+    }
+    return $filename;
   }
 
 }
