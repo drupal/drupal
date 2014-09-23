@@ -40,8 +40,8 @@ class Name extends InOperator {
     $default_value = implode(', ', $values);
     $form['value'] = array(
       '#type' => 'textfield',
-      '#title' => t('Usernames'),
-      '#description' => t('Enter a comma separated list of user names.'),
+      '#title' => $this->t('Usernames'),
+      '#description' => $this->t('Enter a comma separated list of user names.'),
       '#default_value' => $default_value,
       '#autocomplete_route_name' => 'user.autocomplete_anonymous',
     );

@@ -36,8 +36,8 @@ class Extension extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['extension_detect_tar'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Detect if tar is part of the extension'),
-      '#description' => t("See if the previous extension is '.tar' and if so, add that, so we see 'tar.gz' or 'tar.bz2' instead of just 'gz'."),
+      '#title' => $this->t('Detect if tar is part of the extension'),
+      '#description' => $this->t("See if the previous extension is '.tar' and if so, add that, so we see 'tar.gz' or 'tar.bz2' instead of just 'gz'."),
       '#default_value' => $this->options['extension_detect_tar'],
     );
   }

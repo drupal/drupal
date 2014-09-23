@@ -55,12 +55,12 @@ class Rss extends RowPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['view_mode'] = array(
       '#type' => 'select',
-      '#title' => t('Display type'),
+      '#title' => $this->t('Display type'),
       '#options' => array(
-        'fulltext' => t('Full text'),
-        'teaser' => t('Title plus teaser'),
-        'title' => t('Title only'),
-        'default' => t('Use default RSS settings'),
+        'fulltext' => $this->t('Full text'),
+        'teaser' => $this->t('Title plus teaser'),
+        'title' => $this->t('Title only'),
+        'default' => $this->t('Use default RSS settings'),
       ),
       '#default_value' => $this->options['view_mode'],
     );

@@ -44,18 +44,18 @@ class ContextualLinks extends FieldPluginBase {
     $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
     $form['fields'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Fields'),
-      '#description' => t('Fields to be included as contextual links.'),
+      '#title' => $this->t('Fields'),
+      '#description' => $this->t('Fields to be included as contextual links.'),
       '#options' => $field_options,
       '#default_value' => $this->options['fields'],
     );
     $form['destination'] = array(
       '#type' => 'select',
-      '#title' => t('Include destination'),
-      '#description' => t('Include a "destination" parameter in the link to return the user to the original view upon completing the contextual action.'),
+      '#title' => $this->t('Include destination'),
+      '#description' => $this->t('Include a "destination" parameter in the link to return the user to the original view upon completing the contextual action.'),
       '#options' => array(
-        '0' => t('No'),
-        '1' => t('Yes'),
+        '0' => $this->t('No'),
+        '1' => $this->t('Yes'),
       ),
       '#default_value' => $this->options['destination'],
     );

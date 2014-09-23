@@ -49,7 +49,7 @@ class Rss extends RowPluginBase {
 
     $form['view_mode'] = array(
       '#type' => 'select',
-      '#title' => t('Display type'),
+      '#title' => $this->t('Display type'),
       '#options' => $this->buildOptionsForm_summary_options(),
       '#default_value' => $this->options['view_mode'],
     );
@@ -64,8 +64,8 @@ class Rss extends RowPluginBase {
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];
     }
-    $options['title'] = t('Title only');
-    $options['default'] = t('Use site default RSS settings');
+    $options['title'] = $this->t('Title only');
+    $options['default'] = $this->t('Use site default RSS settings');
     return $options;
   }
 

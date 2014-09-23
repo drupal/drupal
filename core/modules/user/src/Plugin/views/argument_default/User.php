@@ -40,7 +40,7 @@ class User extends ArgumentDefaultPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['user'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Also look for a node and use the node author'),
+      '#title' => $this->t('Also look for a node and use the node author'),
       '#default_value' => $this->options['user'],
     );
   }

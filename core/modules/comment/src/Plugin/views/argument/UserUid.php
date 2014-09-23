@@ -62,7 +62,7 @@ class UserUid extends ArgumentPluginBase {
       $title = $this->database->query('SELECT name FROM {users_field_data} WHERE uid = :uid AND default_langcode = 1', array(':uid' => $this->argument))->fetchField();
     }
     if (empty($title)) {
-      return t('No user');
+      return $this->t('No user');
     }
 
     return String::checkPlain($title);
@@ -108,7 +108,7 @@ class UserUid extends ArgumentPluginBase {
    * {@inheritdoc}
    */
   public function getSortName() {
-    return t('Numerical', array(), array('context' => 'Sort order'));
+    return $this->t('Numerical', array(), array('context' => 'Sort order'));
   }
 
 }

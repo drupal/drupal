@@ -55,7 +55,7 @@ class FieldList extends Numeric {
     parent::buildOptionsForm($form, $form_state);
 
     $form['summary']['human'] = array(
-      '#title' => t('Display list value as human readable'),
+      '#title' => $this->t('Display list value as human readable'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['summary']['human'],
       '#states' => array(

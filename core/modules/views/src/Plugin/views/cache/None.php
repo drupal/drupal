@@ -24,7 +24,7 @@ class None extends CachePluginBase {
   }
 
   public function summaryTitle() {
-    return t('None');
+    return $this->t('None');
   }
 
 

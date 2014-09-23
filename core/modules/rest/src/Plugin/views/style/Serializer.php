@@ -94,8 +94,8 @@ class Serializer extends StylePluginBase {
 
     $form['formats'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Accepted request formats'),
-      '#description' => t('Request formats that will be allowed in responses. If none are selected all formats will be allowed.'),
+      '#title' => $this->t('Accepted request formats'),
+      '#description' => $this->t('Request formats that will be allowed in responses. If none are selected all formats will be allowed.'),
       '#options' => array_combine($this->formats, $this->formats),
       '#default_value' => $this->options['formats'],
     );

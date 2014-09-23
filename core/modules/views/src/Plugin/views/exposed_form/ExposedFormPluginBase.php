@@ -57,21 +57,21 @@ abstract class ExposedFormPluginBase extends PluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['submit_button'] = array(
       '#type' => 'textfield',
-      '#title' => t('Submit button text'),
+      '#title' => $this->t('Submit button text'),
       '#default_value' => $this->options['submit_button'],
       '#required' => TRUE,
     );
 
     $form['reset_button'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Include reset button (resets all applied exposed filters)'),
+      '#title' => $this->t('Include reset button (resets all applied exposed filters)'),
       '#default_value' => $this->options['reset_button'],
     );
 
     $form['reset_button_label'] = array(
      '#type' => 'textfield',
-      '#title' => t('Reset button label'),
-      '#description' => t('Text to display in the reset button of the exposed form.'),
+      '#title' => $this->t('Reset button label'),
+      '#description' => $this->t('Text to display in the reset button of the exposed form.'),
       '#default_value' => $this->options['reset_button_label'],
       '#required' => TRUE,
       '#states' => array(
@@ -83,21 +83,21 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $form['exposed_sorts_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Exposed sorts label'),
+      '#title' => $this->t('Exposed sorts label'),
       '#default_value' => $this->options['exposed_sorts_label'],
       '#required' => TRUE,
     );
 
     $form['expose_sort_order'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow people to choose the sort order'),
-      '#description' => t('If sort order is not exposed, the sort criteria settings for each sort will determine its order.'),
+      '#title' => $this->t('Allow people to choose the sort order'),
+      '#description' => $this->t('If sort order is not exposed, the sort criteria settings for each sort will determine its order.'),
       '#default_value' => $this->options['expose_sort_order'],
     );
 
     $form['sort_asc_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label for ascending sort'),
+      '#title' => $this->t('Label for ascending sort'),
       '#default_value' => $this->options['sort_asc_label'],
       '#required' => TRUE,
       '#states' => array(
@@ -109,7 +109,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
     $form['sort_desc_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label for descending sort'),
+      '#title' => $this->t('Label for descending sort'),
       '#default_value' => $this->options['sort_desc_label'],
       '#required' => TRUE,
       '#states' => array(
@@ -244,7 +244,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
         $form['sort_order'] = array(
           '#type' => 'select',
           '#options' => $sort_order,
-          '#title' => t('Order', array(), array('context' => 'Sort order')),
+          '#title' => $this->t('Order', array(), array('context' => 'Sort order')),
           '#default_value' => $default_sort_order,
         );
       }

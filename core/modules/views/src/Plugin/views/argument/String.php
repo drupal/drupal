@@ -60,16 +60,16 @@ class String extends ArgumentPluginBase {
 
     $form['glossary'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Glossary mode'),
-      '#description' => t('Glossary mode applies a limit to the number of characters used in the filter value, which allows the summary view to act as a glossary.'),
+      '#title' => $this->t('Glossary mode'),
+      '#description' => $this->t('Glossary mode applies a limit to the number of characters used in the filter value, which allows the summary view to act as a glossary.'),
       '#default_value' => $this->options['glossary'],
       '#fieldset' => 'more',
     );
 
     $form['limit'] = array(
       '#type' => 'textfield',
-      '#title' => t('Character limit'),
-      '#description' => t('How many characters of the filter value to filter against. If set to 1, all fields starting with the first letter in the filter value would be matched.'),
+      '#title' => $this->t('Character limit'),
+      '#description' => $this->t('How many characters of the filter value to filter against. If set to 1, all fields starting with the first letter in the filter value would be matched.'),
       '#default_value' => $this->options['limit'],
       '#states' => array(
         'visible' => array(
@@ -81,14 +81,14 @@ class String extends ArgumentPluginBase {
 
     $form['case'] = array(
       '#type' => 'select',
-      '#title' => t('Case'),
-      '#description' => t('When printing the title and summary, how to transform the case of the filter value.'),
+      '#title' => $this->t('Case'),
+      '#description' => $this->t('When printing the title and summary, how to transform the case of the filter value.'),
       '#options' => array(
-        'none' => t('No transform'),
-        'upper' => t('Upper case'),
-        'lower' => t('Lower case'),
-        'ucfirst' => t('Capitalize first letter'),
-        'ucwords' => t('Capitalize each word'),
+        'none' => $this->t('No transform'),
+        'upper' => $this->t('Upper case'),
+        'lower' => $this->t('Lower case'),
+        'ucfirst' => $this->t('Capitalize first letter'),
+        'ucwords' => $this->t('Capitalize each word'),
       ),
       '#default_value' => $this->options['case'],
       '#fieldset' => 'more',
@@ -96,14 +96,14 @@ class String extends ArgumentPluginBase {
 
     $form['path_case'] = array(
       '#type' => 'select',
-      '#title' => t('Case in path'),
-      '#description' => t('When printing url paths, how to transform the case of the filter value. Do not use this unless with Postgres as it uses case sensitive comparisons.'),
+      '#title' => $this->t('Case in path'),
+      '#description' => $this->t('When printing url paths, how to transform the case of the filter value. Do not use this unless with Postgres as it uses case sensitive comparisons.'),
       '#options' => array(
-        'none' => t('No transform'),
-        'upper' => t('Upper case'),
-        'lower' => t('Lower case'),
-        'ucfirst' => t('Capitalize first letter'),
-        'ucwords' => t('Capitalize each word'),
+        'none' => $this->t('No transform'),
+        'upper' => $this->t('Upper case'),
+        'lower' => $this->t('Lower case'),
+        'ucfirst' => $this->t('Capitalize first letter'),
+        'ucwords' => $this->t('Capitalize each word'),
       ),
       '#default_value' => $this->options['path_case'],
       '#fieldset' => 'more',
@@ -111,7 +111,7 @@ class String extends ArgumentPluginBase {
 
     $form['transform_dash'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Transform spaces to dashes in URL'),
+      '#title' => $this->t('Transform spaces to dashes in URL'),
       '#default_value' => $this->options['transform_dash'],
       '#fieldset' => 'more',
     );
@@ -119,15 +119,15 @@ class String extends ArgumentPluginBase {
     if (!empty($this->definition['many to one'])) {
       $form['add_table'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Allow multiple filter values to work together'),
-        '#description' => t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
+        '#title' => $this->t('Allow multiple filter values to work together'),
+        '#description' => $this->t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
         '#default_value' => !empty($this->options['add_table']),
         '#fieldset' => 'more',
       );
 
       $form['require_value'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Do not display items with no value in summary'),
+        '#title' => $this->t('Do not display items with no value in summary'),
         '#default_value' => !empty($this->options['require_value']),
         '#fieldset' => 'more',
       );
@@ -136,8 +136,8 @@ class String extends ArgumentPluginBase {
     // allow + for or, , for and
     $form['break_phrase'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow multiple values'),
-      '#description' => t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
+      '#title' => $this->t('Allow multiple values'),
+      '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
       '#fieldset' => 'more',
     );
@@ -253,7 +253,7 @@ class String extends ArgumentPluginBase {
    * {@inheritdoc}
    */
   public function getSortName() {
-    return t('Alphabetical', array(), array('context' => 'Sort order'));
+    return $this->t('Alphabetical', array(), array('context' => 'Sort order'));
   }
 
   function title() {
@@ -271,11 +271,11 @@ class String extends ArgumentPluginBase {
     }
 
     if (empty($this->value)) {
-      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : t('Uncategorized');
+      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }
 
     if ($this->value === array(-1)) {
-      return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
+      return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : $this->t('Invalid input');
     }
 
     return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());

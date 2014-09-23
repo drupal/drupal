@@ -31,7 +31,7 @@ class UserBulkForm extends BulkForm {
       foreach ($this->view->result as $row_index => $result) {
         $account = $result->_entity;
         if ($account instanceof UserInterface) {
-          $form[$this->options['id']][$row_index]['#title'] = t('Update the user %name', array('%name' => $account->label()));
+          $form[$this->options['id']][$row_index]['#title'] = $this->t('Update the user %name', array('%name' => $account->label()));
         }
       }
     }
@@ -41,7 +41,7 @@ class UserBulkForm extends BulkForm {
    * {@inheritdoc}
    */
   protected function emptySelectedMessage() {
-    return t('No users selected.');
+    return $this->t('No users selected.');
   }
 
 }

@@ -26,7 +26,7 @@ class Current extends BooleanOperator {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->value_value = t('Is the logged in user');
+    $this->value_value = $this->t('Is the logged in user');
   }
 
   public function query() {

@@ -36,7 +36,7 @@ abstract class AccessPluginBase extends PluginBase {
    * {@inheritdoc}
    */
   public function summaryTitle() {
-    return t('Unknown');
+    return $this->t('Unknown');
   }
 
   /**

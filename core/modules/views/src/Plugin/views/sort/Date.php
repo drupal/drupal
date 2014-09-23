@@ -32,16 +32,16 @@ class Date extends SortPluginBase {
 
     $form['granularity'] = array(
       '#type' => 'radios',
-      '#title' => t('Granularity'),
+      '#title' => $this->t('Granularity'),
       '#options' => array(
-        'second' => t('Second'),
-        'minute' => t('Minute'),
-        'hour'   => t('Hour'),
-        'day'    => t('Day'),
-        'month'  => t('Month'),
-        'year'   => t('Year'),
+        'second' => $this->t('Second'),
+        'minute' => $this->t('Minute'),
+        'hour'   => $this->t('Hour'),
+        'day'    => $this->t('Day'),
+        'month'  => $this->t('Month'),
+        'year'   => $this->t('Year'),
       ),
-      '#description' => t('The granularity is the smallest unit to use when determining whether two dates are the same; for example, if the granularity is "Year" then all dates in 1999, regardless of when they fall in 1999, will be considered the same date.'),
+      '#description' => $this->t('The granularity is the smallest unit to use when determining whether two dates are the same; for example, if the granularity is "Year" then all dates in 1999, regardless of when they fall in 1999, will be considered the same date.'),
       '#default_value' => $this->options['granularity'],
     );
   }

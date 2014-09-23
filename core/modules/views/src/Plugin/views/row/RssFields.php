@@ -44,67 +44,67 @@ class RssFields extends RowPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $initial_labels = array('' => t('- None -'));
+    $initial_labels = array('' => $this->t('- None -'));
     $view_fields_labels = $this->displayHandler->getFieldLabels();
     $view_fields_labels = array_merge($initial_labels, $view_fields_labels);
 
     $form['title_field'] = array(
       '#type' => 'select',
-      '#title' => t('Title field'),
-      '#description' => t('The field that is going to be used as the RSS item title for each row.'),
+      '#title' => $this->t('Title field'),
+      '#description' => $this->t('The field that is going to be used as the RSS item title for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['title_field'],
       '#required' => TRUE,
     );
     $form['link_field'] = array(
       '#type' => 'select',
-      '#title' => t('Link field'),
-      '#description' => t('The field that is going to be used as the RSS item link for each row. This must be a drupal relative path.'),
+      '#title' => $this->t('Link field'),
+      '#description' => $this->t('The field that is going to be used as the RSS item link for each row. This must be a drupal relative path.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['link_field'],
       '#required' => TRUE,
     );
     $form['description_field'] = array(
       '#type' => 'select',
-      '#title' => t('Description field'),
-      '#description' => t('The field that is going to be used as the RSS item description for each row.'),
+      '#title' => $this->t('Description field'),
+      '#description' => $this->t('The field that is going to be used as the RSS item description for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['description_field'],
       '#required' => TRUE,
     );
     $form['creator_field'] = array(
       '#type' => 'select',
-      '#title' => t('Creator field'),
-      '#description' => t('The field that is going to be used as the RSS item creator for each row.'),
+      '#title' => $this->t('Creator field'),
+      '#description' => $this->t('The field that is going to be used as the RSS item creator for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['creator_field'],
       '#required' => TRUE,
     );
     $form['date_field'] = array(
       '#type' => 'select',
-      '#title' => t('Publication date field'),
-      '#description' => t('The field that is going to be used as the RSS item pubDate for each row. It needs to be in RFC 2822 format.'),
+      '#title' => $this->t('Publication date field'),
+      '#description' => $this->t('The field that is going to be used as the RSS item pubDate for each row. It needs to be in RFC 2822 format.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['date_field'],
       '#required' => TRUE,
     );
     $form['guid_field_options'] = array(
       '#type' => 'details',
-      '#title' => t('GUID settings'),
+      '#title' => $this->t('GUID settings'),
       '#open' => TRUE,
     );
     $form['guid_field_options']['guid_field'] = array(
       '#type' => 'select',
-      '#title' => t('GUID field'),
-      '#description' => t('The globally unique identifier of the RSS item.'),
+      '#title' => $this->t('GUID field'),
+      '#description' => $this->t('The globally unique identifier of the RSS item.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['guid_field_options']['guid_field'],
       '#required' => TRUE,
     );
     $form['guid_field_options']['guid_field_is_permalink'] = array(
       '#type' => 'checkbox',
-      '#title' => t('GUID is permalink'),
-      '#description' => t('The RSS item GUID is a permalink.'),
+      '#title' => $this->t('GUID is permalink'),
+      '#description' => $this->t('The RSS item GUID is a permalink.'),
       '#default_value' => $this->options['guid_field_options']['guid_field_is_permalink'],
     );
   }
@@ -114,13 +114,13 @@ class RssFields extends RowPluginBase {
     $required_options = array('title_field', 'link_field', 'description_field', 'creator_field', 'date_field');
     foreach ($required_options as $required_option) {
       if (empty($this->options[$required_option])) {
-        $errors[] = t('Row style plugin requires specifying which views fields to use for RSS item.');
+        $errors[] = $this->t('Row style plugin requires specifying which views fields to use for RSS item.');
         break;
       }
     }
     // Once more for guid.
     if (empty($this->options['guid_field_options']['guid_field'])) {
-      $errors[] = t('Row style plugin requires specifying which views fields to use for RSS item.');
+      $errors[] = $this->t('Row style plugin requires specifying which views fields to use for RSS item.');
     }
     return $errors;
   }

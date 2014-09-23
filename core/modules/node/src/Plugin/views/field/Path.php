@@ -42,9 +42,9 @@ class Path extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['absolute'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use absolute link (begins with "http://")'),
+      '#title' => $this->t('Use absolute link (begins with "http://")'),
       '#default_value' => $this->options['absolute'],
-      '#description' => t('Enable this option to output an absolute link. Required if you want to use the path as a link destination (as in "output this field as a link" above).'),
+      '#description' => $this->t('Enable this option to output an absolute link. Required if you want to use the path as a link destination (as in "output this field as a link" above).'),
       '#fieldset' => 'alter',
     );
   }

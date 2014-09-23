@@ -209,48 +209,48 @@ class Table extends StylePluginBase {
     $handlers = $this->displayHandler->getHandlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(
-        '#markup' => '<div class="messages messages--error">' . t('You need at least one field before you can configure your table settings') . '</div>',
+        '#markup' => '<div class="messages messages--error">' . $this->t('You need at least one field before you can configure your table settings') . '</div>',
       );
       return;
     }
 
     $form['override'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Override normal sorting if click sorting is used'),
+      '#title' => $this->t('Override normal sorting if click sorting is used'),
       '#default_value' => !empty($this->options['override']),
     );
 
     $form['sticky'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enable Drupal style "sticky" table headers (Javascript)'),
+      '#title' => $this->t('Enable Drupal style "sticky" table headers (Javascript)'),
       '#default_value' => !empty($this->options['sticky']),
-      '#description' => t('(Sticky header effects will not be active for preview below, only on live output.)'),
+      '#description' => $this->t('(Sticky header effects will not be active for preview below, only on live output.)'),
     );
 
     $form['caption'] = array(
       '#type' => 'textfield',
-      '#title' => t('Caption for the table'),
-      '#description' => t('A title which is semantically associated to your table for increased accessibility.'),
+      '#title' => $this->t('Caption for the table'),
+      '#description' => $this->t('A title which is semantically associated to your table for increased accessibility.'),
       '#default_value' => $this->options['caption'],
       '#maxlength' => 255,
     );
 
     $form['accessibility_details'] = array(
       '#type' => 'details',
-      '#title' => t('Table details'),
+      '#title' => $this->t('Table details'),
     );
 
     $form['summary'] = array(
-      '#title' => t('Summary title'),
+      '#title' => $this->t('Summary title'),
       '#type' => 'textfield',
       '#default_value' => $this->options['summary'],
       '#fieldset' => 'accessibility_details',
     );
 
     $form['description'] = array(
-      '#title' => t('Table description'),
+      '#title' => $this->t('Table description'),
       '#type' => 'textarea',
-      '#description' => t('Provide additional details about the table to increase accessibility.'),
+      '#description' => $this->t('Provide additional details about the table to increase accessibility.'),
       '#default_value' => $this->options['description'],
       '#states' => array(
         'visible' => array(
@@ -283,7 +283,7 @@ class Table extends StylePluginBase {
       $column_selector = ':input[name="style_options[columns][' . $field . ']"]';
 
       $form['columns'][$field] = array(
-        '#title' => t('Columns for @field', array('@field' => $field)),
+        '#title' => $this->t('Columns for @field', array('@field' => $field)),
         '#title_display' => 'invisible',
         '#type' => 'select',
         '#options' => $field_names,
@@ -291,7 +291,7 @@ class Table extends StylePluginBase {
       );
       if ($handlers[$field]->clickSortable()) {
         $form['info'][$field]['sortable'] = array(
-          '#title' => t('Sortable for @field', array('@field' => $field)),
+          '#title' => $this->t('Sortable for @field', array('@field' => $field)),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => !empty($this->options['info'][$field]['sortable']),
@@ -302,10 +302,10 @@ class Table extends StylePluginBase {
           ),
         );
         $form['info'][$field]['default_sort_order'] = array(
-          '#title' => t('Default sort order for @field', array('@field' => $field)),
+          '#title' => $this->t('Default sort order for @field', array('@field' => $field)),
           '#title_display' => 'invisible',
           '#type' => 'select',
-          '#options' => array('asc' => t('Ascending'), 'desc' => t('Descending')),
+          '#options' => array('asc' => $this->t('Ascending'), 'desc' => $this->t('Descending')),
           '#default_value' => !empty($this->options['info'][$field]['default_sort_order']) ? $this->options['info'][$field]['default_sort_order'] : 'asc',
           '#states' => array(
             'visible' => array(
@@ -317,7 +317,7 @@ class Table extends StylePluginBase {
         // Provide an ID so we can have such things.
         $radio_id = drupal_html_id('edit-default-' . $field);
         $form['default'][$field] = array(
-          '#title' => t('Default sort for @field', array('@field' => $field)),
+          '#title' => $this->t('Default sort for @field', array('@field' => $field)),
           '#title_display' => 'invisible',
           '#type' => 'radio',
           '#return_value' => $field,
@@ -334,15 +334,15 @@ class Table extends StylePluginBase {
         );
       }
       $form['info'][$field]['align'] = array(
-        '#title' => t('Alignment for @field', array('@field' => $field)),
+        '#title' => $this->t('Alignment for @field', array('@field' => $field)),
         '#title_display' => 'invisible',
         '#type' => 'select',
         '#default_value' => !empty($this->options['info'][$field]['align']) ? $this->options['info'][$field]['align'] : '',
         '#options' => array(
-          '' => t('None'),
-          'views-align-left' => t('Left', array(), array('context' => 'Text alignment')),
-          'views-align-center' => t('Center', array(), array('context' => 'Text alignment')),
-          'views-align-right' => t('Right', array(), array('context' => 'Text alignment')),
+          '' => $this->t('None'),
+          'views-align-left' => $this->t('Left', array(), array('context' => 'Text alignment')),
+          'views-align-center' => $this->t('Center', array(), array('context' => 'Text alignment')),
+          'views-align-right' => $this->t('Right', array(), array('context' => 'Text alignment')),
           ),
         '#states' => array(
           'visible' => array(
@@ -351,7 +351,7 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['separator'] = array(
-        '#title' => t('Separator for @field', array('@field' => $field)),
+        '#title' => $this->t('Separator for @field', array('@field' => $field)),
         '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#size' => 10,
@@ -363,7 +363,7 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['empty_column'] = array(
-        '#title' => t('Hide empty column for @field', array('@field' => $field)),
+        '#title' => $this->t('Hide empty column for @field', array('@field' => $field)),
         '#title_display' => 'invisible',
         '#type' => 'checkbox',
         '#default_value' => isset($this->options['info'][$field]['empty_column']) ? $this->options['info'][$field]['empty_column'] : FALSE,
@@ -374,11 +374,11 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['responsive'] = array(
-        '#title' => t('Responsive setting for @field', array('@field' => $field)),
+        '#title' => $this->t('Responsive setting for @field', array('@field' => $field)),
         '#title_display' => 'invisible',
         '#type' => 'select',
         '#default_value' => isset($this->options['info'][$field]['responsive']) ? $this->options['info'][$field]['responsive'] : '',
-        '#options' => array('' => t('High'), RESPONSIVE_PRIORITY_MEDIUM => t('Medium'), RESPONSIVE_PRIORITY_LOW => t('Low')),
+        '#options' => array('' => $this->t('High'), RESPONSIVE_PRIORITY_MEDIUM => $this->t('Medium'), RESPONSIVE_PRIORITY_LOW => $this->t('Low')),
         '#states' => array(
           'visible' => array(
             $column_selector => array('value' => $field),
@@ -394,7 +394,7 @@ class Table extends StylePluginBase {
 
     // Provide a radio for no default sort
     $form['default'][-1] = array(
-      '#title' => t('No default sort'),
+      '#title' => $this->t('No default sort'),
       '#title_display' => 'invisible',
       '#type' => 'radio',
       '#return_value' => -1,
@@ -405,13 +405,13 @@ class Table extends StylePluginBase {
 
     $form['empty_table'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show the empty text in the table'),
+      '#title' => $this->t('Show the empty text in the table'),
       '#default_value' => $this->options['empty_table'],
-      '#description' => t('Per default the table is hidden for an empty view. With this option it is posible to show an empty table with the text in it.'),
+      '#description' => $this->t('Per default the table is hidden for an empty view. With this option it is posible to show an empty table with the text in it.'),
     );
 
     $form['description_markup'] = array(
-      '#markup' => '<div class="description form-item">' . t('Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section.') . '</div>',
+      '#markup' => '<div class="description form-item">' . $this->t('Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section.') . '</div>',
     );
   }
 

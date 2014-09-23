@@ -43,15 +43,15 @@ class Combine extends String {
       if ($options) {
         $form['fields'] = array(
           '#type' => 'select',
-          '#title' => t('Choose fields to combine for filtering'),
-          '#description' => t("This filter doesn't work for very special field handlers."),
+          '#title' => $this->t('Choose fields to combine for filtering'),
+          '#description' => $this->t("This filter doesn't work for very special field handlers."),
           '#multiple' => TRUE,
           '#options' => $options,
           '#default_value' => $this->options['fields'],
         );
       }
       else {
-        $form_state->setErrorByName('', t('You have to add some fields to be able to use this filter.'));
+        $form_state->setErrorByName('', $this->t('You have to add some fields to be able to use this filter.'));
       }
     }
   }

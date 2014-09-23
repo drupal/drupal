@@ -53,7 +53,7 @@ class RevisionLinkDelete extends RevisionLink {
     $this->options['alter']['path'] = 'node/' . $node->id() . "/revisions/$vid/delete";
     $this->options['alter']['query'] = drupal_get_destination();
 
-    return !empty($this->options['text']) ? $this->options['text'] : t('Delete');
+    return !empty($this->options['text']) ? $this->options['text'] : $this->t('Delete');
   }
 
 }

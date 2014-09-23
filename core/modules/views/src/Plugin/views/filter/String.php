@@ -40,80 +40,80 @@ class String extends FilterPluginBase {
   function operators() {
     $operators = array(
       '=' => array(
-        'title' => t('Is equal to'),
-        'short' => t('='),
+        'title' => $this->t('Is equal to'),
+        'short' => $this->t('='),
         'method' => 'opEqual',
         'values' => 1,
       ),
       '!=' => array(
-        'title' => t('Is not equal to'),
-        'short' => t('!='),
+        'title' => $this->t('Is not equal to'),
+        'short' => $this->t('!='),
         'method' => 'opEqual',
         'values' => 1,
       ),
       'contains' => array(
-        'title' => t('Contains'),
-        'short' => t('contains'),
+        'title' => $this->t('Contains'),
+        'short' => $this->t('contains'),
         'method' => 'opContains',
         'values' => 1,
       ),
       'word' => array(
-        'title' => t('Contains any word'),
-        'short' => t('has word'),
+        'title' => $this->t('Contains any word'),
+        'short' => $this->t('has word'),
         'method' => 'opContainsWord',
         'values' => 1,
       ),
       'allwords' => array(
-        'title' => t('Contains all words'),
-        'short' => t('has all'),
+        'title' => $this->t('Contains all words'),
+        'short' => $this->t('has all'),
         'method' => 'opContainsWord',
         'values' => 1,
       ),
       'starts' => array(
-        'title' => t('Starts with'),
-        'short' => t('begins'),
+        'title' => $this->t('Starts with'),
+        'short' => $this->t('begins'),
         'method' => 'opStartsWith',
         'values' => 1,
       ),
       'not_starts' => array(
-        'title' => t('Does not start with'),
-        'short' => t('not_begins'),
+        'title' => $this->t('Does not start with'),
+        'short' => $this->t('not_begins'),
         'method' => 'opNotStartsWith',
         'values' => 1,
       ),
       'ends' => array(
-        'title' => t('Ends with'),
-        'short' => t('ends'),
+        'title' => $this->t('Ends with'),
+        'short' => $this->t('ends'),
         'method' => 'opEndsWith',
         'values' => 1,
       ),
       'not_ends' => array(
-        'title' => t('Does not end with'),
-        'short' => t('not_ends'),
+        'title' => $this->t('Does not end with'),
+        'short' => $this->t('not_ends'),
         'method' => 'opNotEndsWith',
         'values' => 1,
       ),
       'not' => array(
-        'title' => t('Does not contain'),
-        'short' => t('!has'),
+        'title' => $this->t('Does not contain'),
+        'short' => $this->t('!has'),
         'method' => 'opNotLike',
         'values' => 1,
       ),
       'shorterthan' => array(
-        'title' => t('Length is shorter than'),
-        'short' => t('shorter than'),
+        'title' => $this->t('Length is shorter than'),
+        'short' => $this->t('shorter than'),
         'method' => 'opShorterThan',
         'values' => 1,
       ),
       'longerthan' => array(
-        'title' => t('Length is longer than'),
-        'short' => t('longer than'),
+        'title' => $this->t('Length is longer than'),
+        'short' => $this->t('longer than'),
         'method' => 'opLongerThan',
         'values' => 1,
       ),
       'regular_expression' => array(
-        'title' => t('Regular expression'),
-        'short' => t('regex'),
+        'title' => $this->t('Regular expression'),
+        'short' => $this->t('regex'),
         'method' => 'opRegex',
         'values' => 1,
       ),
@@ -122,15 +122,15 @@ class String extends FilterPluginBase {
     if (!empty($this->definition['allow empty'])) {
       $operators += array(
         'empty' => array(
-          'title' => t('Is empty (NULL)'),
+          'title' => $this->t('Is empty (NULL)'),
           'method' => 'opEmpty',
-          'short' => t('empty'),
+          'short' => $this->t('empty'),
           'values' => 0,
         ),
         'not empty' => array(
-          'title' => t('Is not empty (NOT NULL)'),
+          'title' => $this->t('Is not empty (NOT NULL)'),
           'method' => 'opEmpty',
-          'short' => t('not empty'),
+          'short' => $this->t('not empty'),
           'values' => 0,
         ),
       );
@@ -153,10 +153,10 @@ class String extends FilterPluginBase {
 
   public function adminSummary() {
     if ($this->isAGroup()) {
-      return t('grouped');
+      return $this->t('grouped');
     }
     if (!empty($this->options['exposed'])) {
-      return t('exposed');
+      return $this->t('exposed');
     }
 
     $options = $this->operatorOptions('short');
@@ -208,7 +208,7 @@ class String extends FilterPluginBase {
     if ($which == 'all' || $which == 'value') {
       $form['value'] = array(
         '#type' => 'textfield',
-        '#title' => t('Value'),
+        '#title' => $this->t('Value'),
         '#size' => 30,
         '#default_value' => $this->value,
       );

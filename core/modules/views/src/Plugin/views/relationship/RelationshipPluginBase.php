@@ -113,8 +113,8 @@ abstract class RelationshipPluginBase extends HandlerBase {
 
     $form['required'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Require this relationship'),
-      '#description' => t('Enable to hide items that do not contain this relationship'),
+      '#title' => $this->t('Require this relationship'),
+      '#description' => $this->t('Enable to hide items that do not contain this relationship'),
       '#default_value' => !empty($this->options['required']),
     );
   }

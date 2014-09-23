@@ -34,8 +34,8 @@ class Type extends Node {
     parent::buildOptionsForm($form, $form_state);
 
     $form['machine_name'] = array(
-      '#title' => t('Output machine name'),
-      '#description' => t('Display field as the content type machine name.'),
+      '#title' => $this->t('Output machine name'),
+      '#description' => $this->t('Display field as the content type machine name.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['machine_name']),
     );
@@ -47,7 +47,7 @@ class Type extends Node {
   function render_name($data, $values) {
     if ($this->options['machine_name'] != 1 && $data !== NULL && $data !== '') {
       $type = entity_load('node_type', $data);
-      return $type ? t($this->sanitizeValue($type->label())) : '';
+      return $type ? $this->t($this->sanitizeValue($type->label())) : '';
     }
     return $this->sanitizeValue($data);
   }

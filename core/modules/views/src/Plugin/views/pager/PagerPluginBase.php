@@ -132,7 +132,7 @@ abstract class PagerPluginBase extends PluginBase {
    * pager plugin.
    */
   public function summaryTitle() {
-    return t('Unknown');
+    return $this->t('Unknown');
   }
 
   /**

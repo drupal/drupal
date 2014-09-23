@@ -132,7 +132,7 @@ class EntityRow extends RowPluginBase {
     $form['view_mode'] = array(
       '#type' => 'select',
       '#options' => \Drupal::entityManager()->getViewModeOptions($this->entityTypeId),
-      '#title' => t('View mode'),
+      '#title' => $this->t('View mode'),
       '#default_value' => $this->options['view_mode'],
     );
 
@@ -140,7 +140,7 @@ class EntityRow extends RowPluginBase {
     $form['rendering_language'] = array(
       '#type' => 'select',
       '#options' => $options,
-      '#title' => t('Rendering language'),
+      '#title' => $this->t('Rendering language'),
       '#default_value' => $this->options['rendering_language'],
       '#access' => $this->languageManager->isMultilingual(),
     );
@@ -170,7 +170,7 @@ class EntityRow extends RowPluginBase {
       return String::checkPlain($options[$this->options['view_mode']]);
     }
     else {
-      return t('No view mode selected');
+      return $this->t('No view mode selected');
     }
   }
 

@@ -46,16 +46,16 @@ class Numeric extends ArgumentPluginBase {
     // allow + for or, , for and
     $form['break_phrase'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow multiple values'),
-      '#description' => t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
+      '#title' => $this->t('Allow multiple values'),
+      '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
       '#fieldset' => 'more',
     );
 
     $form['not'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Exclude'),
-      '#description' => t('If selected, the numbers entered for the filter will be excluded rather than limiting the view.'),
+      '#title' => $this->t('Exclude'),
+      '#description' => $this->t('If selected, the numbers entered for the filter will be excluded rather than limiting the view.'),
       '#default_value' => !empty($this->options['not']),
       '#fieldset' => 'more',
     );
@@ -63,7 +63,7 @@ class Numeric extends ArgumentPluginBase {
 
   function title() {
     if (!$this->argument) {
-      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : t('Uncategorized');
+      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }
 
     if (!empty($this->options['break_phrase'])) {
@@ -77,11 +77,11 @@ class Numeric extends ArgumentPluginBase {
     }
 
     if (empty($this->value)) {
-      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : t('Uncategorized');
+      return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }
 
     if ($this->value === array(-1)) {
-      return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : t('Invalid input');
+      return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : $this->t('Invalid input');
     }
 
     return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
@@ -125,7 +125,7 @@ class Numeric extends ArgumentPluginBase {
    * {@inheritdoc}
    */
   public function getSortName() {
-    return t('Numerical', array(), array('context' => 'Sort order'));
+    return $this->t('Numerical', array(), array('context' => 'Sort order'));
   }
 
 }

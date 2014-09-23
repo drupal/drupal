@@ -84,28 +84,28 @@ class Date extends FieldPluginBase {
 
     $date_formats = array();
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
-      $date_formats[$machine_name] = t('@name format: @date', array('@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)));
+      $date_formats[$machine_name] = $this->t('@name format: @date', array('@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)));
     }
 
     $form['date_format'] = array(
       '#type' => 'select',
-      '#title' => t('Date format'),
+      '#title' => $this->t('Date format'),
       '#options' => $date_formats + array(
-        'custom' => t('Custom'),
-        'raw time ago' => t('Time ago'),
-        'time ago' => t('Time ago (with "ago" appended)'),
-        'raw time hence' => t('Time hence'),
-        'time hence' => t('Time hence (with "hence" appended)'),
-        'raw time span' => t('Time span (future dates have "-" prepended)'),
-        'inverse time span' => t('Time span (past dates have "-" prepended)'),
-        'time span' => t('Time span (with "ago/hence" appended)'),
+        'custom' => $this->t('Custom'),
+        'raw time ago' => $this->t('Time ago'),
+        'time ago' => $this->t('Time ago (with "ago" appended)'),
+        'raw time hence' => $this->t('Time hence'),
+        'time hence' => $this->t('Time hence (with "hence" appended)'),
+        'raw time span' => $this->t('Time span (future dates have "-" prepended)'),
+        'inverse time span' => $this->t('Time span (past dates have "-" prepended)'),
+        'time span' => $this->t('Time span (with "ago/hence" appended)'),
       ),
       '#default_value' => isset($this->options['date_format']) ? $this->options['date_format'] : 'small',
     );
     $form['custom_date_format'] = array(
       '#type' => 'textfield',
-      '#title' => t('Custom date format'),
-      '#description' => t('If "Custom", see <a href="http://us.php.net/manual/en/function.date.php" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
+      '#title' => $this->t('Custom date format'),
+      '#description' => $this->t('If "Custom", see <a href="http://us.php.net/manual/en/function.date.php" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
       '#default_value' => isset($this->options['custom_date_format']) ? $this->options['custom_date_format'] : '',
     );
     // Setup #states for all possible date_formats on the custom_date_format form element.
@@ -116,9 +116,9 @@ class Date extends FieldPluginBase {
     }
     $form['timezone'] = array(
       '#type' => 'select',
-      '#title' => t('Timezone'),
-      '#description' => t('Timezone to be used for date output.'),
-      '#options' => array('' => t('- Default site/user timezone -')) + system_time_zones(FALSE),
+      '#title' => $this->t('Timezone'),
+      '#description' => $this->t('Timezone to be used for date output.'),
+      '#options' => array('' => $this->t('- Default site/user timezone -')) + system_time_zones(FALSE),
       '#default_value' => $this->options['timezone'],
     );
     foreach (array_merge(array('custom'), array_keys($date_formats)) as $timezone_date_formats) {
@@ -147,17 +147,17 @@ class Date extends FieldPluginBase {
         case 'raw time ago':
           return $this->dateFormatter->formatInterval($time_diff, is_numeric($custom_format) ? $custom_format : 2);
         case 'time ago':
-          return t('%time ago', array('%time' => $this->dateFormatter->formatInterval($time_diff, is_numeric($custom_format) ? $custom_format : 2)));
+          return $this->t('%time ago', array('%time' => $this->dateFormatter->formatInterval($time_diff, is_numeric($custom_format) ? $custom_format : 2)));
         case 'raw time hence':
           return $this->dateFormatter->formatInterval(-$time_diff, is_numeric($custom_format) ? $custom_format : 2);
         case 'time hence':
-          return t('%time hence', array('%time' => $this->dateFormatter->formatInterval(-$time_diff, is_numeric($custom_format) ? $custom_format : 2)));
+          return $this->t('%time hence', array('%time' => $this->dateFormatter->formatInterval(-$time_diff, is_numeric($custom_format) ? $custom_format : 2)));
         case 'raw time span':
           return ($time_diff < 0 ? '-' : '') . $this->dateFormatter->formatInterval(abs($time_diff), is_numeric($custom_format) ? $custom_format : 2);
         case 'inverse time span':
           return ($time_diff > 0 ? '-' : '') . $this->dateFormatter->formatInterval(abs($time_diff), is_numeric($custom_format) ? $custom_format : 2);
         case 'time span':
-          return t(($time_diff < 0 ? '%time hence' : '%time ago'), array('%time' => $this->dateFormatter->formatInterval(abs($time_diff), is_numeric($custom_format) ? $custom_format : 2)));
+          return $this->t(($time_diff < 0 ? '%time hence' : '%time ago'), array('%time' => $this->dateFormatter->formatInterval(abs($time_diff), is_numeric($custom_format) ? $custom_format : 2)));
         case 'custom':
           if ($custom_format == 'r') {
             return format_date($value, $format, $custom_format, $timezone, 'en');

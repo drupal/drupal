@@ -61,20 +61,20 @@ class Entity extends TokenizeAreaPluginBase {
     $form['view_mode'] = array(
       '#type' => 'select',
       '#options' => \Drupal::entityManager()->getViewModeOptions($this->entityType),
-      '#title' => t('View mode'),
+      '#title' => $this->t('View mode'),
       '#default_value' => $this->options['view_mode'],
     );
 
     $form['entity_id'] = array(
-      '#title' => t('ID'),
+      '#title' => $this->t('ID'),
       '#type' => 'textfield',
       '#default_value' => $this->options['entity_id'],
     );
 
     $form['bypass_access'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Bypass access checks'),
-      '#description' => t('If enabled, access permissions for rendering the entity are not checked.'),
+      '#title' => $this->t('Bypass access checks'),
+      '#description' => $this->t('If enabled, access permissions for rendering the entity are not checked.'),
       '#default_value' => !empty($this->options['bypass_access']),
     );
   }

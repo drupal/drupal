@@ -157,7 +157,7 @@ class Feed extends PathPluginBase {
     // Since we're childing off the 'path' type, we'll still *call* our
     // category 'page' but let's override it so it says feed settings.
     $categories['page'] = array(
-      'title' => t('Feed settings'),
+      'title' => $this->t('Feed settings'),
       'column' => 'second',
       'build' => array(
         '#weight' => -10,
@@ -165,12 +165,12 @@ class Feed extends PathPluginBase {
     );
 
     if ($this->getOption('sitename_title')) {
-      $options['title']['value'] = t('Using the site name');
+      $options['title']['value'] = $this->t('Using the site name');
     }
 
     $displays = array_filter($this->getOption('displays'));
     if (count($displays) > 1) {
-      $attach_to = t('Multiple displays');
+      $attach_to = $this->t('Multiple displays');
     }
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
@@ -181,12 +181,12 @@ class Feed extends PathPluginBase {
     }
 
     if (!isset($attach_to)) {
-      $attach_to = t('None');
+      $attach_to = $this->t('None');
     }
 
     $options['displays'] = array(
       'category' => 'page',
-      'title' => t('Attach to'),
+      'title' => $this->t('Attach to'),
       'value' => $attach_to,
     );
   }
@@ -205,7 +205,7 @@ class Feed extends PathPluginBase {
         unset($form['title']);
         $form['sitename_title'] = array(
           '#type' => 'checkbox',
-          '#title' => t('Use the site name for the title'),
+          '#title' => $this->t('Use the site name for the title'),
           '#default_value' => $this->getOption('sitename_title'),
         );
         $form['title'] = $title;
@@ -216,7 +216,7 @@ class Feed extends PathPluginBase {
         );
         break;
       case 'displays':
-        $form['#title'] .= t('Attach to');
+        $form['#title'] .= $this->t('Attach to');
         $displays = array();
         foreach ($this->view->storage->get('display') as $display_id => $display) {
           // @todo The display plugin should have display_title and id as well.
@@ -225,15 +225,15 @@ class Feed extends PathPluginBase {
           }
         }
         $form['displays'] = array(
-          '#title' => t('Displays'),
+          '#title' => $this->t('Displays'),
           '#type' => 'checkboxes',
-          '#description' => t('The feed icon will be available only to the selected displays.'),
+          '#description' => $this->t('The feed icon will be available only to the selected displays.'),
           '#options' => $displays,
           '#default_value' => $this->getOption('displays'),
         );
         break;
       case 'path':
-        $form['path']['#description'] = t('This view will be displayed by visiting this path on your site. It is recommended that the path be something like "path/%/%/feed" or "path/%/%/rss.xml", putting one % in the path for each contextual filter you have defined in the view.');
+        $form['path']['#description'] = $this->t('This view will be displayed by visiting this path on your site. It is recommended that the path be something like "path/%/%/feed" or "path/%/%/rss.xml", putting one % in the path for each contextual filter you have defined in the view.');
     }
   }
 

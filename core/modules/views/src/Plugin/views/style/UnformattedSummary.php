@@ -36,11 +36,11 @@ class UnformattedSummary extends DefaultSummary {
     $form['inline'] = array(
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['inline']),
-      '#title' => t('Display items inline'),
+      '#title' => $this->t('Display items inline'),
     );
     $form['separator'] = array(
       '#type' => 'textfield',
-      '#title' => t('Separator'),
+      '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
     );
   }

@@ -62,25 +62,25 @@ class ManyToOne extends InOperator {
   function operators() {
     $operators = array(
       'or' => array(
-        'title' => t('Is one of'),
-        'short' => t('or'),
-        'short_single' => t('='),
+        'title' => $this->t('Is one of'),
+        'short' => $this->t('or'),
+        'short_single' => $this->t('='),
         'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
       ),
       'and' => array(
-        'title' => t('Is all of'),
-        'short' => t('and'),
-        'short_single' => t('='),
+        'title' => $this->t('Is all of'),
+        'short' => $this->t('and'),
+        'short_single' => $this->t('='),
         'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
       ),
       'not' => array(
-        'title' => t('Is none of'),
-        'short' => t('not'),
-        'short_single' => t('<>'),
+        'title' => $this->t('Is none of'),
+        'short' => $this->t('not'),
+        'short_single' => $this->t('<>'),
         'method' => 'opHelper',
         'values' => 1,
         'ensure_my_table' => 'helper',
@@ -90,15 +90,15 @@ class ManyToOne extends InOperator {
     if (!empty($this->definition['allow empty'])) {
       $operators += array(
         'empty' => array(
-          'title' => t('Is empty (NULL)'),
+          'title' => $this->t('Is empty (NULL)'),
           'method' => 'opEmpty',
-          'short' => t('empty'),
+          'short' => $this->t('empty'),
           'values' => 0,
         ),
         'not empty' => array(
-          'title' => t('Is not empty (NOT NULL)'),
+          'title' => $this->t('Is not empty (NOT NULL)'),
           'method' => 'opEmpty',
-          'short' => t('not empty'),
+          'short' => $this->t('not empty'),
           'values' => 0,
         ),
       );

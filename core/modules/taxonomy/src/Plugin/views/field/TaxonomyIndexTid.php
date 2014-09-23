@@ -52,14 +52,14 @@ class TaxonomyIndexTid extends PrerenderList {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_taxonomy'] = array(
-      '#title' => t('Link this field to its term page'),
+      '#title' => $this->t('Link this field to its term page'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_taxonomy']),
     );
 
     $form['limit'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Limit terms by vocabulary'),
+      '#title' => $this->t('Limit terms by vocabulary'),
       '#default_value' => $this->options['limit'],
     );
 
@@ -71,7 +71,7 @@ class TaxonomyIndexTid extends PrerenderList {
 
     $form['vids'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Vocabularies'),
+      '#title' => $this->t('Vocabularies'),
       '#options' => $options,
       '#default_value' => $this->options['vids'],
       '#states' => array(
@@ -130,10 +130,10 @@ class TaxonomyIndexTid extends PrerenderList {
   }
 
   protected function documentSelfTokens(&$tokens) {
-    $tokens['[' . $this->options['id'] . '-tid' . ']'] = t('The taxonomy term ID for the term.');
-    $tokens['[' . $this->options['id'] . '-name' . ']'] = t('The taxonomy term name for the term.');
-    $tokens['[' . $this->options['id'] . '-vocabulary-vid' . ']'] = t('The machine name for the vocabulary the term belongs to.');
-    $tokens['[' . $this->options['id'] . '-vocabulary' . ']'] = t('The name for the vocabulary the term belongs to.');
+    $tokens['[' . $this->options['id'] . '-tid' . ']'] = $this->t('The taxonomy term ID for the term.');
+    $tokens['[' . $this->options['id'] . '-name' . ']'] = $this->t('The taxonomy term name for the term.');
+    $tokens['[' . $this->options['id'] . '-vocabulary-vid' . ']'] = $this->t('The machine name for the vocabulary the term belongs to.');
+    $tokens['[' . $this->options['id'] . '-vocabulary' . ']'] = $this->t('The name for the vocabulary the term belongs to.');
   }
 
   protected function addSelfTokens(&$tokens, $item) {

@@ -27,7 +27,7 @@ class None extends AccessPluginBase {
    * {@inheritdoc}
    */
   public function summaryTitle() {
-    return t('Unrestricted');
+    return $this->t('Unrestricted');
   }
 
   /**

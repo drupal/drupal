@@ -60,7 +60,7 @@ class HistoryUserTimestamp extends Node {
     if (\Drupal::moduleHandler()->moduleExists('comment')) {
       $form['comments'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Check for new comments as well'),
+        '#title' => $this->t('Check for new comments as well'),
         '#default_value' => !empty($this->options['comments']),
       );
     }

@@ -49,7 +49,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
         $label = $this->options['expose']['label'];
       }
       else {
-        $label = t('Has new content');
+        $label = $this->t('Has new content');
       }
       $form['value'] = array(
         '#type' => 'checkbox',
@@ -95,7 +95,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
 
   public function adminSummary() {
     if (!empty($this->options['exposed'])) {
-      return t('exposed');
+      return $this->t('exposed');
     }
   }
 

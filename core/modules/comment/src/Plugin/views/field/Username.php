@@ -42,7 +42,7 @@ class Username extends FieldPluginBase {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_user'] = array(
-      '#title' => t("Link this field to its user or an author's homepage"),
+      '#title' => $this->t("Link this field to its user or an author's homepage"),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_user'],
     );

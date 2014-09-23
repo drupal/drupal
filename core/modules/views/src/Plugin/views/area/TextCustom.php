@@ -34,7 +34,7 @@ class TextCustom extends TokenizeAreaPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['content'] = array(
-      '#title' => t('Content'),
+      '#title' => $this->t('Content'),
       '#type' => 'textarea',
       '#default_value' => $this->options['content'],
       '#rows' => 6,

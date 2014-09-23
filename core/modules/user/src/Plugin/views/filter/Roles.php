@@ -28,8 +28,8 @@ class Roles extends ManyToOne {
    */
   function operators() {
     $operators = parent::operators();
-    $operators['empty']['title'] = t("Only has the 'authenticated user' role");
-    $operators['not empty']['title'] = t("Has roles in addition to 'authenticated user'");
+    $operators['empty']['title'] = $this->t("Only has the 'authenticated user' role");
+    $operators['not empty']['title'] = $this->t("Has roles in addition to 'authenticated user'");
     return $operators;
   }
 

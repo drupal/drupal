@@ -79,8 +79,8 @@ class DataFieldRow extends RowPluginBase {
 
     $form['field_options'] = array(
       '#type' => 'table',
-      '#header' => array(t('Field'), t('Alias'), t('Raw output')),
-      '#empty' => t('You have no fields. Add some to your view.'),
+      '#header' => array(t('Field'), $this->t('Alias'), $this->t('Raw output')),
+      '#empty' => $this->t('You have no fields. Add some to your view.'),
       '#tree' => TRUE,
     );
 
@@ -92,14 +92,14 @@ class DataFieldRow extends RowPluginBase {
           '#markup' => $id,
         );
         $form['field_options'][$id]['alias'] = array(
-          '#title' => t('Alias for @id', array('@id' => $id)),
+          '#title' => $this->t('Alias for @id', array('@id' => $id)),
           '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#default_value' => isset($options[$id]['alias']) ? $options[$id]['alias'] : '',
           '#element_validate' => array(array($this, 'validateAliasName')),
         );
         $form['field_options'][$id]['raw_output'] = array(
-          '#title' => t('Raw output for @id', array('@id' => $id)),
+          '#title' => $this->t('Raw output for @id', array('@id' => $id)),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => isset($options[$id]['raw_output']) ? $options[$id]['raw_output'] : '',
@@ -113,7 +113,7 @@ class DataFieldRow extends RowPluginBase {
    */
   public function validateAliasName($element, FormStateInterface $form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
-      $form_state->setError($element, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
+      $form_state->setError($element, $this->t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
     }
   }
 
@@ -127,7 +127,7 @@ class DataFieldRow extends RowPluginBase {
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.
     if (($filtered = array_filter($aliases)) && (array_unique($filtered) !== $filtered)) {
-      $form_state->setErrorByName('aliases', t('All field aliases must be unique'));
+      $form_state->setErrorByName('aliases', $this->t('All field aliases must be unique'));
     }
   }
 

@@ -51,7 +51,7 @@ class DblogMessage extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['replace_variables'] = array(
-      '#title' => t('Replace variables'),
+      '#title' => $this->t('Replace variables'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['replace_variables'],
     );

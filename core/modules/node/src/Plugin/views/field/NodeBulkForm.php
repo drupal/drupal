@@ -21,7 +21,7 @@ class NodeBulkForm extends BulkForm {
    * {@inheritdoc}
    */
   protected function emptySelectedMessage() {
-    return t('No content selected.');
+    return $this->t('No content selected.');
   }
 
 }

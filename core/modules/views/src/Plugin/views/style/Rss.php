@@ -79,9 +79,9 @@ class Rss extends StylePluginBase {
 
     $form['description'] = array(
       '#type' => 'textfield',
-      '#title' => t('RSS description'),
+      '#title' => $this->t('RSS description'),
       '#default_value' => $this->options['description'],
-      '#description' => t('This will appear in the RSS feed itself.'),
+      '#description' => $this->t('This will appear in the RSS feed itself.'),
       '#maxlength' => 1024,
     );
   }

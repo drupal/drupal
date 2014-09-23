@@ -61,11 +61,11 @@ class EntityReference extends StylePluginBase {
     $options = $this->displayHandler->getFieldLabels(TRUE);
     $form['search_fields'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Search fields'),
+      '#title' => $this->t('Search fields'),
       '#options' => $options,
       '#required' => TRUE,
       '#default_value' => $this->options['search_fields'],
-      '#description' => t('Select the field(s) that will be searched when using the autocomplete widget.'),
+      '#description' => $this->t('Select the field(s) that will be searched when using the autocomplete widget.'),
       '#weight' => -3,
     );
   }

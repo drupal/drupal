@@ -36,9 +36,9 @@ class Title extends AreaPluginBase {
 
     $form['title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Overridden title'),
+      '#title' => $this->t('Overridden title'),
       '#default_value' => $this->options['title'],
-      '#description' => t('Override the title of this view when it is empty. The available global tokens below can be used here.'),
+      '#description' => $this->t('Override the title of this view when it is empty. The available global tokens below can be used here.'),
     );
 
     // Don't use the AreaPluginBase tokenForm method, we don't want row tokens.

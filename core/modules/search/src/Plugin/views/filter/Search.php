@@ -74,7 +74,7 @@ class Search extends FilterPluginBase {
   protected function operatorForm(&$form, FormStateInterface $form_state) {
     $form['operator'] = array(
       '#type' => 'radios',
-      '#title' => t('On empty input'),
+      '#title' => $this->t('On empty input'),
       '#default_value' => $this->operator,
       '#options' => array(
         'optional' => $this->t('Show All'),

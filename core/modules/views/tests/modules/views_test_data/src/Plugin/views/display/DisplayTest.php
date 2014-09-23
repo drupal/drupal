@@ -56,18 +56,18 @@ class DisplayTest extends DisplayPluginBase {
     parent::optionsSummary($categories, $options);
 
     $categories['display_test'] = array(
-      'title' => t('Display test settings'),
+      'title' => $this->t('Display test settings'),
       'column' => 'second',
       'build' => array(
         '#weight' => -100,
       ),
     );
 
-    $test_option = $this->getOption('test_option') ?: t('Empty');
+    $test_option = $this->getOption('test_option') ?: $this->t('Empty');
 
     $options['test_option'] = array(
       'category' => 'display_test',
-      'title' => t('Test option'),
+      'title' => $this->t('Test option'),
       'value' => views_ui_truncate($test_option, 24),
     );
   }
@@ -80,11 +80,11 @@ class DisplayTest extends DisplayPluginBase {
 
     switch ($form_state->get('section')) {
       case 'test_option':
-        $form['#title'] .= t('Test option');
+        $form['#title'] .= $this->t('Test option');
         $form['test_option'] = array(
-          '#title' => t('Test option'),
+          '#title' => $this->t('Test option'),
           '#type' => 'textfield',
-          '#description' => t('This is a textfield for test_option.'),
+          '#description' => $this->t('This is a textfield for test_option.'),
           '#default_value' => $this->getOption('test_option'),
         );
         break;
@@ -100,7 +100,7 @@ class DisplayTest extends DisplayPluginBase {
     switch ($form_state->get('section')) {
       case 'test_option':
         if (!trim($form_state->getValue('test_option'))) {
-          $form_state->setError($form['test_option'], t('You cannot have an empty option.'));
+          $form_state->setError($form['test_option'], $this->t('You cannot have an empty option.'));
         }
         break;
     }

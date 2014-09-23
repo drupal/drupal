@@ -73,19 +73,19 @@ class Raw extends ArgumentDefaultPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['index'] = array(
       '#type' => 'select',
-      '#title' => t('Path component'),
+      '#title' => $this->t('Path component'),
       '#default_value' => $this->options['index'],
       // range(1, 10) returns an array with:
       // - keys that count from 0 to match PHP array keys from explode().
       // - values that count from 1 for display to humans.
       '#options' => range(1, 10),
-      '#description' => t('The numbering starts from 1, e.g. on the page admin/structure/types, the 3rd path component is "types".'),
+      '#description' => $this->t('The numbering starts from 1, e.g. on the page admin/structure/types, the 3rd path component is "types".'),
     );
     $form['use_alias'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use path alias'),
+      '#title' => $this->t('Use path alias'),
       '#default_value' => $this->options['use_alias'],
-      '#description' => t('Use path alias instead of internal path.'),
+      '#description' => $this->t('Use path alias instead of internal path.'),
     );
   }
 

@@ -24,7 +24,7 @@ class Tag extends CachePluginBase {
    * {@inheritdoc}
    */
   public function summaryTitle() {
-    return t('Tag');
+    return $this->t('Tag');
   }
 
   /**

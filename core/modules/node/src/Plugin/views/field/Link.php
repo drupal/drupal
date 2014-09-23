@@ -36,7 +36,7 @@ class Link extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
-      '#title' => t('Text to display'),
+      '#title' => $this->t('Text to display'),
       '#default_value' => $this->options['text'],
     );
     parent::buildOptionsForm($form, $form_state);
@@ -77,7 +77,7 @@ class Link extends FieldPluginBase {
     if ($node->access('view')) {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'node/' . $node->id();
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
+      $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('View');
       return $text;
     }
   }

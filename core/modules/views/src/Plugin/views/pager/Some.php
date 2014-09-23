@@ -53,8 +53,8 @@ class Some extends PagerPluginBase {
 
     $form['offset'] = array(
       '#type' => 'textfield',
-      '#title' => t('Offset (number of items to skip)'),
-      '#description' => t('For example, set this to 3 and the first 3 items will not be displayed.'),
+      '#title' => $this->t('Offset (number of items to skip)'),
+      '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
     );
   }

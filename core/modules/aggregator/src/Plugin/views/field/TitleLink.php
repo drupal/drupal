@@ -48,7 +48,7 @@ class TitleLink extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['display_as_link'] = array(
-      '#title' => t('Display as link'),
+      '#title' => $this->t('Display as link'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['display_as_link']),
     );

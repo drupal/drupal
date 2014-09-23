@@ -44,7 +44,7 @@ class QueryTest extends QueryPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_setting'] = array(
-      '#title' => t('Test setting'),
+      '#title' => $this->t('Test setting'),
       '#type' => 'textfield',
       '#default_value' => $this->options['test_setting'],
     );

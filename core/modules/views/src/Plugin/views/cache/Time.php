@@ -80,21 +80,21 @@ class Time extends CachePluginBase {
     parent::buildOptionsForm($form, $form_state);
     $options = array(60, 300, 1800, 3600, 21600, 518400);
     $options = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options));
-    $options = array(-1 => t('Never cache')) + $options + array('custom' => t('Custom'));
+    $options = array(-1 => $this->t('Never cache')) + $options + array('custom' => $this->t('Custom'));
 
     $form['results_lifespan'] = array(
       '#type' => 'select',
-      '#title' => t('Query results'),
-      '#description' => t('The length of time raw query results should be cached.'),
+      '#title' => $this->t('Query results'),
+      '#description' => $this->t('The length of time raw query results should be cached.'),
       '#options' => $options,
       '#default_value' => $this->options['results_lifespan'],
     );
     $form['results_lifespan_custom'] = array(
       '#type' => 'textfield',
-      '#title' => t('Seconds'),
+      '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',
-      '#description' => t('Length of time in seconds raw query results should be cached.'),
+      '#description' => $this->t('Length of time in seconds raw query results should be cached.'),
       '#default_value' => $this->options['results_lifespan_custom'],
       '#states' => array(
         'visible' => array(
@@ -104,17 +104,17 @@ class Time extends CachePluginBase {
     );
     $form['output_lifespan'] = array(
       '#type' => 'select',
-      '#title' => t('Rendered output'),
-      '#description' => t('The length of time rendered HTML output should be cached.'),
+      '#title' => $this->t('Rendered output'),
+      '#description' => $this->t('The length of time rendered HTML output should be cached.'),
       '#options' => $options,
       '#default_value' => $this->options['output_lifespan'],
     );
     $form['output_lifespan_custom'] = array(
       '#type' => 'textfield',
-      '#title' => t('Seconds'),
+      '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',
-      '#description' => t('Length of time in seconds rendered HTML output should be cached.'),
+      '#description' => $this->t('Length of time in seconds rendered HTML output should be cached.'),
       '#default_value' => $this->options['output_lifespan_custom'],
       '#states' => array(
         'visible' => array(
@@ -129,7 +129,7 @@ class Time extends CachePluginBase {
     foreach ($custom_fields as $field) {
       $cache_options = $form_state->getValue('cache_options');
       if ($cache_options[$field] == 'custom' && !is_numeric($cache_options[$field . '_custom'])) {
-        $form_state->setError($form[$field .'_custom'], t('Custom time values must be numeric.'));
+        $form_state->setError($form[$field .'_custom'], $this->t('Custom time values must be numeric.'));
       }
     }
   }

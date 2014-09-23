@@ -28,11 +28,11 @@ class NodeComment extends FieldPluginBase {
     switch ($value) {
       case CommentItemInterface::HIDDEN:
       default:
-        return t('Hidden');
+        return $this->t('Hidden');
       case CommentItemInterface::CLOSED:
-        return t('Closed');
+        return $this->t('Closed');
       case CommentItemInterface::OPEN:
-        return t('Open');
+        return $this->t('Open');
     }
   }
 

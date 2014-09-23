@@ -63,13 +63,13 @@ class Comment extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_comment'] = array(
-      '#title' => t('Link this field to its comment'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to its comment'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_comment'],
     );
     $form['link_to_entity'] = array(
-      '#title' => t('Link field to the entity if there is no comment'),
+      '#title' => $this->t('Link field to the entity if there is no comment'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_entity'],
     );

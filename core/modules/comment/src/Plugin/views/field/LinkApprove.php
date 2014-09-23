@@ -47,7 +47,7 @@ class LinkApprove extends Link {
       return;
     }
 
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('Approve');
+    $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Approve');
     $comment = $this->get_entity($values);
 
     $this->options['alter']['make_link'] = TRUE;

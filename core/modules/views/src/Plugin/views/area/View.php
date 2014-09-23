@@ -84,21 +84,21 @@ class View extends AreaPluginBase {
 
     $view_display = $this->view->storage->id() . ':' . $this->view->current_display;
 
-    $options = array('' => t('-Select-'));
+    $options = array('' => $this->t('-Select-'));
     $options += Views::getViewsAsOptions(FALSE, 'all', $view_display, FALSE, TRUE);
     $form['view_to_insert'] = array(
       '#type' => 'select',
-      '#title' => t('View to insert'),
+      '#title' => $this->t('View to insert'),
       '#default_value' => $this->options['view_to_insert'],
-      '#description' => t('The view to insert into this area.'),
+      '#description' => $this->t('The view to insert into this area.'),
       '#options' => $options,
     );
 
     $form['inherit_arguments'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Inherit contextual filters'),
+      '#title' => $this->t('Inherit contextual filters'),
       '#default_value' => $this->options['inherit_arguments'],
-      '#description' => t('If checked, this view will receive the same contextual filters as its parent.'),
+      '#description' => $this->t('If checked, this view will receive the same contextual filters as its parent.'),
     );
   }
 

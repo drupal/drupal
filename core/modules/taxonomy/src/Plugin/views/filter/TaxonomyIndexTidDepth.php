@@ -23,7 +23,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 
   public function operatorOptions($which = 'title') {
     return array(
-      'or' => t('Is one of'),
+      'or' => $this->t('Is one of'),
     );
   }
 
@@ -40,9 +40,9 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 
     $form['depth'] = array(
       '#type' => 'weight',
-      '#title' => t('Depth'),
+      '#title' => $this->t('Depth'),
       '#default_value' => $this->options['depth'],
-      '#description' => t('The depth will match nodes tagged with terms in the hierarchy. For example, if you have the term "fruit" and a child term "apple", with a depth of 1 (or higher) then filtering for the term "fruit" will get nodes that are tagged with "apple" as well as "fruit". If negative, the reverse is true; searching for "apple" will also pick up nodes tagged with "fruit" if depth is -1 (or lower).'),
+      '#description' => $this->t('The depth will match nodes tagged with terms in the hierarchy. For example, if you have the term "fruit" and a child term "apple", with a depth of 1 (or higher) then filtering for the term "fruit" will get nodes that are tagged with "apple" as well as "fruit". If negative, the reverse is true; searching for "apple" will also pick up nodes tagged with "fruit" if depth is -1 (or lower).'),
     );
   }
 

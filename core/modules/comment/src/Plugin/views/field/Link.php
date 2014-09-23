@@ -73,7 +73,7 @@ class Link extends FieldPluginBase {
       '#default_value' => $this->options['text'],
     );
     $form['link_to_entity'] = array(
-      '#title' => t('Link field to the entity if there is no comment'),
+      '#title' => $this->t('Link field to the entity if there is no comment'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_entity'],
     );
@@ -102,7 +102,7 @@ class Link extends FieldPluginBase {
    *   Returns a string for the link text.
    */
   protected function renderLink($data, ResultRow $values) {
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
+    $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('View');
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $data;
     $cid = $comment->id();

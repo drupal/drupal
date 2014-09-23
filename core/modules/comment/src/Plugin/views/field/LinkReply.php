@@ -39,7 +39,7 @@ class LinkReply extends Link {
    *   Returns a string for the link text.
    */
   protected function renderLink($data, ResultRow $values) {
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('Reply');
+    $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Reply');
     $comment = $this->getEntity($values);
 
     $this->options['alter']['make_link'] = TRUE;

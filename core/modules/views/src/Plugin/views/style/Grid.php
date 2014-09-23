@@ -53,53 +53,53 @@ class Grid extends StylePluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['columns'] = array(
       '#type' => 'number',
-      '#title' => t('Number of columns'),
+      '#title' => $this->t('Number of columns'),
       '#default_value' => $this->options['columns'],
       '#required' => TRUE,
       '#min' => 1,
     );
     $form['automatic_width'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Automatic width'),
-      '#description' => t('The width of each column will be calculated automatically based on the number of columns provided. If additional classes are entered or a theme injects classes based on a grid system, disabling this option may prove beneficial.'),
+      '#title' => $this->t('Automatic width'),
+      '#description' => $this->t('The width of each column will be calculated automatically based on the number of columns provided. If additional classes are entered or a theme injects classes based on a grid system, disabling this option may prove beneficial.'),
       '#default_value' => $this->options['automatic_width'],
     );
     $form['alignment'] = array(
       '#type' => 'radios',
-      '#title' => t('Alignment'),
-      '#options' => array('horizontal' => t('Horizontal'), 'vertical' => t('Vertical')),
+      '#title' => $this->t('Alignment'),
+      '#options' => array('horizontal' => $this->t('Horizontal'), 'vertical' => $this->t('Vertical')),
       '#default_value' => $this->options['alignment'],
-      '#description' => t('Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down.'),
+      '#description' => $this->t('Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down.'),
     );
     $form['col_class_default'] = array(
-      '#title' => t('Default column classes'),
-      '#description' => t('Add the default views column classes like views-col, col-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
+      '#title' => $this->t('Default column classes'),
+      '#description' => $this->t('Add the default views column classes like views-col, col-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['col_class_default'],
     );
     $form['col_class_custom'] = array(
-      '#title' => t('Custom column class'),
-      '#description' => t('Additional classes to provide on each column. Separated by a space.'),
+      '#title' => $this->t('Custom column class'),
+      '#description' => $this->t('Additional classes to provide on each column. Separated by a space.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['col_class_custom'],
     );
     if ($this->usesFields()) {
-      $form['col_class_custom']['#description'] .= ' ' . t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
+      $form['col_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }
     $form['row_class_default'] = array(
-      '#title' => t('Default row classes'),
-      '#description' => t('Adds the default views row classes like views-row, row-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
+      '#title' => $this->t('Default row classes'),
+      '#description' => $this->t('Adds the default views row classes like views-row, row-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['row_class_default'],
     );
     $form['row_class_custom'] = array(
-      '#title' => t('Custom row class'),
-      '#description' => t('Additional classes to provide on each row. Separated by a space.'),
+      '#title' => $this->t('Custom row class'),
+      '#description' => $this->t('Additional classes to provide on each row. Separated by a space.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['row_class_custom'],
     );
     if ($this->usesFields()) {
-      $form['row_class_custom']['#description'] .= ' ' . t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
+      $form['row_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }
   }
 

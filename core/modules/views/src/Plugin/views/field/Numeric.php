@@ -43,15 +43,15 @@ class Numeric extends FieldPluginBase {
     if (!empty($this->definition['float'])) {
       $form['set_precision'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Round'),
-        '#description' => t('If checked, the number will be rounded.'),
+        '#title' => $this->t('Round'),
+        '#description' => $this->t('If checked, the number will be rounded.'),
         '#default_value' => $this->options['set_precision'],
       );
       $form['precision'] = array(
         '#type' => 'textfield',
-        '#title' => t('Precision'),
+        '#title' => $this->t('Precision'),
         '#default_value' => $this->options['precision'],
-        '#description' => t('Specify how many digits to print after the decimal point.'),
+        '#description' => $this->t('Specify how many digits to print after the decimal point.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[set_precision]"]' => array('checked' => TRUE),
@@ -61,37 +61,37 @@ class Numeric extends FieldPluginBase {
       );
       $form['decimal'] = array(
         '#type' => 'textfield',
-        '#title' => t('Decimal point'),
+        '#title' => $this->t('Decimal point'),
         '#default_value' => $this->options['decimal'],
-        '#description' => t('What single character to use as a decimal point.'),
+        '#description' => $this->t('What single character to use as a decimal point.'),
         '#size' => 2,
       );
     }
     $form['separator'] = array(
       '#type' => 'select',
-      '#title' => t('Thousands marker'),
+      '#title' => $this->t('Thousands marker'),
       '#options' => array(
-        '' => t('- None -'),
-        ',' => t('Comma'),
-        ' ' => t('Space'),
-        '.' => t('Decimal'),
-        '\'' => t('Apostrophe'),
+        '' => $this->t('- None -'),
+        ',' => $this->t('Comma'),
+        ' ' => $this->t('Space'),
+        '.' => $this->t('Decimal'),
+        '\'' => $this->t('Apostrophe'),
       ),
       '#default_value' => $this->options['separator'],
-      '#description' => t('What single character to use as the thousands separator.'),
+      '#description' => $this->t('What single character to use as the thousands separator.'),
       '#size' => 2,
     );
     $form['format_plural'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Format plural'),
-      '#description' => t('If checked, special handling will be used for plurality.'),
+      '#title' => $this->t('Format plural'),
+      '#description' => $this->t('If checked, special handling will be used for plurality.'),
       '#default_value' => $this->options['format_plural'],
     );
     $form['format_plural_singular'] = array(
       '#type' => 'textfield',
-      '#title' => t('Singular form'),
+      '#title' => $this->t('Singular form'),
       '#default_value' => $this->options['format_plural_singular'],
-      '#description' => t('Text to use for the singular form.'),
+      '#description' => $this->t('Text to use for the singular form.'),
       '#states' => array(
         'visible' => array(
           ':input[name="options[format_plural]"]' => array('checked' => TRUE),
@@ -100,9 +100,9 @@ class Numeric extends FieldPluginBase {
     );
     $form['format_plural_plural'] = array(
       '#type' => 'textfield',
-      '#title' => t('Plural form'),
+      '#title' => $this->t('Plural form'),
       '#default_value' => $this->options['format_plural_plural'],
-      '#description' => t('Text to use for the plural form, @count will be replaced with the value.'),
+      '#description' => $this->t('Text to use for the plural form, @count will be replaced with the value.'),
       '#states' => array(
         'visible' => array(
           ':input[name="options[format_plural]"]' => array('checked' => TRUE),
@@ -111,15 +111,15 @@ class Numeric extends FieldPluginBase {
     );
     $form['prefix'] = array(
       '#type' => 'textfield',
-      '#title' => t('Prefix'),
+      '#title' => $this->t('Prefix'),
       '#default_value' => $this->options['prefix'],
-      '#description' => t('Text to put before the number, such as currency symbol.'),
+      '#description' => $this->t('Text to put before the number, such as currency symbol.'),
     );
     $form['suffix'] = array(
       '#type' => 'textfield',
-      '#title' => t('Suffix'),
+      '#title' => $this->t('Suffix'),
       '#default_value' => $this->options['suffix'],
-      '#description' => t('Text to put after the number, such as currency symbol.'),
+      '#description' => $this->t('Text to put after the number, such as currency symbol.'),
     );
 
     parent::buildOptionsForm($form, $form_state);

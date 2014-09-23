@@ -69,8 +69,8 @@ class Comment extends WizardPluginBase {
    */
   protected function rowStyleOptions() {
     $options = array();
-    $options['comment'] = t('comments');
-    $options['fields'] = t('fields');
+    $options['comment'] = $this->t('comments');
+    $options['fields'] = $this->t('fields');
     return $options;
   }
 
@@ -87,11 +87,11 @@ class Comment extends WizardPluginBase {
       case 'comment':
         $style_form['row_options']['links'] = array(
           '#type' => 'select',
-          '#title' => t('Should links be displayed below each comment'),
+          '#title' => $this->t('Should links be displayed below each comment'),
           '#title_display' => 'invisible',
           '#options' => array(
-            1 => t('with links (allow users to reply to the comment, etc.)'),
-            0 => t('without links'),
+            1 => $this->t('with links (allow users to reply to the comment, etc.)'),
+            0 => $this->t('without links'),
           ),
           '#default_value' => 1,
         );

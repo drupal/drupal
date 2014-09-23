@@ -51,14 +51,14 @@ class Taxonomy extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_taxonomy'] = array(
-      '#title' => t('Link this field to its taxonomy term page'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to its taxonomy term page'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_taxonomy']),
     );
      $form['convert_spaces'] = array(
-      '#title' => t('Convert spaces in term names to hyphens'),
-      '#description' => t('This allows links to work with Views taxonomy term arguments.'),
+      '#title' => $this->t('Convert spaces in term names to hyphens'),
+      '#description' => $this->t('This allows links to work with Views taxonomy term arguments.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['convert_spaces']),
     );

@@ -34,10 +34,10 @@ class Date extends Numeric {
     if (!$form_state->get('exposed')) {
       $form['value']['type'] = array(
         '#type' => 'radios',
-        '#title' => t('Value type'),
+        '#title' => $this->t('Value type'),
         '#options' => array(
-          'date' => t('A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred.'),
-          'offset' => t('An offset from the current time such as "!example1" or "!example2"', array('!example1' => '+1 day', '!example2' => '-2 hours -30 minutes')),
+          'date' => $this->t('A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred.'),
+          'offset' => $this->t('An offset from the current time such as "!example1" or "!example2"', array('!example1' => '+1 day', '!example2' => '-2 hours -30 minutes')),
         ),
         '#default_value' => !empty($this->value['type']) ? $this->value['type'] : 'date',
       );
@@ -87,17 +87,17 @@ class Date extends Numeric {
     if ($operators[$operator]['values'] == 1) {
       $convert = strtotime($value['value']);
       if (!empty($form['value']) && ($convert == -1 || $convert === FALSE)) {
-        $form_state->setError($form['value'], t('Invalid date format.'));
+        $form_state->setError($form['value'], $this->t('Invalid date format.'));
       }
     }
     elseif ($operators[$operator]['values'] == 2) {
       $min = strtotime($value['min']);
       if ($min == -1 || $min === FALSE) {
-        $form_state->setError($form['min'], t('Invalid date format.'));
+        $form_state->setError($form['min'], $this->t('Invalid date format.'));
       }
       $max = strtotime($value['max']);
       if ($max == -1 || $max === FALSE) {
-        $form_state->setError($form['max'], t('Invalid date format.'));
+        $form_state->setError($form['max'], $this->t('Invalid date format.'));
       }
     }
   }
@@ -115,14 +115,14 @@ class Date extends Numeric {
         // Check if the title is defined but value wasn't defined.
         if (!empty($group['title'])) {
           if ((!is_array($group['value']) && empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) == 1)) {
-            $form_state->setError($form['group_info']['group_items'][$id]['value'], t('The value is required if title for this item is defined.'));
+            $form_state->setError($form['group_info']['group_items'][$id]['value'], $this->t('The value is required if title for this item is defined.'));
           }
         }
 
         // Check if the value is defined but title wasn't defined.
         if ((!is_array($group['value']) && !empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) > 1)) {
           if (empty($group['title'])) {
-            $form_state->setError($form['group_info']['group_items'][$id]['title'], t('The title is required if value for this item is defined.'));
+            $form_state->setError($form['group_info']['group_items'][$id]['title'], $this->t('The title is required if value for this item is defined.'));
           }
         }
       }

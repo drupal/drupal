@@ -33,18 +33,18 @@ class Serialized extends FieldPluginBase {
 
     $form['format'] = array(
       '#type' => 'select',
-      '#title' => t('Display format'),
-      '#description' => t('How should the serialized data be displayed. You can choose a custom array/object key or a print_r on the full output.'),
+      '#title' => $this->t('Display format'),
+      '#description' => $this->t('How should the serialized data be displayed. You can choose a custom array/object key or a print_r on the full output.'),
       '#options' => array(
-        'unserialized' => t('Full data (unserialized)'),
-        'serialized' => t('Full data (serialized)'),
-        'key' => t('A certain key'),
+        'unserialized' => $this->t('Full data (unserialized)'),
+        'serialized' => $this->t('Full data (serialized)'),
+        'key' => $this->t('A certain key'),
       ),
       '#default_value' => $this->options['format'],
     );
     $form['key'] = array(
       '#type' => 'textfield',
-      '#title' => t('Which key should be displayed'),
+      '#title' => $this->t('Which key should be displayed'),
       '#default_value' => $this->options['key'],
       '#states' => array(
         'visible' => array(
@@ -57,7 +57,7 @@ class Serialized extends FieldPluginBase {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Require a key if the format is key.
     if ($form_state->getValue(array('options', 'format')) == 'key' && $form_state->getValue(array('options', 'key')) == '') {
-      $form_state->setError($form['key'], t('You have to enter a key if you want to display a key of the data.'));
+      $form_state->setError($form['key'], $this->t('You have to enter a key if you want to display a key of the data.'));
     }
   }
 

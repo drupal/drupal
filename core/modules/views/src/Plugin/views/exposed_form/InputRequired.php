@@ -36,8 +36,8 @@ class InputRequired extends ExposedFormPluginBase {
 
     $form['text_input_required'] = array(
       '#type' => 'text_format',
-      '#title' => t('Text on demand'),
-      '#description' => t('Text to display instead of results until the user selects and applies an exposed filter.'),
+      '#title' => $this->t('Text on demand'),
+      '#description' => $this->t('Text to display instead of results until the user selects and applies an exposed filter.'),
       '#default_value' => $this->options['text_input_required'],
       '#format' => isset($this->options['text_input_required_format']) ? $this->options['text_input_required_format'] : filter_default_format(),
       '#editor' => FALSE,

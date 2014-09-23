@@ -114,7 +114,7 @@ abstract class QueryPluginBase extends PluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
 
   public function summaryTitle() {
-    return t('Settings');
+    return $this->t('Settings');
   }
 
   /**

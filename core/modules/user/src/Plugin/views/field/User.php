@@ -44,8 +44,8 @@ class User extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_user'] = array(
-      '#title' => t('Link this field to its user'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to its user'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_user'],
     );

@@ -31,7 +31,7 @@ class Taxonomy extends Numeric {
       }
     }
     // TODO review text
-    return t('No name');
+    return $this->t('No name');
   }
 
 }

@@ -35,7 +35,7 @@ class Text extends TokenizeAreaPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['content'] = array(
-      '#title' => t('Content'),
+      '#title' => $this->t('Content'),
       '#type' => 'text_format',
       '#default_value' => $this->options['content'],
       '#rows' => 6,

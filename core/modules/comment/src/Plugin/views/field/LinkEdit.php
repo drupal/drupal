@@ -31,8 +31,8 @@ class LinkEdit extends Link {
 
     $form['destination'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use destination'),
-      '#description' => t('Add destination to the link'),
+      '#title' => $this->t('Use destination'),
+      '#description' => $this->t('Add destination to the link'),
       '#default_value' => $this->options['destination'],
     );
   }
@@ -56,7 +56,7 @@ class LinkEdit extends Link {
       return;
     }
 
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('Edit');
+    $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
     unset($this->options['alter']['fragment']);
 
     if (!empty($this->options['destination'])) {

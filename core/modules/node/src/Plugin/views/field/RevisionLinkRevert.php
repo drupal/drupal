@@ -53,7 +53,7 @@ class RevisionLinkRevert extends RevisionLink {
     $this->options['alter']['path'] = 'node/' . $node->id() . "/revisions/$vid/revert";
     $this->options['alter']['query'] = drupal_get_destination();
 
-    return !empty($this->options['text']) ? $this->options['text'] : t('Revert');
+    return !empty($this->options['text']) ? $this->options['text'] : $this->t('Revert');
   }
 
 }

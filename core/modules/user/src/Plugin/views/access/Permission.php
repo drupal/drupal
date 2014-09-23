@@ -88,7 +88,7 @@ class Permission extends AccessPluginBase {
       return $permissions[$this->options['perm']]['title'];
     }
 
-    return t($this->options['perm']);
+    return $this->t($this->options['perm']);
   }
 
 
@@ -115,9 +115,9 @@ class Permission extends AccessPluginBase {
     $form['perm'] = array(
       '#type' => 'select',
       '#options' => $perms,
-      '#title' => t('Permission'),
+      '#title' => $this->t('Permission'),
       '#default_value' => $this->options['perm'],
-      '#description' => t('Only users with the selected permission flag will be able to access this display. Note that users with "access all views" can see any view, regardless of other permissions.'),
+      '#description' => $this->t('Only users with the selected permission flag will be able to access this display. Note that users with "access all views" can see any view, regardless of other permissions.'),
     );
   }
 

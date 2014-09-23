@@ -50,7 +50,7 @@ class Bundle extends InOperator {
   public function getValueOptions() {
     if (!isset($this->value_options)) {
       $types = entity_get_bundles($this->entityTypeId);
-      $this->value_title = t('@entity types', array('@entity' => $this->entityType->getLabel()));
+      $this->value_title = $this->t('@entity types', array('@entity' => $this->entityType->getLabel()));
 
       $options = array();
       foreach ($types as $type => $info) {

@@ -225,7 +225,7 @@ class RestExport extends PathPluginBase {
     unset($options['show_admin_links'], $options['analyze-theme']);
 
     $categories['path'] = array(
-      'title' => t('Path settings'),
+      'title' => $this->t('Path settings'),
       'column' => 'second',
       'build' => array(
         '#weight' => -10,
@@ -233,7 +233,7 @@ class RestExport extends PathPluginBase {
     );
 
     $options['path']['category'] = 'path';
-    $options['path']['title'] = t('Path');
+    $options['path']['title'] = $this->t('Path');
 
     // Remove css/exposed form settings, as they are not used for the data
     // display.

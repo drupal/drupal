@@ -28,7 +28,7 @@ class VocabularyVid extends Numeric {
       return String::checkPlain($vocabulary->label());
     }
 
-    return t('No vocabulary');
+    return $this->t('No vocabulary');
   }
 
 }

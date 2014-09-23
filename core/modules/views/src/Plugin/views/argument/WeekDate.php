@@ -24,7 +24,7 @@ class WeekDate extends Date {
    */
   public function summaryName($data) {
     $created = $data->{$this->name_alias};
-    return t('Week @week', array('@week' => $created));
+    return $this->t('Week @week', array('@week' => $created));
   }
 
 }

@@ -71,9 +71,9 @@ class TaxonomyIndexTid extends ManyToOne {
       if (empty($this->definition['vocabulary'])) {
         $form['vid'] = array(
           '#type' => 'radios',
-          '#title' => t('Vocabulary'),
+          '#title' => $this->t('Vocabulary'),
           '#options' => $options,
-          '#description' => t('Select which vocabulary to show terms for in the regular options.'),
+          '#description' => $this->t('Select which vocabulary to show terms for in the regular options.'),
           '#default_value' => $this->options['vid'],
         );
       }
@@ -81,14 +81,14 @@ class TaxonomyIndexTid extends ManyToOne {
 
     $form['type'] = array(
       '#type' => 'radios',
-      '#title' => t('Selection type'),
-      '#options' => array('select' => t('Dropdown'), 'textfield' => t('Autocomplete')),
+      '#title' => $this->t('Selection type'),
+      '#options' => array('select' => $this->t('Dropdown'), 'textfield' => $this->t('Autocomplete')),
       '#default_value' => $this->options['type'],
     );
 
     $form['hierarchy'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show hierarchy in dropdown'),
+      '#title' => $this->t('Show hierarchy in dropdown'),
       '#default_value' => !empty($this->options['hierarchy']),
       '#states' => array(
         'visible' => array(
@@ -102,7 +102,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $vocabulary = entity_load('taxonomy_vocabulary', $this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
       $form['markup'] = array(
-        '#markup' => '<div class="form-item">' . t('An invalid vocabulary is selected. Please change it in the options.') . '</div>',
+        '#markup' => '<div class="form-item">' . $this->t('An invalid vocabulary is selected. Please change it in the options.') . '</div>',
       );
       return;
     }
@@ -120,7 +120,7 @@ class TaxonomyIndexTid extends ManyToOne {
       }
 
       $form['value'] = array(
-        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : t('Select terms'),
+        '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : $this->t('Select terms'),
         '#type' => 'textfield',
         '#default_value' => $default,
       );
@@ -193,7 +193,7 @@ class TaxonomyIndexTid extends ManyToOne {
       }
       $form['value'] = array(
         '#type' => 'select',
-        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : t('Select terms'),
+        '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : $this->t('Select terms'),
         '#multiple' => TRUE,
         '#options' => $options,
         '#size' => min(9, count($options)),
@@ -342,7 +342,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
     $form['error_message'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display error message'),
+      '#title' => $this->t('Display error message'),
       '#default_value' => !empty($this->options['error_message']),
     );
   }

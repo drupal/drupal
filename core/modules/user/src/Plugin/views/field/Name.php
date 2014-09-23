@@ -53,19 +53,19 @@ class Name extends User {
     parent::buildOptionsForm($form, $form_state);
 
     $form['format_username'] = array(
-      '#title' => t('Use formatted username'),
+      '#title' => $this->t('Use formatted username'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['format_username']),
-      '#description' => t('If checked, the username will be formatted by the system. If unchecked, it will be displayed raw.'),
+      '#description' => $this->t('If checked, the username will be formatted by the system. If unchecked, it will be displayed raw.'),
     );
     $form['overwrite_anonymous'] = array(
-      '#title' => t('Overwrite the value to display for anonymous users'),
+      '#title' => $this->t('Overwrite the value to display for anonymous users'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['overwrite_anonymous']),
-      '#description' => t('Enable to display different text for anonymous users.'),
+      '#description' => $this->t('Enable to display different text for anonymous users.'),
     );
     $form['anonymous_text'] = array(
-      '#title' => t('Text to display for anonymous users'),
+      '#title' => $this->t('Text to display for anonymous users'),
       '#type' => 'textfield',
       '#default_value' => $this->options['anonymous_text'],
       '#states' => array(

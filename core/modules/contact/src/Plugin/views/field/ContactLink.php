@@ -87,9 +87,9 @@ class ContactLink extends Link {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['text']['#title'] = t('Link label');
+    $form['text']['#title'] = $this->t('Link label');
     $form['text']['#required'] = TRUE;
-    $form['text']['#default_value'] = empty($this->options['text']) ? t('contact') : $this->options['text'];
+    $form['text']['#default_value'] = empty($this->options['text']) ? $this->t('contact') : $this->options['text'];
   }
 
   /**
@@ -119,7 +119,7 @@ class ContactLink extends Link {
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "user/{$entity->id()}/contact";
 
-    $title = t('Contact %user', array('%user' => $entity->name->value));
+    $title = $this->t('Contact %user', array('%user' => $entity->name->value));
     $this->options['alter']['attributes'] = array('title' => $title);
 
     if (!empty($this->options['text'])) {

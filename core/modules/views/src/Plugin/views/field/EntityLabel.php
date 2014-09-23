@@ -88,8 +88,8 @@ class EntityLabel extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_entity'] = array(
-      '#title' => t('Link to entity'),
-      '#description' => t('Make entity label a link to entity page.'),
+      '#title' => $this->t('Link to entity'),
+      '#description' => $this->t('Make entity label a link to entity page.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_entity']),
     );

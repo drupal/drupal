@@ -65,7 +65,7 @@ class Node extends WizardPluginBase {
   public function getAvailableSorts() {
     // You can't execute functions in properties, so override the method
     return array(
-      'node_field_data-title:DESC' => t('Title')
+      'node_field_data-title:DESC' => $this->t('Title')
     );
   }
 
@@ -74,11 +74,11 @@ class Node extends WizardPluginBase {
    */
   protected function rowStyleOptions() {
     $options = array();
-    $options['teasers'] = t('teasers');
-    $options['full_posts'] = t('full posts');
-    $options['titles'] = t('titles');
-    $options['titles_linked'] = t('titles (linked)');
-    $options['fields'] = t('fields');
+    $options['teasers'] = $this->t('teasers');
+    $options['full_posts'] = $this->t('full posts');
+    $options['titles'] = $this->t('titles');
+    $options['titles_linked'] = $this->t('titles (linked)');
+    $options['fields'] = $this->t('fields');
     return $options;
   }
 
@@ -106,11 +106,11 @@ class Node extends WizardPluginBase {
       case 'teasers':
         $style_form['row_options']['links'] = array(
           '#type' => 'select',
-          '#title' => t('Should links be displayed below each node'),
+          '#title' => $this->t('Should links be displayed below each node'),
           '#title_display' => 'invisible',
           '#options' => array(
-            1 => t('with links (allow users to add comments, etc.)'),
-            0 => t('without links'),
+            1 => $this->t('with links (allow users to add comments, etc.)'),
+            0 => $this->t('without links'),
           ),
           '#default_value' => 1,
         );
@@ -297,7 +297,7 @@ class Node extends WizardPluginBase {
       // Add the autocomplete textfield to the wizard.
       $form['displays']['show']['tagged_with'] = array(
         '#type' => 'textfield',
-        '#title' => t('tagged with'),
+        '#title' => $this->t('tagged with'),
         '#autocomplete_route_name' => 'taxonomy.autocomplete',
         '#autocomplete_route_parameters' => array(
           'entity_type' => $this->entityTypeId,

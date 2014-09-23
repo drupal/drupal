@@ -96,7 +96,7 @@ abstract class CachePluginBase extends PluginBase {
    * access control.
    */
   public function summaryTitle() {
-    return t('Unknown');
+    return $this->t('Unknown');
   }
 
   /**

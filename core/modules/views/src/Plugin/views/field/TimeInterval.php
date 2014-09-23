@@ -70,8 +70,8 @@ class TimeInterval extends FieldPluginBase {
 
     $form['granularity'] = array(
       '#type' => 'textfield',
-      '#title' => t('Granularity'),
-      '#description' => t('How many different units to display in the string.'),
+      '#title' => $this->t('Granularity'),
+      '#description' => $this->t('How many different units to display in the string.'),
       '#default_value' => $this->options['granularity'],
     );
   }

@@ -356,7 +356,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     parent::optionsSummary($categories, $options);
 
     $categories['page'] = array(
-      'title' => t('Page settings'),
+      'title' => $this->t('Page settings'),
       'column' => 'second',
       'build' => array(
         '#weight' => -10,
@@ -366,7 +366,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $path = strip_tags($this->getOption('path'));
 
     if (empty($path)) {
-      $path = t('No path is set');
+      $path = $this->t('No path is set');
     }
     else {
       $path = '/' . $path;
@@ -374,7 +374,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $options['path'] = array(
       'category' => 'page',
-      'title' => t('Path'),
+      'title' => $this->t('Path'),
       'value' => views_ui_truncate($path, 24),
     );
   }
@@ -387,11 +387,11 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     switch ($form_state->get('section')) {
       case 'path':
-        $form['#title'] .= t('The menu path or URL of this view');
+        $form['#title'] .= $this->t('The menu path or URL of this view');
         $form['path'] = array(
           '#type' => 'textfield',
-          '#title' => t('Path'),
-          '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
+          '#title' => $this->t('Path'),
+          '#description' => $this->t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
           '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),
           '#field_suffix' => '</span>&lrm;',

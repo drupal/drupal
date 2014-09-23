@@ -32,7 +32,7 @@ class Fixed extends ArgumentDefaultPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['argument'] = array(
       '#type' => 'textfield',
-      '#title' => t('Fixed value'),
+      '#title' => $this->t('Fixed value'),
       '#default_value' => $this->options['argument'],
     );
   }

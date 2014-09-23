@@ -85,8 +85,8 @@ class NodeNewComments extends Numeric {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_comment'] = array(
-      '#title' => t('Link this field to new comments'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to new comments'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_comment'],
     );

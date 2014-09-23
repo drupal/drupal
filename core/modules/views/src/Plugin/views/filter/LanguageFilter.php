@@ -24,7 +24,7 @@ class LanguageFilter extends InOperator {
    */
   public function getValueOptions() {
     if (!isset($this->value_options)) {
-      $this->value_title = t('Language');
+      $this->value_title = $this->t('Language');
       $this->value_options = $this->listLanguages(LanguageInterface::STATE_ALL |LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
     }
   }

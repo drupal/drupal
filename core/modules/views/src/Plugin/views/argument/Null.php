@@ -32,9 +32,9 @@ class Null extends ArgumentPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['must_not_be'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Fail basic validation if any argument is given'),
+      '#title' => $this->t('Fail basic validation if any argument is given'),
       '#default_value' => !empty($this->options['must_not_be']),
-      '#description' => t('By checking this field, you can use this to make sure views with more arguments than necessary fail validation.'),
+      '#description' => $this->t('By checking this field, you can use this to make sure views with more arguments than necessary fail validation.'),
       '#fieldset' => 'more',
     );
 

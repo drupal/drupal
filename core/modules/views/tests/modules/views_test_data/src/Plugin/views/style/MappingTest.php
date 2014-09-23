@@ -31,18 +31,18 @@ class MappingTest extends Mapping {
   protected function defineMapping() {
     return array(
       'title_field' => array(
-        '#title' => t('Title field'),
-        '#description' => t('Choose the field with the custom title.'),
+        '#title' => $this->t('Title field'),
+        '#description' => $this->t('Choose the field with the custom title.'),
         '#toggle' => TRUE,
         '#required' => TRUE,
       ),
       'name_field' => array(
-        '#title' => t('Name field'),
-        '#description' => t('Choose the field with the custom name.'),
+        '#title' => $this->t('Name field'),
+        '#description' => $this->t('Choose the field with the custom name.'),
       ),
       'numeric_field' => array(
-        '#title' => t('Numeric field'),
-        '#description' => t('Select one or more numeric fields.'),
+        '#title' => $this->t('Numeric field'),
+        '#description' => $this->t('Select one or more numeric fields.'),
         '#multiple' => TRUE,
         '#toggle' => TRUE,
         '#filter' => 'filterNumericFields',

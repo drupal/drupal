@@ -44,8 +44,8 @@ class Revision extends Node {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_node_revision'] = array(
-      '#title' => t('Link this field to its content revision'),
-      '#description' => t('This will override any other link you have set.'),
+      '#title' => $this->t('Link this field to its content revision'),
+      '#description' => $this->t('This will override any other link you have set.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_node_revision']),
     );

@@ -56,22 +56,22 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['offset'] = array(
       '#type' => 'number',
-      '#title' => t('Offset (number of items to skip)'),
-      '#description' => t('For example, set this to 3 and the first 3 items will not be displayed.'),
+      '#title' => $this->t('Offset (number of items to skip)'),
+      '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
     );
 
     $form['id'] = array(
       '#type' => 'number',
-      '#title' => t('Pager ID'),
-      '#description' => t("Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
+      '#title' => $this->t('Pager ID'),
+      '#description' => $this->t("Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
       '#default_value' => $this->options['id'],
     );
 
     $form['total_pages'] = array(
       '#type' => 'number',
-      '#title' => t('Number of pages'),
-      '#description' => t('The total number of pages. Leave empty to show all pages.'),
+      '#title' => $this->t('Number of pages'),
+      '#description' => $this->t('The total number of pages. Leave empty to show all pages.'),
       '#default_value' => $this->options['total_pages'],
     );
 
@@ -79,19 +79,19 @@ abstract class SqlBase extends PagerPluginBase {
       '#type' => 'details',
       '#open' => TRUE,
       '#tree' => TRUE,
-      '#title' => t('Pager link labels'),
+      '#title' => $this->t('Pager link labels'),
       '#input' => TRUE,
     );
 
     $form['tags']['previous'] = array(
       '#type' => 'textfield',
-      '#title' => t('Previous page link text'),
+      '#title' => $this->t('Previous page link text'),
       '#default_value' => $this->options['tags']['previous'],
     );
 
     $form['tags']['next'] = array(
       '#type' => 'textfield',
-      '#title' => t('Next page link text'),
+      '#title' => $this->t('Next page link text'),
       '#default_value' => $this->options['tags']['next'],
     );
 
@@ -99,23 +99,23 @@ abstract class SqlBase extends PagerPluginBase {
       '#type' => 'details',
       '#open' => TRUE,
       '#tree' => TRUE,
-      '#title' => t('Exposed options'),
+      '#title' => $this->t('Exposed options'),
       '#input' => TRUE,
-      '#description' => t('Exposing this options allows users to define their values in a exposed form when view is displayed'),
+      '#description' => $this->t('Exposing this options allows users to define their values in a exposed form when view is displayed'),
     );
 
     $form['expose']['items_per_page'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Expose items per page'),
-      '#description' => t('When checked, users can determine how many items per page show in a view'),
+      '#title' => $this->t('Expose items per page'),
+      '#description' => $this->t('When checked, users can determine how many items per page show in a view'),
       '#default_value' => $this->options['expose']['items_per_page'],
     );
 
     $form['expose']['items_per_page_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Items per page label'),
+      '#title' => $this->t('Items per page label'),
       '#required' => TRUE,
-      '#description' => t('Label to use in the exposed items per page form element.'),
+      '#description' => $this->t('Label to use in the exposed items per page form element.'),
       '#default_value' => $this->options['expose']['items_per_page_label'],
       '#states' => array(
         'invisible' => array(
@@ -126,9 +126,9 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['expose']['items_per_page_options'] = array(
       '#type' => 'textfield',
-      '#title' => t('Exposed items per page options'),
+      '#title' => $this->t('Exposed items per page options'),
       '#required' => TRUE,
-      '#description' => t('Set between which values the user can choose when determining the items per page. Separated by comma.'),
+      '#description' => $this->t('Set between which values the user can choose when determining the items per page. Separated by comma.'),
       '#default_value' => $this->options['expose']['items_per_page_options'],
       '#states' => array(
         'invisible' => array(
@@ -140,15 +140,15 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['expose']['items_per_page_options_all'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Include all items option'),
-      '#description' => t('If checked, an extra item will be included to items per page to display all items'),
+      '#title' => $this->t('Include all items option'),
+      '#description' => $this->t('If checked, an extra item will be included to items per page to display all items'),
       '#default_value' => $this->options['expose']['items_per_page_options_all'],
     );
 
     $form['expose']['items_per_page_options_all_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('All items label'),
-      '#description' => t('Which label will be used to display all items'),
+      '#title' => $this->t('All items label'),
+      '#description' => $this->t('Which label will be used to display all items'),
       '#default_value' => $this->options['expose']['items_per_page_options_all_label'],
       '#states' => array(
         'invisible' => array(
@@ -159,16 +159,16 @@ abstract class SqlBase extends PagerPluginBase {
 
     $form['expose']['offset'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Expose Offset'),
-      '#description' => t('When checked, users can determine how many items should be skipped at the beginning.'),
+      '#title' => $this->t('Expose Offset'),
+      '#description' => $this->t('When checked, users can determine how many items should be skipped at the beginning.'),
       '#default_value' => $this->options['expose']['offset'],
     );
 
     $form['expose']['offset_label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Offset label'),
+      '#title' => $this->t('Offset label'),
       '#required' => TRUE,
-      '#description' => t('Label to use in the exposed offset form element.'),
+      '#description' => $this->t('Label to use in the exposed offset form element.'),
       '#default_value' => $this->options['expose']['offset_label'],
       '#states' => array(
         'invisible' => array(
@@ -197,14 +197,14 @@ abstract class SqlBase extends PagerPluginBase {
       $error = TRUE;
     }
     if ($error) {
-      $form_state->setErrorByName('pager_options][expose][items_per_page_options', t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
+      $form_state->setErrorByName('pager_options][expose][items_per_page_options', $this->t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
     }
 
     // Make sure that the items_per_page is part of the expose settings.
     if (!$form_state->isValueEmpty(array('pager_options', 'expose', 'items_per_page')) && !$form_state->isValueEmpty(array('pager_options', 'items_per_page'))) {
       $items_per_page = $form_state->getValue(array('pager_options', 'items_per_page'));
       if (array_search($items_per_page, $options) === FALSE) {
-        $form_state->setErrorByName('pager_options][expose][items_per_page_options', t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
+        $form_state->setErrorByName('pager_options][expose][items_per_page_options', $this->t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
           array('@items_per_page' => $items_per_page))
         );
       }
@@ -371,7 +371,7 @@ abstract class SqlBase extends PagerPluginBase {
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('offset') && trim($form_state->getValue('offset'))) {
       if (!is_numeric($form_state->getValue('offset')) || $form_state->getValue('offset') < 0) {
-        $form_state->setErrorByName('offset', t('Offset must be an number greather or equal than 0.'));
+        $form_state->setErrorByName('offset', $this->t('Offset must be an number greather or equal than 0.'));
       }
     }
   }

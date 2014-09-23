@@ -29,10 +29,10 @@ class LanguageField extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['native_language'] = array(
-      '#title' => t('Native language'),
+      '#title' => $this->t('Native language'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['native_language'],
-      '#description' => t('If enabled, the native name of the language will be displayed'),
+      '#description' => $this->t('If enabled, the native name of the language will be displayed'),
     );
   }
 

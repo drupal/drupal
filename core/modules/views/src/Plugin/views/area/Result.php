@@ -55,11 +55,11 @@ class Result extends AreaPluginBase {
     );
     $list = drupal_render($item_list);
     $form['content'] = array(
-      '#title' => t('Display'),
+      '#title' => $this->t('Display'),
       '#type' => 'textarea',
       '#rows' => 3,
       '#default_value' => $this->options['content'],
-      '#description' => t('You may use HTML code in this field. The following tokens are supported:') . $list,
+      '#description' => $this->t('You may use HTML code in this field. The following tokens are supported:') . $list,
     );
   }
 

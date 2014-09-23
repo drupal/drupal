@@ -43,18 +43,18 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
     parent::optionsSummary($categories, $options);
 
     $categories['display_extender_test'] = array(
-      'title' => t('Display extender test settings'),
+      'title' => $this->t('Display extender test settings'),
       'column' => 'second',
       'build' => array(
         '#weight' => -100,
       ),
     );
 
-    $test_option = $this->displayHandler->getOption('test_extender_test_option') ?: t('Empty');
+    $test_option = $this->displayHandler->getOption('test_extender_test_option') ?: $this->t('Empty');
 
     $options['test_extender_test_option'] = array(
       'category' => 'display_extender_test',
-      'title' => t('Test option'),
+      'title' => $this->t('Test option'),
       'value' => views_ui_truncate($test_option, 24),
     );
   }
@@ -65,11 +65,11 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     switch ($form_state->get('section')) {
       case 'test_extender_test_option':
-        $form['#title'] .= t('Test option');
+        $form['#title'] .= $this->t('Test option');
         $form['test_extender_test_option'] = array(
-          '#title' => t('Test option'),
+          '#title' => $this->t('Test option'),
           '#type' => 'textfield',
-          '#description' => t('This is a textfield for test_option.'),
+          '#description' => $this->t('This is a textfield for test_option.'),
           '#default_value' => $this->displayHandler->getOption('test_extender_test_option'),
         );
     }

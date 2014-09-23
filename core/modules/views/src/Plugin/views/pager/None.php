@@ -37,9 +37,9 @@ class None extends PagerPluginBase {
 
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return t('All items, skip @skip', array('@skip' => $this->options['offset']));
+      return $this->t('All items, skip @skip', array('@skip' => $this->options['offset']));
     }
-    return t('All items');
+    return $this->t('All items');
   }
 
   protected function defineOptions() {
@@ -56,8 +56,8 @@ class None extends PagerPluginBase {
     parent::buildOptionsForm($form, $form_state);
     $form['offset'] = array(
       '#type' => 'textfield',
-      '#title' => t('Offset (number of items to skip)'),
-      '#description' => t('For example, set this to 3 and the first 3 items will not be displayed.'),
+      '#title' => $this->t('Offset (number of items to skip)'),
+      '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
     );
   }

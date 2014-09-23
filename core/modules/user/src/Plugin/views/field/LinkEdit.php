@@ -26,7 +26,7 @@ class LinkEdit extends Link {
     if ($entity && $entity->access('update')) {
       $this->options['alter']['make_link'] = TRUE;
 
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('Edit');
+      $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
 
       $this->options['alter']['path'] = $entity->getSystemPath('edit-form');
       $this->options['alter']['query'] = drupal_get_destination();

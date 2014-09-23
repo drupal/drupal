@@ -44,8 +44,8 @@ class File extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_file'] = array(
-      '#title' => t('Link this field to download the file'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to download the file'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_file']),
     );

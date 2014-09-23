@@ -27,7 +27,7 @@ class FileMime extends File {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['filemime_image'] = array(
-      '#title' => t('Display an icon representing the file type, instead of the MIME text (such as "image/jpeg")'),
+      '#title' => $this->t('Display an icon representing the file type, instead of the MIME text (such as "image/jpeg")'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['filemime_image']),
     );

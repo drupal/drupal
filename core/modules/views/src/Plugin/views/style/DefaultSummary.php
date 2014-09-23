@@ -45,9 +45,9 @@ class DefaultSummary extends StylePluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['base_path'] = array(
       '#type' => 'textfield',
-      '#title' => t('Base path'),
+      '#title' => $this->t('Base path'),
       '#default_value' => $this->options['base_path'],
-      '#description' => t('Define the base path for links in this summary
+      '#description' => $this->t('Define the base path for links in this summary
         view, i.e. http://example.com/<strong>your_view_path/archive</strong>.
         Do not include beginning and ending forward slash. If this value
         is empty, views will use the first path found as the base path,
@@ -56,17 +56,17 @@ class DefaultSummary extends StylePluginBase {
     $form['count'] = array(
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['count']),
-      '#title' => t('Display record count with link'),
+      '#title' => $this->t('Display record count with link'),
     );
     $form['override'] = array(
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['override']),
-      '#title' => t('Override number of items to display'),
+      '#title' => $this->t('Override number of items to display'),
     );
 
     $form['items_per_page'] = array(
       '#type' => 'textfield',
-      '#title' => t('Items to display'),
+      '#title' => $this->t('Items to display'),
       '#default_value' => $this->options['items_per_page'],
       '#states' => array(
         'visible' => array(

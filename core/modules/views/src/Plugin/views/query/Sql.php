@@ -206,34 +206,34 @@ class Sql extends QueryPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['disable_sql_rewrite'] = array(
-      '#title' => t('Disable SQL rewriting'),
-      '#description' => t('Disabling SQL rewriting will disable node_access checks as well as other modules that implement hook_query_alter().'),
+      '#title' => $this->t('Disable SQL rewriting'),
+      '#description' => $this->t('Disabling SQL rewriting will disable node_access checks as well as other modules that implement hook_query_alter().'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['disable_sql_rewrite']),
-      '#suffix' => '<div class="messages messages--warning sql-rewrite-warning js-hide">' . t('WARNING: Disabling SQL rewriting means that node access security is disabled. This may allow users to see data they should not be able to see if your view is misconfigured. Use this option only if you understand and accept this security risk.') . '</div>',
+      '#suffix' => '<div class="messages messages--warning sql-rewrite-warning js-hide">' . $this->t('WARNING: Disabling SQL rewriting means that node access security is disabled. This may allow users to see data they should not be able to see if your view is misconfigured. Use this option only if you understand and accept this security risk.') . '</div>',
     );
     $form['distinct'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Distinct'),
-      '#description' => t('This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution.'),
+      '#title' => $this->t('Distinct'),
+      '#description' => $this->t('This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution.'),
       '#default_value' => !empty($this->options['distinct']),
     );
     $form['replica'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use Secondary Server'),
-      '#description' => t('This will make the query attempt to connect to a replica server if available.  If no replica server is defined or available, it will fall back to the default server.'),
+      '#title' => $this->t('Use Secondary Server'),
+      '#description' => $this->t('This will make the query attempt to connect to a replica server if available.  If no replica server is defined or available, it will fall back to the default server.'),
       '#default_value' => !empty($this->options['replica']),
     );
     $form['query_comment'] = array(
       '#type' => 'textfield',
-      '#title' => t('Query Comment'),
-      '#description' => t('If set, this comment will be embedded in the query and passed to the SQL server. This can be helpful for logging or debugging.'),
+      '#title' => $this->t('Query Comment'),
+      '#description' => $this->t('If set, this comment will be embedded in the query and passed to the SQL server. This can be helpful for logging or debugging.'),
       '#default_value' => $this->options['query_comment'],
     );
     $form['query_tags'] = array(
       '#type' => 'textfield',
-      '#title' => t('Query Tags'),
-      '#description' => t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
+      '#title' => $this->t('Query Tags'),
+      '#description' => $this->t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
       '#default_value' => implode(', ', $this->options['query_tags']),
       '#element_validate' => array('views_element_validate_tags'),
     );
@@ -1529,11 +1529,11 @@ class Sql extends QueryPluginBase {
     // functions into here.
     return array(
       'group' => array(
-        'title' => t('Group results together'),
+        'title' => $this->t('Group results together'),
         'is aggregate' => FALSE,
       ),
       'count' => array(
-        'title' => t('Count'),
+        'title' => $this->t('Count'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1543,7 +1543,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'count_distinct' => array(
-        'title' => t('Count DISTINCT'),
+        'title' => $this->t('Count DISTINCT'),
         'method' => 'aggregationMethodDistinct',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1553,7 +1553,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'sum' => array(
-        'title' => t('Sum'),
+        'title' => $this->t('Sum'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1563,7 +1563,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'avg' => array(
-        'title' => t('Average'),
+        'title' => $this->t('Average'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1573,7 +1573,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'min' => array(
-        'title' => t('Minimum'),
+        'title' => $this->t('Minimum'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1583,7 +1583,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'max' => array(
-        'title' => t('Maximum'),
+        'title' => $this->t('Maximum'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',
@@ -1593,7 +1593,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'stddev_pop' => array(
-        'title' => t('Standard deviation'),
+        'title' => $this->t('Standard deviation'),
         'method' => 'aggregationMethodSimple',
         'handler' => array(
           'argument' => 'groupby_numeric',

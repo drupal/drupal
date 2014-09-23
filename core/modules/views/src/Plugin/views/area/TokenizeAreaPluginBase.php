@@ -46,7 +46,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
   public function tokenForm(&$form, FormStateInterface $form_state) {
     $form['tokenize'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use replacement tokens from the first row'),
+      '#title' => $this->t('Use replacement tokens from the first row'),
       '#default_value' => $this->options['tokenize'],
     );
 
@@ -58,14 +58,14 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
 
     $count = 0; // This lets us prepare the key as we want it printed.
     foreach ($this->view->display_handler->getHandlers('argument') as $handler) {
-      $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
-      $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
+      $options[t('Arguments')]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+      $options[t('Arguments')]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
     }
 
     if (!empty($options)) {
       $form['tokens'] = array(
         '#type' => 'details',
-        '#title' => t('Replacement patterns'),
+        '#title' => $this->t('Replacement patterns'),
         '#open' => TRUE,
         '#id' => 'edit-options-token-help',
         '#states' => array(
@@ -75,7 +75,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
         ),
       );
       $form['tokens']['help'] = array(
-        '#markup' => '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
+        '#markup' => '<p>' . $this->t('The following tokens are available. If you would like to have the characters \'[\' and \']\' use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
       );
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
