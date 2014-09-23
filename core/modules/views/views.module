@@ -47,11 +47,13 @@ function views_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Implements hook_element_info().
+ *
+ * @todo Remove once https://www.drupal.org/node/2326409 is in.
  */
 function views_element_info() {
   $types['view'] = array(
     '#theme_wrappers' => array('container'),
-    '#pre_render' => array('views_pre_render_view_element'),
+    '#pre_render' => array('\Drupal\views\Element\View::preRenderViewElement'),
     '#name' => NULL,
     '#display_id' => 'default',
     '#arguments' => array(),
@@ -88,20 +90,6 @@ function views_views_pre_render($view) {
   }
 
   return $view;
-}
-
-/**
- * View element pre render callback.
- */
-function views_pre_render_view_element($element) {
-  $element['#attributes']['class'][] = 'views-element-container';
-
-  $view = Views::getView($element['#name']);
-  if ($view && $view->access($element['#display_id'])) {
-    $element['view'] = $view->preview($element['#display_id'], $element['#arguments']);
-  }
-
-  return $element;
 }
 
 /**
