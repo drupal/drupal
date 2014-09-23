@@ -31,10 +31,21 @@ class Drupal6NodeRevision extends Drupal6DumpBase {
         'vid' => 2,
         'uid' => 2,
         'title' => 'Test title rev 2',
-        'body' => 'test rev 2',
-        'teaser' => 'test rev 2',
-        'log' => '',
-        'timestamp' => 1390095701,
+        'body' => 'body test rev 2',
+        'teaser' => 'teaser test rev 2',
+        'log' => 'modified rev 2',
+        'timestamp' => 1390095702,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 1,
+        'vid' => 4,
+        'uid' => 1,
+        'title' => 'Test title rev 3',
+        'body' => 'body test rev 3',
+        'teaser' => 'teaser test rev 3',
+        'log' => 'modified rev 3',
+        'timestamp' => 1390095703,
         'format' => 1,
       ))
       ->execute();

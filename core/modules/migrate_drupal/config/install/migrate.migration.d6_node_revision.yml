@@ -8,7 +8,10 @@ process:
   nid: nid
   vid: vid
   type: type
-  langcode: language
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
   title: title
   uid: uid
   status: status
@@ -21,6 +24,10 @@ process:
     migration: d6_filter_format
     source: format
   'body/value': body
+  'body/summary': teaser
+  revision_uid: uid
+  revision_log: log
+  revision_timestamp: timestamp
 
 #  unmapped d6 fields.
 #  tnid

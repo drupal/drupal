@@ -43,9 +43,23 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    */
   public function testNodeRevision() {
     $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2);
+    /** @var \Drupal\node\NodeInterface $node */
     $this->assertEqual($node->id(), 1);
     $this->assertEqual($node->getRevisionId(), 2);
-    $this->assertEqual($node->body->value, 'test rev 2');
+    $this->assertEqual($node->langcode->value, 'und');
+    $this->assertEqual($node->getTitle(), 'Test title rev 2');
+    $this->assertEqual($node->body->value, 'body test rev 2');
+    $this->assertEqual($node->body->summary, 'teaser test rev 2');
+    $this->assertEqual($node->getRevisionAuthor()->id(), 1);
+    $this->assertEqual($node->revision_log->value, 'modified rev 2');
+    $this->assertEqual($node->getRevisionCreationTime(), '1390095702');
+
+    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(4);
+    $this->assertEqual($node->id(), 1);
+    $this->assertEqual($node->body->value, 'body test rev 3');
+    $this->assertEqual($node->getRevisionAuthor()->id(), 1);
+    $this->assertEqual($node->revision_log->value, 'modified rev 3');
+    $this->assertEqual($node->getRevisionCreationTime(), '1390095703');
   }
 
 }

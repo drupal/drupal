@@ -40,7 +40,6 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 1',
       'uid' => 1,
       'status' => 1,
-      'timestamp' => 1279051598,
       'created' => 1279051598,
       'changed' => 1279051598,
       'comment' => 2,
@@ -52,6 +51,8 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 1',
       'teaser' => 'teaser for node 1',
+      'log' => '',
+      'timestamp' => 1279051598,
       'format' => 1,
     ),
     array(
@@ -63,7 +64,6 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 2',
       'uid' => 1,
       'status' => 1,
-      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -75,6 +75,8 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 2',
       'teaser' => 'teaser for node 2',
+      'log' => '',
+      'timestamp' => 1279308993,
       'format' => 1,
     ),
     array(
@@ -86,7 +88,6 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 5',
       'uid' => 1,
       'status' => 1,
-      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -98,6 +99,8 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 5',
       'teaser' => 'body for node 5',
+      'log' => '',
+      'timestamp' => 1279308993,
       'format' => 1,
     ),
   );
@@ -107,7 +110,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
    */
   protected function setUp() {
     foreach ($this->expectedResults as $k => $row) {
-      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp') as $i => $field) {
+      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'log', 'timestamp', 'format') as $i => $field) {
         $this->databaseContents['node_revisions'][$k][$field] = $row[$field];
         // Keep nid and vid.
         if ($i > 1) {
