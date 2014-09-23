@@ -303,6 +303,12 @@ class Drupal6Node extends Drupal6DumpBase {
           'unsigned' => TRUE,
           'not null' => TRUE,
         ),
+        'uid' => array(
+          'description' => 'The author of the node.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
         'field_test_three_value' => array(
           'description' => 'Test field column.',
           'type' => 'numeric',
@@ -324,12 +330,14 @@ class Drupal6Node extends Drupal6DumpBase {
       array(
         'nid',
         'vid',
+        'uid',
         'field_test_three_value',
         'field_test_integer_selectlist_value',
       ))
       ->values(array(
         'nid' => 1,
         'vid' => 1,
+        'uid' => 1,
         'field_test_three_value' => '42.42',
         'field_test_integer_selectlist_value' => '3412',
       ))

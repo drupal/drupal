@@ -29,7 +29,7 @@ class Drupal6NodeRevision extends Drupal6DumpBase {
       ->values(array(
         'nid' => 1,
         'vid' => 2,
-        'uid' => 1,
+        'uid' => 2,
         'title' => 'Test title rev 2',
         'body' => 'test rev 2',
         'teaser' => 'test rev 2',
