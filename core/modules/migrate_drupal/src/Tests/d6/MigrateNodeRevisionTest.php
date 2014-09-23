@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate_drupal\Tests\Dump\Drupal6User;
 
 /**
  * Node content revisions migration.
@@ -21,6 +22,12 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    // Create our users for the node authors.
+    foreach (Drupal6User::getData('users') as $u) {
+      $user = entity_create('user', $u);
+      $user->enforceIsNew();
+      $user->save();
+    }
     $id_mappings = array(
       'd6_node' => array(
         array(array(1), array(1)),
@@ -50,11 +57,11 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertEqual($node->getTitle(), 'Test title rev 2');
     $this->assertEqual($node->body->value, 'body test rev 2');
     $this->assertEqual($node->body->summary, 'teaser test rev 2');
-    $this->assertEqual($node->getRevisionAuthor()->id(), 1);
+    $this->assertEqual($node->getRevisionAuthor()->id(), 2);
     $this->assertEqual($node->revision_log->value, 'modified rev 2');
     $this->assertEqual($node->getRevisionCreationTime(), '1390095702');
 
-    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(4);
+    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(5);
     $this->assertEqual($node->id(), 1);
     $this->assertEqual($node->body->value, 'body test rev 3');
     $this->assertEqual($node->getRevisionAuthor()->id(), 1);
