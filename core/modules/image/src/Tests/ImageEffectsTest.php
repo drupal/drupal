@@ -130,7 +130,7 @@ class ImageEffectsTest extends ToolkitTestBase {
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['rotate'][0][0], 90, 'Degrees were passed correctly');
-    $this->assertEqual($calls['rotate'][0][1], 0xffffff, 'Background color was passed correctly');
+    $this->assertEqual($calls['rotate'][0][1], '#fff', 'Background color was passed correctly');
   }
 
   /**

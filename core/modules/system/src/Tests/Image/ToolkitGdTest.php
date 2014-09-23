@@ -32,9 +32,11 @@ class ToolkitGdTest extends DrupalUnitTestBase {
   protected $green       = array(0, 255, 0, 0);
   protected $blue        = array(0, 0, 255, 0);
   protected $yellow      = array(255, 255, 0, 0);
-  protected $fuchsia     = array(255, 0, 255, 0); // Used as background colors.
-  protected $transparent = array(0, 0, 0, 127);
   protected $white       = array(255, 255, 255, 0);
+  protected $transparent = array(0, 0, 0, 127);
+  // Used as rotate background colors.
+  protected $fuchsia            = array(255, 0, 255, 0);
+  protected $rotate_transparent = array(255, 255, 255, 127);
 
   protected $width = 40;
   protected $height = 20;
@@ -117,6 +119,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
     $files = array(
       'image-test.png',
       'image-test.gif',
+      'image-test-no-transparency.gif',
       'image-test.jpg',
     );
 
@@ -178,14 +181,14 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       $operations += array(
         'rotate_5' => array(
           'function' => 'rotate',
-          'arguments' => array('degrees' => 5, 'background' => 0xFF00FF), // Fuchsia background.
+          'arguments' => array('degrees' => 5, 'background' => '#FF00FF'), // Fuchsia background.
           'width' => 42,
           'height' => 24,
           'corners' => array_fill(0, 4, $this->fuchsia),
         ),
         'rotate_90' => array(
           'function' => 'rotate',
-          'arguments' => array('degrees' => 90, 'background' => 0xFF00FF), // Fuchsia background.
+          'arguments' => array('degrees' => 90, 'background' => '#FF00FF'), // Fuchsia background.
           'width' => 20,
           'height' => 40,
           'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
@@ -195,7 +198,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
           'arguments' => array('degrees' => 5),
           'width' => 42,
           'height' => 24,
-          'corners' => array_fill(0, 4, $this->transparent),
+          'corners' => array_fill(0, 4, $this->rotate_transparent),
         ),
         'rotate_transparent_90' => array(
           'function' => 'rotate',
@@ -257,7 +260,20 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $correct_dimensions_real = TRUE;
         $correct_dimensions_object = TRUE;
 
-        // Check the real dimensions of the image first.
+        // PHP 5.5 GD bug: https://bugs.php.net/bug.php?id=65148. PHP 5.5 GD
+        // rotates differently then it did in PHP 5.4 resulting in different
+        // dimensions then what math teaches us. For the test images, the
+        // dimensions will be 1 pixel smaller in both dimensions (though other
+        // tests have shown a difference of 0 to 3 pixels in both dimensions.
+        // @todo: if and when the PHP bug gets solved, add an upper limit
+        //   version check.
+        // @todo: in [#1551686] the dimension calculations for rotation are
+        //   reworked. That issue should also check if these tests can be made
+        //   more robust.
+        if (version_compare(PHP_VERSION, '5.5', '>=') && $values['function'] === 'rotate' && $values['arguments']['degrees'] % 90 != 0) {
+          $values['height']--;
+          $values['width']--;
+        }
         if (imagesy($toolkit->getResource()) != $values['height'] || imagesx($toolkit->getResource()) != $values['width']) {
           $correct_dimensions_real = FALSE;
         }
@@ -279,6 +295,11 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         if ($image->getToolkit()->getType() != IMAGETYPE_JPEG) {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
+            // The test gif that does not have transparency has yellow where the
+            // others have transparent.
+            if ($file === 'image-test-no-transparency.gif' && $corner === $this->transparent) {
+              $corner = $this->yellow;
+            }
             // Get the location of the corner.
             switch ($key) {
               case 0:
@@ -286,16 +307,16 @@ class ToolkitGdTest extends DrupalUnitTestBase {
                 $y = 0;
                 break;
               case 1:
-                $x = $values['width'] - 1;
+                $x = $image->getWidth() - 1;
                 $y = 0;
                 break;
               case 2:
-                $x = $values['width'] - 1;
-                $y = $values['height'] - 1;
+                $x = $image->getWidth() - 1;
+                $y = $image->getHeight() - 1;
                 break;
               case 3:
                 $x = 0;
-                $y = $values['height'] - 1;
+                $y = $image->getHeight() - 1;
                 break;
             }
             $color = $this->getPixelColor($image, $x, $y);

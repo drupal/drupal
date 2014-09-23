@@ -27,23 +27,9 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    // Convert short #FFF syntax to full #FFFFFF syntax.
-    if (strlen($this->configuration['bgcolor']) == 4) {
-      $c = $this->configuration['bgcolor'];
-      $this->configuration['bgcolor'] = $c[0] . $c[1] . $c[1] . $c[2] . $c[2] . $c[3] . $c[3];
-    }
-
-    // Convert #FFFFFF syntax to hexadecimal colors.
-    if ($this->configuration['bgcolor'] != '') {
-      $this->configuration['bgcolor'] = hexdec(str_replace('#', '0x', $this->configuration['bgcolor']));
-    }
-    else {
-      $this->configuration['bgcolor'] = NULL;
-    }
-
     if (!empty($this->configuration['random'])) {
       $degrees = abs((float) $this->configuration['degrees']);
-      $this->configuration['degrees'] = rand(-1 * $degrees, $degrees);
+      $this->configuration['degrees'] = rand(-$degrees, $degrees);
     }
 
     if (!$image->rotate($this->configuration['degrees'], $this->configuration['bgcolor'])) {
