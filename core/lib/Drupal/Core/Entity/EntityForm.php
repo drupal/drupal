@@ -198,8 +198,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     // @todo Consider renaming the action key from submit to save. The impacts
-      //   are hard to predict. For example, see
-      //   language_configuration_element_process().
+    //   are hard to predict. For example, see
+    //   \Drupal\language\Element\LanguageConfiguration::processLanguageConfiguration().
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save'),
