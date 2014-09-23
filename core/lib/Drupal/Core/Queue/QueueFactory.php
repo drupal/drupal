@@ -50,7 +50,7 @@ class QueueFactory implements ContainerAwareInterface {
    *   least once is important, FALSE if scalability is the main concern. Defaults
    *   to FALSE.
    *
-   * @return \Drupal\Core\QueueStore\QueueInterface
+   * @return \Drupal\Core\Queue\QueueInterface
    *   A queue implementation for the given name.
    */
   public function get($name, $reliable = FALSE) {

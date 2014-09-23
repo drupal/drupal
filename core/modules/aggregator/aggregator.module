@@ -6,7 +6,6 @@
  */
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -159,22 +158,6 @@ function aggregator_cron() {
       $feed->save();
     }
   }
-}
-
-/**
- * Implements hook_queue_info().
- */
-function aggregator_queue_info() {
-  $queues['aggregator_feeds'] = array(
-    'title' => t('Aggregator refresh'),
-    'worker callback' => function (FeedInterface $feed) {
-      $feed->refreshItems();
-    },
-    'cron' => array(
-      'time' => 60,
-    ),
-  );
-  return $queues;
 }
 
 /**

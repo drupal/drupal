@@ -8,6 +8,7 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -72,6 +73,13 @@ class Cron implements CronInterface {
   protected $logger;
 
   /**
+   * The queue plugin manager.
+   *
+   * @var \Drupal\Core\Queue\QueueWorkerManagerInterface
+   */
+  protected $queueManager;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -88,8 +96,10 @@ class Cron implements CronInterface {
    *   The session manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface
+   *   The queue plugin manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user, SessionManagerInterface $session_manager, LoggerInterface $logger) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user, SessionManagerInterface $session_manager, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
@@ -97,6 +107,7 @@ class Cron implements CronInterface {
     $this->currentUser = $current_user;
     $this->sessionManager = $session_manager;
     $this->logger = $logger;
+    $this->queueManager = $queue_manager;
   }
 
   /**
@@ -162,21 +173,18 @@ class Cron implements CronInterface {
    */
   protected function processQueues() {
     // Grab the defined cron queues.
-    $queues = $this->moduleHandler->invokeAll('queue_info');
-    $this->moduleHandler->alter('queue_info', $queues);
-
-    foreach ($queues as $queue_name => $info) {
+    foreach ($this->queueManager->getDefinitions() as $queue_name => $info) {
       if (isset($info['cron'])) {
         // Make sure every queue exists. There is no harm in trying to recreate
         // an existing queue.
         $this->queueFactory->get($queue_name)->createQueue();
 
-        $callback = $info['worker callback'];
+        $queue_worker = $this->queueManager->createInstance($queue_name);
         $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
         $queue = $this->queueFactory->get($queue_name);
         while (time() < $end && ($item = $queue->claimItem())) {
           try {
-            call_user_func_array($callback, array($item->data));
+            $queue_worker->processItem($item->data);
             $queue->deleteItem($item);
           }
           catch (SuspendQueueException $e) {
