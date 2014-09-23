@@ -1073,11 +1073,31 @@ function template_preprocess_links(&$variables) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables) {
-  $variables['attributes']['src'] = file_create_url($variables['uri']);
+  if (!empty($variables['uri'])) {
+    $variables['attributes']['src'] = file_create_url($variables['uri']);
+  }
+  // Generate a srcset attribute conforming to the spec at
+  // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
+  if (!empty($variables['srcset'])) {
+    $srcset = array();
+    foreach ($variables['srcset'] as $src) {
+      // URI is mandatory.
+      $source = file_create_url($src['uri']);
+      if (isset($src['width']) && !empty($src['width'])) {
+        $source .= ' ' . $src['width'];
+      }
+      elseif (isset($src['multiplier']) && !empty($src['multiplier'])) {
+        $source .= ' ' . $src['multiplier'];
+      }
+      $srcset[] = $source;
+    }
+    $variables['attributes']['srcset'] = implode(', ', $srcset);
+  }
 
   foreach (array('width', 'height', 'alt', 'title', 'sizes') as $key) {
     if (isset($variables[$key])) {
@@ -2268,7 +2288,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL),
+      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL, 'srcset' => array()),
       'template' => 'image',
     ),
     'breadcrumb' => array(

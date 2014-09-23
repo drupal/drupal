@@ -23,6 +23,21 @@ class ImageTest extends KernelTestBase {
    */
   public static $modules = array('system');
 
+  /*
+   * The images to test with.
+   *
+   * @var array
+   */
+  protected $testImages;
+
+  protected function setUp() {
+    parent::setUp();
+    $this->testImages = array(
+      '/core/misc/druplicon.png',
+      '/core/misc/loading.gif',
+    );
+  }
+
   /**
    * Tests that an image with the sizes attribute is output correctly.
    */
@@ -32,7 +47,7 @@ class ImageTest extends KernelTestBase {
     $image = array(
       '#theme' => 'image',
       '#sizes' => $sizes,
-      '#uri' => '/core/misc/druplicon.png',
+      '#uri' => reset($this->testImages),
       '#width' => rand(0, 1000) . 'px',
       '#height' => rand(0, 500) . 'px',
       '#alt' => $this->randomMachineName(),
@@ -42,6 +57,85 @@ class ImageTest extends KernelTestBase {
 
     // Make sure sizes is set.
     $this->assertRaw($sizes, 'Sizes is set correctly.');
+  }
+
+  /**
+   * Tests that an image with the src attribute is output correctly.
+   */
+  function testThemeImageWithSrc() {
+
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => reset($this->testImages),
+      '#width' => rand(0, 1000) . 'px',
+      '#height' => rand(0, 500) . 'px',
+      '#alt' => $this->randomMachineName(),
+      '#title' => $this->randomMachineName(),
+    );
+    $this->render($image);
+
+    // Make sure the src attribute has the correct value.
+    $this->assertRaw(file_create_url($image['#uri']), 'Correct output for an image with the src attribute.');
+  }
+
+  /**
+   * Tests that an image with the srcset and multipliers is output correctly.
+   */
+  function testThemeImageWithSrcsetMultiplier() {
+    // Test with multipliers.
+    $image = array(
+      '#theme' => 'image',
+      '#srcset' => array(
+        array(
+          'uri' => $this->testImages[0],
+          'multiplier' => '1x',
+        ),
+        array(
+          'uri' => $this->testImages[1],
+          'multiplier' => '2x',
+        ),
+      ),
+      '#width' => rand(0, 1000) . 'px',
+      '#height' => rand(0, 500) . 'px',
+      '#alt' => $this->randomMachineName(),
+      '#title' => $this->randomMachineName(),
+    );
+    $this->render($image);
+
+    // Make sure the srcset attribute has the correct value.
+    $this->assertRaw(file_create_url($this->testImages[0]) . ' 1x, ' . file_create_url($this->testImages[1]) . ' 2x', 'Correct output for image with srcset attribute and multipliers.');
+  }
+
+  /**
+   * Tests that an image with the srcset and widths is output correctly.
+   */
+  function testThemeImageWithSrcsetWidth() {
+    // Test with multipliers.
+    $widths = array(
+      rand(0, 500) . 'w',
+      rand(500, 1000) . 'w',
+    );
+    $image = array(
+      '#theme' => 'image',
+      '#srcset' => array(
+        array(
+          'uri' => $this->testImages[0],
+          'width' => $widths[0],
+        ),
+        array(
+          'uri' => $this->testImages[1],
+          'width' => $widths[1],
+        ),
+      ),
+      '#width' => rand(0, 1000) . 'px',
+      '#height' => rand(0, 500) . 'px',
+      '#alt' => $this->randomMachineName(),
+      '#title' => $this->randomMachineName(),
+    );
+    $this->render($image);
+
+    // Make sure the srcset attribute has the correct value.
+    $this->assertRaw(file_create_url($this->testImages[0]) . ' ' . $widths[0] . ', ' . file_create_url($this->testImages[1]) . ' ' . $widths[1], 'Correct output for image with srcset attribute and width descriptors.');
   }
 
 }
