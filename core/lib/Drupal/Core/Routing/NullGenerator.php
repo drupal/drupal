@@ -24,6 +24,16 @@ class NullGenerator extends UrlGenerator {
 
   /**
    * {@inheritdoc}
+   */
+  public function updateFromRequest() {
+    global $base_url, $base_path, $script_path;
+    $this->basePath = $base_path;
+    $this->baseUrl = $base_url . '/';
+    $this->scriptPath = $script_path;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * generate(), generateFromRoute(), and getPathFromRoute() all call this
    * protected method.

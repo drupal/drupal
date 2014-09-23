@@ -642,21 +642,7 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromPath().
  */
 function url($path = NULL, array $options = array()) {
-  $generator = \Drupal::urlGenerator();
-  try {
-    $url = $generator->generateFromPath($path, $options);
-  }
-  catch (GeneratorNotInitializedException $e) {
-    // Fallback to using globals.
-    // @todo Remove this once there is no code that calls url() when there is
-    //   no request.
-    global $base_url, $base_path, $script_path;
-    $generator->setBasePath($base_path);
-    $generator->setBaseUrl($base_url . '/');
-    $generator->setScriptPath($script_path);
-    $url = $generator->generateFromPath($path, $options);
-  }
-  return $url;
+  return \Drupal::urlGenerator()->generateFromPath($path, $options);
 }
 
 /**
