@@ -8,7 +8,6 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_toolbar().
@@ -88,14 +87,16 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Implements hook_element_info().
+ *
+ * @todo Remove once https://www.drupal.org/node/2326409 is in.
  */
 function contextual_element_info() {
   $types['contextual_links_placeholder'] = array(
-    '#pre_render' => array('contextual_pre_render_placeholder'),
+    '#pre_render' => array('\Drupal\contextual\Element\ContextualLinksPlaceholder::preRenderPlaceholder'),
     '#id' => NULL,
   );
   $types['contextual_links'] = array(
-    '#pre_render' => array('contextual_pre_render_links'),
+    '#pre_render' => array('\Drupal\contextual\Element\ContextualLinks::preRenderLinks'),
     '#theme' => 'links__contextual',
     '#links' => array(),
     '#attributes' => array('class' => array('contextual-links')),
@@ -142,91 +143,6 @@ function contextual_preprocess(&$variables, $hook, $info) {
       '#id' => _contextual_links_to_id($element['#contextual_links']),
     );
   }
-}
-
-/**
- * Pre-render callback: Renders a contextual links placeholder into #markup.
- *
- * Renders an empty (hence invisible) placeholder div with a data-attribute that
- * contains an identifier ("contextual id"), which allows the JavaScript of the
- * drupal.contextual-links library to dynamically render contextual links.
- *
- * @param $element
- *   A structured array with #id containing a "contextual id".
- *
- * @return
- *   The passed-in element with a contextual link placeholder in '#markup'.
- *
- * @see _contextual_links_to_id()
- * @see contextual_element_info()
- */
-function contextual_pre_render_placeholder($element) {
-  $element['#markup'] = '<div' . new Attribute(array('data-contextual-id' => $element['#id'])) . '></div>';
-  return $element;
-}
-
-/**
- * Pre-render callback: Builds a renderable array for contextual links.
- *
- * @param $element
- *   A renderable array containing a #contextual_links property, which is a
- *   keyed array. Each key is the name of the group of contextual links to
- *   render (based on the 'group' key in the *.links.contextual.yml files for
- *   all enabled modules). The value contains an associative array containing
- *   the following keys:
- *   - route_parameters: The route parameters passed to the url generator.
- *   - metadata: Any additional data needed in order to alter the link.
- *   @code
- *     array('#contextual_links' => array(
- *       'block' => array(
- *         'route_parameters' => array('block' => 'system.menu-tools'),
- *       ),
- *       'menu' => array(
- *         'route_parameters' => array('menu' => 'tools'),
- *       ),
- *     ))
- *   @endcode
- *
- * @return
- *   A renderable array representing contextual links.
- *
- * @see contextual_element_info()
- */
-function contextual_pre_render_links($element) {
-  // Retrieve contextual menu links.
-  $items = array();
-
-  /** @var $contextual_links_manager \Drupal\Core\Menu\ContextualLinkManager */
-  $contextual_links_manager = \Drupal::service('plugin.manager.menu.contextual_link');
-  foreach ($element['#contextual_links'] as $group => $args) {
-    $args += array(
-      'route_parameters' => array(),
-      'metadata' => array(),
-    );
-    $items += $contextual_links_manager->getContextualLinksArrayByGroup($group, $args['route_parameters'], $args['metadata']);
-  }
-
-  // Transform contextual links into parameters suitable for links.html.twig.
-  $links = array();
-  foreach ($items as $class => $item) {
-    $class = drupal_html_class($class);
-    $links[$class] = array(
-      'title' => $item['title'],
-      'route_name' => isset($item['route_name']) ? $item['route_name'] : '',
-      'route_parameters' => isset($item['route_parameters']) ? $item['route_parameters'] : array(),
-    );
-  }
-  $element['#links'] = $links;
-
-  // Allow modules to alter the renderable contextual links element.
-  \Drupal::moduleHandler()->alter('contextual_links_view', $element, $items);
-
-  // If there are no links, tell drupal_render() to abort rendering.
-  if (empty($element['#links'])) {
-    $element['#printed'] = TRUE;
-  }
-
-  return $element;
 }
 
 /**
