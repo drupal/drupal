@@ -22,11 +22,6 @@ namespace Drupal\Core\Access;
  * @endcode
  * would never enter the else-statement and hence introduce a critical security
  * issue.
- *
- * Objects implementing this interface are using Kleene's weak three-valued
- * logic with the isAllowed() state being TRUE, the isForbidden() state being
- * the intermediate truth value and isNeutral() being FALSE. See
- * http://en.wikipedia.org/wiki/Many-valued_logic for more.
  */
 interface AccessResultInterface {
 
@@ -65,6 +60,15 @@ interface AccessResultInterface {
    * - otherwise if isAllowed() in either ⇒ isAllowed()
    * - otherwise both must be isNeutral() ⇒ isNeutral()
    *
+   * Truth table:
+   * @code
+   *   |A N F
+   * --+-----
+   * A |A A F
+   * N |A N F
+   * F |F F F
+   * @endcode
+   *
    * @param \Drupal\Core\Access\AccessResultInterface $other
    *   The other access result to OR this one with.
    *
@@ -79,6 +83,15 @@ interface AccessResultInterface {
    * - isForbidden() in either ⇒ isForbidden()
    * - otherwise, if isAllowed() in both ⇒ isAllowed()
    * - otherwise, one of them is isNeutral()  ⇒ isNeutral()
+   *
+   * Truth table:
+   * @code
+   *   |A N F
+   * --+-----
+   * A |A N F
+   * N |N N F
+   * F |F F F
+   * @endcode
    *
    * @param \Drupal\Core\Access\AccessResultInterface $other
    *   The other access result to AND this one with.
