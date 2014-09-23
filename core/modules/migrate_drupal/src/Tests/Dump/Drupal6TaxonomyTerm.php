@@ -150,7 +150,7 @@ class Drupal6TaxonomyTerm extends Drupal6DumpBase {
     ))
       ->values(array(
         'tid' => '1',
-        'parent' => '0',
+        'parent' => '2',
       ))
       ->values(array(
         'tid' => '2',

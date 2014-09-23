@@ -51,7 +51,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'source_vid' => 1,
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
-        'parent' => array(0),
+        'parent' => array(2),
       ),
       '2' => array(
         'source_vid' => 2,
