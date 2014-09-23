@@ -50,12 +50,16 @@ function toolbar_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_element_info().
+ *
+ * @todo Remove once https://www.drupal.org/node/2326409 is in.
  */
 function toolbar_element_info() {
   $elements = array();
 
   $elements['toolbar'] = array(
-    '#pre_render' => array('toolbar_pre_render'),
+    '#pre_render' => array(
+      '\Drupal\toolbar\Element\Toolbar::preRenderToolbar',
+    ),
     '#theme' => 'toolbar',
     '#attached' => array(
       'library' => array(
@@ -84,7 +88,9 @@ function toolbar_element_info() {
   // A toolbar item is wrapped in markup for common styling.  The 'tray'
   // property contains a renderable array.
   $elements['toolbar_item'] = array(
-    '#pre_render' => array('toolbar_pre_render_item'),
+    '#pre_render' => array(
+      '\Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem',
+    ),
     '#theme' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
@@ -105,57 +111,6 @@ function toolbar_page_build(&$page) {
     '#type' => 'toolbar',
     '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
   );
-}
-
-/**
- * Builds the Toolbar as a structured array ready for drupal_render().
- *
- * Since building the toolbar takes some time, it is done just prior to
- * rendering to ensure that it is built only if it will be displayed.
- *
- * @param array $element
- *  A renderable array.
- *
- * @return
- *  A renderable array.
- *
- * @see toolbar_page_build().
- */
-function toolbar_pre_render($element) {
-
-  // Get the configured breakpoints to switch from vertical to horizontal
-  // toolbar presentation.
-  $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('toolbar');
-  if (!empty($breakpoints)) {
-    $media_queries =  array();
-    foreach ($breakpoints as $id => $breakpoint) {
-      $media_queries[$id] = $breakpoint->getMediaQuery();
-    }
-
-    $element['#attached']['js'][] = array(
-      'data' => array(
-        'toolbar' => array(
-          'breakpoints' => $media_queries,
-        )
-      ),
-      'type' => 'setting',
-    );
-  }
-
-  // Get toolbar items from all modules that implement hook_toolbar().
-  $items = \Drupal::moduleHandler()->invokeAll('toolbar');
-  // Allow for altering of hook_toolbar().
-  \Drupal::moduleHandler()->alter('toolbar', $items);
-  // Sort the children.
-  uasort($items, array('\Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
-
-  // Merge in the original toolbar values.
-  $element = array_merge($element, $items);
-
-  // Render the children.
-  $element['#children'] = drupal_render_children($element);
-
-  return $element;
 }
 
 /**
@@ -213,61 +168,6 @@ function template_preprocess_toolbar(&$variables) {
       }
     }
   }
-}
-
-/**
- * Provides markup for associating a tray trigger with a tray element.
- *
- * A tray is a responsive container that wraps renderable content. Trays present
- * content well on small and large screens alike.
- *
- * @param array $element
- *   A renderable array.
- *
- * @return
- *   A renderable array.
- */
-function toolbar_pre_render_item($element) {
-  // Assign each item a unique ID.
-  $id = drupal_html_id('toolbar-item');
-
-  // Provide attributes for a toolbar item.
-  $attributes = array(
-    'id' => $id,
-  );
-
-  // If tray content is present, markup the tray and its associated trigger.
-  if (!empty($element['tray'])) {
-    // Provide attributes necessary for trays.
-    $attributes += array(
-      'data-toolbar-tray' => $id . '-tray',
-      'aria-owns' => $id,
-      'role' => 'button',
-      'aria-pressed' => 'false',
-    );
-
-    // Merge in module-provided attributes.
-    $element['tab'] += array('#attributes' => array());
-    $element['tab']['#attributes'] += $attributes;
-    $element['tab']['#attributes']['class'][] = 'trigger';
-
-    // Provide attributes for the tray theme wrapper.
-    $attributes = array(
-      'id' => $id . '-tray',
-      'data-toolbar-tray' => $id . '-tray',
-      'aria-owned-by' => $id,
-    );
-    // Merge in module-provided attributes.
-    if (!isset($element['tray']['#wrapper_attributes'])) {
-      $element['tray']['#wrapper_attributes'] = array();
-    }
-    $element['tray']['#wrapper_attributes'] += $attributes;
-    $element['tray']['#wrapper_attributes']['class'][] = 'toolbar-tray';
-  }
-
-  $element['tab']['#attributes']['class'][] = 'toolbar-item';
-
-  return $element;
 }
 
 /**
