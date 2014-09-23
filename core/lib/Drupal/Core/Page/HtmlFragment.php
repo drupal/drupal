@@ -65,7 +65,6 @@ class HtmlFragment implements CacheableInterface, HtmlFragmentInterface {
     $this->cache = $cache_info + array(
       'keys' => array(),
       'tags' => array(),
-      'bin' => NULL,
       'max_age' => 0,
       'is_cacheable' => TRUE,
     );
@@ -211,13 +210,6 @@ class HtmlFragment implements CacheableInterface, HtmlFragmentInterface {
    */
   public function getCacheTags() {
     return $this->cache['tags'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheBin() {
-    return $this->cache['bin'];
   }
 
   /**

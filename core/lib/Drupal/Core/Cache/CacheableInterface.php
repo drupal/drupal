@@ -36,14 +36,6 @@ interface CacheableInterface {
   public function getCacheTags();
 
   /**
-   * The bin to use for this potentially cacheable object.
-   *
-   * @return string
-   *   The name of the cache bin to use.
-   */
-  public function getCacheBin();
-
-  /**
    * The maximum age for which this object may be cached.
    *
    * @return int

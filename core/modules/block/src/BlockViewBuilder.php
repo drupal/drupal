@@ -93,7 +93,6 @@ class BlockViewBuilder extends EntityViewBuilder {
         $max_age = $plugin->getCacheMaxAge();
         $build[$entity_id]['#cache'] += array(
           'keys' => array_merge($default_cache_keys, $plugin->getCacheKeys()),
-          'bin' => $plugin->getCacheBin(),
           'expire' => ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : REQUEST_TIME + $max_age,
         );
       }

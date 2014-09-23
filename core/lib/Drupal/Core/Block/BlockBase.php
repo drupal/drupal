@@ -489,13 +489,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function getCacheBin() {
-    return 'render';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheMaxAge() {
     return (int)$this->configuration['cache']['max_age'];
   }

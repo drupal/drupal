@@ -82,9 +82,6 @@ class HtmlViewSubscriber implements EventSubscriberInterface {
       if ($keys = $page->getCacheKeys()) {
         $response->headers->set('cache_keys', serialize($keys));
       }
-      if ($bin = $page->getCacheBin()) {
-        $response->headers->set('cache_bin', $bin);
-      }
       if ($max_age = $page->getCacheMaxAge()) {
         $response->headers->set('cache_max_age', $max_age);
       }
