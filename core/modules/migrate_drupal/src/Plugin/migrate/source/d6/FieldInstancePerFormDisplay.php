@@ -36,7 +36,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
       $rows[$index]['field_name'] = $field_name;
       $rows[$index]['type'] = $field_row['type'];
       $rows[$index]['module'] = $field_row['module'];
-      $rows[$index]['weight'] = $field_row['display_settings']['weight'];
+      $rows[$index]['weight'] = $field_row['weight'];
       $rows[$index]['widget_type'] = $field_row['widget_type'];
       $rows[$index]['widget_settings'] = $field_row['widget_settings'];
     }
@@ -66,7 +66,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
         'module',
       ));
     $query->join('content_node_field', 'cnf', 'cnfi.field_name = cnf.field_name');
-    $query->orderBy('type_name');
+    $query->orderBy('weight');
 
     return $query;
   }

@@ -61,7 +61,7 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
       'field_name' => 'field_test',
       'type' => 'text',
       'module' => 'text',
-      'weight' => 1,
+      'weight' => 2,
       'label' => 'above',
       'display_settings' => array(
         'weight' => 1,

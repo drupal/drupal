@@ -45,7 +45,7 @@ class FieldInstance extends DrupalSqlBase {
       ));
 
     $query->join('content_node_field', 'cnf', 'cnf.field_name = cnfi.field_name');
-    $query->orderBy('type_name');
+    $query->orderBy('weight');
 
     return $query;
   }
