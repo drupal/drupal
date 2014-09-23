@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
@@ -16,7 +15,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Implements hook_help().
@@ -92,10 +90,14 @@ function filter_theme() {
  *
  * @see filter_process_format()
  * @see text_format_wrapper()
+ *
+ * @todo Remove once https://www.drupal.org/node/2326409 is in.
  */
 function filter_element_info() {
   $type['text_format'] = array(
-    '#process' => array('filter_process_format'),
+    '#process' => array(
+      '\Drupal\filter\Element\TextFormat::processFormat',
+    ),
     '#base_type' => 'textarea',
     '#theme_wrappers' => array('text_format_wrapper'),
   );
@@ -104,124 +106,11 @@ function filter_element_info() {
     '#format' => NULL,
     '#filter_types_to_skip' => array(),
     '#langcode' => '',
-    '#pre_render' => array('filter_pre_render_text'),
+    '#pre_render' => array(
+      '\Drupal\filter\Element\ProcessedText::preRenderText',
+    ),
   );
   return $type;
-}
-
-/**
- * Pre-render callback: Renders a processed text element into #markup.
- *
- * Runs all the enabled filters on a piece of text.
- *
- * Note: Because filters can inject JavaScript or execute PHP code, security is
- * vital here. When a user supplies a text format, you should validate it using
- * $format->access() before accepting/using it. This is normally done in the
- * validation stage of the Form API. You should for example never make a
- * preview of content in a disallowed format.
- *
- * @param array $element
- *   A structured array with the following key-value pairs:
- *   - #text: containing the text to be filtered
- *   - #format: containing the machine name of the filter format to be used to
- *     filter the text. Defaults to the fallback format. See
- *     filter_fallback_format().
- *   - #langcode: the language code of the text to be filtered, e.g. 'en' for
- *     English. This allows filters to be language-aware so language-specific
- *     text replacement can be implemented. Defaults to an empty string.
- *   - #filter_types_to_skip: an array of filter types to skip, or an empty
- *     array (default) to skip no filter types. All of the format's filters will
- *     be applied, except for filters of the types that are marked to be skipped.
- *     FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be
- *     skipped.
- *
- * @return array
- *   The passed-in element with the filtered text in '#markup'.
- *
- * @ingroup sanitization
- */
-function filter_pre_render_text(array $element) {
-  $format_id = $element['#format'];
-  $filter_types_to_skip = $element['#filter_types_to_skip'];
-  $text = $element['#text'];
-  $langcode = $element['#langcode'];
-
-  if (!isset($format_id)) {
-    $format_id = filter_fallback_format();
-  }
-  // If the requested text format does not exist, the text cannot be filtered.
-  /** @var \Drupal\filter\Entity\FilterFormat $format **/
-  if (!$format = entity_load('filter_format', $format_id)) {
-    \Drupal::logger('filter')->alert('Missing text format: %format.', array('%format' => $format_id));
-    $element['#markup'] = '';
-    return $element;
-  }
-
-  $filter_must_be_applied = function($filter) use ($filter_types_to_skip) {
-    $enabled = $filter->status === TRUE;
-    $type = $filter->getType();
-    // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
-    $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
-    return $enabled && $filter_type_must_be_applied;
-  };
-
-  // Convert all Windows and Mac newlines to a single newline, so filters only
-  // need to deal with one possibility.
-  $text = str_replace(array("\r\n", "\r"), "\n", $text);
-
-  // Get a complete list of filters, ordered properly.
-  /** @var \Drupal\filter\FilterBag $filters **/
-  $filters = $format->filters();
-
-  // Give filters the chance to escape HTML-like data such as code or formulas.
-  /** @var \Drupal\filter\Plugin\FilterInterface $filter **/
-  foreach ($filters as $filter) {
-    if ($filter_must_be_applied($filter)) {
-      $text = $filter->prepare($text, $langcode);
-    }
-  }
-
-  // Perform filtering.
-  $all_cache_tags = array();
-  $all_assets = array();
-  $all_post_render_cache_callbacks = array();
-  foreach ($filters as $filter) {
-    if ($filter_must_be_applied($filter)) {
-      $result = $filter->process($text, $langcode);
-      $all_assets[] = $result->getAssets();
-      $all_cache_tags[] = $result->getCacheTags();
-      $all_post_render_cache_callbacks[] = $result->getPostRenderCacheCallbacks();
-      $text = $result->getProcessedText();
-    }
-  }
-
-  // Filtering done, store in #markup.
-  $element['#markup'] = $text;
-
-  // Collect all cache tags.
-  if (isset($element['#cache']) && isset($element['#cache']['tags'])) {
-    // Prepend the original cache tags array.
-    array_unshift($all_cache_tags, $element['#cache']['tags']);
-  }
-  // Prepend the text format's cache tags array.
-  array_unshift($all_cache_tags, $format->getCacheTag());
-  $element['#cache']['tags'] = NestedArray::mergeDeepArray($all_cache_tags);
-
-  // Collect all attached assets.
-  if (isset($element['#attached'])) {
-    // Prepend the original attached assets array.
-    array_unshift($all_assets, $element['#attached']);
-  }
-  $element['#attached'] = NestedArray::mergeDeepArray($all_assets);
-
-  // Collect all #post_render_cache callbacks.
-  if (isset($element['#post_render_cache'])) {
-    // Prepend the original attached #post_render_cache array.
-    array_unshift($all_assets, $element['#post_render_cache']);
-  }
-  $element['#post_render_cache'] = NestedArray::mergeDeepArray($all_post_render_cache_callbacks);
-
-  return $element;
 }
 
 /**
@@ -446,198 +335,6 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
     '#langcode' => $langcode,
   );
   return drupal_render($build);
-}
-
-/**
- * Expands an element into a base element with text format selector attached.
- *
- * The form element will be expanded into two separate form elements, one
- * holding the original element, and the other holding the text format
- * selector:
- * - value: Holds the original element, having its #type changed to the value
- *   of #base_type or 'textarea' by default.
- * - format: Holds the text format details and the text format selection,
- *   using the text format ID specified in #format or the user's default format
- *   by default, if NULL.
- *
- * The resulting value for the element will be an array holding the value and
- * the format. For example, the value for the body element will be:
- * @code
- *   $values = $form_state->getValue('body');
- *   $values['value'] = 'foo';
- *   $values['format'] = 'foo';
- * @endcode
- *
- * @param $element
- *   The form element to process. Properties used:
- *   - #base_type: The form element #type to use for the 'value' element.
- *     'textarea' by default.
- *   - #format: (optional) The text format ID to preselect. If omitted, the
- *     default format for the current user will be used.
- *   - #allowed_formats: (optional) An array of text format IDs that are
- *     available for this element. If omitted, all text formats that the current
- *     user has access to will be allowed.
- *
- * @return
- *   The expanded element.
- */
-function filter_process_format($element) {
-  $user = \Drupal::currentUser();
-
-  // Ensure that children appear as subkeys of this element.
-  $element['#tree'] = TRUE;
-  $blacklist = array(
-    // Make form_builder() regenerate child properties.
-    '#parents',
-    '#id',
-    '#name',
-    // Do not copy this #process function to prevent form_builder() from
-    // recursing infinitely.
-    '#process',
-    // Description is handled by theme_text_format_wrapper().
-    '#description',
-    // Ensure proper ordering of children.
-    '#weight',
-    // Properties already processed for the parent element.
-    '#prefix',
-    '#suffix',
-    '#attached',
-    '#processed',
-    '#theme_wrappers',
-  );
-  // Move this element into sub-element 'value'.
-  unset($element['value']);
-  foreach (Element::properties($element) as $key) {
-    if (!in_array($key, $blacklist)) {
-      $element['value'][$key] = $element[$key];
-    }
-  }
-
-  $element['value']['#type'] = $element['#base_type'];
-  $element['value'] += element_info($element['#base_type']);
-  // Make sure the #default_value key is set, so we can use it below.
-  $element['value'] += array('#default_value' => '');
-
-  // Turn original element into a text format wrapper.
-  $element['#attached']['library'][] = 'filter/drupal.filter';
-
-  // Setup child container for the text format widget.
-  $element['format'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('filter-wrapper')),
-  );
-
-  // Get a list of formats that the current user has access to.
-  $formats = filter_formats($user);
-
-  // Allow the list of formats to be restricted.
-  if (isset($element['#allowed_formats'])) {
-    // We do not add the fallback format here to allow the use-case of forcing
-    // certain text formats to be used for certain text areas. In case the
-    // fallback format is supposed to be allowed as well, it must be added to
-    // $element['#allowed_formats'] explicitly.
-    $formats = array_intersect_key($formats, array_flip($element['#allowed_formats']));
-  }
-
-  if (!isset($element['#format']) && !empty($formats)) {
-    // If no text format was selected, use the allowed format with the highest
-    // weight. This is equivalent to calling filter_default_format().
-    $element['#format'] = reset($formats)->format;
-  }
-
-  // If #allowed_formats is set, the list of formats must not be modified in any
-  // way. Otherwise, however, if all of the following conditions are true,
-  // remove the fallback format from the list of formats:
-  // 1. The 'always_show_fallback_choice' filter setting has not been activated.
-  // 2. Multiple text formats are available.
-  // 3. The fallback format is not the default format.
-  // The 'always_show_fallback_choice' filter setting is a hidden setting that
-  // has no UI. It defaults to FALSE.
-  if (!isset($element['#allowed_formats']) && !\Drupal::config('filter.settings')->get('always_show_fallback_choice')) {
-    $fallback_format = filter_fallback_format();
-    if ($element['#format'] !== $fallback_format && count($formats) > 1) {
-      unset($formats[$fallback_format]);
-    }
-  }
-
-  // Prepare text format guidelines.
-  $element['format']['guidelines'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('filter-guidelines')),
-    '#weight' => 20,
-  );
-  $options = array();
-  foreach ($formats as $format) {
-    $options[$format->id()] = $format->label();
-    $element['format']['guidelines'][$format->id()] = array(
-      '#theme' => 'filter_guidelines',
-      '#format' => $format,
-    );
-  }
-
-  $element['format']['format'] = array(
-    '#type' => 'select',
-    '#title' => t('Text format'),
-    '#options' => $options,
-    '#default_value' => $element['#format'],
-    '#access' => count($formats) > 1,
-    '#weight' => 10,
-    '#attributes' => array('class' => array('filter-list')),
-    '#parents' => array_merge($element['#parents'], array('format')),
-  );
-
-  $element['format']['help'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('filter-help')),
-    '#markup' => l(t('About text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))),
-    '#weight' => 0,
-  );
-
-  $all_formats = filter_formats();
-  $format_exists = isset($all_formats[$element['#format']]);
-  $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'], $element['#allowed_formats']);
-  $user_has_access = isset($formats[$element['#format']]);
-  $user_is_admin = \Drupal::currentUser()->hasPermission('administer filters');
-
-  // If the stored format does not exist or if it is not among the allowed
-  // formats for this textarea, administrators have to assign a new format.
-  if ((!$format_exists || !$format_allowed) && $user_is_admin) {
-    $element['format']['format']['#required'] = TRUE;
-    $element['format']['format']['#default_value'] = NULL;
-    // Force access to the format selector (it may have been denied above if
-    // the user only has access to a single format).
-    $element['format']['format']['#access'] = TRUE;
-  }
-  // Disable this widget, if the user is not allowed to use the stored format,
-  // or if the stored format does not exist. The 'administer filters' permission
-  // only grants access to the filter administration, not to all formats.
-  elseif (!$user_has_access || !$format_exists) {
-    // Overload default values into #value to make them unalterable.
-    $element['value']['#value'] = $element['value']['#default_value'];
-    $element['format']['format']['#value'] = $element['format']['format']['#default_value'];
-
-    // Prepend #pre_render callback to replace field value with user notice
-    // prior to rendering.
-    $element['value'] += array('#pre_render' => array());
-    array_unshift($element['value']['#pre_render'], 'filter_form_access_denied');
-
-    // Cosmetic adjustments.
-    if (isset($element['value']['#rows'])) {
-      $element['value']['#rows'] = 3;
-    }
-    $element['value']['#disabled'] = TRUE;
-    $element['value']['#resizable'] = 'none';
-
-    // Hide the text format selector and any other child element (such as text
-    // field's summary).
-    foreach (Element::children($element) as $key) {
-      if ($key != 'value') {
-        $element[$key]['#access'] = FALSE;
-      }
-    }
-  }
-
-  return $element;
 }
 
 /**
