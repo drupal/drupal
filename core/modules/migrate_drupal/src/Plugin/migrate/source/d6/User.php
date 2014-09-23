@@ -76,6 +76,9 @@ class User extends DrupalSqlBase implements SourceEntityInterface {
       }
     }
 
+    // Unserialize Data.
+    $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+
     return parent::prepareRow($row);
   }
 
@@ -113,6 +116,7 @@ class User extends DrupalSqlBase implements SourceEntityInterface {
       'language' => $this->t('Language'),
       'picture' => $this->t('Picture'),
       'init' => $this->t('Init'),
+      'data' => $this->t('User data'),
     );
 
     // Possible field added by Date contributed module.

@@ -237,6 +237,21 @@ migrate.source.empty:
           type: boolean
           label: 'Display field'
 
+migrate.source.d6_user:
+  type: migrate_source
+  label: 'Drupal 6 user'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        key:
+          type: string
+          label: 'User data key'
+        module:
+          type: string
+          label: 'Module name'
+
 migrate.source.d6_user_picture_file:
   type: migrate_source
   label: 'Drupal 6 user picure display'
