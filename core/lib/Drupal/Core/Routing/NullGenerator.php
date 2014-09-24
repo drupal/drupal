@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -18,18 +19,12 @@ class NullGenerator extends UrlGenerator {
 
   /**
    * Override the parent constructor.
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateFromRequest() {
-    global $base_url, $base_path, $script_path;
-    $this->basePath = $base_path;
-    $this->baseUrl = $base_url . '/';
-    $this->scriptPath = $script_path;
+  public function __construct(RequestStack $request_stack) {
+    $this->requestStack = $request_stack;
   }
 
   /**

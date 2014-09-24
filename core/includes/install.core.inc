@@ -886,9 +886,6 @@ function install_display_output($output, $install_state) {
   // reached in case of an early installer error.
   drupal_maintenance_theme();
 
-  // Ensure the URL generator is initialized.
-  \Drupal::urlGenerator()->updateFromRequest();
-
   drupal_page_header();
 
   // Prevent install.php from being indexed when installed in a sub folder.

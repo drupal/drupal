@@ -2673,7 +2673,6 @@ abstract class WebTestBase extends TestBase {
    *   The mocked request object.
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = array()) {
-    $generator = $this->container->get('url_generator');
     $request = Request::createFromGlobals();
     $server = $request->server->all();
     if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
@@ -2697,7 +2696,6 @@ abstract class WebTestBase extends TestBase {
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
     $this->container->get('request_stack')->push($request);
-    $generator->updateFromRequest();
     return $request;
   }
 }

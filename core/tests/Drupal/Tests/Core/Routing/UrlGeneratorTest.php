@@ -53,6 +53,13 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   protected $routeProcessorManager;
 
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
   protected function setUp() {
 
     $routes = new RouteCollection();
@@ -126,15 +133,15 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $config_factory_stub = $this->getConfigFactoryStub(array('system.filter' => array('protocols' => array('http', 'https'))));
 
-    $requestStack = new RequestStack();
-    $requestStack->push($request);
+    $this->requestStack = new RequestStack();
+    $this->requestStack->push($request);
 
-    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array()), NULL, $requestStack);
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array()), NULL, $this->requestStack);
     $generator->setContext($context);
     $this->generator = $generator;
 
     // Second generator for mixed-mode sessions.
-    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)), NULL, $requestStack);
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)), NULL, $this->requestStack);
     $generator->setContext($context);
     $this->generatorMixedMode = $generator;
   }
@@ -187,8 +194,6 @@ class UrlGeneratorTest extends UnitTestCase {
    * Tests URL generation in a subdirectory.
    */
   public function testGetPathFromRouteWithSubdirectory() {
-    $this->generator->setBasePath('/test-base-path');
-
     $this->routeProcessorManager->expects($this->never())
       ->method('processOutbound');
 
@@ -279,11 +284,21 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testPathBasedURLGeneration() {
     $base_path = '/subdir';
     $base_url = 'http://www.example.com' . $base_path;
-    $this->generator->setBasePath($base_path . '/');
-    $this->generator->setBaseUrl($base_url . '/');
+
     foreach (array('', 'index.php/') as $script_path) {
-      $this->generator->setScriptPath($script_path);
       foreach (array(FALSE, TRUE) as $absolute) {
+        // Setup a fake request which looks like a Drupal installed under the
+        // subdir "subdir" on the domain www.example.com.
+        // To reproduce the values install Drupal like that and use a debugger.
+        $server = [
+          'SCRIPT_NAME' => '/subdir/index.php',
+          'SCRIPT_FILENAME' => DRUPAL_ROOT . '/index.php',
+          'SERVER_NAME' => 'http://www.example.com',
+        ];
+        $request = Request::create('/subdir/' . $script_path, 'GET', [], [], [], $server);
+        $request->headers->set('host', ['www.example.com']);
+        $this->requestStack->push($request);
+
         // Get the expected start of the path string.
         $base = ($absolute ? $base_url . '/' : $base_path . '/') . $script_path;
         $url = $base . 'node/123';

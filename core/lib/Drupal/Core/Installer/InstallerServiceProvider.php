@@ -10,6 +10,7 @@ namespace Drupal\Core\Installer;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Service provider for the early installer environment.
@@ -43,7 +44,8 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     $container
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container
-      ->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
+      ->register('url_generator', 'Drupal\Core\Routing\NullGenerator')
+      ->addArgument(new Reference('request_stack'));
     $container
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
 

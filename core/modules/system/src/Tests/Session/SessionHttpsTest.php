@@ -172,8 +172,8 @@ class SessionHttpsTest extends WebTestBase {
     $ssid = $this->cookies[$secure_session_name]['value'];
     $this->assertSessionIds($sid, $ssid, 'Session has both secure and insecure SIDs');
     $cookies = array(
-      $insecure_session_name . '=' . $sid,
-      $secure_session_name . '=' . $ssid,
+      'http' => $insecure_session_name . '=' . $sid,
+      'https' => $secure_session_name . '=' . $ssid,
     );
 
     // Test that session data saved before login is still available on the
@@ -182,8 +182,11 @@ class SessionHttpsTest extends WebTestBase {
     $this->assertText($session_data, 'Session correctly returned the stored data set by the anonymous session.');
 
     foreach ($cookies as $cookie_key => $cookie) {
-      foreach (array('admin/config', $this->httpsUrl('admin/config')) as $url_key => $url) {
+      foreach (array('http' => 'admin/config', 'https' => $this->httpsUrl('admin/config')) as $url_key => $url) {
         $this->curlClose();
+        // The HTTPS setting needs to be set correctly on the request for the
+        // URL generator to work.
+        $this->request->server->set('HTTPS', $url_key == 'https' ? 'on' : 'off');
 
         $this->drupalGet($url, array(), array('Cookie: ' . $cookie));
         if ($cookie_key == $url_key) {
