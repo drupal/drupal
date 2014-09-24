@@ -34,18 +34,18 @@ class CsrfAccessCheckTest extends UnitTestCase {
   protected $accessCheck;
 
   /**
-   * The mock user account.
+   * The mock route match.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\RouteMatch\RouteMatchInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account;
+  protected $routeMatch;
 
   protected function setUp() {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->accessCheck = new CsrfAccessCheck($this->csrfToken);
   }
@@ -56,14 +56,17 @@ class CsrfAccessCheckTest extends UnitTestCase {
   public function testAccessTokenPass() {
     $this->csrfToken->expects($this->once())
       ->method('validate')
-      ->with('test_query', '/test-path')
+      ->with('test_query', 'test-path/42')
       ->will($this->returnValue(TRUE));
 
-    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
-    $request = Request::create('/test-path?token=test_query');
-    $request->attributes->set('_system_path', '/test-path');
+    $this->routeMatch->expects($this->once())
+      ->method('getRawParameters')
+      ->will($this->returnValue(array('node' => 42)));
 
-    $this->assertEquals(AccessResult::allowed()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
+    $route = new Route('/test-path/{node}', array(), array('_csrf_token' => 'TRUE'));
+    $request = Request::create('/test-path/42?token=test_query');
+
+    $this->assertEquals(AccessResult::allowed()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->routeMatch));
   }
 
   /**
@@ -72,14 +75,17 @@ class CsrfAccessCheckTest extends UnitTestCase {
   public function testAccessTokenFail() {
     $this->csrfToken->expects($this->once())
       ->method('validate')
-      ->with('test_query', '/test-path')
+      ->with('test_query', 'test-path')
       ->will($this->returnValue(FALSE));
+
+    $this->routeMatch->expects($this->once())
+      ->method('getRawParameters')
+      ->will($this->returnValue(array()));
 
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
     $request = Request::create('/test-path?token=test_query');
-    $request->attributes->set('_system_path', '/test-path');
 
-    $this->assertEquals(AccessResult::forbidden()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->account));
+    $this->assertEquals(AccessResult::forbidden()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->routeMatch));
   }
 
 }

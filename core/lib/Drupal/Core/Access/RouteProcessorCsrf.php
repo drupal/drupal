@@ -51,4 +51,3 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
   }
 
 }
-

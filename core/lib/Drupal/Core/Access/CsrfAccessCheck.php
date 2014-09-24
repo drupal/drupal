@@ -8,6 +8,7 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,14 +45,21 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    *   The route to check against.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, Request $request) {
-    // @todo Remove dependency on the internal _system_path attribute:
-    //   https://www.drupal.org/node/2293501.
-    if ($this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path'))) {
+  public function access(Route $route, Request $request, RouteMatchInterface $route_match) {
+    $parameters = $route_match->getRawParameters();
+    $path = ltrim($route->getPath(), '/');
+    // Replace the path parameters with values from the parameters array.
+    foreach ($parameters as $param => $value) {
+      $path = str_replace("{{$param}}", $value, $path);
+    }
+
+    if ($this->csrfToken->validate($request->query->get('token'), $path)) {
       $result = AccessResult::allowed();
     }
     else {
