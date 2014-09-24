@@ -8,6 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -64,6 +65,23 @@ class CommentViewBuilder extends EntityViewBuilder {
   public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, CsrfTokenGenerator $csrf_token) {
     parent::__construct($entity_type, $entity_manager, $language_manager);
     $this->csrfToken = $csrf_token;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
+    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
+
+    // If threading is enabled, don't render cache individual comments, but do
+    // keep the cache tags, so they can bubble up.
+    if ($entity->getCommentedEntity()->getFieldDefinition($entity->getFieldName())->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED) {
+      $cache_tags = $build['#cache']['tags'];
+      $build['#cache'] = [];
+      $build['#cache']['tags'] = $cache_tags;
+    }
+
+    return $build;
   }
 
   /**

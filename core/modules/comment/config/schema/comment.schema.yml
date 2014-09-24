@@ -98,7 +98,7 @@ field.comment.field_settings:
   label: 'Comment settings'
   mapping:
     default_mode:
-      type: boolean
+      type: integer
       label: 'Threading'
     per_page:
       type: integer
