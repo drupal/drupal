@@ -1493,7 +1493,6 @@ function template_preprocess_feed_icon(&$variables) {
     '#height' => 16,
     '#alt' => $text,
   );
-  $variables['attributes']['class'] = array('feed-icon');
   // Stripping tags because that's what l() used to do.
   $variables['attributes']['title'] = strip_tags($text);
 }
