@@ -57,7 +57,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    *   The library discovery parser.
    */
   public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser) {
-    parent::__construct($this->cacheKey, $cache, $lock, array($this->cacheKey => array(TRUE)));
+    parent::__construct($this->cacheKey, $cache, $lock, array($this->cacheKey));
 
     $this->discoveryParser = $discovery_parser;
   }

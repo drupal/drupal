@@ -22,6 +22,78 @@ class Cache {
   const PERMANENT = CacheBackendInterface::CACHE_PERMANENT;
 
   /**
+   * Merges arrays of cache tags and removes duplicates.
+   *
+   * The cache tags array is returned in a format that is valid for
+   * \Drupal\Core\Cache\CacheBackendInterface::set().
+   *
+   * When caching elements, it is necessary to collect all cache tags into a
+   * single array, from both the element itself and all child elements. This
+   * allows items to be invalidated based on all tags attached to the content
+   * they're constituted from.
+   *
+   * @param string[] …
+   *   Arrays of cache tags to merge.
+   *
+   * @return string[]
+   *   The merged array of cache tags.
+   */
+  public static function mergeTags() {
+    $cache_tag_arrays = func_get_args();
+    $cache_tags = [];
+    foreach ($cache_tag_arrays as $tags) {
+      static::validateTags($tags);
+      $cache_tags = array_merge($cache_tags, $tags);
+    }
+    $cache_tags = array_unique($cache_tags);
+    sort($cache_tags);
+    return $cache_tags;
+  }
+
+  /**
+   * Validates an array of cache tags.
+   *
+   * Can be called before using cache tags in operations, to ensure validity.
+   *
+   * @param string[] $tags
+   *   An array of cache tags.
+   *
+   * @throws \LogicException
+   */
+  public static function validateTags(array $tags) {
+    if (empty($tags)) {
+      return;
+    }
+    foreach ($tags as $value) {
+      if (!is_string($value)) {
+        throw new \LogicException('Cache tags must be strings, ' . gettype($value) . ' given.');
+      }
+    }
+  }
+
+  /**
+   * Build an array of cache tags from a given prefix and an array of suffixes.
+   *
+   * Each suffix will be converted to a cache tag by appending it to the prefix,
+   * with a colon between them.
+   *
+   * @param string $prefix
+   *   A prefix string.
+   * @param array $suffixes
+   *   An array of suffixes. Will be cast to strings.
+   *
+   * @return string[]
+   *   An array of cache tags.
+   */
+  public static function buildTags($prefix, array $suffixes) {
+    $tags = [];
+    foreach ($suffixes as $suffix) {
+      $tags[] = $prefix . ':' . $suffix;
+    }
+    return $tags;
+  }
+
+  /**
    * Deletes items from all bins with any of the specified tags.
    *
    * Many sites have more than one active cache backend, and each backend may
@@ -31,10 +103,11 @@ class Cache {
    * When deleting a given list of tags, we iterate over each cache backend, and
    * and call deleteTags() on each.
    *
-   * @param array $tags
+   * @param string[] $tags
    *   The list of tags to delete cache items for.
    */
   public static function deleteTags(array $tags) {
+    static::validateTags($tags);
     foreach (static::getBins() as $cache_backend) {
       $cache_backend->deleteTags($tags);
     }
@@ -50,10 +123,11 @@ class Cache {
    * When invalidating a given list of tags, we iterate over each cache backend,
    * and call invalidateTags() on each.
    *
-   * @param array $tags
+   * @param string[] $tags
    *   The list of tags to invalidate cache items for.
    */
   public static function invalidateTags(array $tags) {
+    static::validateTags($tags);
     foreach (static::getBins() as $cache_backend) {
       $cache_backend->invalidateTags($tags);
     }

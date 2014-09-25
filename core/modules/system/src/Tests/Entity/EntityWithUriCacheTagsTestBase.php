@@ -18,7 +18,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
    * Tests cache tags presence and invalidation of the entity at its URI.
    *
    * Tests the following cache tags:
-   * - "<entity type>_view:1"
+   * - "<entity type>_view"
    * - "<entity_type>:<entity ID>"
    */
   public function testEntityUri() {
@@ -29,9 +29,9 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $view_mode = $this->selectViewMode($entity_type);
 
     // Generate the standardized entity cache tags.
-    $cache_tag = $entity_type . ':' . $this->entity->id();
-    $view_cache_tag = $entity_type . '_view:1';
-    $render_cache_tag = 'rendered:1';
+    $cache_tag = $this->entity->getCacheTag();
+    $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)->getCacheTag();
+    $render_cache_tag = 'rendered';
 
 
     $this->pass("Test entity.", 'Debug');
@@ -45,7 +45,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     if (\Drupal::entityManager()->getDefinition($entity_type)->isRenderCacheable()) {
       $cid = 'entity_view:' . $entity_type . ':' . $this->entity->id() . ':' . $view_mode . ':stark:r.anonymous:' . date_default_timezone_get();
       $cache_entry = \Drupal::cache('render')->get($cid);
-      $expected_cache_tags = array_merge(array($view_cache_tag, $cache_tag), $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
+      $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag, $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
       $this->verifyRenderCache($cid, $expected_cache_tags);
     }
 
@@ -110,7 +110,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Verify that after invalidating the entity's cache tag directly, there is
     // a cache miss.
     $this->pass("Test invalidation of entity's cache tag.", 'Debug');
-    Cache::invalidateTags(array($entity_type => array($this->entity->id())));
+    Cache::invalidateTags($this->entity->getCacheTag());
     $this->verifyPageCache($entity_path, 'MISS');
 
     // Verify a cache hit.
@@ -120,7 +120,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Verify that after invalidating the generic entity type's view cache tag
     // directly, there is a cache miss.
     $this->pass("Test invalidation of entity's 'view' cache tag.", 'Debug');
-    Cache::invalidateTags(array($entity_type . '_view' => TRUE));
+    Cache::invalidateTags($view_cache_tag);
     $this->verifyPageCache($entity_path, 'MISS');
 
     // Verify a cache hit.

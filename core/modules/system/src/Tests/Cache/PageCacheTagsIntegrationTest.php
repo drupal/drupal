@@ -68,10 +68,10 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 1.
     $this->verifyPageCacheTags('node/' . $node_1->id(), array(
-      'rendered:1',
+      'rendered',
       'theme:bartik',
-      'theme_global_settings:1',
-      'block_view:1',
+      'theme_global_settings',
+      'block_view',
       'block:bartik_content',
       'block:bartik_tools',
       'block:bartik_login',
@@ -82,7 +82,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'block_plugin:user_login_block',
       'block_plugin:system_menu_block__footer',
       'block_plugin:system_powered_by_block',
-      'node_view:1',
+      'node_view',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'filter_format:basic_html',
@@ -93,10 +93,10 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 2.
     $this->verifyPageCacheTags('node/' . $node_2->id(), array(
-      'rendered:1',
+      'rendered',
       'theme:bartik',
-      'theme_global_settings:1',
-      'block_view:1',
+      'theme_global_settings',
+      'block_view',
       'block:bartik_content',
       'block:bartik_tools',
       'block:bartik_login',
@@ -109,7 +109,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'block_plugin:views_block__comments_recent-block_1',
       'block_plugin:system_menu_block__footer',
       'block_plugin:system_powered_by_block',
-      'node_view:1',
+      'node_view',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
       'filter_format:full_html',

@@ -113,7 +113,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
     $this->moduleHandler = $module_handler;
     $this->requestStack = $request_stack;
     $this->alterInfo('contextual_links_plugins');
-    $this->setCacheBackend($cache_backend, 'contextual_links_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('contextual_links_plugins' => TRUE));
+    $this->setCacheBackend($cache_backend, 'contextual_links_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('contextual_links_plugins'));
   }
 
   /**

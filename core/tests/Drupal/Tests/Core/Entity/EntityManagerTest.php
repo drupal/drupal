@@ -182,13 +182,13 @@ class EntityManagerTest extends UnitTestCase {
     $this->setUpEntityManager();
     $this->cache->expects($this->at(0))
       ->method('deleteTags')
-      ->with(array('entity_types' => TRUE));
+      ->with(array('entity_types'));
     $this->cache->expects($this->at(1))
       ->method('deleteTags')
-      ->with(array('entity_bundles' => TRUE));
+      ->with(array('entity_bundles'));
     $this->cache->expects($this->at(2))
       ->method('deleteTags')
-      ->with(array('entity_field_info' => TRUE));
+      ->with(array('entity_field_info'));
 
     $this->entityManager->clearCachedDefinitions();
   }
@@ -760,7 +760,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->setUpEntityManager();
     $this->cache->expects($this->once())
       ->method('deleteTags')
-      ->with(array('entity_field_info' => TRUE));
+      ->with(array('entity_field_info'));
     $this->typedDataManager->expects($this->once())
       ->method('clearCachedDefinitions');
 
@@ -776,7 +776,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->setUpEntityManager();
     $this->cache->expects($this->once())
       ->method('deleteTags')
-      ->with(array('entity_bundles' => TRUE));
+      ->with(array('entity_bundles'));
 
     $this->entityManager->clearCachedBundles();
   }
@@ -862,13 +862,13 @@ class EntityManagerTest extends UnitTestCase {
       ->with("entity_bundle_info:en");
     $this->cache->expects($this->at(4))
       ->method('deleteTags')
-      ->with(array('entity_types' => TRUE));
+      ->with(array('entity_types'));
     $this->cache->expects($this->at(5))
       ->method('deleteTags')
-      ->with(array('entity_bundles' => TRUE));
+      ->with(array('entity_bundles'));
     $this->cache->expects($this->at(6))
       ->method('deleteTags')
-      ->with(array('entity_field_info' => TRUE));
+      ->with(array('entity_field_info'));
     $this->cache->expects($this->at(7))
       ->method('get')
       ->with("entity_bundle_info:en", FALSE)

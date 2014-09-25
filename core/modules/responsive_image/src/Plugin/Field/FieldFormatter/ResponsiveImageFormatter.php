@@ -7,7 +7,7 @@
 
 namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
@@ -145,9 +145,9 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     if ($fallback_image_style) {
       $image_styles_to_load[] = $fallback_image_style;
     }
-    $all_cache_tags = array();
+    $cache_tags = [];
     if ($responsive_image_mapping) {
-      $all_cache_tags[] = $responsive_image_mapping->getCacheTag();
+      $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_mapping->getCacheTag());
       foreach ($responsive_image_mapping->getMappings() as $mapping) {
         // First mapping found is used as fallback.
         if (empty($fallback_image_style)) {
@@ -158,10 +158,8 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     }
     $image_styles = entity_load_multiple('image_style', $image_styles_to_load);
     foreach ($image_styles as $image_style) {
-      $all_cache_tags[] = $image_style->getCacheTag();
+      $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTag());
     }
-
-    $cache_tags = NestedArray::mergeDeepArray($all_cache_tags);
 
     foreach ($items as $delta => $item) {
       if (isset($link_file)) {

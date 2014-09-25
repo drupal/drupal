@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\EventSubscriber\HtmlViewSubscriber;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
@@ -1769,41 +1768,6 @@ function drupal_merge_attached(array $a, array $b) {
 }
 
 /**
- * Merges sets of cache tags.
- *
- * The cache tags array is returned in a format that is valid for
- * \Drupal\Core\Cache\CacheBackendInterface::set().
- *
- * When caching elements, it is necessary to collect all cache tags into a
- * single array, from both the element itself and all child elements. This
- * allows items to be invalidated based on all tags attached to the content
- * they're constituted from.
- *
- * @param array $tags
- *   The first set of cache tags.
- * @param array $other
- *   The other set of cache tags.
- *
- * @return array
- *   The merged set of cache tags.
- */
-function drupal_merge_cache_tags(array $tags, array $other) {
-  foreach ($other as $namespace => $values) {
-    if (is_array($values)) {
-      foreach ($values as $value) {
-        $tags[$namespace][$value] = $value;
-      }
-    }
-    else {
-      if (!isset($tags[$namespace])) {
-        $tags[$namespace] = $values;
-      }
-    }
-  }
-  return $tags;
-}
-
-/**
  * Adds attachments to a render() structure.
  *
  * Libraries, JavaScript, CSS and other types of custom structures are attached
@@ -2303,7 +2267,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
   $expire = ($date > (new DateTime())) ? $date->getTimestamp() : Cache::PERMANENT;
 
   $cid = drupal_page_cache_get_cid($request);
-  $tags = HtmlViewSubscriber::convertHeaderToCacheTags($response->headers->get('X-Drupal-Cache-Tags'));
+  $tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
   \Drupal::cache('render')->set($cid, $response, $expire, $tags);
 }
 
@@ -2494,11 +2458,11 @@ function drupal_prepare_page($page) {
   // @todo Remove this once https://drupal.org/node/1869476 lands.
   if (theme_get_setting('features.main_menu') && count(menu_main_menu())) {
     $main_links_source = _menu_get_links_source('main_links', 'main');
-    $page['page_top']['#cache']['tags']['menu'][$main_links_source] = $main_links_source;
+    $page['page_top']['#cache']['tags'][] = 'menu:' . $main_links_source;
   }
   if (theme_get_setting('features.secondary_menu') && count(menu_secondary_menu())) {
     $secondary_links_source = _menu_get_links_source('secondary_links', 'account');
-    $page['page_top']['#cache']['tags']['menu'][$secondary_links_source] = $secondary_links_source;
+    $page['page_top']['#cache']['tags'][] = 'menu:' . $secondary_links_source;
   }
 
   // If no module has taken care of the main content, add it to the page now.
@@ -2710,7 +2674,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $frame = $stack->top();
     // Update the frame, but also update the current element, to ensure it
     // contains up-to-date information in case it gets render cached.
-    $frame->tags = $element['#cache']['tags'] = drupal_merge_cache_tags($element['#cache']['tags'], $frame->tags);
+    $frame->tags = $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $frame->tags);
     $frame->attached = $element['#attached'] = drupal_merge_attached($element['#attached'], $frame->attached);
     $frame->postRenderCache = $element['#post_render_cache'] = NestedArray::mergeDeep($element['#post_render_cache'], $frame->postRenderCache);
   };
@@ -2726,7 +2690,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     // Merge the current and the parent stack frame.
     $current = $stack->pop();
     $parent = $stack->pop();
-    $current->tags = drupal_merge_cache_tags($current->tags, $parent->tags);
+    $current->tags = Cache::mergeTags($current->tags, $parent->tags);
     $current->attached = drupal_merge_attached($current->attached, $parent->attached);
     $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
     $stack->push($current);
@@ -2943,7 +2907,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $stack->push(new RenderStackFrame());
     _drupal_render_process_post_render_cache($elements);
     $post_render_additions = $stack->pop();
-    $elements['#cache']['tags'] = drupal_merge_cache_tags($elements['#cache']['tags'], $post_render_additions->tags);
+    $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
     $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
     $elements['#post_render_cache'] = NestedArray::mergeDeep($elements['#post_render_cache'], $post_render_additions->postRenderCache);
   }
@@ -3136,17 +3100,15 @@ function drupal_render_cache_set(&$markup, array $elements) {
     $data['#post_render_cache'] = $elements['#post_render_cache'];
   }
 
-  // Tag every render cache item with the "rendered" cache tag. This allows us
-  // to invalidate the entire render cache, regardless of the cache bin.
-  $cache_tags = $elements['#cache']['tags'] ?: array();
-  $cache_tags['rendered'] = TRUE;
-
-  // Persist cache tags associated with this element.
-  $data['#cache']['tags'] = $cache_tags;
+  // Persist cache tags associated with this element. Also associate the
+  // "rendered" cache tag. This allows us to invalidate the entire render cache,
+  // regardless of the cache bin.
+  $data['#cache']['tags'] = $elements['#cache']['tags'];
+  $data['#cache']['tags'][] = 'rendered';
 
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
-  \Drupal::cache($bin)->set($cid, $data, $expire, $cache_tags);
+  \Drupal::cache($bin)->set($cid, $data, $expire, $data['#cache']['tags']);
 }
 
 /**

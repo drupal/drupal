@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Core\Url;
@@ -253,14 +253,14 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 
   /** @var \Drupal\shortcut\ShortcutInterface[] $shortcuts  */
   $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
-  $all_cache_tags = array();
+  $cache_tags = array();
   foreach ($shortcuts as $shortcut) {
     $shortcut = \Drupal::entityManager()->getTranslationFromContext($shortcut);
     $links[] = array(
       'title' => $shortcut->label(),
       'href' => $shortcut->path->value,
     );
-    $all_cache_tags[] = $shortcut->getCacheTag();
+    $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTag());
   }
 
   if (!empty($links)) {
@@ -271,7 +271,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
         'class' => array('menu'),
       ),
       '#cache' => array(
-        'tags' => NestedArray::mergeDeepArray($all_cache_tags),
+        'tags' => $cache_tags,
       ),
     );
   }

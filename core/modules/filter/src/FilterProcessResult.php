@@ -8,6 +8,7 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Used to return values from a text filter plugin's processing method.
@@ -155,7 +156,7 @@ class FilterProcessResult {
    * @return $this
    */
   public function addCacheTags(array $cache_tags) {
-    $this->cacheTags = drupal_merge_attached($this->cacheTags, $cache_tags);
+    $this->cacheTags = Cache::mergeTags($this->cacheTags, $cache_tags);
     return $this;
   }
 

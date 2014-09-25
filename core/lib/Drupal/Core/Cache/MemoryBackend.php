@@ -107,12 +107,16 @@ class MemoryBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+    Cache::validateTags($tags);
+    $tags = array_unique($tags);
+    // Sort the cache tags so that they are stored consistently in the database.
+    sort($tags);
     $this->cache[$cid] = (object) array(
       'cid' => $cid,
       'data' => serialize($data),
       'created' => REQUEST_TIME,
       'expire' => $expire,
-      'tags' => $this->flattenTags($tags),
+      'tags' => $tags,
     );
   }
 
@@ -143,9 +147,8 @@ class MemoryBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
    */
   public function deleteTags(array $tags) {
-    $flat_tags = $this->flattenTags($tags);
     foreach ($this->cache as $cid => $item) {
-      if (array_intersect($flat_tags, $item->tags)) {
+      if (array_intersect($tags, $item->tags)) {
         unset($this->cache[$cid]);
       }
     }
@@ -180,9 +183,8 @@ class MemoryBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
   public function invalidateTags(array $tags) {
-    $flat_tags = $this->flattenTags($tags);
     foreach ($this->cache as $cid => $item) {
-      if (array_intersect($flat_tags, $item->tags)) {
+      if (array_intersect($tags, $item->tags)) {
         $this->cache[$cid]->expire = REQUEST_TIME - 1;
       }
     }
@@ -195,34 +197,6 @@ class MemoryBackend implements CacheBackendInterface {
     foreach ($this->cache as $cid => $item) {
       $this->cache[$cid]->expire = REQUEST_TIME - 1;
     }
-  }
-
-  /**
-   * 'Flattens' a tags array into an array of strings.
-   *
-   * @param array $tags
-   *   Associative array of tags to flatten.
-   *
-   * @return array
-   *   An indexed array of strings.
-   */
-  protected function flattenTags(array $tags) {
-    if (isset($tags[0])) {
-      return $tags;
-    }
-
-    $flat_tags = array();
-    foreach ($tags as $namespace => $values) {
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          $flat_tags[] = "$namespace:$value";
-        }
-      }
-      else {
-        $flat_tags[] = "$namespace:$values";
-      }
-    }
-    return $flat_tags;
   }
 
   /**

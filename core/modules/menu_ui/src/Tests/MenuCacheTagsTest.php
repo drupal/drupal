@@ -49,9 +49,9 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = array(
       'theme:stark',
-      'theme_global_settings:1',
-      'rendered:1',
-      'block_view:1',
+      'theme_global_settings',
+      'rendered',
+      'block_view',
       'block:' . $block->id(),
       'block_plugin:system_menu_block__llama',
       'menu:llama',
@@ -106,7 +106,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('rendered:1', 'theme:stark', 'theme_global_settings:1'));
+    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:stark', 'theme_global_settings'));
   }
 
 }

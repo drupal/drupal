@@ -38,8 +38,8 @@ class Page extends RenderElement {
    * @return array
    */
   public static function preRenderPage($element) {
-    $element['#cache']['tags']['theme'] = \Drupal::theme()->getActiveTheme()->getName();
-    $element['#cache']['tags']['theme_global_settings'] = TRUE;
+    $element['#cache']['tags'][] = 'theme:' . \Drupal::theme()->getActiveTheme()->getName();
+    $element['#cache']['tags'][] = 'theme_global_settings';
     return $element;
   }
 

@@ -868,7 +868,7 @@ function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $vi
  * @see views_invalidate_cache()
  */
 function hook_views_invalidate_cache() {
-  \Drupal\Core\Cache\Cache::invalidateTags(array('views' => TRUE));
+  \Drupal\Core\Cache\Cache::invalidateTags(array('views'));
 }
 
 /**

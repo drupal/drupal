@@ -193,7 +193,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->resetDefinitions();
     $affected_menus = $this->getMenuNames() + $before_menus;
     // Invalidate any cache tagged with any menu name.
-    Cache::invalidateTags(array('menu' => $affected_menus));
+    $cache_tags = Cache::buildTags('menu', $affected_menus);
+    Cache::invalidateTags($cache_tags);
     $this->resetDefinitions();
     // Every item in the cache bin should have one of the menu cache tags but it
     // is not guaranteed, so invalidate everything in the bin.
@@ -255,7 +256,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   public function save(array $link) {
     $affected_menus = $this->doSave($link);
     $this->resetDefinitions();
-    Cache::invalidateTags(array('menu' => $affected_menus));
+    $cache_tags = Cache::buildTags('menu', $affected_menus);
+    Cache::invalidateTags($cache_tags);
     return $affected_menus;
   }
 
@@ -436,7 +438,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $this->updateParentalStatus($item);
       // Many children may have moved.
       $this->resetDefinitions();
-      Cache::invalidateTags(array('menu' => $item['menu_name']));
+      Cache::invalidateTags(array('menu:' . $item['menu_name']));
     }
   }
 
@@ -837,7 +839,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $data['tree'] = $this->doBuildTreeData($links, $parameters->activeTrail, $parameters->minDepth);
       $data['definitions'] = array();
       $data['route_names'] = $this->collectRoutesAndDefinitions($data['tree'], $data['definitions']);
-      $this->menuCacheBackend->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
+      $this->menuCacheBackend->set($tree_cid, $data, Cache::PERMANENT, array('menu:' . $menu_name));
       // The definitions were already added to $this->definitions in
       // $this->doBuildTreeData()
       unset($data['definitions']);

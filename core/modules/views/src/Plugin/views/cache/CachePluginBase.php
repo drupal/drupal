@@ -199,7 +199,7 @@ abstract class CachePluginBase extends PluginBase {
    */
   public function cacheFlush() {
     $id = $this->view->storage->id();
-    Cache::invalidateTags(array('view' => array($id => $id)));
+    Cache::invalidateTags(array('view:' . $id));
   }
 
   /**
@@ -353,14 +353,14 @@ abstract class CachePluginBase extends PluginBase {
    */
   protected function getCacheTags() {
     $id = $this->view->storage->id();
-    $tags = array('view' => array($id => $id));
+    $tags = array('view:' . $id);
 
     $entity_information = $this->view->query->getEntityTableInfo();
 
     if (!empty($entity_information)) {
       // Add an ENTITY_TYPE_list tag for each entity type used by this view.
       foreach (array_keys($entity_information) as $entity_type) {
-        $tags[$entity_type . '_list'] = TRUE;
+        $tags[] = $entity_type . '_list';
       }
     }
 

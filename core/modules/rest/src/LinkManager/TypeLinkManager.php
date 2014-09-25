@@ -99,6 +99,6 @@ class TypeLinkManager implements TypeLinkManagerInterface {
     }
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
-    $this->cache->set('rest:links:types', $data, Cache::PERMANENT, array('entity_types' => TRUE));
+    $this->cache->set('rest:links:types', $data, Cache::PERMANENT, array('entity_types'));
   }
 }

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Implements hook_block_alter().
@@ -27,7 +28,7 @@ function block_test_block_view_test_cache_alter(array &$build, BlockPluginInterf
     $build['#cache']['keys'][] = \Drupal::state()->get('block_test_view_alter_cache_key');
   }
   if (\Drupal::state()->get('block_test_view_alter_cache_tag') !== NULL) {
-    $build['#cache']['tags'][\Drupal::state()->get('block_test_view_alter_cache_tag')] = TRUE;
+    $build['#cache']['tags'][] = \Drupal::state()->get('block_test_view_alter_cache_tag');
   }
   if (\Drupal::state()->get('block_test_view_alter_append_pre_render_prefix') !== NULL) {
     $build['#pre_render'][] = 'block_test_pre_render_alter_content';

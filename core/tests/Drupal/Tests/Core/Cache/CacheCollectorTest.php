@@ -389,7 +389,7 @@ class CacheCollectorTest extends UnitTestCase {
   public function testUpdateCacheClearTags() {
     $key = $this->randomMachineName();
     $value = $this->randomMachineName();
-    $tags = array($this->randomMachineName() => TRUE);
+    $tags = array($this->randomMachineName());
     $this->collector = new CacheCollectorHelper($this->cid, $this->cache, $this->lock, $tags);
 
     // Set the data and request it.

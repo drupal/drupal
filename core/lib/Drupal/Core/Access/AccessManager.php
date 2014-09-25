@@ -194,7 +194,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     }
     catch (RouteNotFoundException $e) {
       // Cacheable until extensions change.
-      $result = AccessResult::forbidden()->addCacheTags(array('extension' => TRUE));
+      $result = AccessResult::forbidden()->addCacheTags(array('extension'));
       return $return_as_object ? $result : $result->isAllowed();
     }
     catch (ParamNotConvertedException $e) {

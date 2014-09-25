@@ -94,7 +94,7 @@ class LocaleLookup extends CacheCollector {
 
     $this->cache = $cache;
     $this->lock = $lock;
-    $this->tags = array('locale' => TRUE);
+    $this->tags = array('locale');
   }
 
   /**

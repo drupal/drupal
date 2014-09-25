@@ -38,7 +38,7 @@ class RegistryTest extends WebTestBase {
     // entry to be written in __construct().
     $cache = \Drupal::cache();
     $lock_backend = \Drupal::lock();
-    $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry' => TRUE), $this->container->get('module_handler')->isLoaded());
+    $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry'), $this->container->get('module_handler')->isLoaded());
 
     $this->assertTrue(\Drupal::cache()->get($cid), 'Cache entry was created.');
 
@@ -58,7 +58,7 @@ class RegistryTest extends WebTestBase {
     // Create a new instance of the class. Confirm that both the offset
     // requested previously, and one that has not yet been requested are both
     // available.
-    $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry' => TRUE), $this->container->get('module_handler')->isLoaded());
+    $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry'), $this->container->get('module_handler')->isLoaded());
     $this->assertTrue($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry');
     $this->assertTrue($registry->get('theme_test_template_test_2'), 'Offset was returned correctly from the theme registry');
   }

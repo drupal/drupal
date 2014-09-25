@@ -39,7 +39,7 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
    * Tests cache tags presence and invalidation of the Tour entity.
    *
    * Tests the following cache tags:
-   * - ['tour' => '<tour ID>']
+   * - 'tour:<tour ID>'
    */
   public function testRenderedTour() {
     $path = 'tour-test-1';
@@ -50,9 +50,9 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = array(
       'theme:stark',
-      'theme_global_settings:1',
+      'theme_global_settings',
       'tour:tour-test',
-      'rendered:1',
+      'rendered',
     );
     $this->verifyPageCache($path, 'HIT', $expected_tags);
 
@@ -70,7 +70,7 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('rendered:1', 'theme:stark', 'theme_global_settings:1'));
+    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:stark', 'theme_global_settings'));
   }
 
 }

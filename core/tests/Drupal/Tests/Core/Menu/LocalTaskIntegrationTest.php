@@ -123,7 +123,7 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
     $property->setValue($manager, $factory);
 
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $manager->setCacheBackend($cache_backend, 'local_task.en', array('local_task' => 1));
+    $manager->setCacheBackend($cache_backend, 'local_task.en', array('local_task'));
 
     return $manager;
   }

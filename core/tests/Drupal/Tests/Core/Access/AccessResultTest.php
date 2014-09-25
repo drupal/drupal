@@ -418,44 +418,35 @@ class AccessResultTest extends UnitTestCase {
       $this->assertSame($tags, $access->getCacheTags());
     };
 
-    $access = AccessResult::neutral()->addCacheTags(['foo' => ['bar']]);
-    $verify($access, ['foo' => ['bar' => 'bar']]);
+    $access = AccessResult::neutral()->addCacheTags(['foo:bar']);
+    $verify($access, ['foo:bar']);
     // Verify resetting works.
     $access->resetCacheTags();
     $verify($access, []);
     // Verify idempotency.
-    $access->addCacheTags(['foo' => ['bar']])
-      ->addCacheTags(['foo' => ['bar']]);
-    $verify($access, ['foo' => ['bar' => 'bar']]);
+    $access->addCacheTags(['foo:bar'])
+      ->addCacheTags(['foo:bar']);
+    $verify($access, ['foo:bar']);
     // Verify same values in different call order yields the same result.
     $access->resetCacheTags()
-      ->addCacheTags(['bar' => ['baz']])
-      ->addCacheTags(['bar' => ['qux']])
-      ->addCacheTags(['foo' => ['bar']])
-      ->addCacheTags(['foo' => ['baz']]);
-    $verify($access, ['bar' => ['baz' => 'baz', 'qux' => 'qux'], 'foo' => ['bar' => 'bar', 'baz' => 'baz']]);
+      ->addCacheTags(['bar:baz'])
+      ->addCacheTags(['bar:qux'])
+      ->addCacheTags(['foo:bar'])
+      ->addCacheTags(['foo:baz']);
+    $verify($access, ['bar:baz', 'bar:qux', 'foo:bar', 'foo:baz']);
     $access->resetCacheTags()
-      ->addCacheTags(['foo' => ['bar']])
-      ->addCacheTags(['bar' => ['qux']])
-      ->addCacheTags(['foo' => ['baz']])
-      ->addCacheTags(['bar' => ['baz']]);
-    $verify($access, ['bar' => ['baz' => 'baz', 'qux' => 'qux'], 'foo' => ['bar' => 'bar', 'baz' => 'baz']]);
-    // Verify tags with nested arrays and without.
-    $access->resetCacheTags()
-      // Array.
-      ->addCacheTags(['foo' => ['bar']])
-      // String.
-      ->addCacheTags(['bar' => 'baz'])
-      // Boolean.
-      ->addCacheTags(['qux' => TRUE]);
-    $verify($access, ['bar' => 'baz', 'foo' => ['bar' => 'bar'], 'qux' => TRUE]);
+      ->addCacheTags(['foo:bar'])
+      ->addCacheTags(['bar:qux'])
+      ->addCacheTags(['foo:baz'])
+      ->addCacheTags(['bar:baz']);
+    $verify($access, ['bar:baz', 'bar:qux', 'foo:bar', 'foo:baz']);
 
     // ::cacheUntilEntityChanges() convenience method.
     $node = $this->getMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('getCacheTag')
-      ->will($this->returnValue(array('node' => array(20011988))));
-    $tags = array('node' => array(20011988 => 20011988));
+      ->will($this->returnValue(array('node:20011988')));
+    $tags = array('node:20011988');
     $a = AccessResult::neutral()->addCacheTags($tags);
     $verify($a, $tags);
     $b = AccessResult::neutral()->cacheUntilEntityChanges($node);
@@ -469,21 +460,21 @@ class AccessResultTest extends UnitTestCase {
   public function testInheritCacheability() {
     // andIf(); 1st has defaults, 2nd has custom tags, contexts and max-age.
     $access = AccessResult::allowed();
-    $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerRole()->addCacheTags(['node' => [20011988]]);
+    $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerRole()->addCacheTags(['node:20011988']);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
     $this->assertTrue($access->isCacheable());
     $this->assertSame(['cache_context.user.roles'], $access->getCacheKeys());
-    $this->assertSame(['node' => [20011988 => 20011988]], $access->getCacheTags());
+    $this->assertSame(['node:20011988'], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(1500, $access->getCacheMaxAge());
 
     // andIf(); 1st has custom tags, max-age, 2nd has custom contexts and max-age.
     $access = AccessResult::allowed()->cachePerUser()->setCacheMaxAge(43200);
-    $other = AccessResult::forbidden()->addCacheTags(['node' => [14031991]])->setCacheMaxAge(86400);
+    $other = AccessResult::forbidden()->addCacheTags(['node:14031991'])->setCacheMaxAge(86400);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
     $this->assertTrue($access->isCacheable());
     $this->assertSame(['cache_context.user'], $access->getCacheKeys());
-    $this->assertSame(['node' => [14031991 => 14031991]], $access->getCacheTags());
+    $this->assertSame(['node:14031991'], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(43200, $access->getCacheMaxAge());
   }

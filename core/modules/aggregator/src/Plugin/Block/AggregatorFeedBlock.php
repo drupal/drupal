@@ -7,10 +7,10 @@
 
 namespace Drupal\aggregator\Plugin\Block;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\aggregator\FeedStorageInterface;
 use Drupal\aggregator\ItemStorageInterface;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -195,8 +195,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   public function getCacheTags() {
     $cache_tags = parent::getCacheTags();
     $feed = $this->feedStorage->load($this->configuration['feed']);
-    $cache_tags = NestedArray::mergeDeep($cache_tags, $feed->getCacheTag());
-    return $cache_tags;
+    return Cache::mergeTags($cache_tags, $feed->getCacheTag());
   }
 
 }

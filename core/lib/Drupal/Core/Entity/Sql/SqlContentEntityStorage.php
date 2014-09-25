@@ -497,8 +497,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     $cache_tags = array(
-      $this->entityTypeId . '_values' => TRUE,
-      'entity_field_info' => TRUE,
+      $this->entityTypeId . '_values',
+      'entity_field_info',
     );
     foreach ($entities as $id => $entity) {
       $this->cacheBackend->set($this->buildCacheId($id), $entity, CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
@@ -543,7 +543,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     else {
       $this->entities = array();
       if ($this->entityType->isPersistentlyCacheable()) {
-        $this->cacheBackend->deleteTags(array($this->entityTypeId . '_values' => TRUE));
+        $this->cacheBackend->deleteTags(array($this->entityTypeId . '_values'));
       }
     }
   }

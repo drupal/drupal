@@ -113,7 +113,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     $this->themeHandler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('breakpoints');
-    $this->setCacheBackend($cache_backend, 'breakpoints', array('breakpoints' => TRUE));
+    $this->setCacheBackend($cache_backend, 'breakpoints', array('breakpoints'));
   }
 
   /**
@@ -176,7 +176,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
           }
         }
         uasort($breakpoints, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
-        $this->cacheBackend->set($this->cacheKey . ':' . $group, $breakpoints, Cache::PERMANENT, array('breakpoints' => TRUE));
+        $this->cacheBackend->set($this->cacheKey . ':' . $group, $breakpoints, Cache::PERMANENT, array('breakpoints'));
         $this->breakpointsByGroup[$group] = $breakpoints;
       }
     }
@@ -205,7 +205,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
           $groups[$plugin_definition['group']] = $plugin_definition['group'];
         }
       }
-      $this->cacheBackend->set($this->cacheKey . '::groups', $groups, Cache::PERMANENT, array('breakpoints' => TRUE));
+      $this->cacheBackend->set($this->cacheKey . '::groups', $groups, Cache::PERMANENT, array('breakpoints'));
     }
     // Get the labels. This is not cacheable due to translation.
     $group_labels = array();

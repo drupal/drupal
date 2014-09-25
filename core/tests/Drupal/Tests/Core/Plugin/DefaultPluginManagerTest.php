@@ -196,7 +196,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $cache_backend
       ->expects($this->once())
       ->method('deleteTags')
-      ->with(array('tag' => TRUE));
+      ->with(array('tag'));
     $cache_backend
       ->expects($this->never())
       ->method('deleteMultiple');
@@ -204,7 +204,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->getContainerWithCacheBins($cache_backend);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, NULL, NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
-    $plugin_manager->setCacheBackend($cache_backend, $cid, array('tag' => TRUE));
+    $plugin_manager->setCacheBackend($cache_backend, $cid, array('tag'));
 
     $plugin_manager->clearCachedDefinitions();
   }

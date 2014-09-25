@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Plugin\Block;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
@@ -190,8 +189,9 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // the cache tag for this menu to be set: whenever the menu is changed, this
     // menu block must also be re-rendered for that user, because maybe a menu
     // link that is accessible for that user has been added.
-    $tags = array('menu' => array($this->getDerivativeId()));
-    return NestedArray::mergeDeep(parent::getCacheTags(), $tags);
+    $cache_tags = parent::getCacheTags();
+    $cache_tags[] = 'menu:' . $this->getDerivativeId();
+    return $cache_tags;
   }
 
   /**

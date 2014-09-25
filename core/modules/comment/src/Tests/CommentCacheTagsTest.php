@@ -87,7 +87,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     return array(
       'filter_format:plain_text',
       'user:' . $entity->getOwnerId(),
-      'user_view:1',
+      'user_view',
     );
   }
 

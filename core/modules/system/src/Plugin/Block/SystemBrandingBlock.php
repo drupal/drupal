@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Plugin\Block;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -192,10 +191,9 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
   public function getCacheTags() {
     // The theme-specific cache tag is set automatically for each block, but the
     // output of this block also depends on the global theme settings.
-    $tags = array(
-      'theme_global_setting' => TRUE,
-    );
-    return NestedArray::mergeDeep(parent::getCacheTags(), $tags);
+    $cache_tags = parent::getCacheTags();
+    $cache_tags[] = 'theme_global_setting';
+    return $cache_tags;
   }
 
   /**

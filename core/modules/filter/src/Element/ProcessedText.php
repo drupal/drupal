@@ -8,6 +8,7 @@
 namespace Drupal\filter\Element;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\FilterInterface;
@@ -107,14 +108,14 @@ class ProcessedText extends RenderElement {
     }
 
     // Perform filtering.
-    $all_cache_tags = array();
+    $cache_tags = array();
     $all_assets = array();
     $all_post_render_cache_callbacks = array();
     foreach ($filters as $filter) {
       if ($filter_must_be_applied($filter)) {
         $result = $filter->process($text, $langcode);
         $all_assets[] = $result->getAssets();
-        $all_cache_tags[] = $result->getCacheTags();
+        $cache_tags = Cache::mergeTags($cache_tags, $result->getCacheTags());
         $all_post_render_cache_callbacks[] = $result->getPostRenderCacheCallbacks();
         $text = $result->getProcessedText();
       }
@@ -125,12 +126,12 @@ class ProcessedText extends RenderElement {
 
     // Collect all cache tags.
     if (isset($element['#cache']) && isset($element['#cache']['tags'])) {
-      // Prepend the original cache tags array.
-      array_unshift($all_cache_tags, $element['#cache']['tags']);
+      // Merge the original cache tags array.
+      $cache_tags = Cache::mergeTags($cache_tags, $element['#cache']['tags']);
     }
     // Prepend the text format's cache tags array.
-    array_unshift($all_cache_tags, $format->getCacheTag());
-    $element['#cache']['tags'] = NestedArray::mergeDeepArray($all_cache_tags);
+    $cache_tags = Cache::mergeTags($cache_tags, $format->getCacheTag());
+    $element['#cache']['tags'] = $cache_tags;
 
     // Collect all attached assets.
     if (isset($element['#attached'])) {

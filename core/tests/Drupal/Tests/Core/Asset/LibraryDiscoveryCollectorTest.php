@@ -107,7 +107,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->once())
       ->method('set')
-      ->with('library_info', array('test' => $this->libraryData), Cache::PERMANENT, array('library_info' => array(TRUE)));
+      ->with('library_info', array('test' => $this->libraryData), Cache::PERMANENT, array('library_info'));
     $this->lock->expects($this->once())
       ->method('release')
       ->with($lock_key);

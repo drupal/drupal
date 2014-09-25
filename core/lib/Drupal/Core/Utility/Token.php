@@ -320,7 +320,7 @@ class Token {
         $this->tokenInfo = $this->moduleHandler->invokeAll('token_info');
         $this->moduleHandler->alter('token_info', $this->tokenInfo);
         $this->cache->set($cache_id, $this->tokenInfo, CacheBackendInterface::CACHE_PERMANENT, array(
-          static::TOKEN_INFO_CACHE_TAG => TRUE,
+          static::TOKEN_INFO_CACHE_TAG,
         ));
       }
     }

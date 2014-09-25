@@ -7,7 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityViewBuilder;
@@ -71,12 +70,12 @@ class BlockViewBuilder extends EntityViewBuilder {
 
       // Set cache tags; these always need to be set, whether the block is
       // cacheable or not, so that the page cache is correctly informed.
-      $build[$entity_id]['#cache']['tags'] = NestedArray::mergeDeepArray(array(
+      $build[$entity_id]['#cache']['tags'] = Cache::mergeTags(
         $this->getCacheTag(), // Block view builder cache tag.
         $entity->getCacheTag(), // Block entity cache tag.
         $entity->getListCacheTags(), // Block entity list cache tags.
-        $plugin->getCacheTags(), // Block plugin cache tags.
-      ));
+        $plugin->getCacheTags() // Block plugin cache tags.
+      );
 
       if ($plugin->isCacheable()) {
         $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');

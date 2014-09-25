@@ -371,7 +371,7 @@ function _toolbar_get_subtrees_hash($langcode) {
     // caches later, based on the user's ID regardless of language.
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE, 'menu' => 'admin', 'user_roles' => TRUE));
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user:' . $uid, 'locale', 'menu:admin', 'user_roles'));
   }
   return $hash;
 }

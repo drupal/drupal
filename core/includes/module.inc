@@ -69,7 +69,7 @@ function system_list_reset() {
   // @todo Trigger an event upon module install/uninstall and theme
   //   enable/disable, and move this into an event subscriber.
   // @see https://drupal.org/node/2206347
-  Cache::invalidateTags(array('extension' => TRUE));
+  Cache::invalidateTags(array('extension'));
 }
 
 /**

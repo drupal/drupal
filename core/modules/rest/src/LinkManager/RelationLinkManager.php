@@ -102,6 +102,6 @@ class RelationLinkManager implements RelationLinkManagerInterface{
     }
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when the fields cache is cleared.
-    $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('entity_field_info' => TRUE));
+    $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('entity_field_info'));
   }
 }

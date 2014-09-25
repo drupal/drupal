@@ -43,7 +43,7 @@ class ViewsPluginManager extends DefaultPluginManager {
     );
 
     $this->alterInfo('views_plugins_' . $type);
-    $this->setCacheBackend($cache_backend, "views:{$type}_plugins", array('extension' => array(TRUE, 'views')));
+    $this->setCacheBackend($cache_backend, "views:{$type}_plugins", array('extension', 'extension:views'));
   }
 
 }

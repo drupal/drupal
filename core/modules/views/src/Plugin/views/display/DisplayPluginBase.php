@@ -180,7 +180,7 @@ abstract class DisplayPluginBase extends PluginBase {
         else {
           $this->unpackOptions($this->options, $options);
           $id = $this->view->storage->id();
-          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, array('extension' => array(TRUE, 'views'), 'view' => array($id => $id)));
+          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, array('extension', 'extension:views', 'view:' . $id));
         }
         static::$unpackOptions[$cid] = $this->options;
       }

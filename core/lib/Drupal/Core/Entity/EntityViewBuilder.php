@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -160,7 +159,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       '#langcode' => $langcode,
       // Collect cache defaults for this entity.
       '#cache' => array(
-        'tags' => NestedArray::mergeDeep($this->getCacheTag(), $entity->getCacheTag()),
+        'tags' => Cache::mergeTags($this->getCacheTag(), $entity->getCacheTag()),
       ),
     );
 
@@ -343,7 +342,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public function getCacheTag() {
-    return array($this->entityTypeId . '_view' => TRUE);
+    return array($this->entityTypeId . '_view');
   }
 
   /**
@@ -352,9 +351,9 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   public function resetCache(array $entities = NULL) {
     if (isset($entities)) {
       // Always invalidate the ENTITY_TYPE_list tag.
-      $tags = array($this->entityTypeId . '_list' => TRUE);
+      $tags = array($this->entityTypeId . '_list');
       foreach ($entities as $entity) {
-        $tags = NestedArray::mergeDeep($tags, $entity->getCacheTag());
+        $tags = Cache::mergeTags($tags, $entity->getCacheTag());
       }
       Cache::invalidateTags($tags);
     }

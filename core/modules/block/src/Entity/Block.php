@@ -164,7 +164,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    * this block is placed in instead.
    */
   public function getListCacheTags() {
-    return array('theme' => $this->theme);
+    return array('theme:' . $this->theme);
   }
 
   /**

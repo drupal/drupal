@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Page;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -68,12 +69,15 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     }
 
     if ($fragment instanceof CacheableInterface) {
-      // Collect cache tags for all the content in all the regions on the page.
-      $tags = $page_array['#cache']['tags'];
-      // Tag every render cache item with the "rendered" cache tag. This allows us
-      // to invalidate the entire render cache, regardless of the cache bin.
-      $tags['rendered'] = TRUE;
-      $page->setCacheTags($tags);
+      // Persist cache tags associated with this page. Also associate the
+      // "rendered" cache tag. This allows us to invalidate the entire render
+      // cache, regardless of the cache bin.
+      $cache_tags = $page_array['#cache']['tags'];
+      $cache_tags[] = 'rendered';
+      // Only keep unique cache tags. We need to prevent duplicates here already
+      // rather than only in the cache layer, because they are also used by
+      // reverse proxies (like Varnish), not only by Drupal's page cache.
+      $page->setCacheTags(array_unique($cache_tags));
     }
 
     return $page;

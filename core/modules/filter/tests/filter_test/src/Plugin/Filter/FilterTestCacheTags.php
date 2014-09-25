@@ -27,8 +27,8 @@ class FilterTestCacheTags extends FilterBase {
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-    $result->addCacheTags(array('foo' => array('bar')));
-    $result->addCacheTags(array('foo' => array('baz')));
+    $result->addCacheTags(array('foo:bar'));
+    $result->addCacheTags(array('foo:baz'));
     return $result;
   }
 

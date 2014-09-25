@@ -59,7 +59,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
     }
     parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_annotation_name);
 
-    $this->setCacheBackend($cache_backend, "views:$handler_type", array('extension' => array(TRUE, 'views')));
+    $this->setCacheBackend($cache_backend, "views:$handler_type", array('extension', 'extension:views'));
 
     $this->viewsData = $views_data;
     $this->handlerType = $handler_type;

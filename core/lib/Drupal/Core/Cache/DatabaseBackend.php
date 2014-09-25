@@ -147,6 +147,10 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+    Cache::validateTags($tags);
+    $tags = array_unique($tags);
+    // Sort the cache tags so that they are stored consistently in the database.
+    sort($tags);
     $try_again = FALSE;
     try {
       // The bin might not yet exist.
@@ -170,13 +174,12 @@ class DatabaseBackend implements CacheBackendInterface {
    * Actually set the cache.
    */
   protected function doSet($cid, $data, $expire, $tags) {
-    $flat_tags = $this->flattenTags($tags);
     $deleted_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::deletedTags', array());
     $invalidated_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::invalidatedTags', array());
     // Remove tags that were already deleted or invalidated during this request
     // from the static caches so that another deletion or invalidation can
     // occur.
-    foreach ($flat_tags as $tag) {
+    foreach ($tags as $tag) {
       if (isset($deleted_tags[$tag])) {
         unset($deleted_tags[$tag]);
       }
@@ -184,12 +187,12 @@ class DatabaseBackend implements CacheBackendInterface {
         unset($invalidated_tags[$tag]);
       }
     }
-    $checksum = $this->checksumTags($flat_tags);
+    $checksum = $this->checksumTags($tags);
     $fields = array(
       'serialized' => 0,
       'created' => round(microtime(TRUE), 3),
       'expire' => $expire,
-      'tags' => implode(' ', $flat_tags),
+      'tags' => implode(' ', $tags),
       'checksum_invalidations' => $checksum['invalidations'],
       'checksum_deletions' => $checksum['deletions'],
     );
@@ -234,12 +237,15 @@ class DatabaseBackend implements CacheBackendInterface {
           'tags' => array(),
         );
 
-        $flat_tags = $this->flattenTags($item['tags']);
+        Cache::validateTags($item['tags']);
+        $item['tags'] = array_unique($item['tags']);
+        // Sort the cache tags so that they are stored consistently in the DB.
+        sort($item['tags']);
 
         // Remove tags that were already deleted or invalidated during this
         // request from the static caches so that another deletion or
         // invalidation can occur.
-        foreach ($flat_tags as $tag) {
+        foreach ($item['tags'] as $tag) {
           if (isset($deleted_tags[$tag])) {
             unset($deleted_tags[$tag]);
           }
@@ -248,13 +254,13 @@ class DatabaseBackend implements CacheBackendInterface {
           }
         }
 
-        $checksum = $this->checksumTags($flat_tags);
+        $checksum = $this->checksumTags($item['tags']);
 
         $fields = array(
           'cid' => $cid,
           'expire' => $item['expire'],
           'created' => round(microtime(TRUE), 3),
-          'tags' => implode(' ', $flat_tags),
+          'tags' => implode(' ', $item['tags']),
           'checksum_invalidations' => $checksum['invalidations'],
           'checksum_deletions' => $checksum['deletions'],
         );
@@ -316,7 +322,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function deleteTags(array $tags) {
     $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
     $deleted_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::deletedTags', array());
-    foreach ($this->flattenTags($tags) as $tag) {
+    foreach ($tags as $tag) {
       // Only delete tags once per request unless they are written again.
       if (isset($deleted_tags[$tag])) {
         continue;
@@ -386,7 +392,7 @@ class DatabaseBackend implements CacheBackendInterface {
     try {
       $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
       $invalidated_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::invalidatedTags', array());
-      foreach ($this->flattenTags($tags) as $tag) {
+      foreach ($tags as $tag) {
         // Only invalidate tags once per request unless they are written again.
         if (isset($invalidated_tags[$tag])) {
           continue;
@@ -437,45 +443,15 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * 'Flattens' a tags array into an array of strings.
-   *
-   * @param array $tags
-   *   Associative array of tags to flatten.
-   *
-   * @return array
-   *   An indexed array of flattened tag identifiers.
-   */
-  protected function flattenTags(array $tags) {
-    if (isset($tags[0])) {
-      return $tags;
-    }
-
-    $flat_tags = array();
-    foreach ($tags as $namespace => $values) {
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          $flat_tags[] = "$namespace:$value";
-        }
-      }
-      else {
-        $flat_tags[] = "$namespace:$values";
-      }
-    }
-    return $flat_tags;
-  }
-
-  /**
    * Returns the sum total of validations for a given set of tags.
    *
    * @param array $tags
-   *   Array of flat tags.
+   *   Array of cache tags.
    *
    * @return int
    *   Sum of all invalidations.
-   *
-   * @see \Drupal\Core\Cache\DatabaseBackend::flattenTags()
    */
-  protected function checksumTags($flat_tags) {
+  protected function checksumTags(array $tags) {
     $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
 
     $checksum = array(
@@ -483,7 +459,7 @@ class DatabaseBackend implements CacheBackendInterface {
       'deletions' => 0,
     );
 
-    $query_tags = array_diff($flat_tags, array_keys($tag_cache));
+    $query_tags = array_diff($tags, array_keys($tag_cache));
     if ($query_tags) {
       $db_tags = $this->connection->query('SELECT tag, invalidations, deletions FROM {cachetags} WHERE tag IN (:tags)', array(':tags' => $query_tags))->fetchAllAssoc('tag', \PDO::FETCH_ASSOC);
       $tag_cache += $db_tags;
@@ -492,7 +468,7 @@ class DatabaseBackend implements CacheBackendInterface {
       $tag_cache += array_fill_keys(array_diff($query_tags, array_keys($db_tags)), $checksum);
     }
 
-    foreach ($flat_tags as $tag) {
+    foreach ($tags as $tag) {
       $checksum['invalidations'] += $tag_cache[$tag]['invalidations'];
       $checksum['deletions'] += $tag_cache[$tag]['deletions'];
     }

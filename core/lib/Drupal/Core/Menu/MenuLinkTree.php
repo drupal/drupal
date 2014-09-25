@@ -124,7 +124,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
           // expanded.
           ->addExpandedParents($this->treeStorage->getExpanded($menu_name, $active_trail));
 
-        $this->cache->set($cid, $parameters, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+        $this->cache->set($cid, $parameters, CacheBackendInterface::CACHE_PERMANENT, array('menu:' . $menu_name));
       }
       $this->cachedCurrentRouteParameters[$menu_name] = $parameters;
     }
@@ -246,7 +246,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
       // Allow menu-specific theme overrides.
       $build['#theme_wrappers'][] = 'menu_tree__' . strtr($menu_name, '-', '_');
       // Set cache tag.
-      $build['#cache']['tags']['menu'][$menu_name] = $menu_name;
+      $build['#cache']['tags'][] = 'menu:' . $menu_name;
     }
 
     return $build;

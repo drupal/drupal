@@ -246,14 +246,10 @@ class FilterAPITest extends EntityUnitTestBase {
     $this->assertEqual($expected_assets, $build['#attached'], 'Expected assets present');
     $expected_cache_tags = array(
       // The cache tag set by the processed_text element itself.
-      'filter_format' => array(
-        'element_test',
-      ),
+      'filter_format:element_test',
       // The cache tags set by the filter_test_cache_tags filter.
-      'foo' => array(
-        'bar',
-        'baz',
-      ),
+      'foo:bar',
+      'foo:baz',
     );
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');
     $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p>';

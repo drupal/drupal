@@ -37,7 +37,7 @@ class FilterPluginManager extends DefaultPluginManager implements FallbackPlugin
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Filter', $namespaces, $module_handler, 'Drupal\filter\Plugin\FilterInterface', 'Drupal\filter\Annotation\Filter');
     $this->alterInfo('filter_info');
-    $this->setCacheBackend($cache_backend, 'filter_plugins', array('filter_formats' => TRUE));
+    $this->setCacheBackend($cache_backend, 'filter_plugins', array('filter_formats'));
   }
 
   /**

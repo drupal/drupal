@@ -77,7 +77,7 @@ class HtmlViewSubscriber implements EventSubscriberInterface {
       // recommended.
       $response = new Response((string) $this->pageRenderer->render($page), $page->getStatusCode());
       if ($tags = $page->getCacheTags()) {
-        $response->headers->set('X-Drupal-Cache-Tags', static::convertCacheTagsToHeader($tags));
+        $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $tags));
       }
       if ($keys = $page->getCacheKeys()) {
         $response->headers->set('cache_keys', serialize($keys));
@@ -105,62 +105,6 @@ class HtmlViewSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::VIEW][] = array('onHtmlPage', 50);
 
     return $events;
-  }
-
-  /**
-   * Converts a cache tags array into a X-Drupal-Cache-Tags header value.
-   *
-   * @param array $tags
-   *   Associative array of cache tags to flatten.
-   *
-   * @return string
-   *   A space-separated list of flattened cache tag identifiers.
-   */
-  public static function convertCacheTagsToHeader(array $tags) {
-    $flat_tags = array();
-    foreach ($tags as $namespace => $values) {
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          $flat_tags[] = "$namespace:$value";
-        }
-      }
-      else {
-        $flat_tags[] = "$namespace:$values";
-      }
-    }
-    return implode(' ', $flat_tags);
-  }
-
-  /**
-   * Converts a X-Drupal-Cache-Tags header value into a cache tags array.
-   *
-   * @param string $tags_header
-   *   A space-separated list of flattened cache tag identifiers.
-   *
-   * @return array
-   *   Associative array of cache tags to flatten.
-   */
-  public static function convertHeaderToCacheTags($tags_header) {
-    if (!is_string($tags_header) || strlen(trim($tags_header)) == 0) {
-      return array();
-    }
-
-    $flat_tags = explode(' ', trim($tags_header));
-    $tags = array();
-    foreach ($flat_tags as $flat_tag) {
-      list($namespace, $value) = explode(':', $flat_tag);
-      if (!isset($tags[$namespace])) {
-        $tags[$namespace] = $value;
-      }
-      // Multiple values in this namespace.
-      else {
-        if (!is_array($tags[$namespace])) {
-          $tags[$namespace] = array($tags[$namespace]);
-        }
-        $tags[$namespace][] = $value;
-      }
-    }
-    return $tags;
   }
 
 }

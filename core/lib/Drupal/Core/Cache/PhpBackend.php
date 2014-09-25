@@ -133,13 +133,14 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+    Cache::validateTags($tags);
     $item = (object) array(
       'cid' => $cid,
       'data' => $data,
       'created' => round(microtime(TRUE), 3),
       'expire' => $expire,
+      'tags' => array_unique($tags),
     );
-    $item->tags = $this->flattenTags($tags);
     $this->writeItem($this->normalizeCid($cid), $item);
   }
 
@@ -163,10 +164,9 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function deleteTags(array $tags) {
-    $flat_tags = $this->flattenTags($tags);
     foreach ($this->storage()->listAll() as $cidhash) {
       $item = $this->getByHash($cidhash);
-      if (is_object($item) && array_intersect($flat_tags, $item->tags)) {
+      if (is_object($item) && array_intersect($tags, $item->tags)) {
         $this->delete($item->cid);
       }
     }
@@ -212,10 +212,9 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
-    $flat_tags = $this->flattenTags($tags);
     foreach ($this->storage()->listAll() as $cidhash) {
       $item = $this->getByHash($cidhash);
-      if ($item && array_intersect($flat_tags, $item->tags)) {
+      if ($item && array_intersect($tags, $item->tags)) {
         $this->invalidate($item->cid);
       }
     }
@@ -228,34 +227,6 @@ class PhpBackend implements CacheBackendInterface {
     foreach($this->storage()->listAll() as $cidhash) {
       $this->invalidatebyHash($cidhash);
     }
-  }
-
-  /**
-   * 'Flattens' a tags array into an array of strings.
-   *
-   * @param array $tags
-   *   Associative array of tags to flatten.
-   *
-   * @return array
-   *   An indexed array of strings.
-   */
-  protected function flattenTags(array $tags) {
-    if (isset($tags[0])) {
-      return $tags;
-    }
-
-    $flat_tags = array();
-    foreach ($tags as $namespace => $values) {
-      if (is_array($values)) {
-        foreach ($values as $value) {
-          $flat_tags[] = "$namespace:$value";
-        }
-      }
-      else {
-        $flat_tags[] = "$namespace:$values";
-      }
-    }
-    return $flat_tags;
   }
 
   /**

@@ -392,13 +392,13 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(0))
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
     $this->cacheBackend->expects($this->at(1))
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
-        $this->entityTypeId => array($this->values['id']), // Own cache tag.
+        $this->entityTypeId . ':' . $this->values['id'], // Own cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     // This method is internal, so check for errors on calling it only.
@@ -449,8 +449,8 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId => array($this->values['id']),
-        $this->entityTypeId . 's' => TRUE,
+        $this->entityTypeId . ':' . $this->values['id'],
+        $this->entityTypeId . 's',
       ));
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
 

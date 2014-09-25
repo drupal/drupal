@@ -185,7 +185,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->cacheBackend->expects($this->at(3))
       ->method('set')
-      ->with('local_task:en:menu_local_task_test_tasks_view', $expected_set, Cache::PERMANENT, array('local_task' => 1));
+      ->with('local_task:en:menu_local_task_test_tasks_view', $expected_set, Cache::PERMANENT, array('local_task'));
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);
@@ -280,7 +280,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
-    $this->manager->setCacheBackend($this->cacheBackend, 'local_task:en', array('local_task' => 1));
+    $this->manager->setCacheBackend($this->cacheBackend, 'local_task:en', array('local_task'));
   }
 
   /**

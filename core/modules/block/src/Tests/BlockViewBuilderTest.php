@@ -8,7 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\UrlCacheContext;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -221,7 +221,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $request->setMethod('GET');
 
     $default_keys = array('entity_view', 'block', 'test_block', 'en', 'cache_context.theme');
-    $default_tags = array('block_view' => TRUE, 'block' => array('test_block'), 'theme' => 'stark', 'block_plugin' => array('test_cache'));
+    $default_tags = array('block_view', 'block:test_block', 'theme:stark', 'block_plugin:test_cache');
 
     // Advanced: cached block, but an alter hook adds an additional cache key.
     $this->setBlockCacheConfig(array(
@@ -236,22 +236,25 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_flattened_tags = array('block_view:1', 'block:test_block', 'theme:stark', 'block_plugin:test_cache', 'rendered:1');
-    $this->assertIdentical($cache_entry->tags, $expected_flattened_tags, 'The block render element has been cached with the expected cache tags.');
+    $expected_tags = array('block_view', 'block:test_block', 'theme:stark', 'block_plugin:test_cache', 'rendered');
+    sort($expected_tags);
+    $this->assertIdentical($cache_entry->tags, $expected_tags, 'The block render element has been cached with the expected cache tags.');
     $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds an additional cache tag.
     $alter_add_tag = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_tag', $alter_add_tag);
-    $expected_tags = NestedArray::mergeDeep($default_tags, array($alter_add_tag => TRUE));
+    $expected_tags = Cache::mergeTags($default_tags, array($alter_add_tag));
     $build = $this->getBlockRenderArray();
+    sort($build['#cache']['tags']);
     $this->assertIdentical($expected_tags, $build['#cache']['tags'], 'An altered cacheable block has the expected cache tags.');
     $cid = drupal_render_cid_create(array('#cache' => array('keys' => $expected_keys)));
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_flattened_tags = array('block_view:1', 'block:test_block', 'theme:stark', 'block_plugin:test_cache', $alter_add_tag . ':1', 'rendered:1');
-    $this->assertIdentical($cache_entry->tags, $expected_flattened_tags, 'The block render element has been cached with the expected cache tags.');
+    $expected_tags = array('block_view', 'block:test_block', 'theme:stark', 'block_plugin:test_cache', $alter_add_tag, 'rendered');
+    sort($expected_tags);
+    $this->assertIdentical($cache_entry->tags, $expected_tags, 'The block render element has been cached with the expected cache tags.');
     $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds a #pre_render callback to

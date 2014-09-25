@@ -57,7 +57,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    */
   public function testEntityCreation() {
     // Create a cache entry that is tagged with a shortcut set cache tag.
-    $cache_tags = array('shortcut_set' => 'default');
+    $cache_tags = array('shortcut_set:default');
     \Drupal::cache('render')->set('foo', 'bar', \Drupal\Core\Cache\CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
 
     // Verify a cache hit.

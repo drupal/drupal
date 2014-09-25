@@ -235,7 +235,7 @@ class Registry implements DestructableInterface {
   public function getRuntime() {
     $this->init($this->themeName);
     if (!isset($this->runtimeRegistry)) {
-      $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry' => TRUE), $this->moduleHandler->isLoaded());
+      $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
     }
     return $this->runtimeRegistry;
   }
@@ -244,7 +244,7 @@ class Registry implements DestructableInterface {
    * Persists the theme registry in the cache backend.
    */
   protected function setCache() {
-    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry, Cache::PERMANENT, array('theme_registry' => TRUE));
+    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry, Cache::PERMANENT, array('theme_registry'));
   }
 
   /**
@@ -318,7 +318,7 @@ class Registry implements DestructableInterface {
       }
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
-        $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, array('theme_registry' => TRUE));
+        $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, array('theme_registry'));
       }
     }
 
@@ -557,7 +557,7 @@ class Registry implements DestructableInterface {
     $this->runtimeRegistry = NULL;
 
     $this->registry = NULL;
-    Cache::invalidateTags(array('theme_registry' => TRUE));
+    Cache::invalidateTags(array('theme_registry'));
     return $this;
   }
 

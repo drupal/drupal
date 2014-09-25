@@ -81,10 +81,10 @@ class CommentLockTest extends UnitTestCase {
       ->will($this->returnValue((object) array('value' => NULL)));
     $comment->expects($this->once())
       ->method('getCacheTag')
-      ->will($this->returnValue(array('comment' => array($cid))));
+      ->will($this->returnValue(array('comment:' . $cid)));
     $comment->expects($this->once())
       ->method('getListCacheTags')
-      ->will($this->returnValue(array('comments' => TRUE)));
+      ->will($this->returnValue(array('comments')));
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
 
     // preSave() should acquire the lock. (This is what's really being tested.)

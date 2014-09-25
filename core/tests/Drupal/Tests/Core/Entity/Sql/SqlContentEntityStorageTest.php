@@ -1165,7 +1165,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(array()));
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, array($this->entityTypeId . '_values' => TRUE, 'entity_field_info' => TRUE));
+      ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, array($this->entityTypeId . '_values', 'entity_field_info'));
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))

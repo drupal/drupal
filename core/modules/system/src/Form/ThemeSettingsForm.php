@@ -426,10 +426,10 @@ class ThemeSettingsForm extends ConfigFormBase {
     // Invalidate either the theme-specific cache tag or the global theme
     // settings cache tag, depending on whose settings were actually changed.
     if (isset($values['theme'])) {
-      Cache::invalidateTags(array('theme' => $values['theme']));
+      Cache::invalidateTags(array('theme:' . $values['theme']));
     }
     else {
-      Cache::invalidateTags(array('theme_global_settings' => TRUE));
+      Cache::invalidateTags(array('theme_global_settings'));
     }
   }
 

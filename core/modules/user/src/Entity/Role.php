@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\RoleInterface;

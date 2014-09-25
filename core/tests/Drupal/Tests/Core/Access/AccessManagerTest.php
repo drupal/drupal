@@ -553,7 +553,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->setupAccessChecker();
 
     $this->assertEquals(FALSE, $this->accessManager->checkNamedRoute('test_route_1', array(), $this->account), 'A non existing route lead to access.');
-    $this->assertEquals(AccessResult::forbidden()->addCacheTags(array('extension' => TRUE)), $this->accessManager->checkNamedRoute('test_route_1', array(), $this->account, TRUE), 'A non existing route lead to access.');
+    $this->assertEquals(AccessResult::forbidden()->addCacheTags(array('extension')), $this->accessManager->checkNamedRoute('test_route_1', array(), $this->account, TRUE), 'A non existing route lead to access.');
   }
 
   /**

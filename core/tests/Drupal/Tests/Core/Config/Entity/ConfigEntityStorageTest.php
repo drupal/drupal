@@ -241,7 +241,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     $this->configFactory->expects($this->exactly(2))
@@ -300,8 +300,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
-        $this->entityTypeId => array('foo'), // Own cache tag.
+        $this->entityTypeId . ':foo', // Own cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     $this->configFactory->expects($this->exactly(2))
@@ -360,8 +360,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
-        $this->entityTypeId => array('bar'), // Own cache tag.
+        $this->entityTypeId .':bar', // Own cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     $this->configFactory->expects($this->once())
@@ -493,7 +493,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     $this->configFactory->expects($this->once())
@@ -726,8 +726,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
-        $this->entityTypeId . 's' => TRUE, // List cache tag.
-        $this->entityTypeId => array('foo', 'bar'), // Own cache tag.
+        $this->entityTypeId . ':bar', // Own cache tag.
+        $this->entityTypeId . ':foo', // Own cache tag.
+        $this->entityTypeId . 's', // List cache tag.
       ));
 
     $this->configFactory->expects($this->exactly(2))
