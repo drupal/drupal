@@ -49,3 +49,32 @@ views.row.rss_fields:
         guid_field_is_permalink:
           type: boolean
           label: 'GUID is permalink'
+
+views.row.opml_fields:
+  type: views_row
+  label: 'OPML field options'
+  mapping:
+    type_field:
+      type: string
+      label: 'Type attribute'
+    text_field:
+      type: string
+      label: 'Text attribute'
+    created_field:
+      type: string
+      label: 'Created attribute'
+    description_field:
+      type: string
+      label: 'Description attribute'
+    html_url_field:
+      type: string
+      label: 'HTML URL attribute'
+    language_field:
+      type: string
+      label: 'Language attribute'
+    xml_url_field:
+      type: string
+      label: 'XML URL attribute'
+    url_field:
+      type: string
+      label: 'URL attribute'

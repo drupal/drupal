@@ -84,19 +84,3 @@ aggregator.page_last:
     _title: 'Feed aggregator'
   requirements:
     _permission: 'access news feeds'
-
-aggregator.sources:
-  path: '/aggregator/sources'
-  defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::sources'
-    _title: 'Sources'
-  requirements:
-    _permission: 'access news feeds'
-
-aggregator.opml_page:
-  path: '/aggregator/opml'
-  defaults:
-    _title: 'OPML feed'
-    _controller: '\Drupal\aggregator\Controller\AggregatorController::opmlPage'
-  requirements:
-    _permission: 'access news feeds'

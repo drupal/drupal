@@ -180,52 +180,6 @@ class AggregatorController extends ControllerBase {
   }
 
   /**
-   * Displays all the feeds used by the Aggregator module.
-   *
-   * @return array
-   *   A render array as expected by drupal_render().
-   */
-  public function sources() {
-    $entity_manager = $this->entityManager();
-
-    $feeds = $entity_manager->getStorage('aggregator_feed')->loadMultiple();
-
-    $build = $entity_manager->getViewBuilder('aggregator_feed')
-      ->viewMultiple($feeds, 'summary');
-    $build['feed_icon'] = array(
-      '#theme' => 'feed_icon',
-      '#url' => 'aggregator/opml',
-      '#title' => $this->t('OPML feed'),
-    );
-    return $build;
-  }
-
-  /**
-   * Generates an OPML representation of all feeds.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The response containing the OPML.
-   */
-  public function opmlPage() {
-     $feeds = $this->entityManager()
-      ->getStorage('aggregator_feed')
-      ->loadMultiple();
-
-    $feeds = $result->fetchAll();
-    $aggregator_page_opml = array(
-      '#theme' => 'aggregator_page_opml',
-      '#feeds' => $feeds,
-    );
-    $output = drupal_render($aggregator_page_opml);
-
-    $response = new Response();
-    $response->headers->set('Content-Type', 'text/xml; charset=utf-8');
-    $response->setContent($output);
-
-    return $response;
-  }
-
-  /**
    * Route title callback.
    *
    * @param \Drupal\aggregator\FeedInterface $aggregator_feed

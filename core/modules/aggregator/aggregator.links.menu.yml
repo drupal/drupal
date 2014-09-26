@@ -8,9 +8,6 @@ aggregator.page_last:
   title: 'Feed aggregator'
   weight: 5
   route_name: aggregator.page_last
-aggregator.sources:
-  title: Sources
-  route_name: aggregator.sources
 aggregator.feed_add:
   title: 'Add feed'
   route_name: aggregator.feed_add

@@ -20,17 +20,22 @@ const AGGREGATOR_CLEAR_NEVER = 0;
 function aggregator_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.aggregator':
+      $path_validator = \Drupal::pathValidator();
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Aggregator module is an on-site syndicator and news reader that gathers and displays fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines in feeds, using a number of standardized XML-based formats. For more information, see the <a href="!aggregator-module">online documentation for the Aggregator module</a>.', array('!aggregator-module' => 'https://drupal.org/documentation/modules/aggregator')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Viewing feeds') . '</dt>';
-      $output .= '<dd>' . t('Users view feed content in the <a href="!aggregator">main aggregator display</a>, or by <a href="!aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="!admin-block">Blocks administration page</a>.', array('!aggregator' => \Drupal::url('aggregator.page_last'), '!aggregator-sources' => \Drupal::url('aggregator.sources'), '!admin-block' => \Drupal::url('block.admin_display'))) . '</dd>';
+      if ($url = $path_validator->getUrlIfValid('aggregator/sources')) {
+        $output .= '<dt>' . t('Viewing feeds') . '</dt>';
+        $output .= '<dd>' . t('Users view feed content in the <a href="!aggregator">main aggregator display</a>, or by <a href="!aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="!admin-block">Blocks administration page</a>.', array('!aggregator' => \Drupal::url('aggregator.page_last'), '!aggregator-sources' => $url->toString(), '!admin-block' => \Drupal::url('block.admin_display'))) . '</dd>';
+      }
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
       $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href="!feededit">Feed aggregator administration page</a>.', array('!feededit' => \Drupal::url('aggregator.admin_overview'))) . '</dd>';
       $output .= '<dt>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> integration') . '</dt>';
-      $output .= '<dd>' . t('A <a href="!aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="!import-opml">imported via an OPML file</a>.', array('!aggregator-opml' => \Drupal::url('aggregator.opml_page'), '!import-opml' => \Drupal::url('aggregator.opml_add'))) . '</dd>';
+      if ($url = $path_validator->getUrlIfValid('aggregator/opml')) {
+        $output .= '<dd>' . t('A <a href="!aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="!import-opml">imported via an OPML file</a>.', array('!aggregator-opml' => $url->toString(), '!import-opml' => \Drupal::url('aggregator.opml_add'))) . '</dd>';
+      }
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
       $output .= '<dd>' . t('A working <a href="!cron">cron maintenance task</a> is required to update feeds automatically.', array('!cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
       $output .= '</dl>';
@@ -69,10 +74,6 @@ function aggregator_theme() {
       'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
       'template' => 'aggregator-item',
-    ),
-    'aggregator_page_opml' => array(
-      'variables' => array('feeds' => NULL),
-      'file' => 'aggregator.theme.inc',
     ),
   );
 }

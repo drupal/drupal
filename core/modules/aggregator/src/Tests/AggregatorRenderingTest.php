@@ -113,6 +113,18 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $cache_tags = explode(' ', $cache_tags_header);
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
 
+    // Check the rss aggregator page.
+    $this->drupalGet('aggregator/rss');
+    $this->assertResponse(200);
+    $this->assertEqual($this->drupalGetHeader('Content-type'), 'application/rss+xml; charset=utf-8');
+
+    // Check the opml aggregator page.
+    $this->drupalGet('aggregator/opml');
+    $outline = $this->xpath('//outline[1]');
+    $this->assertEqual($outline[0]['type'], 'rss', 'The correct type attribute is used for rss OPML.');
+    $this->assertEqual($outline[0]['text'], $feed->label(), 'The correct text attribute is used for rss OPML.');
+    $this->assertEqual($outline[0]['xmlurl'], $feed->getUrl(), 'The correct xmlUrl attribute is used for rss OPML.');
+
     // Check for the presence of a pager.
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));

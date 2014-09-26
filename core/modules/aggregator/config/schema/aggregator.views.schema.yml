@@ -1,5 +1,13 @@
 # Schema for the views plugins of the Aggregator module.
 
+"views.row.entity:aggregator_feed":
+  type: views_entity_row
+  label: 'Entity options'
+
+"views.row.entity:aggregator_item":
+  type: views_entity_row
+  label: 'Entity options'
+
 views.argument.aggregator_fid:
   type: views.argument.numeric
   label: 'Aggregator feed ID'
