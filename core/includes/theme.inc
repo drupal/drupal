@@ -1523,6 +1523,7 @@ function theme_indentation($variables) {
  *     Properties used: #id, #attributes, #children.
  */
 function template_preprocess_container(&$variables) {
+  $variables['has_parent'] = FALSE;
   $element = $variables['element'];
   // Ensure #attributes is set.
   $element += array('#attributes' => array());
@@ -1533,8 +1534,7 @@ function template_preprocess_container(&$variables) {
     if (!isset($element['#attributes']['id'])) {
       $element['#attributes']['id'] = $element['#id'];
     }
-    // Add the 'form-wrapper' class.
-    $element['#attributes']['class'][] = 'form-wrapper';
+    $variables['has_parent'] = TRUE;
   }
 
   $variables['children'] = $element['#children'];
