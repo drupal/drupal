@@ -58,7 +58,7 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sold_to',
-      'type' => 'list_text',
+      'type' => 'list_string',
       'settings' => array(
         'allowed_values' => array(
           'Pill spammers' => 'Pill spammers',

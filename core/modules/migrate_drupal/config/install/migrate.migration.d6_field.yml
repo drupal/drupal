@@ -35,8 +35,8 @@ process:
           optionwidgets_buttons: list_float
           optionwidgets_onoff: boolean
         text:
-          optionwidgets_select: list_text
-          optionwidgets_buttons: list_text
+          optionwidgets_select: list_string
+          optionwidgets_buttons: list_string
           optionwidgets_onoff: boolean
           text_textfield: text
           text_textarea: text_long

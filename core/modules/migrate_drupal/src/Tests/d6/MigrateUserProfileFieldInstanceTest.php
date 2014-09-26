@@ -99,7 +99,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
       'profile_color' => 'text',
       'profile_biography' => 'text_long',
       'profile_sell_address' => 'boolean',
-      'profile_sold_to' => 'list_text',
+      'profile_sold_to' => 'list_string',
       'profile_bands' => 'text',
       'profile_blog' => 'link',
       'profile_birthdate' => 'datetime',

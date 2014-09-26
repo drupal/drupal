@@ -334,7 +334,7 @@ class FormTest extends FieldTestBase {
     entity_create('field_storage_config', array(
       'name' => 'required_radio_test',
       'entity_type' => 'entity_test',
-      'type' => 'list_text',
+      'type' => 'list_string',
       'settings' => array(
         'allowed_values' => array('yes' => 'yes', 'no' => 'no'),
       ),

@@ -20,7 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
  *     "boolean",
  *     "list_integer",
  *     "list_float",
- *     "list_text",
+ *     "list_string",
  *   },
  *   multiple_values = TRUE
  * )

@@ -74,7 +74,7 @@ field.list_float.value:
           type: string
           label: 'Value'
 
-field.list_text.storage_settings:
+field.list_string.storage_settings:
   type: mapping
   label: 'List (text) settings'
   mapping:
@@ -95,12 +95,12 @@ field.list_text.storage_settings:
       type: string
       label: 'Allowed values function'
 
-field.list_text.field_settings:
+field.list_string.field_settings:
   label: 'List (float)'
   type: mapping
   mapping: {  }
 
-field.list_text.value:
+field.list_string.value:
   type: sequence
   label: 'Default value'
   sequence:

@@ -45,7 +45,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sold_to',
-      'type' => 'list_text',
+      'type' => 'list_string',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',

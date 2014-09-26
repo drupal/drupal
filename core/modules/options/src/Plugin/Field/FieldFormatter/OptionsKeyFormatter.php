@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   field_types = {
  *     "list_integer",
  *     "list_float",
- *     "list_text",
+ *     "list_string",
  *   }
  * )
  */

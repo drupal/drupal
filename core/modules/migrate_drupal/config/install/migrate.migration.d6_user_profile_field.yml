@@ -16,7 +16,7 @@ process:
       checkbox: boolean
       date: datetime
       list: text
-      selection: list_text
+      selection: list_string
       textfield: text
       textarea: text_long
       url: link

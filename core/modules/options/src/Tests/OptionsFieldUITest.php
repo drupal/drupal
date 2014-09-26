@@ -166,7 +166,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   function testOptionsAllowedValuesText() {
     $this->field_name = 'field_options_text';
-    $this->createOptionsField('list_text');
+    $this->createOptionsField('list_string');
 
     // Flat list of textual values.
     $string = "Zero\nOne";
@@ -231,7 +231,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   function testOptionsTrimmedValuesText() {
     $this->field_name = 'field_options_trimmed_text';
-    $this->createOptionsField('list_text');
+    $this->createOptionsField('list_string');
 
     // Explicit keys.
     $string = "zero |Zero\none | One";
@@ -243,7 +243,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Helper function to create list field of a given type.
    *
    * @param string $type
-   *   'list_integer', 'list_float' or 'list_text'
+   *   'list_integer', 'list_float' or 'list_string'
    */
   protected function createOptionsField($type) {
     // Create a field.

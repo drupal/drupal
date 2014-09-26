@@ -53,7 +53,7 @@ class FieldSettings extends ProcessPluginBase {
       $list = array_map('trim', $list);
       $list = array_filter($list, 'strlen');
       switch ($field_type) {
-        case 'list_text':
+        case 'list_string':
         case 'list_integer':
         case 'list_float':
           foreach ($list as $value) {
@@ -81,7 +81,7 @@ class FieldSettings extends ProcessPluginBase {
         ),
       ),
       'datetime' => array('datetime_type' => 'datetime'),
-      'list_text' => array(
+      'list_string' => array(
         'allowed_values' => $allowed_values,
       ),
       'list_integer' => array(

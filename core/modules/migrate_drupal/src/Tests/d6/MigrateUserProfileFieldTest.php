@@ -53,7 +53,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
 
     // Migrated selection field.
     $field_storage = entity_load('field_storage_config', 'user.profile_sold_to');
-    $this->assertEqual($field_storage->type, 'list_text', 'Field type is list_text.');
+    $this->assertEqual($field_storage->type, 'list_string', 'Field type is list_string.');
     $settings = $field_storage->getSettings();
     $this->assertEqual($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
@@ -62,7 +62,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
       'Faithful servant' => 'Faithful servant',
       'Anonymous donor' => 'Anonymous donor',
     ));
-    $this->assertEqual($field_storage->type, 'list_text', 'Field type is list_text.');
+    $this->assertEqual($field_storage->type, 'list_string', 'Field type is list_string.');
 
     // Migrated list field.
     $field_storage = entity_load('field_storage_config', 'user.profile_bands');

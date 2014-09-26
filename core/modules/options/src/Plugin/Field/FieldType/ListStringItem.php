@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Type\ListTextItem.
+ * Contains \Drupal\options\Type\ListStringItem.
  */
 
 namespace Drupal\options\Plugin\Field\FieldType;
@@ -11,17 +11,17 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Plugin implementation of the 'list_text' field type.
+ * Plugin implementation of the 'list_string' field type.
  *
  * @FieldType(
- *   id = "list_text",
+ *   id = "list_string",
  *   label = @Translation("List (text)"),
  *   description = @Translation("This field stores text values from a list of allowed 'value => label' pairs, i.e. 'US States': IL => Illinois, IA => Iowa, IN => Indiana."),
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )
  */
-class ListTextItem extends ListItemBase {
+class ListStringItem extends ListItemBase {
 
   /**
    * {@inheritdoc}

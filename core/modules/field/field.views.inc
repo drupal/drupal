@@ -481,7 +481,7 @@ function list_field_views_data(FieldStorageConfigInterface $field_storage) {
         $data[$table_name][$field_name]['filter']['id'] = 'field_list';
       }
       if (isset($field_data['argument']) && $field_name != 'delta') {
-        if ($field_storage->getType() == 'list_text') {
+        if ($field_storage->getType() == 'list_string') {
           $data[$table_name][$field_name]['argument']['id'] = 'field_list_string';
         }
         else {
