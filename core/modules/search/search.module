@@ -115,7 +115,7 @@ function search_theme() {
 function search_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'search_form_block') {
     $variables['attributes']['role'] = 'search';
-    $variables['content_attributes']['class'][] = 'container-inline';
+    $variables['attributes']['class'][] = 'container-inline';
   }
 }
 

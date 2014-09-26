@@ -86,11 +86,8 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $expected[] = '<div id="block-test-block1" class="block block-block-test">';
     $expected[] = '  ';
     $expected[] = '    ';
-    $expected[] = '';
-    $expected[] = '  <div class="content">';
-    $expected[] = '          ';
-    $expected[] = '      </div>';
-    $expected[] = '</div>';
+    $expected[] = '      ';
+    $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
     $this->assertEqual(drupal_render($output), $expected_output);
@@ -114,11 +111,8 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $expected[] = '  ';
     $expected[] = '      <h2>Powered by Bananas</h2>';
     $expected[] = '    ';
-    $expected[] = '';
-    $expected[] = '  <div class="content">';
-    $expected[] = '          ';
-    $expected[] = '      </div>';
-    $expected[] = '</div>';
+    $expected[] = '      ';
+    $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
     $this->assertEqual(drupal_render($output), $expected_output);

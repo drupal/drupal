@@ -75,7 +75,7 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[contains(@class, "content")]', array(':id' => 'block-test-language-block'));
+    list($language_switcher) = $this->xpath('//div[@id=:id]', array(':id' => 'block-test-language-block'));
     $list_items = array();
     $anchors = array();
     $labels = array();
@@ -125,7 +125,7 @@ class LanguageSwitchingTest extends WebTestBase {
     $this->assertText($block_label, 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[contains(@class, "content")]', array(':id' => 'block-test-language-block'));
+    list($language_switcher) = $this->xpath('//div[@id=:id]', array(':id' => 'block-test-language-block'));
     $links = array(
       'active' => array(),
       'inactive' => array(),
