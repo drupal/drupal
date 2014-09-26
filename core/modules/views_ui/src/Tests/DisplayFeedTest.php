@@ -58,8 +58,8 @@ class DisplayFeedTest extends UITestBase {
     // Load all the options of the checkbox.
     $result = $this->xpath('//div[@id="edit-displays"]/div');
     $options = array();
-    foreach ($result as $value) {
-      foreach ($value->input->attributes() as $attribute => $value) {
+    foreach ($result as $item) {
+      foreach ($item->input->attributes() as $attribute => $value) {
         if ($attribute == 'value') {
           $options[] = (string) $value;
         }
