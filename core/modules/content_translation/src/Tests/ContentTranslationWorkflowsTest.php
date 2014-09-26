@@ -86,7 +86,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     // Check that translation permissions governate the associated operations.
     $ops = array('create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete'));
     $translations_path = $this->entity->getSystemPath('drupal:content-translation-overview');
-    foreach ($ops as $current_op => $label) {
+    foreach ($ops as $current_op => $item) {
       $user = $this->drupalCreateUser(array($this->getTranslatePermission(), "$current_op content translations"));
       $this->drupalLogin($user);
       $this->drupalGet($translations_path);
