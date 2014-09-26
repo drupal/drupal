@@ -296,7 +296,7 @@ abstract class RESTTestBase extends WebTestBase {
    *
    * @param string $entity_type
    *   The entity type.
-   * @param type $operation
+   * @param string $operation
    *   The operation, one of 'view', 'create', 'update' or 'delete'.
    *
    * @return array
