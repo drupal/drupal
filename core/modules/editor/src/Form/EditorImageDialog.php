@@ -53,7 +53,7 @@ class EditorImageDialog extends FormBase {
     // Construct strings to use in the upload validators.
     $image_upload = $editor->getImageUploadSettings();
     if (!empty($image_upload['dimensions'])) {
-      $max_dimensions = $image_upload['dimensions']['max_width'] . 'x' . $image_upload['dimensions']['max_height'];
+      $max_dimensions = $image_upload['dimensions']['max_width'] . '×' . $image_upload['dimensions']['max_height'];
     }
     else {
       $max_dimensions = 0;
@@ -134,7 +134,7 @@ class EditorImageDialog extends FormBase {
       '#min' => 1,
       '#max' => 99999,
       '#placeholder' => $this->t('width'),
-      '#field_suffix' => ' x ',
+      '#field_suffix' => ' × ',
       '#parents' => array('attributes', 'width'),
     );
     $form['dimensions']['height'] = array(

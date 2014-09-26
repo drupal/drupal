@@ -1,5 +1,5 @@
 name: medium
-label: 'Medium (220x220)'
+label: 'Medium (220×220)'
 effects:
   bddf0d06-42f9-4c75-a700-a33cafa25ea0:
     id: image_scale

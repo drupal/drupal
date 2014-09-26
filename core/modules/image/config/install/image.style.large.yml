@@ -1,5 +1,5 @@
 name: large
-label: 'Large (480x480)'
+label: 'Large (480×480)'
 effects:
   ddd73aa7-4bd6-4c85-b600-bdf2b1628d1d:
     id: image_scale

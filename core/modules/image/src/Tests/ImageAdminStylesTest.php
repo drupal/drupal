@@ -344,15 +344,15 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, array('label' => 'Test style effect edit', 'name' => $style_name), t('Create new style'));
     $this->drupalPostForm(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
     $this->drupalPostForm(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
-    $this->assertText(t('Scale and crop 300x200'));
+    $this->assertText(t('Scale and crop 300×200'));
 
     // There should normally be only one edit link on this page initially.
     $this->clickLink(t('Edit'));
     $this->drupalPostForm(NULL, array('data[width]' => '360', 'data[height]' => '240'), t('Update effect'));
-    $this->assertText(t('Scale and crop 360x240'));
+    $this->assertText(t('Scale and crop 360×240'));
 
     // Check that the previous effect is replaced.
-    $this->assertNoText(t('Scale and crop 300x200'));
+    $this->assertNoText(t('Scale and crop 300×200'));
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
@@ -367,8 +367,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Add another scale effect and make sure both exist.
     $this->drupalPostForm(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
-    $this->assertText(t('Scale 24x19'));
-    $this->assertText(t('Scale 12x19'));
+    $this->assertText(t('Scale 24×19'));
+    $this->assertText(t('Scale 12×19'));
 
     // Try to edit a nonexistent effect.
     $uuid = $this->container->get('uuid');
