@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests paging of comments and their settings.
@@ -329,22 +330,52 @@ class CommentPagerTest extends CommentTestBase {
     $this->assertRaw('Comment 1 on field comment');
     $this->assertRaw('Comment 1 on field comment_2');
     // Navigate to next page of field 1.
-    $this->clickLink('next ›');
+    $this->clickLinkWithXPath('//a[@rel="next"]');
     // Check only one pager updated.
     $this->assertRaw('Comment 2 on field comment');
     $this->assertRaw('Comment 1 on field comment_2');
     // Return to page 1.
     $this->drupalGet('node/' . $node->id());
     // Navigate to next page of field 2.
-    $this->clickLink('next ›', 1);
+    $this->clickLinkWithXPath('//a[@rel="next"]', 1);
     // Check only one pager updated.
     $this->assertRaw('Comment 1 on field comment');
     $this->assertRaw('Comment 2 on field comment_2');
     // Navigate to next page of field 1.
-    $this->clickLink('next ›');
+    $this->clickLinkWithXPath('//a[@rel="next"]');
     // Check only one pager updated.
     $this->assertRaw('Comment 2 on field comment');
     $this->assertRaw('Comment 2 on field comment_2');
+  }
+
+  /**
+   * Follows a link found at a give xpath query.
+   *
+   * Will click the first link found with the given xpath query by default,
+   * or a later one if an index is given.
+   *
+   * If the link is discovered and clicked, the test passes. Fail otherwise.
+   *
+   * @param string $xpath
+   *   Xpath query that targets an anchor tag, or set of anchor tags.
+   * @param int $index
+   *   Link position counting from zero.
+   *
+   * @return string|false
+   *   Page contents on success, or FALSE on failure.
+   *
+   * @see WebTestBase::clickLink()
+   */
+  protected function clickLinkWithXPath($xpath, $index = 0) {
+    $url_before = $this->getUrl();
+    $urls = $this->xpath($xpath);
+    if (isset($urls[$index])) {
+      $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
+      $this->pass(String::format('Clicked link %label (@url_target) from @url_before', array('%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
+      return $this->drupalGet($url_target);
+    }
+    $this->fail(String::format('Link %label does not exist on @url_before', array('%label' => $xpath, '@url_before' => $url_before)), 'Browser');
+    return FALSE;
   }
 
 }

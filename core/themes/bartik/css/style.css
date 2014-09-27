@@ -129,7 +129,7 @@ body,
 ul.contextual-links,
 ul.links,
 ul.primary,
-.item-list .pager,
+.pager__items,
 div.field-type-taxonomy-term-reference,
 div.messages,
 .node__meta,
@@ -277,24 +277,29 @@ table ul.links li {
   font-size: 0.923em;
   text-shadow: 0 0 0 !important;
 }
-.item-list .pager {
-  font-size: 0.929em;
+.pager .pager__items {
+  padding: 0;
 }
-.item-list .pager li {
+.pager__item {
+  font-size: 0.929em;
   padding: 10px 15px;
 }
-.item-list .pager a {
+.pager__item a {
   display: inline-block;
 }
-.item-list .pager li.pager-first,
-.item-list .pager li.pager-previous {
+.pager__item.is-active a {
+  color: #3B3B3B;
+  border-bottom: 0;
+}
+.pager__item--first,
+.pager__item--previous {
   padding: 10px 10px 10px 0;
 }
-.item-list .pager li.pager-ellipsis {
+.pager__item--ellipsis {
   padding: 10px 0;
 }
-.item-list .pager li.pager-last,
-.item-list .pager li.pager-next {
+.pager__item--last,
+.pager__item--next {
   padding: 10px 0 10px 10px;
 }
 ul.menu li {

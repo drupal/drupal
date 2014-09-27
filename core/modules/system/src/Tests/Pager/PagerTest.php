@@ -55,7 +55,7 @@ class PagerTest extends WebTestBase {
     $this->assertPagerItems($current_page);
 
     // Verify last page.
-    $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager-last'));
+    $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager__item--last'));
     preg_match('@page=(\d+)@', $elements[0]['href'], $matches);
     $current_page = (int) $matches[1];
     $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));
@@ -69,7 +69,7 @@ class PagerTest extends WebTestBase {
    *   The current pager page the internal browser is on.
    */
   protected function assertPagerItems($current_page) {
-    $elements = $this->xpath('//ul[@class=:class]/li', array(':class' => 'pager'));
+    $elements = $this->xpath('//ul[@class=:class]/li', array(':class' => 'pager__items'));
     $this->assertTrue(!empty($elements), 'Pager found.');
 
     // Make current page 1-based.
@@ -92,14 +92,13 @@ class PagerTest extends WebTestBase {
       // Make item/page index 1-based.
       $page++;
       if ($current_page == $page) {
-        $this->assertClass($element, 'pager-current', 'Item for current page has .pager-current class.');
-        $this->assertFalse(isset($element->a), 'Item for current page has no link.');
+        $this->assertClass($element, 'is-active', 'Element for current page has .is-active class.');
+        $this->assertTrue($element->a, 'Element for current page has link.');
       }
       else {
-        $this->assertNoClass($element, 'pager-current', "Item for page $page has no .pager-current class.");
-        $this->assertClass($element, 'pager-item', "Item for page $page has .pager-item class.");
+        $this->assertNoClass($element, 'is-active', "Element for page $page has no .is-active class.");
+        $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
         $this->assertTrue($element->a, "Link to page $page found.");
-        $this->assertNoClass($element->a, 'active', "Link to page $page is not active.");
       }
       unset($elements[--$page]);
     }
@@ -108,24 +107,24 @@ class PagerTest extends WebTestBase {
 
     // Verify first/previous and next/last items and links.
     if (isset($first)) {
-      $this->assertClass($first, 'pager-first', 'Item for first page has .pager-first class.');
+      $this->assertClass($first, 'pager__item--first', 'Element for first page has .pager__item--first class.');
       $this->assertTrue($first->a, 'Link to first page found.');
-      $this->assertNoClass($first->a, 'active', 'Link to first page is not active.');
+      $this->assertNoClass($first->a, 'is-active', 'Link to first page is not active.');
     }
     if (isset($previous)) {
-      $this->assertClass($previous, 'pager-previous', 'Item for first page has .pager-previous class.');
+      $this->assertClass($previous, 'pager__item--previous', 'Element for first page has .pager__item--previous class.');
       $this->assertTrue($previous->a, 'Link to previous page found.');
-      $this->assertNoClass($previous->a, 'active', 'Link to previous page is not active.');
+      $this->assertNoClass($previous->a, 'is-active', 'Link to previous page is not active.');
     }
     if (isset($next)) {
-      $this->assertClass($next, 'pager-next', 'Item for next page has .pager-next class.');
+      $this->assertClass($next, 'pager__item--next', 'Element for next page has .pager__item--next class.');
       $this->assertTrue($next->a, 'Link to next page found.');
-      $this->assertNoClass($next->a, 'active', 'Link to next page is not active.');
+      $this->assertNoClass($next->a, 'is-active', 'Link to next page is not active.');
     }
     if (isset($last)) {
-      $this->assertClass($last, 'pager-last', 'Item for last page has .pager-last class.');
+      $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
       $this->assertTrue($last->a, 'Link to last page found.');
-      $this->assertNoClass($last->a, 'active', 'Link to last page is not active.');
+      $this->assertNoClass($last->a, 'is-active', 'Link to last page is not active.');
     }
   }
 

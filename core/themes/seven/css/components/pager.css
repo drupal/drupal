@@ -1,46 +1,42 @@
 /**
  * Pagination.
- * The item-list CSS uses quite strong selectors, we have to match them here to
- * override.
  */
-.item-list .pager li {
+.pager__items {
+  margin: 0.25em 0 0.25em 1.5em;
+  padding: 0;
+}
+.pager__item {
   display: inline-block;
   color: #8c8c8c;
   font-size: 1.08em;
-  padding: 0 0.6em;
   margin: 0;
+  padding: 0 0.4em;
 }
-.item-list .pager a,
-.item-list .pager .pager-current {
+.pager__item a {
   border-bottom: 2px solid transparent;
   line-height: 1.55em;
-  padding: 0 5px;
+  padding: 0 5px 2px;
   text-decoration: none;
   -webkit-transition: border-bottom-color 0.2s;
   transition: border-bottom-color 0.2s;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
 }
-.item-list .pager a {
-  padding-bottom: 3px;
-}
-.item-list .pager .pager-current {
+.pager__item.is-active a {
   border-bottom-width: 3px;
   border-bottom-color: #2a678c;
   color: #2a678c;
-  margin: 0 5px;
   font-weight: 700;
 }
-.item-list .pager a:focus,
-.item-list .pager a:hover {
+.pager__item a:focus,
+.pager__item a:hover {
   border-bottom-color: #3395d2;
   color: #3395d2;
 }
-.item-list .pager-next a,
-.item-list .pager-last a,
-.item-list .pager-first a,
-.item-list .pager-previous a {
+.pager__item--next a,
+.pager__item--last a,
+.pager__item--first a,
+.pager__item--previous a {
   border-bottom-width: 0;
   color: #2a678c;
-  font-weight: 600;
 }
