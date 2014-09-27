@@ -238,7 +238,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
           $project_data['extra'] = array();
         }
         $project_data['extra'][] = array(
-          'class' => array('project-not-secure'),
           'label' => t('Project not secure'),
           'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
         );
@@ -250,7 +249,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
           $project_data['extra'] = array();
         }
         $project_data['extra'][] = array(
-          'class' => array('project-revoked'),
           'label' => t('Project revoked'),
           'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
         );
@@ -261,7 +259,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
           $project_data['extra'] = array();
         }
         $project_data['extra'][] = array(
-          'class' => array('project-not-supported'),
           'label' => t('Project not supported'),
           'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
         );

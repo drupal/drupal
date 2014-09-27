@@ -29,9 +29,18 @@
  * @ingroup themeable
  */
 #}
+{%
+  set status_classes = [
+    project.status == constant('UPDATE_NOT_SECURE') ? 'security-error',
+    project.status == constant('UPDATE_REVOKED') ? 'revoked',
+    project.status == constant('UPDATE_NOT_SUPPORTED') ? 'not-supported',
+    project.status == constant('UPDATE_NOT_CURRENT') ? 'not-current',
+    project.status == constant('UPDATE_CURRENT') ? 'current',
+  ]
+%}
 <div class="version-status">
   {%- if status.label -%}
-    <span{{ status.attributes }}>{{ status.label }}</span>
+    <span{{ status.attributes.addClass(status_classes) }}>{{ status.label }}</span>
   {%- else -%}
     {{ status.reason }}
   {%- endif %}
@@ -58,11 +67,18 @@
   </div>
 {% endif %}
 
+{%
+  set extra_classes = [
+    project.status == constant('UPDATE_NOT_SECURE') ? 'project-not-secure',
+    project.status == constant('UPDATE_REVOKED') ? 'project-revoked',
+    project.status == constant('UPDATE_NOT_SUPPORTED') ? 'project-not-supported',
+  ]
+%}
 <div class="info">
   {% if extras %}
     <div class="extra">
       {% for extra in extras %}
-        <div{{ extra.attributes }}>
+        <div{{ extra.attributes.addClass(extra_classes) }}>
           {{ extra.label }}: {{ extra.data }}
         </div>
       {% endfor %}

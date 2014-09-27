@@ -246,7 +246,7 @@ function template_preprocess_update_project_status(&$variables) {
   if (!empty($project['extra'])) {
     foreach ($project['extra'] as $value) {
       $extra_item = array();
-      $extra_item['attributes'] = new Attribute(array('class' => $value['class']));
+      $extra_item['attributes'] = new Attribute();
       $extra_item['label'] = $value['label'];
       $extra_item['data'] = drupal_placeholder($value['data']);
       $variables['extras'][] = $extra_item;
@@ -290,32 +290,26 @@ function template_preprocess_update_project_status(&$variables) {
   }
 
   // Set the project status details.
-  $status_attributes = array();
   $status_label = NULL;
   switch ($project['status']) {
     case UPDATE_NOT_SECURE:
-      $status_attributes['class'][] = 'security-error';
       $status_label = t('Security update required!');
       break;
     case UPDATE_REVOKED:
-      $status_attributes['class'][] = 'revoked';
       $status_label = t('Revoked!');
       break;
     case UPDATE_NOT_SUPPORTED:
-      $status_attributes['class'][] = 'not-supported';
       $status_label = t('Not supported!');
       break;
     case UPDATE_NOT_CURRENT:
-      $status_attributes['class'][] = 'not-current';
       $status_label = t('Update available');
       break;
     case UPDATE_CURRENT:
-      $status_attributes['class'][] = 'current';
       $status_label = t('Up to date');
       break;
   }
   $variables['status']['label'] = $status_label;
-  $variables['status']['attributes'] = new Attribute($status_attributes);
+  $variables['status']['attributes'] = new Attribute();
   $variables['status']['reason'] = (isset($project['reason'])) ? $project['reason'] : NULL;
 
   switch ($project['status']) {
