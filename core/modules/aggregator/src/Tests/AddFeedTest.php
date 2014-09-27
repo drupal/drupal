@@ -20,7 +20,7 @@ class AddFeedTest extends AggregatorTestBase {
     $feed = $this->createFeed();
 
     // Check feed data.
-    $this->assertEqual($this->getUrl(), url('aggregator/sources/add', array('absolute' => TRUE)), 'Directed to correct url.');
+    $this->assertUrl(\Drupal::url('aggregator.feed_add', [], ['absolute' => TRUE]), [], 'Directed to correct url.');
     $this->assertTrue($this->uniqueFeed($feed->label(), $feed->getUrl()), 'The feed is unique.');
 
     // Check feed source.

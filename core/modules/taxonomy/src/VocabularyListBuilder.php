@@ -80,7 +80,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
       unset($this->weightKey);
     }
     $build = parent::render();
-    $build['#empty'] = t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add')));
+    $build['#empty'] = t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => \Drupal::url('entity.taxonomy_vocabulary.add_form')));
     return $build;
   }
 

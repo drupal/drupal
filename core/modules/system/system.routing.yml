@@ -304,6 +304,16 @@ system.files:
   requirements:
     _access: 'TRUE'
 
+system.private_file_download:
+  path: '/system/files/{filepath}'
+  defaults:
+    _controller: 'Drupal\system\FileDownloadController::download'
+  requirements:
+    # Permissive regex to allow slashes in filepath see
+    # http://symfony.com/doc/current/cookbook/routing/slash_in_parameter.html
+    filepath: .+
+    _access: 'TRUE'
+
 system.temporary:
   path: '/system/temporary'
   defaults:

@@ -647,8 +647,9 @@ function drupal_install_system($install_state) {
   // Install base system configuration.
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');
 
-  // Install System module.
+  // Install System module and rebuild the newly available routes.
   $kernel->getContainer()->get('module_handler')->install(array('system'), FALSE);
+  \Drupal::service('router.builder')->rebuild();
 
   // DrupalKernel::prepareLegacyRequest() above calls into
   // DrupalKernel::bootCode(), which primes file_get_stream_wrappers()'s static

@@ -155,7 +155,7 @@ class DownloadTest extends FileManagedTestBase {
     $file = $this->createFile($filepath, NULL, $scheme);
 
     $url = file_create_url($file->getFileUri());
-    $this->assertEqual($url, $expected_url, 'Generated URL matches expected URL.');
+    $this->assertEqual($url, $expected_url);
 
     if ($scheme == 'private') {
       // Tell the implementation of hook_file_download() in file_test.module

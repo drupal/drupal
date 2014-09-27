@@ -43,9 +43,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $edit_url = url("node/" . $node->id() . "/edit", array('absolute' => TRUE));
-    $actual_url = $this->getURL();
-    $this->assertEqual($edit_url, $actual_url, 'On edit page.');
+    $this->assertUrl($node->url('edit-form', ['absolute' => TRUE]));
 
     // Check that the title and body fields are displayed with the correct values.
     $active = '<span class="visually-hidden">' . t('(active tab)') . '</span>';

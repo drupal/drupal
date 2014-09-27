@@ -404,7 +404,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
     $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('locale.translate_page', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     $this->drupalLogout();
 
     // Log in the admin_user. Check the admin menu subtrees hash now that one

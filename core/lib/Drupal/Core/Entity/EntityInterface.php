@@ -119,10 +119,13 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param string $rel
    *   The link relationship type, for example: canonical or edit-form.
+   * @param array $options
+   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *   the available options.
    *
    * @return \Drupal\Core\Url
    */
-  public function urlInfo($rel = 'canonical');
+  public function urlInfo($rel = 'canonical', array $options = array());
 
   /**
    * Returns the public URL for this entity.

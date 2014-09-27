@@ -37,9 +37,9 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view1['label']);
     $this->assertText($view1['description']);
-    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id']));
-    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/delete'));
-    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/duplicate'));
+    $this->assertLinkByHref(\Drupal::url('entity.view.edit_form', ['view' => $view1['id']]));
+    $this->assertLinkByHref(\Drupal::url('entity.view.delete_form', ['view' => $view1['id']]));
+    $this->assertLinkByHref(\Drupal::url('entity.view.duplicate_form', ['view' => $view1['id']]));
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'When no options are enabled in the wizard, the resulting view does not have a REST export display.');
@@ -79,9 +79,9 @@ class BasicTest extends WizardTestBase {
     $this->assertRaw('<rss version="2.0"');
     // The feed should have the same title and nodes as the page.
     $this->assertText($view2['page[title]']);
-    $this->assertRaw(url('node/' . $node1->id(), array('absolute' => TRUE)));
+    $this->assertRaw($node1->url('canonical', ['absolute' => TRUE]));
     $this->assertText($node1->label());
-    $this->assertRaw(url('node/' . $node2->id(), array('absolute' => TRUE)));
+    $this->assertRaw($node2->url('canonical', ['absolute' => TRUE]));
     $this->assertText($node2->label());
 
     // Go back to the views page and check if this view is there.

@@ -262,7 +262,7 @@ function locale_requirements($phase) {
               'title' => 'Translation update status',
               'value' => l(t('Updates available'), 'admin/reports/translations'),
               'severity' => REQUIREMENT_WARNING,
-              'description' => t('Updates available for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $available_updates), '@updates' => url('admin/reports/translations'))),
+              'description' => t('Updates available for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $available_updates), '@updates' => \Drupal::url('locale.translate_status'))),
             );
           }
           else {
@@ -270,7 +270,7 @@ function locale_requirements($phase) {
               'title' => 'Translation update status',
               'value' => t('Missing translations'),
               'severity' => REQUIREMENT_INFO,
-              'description' => t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $untranslated), '@updates' => url('admin/reports/translations'))),
+              'description' => t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $untranslated), '@updates' => \Drupal::url('locale.translate_status'))),
             );
           }
         }
@@ -287,7 +287,7 @@ function locale_requirements($phase) {
           'title' => 'Translation update status',
           'value' => l(t('Can not determine status'), 'admin/reports/translations'),
           'severity' => REQUIREMENT_WARNING,
-          'description' => t('No translation status is available. See the <a href="@updates">Available translation updates</a> page for more information.', array('@updates' => url('admin/reports/translations'))),
+          'description' => t('No translation status is available. See the <a href="@updates">Available translation updates</a> page for more information.', array('@updates' => \Drupal::url('locale.translate_status'))),
         );
       }
     }

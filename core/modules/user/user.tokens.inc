@@ -98,11 +98,11 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = $account->id() ? url("user/" . $account->id(), $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? $account->url('canonical', $url_options) : t('not yet assigned');
           break;
 
         case 'edit-url':
-          $replacements[$original] = $account->id() ? url("user/" . $account->id() . "/edit", $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? $account->url('edit-form', $url_options) : t('not yet assigned');
           break;
 
         // These tokens are default variations on the chained tokens handled below.

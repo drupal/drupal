@@ -59,7 +59,7 @@ class ContactSitewideTest extends WebTestBase {
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://drupal.org/node/2031223 for the above
     $edit_link = $this->xpath('//a[@href=:href]', array(
-      ':href' => url('admin/structure/contact/manage/personal')
+      ':href' => \Drupal::url('entity.contact_form.edit_form', array('contact_form' => 'personal'))
     ));
     $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
       array('%href' => 'admin/structure/contact/manage/personal')

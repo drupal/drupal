@@ -157,7 +157,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     elseif (!$form_state->get('ajax')) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
       $display_id = $form_state->get('display_id');
-      return new RedirectResponse(url("admin/structure/views/view/{$view->id()}/edit/$display_id", array('absolute' => TRUE)));
+      return new RedirectResponse($this->url('entity.view.edit_display_form', ['view' => $view->id(), 'display_id' => $display_id], ['absolute' => TRUE]));
     }
     else {
       $response = new AjaxResponse();

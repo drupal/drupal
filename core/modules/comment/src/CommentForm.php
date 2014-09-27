@@ -95,7 +95,7 @@ class CommentForm extends ContentEntityForm {
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
     if (!$comment->id() && !$comment->hasParentComment()) {
-      $form['#action'] = url('comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name);
+      $form['#action'] = $this->url('comment.reply', array('entity_type' => $entity->getEntityTypeId(), 'entity' => $entity->id(), 'field_name' => $field_name));
     }
 
     $comment_preview = $form_state->get('comment_preview');

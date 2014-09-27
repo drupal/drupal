@@ -182,7 +182,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       // conform the Drupal >= 7.
       $credentials = array('name' => $source->name, 'pass' => $source->pass_plain);
       $this->drupalPostForm('user/login', $credentials, t('Log in'));
-      $this->assertNoRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $source->name))))));
+      $this->assertNoRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => \Drupal::url('user.pass', [], array('query' => array('name' => $source->name))))));
       $this->drupalLogout();
     }
   }

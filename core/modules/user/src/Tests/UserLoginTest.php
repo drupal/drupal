@@ -24,8 +24,7 @@ class UserLoginTest extends WebTestBase {
     $this->drupalGet('user', array('query' => array('destination' => 'foo')));
     $edit = array('name' => $user->getUserName(), 'pass' => $user->pass_raw);
     $this->drupalPostForm(NULL, $edit, t('Log in'));
-    $expected = url('foo', array('absolute' => TRUE));
-    $this->assertEqual($this->getUrl(), $expected, 'Redirected to the correct URL');
+    $this->assertUrl('foo', [],  'Redirected to the correct URL');
   }
 
   /**
@@ -156,11 +155,11 @@ class UserLoginTest extends WebTestBase {
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {
-        $this->assertRaw(format_plural(\Drupal::config('user.flood')->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        $this->assertRaw(format_plural(\Drupal::config('user.flood')->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => \Drupal::url('user.pass'))));
       }
       else {
         // No uid, so the limit is IP-based.
-        $this->assertRaw(t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        $this->assertRaw(t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => \Drupal::url('user.pass'))));
       }
     }
     else {

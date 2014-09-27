@@ -89,11 +89,11 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     // Parse the teaser.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $base_uri = url('<front>', array('absolute' => TRUE));
+    $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     // Construct the node and image URIs for testing.
-    $node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
+    $node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
     $image_uri = entity_load('image_style', 'medium')->buildUrl($this->file->getFileUri());
 
     // Test relations from node to image.

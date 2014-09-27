@@ -92,7 +92,7 @@ function search_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'search.settings':
-      return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="!cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('!cron' => url('admin/reports/status'))) . '</p>';
+      return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="!cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('!cron' => \Drupal::url('system.status'))) . '</p>';
   }
 }
 

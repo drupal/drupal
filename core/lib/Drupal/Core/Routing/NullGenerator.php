@@ -8,7 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
@@ -25,6 +25,7 @@ class NullGenerator extends UrlGenerator {
    */
   public function __construct(RequestStack $request_stack) {
     $this->requestStack = $request_stack;
+    $this->context = new RequestContext();
   }
 
   /**
@@ -34,13 +35,29 @@ class NullGenerator extends UrlGenerator {
    * protected method.
    */
   protected function getRoute($name) {
+    if ($name === '<front>') {
+      return new Route('/');
+    }
     throw new RouteNotFoundException();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function processRoute(Route $route, array &$parameters) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getInternalPathFromRoute(Route $route, $parameters = array()) {
+    return $route->getPath();
   }
 
   /**
    * Overrides Drupal\Core\Routing\UrlGenerator::setContext();
    */
-  public function setContext(RequestContext $context) {
+  public function setContext(SymfonyRequestContext $context) {
   }
 
   /**

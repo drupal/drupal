@@ -58,7 +58,7 @@ class TourTest extends TourTestBasic {
     $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', array(
       ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
-      ':href' =>  url('<front>', array('absolute' => TRUE)),
+      ':href' =>  \Drupal::url('<front>', [], ['absolute' => TRUE]),
       ':text' => 'Drupal',
     ));
     $this->assertEqual(count($elements), 1, 'Found Token replacement.');

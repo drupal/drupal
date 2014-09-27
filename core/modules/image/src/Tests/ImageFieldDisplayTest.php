@@ -123,7 +123,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $elements = $this->xpath(
       '//a[@href=:path]/img[@src=:url and @alt="" and @width=:width and @height=:height]',
       array(
-        ':path' => url('node/' . $nid),
+        ':path' => $node->url(),
         ':url' => file_create_url($image['#uri']),
         ':width' => $image['#width'],
         ':height' => $image['#height'],

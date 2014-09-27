@@ -58,7 +58,7 @@ function update_manager_download_batch_finished($success, $results) {
   elseif ($success) {
     drupal_set_message(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = $results['projects'];
-    return new RedirectResponse(url('admin/update/ready', array('absolute' => TRUE)));
+    return new RedirectResponse(\Drupal::url('update.confirmation_page', [], ['absolute' => TRUE]));
   }
   else {
     // Ideally we're catching all Exceptions, so they should never see this,

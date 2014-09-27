@@ -393,7 +393,7 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $variables['attributes']['about'] = url('user/' . $variables['uid']);
+    $variables['attributes']['about'] = \Drupal::url('entity.user.canonical', ['user' => $variables['uid']]);
   }
 
   // Add RDF type of user.

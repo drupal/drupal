@@ -27,7 +27,7 @@ function toolbar_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying administrative links') . '</dt>';
-      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative components across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by clicking on its corresponding tab.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
+      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative components across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by clicking on its corresponding tab.', array('@shortcuts-help' => \Drupal::url('help.page', ['name' => 'shortcut']))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }

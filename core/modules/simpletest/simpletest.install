@@ -42,7 +42,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_domdocument) {
     $requirements['php_domdocument']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_domdocument']['description'] = t('The testing framework requires the DOMDocument class to be available. Check the configure command at the <a href="@link-phpinfo">PHP info page</a>.', array('@link-phpinfo' => url('admin/reports/status/php')));
+    $requirements['php_domdocument']['description'] = t('The testing framework requires the DOMDocument class to be available. Check the configure command at the <a href="@link-phpinfo">PHP info page</a>.', array('@link-phpinfo' => \Drupal::url('system.php')));
   }
 
   // SimpleTest currently needs 2 cURL options which are incompatible with

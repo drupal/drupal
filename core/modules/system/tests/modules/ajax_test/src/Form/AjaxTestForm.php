@@ -27,7 +27,7 @@ class AjaxTestForm implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $form['#action'] = url('ajax-test/dialog');
+    $form['#action'] = \Drupal::url('ajax_test.dialog');
 
     $form['description'] = array(
       '#markup' => '<p>' . t("Ajax Form contents description.") . '</p>',

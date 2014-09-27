@@ -43,7 +43,7 @@ class RegisterForm extends AccountForm {
 
     // If we aren't admin but already logged on, go to the user page instead.
     if (!$admin && $user->isAuthenticated()) {
-      return new RedirectResponse(url('user/' . \Drupal::currentUser()->id(), array('absolute' => TRUE)));
+      return new RedirectResponse($this->url('entity.user.canonical', ['user' => \Drupal::currentUser()->id()], array('absolute' => TRUE)));
     }
 
     $form['#attached']['library'][] = 'core/drupal.form';

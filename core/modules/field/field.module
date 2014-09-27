@@ -138,12 +138,7 @@ function field_system_info_alter(&$info, Extension $file, $type) {
         }
       }
       if ($non_deleted) {
-        if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
-          $explanation = t('Field type(s) in use - see <a href="@fields-page">Field list</a>', array('@fields-page' => url('admin/reports/fields')));
-        }
-        else {
-          $explanation = t('Fields type(s) in use');
-        }
+        $explanation = t('Fields type(s) in use');
       }
       else {
         $explanation = t('Fields pending deletion');

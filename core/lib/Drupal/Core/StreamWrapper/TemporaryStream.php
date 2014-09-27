@@ -27,6 +27,6 @@ class TemporaryStream extends LocalStream {
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    return url('system/temporary/' . $path, array('absolute' => TRUE));
+    return $this->url('system.temporary', ['scheme' => $path], ['absolute' => TRUE]);
   }
 }

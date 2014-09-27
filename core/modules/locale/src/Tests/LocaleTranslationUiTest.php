@@ -106,7 +106,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
     $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
     $url_bits = explode('?', $this->getUrl());
-    $this->assertEqual($url_bits[0], url('admin/config/regional/translate', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertEqual($url_bits[0], \Drupal::url('locale.translate_page', array(), array('absolute' => TRUE)), 'Correct page redirection.');
     $search = array(
       'string' => $name,
       'langcode' => $langcode,

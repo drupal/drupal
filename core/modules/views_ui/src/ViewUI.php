@@ -926,8 +926,8 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::uri().
    */
-  public function urlInfo($rel = 'edit-form') {
-    return $this->storage->urlInfo($rel);
+  public function urlInfo($rel = 'edit-form', array $options = []) {
+    return $this->storage->urlInfo($rel, $options);
   }
 
   /**

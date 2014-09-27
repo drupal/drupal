@@ -41,7 +41,7 @@ class ConfigTestController extends ControllerBase {
    */
   function enable(ConfigTest $config_test) {
     $config_test->enable()->save();
-    return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
+    return new RedirectResponse($this->url('config_test.list_page', array(), array('absolute' => TRUE)));
   }
 
   /**
@@ -55,7 +55,7 @@ class ConfigTestController extends ControllerBase {
    */
   function disable(ConfigTest $config_test) {
     $config_test->disable()->save();
-    return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
+    return new RedirectResponse(\Drupal::url('config_test.list_page', array(), array('absolute' => TRUE)));
   }
 
 }

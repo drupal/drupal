@@ -1797,7 +1797,7 @@ function template_preprocess_page(&$variables) {
   }
 
   $variables['base_path']         = base_path();
-  $variables['front_page']        = url();
+  $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
   $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo.url');

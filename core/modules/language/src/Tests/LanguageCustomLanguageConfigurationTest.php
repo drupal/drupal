@@ -44,7 +44,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->assertText(t('!name field is required.', array('!name' => t('Language name in English'))));
     $empty_language = new Language();
     $this->assertFieldChecked('edit-direction-' . $empty_language->direction, 'Consistent usage of language direction.');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Test validation of invalid values.
     $edit = array(
@@ -56,7 +56,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => t('Language code'))));
     $this->assertRaw(t('%field cannot contain any markup.', array('%field' => t('Language name in English'))));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Test validation of existing language values.
     $edit = array(
@@ -72,7 +72,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'The language %language has been created and can now be used.',
       array('%language' => $edit['label'])
     ));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('language.admin_overview', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Add the language a second time and confirm that this is not allowed.
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -80,6 +80,6 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'The language %language (%langcode) already exists.',
       array('%language' => $edit['label'], '%langcode' => $edit['langcode'])
     ));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
   }
 }

@@ -45,7 +45,7 @@ function _batch_page(Request $request) {
     $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
       drupal_set_message(t('No active batch.'), 'error');
-      return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
+      return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
     }
   }
   // Restore safe strings from previous batches.

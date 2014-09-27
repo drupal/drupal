@@ -361,7 +361,7 @@ abstract class AccountForm extends ContentEntityForm {
           $form_state->setErrorByName('mail', $this->t('The email address %email is already taken.', array('%email' => $mail)));
         }
         else {
-          $form_state->setErrorByName('mail', $this->t('The email address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
+          $form_state->setErrorByName('mail', $this->t('The email address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => $this->url('user.pass'))));
         }
       }
     }

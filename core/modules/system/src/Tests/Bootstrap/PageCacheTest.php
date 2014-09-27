@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Bootstrap;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Symfony\Component\Routing\RequestContext;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
 
@@ -57,7 +57,7 @@ class PageCacheTest extends WebTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = array(url($path, array('absolute' => TRUE)), 'html');
+    $cid_parts = array(\Drupal::url('system_test.cache_tags_page', array(), array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);

@@ -87,7 +87,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   function getFeedEditArray($feed_url = NULL, array $edit = array()) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = url('rss.xml', array(
+      $feed_url = \Drupal::url('view.frontpage.feed_1', array(), array(
         'query' => array('feed' => $feed_name),
         'absolute' => TRUE,
       ));
@@ -115,7 +115,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   function getFeedEditObject($feed_url = NULL, array $values = array()) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = url('rss.xml', array(
+      $feed_url = \Drupal::url('view.frontpage.feed_1', array(
         'query' => array('feed' => $feed_name),
         'absolute' => TRUE,
       ));

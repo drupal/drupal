@@ -146,7 +146,7 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function urlInfo($rel = 'canonical') {
+  public function urlInfo($rel = 'canonical', array $options = []) {
     if ($this->isNew()) {
       throw new EntityMalformedException(sprintf('The "%s" entity type has not been saved, and cannot have a URI.', $this->getEntityTypeId()));
     }
@@ -188,8 +188,9 @@ abstract class Entity implements EntityInterface {
     $uri
       ->setOption('entity_type', $this->getEntityTypeId())
       ->setOption('entity', $this);
-
-    return $uri;
+    $uri_options = $uri->getOptions();
+    $uri_options += $options;
+    return $uri->setOptions($uri_options);
   }
 
   /**

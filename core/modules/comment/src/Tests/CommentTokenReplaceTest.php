@@ -57,8 +57,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
-    $tests['[comment:url]'] = url('comment/' . $comment->id(), $url_options + array('fragment' => 'comment-' . $comment->id()));
-    $tests['[comment:edit-url]'] = url('comment/' . $comment->id() . '/edit', $url_options);
+    $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
+    $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->id);
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->id);
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;

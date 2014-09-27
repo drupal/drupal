@@ -43,7 +43,7 @@ class LanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $this->assertText('French');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('language.admin_overview', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     // Langcode for Languages is always 'en'.
     $language = $this->container->get('config.factory')->get('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');
@@ -64,8 +64,9 @@ class LanguageConfigurationTest extends WebTestBase {
       'site_default_language' => 'fr',
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+    $this->rebuildContainer();
     $this->assertOptionSelected('edit-site-default-language', 'fr', 'Default language updated.');
-    $this->assertEqual($this->getUrl(), url('fr/admin/config/regional/settings', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('system.regional_settings', [], ['absolute' => TRUE, 'langcode' => 'fr']), [], 'Correct page redirection.');
 
     // Check if a valid language prefix is added after changing the default
     // language.
@@ -100,6 +101,7 @@ class LanguageConfigurationTest extends WebTestBase {
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
+    $this->rebuildContainer();
     $this->assertRaw(t('The %language (%langcode) language has been removed.', array('%language' => 'English', '%langcode' => 'en')));
     $edit = array(
       'predefined_langcode' => 'de',

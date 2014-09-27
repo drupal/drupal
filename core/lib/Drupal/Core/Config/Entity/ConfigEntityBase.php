@@ -339,8 +339,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function urlInfo($rel = 'edit-form') {
-    return parent::urlInfo($rel);
+  public function urlInfo($rel = 'edit-form', array $options = []) {
+    return parent::urlInfo($rel, $options);
   }
 
   /**

@@ -57,14 +57,15 @@ class UserAttributesTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'article'));
 
-    foreach($authors as $author) {
-      $account_uri = url('user/' . $author->id(), array('absolute' => TRUE));
+    /** @var \Drupal\user\UserInterface[] $authors */
+    foreach ($authors as $author) {
+      $account_uri = $author->url('canonical', ['absolute' => TRUE]);
 
       // Parses the user profile page where the default bundle mapping for user
       // should be used.
       $parser = new \EasyRdf_Parser_Rdfa();
       $graph = new \EasyRdf_Graph();
-      $base_uri = url('<front>', array('absolute' => TRUE));
+      $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
       $parser->parse($graph, $this->drupalGet('user/' . $author->id()), 'rdfa', $base_uri);
 
       // Inspects RDF graph output.
@@ -89,7 +90,7 @@ class UserAttributesTest extends WebTestBase {
       // Parses the node created by the user.
       $parser = new \EasyRdf_Parser_Rdfa();
       $graph = new \EasyRdf_Graph();
-      $base_uri = url('<front>', array('absolute' => TRUE));
+      $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
       $parser->parse($graph, $this->drupalGet('node/' . $node->id()), 'rdfa', $base_uri);
 
       // Ensures the default bundle mapping for user is used on the Authored By

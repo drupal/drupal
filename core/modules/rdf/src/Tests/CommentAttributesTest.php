@@ -42,8 +42,8 @@ class CommentAttributesTest extends CommentTestBase {
     $this->setCommentSettings('comment_default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     // Prepares commonly used URIs.
-    $this->base_uri = url('<front>', array('absolute' => TRUE));
-    $this->node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
+    $this->base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $this->node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
 
     // Set relation between node and comment.
     $article_mapping = rdf_get_mapping('node', 'article');
@@ -182,11 +182,11 @@ class CommentAttributesTest extends CommentTestBase {
     $this->drupalLogin($this->web_user);
     $comment_1 = $this->saveComment($this->node->id(), $this->web_user->id());
 
-    $comment_1_uri = url('comment/' . $comment_1->id(), array('absolute' => TRUE));
+    $comment_1_uri = $comment_1->url('canonical', ['absolute' => TRUE]);
 
     // Posts a reply to the first comment.
     $comment_2 = $this->saveComment($this->node->id(), $this->web_user->id(), NULL, $comment_1->id());
-    $comment_2_uri = url('comment/' . $comment_2->id(), array('absolute' => TRUE));
+    $comment_2_uri = $comment_2->url('canonical', ['absolute' => TRUE]);
 
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
@@ -271,7 +271,7 @@ class CommentAttributesTest extends CommentTestBase {
 
     // The comment author can be a registered user or an anonymous user.
     if ($comment->getOwnerId() > 0) {
-      $author_uri = url('user/' . $comment->getOwnerId(), array('absolute' => TRUE));
+      $author_uri = \Drupal::url('entity.user.canonical', ['user' => $comment->getOwnerId()], array('absolute' => TRUE));
       // Comment relation to author.
       $expected_value = array(
         'type' => 'uri',

@@ -99,7 +99,7 @@ class DeleteMultiple extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get(\Drupal::currentUser()->id());
     if (empty($this->nodes)) {
-      return new RedirectResponse(url('admin/content', array('absolute' => TRUE)));
+      return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
     }
 
     $form['nodes'] = array(

@@ -33,7 +33,7 @@ function locale_translation_manual_status() {
   if (batch_get()) {
     return batch_process('admin/reports/translations');
   }
-  return new RedirectResponse(url('admin/reports/translations', array('absolute' => TRUE)));
+  return new RedirectResponse(\Drupal::url('locale.translate_status', array(), array('absolute' => TRUE)));
 }
 
 /**

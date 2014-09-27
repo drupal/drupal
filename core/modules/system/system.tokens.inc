@@ -120,15 +120,15 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'url':
-          $replacements[$original] = url('<front>', $url_options);
+          $replacements[$original] = \Drupal::url('<front>', array(), $url_options);
           break;
 
         case 'url-brief':
-          $replacements[$original] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
+          $replacements[$original] = preg_replace(array('!^https?://!', '!/$!'), '', \Drupal::url('<front>', array(), $url_options));
           break;
 
         case 'login-url':
-          $replacements[$original] = url('user', $url_options);
+          $replacements[$original] = \Drupal::url('user.page', [], $url_options);
           break;
       }
     }

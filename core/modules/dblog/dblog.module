@@ -102,7 +102,7 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
     '#title' => t('Database log messages to keep'),
     '#default_value' => \Drupal::config('dblog.settings')->get('row_limit'),
     '#options' => array(0 => t('All')) + array_combine($row_limits, $row_limits),
-    '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
+    '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => \Drupal::url('system.status')))
   );
 
   $form['#submit'][] = 'dblog_logging_settings_submit';

@@ -61,7 +61,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
     }
     else {
       drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
-      return new RedirectResponse(url("user/" . $account->id() . "/cancel", array('absolute' => TRUE)));
+      return new RedirectResponse(\Drupal::url('entity.user.cancel_form', ['user' => $account->id()], array('absolute' => TRUE)));
     }
   }
   throw new AccessDeniedHttpException();

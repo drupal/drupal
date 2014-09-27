@@ -39,7 +39,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.shortcut_set.edit_form':
       $user = \Drupal::currentUser();
       if ($user->hasPermission('access shortcuts') && $user->hasPermission('switch shortcut sets')) {
-        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
+        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => \Drupal::url('shortcut.set_switch', array('user' => $user->id())))) . '</p>';
         return $output;
       }
   }

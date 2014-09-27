@@ -8,6 +8,7 @@
 namespace Drupal\user\EventSubscriber;
 
 use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,6 +20,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Maintenance mode subscriber to logout users.
  */
 class MaintenanceModeSubscriber implements EventSubscriberInterface {
+
+  use UrlGeneratorTrait;
 
   /**
    * The maintenance mode.
@@ -62,25 +65,25 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       if ($this->account->isAuthenticated() && !$this->maintenanceMode->exempt($this->account)) {
         user_logout();
         // Redirect to homepage.
-        $event->setResponse(new RedirectResponse(url('<front>', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse($this->url('<front>', [], ['absolute' => TRUE])));
         return;
       }
 
       if ($this->account->isAnonymous() && $path == 'user') {
         // Forward anonymous user to login page.
-        $event->setResponse(new RedirectResponse(url('user/login', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse($this->url('user.login', [], ['absolute' => TRUE])));
         return;
       }
     }
     if ($this->account->isAuthenticated()) {
       if ($path == 'user/login') {
         // If user is logged in, redirect to 'user' instead of giving 403.
-        $event->setResponse(new RedirectResponse(url('user', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse($this->url('user.page', [], ['absolute' => TRUE])));
         return;
       }
       if ($path == 'user/register') {
         // Authenticated user should be redirected to user edit page.
-        $event->setResponse(new RedirectResponse(url('user/' . $this->account->id() . '/edit', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse($this->url('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE])));
         return;
       }
     }

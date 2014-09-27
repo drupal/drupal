@@ -31,6 +31,7 @@ class StackKernelIntegrationTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

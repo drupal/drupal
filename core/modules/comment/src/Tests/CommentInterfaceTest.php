@@ -99,7 +99,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // \Drupal\comment\Controller\CommentController::redirectNode().
     $this->drupalGet('comment/' . $this->node->id() . '/reply');
     // Verify we were correctly redirected.
-    $this->assertUrl(url('comment/reply/node/' . $this->node->id() . '/comment', array('absolute' => TRUE)));
+    $this->assertUrl(\Drupal::url('comment.reply', array('entity_type' => 'node', 'entity' => $this->node->id(), 'field_name' => 'comment'), array('absolute' => TRUE)));
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');

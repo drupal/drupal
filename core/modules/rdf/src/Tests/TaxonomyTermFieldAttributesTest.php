@@ -78,8 +78,8 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
     // Create a term in each vocabulary.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
-    $taxonomy_term_1_uri = url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE));
-    $taxonomy_term_2_uri = url('taxonomy/term/' . $term2->id(), array('absolute' => TRUE));
+    $taxonomy_term_1_uri = $term1->url('canonical', ['absolute' => TRUE]);
+    $taxonomy_term_2_uri = $term2->url('canonical', ['absolute' => TRUE]);
 
     // Create the node.
     $node = $this->drupalCreateNode(array('type' => 'article'));
@@ -95,11 +95,11 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
     // Parse the teaser.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $base_uri = url('<front>', array('absolute' => TRUE));
+    $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     // Node relations to taxonomy terms.
-    $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
+    $node_uri = $node->url('canonical', ['absolute' => TRUE]);
     $expected_value = array(
       'type' => 'uri',
       'value' => $taxonomy_term_1_uri,

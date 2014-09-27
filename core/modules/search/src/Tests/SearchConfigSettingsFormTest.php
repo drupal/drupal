@@ -215,8 +215,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   public function testDefaultSearchPageOrdering() {
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
-    $this->assertIdentical((string) $elements[0]['href'], url('search/node'));
-    $this->assertIdentical((string) $elements[1]['href'], url('search/user'));
+    $this->assertIdentical((string) $elements[0]['href'], \Drupal::url('search.view_node_search'));
+    $this->assertIdentical((string) $elements[1]['href'], \Drupal::url('search.view_user_search'));
   }
 
   /**

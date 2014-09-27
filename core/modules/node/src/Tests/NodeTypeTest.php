@@ -108,7 +108,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->assertRaw('Lorem ipsum', 'New description was displayed.');
     $this->clickLink('Bar');
-    $this->assertEqual(url('node/add/bar', array('absolute' => TRUE)), $this->getUrl(), 'New machine name was used in URL.');
+    $this->assertUrl(\Drupal::url('node.add', ['node_type' => 'bar'], ['absolute' => TRUE]), [], 'New machine name was used in URL.');
     $this->assertRaw('Foo', 'Title field was found.');
     $this->assertRaw('Body', 'Body field was found.');
 

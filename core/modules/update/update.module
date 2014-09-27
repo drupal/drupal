@@ -72,7 +72,10 @@ function update_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.update':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The Update Manager module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts administrators to available updates. In order to provide update information, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update Manager module from the <a href='@modules'>Module administration page</a>. For more information, see the online handbook entry for <a href='@update'>Update Manager module</a>.", array('@update' => 'http://drupal.org/documentation/modules/update', '@modules' => url('admin/modules'))) . '</p>';
+      $output .= '<p>' . t("The Update Manager module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts administrators to available updates. In order to provide update information, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update Manager module from the <a href='@modules'>Module administration page</a>. For more information, see the online handbook entry for <a href='@update'>Update Manager module</a>.", [
+        '@update' => 'http://drupal.org/documentation/modules/update',
+        '@modules' => \Drupal::url('system.modules_list'),
+      ]) . '</p>';
       // Only explain the Update manager if it has not been disabled.
       if (update_manager_access()) {
         $output .= '<p>' . t('The Update manager also allows administrators to update and install modules and themes through the administration interface.') . '</p>';
@@ -80,13 +83,26 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Checking for available updates') . '</dt>';
-      $output .= '<dd>' . t('A report of <a href="@update-report">available updates</a> will alert you when new releases are available for download. You may configure options for the frequency for checking updates (which are performed during <a href="@cron">cron</a> runs) and email notifications at the <a href="@update-settings">Update Manager settings</a>  page.', array('@update-report' => url('admin/reports/updates'), '@cron' => 'http://drupal.org/cron', '@update-settings' => url('admin/reports/updates/settings'))) . '</dd>';
+      $output .= '<dd>' . t('A report of <a href="@update-report">available updates</a> will alert you when new releases are available for download. You may configure options for the frequency for checking updates (which are performed during <a href="@cron">cron</a> runs) and email notifications at the <a href="@update-settings">Update Manager settings</a>  page.', [
+        '@update-report' => \Drupal::url('update.status'),
+        '@cron' => 'http://drupal.org/cron',
+        '@update-settings' => \Drupal::url('update.settings'),
+      ]) . '</dd>';
       // Only explain the Update manager if it has not been disabled.
       if (update_manager_access()) {
         $output .= '<dt>' . t('Performing updates through the user interface') . '</dt>';
-        $output .= '<dd>' . t('The Update Manager module allows administrators to perform updates directly through the administration interface. At the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages you will see a link to update to new releases. This will direct you to the <a href="@update-page">update page</a> where you see a listing of all the missing updates and confirm which ones you want to upgrade. From there, you are prompted for your FTP/SSH password, which then transfers the files into your Drupal installation, overwriting your old files. More detailed instructions can be found in the <a href="@update">online handbook</a>.', array('@modules_page' => url('admin/modules'), '@themes_page' => url('admin/appearance'),  '@update-page' => url('admin/reports/updates/update'), '@update' => 'http://drupal.org/documentation/modules/update')) . '</dd>';
+        $output .= '<dd>' . t('The Update Manager module allows administrators to perform updates directly through the administration interface. At the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages you will see a link to update to new releases. This will direct you to the <a href="@update-page">update page</a> where you see a listing of all the missing updates and confirm which ones you want to upgrade. From there, you are prompted for your FTP/SSH password, which then transfers the files into your Drupal installation, overwriting your old files. More detailed instructions can be found in the <a href="@update">online handbook</a>.', [
+          '@modules_page' => \Drupal::url('system.modules_list'),
+          '@themes_page' => \Drupal::url('system.themes_page'),
+          '@update-page' => \Drupal::url('update.report_update'),
+          '@update' => 'http://drupal.org/documentation/modules/update',
+        ]) . '</dd>';
         $output .= '<dt>' . t('Installing new modules and themes through the user interface') . '</dt>';
-        $output .= '<dd>' . t('You can also install new modules and themes in the same fashion, through the <a href="@install">install page</a>, or by clicking the <em>Install new module/theme</em> link at the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', array('@modules_page' => url('admin/modules'), '@themes_page' => url('admin/appearance'), '@install' => url('admin/reports/updates/install'))) . '</dd>';
+        $output .= '<dd>' . t('You can also install new modules and themes in the same fashion, through the <a href="@install">install page</a>, or by clicking the <em>Install new module/theme</em> link at the top of the <a href="@modules_page">modules</a> and <a href="@themes_page">themes</a> pages. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', [
+          '@modules_page' => \Drupal::url('system.modules_list'),
+          '@themes_page' => \Drupal::url('system.themes_page'),
+          '@install' => \Drupal::url('update.report_install'),
+        ]) . '</dd>';
       }
       $output .= '</dl>';
       return $output;
@@ -278,8 +294,8 @@ function update_storage_clear_submit($form, FormStateInterface $form_state) {
 function _update_no_data() {
   $destination = drupal_get_destination();
   return t('No update information available. <a href="@run_cron">Run cron</a> or <a href="@check_manually">check manually</a>.', array(
-    '@run_cron' => url('admin/reports/status/run-cron', array('query' => $destination)),
-    '@check_manually' => url('admin/reports/updates/check', array('query' => $destination)),
+    '@run_cron' => \Drupal::url('system.run_cron', [], ['query' => $destination]),
+    '@check_manually' => \Drupal::url('update.manual_status', [], ['query' => $destination]),
   ));
 }
 
@@ -440,11 +456,11 @@ function update_mail($key, &$message, $params) {
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $langcode);
   }
-  $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
+  $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . \Drupal::url('update.status', [], ['absolute' => TRUE, 'language' => $language]);
   if (update_manager_access()) {
-    $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates/update', array('absolute' => TRUE, 'language' => $language));
+    $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . \Drupal::url('update.report_update', [], ['absolute' => TRUE, 'language' => $language]);
   }
-  $settings_url = url('admin/reports/updates/settings', array('absolute' => TRUE));
+  $settings_url = \Drupal::url('update.settings', [], ['absolute' => TRUE]);
   if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
     $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, !url.', array('!url' => $settings_url));
   }
@@ -518,10 +534,10 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
     case UPDATE_NOT_FETCHED:
     case UPDATE_FETCH_PENDING:
       if ($msg_type == 'core') {
-        $text = t('There was a problem checking <a href="@update-report">available updates</a> for Drupal.', array('@update-report' => url('admin/reports/updates')), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href="@update-report">available updates</a> for Drupal.', array('@update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
       }
       else {
-        $text = t('There was a problem checking <a href="@update-report">available updates</a> for your modules or themes.', array('@update-report' => url('admin/reports/updates')), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href="@update-report">available updates</a> for your modules or themes.', array('@update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
       }
       break;
   }
@@ -533,10 +549,10 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   }
   if ($report_link) {
     if (update_manager_access()) {
-      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', array('@available_updates' => url('admin/reports/updates/update', array('language' => $language))), array('langcode' => $langcode));
+      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', array('@available_updates' => \Drupal::url('update.report_update', [], ['language' => $language])), array('langcode' => $langcode));
     }
     else {
-      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), array('langcode' => $langcode));
+      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => \Drupal::url('update.status', [], ['language' => $language])), array('langcode' => $langcode));
     }
   }
 

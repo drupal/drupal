@@ -36,14 +36,14 @@ class LocaleSettingsForm extends ConfigFormBase {
         '7' => t('Weekly'),
         '30' => t('Monthly'),
       ),
-      '#description' => t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href="@url">Check updates now</a>.', array('@url' => url('admin/reports/translations/check'))),
+      '#description' => t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href="@url">Check updates now</a>.', array('@url' => $this->url('locale.check_translation'))),
     );
 
     if ($directory = $config->get('translation.path')) {
-      $description = t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href="@url">File system</a> configuration page.', array('%path' => $directory, '@url' => url('admin/config/media/file-system')));
+      $description = t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href="@url">File system</a> configuration page.', array('%path' => $directory, '@url' => $this->url('system.file_system_settings')));
     }
     else {
-      $description = t('Translation files will not be stored locally. Change the Interface translation directory on the <a href="@url">File system configuration</a> page.', array('@url' => url('admin/config/media/file-system')));
+      $description = t('Translation files will not be stored locally. Change the Interface translation directory on the <a href="@url">File system configuration</a> page.', array('@url' => $this->url('system.file_system_settings')));
     }
     $form['#translation_directory'] = $directory;
     $form['use_source'] = array(
@@ -88,7 +88,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if (empty($form['#translation_directory']) && $form_state->getValue('use_source') == LOCALE_TRANSLATION_USE_SOURCE_LOCAL) {
-      $form_state->setErrorByName('use_source', $this->t('You have selected local translation source, but no <a href="@url">Interface translation directory</a> was configured.', array('@url' => url('admin/config/media/file-system'))));
+      $form_state->setErrorByName('use_source', $this->t('You have selected local translation source, but no <a href="@url">Interface translation directory</a> was configured.', array('@url' => $this->url('system.file_system_settings'))));
     }
   }
 

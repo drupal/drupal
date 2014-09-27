@@ -42,7 +42,7 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'filter.admin_overview':
-      $output = '<p>' . t('Text formats define the HTML tags, code, and other formatting that can be used when entering text. <strong>Improper text format configuration is a security risk</strong>. Learn more on the <a href="@filterhelp">Filter module help page</a>.', array('@filterhelp' => url('admin/help/filter'))) . '</p>';
+      $output = '<p>' . t('Text formats define the HTML tags, code, and other formatting that can be used when entering text. <strong>Improper text format configuration is a security risk</strong>. Learn more on the <a href="@filterhelp">Filter module help page</a>.', array('@filterhelp' => \Drupal::url('help.page', array('name' => 'filter')))) . '</p>';
       $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
       return $output;
 

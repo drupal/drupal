@@ -315,8 +315,8 @@ function system_requirements($phase) {
       $description = t('Cron has not run recently.') . ' ' . $help;
     }
 
-    $description .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . \Drupal::state()->get('system.cron_key'), array('absolute' => TRUE))));
+    $description .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => \Drupal::url('system.run_cron')));
+    $description .= '<br />' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => \Drupal::url('system.cron', array('key' => \Drupal::state()->get('system.cron_key'), array('absolute' => TRUE)))));
 
     $requirements['cron'] = array(
       'title' => t('Cron maintenance tasks'),
@@ -407,7 +407,7 @@ function system_requirements($phase) {
       }
       // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
-        $description = $error . t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/config/media/file-system')));
+        $description = $error . t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => \Drupal::url('system.file_system_settings')));
       }
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
@@ -534,7 +534,10 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/documentation/modules/update', '@module' => url('admin/modules'))),
+        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array(
+          '@update' => 'http://drupal.org/documentation/modules/update',
+          '@module' => \Drupal::url('system.modules_list'),
+        )),
       );
     }
     else {

@@ -145,7 +145,7 @@ function forum_menu_local_tasks(&$data, $route_name) {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => t('<a href="@login">Log in</a> to post new content in the forum.', array(
-              '@login' => url('user/login', array('query' => drupal_get_destination())),
+              '@login' => \Drupal::url('user.login', [], array('query' => drupal_get_destination())),
             )),
             'localized_options' => array('html' => TRUE),
           ),
@@ -563,7 +563,7 @@ function template_preprocess_forums(&$variables) {
             ->getNewCommentPageNumber($topic->comment_count, $topic->new_replies, $topic, 'comment_forum');
           $query = $page_number ? array('page' => $page_number) : NULL;
           $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
-          $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => $query, 'fragment' => 'new'));
+          $variables['topics'][$id]->new_url = \Drupal::url('entity.node.canonical', ['node' => $topic->id()], ['query' => $query, 'fragment' => 'new']);
         }
 
         // Build table rows from topics.
@@ -629,7 +629,7 @@ function template_preprocess_forum_list(&$variables) {
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
-    $variables['forums'][$id]->link = url("forum/" . $forum->id());
+    $variables['forums'][$id]->link = $forum->url();
     $variables['forums'][$id]->name = String::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
@@ -645,7 +645,7 @@ function template_preprocess_forum_list(&$variables) {
       $variables['forums'][$id]->new_topics = \Drupal::service('forum_manager')->unreadTopics($forum->id(), $user->id());
       if ($variables['forums'][$id]->new_topics) {
         $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
-        $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
+        $variables['forums'][$id]->new_url = \Drupal::url('forum.page', ['taxonomy_term' => $forum->id()], ['fragment' => 'new']);
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
       }

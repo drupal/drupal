@@ -456,9 +456,11 @@ services:
     tags:
       - { name: backend_overridable }
   router.request_context:
-    class: Symfony\Component\Routing\RequestContext
+    class: Drupal\Core\Routing\RequestContext
     tags:
       - { name: persist }
+    calls:
+      - [fromRequestStack, ['@request_stack']]
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
     arguments: ['@request_stack']

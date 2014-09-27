@@ -37,7 +37,7 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
         'key' => 'category',
         'value' => $item->entity->label(),
         'attributes' => array(
-          'domain' => $item->target_id ? url('taxonomy/term/' . $item->target_id, array('absolute' => TRUE)) : '',
+          'domain' => $item->target_id ? \Drupal::url('entity.taxonomy_term.canonical', ['taxonomy_term' => $item->target_id], array('absolute' => TRUE)) : '',
         ),
       );
     }

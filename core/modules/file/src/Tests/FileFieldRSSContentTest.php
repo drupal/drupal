@@ -68,7 +68,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
       'key' => 'enclosure',
       'value' => "",
       'attributes' => array(
-        'url' => url("$this->public_files_directory/$uploaded_filename", array('absolute' => TRUE)),
+        'url' => file_create_url("public://$uploaded_filename", array('absolute' => TRUE)),
         'length' => $node_file->getSize(),
         'type' => $node_file->getMimeType()
       ),

@@ -98,7 +98,7 @@ class RssTest extends TaxonomyTestBase {
       'key' => 'category',
       'value' => $term1->getName(),
       'attributes' => array(
-        'domain' => url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE)),
+        'domain' => $term1->url('canonical', array('absolute' => TRUE)),
       ),
     );
     $this->assertRaw(format_xml_elements(array($test_element)), 'Term is displayed when viewing the rss feed.');

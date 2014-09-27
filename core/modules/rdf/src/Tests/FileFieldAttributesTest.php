@@ -84,10 +84,10 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     // Parses front page where the node is displayed in its teaser form.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $base_uri = url('<front>', array('absolute' => TRUE));
+    $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
-    $node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
+    $node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
     $file_uri = file_create_url($this->file->getFileUri());
 
     // Node relation to attached file.

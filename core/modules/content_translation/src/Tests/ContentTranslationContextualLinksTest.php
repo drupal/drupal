@@ -170,7 +170,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
     // Perform HTTP request.
     return $this->curlExec(array(
-      CURLOPT_URL => url('contextual/render', array('absolute' => TRUE, 'query' => array('destination' => $current_path))),
+      CURLOPT_URL => \Drupal::url('contextual.render', array(), array('absolute' => TRUE, 'query' => array('destination' => $current_path))),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
       CURLOPT_HTTPHEADER => array(

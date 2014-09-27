@@ -165,12 +165,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
         // Comment related URLs.
         case 'url':
           $url_options['fragment']  = 'comment-' . $comment->id();
-          $replacements[$original] = url('comment/' . $comment->id(), $url_options);
+          $replacements[$original] = $comment->url('canonical', $url_options);
           break;
 
         case 'edit-url':
           $url_options['fragment'] = NULL;
-          $replacements[$original] = url('comment/' . $comment->id() . '/edit', $url_options);
+          $replacements[$original] = $comment->url('edit-form', $url_options);
           break;
 
         // @todo Remove 'name' token in favour of 'author'. See

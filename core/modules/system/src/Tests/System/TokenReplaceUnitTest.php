@@ -98,9 +98,9 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $tests['[site:name]'] = String::checkPlain($config->get('name'));
     $tests['[site:slogan]'] = $safe_slogan;
     $tests['[site:mail]'] = $config->get('mail');
-    $tests['[site:url]'] = url('<front>', $url_options);
-    $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
-    $tests['[site:login-url]'] = url('user', $url_options);
+    $tests['[site:url]'] = \Drupal::url('<front>', [], $url_options);
+    $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', \Drupal::url('<front>', [], $url_options));
+    $tests['[site:login-url]'] = \Drupal::url('user.page', [], $url_options);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

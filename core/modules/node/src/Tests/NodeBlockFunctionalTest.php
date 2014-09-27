@@ -146,7 +146,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/block');
     $this->assertText($label, 'Block was displayed on the admin/structure/block page.');
-    $this->assertLinkByHref(url('admin/structure/block/manage/' . $block->id()));
+    $this->assertLinkByHref($block->url());
   }
 
 }

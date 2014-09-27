@@ -69,7 +69,7 @@ function views_views_pre_render($view) {
   if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
     $settings = array(
       'views' => array(
-        'ajax_path' => url('views/ajax'),
+        'ajax_path' => \Drupal::url('views.ajax'),
         'ajaxViews' => array(
           'views_dom_id:' . $view->dom_id => array(
             'view_name' => $view->storage->id(),

@@ -1178,7 +1178,7 @@ function hook_mail($key, &$message, $params) {
     $node = $params['node'];
     $variables += array(
       '%uid' => $node->getOwnerId(),
-      '%url' => url('node/' . $node->id(), array('absolute' => TRUE)),
+      '%url' => $node->url('canonical', array('absolute' => TRUE)),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->getTitle(),
       '%teaser' => $node->teaser,
@@ -1587,7 +1587,7 @@ function hook_requirements($phase) {
       );
     }
 
-    $requirements['cron']['description'] .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $requirements['cron']['description'] .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => \Drupal::url('system.run_cron')));
 
     $requirements['cron']['title'] = t('Cron maintenance tasks');
   }
@@ -2350,7 +2350,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->id() . '/edit', $url_options);
+          $replacements[$original] = $node->url('edit-form', $url_options);
           break;
 
         // Default values for the chained tokens handled below.

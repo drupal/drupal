@@ -95,7 +95,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $view->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $result = $this->xpath('//input[@id="edit-options-value"]/@data-autocomplete-path');
-    $this->assertEqual((string) $result[0], url('taxonomy/autocomplete_vid/tags'));
+    $this->assertEqual((string) $result[0], \Drupal::url('taxonomy.autocomplete_vid', ['taxonomy_vocabulary' => 'tags']));
   }
 
 }

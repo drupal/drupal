@@ -677,7 +677,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * However, for links enclosed in translatable text you should use t() and
  * embed the HTML anchor tag directly in the translated string. For example:
  * @code
- * t('Visit the <a href="@url">settings</a> page', array('@url' => url('admin')));
+ * t('Visit the <a href="@url">settings</a> page', array('@url' => \Drupal::url('system.admin')));
  * @endcode
  * This keeps the context of the link title ('settings' in the example) for
  * translators.

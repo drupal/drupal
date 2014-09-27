@@ -54,7 +54,7 @@ class UserBlocksTest extends WebTestBase {
     $this->assertNoText(t('User login'), 'Logged in.');
 
     // Check that we are still on the same page.
-    $this->assertEqual(url('admin/people/permissions', array('absolute' => TRUE)), $this->getUrl(), 'Still on the same page after login for access denied page');
+    $this->assertUrl(\Drupal::url('user.admin_permissions', [], ['absolute' => TRUE]), [], 'Still on the same page after login for access denied page');
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
@@ -67,7 +67,7 @@ class UserBlocksTest extends WebTestBase {
     $this->drupalLogout();
     $this->drupalPostForm('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
     // Check that we remain on the site after login.
-    $this->assertEqual(url('user/' . $user->id(), array('absolute' => TRUE)), $this->getUrl(), 'Redirected to user profile page after login from the frontpage');
+    $this->assertUrl($user->url('canonical', ['absolute' => TRUE]), [], 'Redirected to user profile page after login from the frontpage');
   }
 
   /**

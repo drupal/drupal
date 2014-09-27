@@ -143,7 +143,7 @@ class TrackerTest extends WebTestBase {
     // Simulate the JavaScript on the node page to mark the node as read.
     // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
     $this->curlExec(array(
-      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(
         'Accept: application/json',
       ),
@@ -159,7 +159,7 @@ class TrackerTest extends WebTestBase {
     // Simulate the JavaScript on the node page to mark the node as read.
     // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
     $this->curlExec(array(
-      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(
         'Accept: application/json',
       ),
@@ -188,7 +188,7 @@ class TrackerTest extends WebTestBase {
     // JavaScript that does this.
     // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
     $this->curlExec(array(
-      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(
         'Accept: application/json',
       ),

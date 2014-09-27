@@ -55,7 +55,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
 
     // Perform HTTP request.
     return $this->curlExec(array(
-      CURLOPT_URL => url('comments/render_new_comments_node_links', array('absolute' => TRUE)),
+      CURLOPT_URL => \Drupal::url('comment.new_comments_node_links', array(), array('absolute' => TRUE)),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
       CURLOPT_HTTPHEADER => array(
@@ -114,7 +114,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $json = Json::decode($response);
     $expected = array($this->node->id() => array(
       'new_comment_count' => 1,
-      'first_new_comment_link' => url('node/' . $this->node->id(), array('fragment' => 'new')),
+      'first_new_comment_link' => $this->node->url('canonical', array('fragment' => 'new')),
     ));
     $this->assertIdentical($expected, $json);
 

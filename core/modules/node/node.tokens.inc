@@ -165,11 +165,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = url('node/' . $node->id(), $url_options);
+          $replacements[$original] = $node->url('canonical', $url_options);
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->id() . '/edit', $url_options);
+          $replacements[$original] = $node->url('edit-form', $url_options);
           break;
 
         // Default values for the chained tokens handled below.

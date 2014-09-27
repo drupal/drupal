@@ -49,7 +49,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'language.admin_overview':
-      return '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => url('admin/config/regional/language/detection'))) . '</p>';
+      return '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => \Drupal::url('language.negotiation'))) . '</p>';
 
     case 'language.add':
       return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
@@ -512,7 +512,7 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
     '#title' => t('Default language'),
     '#default_value' => $default->id,
     '#options' => $language_options,
-    '#description' => t('It is not recommended to change the default language on a working site. <a href="@language-detection">Configure the Selected language</a> setting on the detection and selection page to change the fallback language for language selection.', array('@language-detection' => url('admin/config/regional/language/detection'))),
+    '#description' => t('It is not recommended to change the default language on a working site. <a href="@language-detection">Configure the Selected language</a> setting on the detection and selection page to change the fallback language for language selection.', array('@language-detection' => \Drupal::url('language.negotiation'))),
     '#weight' => -1,
   );
   // Add submit handler to save default language.

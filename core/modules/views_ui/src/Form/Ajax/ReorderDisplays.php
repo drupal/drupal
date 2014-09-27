@@ -39,7 +39,11 @@ class ReorderDisplays extends ViewsFormBase {
 
     $form['#title'] = $this->t('Reorder displays');
     $form['#section'] = 'reorder';
-    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $view->id() . '/' . $display_id);
+    $form['#action'] = $this->url('views_ui.form_reorder_displays', [
+      'js' => 'nojs',
+      'view' => $view->id(),
+      'display_id' => $display_id,
+    ]);
     $form['view'] = array(
       '#type' => 'value',
       '#value' => $view

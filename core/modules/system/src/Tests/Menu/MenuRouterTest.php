@@ -227,11 +227,11 @@ class MenuRouterTest extends WebTestBase {
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
-    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->id(), array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
+    $this->assertUrl($this->loggedInUser->url('canonical', ['absolute' => TRUE]));
 
     // user/register should redirect to user/UID/edit.
     $this->drupalGet('user/register');
-    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->id() . '/edit', array('absolute' => TRUE)), "Logged-in user redirected to user/UID/edit on accessing user/register");
+    $this->assertUrl($this->loggedInUser->url('edit-form', ['absolute' => TRUE]));
   }
 
   /**

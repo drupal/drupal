@@ -108,7 +108,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalGet('admin/structure/comment');
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Manage fields');
-    $this->assertEqual(url('admin/structure/comment/manage/comment/fields', array('absolute' => TRUE)), $this->getUrl(), 'Original machine name was used in URL.');
+    $this->assertUrl(\Drupal::url('field_ui.overview_comment', array('comment_type' => 'comment'), array('absolute' => TRUE)), [], 'Original machine name was used in URL.');
 
     // Remove the body field.
     $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete', array(), t('Delete'));

@@ -566,7 +566,7 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, F
 
   // Provide helpful pointers for administrators.
   if (\Drupal::currentUser()->hasPermission('administer content translation') &&  !$bundle_is_translatable) {
-    $toggle_url = url('admin/config/regional/content-language', array(
+    $toggle_url = \Drupal::url('language.content_settings_page', array(), array(
       'query' => drupal_get_destination(),
     ));
     $form['field']['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(

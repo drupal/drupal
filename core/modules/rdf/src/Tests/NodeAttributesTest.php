@@ -52,8 +52,8 @@ class NodeAttributesTest extends NodeTestBase {
       'title' => $this->randomMachineName(8) . "'",
     ));
 
-    $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
-    $base_uri = url('<front>', array('absolute' => TRUE));
+    $node_uri = $node->url('canonical', ['absolute' => TRUE]);
+    $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
     // Parses front page where the node is displayed in its teaser form.
     $parser = new \EasyRdf_Parser_Rdfa();

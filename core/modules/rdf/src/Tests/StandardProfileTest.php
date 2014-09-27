@@ -104,7 +104,7 @@ class StandardProfileTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->base_uri = url('<front>', array('absolute' => TRUE));
+    $this->base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
     // Create two test users.
     $this->adminUser = $this->drupalCreateUser(array(

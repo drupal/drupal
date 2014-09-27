@@ -22,18 +22,18 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('User contact forms') . '</dt>';
       $output .= '<dd>' . t('Site users can be contacted with a user contact form that keeps their email address private. Users may enable or disable their personal contact forms by editing their <em>My account</em> page. If enabled, a <em>Contact</em> tab leads to a personal contact form displayed on their user profile. Site administrators are still able to use the contact form, even if has been disabled. The <em>Contact</em> tab is not shown when you view your own profile.') . '</dd>';
       $output .= '<dt>' . t('Site-wide contact forms') . '</dt>';
-      $output .= '<dd>' . t('The <a href="@contact">Contact page</a> provides a simple form for users with the <em>Use the site-wide contact form</em> permission to send comments, feedback, or other requests. You can create forms for directing the contact messages to a set of defined recipients. Common forms for a business site, for example, might include "Website feedback" (messages are forwarded to website administrators) and "Product information" (messages are forwarded to members of the sales department). Email addresses defined within a form are not displayed publicly.', array('@contact' => url('contact'))) . '</p>';
+      $output .= '<dd>' . t('The <a href="@contact">Contact page</a> provides a simple form for users with the <em>Use the site-wide contact form</em> permission to send comments, feedback, or other requests. You can create forms for directing the contact messages to a set of defined recipients. Common forms for a business site, for example, might include "Website feedback" (messages are forwarded to website administrators) and "Product information" (messages are forwarded to members of the sales department). Email addresses defined within a form are not displayed publicly.', array('@contact' => \Drupal::url('contact.site_page'))) . '</p>';
       $output .= '<dt>' . t('Navigation') . '</dt>';
-      $output .= '<dd>' . t('When the site-wide contact form is enabled, a link in the <em>Footer</em> menu is created, which you can modify on the <a href="@menu">Menus administration page</a>.', array('@menu' => url('admin/structure/menu'))) . '</dd>';
+      $output .= '<dd>' . t('When the site-wide contact form is enabled, a link in the <em>Footer</em> menu is created, which you can modify on the <a href="@menu">Menus administration page</a>.', array('@menu' => \Drupal::url('menu_ui.overview_page'))) . '</dd>';
       $output .= '<dt>' . t('Customization') . '</dt>';
-      $output .= '<dd>' . t('If you would like additional text to appear on the site-wide or personal contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</dd>';
+      $output .= '<dd>' . t('If you would like additional text to appear on the site-wide or personal contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => \Drupal::url('block.admin_display'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'contact.form_list':
-      $output = '<p>' . t('Add one or more forms on this page to set up your site-wide <a href="@form">contact form</a>.', array('@form' => url('contact'))) . '</p>';
-      $output .= '<p>' . t('A <em>Contact</em> menu item is added to the <em>Footer</em> menu, which you can modify on the <a href="@menu-settings">Menus administration page</a>.', array('@menu-settings' => url('admin/structure/menu'))) . '</p>';
-      $output .= '<p>' . t('If you would like additional text to appear on the site-wide contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
+      $output = '<p>' . t('Add one or more forms on this page to set up your site-wide <a href="@form">contact form</a>.', array('@form' => \Drupal::url('contact.site_page'))) . '</p>';
+      $output .= '<p>' . t('A <em>Contact</em> menu item is added to the <em>Footer</em> menu, which you can modify on the <a href="@menu-settings">Menus administration page</a>.', array('@menu-settings' => \Drupal::url('menu_ui.overview_page'))) . '</p>';
+      $output .= '<p>' . t('If you would like additional text to appear on the site-wide contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => \Drupal::url('block.admin_display'))) . '</p>';
       return $output;
   }
 }
@@ -127,7 +127,7 @@ function contact_mail($key, &$message, $params) {
     case 'user_copy':
       $variables += array(
         '!recipient-name' => user_format_name($params['recipient']),
-        '!recipient-edit-url' => url('user/' . $params['recipient']->id() . '/edit', array('absolute' => TRUE, 'language' => $language)),
+        '!recipient-edit-url' => $params['recipient']->url('edit-form', array('absolute' => TRUE, 'language' => $language)),
       );
       $message['subject'] .= t('[!site-name] !subject', $variables, $options);
       $message['body'][] = t('Hello !recipient-name,', $variables, $options);

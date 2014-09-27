@@ -124,7 +124,7 @@ class FilterAdminTest extends WebTestBase {
     // exists.
     // @todo: See https://drupal.org/node/2031223 for the above
     $edit_link = $this->xpath('//a[@href=:href]', array(
-      ':href' => url('admin/config/content/formats/manage/' . $format_id)
+      ':href' => \Drupal::url('entity.filter_format.edit_form', ['filter_format' => $format_id])
     ));
     $this->assertTrue($edit_link, format_string('Link href %href found.',
       array('%href' => 'admin/config/content/formats/manage/' . $format_id)

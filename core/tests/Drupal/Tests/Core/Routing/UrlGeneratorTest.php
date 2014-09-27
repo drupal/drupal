@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorManager;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
@@ -16,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * Confirm that the UrlGenerator is functioning properly.
@@ -120,8 +120,12 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $this->aliasManager = $alias_manager;
 
+    $this->requestStack = new RequestStack();
+    $request = Request::create('/some/path');
+    $this->requestStack->push($request);
+
     $context = new RequestContext();
-    $context->fromRequest($request = Request::create('/some/path'));
+    $context->fromRequestStack($this->requestStack);
 
     $processor = new PathProcessorAlias($this->aliasManager);
     $processor_manager = new PathProcessorManager();
@@ -132,9 +136,6 @@ class UrlGeneratorTest extends UnitTestCase {
       ->getMock();
 
     $config_factory_stub = $this->getConfigFactoryStub(array('system.filter' => array('protocols' => array('http', 'https'))));
-
-    $this->requestStack = new RequestStack();
-    $this->requestStack->push($request);
 
     $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array()), NULL, $this->requestStack);
     $generator->setContext($context);

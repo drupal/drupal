@@ -56,6 +56,18 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   protected $mixedModeSessions;
 
   /**
+   * Overrides characters that will not be percent-encoded in the path segment.
+   *
+   * @see \Symfony\Component\Routing\Generator\UrlGenerator
+   */
+  protected $decodedChars = array(
+    // the slash can be used to designate a hierarchical structure and we want allow using it with this meaning
+    // some webservers don't allow the slash in encoded form in the path for security reasons anyway
+    // see http://stackoverflow.com/questions/4069002/http-400-if-2f-part-of-get-url-in-jboss
+    '%2F' => '/',
+  );
+
+  /**
    *  Constructs a new generator object.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
