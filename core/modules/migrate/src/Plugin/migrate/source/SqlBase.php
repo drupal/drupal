@@ -204,8 +204,10 @@ abstract class SqlBase extends SourcePluginBase {
     $id_map_database_options = $id_map->getDatabase()->getConnectionOptions();
     $source_database_options = $this->getDatabase()->getConnectionOptions();
     foreach (array('username', 'password', 'host', 'port', 'namespace', 'driver') as $key) {
-      if ($id_map_database_options[$key] != $source_database_options[$key]) {
-        return FALSE;
+      if (isset($source_database_options[$key])) {
+        if ($id_map_database_options[$key] != $source_database_options[$key]) {
+          return FALSE;
+        }
       }
     }
     return TRUE;
