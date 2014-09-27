@@ -17,13 +17,6 @@ use Drupal\filter\Plugin\FilterInterface;
 class StandardTest extends UnitTestCase {
 
   /**
-   * The tested text editor XSS filter.
-   *
-   * @var \Drupal\editor\EditorXssFilter\Standard
-   */
-  protected $editorXssFilterClass;
-
-  /**
    * The mocked text format configuration entity.
    *
    * @var \Drupal\filter\Entity\FilterFormat|\PHPUnit_Framework_MockObject_MockObject
@@ -31,7 +24,6 @@ class StandardTest extends UnitTestCase {
   protected $format;
 
   protected function setUp() {
-    $this->editorXssFilterClass = '\Drupal\editor\EditorXssFilter\Standard';
 
     // Mock text format configuration entity object.
     $this->format = $this->getMockBuilder('\Drupal\filter\Entity\FilterFormat')
@@ -538,7 +530,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>', 'exp/*<A>');
    * @dataProvider providerTestFilterXss
    */
   public function testFilterXss($input, $expected_output) {
-    $output = call_user_func($this->editorXssFilterClass . '::filterXss', $input, $this->format);
+    $output = call_user_func('\Drupal\editor\EditorXssFilter\Standard::filterXss', $input, $this->format);
     $this->assertSame($expected_output, $output);
   }
 
