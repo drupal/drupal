@@ -34,6 +34,7 @@ class AccessPermissionTest extends AccessTestBase {
 
     $access_plugin = $view->display_handler->getPlugin('access');
     $this->assertTrue($access_plugin instanceof Permission, 'Make sure the right class got instantiated.');
+    $this->assertEqual($access_plugin->pluginTitle(), t('Permission'));
 
     $this->assertTrue($view->display_handler->access($this->adminUser), 'Admin-Account should be able to access the view everytime');
     $this->assertFalse($view->display_handler->access($this->webUser));

@@ -53,6 +53,7 @@ class Permission extends AccessPluginBase {
    *   The permission handler.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->permissionHandler = $permission_handler;
   }
 
