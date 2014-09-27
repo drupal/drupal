@@ -40,6 +40,8 @@ function views_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('The Views module adds functionality to some core administration pages. For example, <em>admin/content</em> uses Views to filter and sort content. With Views uninstalled, <em>admin/content</em> is more limited.') . '</dd>';
       $output .= '<dt>' . t('Expanding Views functionality') . '</dt>';
       $output .= '<dd>' . t('Contributed projects that support the Views module can be found in the <a href="!node">online documentation for Views-related contributed modules</a>.', array('!node' => 'https://drupal.org/documentation/modules/views/add-ons')) . '</dd>';
+      $output .= '<dt>' . t('Improving table accessibility') . '</dt>';
+      $output .= '<dd>' . t('Views tables include semantic markup to improve accessibility. Data cells are automatically associated with header cells through id and header attributes. To improve the accessibility of your tables you can add descriptive elements within the Views table settings. The <em>caption</em> element can introduce context for a table, making it easier to understand. The <em>summary</em> element can provide an overview of how the data has been organized and how to navigate the table. Both the caption and summary are visible by default and also implemented according to HTML5 guidelines.') . '</dd>';
       $output .= '</dl>';
       return $output;
   }
