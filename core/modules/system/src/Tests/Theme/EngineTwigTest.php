@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -57,6 +58,25 @@ class EngineTwigTest extends WebTestBase {
     );
     // Make sure we got something.
     $content = $this->drupalGetContent();
+    $this->assertFalse(empty($content), 'Page content is not empty');
+    foreach ($expected as $string) {
+      $this->assertRaw('<div>' . $string . '</div>');
+    }
+  }
+
+  /**
+   * Tests the link_generator twig functions.
+   */
+  public function testTwigLinkGenerator() {
+    $this->drupalGet('twig-theme-test/link-generator');
+
+    $link_generator = $this->container->get('link_generator');
+
+    $expected = [
+      'link via the linkgenerator: ' . $link_generator->generateFromUrl('register', new Url('user.register')),
+    ];
+
+    $content = $this->getRawContent();
     $this->assertFalse(empty($content), 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');

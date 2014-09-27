@@ -18,3 +18,10 @@ twig_theme_test_url_generator:
     _content: '\Drupal\twig_theme_test\TwigThemeTestController::urlGeneratorRender'
   requirements:
     _access: 'TRUE'
+
+twig_theme_test_link_generator:
+  path: '/twig-theme-test/link-generator'
+  defaults:
+    _content: '\Drupal\twig_theme_test\TwigThemeTestController::linkGeneratorRender'
+  requirements:
+    _access: 'TRUE'

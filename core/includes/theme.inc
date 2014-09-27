@@ -439,7 +439,7 @@ function _theme($hook, $variables = array()) {
     $variables['theme_hook_suggestions'] = $suggestions;
     // For backwards compatibility, pass 'theme_hook_suggestion' on to the
     // template engine. This is only set when calling a direct suggestion like
-    // '#theme' => 'menu_tree__shortcut_default' when the template exists in the
+    // '#theme' => 'menu__shortcut_default' when the template exists in the
     // current theme.
     if (isset($theme_hook_suggestion)) {
       $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
@@ -1833,22 +1833,10 @@ function template_preprocess_page(&$variables) {
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
-    $variables['main_menu']['#heading'] = array(
-      'text' => t('Main menu'),
-      'attributes' => array(
-        'id' => 'links__system_main_menu',
-        'class' => array('visually-hidden'),
-       ),
-    );
+    $variables['main_menu']['#prefix'] = '<h2 id="links__system_main_menu" class="visually-hidden">' . t('Main menu') . '</h2>';
   }
   if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu']['#heading'] = array(
-      'text' => t('Secondary menu'),
-      'attributes' => array(
-        'id' => 'links__system_secondary_menu',
-        'class' => array('visually-hidden'),
-      ),
-    );
+    $variables['secondary_menu']['#prefix'] = '<h2 id="links__system_secondary_menu" class="visually-hidden">' . t('Secondary menu') . '</h2>';
   }
 
   if ($node = \Drupal::routeMatch()->getParameter('node')) {
@@ -2346,12 +2334,9 @@ function drupal_common_theme() {
       'template' => 'pager',
     ),
     // From menu.inc.
-    'menu_link' => array(
-      'render element' => 'element',
-    ),
-    'menu_tree' => array(
-      'render element' => 'tree',
-      'template' => 'menu-tree',
+    'menu' => array(
+      'variables' => array('items' => array(), 'attributes' => array()),
+      'template' => 'menu',
     ),
     'menu_local_task' => array(
       'render element' => 'element',

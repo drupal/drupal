@@ -227,7 +227,9 @@ class SystemMenuBlockTest extends KernelTestBase {
     $no_active_trail_expectations['level_2_and_beyond'] = $no_active_trail_expectations['level_2_only'];
     $no_active_trail_expectations['level_3_and_beyond'] = [];
     foreach ($blocks as $id => $block) {
-      $this->assertIdentical($no_active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($block->build()), format_string('Menu block %id with no active trail renders the expected tree.', ['%id' => $id]));
+      $block_build = $block->build();
+      $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+      $this->assertIdentical($no_active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), format_string('Menu block %id with no active trail renders the expected tree.', ['%id' => $id]));
     }
 
     // Scenario 2: test all block instances when there's an active trail.
@@ -273,7 +275,9 @@ class SystemMenuBlockTest extends KernelTestBase {
     ];
     $active_trail_expectations['level_3_and_beyond'] = $active_trail_expectations['level_3_only'];
     foreach ($blocks as $id => $block) {
-      $this->assertIdentical($active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($block->build()), format_string('Menu block %id with an active trail renders the expected tree.', ['%id' => $id]));
+      $block_build = $block->build();
+      $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+      $this->assertIdentical($active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), format_string('Menu block %id with an active trail renders the expected tree.', ['%id' => $id]));
     }
   }
 
@@ -292,8 +296,8 @@ class SystemMenuBlockTest extends KernelTestBase {
     $level = [];
     foreach (Element::children($build) as $id) {
       $level[$id] = [];
-      if (isset($build[$id]['#below'])) {
-        $level[$id] = $this->convertBuiltMenuToIdTree($build[$id]['#below']);
+      if (isset($build[$id]['below'])) {
+        $level[$id] = $this->convertBuiltMenuToIdTree($build[$id]['below']);
       }
     }
     return $level;

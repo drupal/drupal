@@ -139,19 +139,10 @@ function bartik_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for menu-tree.html.twig.
- *
- * @see template_preprocess_menu_tree()
+ * Implements hook_preprocess_HOOK() for menu.html.twig.
  */
-function bartik_preprocess_menu_tree(&$variables) {
+function bartik_preprocess_menu(&$variables) {
   $variables['attributes']['class'][] = 'clearfix';
-}
-
-/**
- * Implements THEME_menu_tree__MENUNAME().
- */
-function bartik_menu_tree__shortcut_default($variables) {
-  return '<ul class="menu">' . $variables['tree'] . '</ul>';
 }
 
 /**

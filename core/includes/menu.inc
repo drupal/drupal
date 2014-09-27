@@ -308,64 +308,6 @@ use Drupal\Core\Template\Attribute;
  */
 
 /**
- * Implements template_preprocess_HOOK() for theme_menu_tree().
- */
-function template_preprocess_menu_tree(&$variables) {
-  if (isset($variables['tree']['#heading'])) {
-    $variables['heading'] = $variables['tree']['#heading'];
-    $heading = &$variables['heading'];
-    // Convert a string heading into an array, using a H2 tag by default.
-    if (is_string($heading)) {
-      $heading = array('text' => $heading);
-    }
-    // Merge in default array properties into $heading.
-    $heading += array(
-      'level' => 'h2',
-      'attributes' => array(),
-    );
-    // Convert the attributes array into an Attribute object.
-    $heading['attributes'] = new Attribute($heading['attributes']);
-    $heading['text'] = String::checkPlain($heading['text']);
-  }
-
-  if (isset($variables['tree']['#attributes'])) {
-    $variables['attributes'] = new Attribute($variables['tree']['#attributes']);
-  }
-  else {
-    $variables['attributes'] = new Attribute();
-  }
-  if (!isset($variables['attributes']['class'])) {
-    $variables['attributes']['class'] = array();
-  }
-  $variables['attributes']['class'][] = 'menu';
-
-  $variables['tree'] = $variables['tree']['#children'];
-}
-
-/**
- * Returns HTML for a menu link and submenu.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: Structured array data for a menu link.
- *
- * @ingroup themeable
- */
-function theme_menu_link(array $variables) {
-  $element = $variables['element'];
-  $sub_menu = '';
-
-  if ($element['#below']) {
-    $sub_menu = drupal_render($element['#below']);
-  }
-  /** @var \Drupal\Core\Url $url */
-  $url = $element['#url'];
-  $url->setOption('set_active_class', TRUE);
-  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
-  return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
-}
-
-/**
  * Prepares variables for single local task link templates.
  *
  * Default template: menu-local-task.html.twig.
