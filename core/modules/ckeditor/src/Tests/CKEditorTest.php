@@ -378,6 +378,7 @@ class CKEditorTest extends DrupalUnitTestBase {
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
       'justifyClasses' => array('text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'),
+      'entities' => FALSE,
     );
   }
 

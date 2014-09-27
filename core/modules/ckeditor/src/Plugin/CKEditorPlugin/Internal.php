@@ -99,6 +99,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
       'justifyClasses' => array('text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'),
+      'entities' => FALSE,
     );
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
