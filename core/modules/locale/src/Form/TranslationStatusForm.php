@@ -277,6 +277,8 @@ class TranslationStatusForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('locale', 'fetch.inc');
+    $this->moduleHandler->loadInclude('locale', 'bulk.inc');
+
     $langcodes = array_filter($form_state->getValue('langcodes'));
     $projects = array_filter($form_state->getValue('projects_update'));
 
@@ -294,8 +296,13 @@ class TranslationStatusForm extends FormBase {
       batch_set($batch);
     }
     else {
+      // Set a batch to download and import translations.
       $batch = locale_translation_batch_fetch_build($projects, $langcodes, $options);
       batch_set($batch);
+      // Set a batch to update configuration as well.
+      if ($batch = locale_config_batch_update_components($options, $langcodes)) {
+        batch_set($batch);
+      }
     }
   }
 
