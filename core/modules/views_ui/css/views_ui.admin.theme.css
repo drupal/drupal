@@ -728,6 +728,10 @@ td.group-title {
   background-color: #f3f5ee;
 }
 
+.views-ui-display-tab-actions.views-ui-display-tab-bucket .views-display-setting {
+  background-color: transparent;
+}
+
 .views-ui-display-tab-bucket .views-group-text {
   margin-top: 6px;
   margin-bottom: 6px;
