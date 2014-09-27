@@ -49,7 +49,7 @@ function locale_test_locale_translation_projects_alter(&$projects) {
 
     // Instead of the default ftp.drupal.org we use the file system of the test
     // instance to simulate a remote file location.
-    $url = url(NULL, array('absolute' => TRUE));
+    $url = \Drupal::url('<none>', [], ['absolute' => TRUE]);
     $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.

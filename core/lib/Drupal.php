@@ -188,6 +188,16 @@ class Drupal {
   }
 
   /**
+   * Retrives the request stack.
+   *
+   * @return \Symfony\Component\HttpFoundation\RequestStack
+   *   The request stack
+   */
+  public static function requestStack() {
+    return static::$container->get('request_stack');
+  }
+
+  /**
    * Retrieves the currently active route match object.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface

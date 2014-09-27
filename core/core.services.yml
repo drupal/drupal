@@ -819,6 +819,14 @@ services:
       - { name: path_processor_inbound, priority: 200 }
       - { name: path_processor_outbound, priority: 200 }
     arguments: ['@config.factory']
+  path_processor_none:
+    class: Drupal\Core\PathProcessor\PathProcessorNone
+    tags:
+      - { name: path_processor_outbound, priority: 200 }
+  path_processor_current:
+    class: Drupal\Core\PathProcessor\PathProcessorCurrent
+    tags:
+      - { name: path_processor_outbound, priority: 200 }
   path_processor_alias:
     class: Drupal\Core\PathProcessor\PathProcessorAlias
     tags:

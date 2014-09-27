@@ -97,7 +97,7 @@ function contact_mail($key, &$message, $params) {
     '!site-name' => \Drupal::config('system.site')->get('name'),
     '!subject' => $contact_message->getSubject(),
     '!form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
-    '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
+    '!form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
     '!sender-name' => user_format_name($sender),
   );
   if ($sender->isAuthenticated()) {

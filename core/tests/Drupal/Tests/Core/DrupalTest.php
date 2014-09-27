@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core;
 
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the Drupal class.
@@ -129,6 +130,18 @@ class DrupalTest extends UnitTestCase {
     $this->setMockContainerService('queue', $queue);
 
     $this->assertNotNull(\Drupal::queue('test_queue', TRUE));
+  }
+
+  /**
+   * Tests the testRequestStack() method.
+   *
+   * @covers ::requestStack
+   */
+  public function testRequestStack() {
+    $request_stack = new RequestStack();
+    $this->setMockContainerService('request_stack', $request_stack);
+
+    $this->assertSame($request_stack, \Drupal::requestStack());
   }
 
   /**

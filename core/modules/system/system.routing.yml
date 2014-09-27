@@ -352,6 +352,12 @@ system.theme_settings_theme:
   requirements:
     _access: 'TRUE'
 
+'<none>':
+  path: '<none>'
+
+'<current>':
+  path: '<current>'
+
 system.modules_uninstall:
   path: '/admin/modules/uninstall'
   defaults:
