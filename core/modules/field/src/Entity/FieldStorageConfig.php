@@ -20,7 +20,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *
  * @ConfigEntityType(
  *   id = "field_storage_config",
- *   label = @Translation("Field"),
+ *   label = @Translation("Field storage"),
  *   handlers = {
  *     "storage" = "Drupal\field\FieldStorageConfigStorage"
  *   },
