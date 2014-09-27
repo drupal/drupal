@@ -27,8 +27,8 @@ interface TranslatableInterface {
    *   (optional) Whether the default language should be included. Defaults to
    *   TRUE.
    *
-   * @return
-   *   An array of language objects, keyed by language codes.
+   * @return \Drupal\Core\Language\LanguageInterface[]
+   *   An associative array of language objects, keyed by language codes.
    */
   public function getTranslationLanguages($include_default = TRUE);
 

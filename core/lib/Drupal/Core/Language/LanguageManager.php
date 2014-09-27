@@ -28,7 +28,7 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * An array of all the available languages keyed by language code.
    *
-   * @var array
+   * @var \Drupal\Core\Language\LanguageInterface[]
    */
   protected $languages;
 

@@ -92,7 +92,7 @@ interface LanguageManagerInterface {
    *   It can be: LanguageInterface::STATE_CONFIGURABLE,
    *   LanguageInterface::STATE_LOCKED, LanguageInterface::STATE_ALL.
    *
-   * @return array
+   * @return \Drupal\Core\Language\LanguageInterface[]
    *   An associative array of languages, keyed by the language code.
    */
   public function getLanguages($flags = LanguageInterface::STATE_CONFIGURABLE);
