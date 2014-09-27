@@ -90,6 +90,8 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Providing administrative help') . '</dt>';
       $output .= '<dd>' . t('Page-specific administrative help text that is provided by the System module and other modules is displayed in the System Help block. This block can be placed and configured on the <a href="!blocks">Block layout page</a>.', array('!blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</dd>';
       $output .= '</dl>';
+      $output .= '<dt>' . t('Disabling drag-and-drop functionality') . '</dt>';
+      $output .= '<dd>' . t('The default drag-and-drop user interface for ordering tables in Drupal presents a challenge for some users, including users of screen readers and other assistive technology. The drag-and-drop interface can be disabled in a table by clicking a link labeled "Show row weights" above the table. The replacement interface allows users to order the table by choosing numerical weights instead of dragging table rows.') . '</dd>';
       return $output;
 
     case 'system.admin_index':
