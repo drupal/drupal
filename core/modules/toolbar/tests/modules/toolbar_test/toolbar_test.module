@@ -32,9 +32,9 @@ function toolbar_test_toolbar() {
       'content' => array(
         '#theme' => 'item_list',
         '#items' => array(
-          l(t('link 1'), '<front>', array('attributes' => array('title' => 'Test link 1 title'))),
-          l(t('link 2'), '<front>', array('attributes' => array('title' => 'Test link 2 title'))),
-          l(t('link 3'), '<front>', array('attributes' => array('title' => 'Test link 3 title'))),
+          \Drupal::l(t('link 1'), '<front>', [], array('attributes' => array('title' => 'Test link 1 title'))),
+          \Drupal::l(t('link 2'), '<front>', [], array('attributes' => array('title' => 'Test link 2 title'))),
+          \Drupal::l(t('link 3'), '<front>', [], array('attributes' => array('title' => 'Test link 3 title'))),
         ),
         '#attributes' => array(
           'class' => array('menu'),

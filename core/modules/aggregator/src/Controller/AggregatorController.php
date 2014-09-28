@@ -121,7 +121,7 @@ class AggregatorController extends ControllerBase {
     $rows = array();
     foreach ($feeds as $feed) {
       $row = array();
-      $row[] = l($feed->label(), "aggregator/sources/" . $feed->id());
+      $row[] = $this->getLinkGenerator()->generateFromUrl($feed->label(), $feed->urlInfo());
       $row[] = $this->dateFormatter->formatInterval($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();

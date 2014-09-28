@@ -1034,7 +1034,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->id() . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => array('views-ajax-link', $class), 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return \Drupal::l($text, 'views_ui.form_display', ['js' => 'nojs', 'view' => $this->view->storage->id(), 'display_id' => $this->display['id'], 'type' => $section], array('attributes' => array('class' => array('views-ajax-link', $class), 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**

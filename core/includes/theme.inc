@@ -948,7 +948,7 @@ function template_preprocess_status_messages(&$variables) {
  * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
  *   jQuery('li:has("a.active")')
  *
- * @see l()
+ * @see \Drupal\Core\Utility\LinkGenerator
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
  * @see system_page_build()
  */

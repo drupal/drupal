@@ -41,7 +41,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
     $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for adding a block to a region, and for controlling the order of blocks within regions. To add a block to a region, or to configure its specific title and visibility settings, click the block title under <em>Place blocks</em>. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
-    $output .= '<p>' . l(t('Demonstrate block regions (!theme)', array('!theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';
+    $output .= '<p>' . \Drupal::l(t('Demonstrate block regions (!theme)', array('!theme' => $themes[$demo_theme]->info['name'])), 'block.admin_demo', array('theme' => $demo_theme)) . '</p>';
     return $output;
   }
 }

@@ -594,13 +594,13 @@ function locale_form_language_admin_overview_form_alter(&$form, FormStateInterfa
     );
     if (!$language->locked && ($langcode != 'en' || locale_translate_english())) {
       $form['languages'][$langcode]['locale_statistics'] = array(
-        '#markup' => l(
+        '#markup' => \Drupal::l(
           t('@translated/@total (@ratio%)', array(
             '@translated' => $stats[$langcode]['translated'],
             '@total' => $total_strings,
             '@ratio' => $stats[$langcode]['ratio'],
           )),
-          'admin/config/regional/translate',
+          'locale.translate_page', array(),
           array('query' => array('langcode' => $langcode))
         ),
       );

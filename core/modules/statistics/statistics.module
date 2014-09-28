@@ -147,41 +147,6 @@ function statistics_get($nid) {
 }
 
 /**
- * Generates a link to a path, truncating the displayed text to a given width.
- *
- * @param string $path
- *   The path to generate the link for.
- * @param int $width
- *   The width to set the displayed text of the path.
- *
- * @return string
- *   A string as a link, truncated to the width, linked to the given $path.
- */
-function _statistics_link($path, $width = 35) {
-  $title = \Drupal::service('path.alias_manager')->getAliasByPath($path);
-  $title = truncate_utf8($title, $width, FALSE, TRUE);
-  return l($title, $path);
-}
-
-/**
- * Formats an item for display, including both the item title and the link.
- *
- * @param string $title
- *   The text to link to a path; will be truncated to a maximum width of 35.
- * @param string $path
- *   The path to link to; will default to '/'.
- *
- * @return string
- *   An HTML string with $title linked to the $path.
- */
-function _statistics_format_item($title, $path) {
-  $path = ($path ? $path : '/');
-  $output  = ($title ? "$title<br />" : '');
-  $output .= _statistics_link($path);
-  return $output;
-}
-
-/**
  * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function statistics_node_predelete(EntityInterface $node) {

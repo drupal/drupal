@@ -109,8 +109,8 @@ if (authorize_access_allowed()) {
     }
     else {
       $links = array_merge($links, array(
-        l(t('Administration pages'), 'admin'),
-        l(t('Front page'), '<front>'),
+        \Drupal::l(t('Administration pages'), 'system.admin'),
+        \Drupal::l(t('Front page'), '<front>'),
       ));
     }
 

@@ -31,7 +31,7 @@ function template_preprocess_node_add_list(&$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->type] = array(
         'type' => $type->type,
-        'add_link' => l($type->name, 'node/add/' . $type->type),
+        'add_link' => \Drupal::l($type->name, 'node.add', array('node_type' => $type->type)),
         'description' => Xss::filterAdmin($type->description),
       );
     }

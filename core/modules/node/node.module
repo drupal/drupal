@@ -16,6 +16,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -185,7 +186,7 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
 /**
  * Gathers a listing of links to nodes.
  *
- * @param $result
+ * @param \Drupal\Core\Database\StatementInterface $result
  *   A database result object from a query to fetch node entities. If your
  *   query joins the {comment_entity_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
@@ -197,12 +198,14 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
  *   A renderable array containing a list of linked node titles fetched from
  *   $result, or FALSE if there are no rows in $result.
  */
-function node_title_list($result, $title = NULL) {
+function node_title_list(StatementInterface $result, $title = NULL) {
   $items = array();
   $num_rows = FALSE;
-  foreach ($result as $node) {
-    // Do not use $node->label() here, because $node comes from the database.
-    $items[] = l($node->title, 'node/' . $node->nid, !empty($node->comment_count) ? array('attributes' => array('title' => format_plural($node->comment_count, '1 comment', '@count comments'))) : array());
+  foreach ($result as $row) {
+    // Do not use $node->label() or $node->urlInfo() here, because we only have
+    // database rows, not actual nodes.
+    $options = !empty($row->comment_count) ? array('attributes' => array('title' => format_plural($row->comment_count, '1 comment', '@count comments'))) : array();
+    $items[] = \Drupal::linkGenerator()->generate($row->title, 'entity.node.canonical', ['node' => $row->nid], $options);
     $num_rows = TRUE;
   }
 

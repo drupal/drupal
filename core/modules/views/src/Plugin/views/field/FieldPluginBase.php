@@ -13,6 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;

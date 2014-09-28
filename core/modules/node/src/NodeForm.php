@@ -408,7 +408,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $insert = $node->isNew();
     $node->save();
-    $node_link = l(t('View'), 'node/' . $node->id());
+    $node_link =  $this->getLinkGenerator()->generateFromUrl(t('View'), $node->urlInfo());
     $context = array('@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link);
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 

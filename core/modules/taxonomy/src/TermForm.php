@@ -134,14 +134,17 @@ class TermForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $term = $this->entity;
 
-    switch ($term->save()) {
+    $result = $term->save();
+
+    $link = $this->getLinkGenerator()->generateFromUrl($this->t('Edit'), $term->urlInfo('edit-form'));
+    switch ($result) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new term %term.', array('%term' => $term->getName())));
-        $this->logger('taxonomy')->notice('Created new term %term.', array('%term' => $term->getName(), 'link' => l($this->t('Edit'), 'taxonomy/term/' . $term->id() . '/edit')));
+        $this->logger('taxonomy')->notice('Created new term %term.', array('%term' => $term->getName(), 'link' => $link));
         break;
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated term %term.', array('%term' => $term->getName())));
-        $this->logger('taxonomy')->notice('Updated term %term.', array('%term' => $term->getName(), 'link' => l($this->t('Edit'), 'taxonomy/term/' . $term->id() . '/edit')));
+        $this->logger('taxonomy')->notice('Updated term %term.', array('%term' => $term->getName(), 'link' => $link));
         break;
     }
 

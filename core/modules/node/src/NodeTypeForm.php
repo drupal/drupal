@@ -230,7 +230,7 @@ class NodeTypeForm extends EntityForm {
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message(t('The content type %name has been added.', $t_args));
-      $context = array_merge($t_args, array('link' => l(t('View'), 'admin/structure/types')));
+      $context = array_merge($t_args, array('link' => \Drupal::l(t('View'), 'node.overview_types')));
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 

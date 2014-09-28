@@ -82,8 +82,8 @@ class Theme extends Updater implements UpdaterInterface {
    */
   public function postInstallTasks() {
     return array(
-      l(t('Install newly added themes'), 'admin/appearance'),
-      l(t('Administration pages'), 'admin'),
+      \Drupal::l(t('Install newly added themes'), 'system.themes_page'),
+      \Drupal::l(t('Administration pages'), 'system.admin'),
     );
   }
 }

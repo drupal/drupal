@@ -1565,7 +1565,7 @@ function hook_requirements($phase) {
   // Test PHP version
   $requirements['php'] = array(
     'title' => t('PHP'),
-    'value' => ($phase == 'runtime') ? l(phpversion(), 'admin/reports/status/php') : phpversion(),
+    'value' => ($phase == 'runtime') ? \Drupal::l(phpversion(), 'system.php') : phpversion(),
   );
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));

@@ -518,7 +518,10 @@ function theme_book_link(array $variables) {
     $sub_menu = drupal_render($element['#below']);
   }
   $element['#localized_options']['set_active_class'] = TRUE;
-  $output = l($element['#title'], $element['#href'], $element['#localized_options']);
+  /** @var \Drupal\Core\Url $url */
+  $url = $element['#url'];
+  $url->setOptions($element['#localized_options'] + $url->getOptions());
+  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 

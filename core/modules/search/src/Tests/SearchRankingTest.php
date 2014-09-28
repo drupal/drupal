@@ -218,7 +218,7 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html'));
+          $settings['body'] = array(array('value' => \Drupal::l('Drupal Rocks', '<front>'), 'format' => 'full_html'));
           break;
         case 'notag':
           $settings['body'] = array(array('value' => 'Drupal Rocks'));

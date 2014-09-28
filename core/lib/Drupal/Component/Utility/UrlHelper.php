@@ -133,7 +133,7 @@ class UrlHelper {
    *   - query: An array of query parameters from $url, if they exist.
    *   - fragment: The fragment component from $url, if it exists.
    *
-   * @see l()
+   * @see \Drupal\Core\Utility\LinkGenerator
    * @see url()
    * @see http://tools.ietf.org/html/rfc3986
    *

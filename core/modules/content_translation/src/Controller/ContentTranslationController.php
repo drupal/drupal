@@ -122,11 +122,13 @@ class ContentTranslationController extends ControllerBase {
           $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
-          $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $entity->getSystemPath());
-          $link += array('language' => $language);
-          $row_title = l($label, $link['href'], $link);
+          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : array('url' => $entity->urlInfo());
+          if (!empty($link['url'])) {
+            $link['url']->setOption('language', $language);
+            $row_title = $this->getLinkGenerator()->generateFromUrl($label, $link['url']);
+          }
 
-          if (empty($link['href'])) {
+          if (empty($link['url'])) {
             $row_title = $is_original ? $label : $this->t('n/a');
           }
 
@@ -134,10 +136,7 @@ class ContentTranslationController extends ControllerBase {
           // the entity form, otherwise if we are not dealing with the original
           // language we point the link to the translation form.
           if ($entity->access('update')) {
-            $links['edit'] = array(
-              'href' => $entity->getSystemPath('edit-form'),
-              'language' => $language,
-            );
+            $links['edit'] = $entity->urlInfo('edit-form')->toArray() + ['language' => $language];
           }
           elseif (!$is_original && $handler->getTranslationAccess($entity, 'update')->isAllowed()) {
             $links['edit'] = $edit_url->toArray();

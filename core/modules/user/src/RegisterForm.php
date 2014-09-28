@@ -115,7 +115,7 @@ class RegisterForm extends AccountForm {
     $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
 
-    $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state->getValue('name'), '%email' => '<' . $form_state->getValue('mail') . '>', 'type' => l($this->t('Edit'), 'user/' . $account->id() . '/edit')));
+    $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state->getValue('name'), '%email' => '<' . $form_state->getValue('mail') . '>', 'type' => \Drupal::l($this->t('Edit'), 'entity.user.edit_form', array('user' => $account->id()))));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;

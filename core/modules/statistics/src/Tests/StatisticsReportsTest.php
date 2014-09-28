@@ -49,7 +49,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->assertText('All time', 'Found the all time popular content.');
     $this->assertText('Last viewed', 'Found the last viewed popular content.');
 
-    $this->assertRaw(l($node->label(), 'node/' . $node->id()), 'Found link to visited node.');
+    $this->assertRaw(\Drupal::linkGenerator()->generateFromUrl($node->label(), $node->urlInfo()), 'Found link to visited node.');
   }
 
 }

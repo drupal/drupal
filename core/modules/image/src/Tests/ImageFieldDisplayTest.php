@@ -85,7 +85,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = l($image, file_create_url($image_uri), array('html' => TRUE));
+    $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');

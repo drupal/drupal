@@ -44,14 +44,14 @@ class UserLoginBlock extends BlockBase {
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-      $items['create_account'] = l(t('Create new account'), 'user/register', array(
+      $items['create_account'] = \Drupal::l(t('Create new account'), 'user.register', array(), array(
         'attributes' => array(
           'title' => t('Create a new user account.'),
           'class' => array('create-account-link'),
         ),
       ));
     }
-    $items['request_password'] = l(t('Request new password'), 'user/password', array(
+    $items['request_password'] = \Drupal::l(t('Request new password'), 'user.pass', array(), array(
       'attributes' => array(
         'title' => t('Request new password via email.'),
         'class' => array('request-password-link'),

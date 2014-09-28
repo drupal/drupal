@@ -86,7 +86,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         if (isset($info[$provider]['name'])) {
           $display = $info[$provider]['name'];
           if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
-            $items[] = l($display, 'admin/help/' . $provider);
+            $items[] = \Drupal::l($display, 'help.page', array('name' => $provider));
           }
           else {
             $items[] = $display;

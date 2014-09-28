@@ -134,6 +134,6 @@ function _update_requirement_check($project, $type) {
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
     $requirement_label .= ' ' . t('(version @version available)', array('@version' => $project['recommended']));
   }
-  $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
+  $requirement['value'] = \Drupal::l($requirement_label, update_manager_access() ? 'update.report_update' : 'update.status');
   return $requirement;
 }

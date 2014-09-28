@@ -40,6 +40,9 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Rebuild the router, otherwise we can't generate links.
+    $this->container->get('router.builder')->rebuild();
+
     $this->installSchema('dblog', array('watchdog'));
 
     ViewTestData::createTestViews(get_class($this), array('dblog_test_views'));
@@ -57,12 +60,12 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     // Setup a watchdog entry without tokens.
     $entries[] = array(
       'message' => $this->randomMachineName(),
-      'variables' => array('link' => l('Link', 'node/1')),
+      'variables' => array('link' => \Drupal::l('Link', '<front>')),
     );
     // Setup a watchdog entry with one token.
     $entries[] = array(
       'message' => '@token1',
-      'variables' => array('@token1' => $this->randomMachineName(), 'link' => l('Link', 'node/2')),
+      'variables' => array('@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', '<front>')),
     );
     // Setup a watchdog entry with two tokens.
     $entries[] = array(
@@ -72,7 +75,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
       'variables' => array(
         '@token1' => $this->randomMachineName(),
         '!token2' => $this->randomMachineName(),
-        'link' => l('<object>Link</object>', 'node/2', array('html' => TRUE)),
+        'link' => \Drupal::l('<object>Link</object>', '<front>'),
       ),
     );
     $logger_factory = $this->container->get('logger.factory');

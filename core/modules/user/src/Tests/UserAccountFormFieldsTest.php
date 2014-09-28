@@ -79,6 +79,10 @@ class UserAccountFormFieldsTest extends DrupalUnitTestBase {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(array('user'));
 
+    // Install the router table and then rebuild.
+    $this->installSchema('system', ['router']);
+    \Drupal::service('router.builder')->rebuild();
+
     $form = $this->buildAccountForm('default');
 
     // Verify name and pass field order.

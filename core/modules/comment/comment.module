@@ -727,8 +727,8 @@ function template_preprocess_comment(&$variables) {
     $variables['signature'] = '';
   }
   if (isset($comment->in_preview)) {
-    $variables['title'] = l($comment->getSubject(), '');
-    $variables['permalink'] = l(t('Permalink'), '');
+    $variables['title'] = \Drupal::l($comment->getSubject(), '<front>');
+    $variables['permalink'] = \Drupal::l(t('Permalink'), '<front>');
   }
   else {
     $uri = $comment->urlInfo();

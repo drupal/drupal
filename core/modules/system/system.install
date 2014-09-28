@@ -59,7 +59,7 @@ function system_requirements($phase) {
     $requirements['php'] = array(
       'title' => t('PHP'),
       // $phpversion is safe and output of l() is safe, so this value is safe.
-      'value' => SafeMarkup::set(($phase == 'runtime') ? $phpversion . ' (' . l(t('more information'), 'admin/reports/status/php') . ')' : $phpversion),
+      'value' => SafeMarkup::set(($phase == 'runtime') ? $phpversion . ' (' . \Drupal::l(t('more information'), 'system.php') . ')' : $phpversion),
     );
   }
   else {

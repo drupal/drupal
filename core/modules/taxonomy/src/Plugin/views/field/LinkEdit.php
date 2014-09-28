@@ -68,7 +68,7 @@ class LinkEdit extends FieldPluginBase {
       ));
       if ($term->access('update')) {
         $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
-        return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));
+        return \Drupal::l($text, 'entity.taxonomy.edit_form', ['taxonomy_term' => $tid], array('query' => drupal_get_destination()));
       }
     }
   }

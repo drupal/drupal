@@ -32,7 +32,7 @@ function node_requirements($phase) {
       'value' => $value,
       // The result of t() is safe and so is the result of l(). Preserving
       // safe object.
-      'description' => SafeMarkup::set($description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild')),
+      'description' => SafeMarkup::set($description . ' ' . \Drupal::l(t('Rebuild permissions'), 'node.configure_rebuild_confirm')),
     );
   }
   return $requirements;

@@ -98,9 +98,9 @@ class Module extends Updater implements UpdaterInterface {
    */
   public function postInstallTasks() {
     return array(
-      l(t('Install another module'), 'admin/modules/install'),
-      l(t('Enable newly added modules'), 'admin/modules'),
-      l(t('Administration pages'), 'admin'),
+      \Drupal::l(t('Install another module'), 'update.module_install'),
+      \Drupal::l(t('Enable newly added modules'), 'system.modules_list'),
+      \Drupal::l(t('Administration pages'), 'system.admin'),
     );
   }
 

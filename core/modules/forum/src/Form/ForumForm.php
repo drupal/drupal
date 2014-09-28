@@ -79,16 +79,19 @@ class ForumForm extends TermForm {
     $term_storage = $this->entityManager->getStorage('taxonomy_term');
     $status = $term_storage->save($term);
 
+    $route_name = $this->urlStub == 'container' ? 'forum.edit_container' : 'forum.edit_forum';
+    $route_parameters  = ['taxonomy_term' => $term->id()];
+    $link = \Drupal::l($this->t('Edit'), $route_name, $route_parameters);
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
-        $this->logger('forum')->notice('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id())));
+        $this->logger('forum')->notice('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => $link));
         $form_state->setValue('tid', $term->id());
         break;
 
       case SAVED_UPDATED:
         drupal_set_message($this->t('The @type %term has been updated.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
-        $this->logger('forum')->notice('Updated @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id())));
+        $this->logger('forum')->notice('Updated @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => $link));
         break;
     }
 

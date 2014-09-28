@@ -536,11 +536,11 @@ function template_preprocess_forums(&$variables) {
         if ($variables['tid'] != $topic->forum_tid) {
           $variables['topics'][$id]->moved = TRUE;
           $variables['topics'][$id]->title = String::checkPlain($topic->getTitle());
-          $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
+          $variables['topics'][$id]->message = \Drupal::l(t('This topic has been moved'), 'forum.page', ['taxonomy_term' => $topic->forum_tid]);
         }
         else {
           $variables['topics'][$id]->moved = FALSE;
-          $variables['topics'][$id]->title_link = l($topic->getTitle(), 'node/' . $topic->id());
+          $variables['topics'][$id]->title_link = \Drupal::linkGenerator()->generateFromUrl($topic->getTitle(), $topic->urlInfo());
           $variables['topics'][$id]->message = '';
         }
         $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
