@@ -9,6 +9,8 @@ namespace Drupal\Core\Config;
 
 /**
  * Defines the interface for a configuration object factory.
+ *
+ * @ingroup config_api
  */
 interface ConfigFactoryInterface {
 

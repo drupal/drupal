@@ -23,6 +23,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * is used for reading and writing the configuration data.
  *
  * @see \Drupal\Core\Config\StorageInterface
+ *
+ * @ingroup config_api
  */
 class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface {
 
