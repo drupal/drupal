@@ -105,6 +105,9 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    *
    * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
    * @see \Drupal\Core\Entity\ContentEntityInterface::baseFieldDefinitions()
+   *
+   * @todo WARNING: This method will be changed in
+   *   https://www.drupal.org/node/2346347.
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions);
 

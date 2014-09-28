@@ -1658,6 +1658,9 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
  * @see hook_entity_base_field_info()
  * @see hook_entity_bundle_field_info()
  * @see hook_entity_bundle_field_info_alter()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346329.
  */
 function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   // Alter the mymodule_text field to use a custom class.
@@ -1690,6 +1693,9 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   // Add a property only to nodes of the 'article' bundle.
@@ -1716,6 +1722,9 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
  * @see hook_entity_base_field_info()
  * @see hook_entity_base_field_info_alter()
  * @see hook_entity_bundle_field_info()
+ *
+ * @todo WARNING: This hook will be changed in
+ *   https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->id() == 'node' && $bundle == 'article' && !empty($fields['mymodule_text'])) {
