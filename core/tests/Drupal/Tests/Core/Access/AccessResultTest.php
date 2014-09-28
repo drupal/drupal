@@ -32,7 +32,7 @@ class AccessResultTest extends UnitTestCase {
    * Tests the construction of an AccessResult object.
    *
    * @covers ::__construct
-   * @covers ::create
+   * @covers ::neutral
    * @covers ::getCacheBin
    */
   public function testConstruction() {
@@ -55,7 +55,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::allow
    * @covers ::allowed
    * @covers ::isAllowed
    * @covers ::isForbidden
@@ -75,7 +74,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::forbid
    * @covers ::forbidden
    * @covers ::isAllowed
    * @covers ::isForbidden
@@ -95,7 +93,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::allowIf
    * @covers ::allowedIf
    * @covers ::isAllowed
    * @covers ::isForbidden
@@ -116,7 +113,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::forbidIf
    * @covers ::forbiddenIf
    * @covers ::isAllowed
    * @covers ::isForbidden
@@ -325,7 +321,6 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::getCacheKeys
    * @covers ::cachePerRole
    * @covers ::cachePerUser
-   * @covers ::allowIfHasPermission
    * @covers ::allowedIfHasPermission
    */
   public function testCacheContexts() {
@@ -805,6 +800,45 @@ class AccessResultTest extends UnitTestCase {
     else {
       $this->assertFalse($result instanceof CacheableInterface, 'Result is not an instance of CacheableInterface.');
     }
+  }
+
+  /**
+   * Tests allowedIfHasPermissions().
+   *
+   * @covers ::allowedIfHasPermissions
+   *
+   * @dataProvider providerTestAllowedIfHasPermissions
+   */
+  public function testAllowIfHasPermissions($permissions, $conjunction, $expected_access) {
+    $account = $this->getMock('\Drupal\Core\Session\AccountInterface');
+    $account->expects($this->any())
+      ->method('hasPermission')
+      ->willReturnMap([
+        ['allowed', TRUE],
+        ['denied', FALSE],
+      ]);
+
+    $access_result = AccessResult::allowedIfHasPermissions($account, $permissions, $conjunction);
+    $this->assertEquals($expected_access, $access_result);
+  }
+
+  /**
+   * Provides data for the testAllowedIfHasPermissions() method.
+   *
+   * @return array
+   */
+  public function providerTestAllowedIfHasPermissions() {
+    return [
+      [[], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
+      [[], 'OR', AccessResult::allowedIf(FALSE)->cachePerRole()],
+      [['allowed'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
+      [['allowed'], 'AND', AccessResult::allowedIf(TRUE)->cachePerRole()],
+      [['denied'], 'OR', AccessResult::allowedIf(FALSE)->cachePerRole()],
+      [['denied'], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
+      [['allowed', 'denied'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
+      [['allowed', 'denied', 'other'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
+      [['allowed', 'denied'], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
+    ];
   }
 
 }

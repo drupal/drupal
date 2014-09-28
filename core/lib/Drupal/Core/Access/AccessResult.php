@@ -139,11 +139,52 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
    *   The permission to check for.
    *
    * @return \Drupal\Core\Access\AccessResult
-   *   If the account has the permission, isAlowed() will be TRUE, otherwise
+   *   If the account has the permission, isAllowed() will be TRUE, otherwise
    *   isNeutral() will be TRUE.
    */
   public static function allowedIfHasPermission(AccountInterface $account, $permission) {
     return static::allowedIf($account->hasPermission($permission))->cachePerRole();
+  }
+
+  /**
+   * Creates an allowed access result if the permissions are present, neutral otherwise.
+   *
+   * Convenience method, checks the permissions and calls ::cachePerRole().
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account for which to check permissions.
+   * @param array $permissions
+   *   The permissions to check.
+   * @param string $conjunction
+   *   (optional) 'AND' if all permissions are required, 'OR' in case just one.
+   *   Defaults to 'AND'
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   If the account has the permissions, isAllowed() will be TRUE, otherwise
+   *   isNeutral() will be TRUE.
+   */
+  public static function allowedIfHasPermissions(AccountInterface $account, array $permissions, $conjunction = 'AND') {
+    $access = FALSE;
+
+    if ($conjunction == 'AND' && !empty($permissions)) {
+      $access = TRUE;
+      foreach ($permissions as $permission) {
+        if (!$permission_access = $account->hasPermission($permission)) {
+          $access = FALSE;
+          break;
+        }
+      }
+    }
+    else {
+      foreach ($permissions as $permission) {
+        if ($permission_access = $account->hasPermission($permission)) {
+          $access = TRUE;
+          break;
+        }
+      }
+    }
+
+    return static::allowedIf($access)->cachePerRole();
   }
 
   /**

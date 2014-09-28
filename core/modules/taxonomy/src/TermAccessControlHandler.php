@@ -29,11 +29,11 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
         break;
 
       case 'update':
-        return AccessResult::allowedIf($account->hasPermission("edit terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy'))->cachePerRole();
+        return AccessResult::allowedIfHasPermissions($account, ["edit terms in {$entity->bundle()}", 'administer taxonomy'], 'OR');
         break;
 
       case 'delete':
-        return AccessResult::allowedIf($account->hasPermission("delete terms in {$entity->bundle()}") || $account->hasPermission('administer taxonomy'))->cachePerRole();
+        return AccessResult::allowedIfHasPermissions($account, ["delete terms in {$entity->bundle()}", 'administer taxonomy'], 'OR');
         break;
 
       default:

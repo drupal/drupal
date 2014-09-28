@@ -46,8 +46,7 @@ class ShortcutSetAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    $condition = $account->hasPermission('administer shortcuts') || ($account->hasPermission('access shortcuts') && $account->hasPermission('customize shortcut links'));
-    return AccessResult::allowedIf($condition)->cachePerRole();
+    return AccessResult::allowedIfHasPermission($account, 'administer shortcuts')->orIf(AccessResult::allowedIfHasPermissions($account, ['access shortcuts', 'customize shortcut links'], 'AND'));
   }
 
 }

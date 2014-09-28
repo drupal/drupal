@@ -23,7 +23,7 @@ class PathFieldItemList extends FieldItemList {
     if ($operation == 'view') {
       return AccessResult::allowed();
     }
-    return AccessResult::allowedIf($account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'))->cachePerRole();
+    return AccessResult::allowedIfHasPermissions($account, ['create url aliases', 'administer url aliases'], 'OR')->cachePerRole();
   }
 
 }
