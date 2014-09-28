@@ -138,7 +138,7 @@ class VocabularyForm extends EntityForm {
     $vocabulary->name = trim($vocabulary->name);
 
     $status = $vocabulary->save();
-    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $edit_link = $this->entity->link($this->t('Edit'));
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));

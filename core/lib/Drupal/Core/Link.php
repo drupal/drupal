@@ -7,10 +7,14 @@
 
 namespace Drupal\Core;
 
+use Drupal\Core\Routing\LinkGeneratorTrait;
+
 /**
  * Defines an object that holds information about a link.
  */
 class Link {
+
+  use LinkGeneratorTrait;
 
   /**
    * The text of the link.
@@ -114,6 +118,13 @@ class Link {
   public function setUrl(Url $url) {
     $this->url = $url;
     return $this;
+  }
+
+  /**
+   * Generates the HTML for this Link object.
+   */
+  public function toString() {
+    return $this->getLinkGenerator()->generateFromLink($this);
   }
 
 }

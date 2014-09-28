@@ -92,7 +92,7 @@ class BlockContentTypeForm extends EntityForm {
     $block_type = $this->entity;
     $status = $block_type->save();
 
-    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $edit_link = $this->entity->link($this->t('Edit'));
     $logger = $this->logger('block_content');
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Custom block type %label has been updated.', array('%label' => $block_type->label())));

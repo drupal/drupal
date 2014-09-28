@@ -15,6 +15,7 @@ use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
@@ -227,6 +228,19 @@ abstract class Entity implements EntityInterface {
    */
   protected function linkTemplates() {
     return $this->getEntityType()->getLinkTemplates();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function link($text = NULL, $rel = 'canonical', array $options = []) {
+    if (is_null($text)) {
+      $text = $this->label();
+    }
+    $url = $this->urlInfo($rel);
+    $options += $url->getOptions();
+    $url->setOptions($options);
+    return (new Link($text, $url))->toString();
   }
 
   /**

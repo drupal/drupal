@@ -360,6 +360,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
+  public function link($text = NULL, $rel = 'edit-form', array $options = []) {
+    return parent::link($text, $rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function addDependency($type, $name) {
     // A config entity is always dependent on its provider. There is no need to
     // explicitly declare the dependency. An explicit dependency on Core, which

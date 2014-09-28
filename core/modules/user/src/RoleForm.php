@@ -59,7 +59,7 @@ class RoleForm extends EntityForm {
     $entity->set('label', trim($entity->label()));
     $status = $entity->save();
 
-    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Role %label has been updated.', array('%label' => $entity->label())));
       $this->logger('user')->notice('Role %label has been updated.', array('%label' => $entity->label(), 'link' => $edit_link));

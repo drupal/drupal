@@ -142,6 +142,23 @@ interface EntityInterface extends AccessibleInterface {
   public function url($rel = 'canonical', $options = array());
 
   /**
+   * Generates the HTML for a link to this entity.
+   *
+   * @param string|null $text
+   *   (optional) The link text for the anchor tag as a translated string.
+   *   If NULL, it will use the entity's label. Defaults to NULL.
+   * @param string $rel
+   *   (optional) The link relationship type. Defaults to 'canonical'.
+   * @param array $options
+   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *   the available options.
+   *
+   * @return string
+   *   An HTML string containing a link to the entity.
+   */
+  public function link($text = NULL, $rel = 'canonical', array $options = []);
+
+  /**
    * Returns the internal path for this entity.
    *
    * self::url() will return the full path including any prefixes, fragments, or

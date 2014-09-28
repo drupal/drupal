@@ -182,7 +182,7 @@ class MenuForm extends EntityForm {
 
     $status = $menu->save();
 
-    $edit_link = $this->linkGenerator->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Menu %label has been updated.', array('%label' => $menu->label())));
       $this->logger('menu')->notice('Menu %label has been updated.', array('%label' => $menu->label(), 'link' => $edit_link));

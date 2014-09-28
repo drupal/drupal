@@ -96,8 +96,7 @@ class ContactFormEditForm extends EntityForm {
     $status = $contact_form->save();
     $contact_settings = $this->config('contact.settings');
 
-    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
-
+    $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Contact form %label has been updated.', array('%label' => $contact_form->label())));
       $this->logger('contact')->notice('Contact form %label has been updated.', array('%label' => $contact_form->label(), 'link' => $edit_link));

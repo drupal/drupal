@@ -147,7 +147,7 @@ class CommentTypeForm extends EntityForm {
     $comment_type = $this->entity;
     $status = $comment_type->save();
 
-    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Comment type %label has been updated.', array('%label' => $comment_type->label())));
       $this->logger->notice('Comment type %label has been updated.', array('%label' => $comment_type->label(), 'link' => $edit_link));
