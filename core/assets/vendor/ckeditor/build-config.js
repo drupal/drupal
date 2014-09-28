@@ -32,6 +32,7 @@ var CKBUILDER_CONFIG = {
 		'adapters',
 		'config.js',
 		'contents.css',
+		'Gruntfile.js',
 		'styles.js',
 		'samples',
 		'skins/moono/readme.md'
