@@ -542,6 +542,7 @@ function locale_config_batch_build(array $names, array $langcodes, $options = ar
   $options += array('finish_feedback' => TRUE);
   $i = 0;
   $batch_names = array();
+  $operations = array();
   foreach ($names as $name) {
     $batch_names[] = $name;
     $i++;

@@ -638,8 +638,9 @@ function install_tasks_to_perform($install_state) {
 function install_tasks($install_state) {
   // Determine whether a translation file must be imported during the
   // 'install_import_translations' task. Import when a non-English language is
-  // available and selected.
-  $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
+  // available and selected. Also we will need translations even if the
+  // installer language is English but there are other languages on the system.
+  $needs_translations = (count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en') || \Drupal::languageManager()->isMultilingual();
   // Determine whether a translation file must be downloaded during the
   // 'install_download_translation' task. Download when a non-English language
   // is selected, but no translation is yet in the translations directory.
@@ -1221,7 +1222,7 @@ function install_select_language(&$install_state) {
 function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
   // if possible.
-  $requirements = install_check_translations($install_state);
+  $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern']);
   if ($output = install_display_requirements($install_state, $requirements)) {
     return $output;
   }
@@ -1536,6 +1537,48 @@ function install_profile_themes(&$install_state) {
 }
 
 /**
+ * Prepares the system for import and downloads additional translations.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ *
+ * @return
+ *   The batch definition, if there are language files to download.
+ */
+function install_download_additional_translations_operations(&$install_state) {
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+
+  $langcode = $install_state['parameters']['langcode'];
+  if (!($language = entity_load('configurable_language', $langcode))) {
+    // Create the language if not already shipped with a profile.
+    $language = ConfigurableLanguage::createFromLangcode($langcode);
+  }
+  $language->save();
+
+  // If a non-English language was selected, change the default language and
+  // remove English.
+  if ($langcode != 'en') {
+    \Drupal::config('system.site')->set('langcode', $langcode)->save();
+    entity_delete_multiple('configurable_language', array('en'));
+  }
+
+  // If there is more than one language or the single one is not English, we
+  // should download/import translations.
+  $languages = \Drupal::languageManager()->getLanguages();
+  $operations = array();
+  foreach($languages as $langcode => $language) {
+    // The installer language was already downloaded. Check downloads for the
+    // other languages if any. Ignore any download errors here, since we
+    // are in the middle of an install process and there is no way back. We
+    // will not import what we cannot download.
+    if ($langcode != 'en' && $langcode != $install_state['parameters']['langcode']) {
+      $operations[] = array('install_check_translations', array($langcode, $install_state['server_pattern']));
+    }
+  }
+  return $operations;
+}
+
+/**
  * Imports languages via a batch process during installation.
  *
  * @param $install_state
@@ -1545,61 +1588,77 @@ function install_profile_themes(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once __DIR__ . '/../modules/locale/locale.bulk.inc';
+  \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
 
-  $langcode = $install_state['parameters']['langcode'];
-  $language = ConfigurableLanguage::createFromLangcode($langcode);
-  $language->save();
+  // If there is more than one language or the single one is not English, we
+  // should import translations.
+  $operations = install_download_additional_translations_operations($install_state);
+  $languages = \Drupal::languageManager()->getLanguages();
+  if (count($languages) > 1 || !isset($languages['en'])) {
+    $operations[] = array('_install_prepare_import', array(array_keys($languages), $install_state['server_pattern']));
 
-  // If a non-English language was selected, change the default language,
-  // remove English and import the translations.
-  if ($langcode != 'en') {
-    \Drupal::config('system.site')->set('langcode', $langcode)->save();
-    entity_delete_multiple('configurable_language', array('en'));
-
-    // Set up a batch to import translations for the newly added language.
-    _install_prepare_import($langcode);
-    module_load_include('fetch.inc', 'locale');
-    if ($batch = locale_translation_batch_fetch_build(array(), array($langcode))) {
-      return $batch;
+    // Set up a batch to import translations for drupal core. Translation import
+    // for contrib modules happens in install_import_translations_remaining.
+    foreach ($languages as $language) {
+      if (locale_translation_use_remote_source()) {
+        $operations[] = array('locale_translation_batch_fetch_download', array('drupal', $language->getId()));
+      }
+      $operations[] = array('locale_translation_batch_fetch_import', array('drupal', $language->getId(), array()));
     }
+
+    module_load_include('fetch.inc', 'locale');
+    $batch = array(
+      'operations' => $operations,
+      'title' => t('Updating translations.'),
+      'progress_message' => '',
+      'error_message' => t('Error importing translation files'),
+      'finished' => 'locale_translation_batch_fetch_finished',
+      'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
+    );
+    return $batch;
   }
 }
 
 /**
  * Tells the translation import process that Drupal core is installed.
  *
- * @param string $langcode
- *   Language code used for the translation.
+ * @param array $langcodes
+ *   Language codes used for the translations.
+ * @param string $server_pattern
+ *   Server access pattern (to replace language code, version number, etc. in).
  */
-function _install_prepare_import($langcode) {
+function _install_prepare_import($langcodes, $server_pattern) {
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
   $matches = array();
-  global $install_state;
 
-  // Get the translation files located in the translations directory.
-  $files = locale_translate_get_interface_translation_files(array('drupal'), array($langcode));
-  // We pick the first file which matches the installation language.
-  $file = reset($files);
-  $filename = $file->filename;
-  preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
-  // Get the version information.
-  if ($version = $matches[1]) {
-    $info = _install_get_version_info($version);
-    // Picking the first file does not necessarily result in the right file. So
-    // we check if at least the major version number is available.
-    if ($info['major']) {
-      $core = $info['major'] . '.x';
-      $data = array(
-         'name' => 'drupal',
-         'project_type' => 'module',
-         'core' => $core,
-         'version' => $version,
-         'server_pattern' => $install_state['server_pattern'],
-         'status' => 1,
-      );
-      \Drupal::service('locale.project')->set($data['name'], $data);
-      module_load_include('compare.inc', 'locale');
-      locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
+  foreach ($langcodes as $langcode) {
+    // Get the translation files located in the translations directory.
+    $files = locale_translate_get_interface_translation_files(array('drupal'), array($langcode));
+    // Pick the first file which matches the language, if any.
+    $file = reset($files);
+    if (is_object($file)) {
+      $filename = $file->filename;
+      preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
+      // Get the version information.
+      if ($version = $matches[1]) {
+        $info = _install_get_version_info($version);
+        // Picking the first file does not necessarily result in the right file. So
+        // we check if at least the major version number is available.
+        if ($info['major']) {
+          $core = $info['major'] . '.x';
+          $data = array(
+            'name' => 'drupal',
+            'project_type' => 'module',
+            'core' => $core,
+            'version' => $version,
+            'server_pattern' => $server_pattern,
+            'status' => 1,
+          );
+          \Drupal::service('locale.project')->set($data['name'], $data);
+          module_load_include('compare.inc', 'locale');
+          locale_translation_check_projects_local(array('drupal'), array($langcode));
+        }
+      }
     }
   }
 }
@@ -1617,8 +1676,8 @@ function _install_prepare_import($langcode) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations_remaining(&$install_state) {
-  module_load_include('fetch.inc', 'locale');
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'compare.inc');
 
   // Build a fresh list of installed projects. When more projects than core are
   // installed, their translations will be downloaded (if required) and imported
@@ -1626,7 +1685,8 @@ function install_import_translations_remaining(&$install_state) {
   $projects = locale_translation_build_projects();
   if (count($projects) > 1) {
     $options = _locale_translation_default_update_options();
-    if ($batch =  locale_translation_batch_update_build(array(), array($install_state['parameters']['langcode']), $options)) {
+    $languages = \Drupal::languageManager()->getLanguages();
+    if ($batch = locale_translation_batch_update_build(array(), array_keys($languages), $options)) {
       return $batch;
     }
   }
@@ -1645,7 +1705,8 @@ function install_import_translations_remaining(&$install_state) {
  */
 function install_update_configuration_translations(&$install_state) {
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-  return locale_config_batch_update_components(array(), array($install_state['parameters']['langcode']));
+  $languages = \Drupal::languageManager()->getLanguages();
+  return locale_config_batch_update_components(array(), array_keys($languages));
 }
 
 /**
@@ -1710,8 +1771,18 @@ function _install_module_batch($module, $module_name, &$context) {
 
 /**
  * Checks installation requirements and reports any errors.
+ *
+ * @param string $langcode
+ *   Language code to check for download.
+ * @param string $server_pattern
+ *   Server access pattern (to replace language code, version number, etc. in).
+ *
+ * @return array
+ *   Requirements compliance array. If the translation was downloaded
+ *   successfully then an empty array is returned. Otherwise the requirements
+ *   error with detailed information.
  */
-function install_check_translations($install_state) {
+function install_check_translations($langcode, $server_pattern) {
   $requirements = array();
 
   $readable = FALSE;
@@ -1735,9 +1806,13 @@ function install_check_translations($install_state) {
     $translations_directory_exists = TRUE;
   }
 
+  // The file already exists, no need to attempt to download.
+  if ($existing_file = glob($translations_directory . '/drupal-*.' . $langcode . '.po')) {
+    return;
+  }
+
   // Build URLs for the translation file and the translation server.
   $releases = install_get_localization_release();
-  $langcode = $install_state['parameters']['langcode'];
   $translation_urls = array();
   foreach ($releases as $release) {
     $variables = array(
@@ -1746,7 +1821,7 @@ function install_check_translations($install_state) {
       '%core' => $release['core'],
       '%language' => $langcode,
     );
-    $translation_urls[] = strtr($install_state['server_pattern'], $variables);
+    $translation_urls[] = strtr($server_pattern, $variables);
   }
   $elements = parse_url(reset($translation_urls));
   $server_url = $elements['scheme'] . '://' . $elements['host'];
