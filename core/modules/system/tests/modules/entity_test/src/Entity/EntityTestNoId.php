@@ -16,7 +16,6 @@ namespace Drupal\entity_test\Entity;
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\ContentEntityNullStorage",
  *   },
- *   fieldable = TRUE,
  *   entity_keys = {
  *     "bundle" = "type",
  *   },

@@ -23,8 +23,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   base_table = "entity_test_string",
- *   fieldable = TRUE,
- *   field_cache = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

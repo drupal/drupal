@@ -52,7 +52,7 @@ class FieldUiPermissions implements ContainerInjectionInterface {
     $permissions = [];
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isFieldable()) {
+      if ($entity_type->get('field_ui_base_route')) {
         // Create a permission for each fieldable entity to manage
         // the fields and the display.
         $permissions['administer ' . $entity_type_id . ' fields'] = [

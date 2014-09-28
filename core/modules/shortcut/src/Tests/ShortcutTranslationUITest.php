@@ -35,7 +35,6 @@ class ShortcutTranslationUITest extends ContentTranslationUITest {
   protected function setUp() {
     $this->entityTypeId = 'shortcut';
     $this->bundle = 'default';
-    $this->fieldName = 'title';
     parent::setUp();
   }
 
@@ -52,6 +51,13 @@ class ShortcutTranslationUITest extends ContentTranslationUITest {
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $values['route_name'] = 'user.page';
     return parent::createEntity($values, $langcode, $bundle_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNewEntityValues($langcode) {
+    return array('title' => array(array('value' => $this->randomMachineName()))) + parent::getNewEntityValues($langcode);
   }
 
   protected function doTestBasicTranslation() {

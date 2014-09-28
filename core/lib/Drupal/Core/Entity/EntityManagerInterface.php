@@ -13,7 +13,7 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 /**
  * Provides an interface for entity type managers.
  */
-interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListenerInterface, FieldStorageDefinitionListenerInterface {
+interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListenerInterface, EntityBundleListenerInterface, FieldStorageDefinitionListenerInterface {
 
   /**
    * Builds a list of entity type labels suitable for a Form API options list.
@@ -464,43 +464,5 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
    * @see \Drupal\Core\Entity\Entity::loadMultiple()
    */
   public function getEntityTypeFromClass($class_name);
-
-  /**
-   * Reacts to the creation of a entity bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type to which the bundle is bound; e.g. 'node' or 'user'.
-   * @param string $bundle
-   *   The name of the bundle.
-   *
-   * @see entity_crud
-   */
-  public function onBundleCreate($entity_type_id, $bundle);
-
-  /**
-   * Reacts to the rename of a entity bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type to which the bundle is bound; e.g. 'node' or 'user'.
-   * @param string $bundle_old
-   *   The previous name of the bundle.
-   * @param string $bundle_new
-   *   The new name of the bundle.
-   *
-   * @see entity_crud
-   */
-  public function onBundleRename($entity_type_id, $bundle_old, $bundle_new);
-
-  /**
-   * Reacts to the deletion of a entity bundle.
-   *
-   * @param string $entity_type_id
-   *   The entity type to which the bundle is bound; e.g. 'node' or 'user'.
-   * @param string $bundle
-   *   The bundle that was just deleted.
-   *
-   * @see entity_crud
-   */
-  public function onBundleDelete($entity_type_id, $bundle);
 
 }

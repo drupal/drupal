@@ -30,7 +30,6 @@ use Drupal\entity_test\Entity\EntityTestRev;
  *   data_table = "entity_test_mulrev_property_data",
  *   revision_table = "entity_test_mulrev_revision",
  *   revision_data_table = "entity_test_mulrev_property_revision",
- *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",

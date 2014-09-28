@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
-use Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface;
+use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -27,7 +27,7 @@ use Drupal\field\FieldStorageConfigInterface;
  * optimizations and getSharedTableFieldSchema() for optimizations applying to
  * a single field.
  */
-class SqlContentEntityStorageSchema implements FieldableEntityStorageSchemaInterface {
+class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorageSchemaInterface {
 
   /**
    * The entity manager.

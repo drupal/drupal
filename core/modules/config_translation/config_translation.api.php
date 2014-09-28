@@ -48,8 +48,8 @@ function hook_config_translation_info(&$info) {
         // Ignore non-existent routes.
       }
 
-      // Make sure entity type is fieldable and has a base route.
-      if ($entity_type->isFieldable() && !empty($base_route)) {
+      // Make sure entity type has field UI enabled and has a base route.
+      if ($entity_type->get('field_ui_base_route') && !empty($base_route)) {
         $info[$entity_type_id . '_fields'] = array(
           'base_route_name' => 'field_ui.field_edit_' . $entity_type_id,
           'entity_type' => 'field_config',

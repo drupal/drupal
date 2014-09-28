@@ -92,8 +92,8 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
         continue;
       }
 
-      // Filter entities
-      if ($this->entityTypes[$entity_type]->isFieldable() && !$this->isValidEntity($entity_type)) {
+      // Filter entities.
+      if (!$this->isValidEntity($entity_type)) {
         continue;
       }
 
@@ -142,7 +142,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return $this->entityTypes[$entity_type]->hasViewBuilderClass();
+    return $this->entityTypes[$entity_type]->get('field_ui_base_route') && $this->entityTypes[$entity_type]->hasViewBuilderClass();
   }
 
 }

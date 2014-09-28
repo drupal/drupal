@@ -43,7 +43,6 @@ use Drupal\block_content\BlockContentInterface;
  *     "delete-form" = "entity.block_content.delete_form",
  *     "edit-form" = "entity.block_content.canonical",
  *   },
- *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",

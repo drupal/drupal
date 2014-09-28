@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\FieldableEntityStorageInterface.
+ * Contains \Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -11,8 +11,16 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 
-interface FieldableEntityStorageInterface extends EntityStorageInterface, FieldStorageDefinitionListenerInterface {
-
+/**
+ * A storage that supports entity types with dynamic field definitions.
+ *
+ * A storage that implements this interface can react to the entity type's field
+ * definitions changing, due to modules being installed or uninstalled, or via
+ * field UI, or via code changes to the entity class.
+ *
+ * For example, configurable fields defined and exposed by field.module.
+ */
+interface DynamicallyFieldableEntityStorageInterface extends EntityStorageInterface, FieldStorageDefinitionListenerInterface {
   /**
    * Reacts to the creation of a field.
    *
@@ -43,36 +51,6 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface, FieldS
    * @see purgeFieldData()
    */
   public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition);
-
-  /**
-   * Reacts to a bundle being created.
-   *
-   * @param string $bundle
-   *   The name of the bundle created.
-   */
-  public function onBundleCreate($bundle);
-
-  /**
-   * Reacts to a bundle being renamed.
-   *
-   * This method runs before fields are updated with the new bundle name.
-   *
-   * @param string $bundle
-   *   The name of the bundle being renamed.
-   * @param string $bundle_new
-   *   The new name of the bundle.
-   */
-  public function onBundleRename($bundle, $bundle_new);
-
-  /**
-   * Reacts to a bundle being deleted.
-   *
-   * This method runs before fields are deleted.
-   *
-   * @param string $bundle
-   *   The name of the bundle being deleted.
-   */
-  public function onBundleDelete($bundle);
 
   /**
    * Purges a batch of field data.

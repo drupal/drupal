@@ -18,8 +18,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *   },
- *   fieldable = TRUE
+ *   }
  * )
  */
 class FieldUITestNoBundle extends EntityTest {

@@ -412,7 +412,7 @@ function comment_entity_predelete(EntityInterface $entity) {
   // mismatched types. So, we need to verify that the ID is numeric (even for an
   // entity type that has an integer ID, $entity->id() might be a string
   // containing a number), and then cast it to an integer when querying.
-  if ($entity->getEntityType()->isFieldable() && is_numeric($entity->id())) {
+  if ($entity instanceof ContentEntityInterface && is_numeric($entity->id())) {
     $entity_query = \Drupal::entityQuery('comment');
     $entity_query->condition('entity_id', (int) $entity->id());
     $entity_query->condition('entity_type', $entity->getEntityTypeId());

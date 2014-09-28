@@ -68,11 +68,11 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
     parent::postSave($storage, $update);
 
     if (!$update) {
-      $this->entityManager()->onBundleCreate($this->getEntityType()->getBundleOf(), $this->id());
+      $this->entityManager()->onBundleCreate($this->id(), $this->getEntityType()->getBundleOf());
     }
     elseif ($this->getOriginalId() != $this->id()) {
       $this->renameDisplays();
-      $this->entityManager()->onBundleRename($this->getEntityType()->getBundleOf(), $this->getOriginalId(), $this->id());
+      $this->entityManager()->onBundleRename($this->getOriginalId(), $this->id(), $this->getEntityType()->getBundleOf());
     }
   }
 
@@ -84,7 +84,7 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
 
     foreach ($entities as $entity) {
       $entity->deleteDisplays();
-      \Drupal::entityManager()->onBundleDelete($entity->getEntityType()->getBundleOf(), $entity->id());
+      \Drupal::entityManager()->onBundleDelete($entity->id(), $entity->getEntityType()->getBundleOf());
     }
   }
 

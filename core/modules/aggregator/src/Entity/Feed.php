@@ -39,7 +39,6 @@ use Drupal\aggregator\FeedInterface;
  *   },
  *   field_ui_base_route = "aggregator.admin_overview",
  *   base_table = "aggregator_feed",
- *   fieldable = TRUE,
  *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "fid",

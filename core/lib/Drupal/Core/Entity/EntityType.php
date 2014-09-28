@@ -101,14 +101,6 @@ class EntityType implements EntityTypeInterface {
    * @var string
    */
   protected $permission_granularity = 'entity_type';
-
-  /**
-   * Indicates whether fields can be attached to entities of this type.
-   *
-   * @var bool
-   */
-  protected $fieldable = FALSE;
-
   /**
    * Link templates using the URI template syntax.
    *
@@ -498,13 +490,6 @@ class EntityType implements EntityTypeInterface {
    */
   public function getPermissionGranularity() {
     return $this->permission_granularity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isFieldable() {
-    return $this->fieldable;
   }
 
   /**

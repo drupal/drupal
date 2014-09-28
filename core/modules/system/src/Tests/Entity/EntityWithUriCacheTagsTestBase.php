@@ -82,7 +82,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     }
 
 
-    if ($this->entity->getEntityType()->isFieldable()) {
+    if ($this->entity->getEntityType()->get('field_ui_base_route')) {
       // Verify that after modifying a configurable field on the entity, there
       // is a cache miss.
       $this->pass("Test modification of entity's configurable field.", 'Debug');

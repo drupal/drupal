@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class ContentEntityStorageBase extends EntityStorageBase implements FieldableEntityStorageInterface {
+abstract class ContentEntityStorageBase extends EntityStorageBase implements DynamicallyFieldableEntityStorageInterface {
 
   /**
    * The entity bundle key.
@@ -102,21 +102,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
    * {@inheritdoc}
    */
   public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition) { }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onBundleCreate($bundle) { }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onBundleRename($bundle, $bundle_new) { }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onBundleDelete($bundle) { }
 
   /**
    * {@inheritdoc}

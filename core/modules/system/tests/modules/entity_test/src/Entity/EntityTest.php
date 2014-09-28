@@ -33,7 +33,6 @@ use Drupal\user\UserInterface;
  *     "views_data" = "Drupal\views\EntityViewsData"
  *   },
  *   base_table = "entity_test",
- *   fieldable = TRUE,
  *   persistent_cache = FALSE,
  *   entity_keys = {
  *     "id" = "id",

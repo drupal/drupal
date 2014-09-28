@@ -30,7 +30,6 @@ use Drupal\Core\Url;
  *   },
  *   uri_callback = "Drupal\aggregator\Entity\Item::buildUri",
  *   base_table = "aggregator_item",
- *   fieldable = TRUE,
  *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "iid",

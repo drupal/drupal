@@ -16,7 +16,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   id = "entity_test_field_override",
  *   label = @Translation("Test entity field overrides"),
  *   base_table = "entity_test_field_override",
- *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

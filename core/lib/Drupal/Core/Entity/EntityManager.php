@@ -987,7 +987,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     }
 
     $this->setLastInstalledDefinition($entity_type);
-    if ($entity_type->isFieldable()) {
+    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
       $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->getFieldStorageDefinitions($entity_type_id));
     }
   }
@@ -1078,12 +1078,12 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function onBundleCreate($entity_type_id, $bundle) {
+  public function onBundleCreate($bundle, $entity_type_id) {
     $this->clearCachedBundles();
     // Notify the entity storage.
     $storage = $this->getStorage($entity_type_id);
-    if ($storage instanceof FieldableEntityStorageInterface) {
-      $storage->onBundleCreate($bundle);
+    if ($storage instanceof EntityBundleListenerInterface) {
+      $storage->onBundleCreate($bundle, $entity_type_id);
     }
     // Invoke hook_entity_bundle_create() hook.
     $this->moduleHandler->invokeAll('entity_bundle_create', array($entity_type_id, $bundle));
@@ -1092,12 +1092,12 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function onBundleRename($entity_type_id, $bundle_old, $bundle_new) {
+  public function onBundleRename($bundle_old, $bundle_new, $entity_type_id) {
     $this->clearCachedBundles();
     // Notify the entity storage.
     $storage = $this->getStorage($entity_type_id);
-    if ($storage instanceof FieldableEntityStorageInterface) {
-      $storage->onBundleRename($bundle_old, $bundle_new);
+    if ($storage instanceof EntityBundleListenerInterface) {
+      $storage->onBundleRename($bundle_old, $bundle_new, $entity_type_id);
     }
 
     // Rename existing base field bundle overrides.
@@ -1117,12 +1117,12 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function onBundleDelete($entity_type_id, $bundle) {
+  public function onBundleDelete($bundle, $entity_type_id) {
     $this->clearCachedBundles();
     // Notify the entity storage.
     $storage = $this->getStorage($entity_type_id);
-    if ($storage instanceof FieldableEntityStorageInterface) {
-      $storage->onBundleDelete($bundle);
+    if ($storage instanceof EntityBundleListenerInterface) {
+      $storage->onBundleDelete($bundle, $entity_type_id);
     }
     // Invoke hook_entity_bundle_delete() hook.
     $this->moduleHandler->invokeAll('entity_bundle_delete', array($entity_type_id, $bundle));

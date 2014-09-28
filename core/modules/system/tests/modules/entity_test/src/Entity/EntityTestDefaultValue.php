@@ -17,7 +17,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   id = "entity_test_default_value",
  *   label = @Translation("Test entity for default values"),
  *   base_table = "entity_test_default_value",
- *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

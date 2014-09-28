@@ -24,7 +24,7 @@ class EntityDisplayModeController extends ControllerBase {
   public function viewModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isFieldable() && $entity_type->hasViewBuilderClass()) {
+      if ($entity_type->get('field_ui_base_route') && $entity_type->hasViewBuilderClass()) {
         $entity_types[$entity_type_id] = array(
           'title' => $entity_type->getLabel(),
           'url' => new Url('field_ui.entity_view_mode_add_type', array('entity_type_id' => $entity_type_id)),
@@ -47,7 +47,7 @@ class EntityDisplayModeController extends ControllerBase {
   public function formModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isFieldable() && $entity_type->hasFormClasses()) {
+      if ($entity_type->get('field_ui_base_route') && $entity_type->hasFormClasses()) {
         $entity_types[$entity_type_id] = array(
           'title' => $entity_type->getLabel(),
           'url' => new Url('field_ui.entity_form_mode_add_type', array('entity_type_id' => $entity_type_id)),

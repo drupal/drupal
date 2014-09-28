@@ -20,7 +20,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 class FieldDataCountTest extends FieldUnitTestBase {
 
   /**
-   * @var \Drupal\Core\Entity\FieldableEntityStorageInterface
+   * @var \Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface
    */
   protected $storage;
 

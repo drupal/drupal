@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface.
+ * Contains \Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface.
  */
 
 namespace Drupal\Core\Entity\Schema;
@@ -11,9 +11,15 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 
 /**
- * Defines the interface for storage schema classes for fieldable entity types.
+ * A storage schema that supports entity types with dynamic field definitions.
+ *
+ * A storage schema that implements this interface can react to the entity
+ * type's field definitions changing, due to modules being installed or
+ * uninstalled, or via field UI, or via code changes to the entity class.
+ *
+ * For example, configurable fields defined and exposed by field.module.
  */
-interface FieldableEntityStorageSchemaInterface extends EntityStorageSchemaInterface, FieldStorageDefinitionListenerInterface {
+interface DynamicallyFieldableEntityStorageSchemaInterface extends EntityStorageSchemaInterface, FieldStorageDefinitionListenerInterface {
 
   /**
    * Checks if the changes to the storage definition requires schema changes.

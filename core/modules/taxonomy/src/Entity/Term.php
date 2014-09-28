@@ -35,7 +35,6 @@ use Drupal\taxonomy\TermInterface;
  *   base_table = "taxonomy_term_data",
  *   data_table = "taxonomy_term_field_data",
  *   uri_callback = "taxonomy_term_uri",
- *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",

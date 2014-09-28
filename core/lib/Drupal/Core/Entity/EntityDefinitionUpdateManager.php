@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
-use Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface;
+use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -171,7 +171,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         $change_list[$entity_type_id]['entity_type'] = static::DEFINITION_UPDATED;
       }
 
-      if ($entity_type->isFieldable()) {
+      if ($this->entityManager->getStorage($entity_type_id) instanceof DynamicallyFieldableEntityStorageInterface) {
         $field_changes = array();
         $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
         $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
@@ -238,7 +238,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    */
   protected function requiresFieldStorageSchemaChanges(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
     $storage = $this->entityManager->getStorage($storage_definition->getTargetEntityTypeId());
-    return ($storage instanceof FieldableEntityStorageSchemaInterface) && $storage->requiresFieldStorageSchemaChanges($storage_definition, $original);
+    return ($storage instanceof DynamicallyFieldableEntityStorageSchemaInterface) && $storage->requiresFieldStorageSchemaChanges($storage_definition, $original);
   }
 
 }

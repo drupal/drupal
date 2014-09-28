@@ -41,7 +41,6 @@ use Drupal\user\UserInterface;
  *   base_table = "users",
  *   data_table = "users_field_data",
  *   label_callback = "user_format_name",
- *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "uid",

@@ -69,7 +69,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
     $this->derivatives = array();
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isFieldable() && $entity_type->get('field_ui_base_route')) {
+      if ($entity_type->get('field_ui_base_route')) {
         $this->derivatives["overview_$entity_type_id"] = array(
           'route_name' => "field_ui.overview_$entity_type_id",
           'weight' => 1,
@@ -172,7 +172,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
    */
   public function alterLocalTasks(&$local_tasks) {
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isFieldable() && $route_name = $entity_type->get('field_ui_base_route')) {
+      if ($route_name = $entity_type->get('field_ui_base_route')) {
         $local_tasks["field_ui.fields:overview_$entity_type_id"]['base_route'] = $route_name;
         $local_tasks["field_ui.fields:form_display_overview_$entity_type_id"]['base_route'] = $route_name;
         $local_tasks["field_ui.fields:display_overview_$entity_type_id"]['base_route'] = $route_name;

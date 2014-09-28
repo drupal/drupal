@@ -13,12 +13,13 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
+use Drupal\Core\Entity\EntityBundleListenerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\Schema\FieldableEntityStorageSchemaInterface;
+use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -38,7 +39,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup entity_api
  */
-class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, FieldableEntityStorageSchemaInterface {
+class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, DynamicallyFieldableEntityStorageSchemaInterface, EntityBundleListenerInterface  {
 
   /**
    * The mapping of field columns to SQL tables.
@@ -605,9 +606,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->attachPropertyData($entities);
 
     // Attach field values.
-    if ($this->entityType->isFieldable()) {
-      $this->loadFieldItems($entities);
-    }
+    $this->loadFieldItems($entities);
 
     return $entities;
   }
@@ -1180,7 +1179,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   An array of entities keyed by entity ID.
    */
   protected function loadFieldItems(array $entities) {
-    if (empty($entities) || !$this->entityType->isFieldable()) {
+    if (empty($entities)) {
       return;
     }
 
@@ -1546,7 +1545,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  public function onBundleRename($bundle, $bundle_new) {
+  public function onBundleCreate($bundle, $entity_type_id) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onBundleDelete($bundle, $entity_type_id) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onBundleRename($bundle, $bundle_new, $entity_type_id) {
     // The method runs before the field definitions are updated, so we use the
     // old bundle name.
     $field_definitions = $this->entityManager->getFieldDefinitions($this->entityTypeId, $bundle);
