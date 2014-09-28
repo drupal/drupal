@@ -10,9 +10,11 @@ namespace Drupal\field\Entity;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -578,6 +580,19 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public function isRequired() {
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProvider($property_name, ContentEntityInterface $entity) {
+    // If the field item class implements the interface, proxy it through.
+    $item = $entity->get($this->getName())->first();
+    if ($item instanceof OptionsProviderInterface) {
+      return $item;
+    }
+    // @todo: Allow setting custom options provider, see
+    // https://www.drupal.org/node/2002138.
   }
 
   /**

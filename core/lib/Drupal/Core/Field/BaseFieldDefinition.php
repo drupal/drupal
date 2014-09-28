@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * A class for defining entity fields.
@@ -429,6 +430,19 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function setDefaultValue($value) {
     $this->definition['default_value'] = $value;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProvider($property_name, ContentEntityInterface $entity) {
+    // If the field item class implements the interface, proxy it through.
+    $item = $entity->get($this->getName())->first();
+    if ($item instanceof OptionsProviderInterface) {
+      return $item;
+    }
+    // @todo: Allow setting custom options provider, see
+    // https://www.drupal.org/node/2002138.
   }
 
   /**

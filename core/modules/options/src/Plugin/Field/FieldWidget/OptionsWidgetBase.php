@@ -7,9 +7,9 @@
 
 namespace Drupal\options\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -114,16 +114,19 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Returns the array of options for the widget.
    *
-   * @param \Drupal\Core\Field\FieldItemInterface $item
-   *   The field item.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity for which to return options.
    *
    * @return array
    *   The array of options for the widget.
    */
-  protected function getOptions(FieldItemInterface $item) {
+  protected function getOptions(ContentEntityInterface $entity) {
     if (!isset($this->options)) {
       // Limit the settable options for the current user account.
-      $options = $item->getSettableOptions(\Drupal::currentUser());
+      $options = $this->fieldDefinition
+        ->getFieldStorageDefinition()
+        ->getOptionsProvider($this->column, $entity)
+        ->getSettableOptions(\Drupal::currentUser());
 
       // Add an empty option if the widget needs one.
       if ($empty_option = $this->getEmptyOption()) {
@@ -143,7 +146,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       $module_handler = \Drupal::moduleHandler();
       $context = array(
         'fieldDefinition' => $this->fieldDefinition,
-        'entity' => $item->getEntity(),
+        'entity' => $entity,
       );
       $module_handler->alter('options_list', $options, $context);
 
@@ -173,7 +176,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   protected function getSelectedOptions(FieldItemListInterface $items, $delta = 0) {
     // We need to check against a flat list of options.
-    $flat_options = $this->flattenOptions($this->getOptions($items[$delta]));
+    $flat_options = $this->flattenOptions($this->getOptions($items->getEntity()));
 
     $selected_options = array();
     foreach ($items as $item) {
