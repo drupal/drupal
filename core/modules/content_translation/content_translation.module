@@ -650,7 +650,9 @@ function content_translation_language_configuration_element_process(array $eleme
     $element['content_translation'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable translation'),
-      '#default_value' => content_translation_enabled($context['entity_type'], $context['bundle']),
+      // For new bundle, we don't know the bundle name yet,
+      // default to no translatability.
+      '#default_value' => $context['bundle'] ? content_translation_enabled($context['entity_type'], $context['bundle']) : FALSE,
       '#element_validate' => array('content_translation_language_configuration_element_validate'),
       '#prefix' => '<label>' . t('Translation') . '</label>',
     );
