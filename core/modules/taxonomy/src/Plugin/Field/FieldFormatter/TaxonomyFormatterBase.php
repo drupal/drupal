@@ -24,8 +24,19 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
     $terms = array();
 
     // Collect every possible term attached to any of the fieldable entities.
+    /* @var \Drupal\Core\Field\EntityReferenceFieldItemList $items */
     foreach ($entities_items as $items) {
+      /* @var \Drupal\Core\Entity\ContentEntityBase $parent */
+      $parent = $items->getParent();
+      $active_langcode = $parent->language()->getId();
+      /* @var \Drupal\taxonomy\Entity\Term $term */
       foreach ($items->referencedEntities() as $term) {
+        if ($term->hasTranslation($active_langcode)) {
+          $translated_term = $term->getTranslation($active_langcode);
+          if ($translated_term->access('view')) {
+            $term = $translated_term;
+          }
+        }
         $terms[$term->id()] = $term;
       }
     }
