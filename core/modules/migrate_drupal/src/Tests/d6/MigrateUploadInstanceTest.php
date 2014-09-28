@@ -46,7 +46,7 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
     }
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'upload',
+      'field_name' => 'upload',
       'type' => 'file',
       'translatable' => '0',
     ))->save();

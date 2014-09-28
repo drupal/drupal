@@ -36,7 +36,7 @@ class ShapeItemTest extends FieldUnitTestBase {
 
     // Create a 'shape' field and storage for validation.
     entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'shape',
     ))->save();

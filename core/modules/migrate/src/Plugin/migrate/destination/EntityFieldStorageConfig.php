@@ -19,7 +19,7 @@ class EntityFieldStorageConfig extends EntityConfigBase {
    */
   public function getIds() {
     $ids['entity_type']['type'] = 'string';
-    $ids['name']['type'] = 'string';
+    $ids['field_name']['type'] = 'string';
     return $ids;
   }
 

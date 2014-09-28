@@ -45,7 +45,7 @@ class TextFieldTest extends WebTestBase {
     $max_length = 3;
     $field_name = drupal_strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text',
       'settings' => array(
@@ -87,7 +87,7 @@ class TextFieldTest extends WebTestBase {
     // Create a field.
     $field_name = drupal_strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type
     ));
@@ -148,7 +148,7 @@ class TextFieldTest extends WebTestBase {
     // Create a field.
     $field_name = drupal_strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type
     ));

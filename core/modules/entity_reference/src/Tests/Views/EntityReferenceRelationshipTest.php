@@ -55,12 +55,12 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
     ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
 
     $field_storage = FieldStorageConfig::create(array(
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_test',
+      'type' => 'entity_reference',
       'settings' => array(
         'target_type' => 'entity_test',
       ),
-      'entity_type' => 'entity_test',
-      'name' => 'field_test',
-      'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ));
     $field_storage->save();

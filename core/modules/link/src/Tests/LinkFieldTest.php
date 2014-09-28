@@ -64,7 +64,7 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
     ));
@@ -184,7 +184,7 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
     ));
@@ -298,7 +298,7 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
       'cardinality' => 2,
@@ -438,7 +438,7 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
       'cardinality' => 2,

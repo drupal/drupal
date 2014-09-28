@@ -15,9 +15,9 @@ field.storage.*.*:
     id:
       type: string
       label: 'ID'
-    name:
+    field_name:
       type: string
-      label: 'Name'
+      label: 'Field name'
     entity_type:
       type: string
       label: 'Entity type'

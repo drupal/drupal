@@ -65,7 +65,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // Create a field.
     $this->fieldName = drupal_strtolower($this->randomMachineName());
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'text',
     ));
@@ -104,7 +104,7 @@ class ConfigExportImportUITest extends WebTestBase {
     }
     $field_storages = entity_load_multiple('field_storage_config');
     foreach ($field_storages as $field_storage) {
-      if ($field_storage->name == $this->fieldName) {
+      if ($field_storage->field_name == $this->fieldName) {
         $field_storage->delete();
       }
     }

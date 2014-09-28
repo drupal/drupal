@@ -21,13 +21,13 @@ function field_views_data() {
   $data = array();
   $module_handler = \Drupal::moduleHandler();
 
-  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field) {
-    if (_field_views_get_entity_type_storage($field)) {
-      $result = (array) $module_handler->invoke($field->module, 'field_views_data', array($field));
+  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
+    if (_field_views_get_entity_type_storage($field_storage)) {
+      $result = (array) $module_handler->invoke($field_storage->module, 'field_views_data', array($field_storage));
       if (empty($result)) {
-        $result = field_views_field_default_views_data($field);
+        $result = field_views_field_default_views_data($field_storage);
       }
-      $module_handler->alter('field_views_data', $result, $field);
+      $module_handler->alter('field_views_data', $result, $field_storage);
 
       if (is_array($result)) {
         $data = NestedArray::mergeDeep($result, $data);
@@ -47,11 +47,11 @@ function field_views_data() {
  * in field_views_data.
  */
 function field_views_data_alter(&$data) {
-  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field) {
-    if (_field_views_get_entity_type_storage($field)) {
-      $function = $field->module . '_field_views_data_views_data_alter';
+  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
+    if (_field_views_get_entity_type_storage($field_storage)) {
+      $function = $field_storage->module . '_field_views_data_views_data_alter';
       if (function_exists($function)) {
-        $function($data, $field);
+        $function($data, $field_storage);
       }
     }
   }

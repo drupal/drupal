@@ -95,7 +95,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     for ($i = 1; $i <= 3; $i++) {
       $field_names[$i] = 'field_' . $i;
       $field_storage = entity_create('field_storage_config', array(
-        'name' => $field_names[$i],
+        'field_name' => $field_names[$i],
         'entity_type' => $entity_type,
         'type' => 'test_field',
       ));
@@ -331,7 +331,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // Create a second field for the test bundle
     $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
     $field_storage = array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 1,

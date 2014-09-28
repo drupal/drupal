@@ -30,7 +30,7 @@ class TelephoneItemTest extends FieldUnitTestBase {
 
     // Create a telephone field storage and field for validation.
     entity_create('field_storage_config', array(
-      'name' => 'field_test',
+      'field_name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ))->save();

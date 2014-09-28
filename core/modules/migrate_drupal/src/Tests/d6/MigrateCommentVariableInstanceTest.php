@@ -40,15 +40,15 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
     }
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-        'name' => 'comment',
-        'type' => 'comment',
-        'translatable' => '0',
+      'field_name' => 'comment',
+      'type' => 'comment',
+      'translatable' => '0',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-        'name' => 'comment_no_subject',
-        'type' => 'comment',
-        'translatable' => '0',
+      'field_name' => 'comment_no_subject',
+      'type' => 'comment',
+      'translatable' => '0',
     ))->save();
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment_field_instance');

@@ -28,8 +28,8 @@ class ArbitraryRebuildTest extends WebTestBase {
 
     // Auto-create a field for testing.
     entity_create('field_storage_config', array(
-      'name' => 'test_multiple',
       'entity_type' => 'user',
+      'field_name' => 'test_multiple',
       'type' => 'text',
       'cardinality' => -1,
       'translatable' => FALSE,

@@ -37,7 +37,7 @@ class UserCreateTest extends WebTestBase {
     // Create a field.
     $field_name = 'test_field';
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'user',
       'module' => 'image',
       'type' => 'image',

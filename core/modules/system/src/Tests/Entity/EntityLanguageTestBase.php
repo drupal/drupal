@@ -71,7 +71,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     // Create field fields in all entity variations.
     foreach (entity_test_entity_types() as $entity_type) {
       entity_create('field_storage_config', array(
-        'name' => $this->field_name,
+        'field_name' => $this->field_name,
         'entity_type' => $entity_type,
         'type' => 'text',
         'cardinality' => 4,
@@ -85,7 +85,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
       $this->field[$entity_type] = entity_load('field_config', $entity_type . '.' . $entity_type . '.' . $this->field_name);
 
       entity_create('field_storage_config', array(
-        'name' => $this->untranslatable_field_name,
+        'field_name' => $this->untranslatable_field_name,
         'entity_type' => $entity_type,
         'type' => 'text',
         'cardinality' => 4,

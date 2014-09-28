@@ -37,7 +37,7 @@ class TestItemTest extends FieldUnitTestBase {
 
     // Create a 'test_field' field and storage for validation.
     entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ))->save();

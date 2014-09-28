@@ -57,7 +57,7 @@ class TranslationWebTest extends FieldTestBase {
     $this->field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
 
     $field_storage = array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,

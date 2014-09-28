@@ -1,7 +1,7 @@
 id: user.user_picture
 status: true
 langcode: en
-name: user_picture
+field_name: user_picture
 entity_type: user
 type: image
 settings:

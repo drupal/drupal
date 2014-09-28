@@ -80,7 +80,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
     // Add a translatable field to the content type.
     entity_create('field_storage_config', array(
-      'name' => 'field_test_text',
+      'field_name' => 'field_test_text',
       'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => 1,

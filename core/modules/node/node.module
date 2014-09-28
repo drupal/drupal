@@ -335,7 +335,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field_storage)) {
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'body',
+      'field_name' => 'body',
       'entity_type' => 'node',
       'type' => 'text_with_summary',
     ));

@@ -36,7 +36,7 @@ class TermIndexTest extends TaxonomyTestBase {
 
     $this->field_name_1 = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $this->field_name_1,
+      'field_name' => $this->field_name_1,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -67,7 +67,7 @@ class TermIndexTest extends TaxonomyTestBase {
 
     $this->field_name_2 = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $this->field_name_2,
+      'field_name' => $this->field_name_2,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

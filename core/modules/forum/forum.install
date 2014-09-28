@@ -27,7 +27,7 @@ function forum_install() {
     // enabled, the field might exist but still be marked inactive.
     if (!FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
       entity_create('field_storage_config', array(
-        'name' => 'taxonomy_forums',
+        'field_name' => 'taxonomy_forums',
         'entity_type' => 'node',
         'type' => 'taxonomy_term_reference',
         'settings' => array(
@@ -84,7 +84,7 @@ function forum_install() {
     // Add the comment field to the forum node type.
     $field_storages = entity_load_multiple_by_properties('field_storage_config', array(
       'type' => 'comment',
-      'name' => 'comment_forum',
+      'field_name' => 'comment_forum',
       'include_deleted' => FALSE,
     ));
     if (empty($field_storages)) {

@@ -39,7 +39,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $entity_type = 'taxonomy_term';
     $name = 'field_test';
     entity_create('field_storage_config', array(
-      'name' => $name,
+      'field_name' => $name,
       'entity_type' => $entity_type,
       'type' => 'image',
       'settings' => array(

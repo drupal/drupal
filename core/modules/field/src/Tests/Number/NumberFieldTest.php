@@ -44,7 +44,7 @@ class NumberFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
       'settings' => array(
@@ -134,7 +134,7 @@ class NumberFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'integer',
     ))->save();
@@ -228,7 +228,7 @@ class NumberFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'float',
     ))->save();
@@ -325,13 +325,13 @@ class NumberFieldTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => $type));
 
     entity_create('field_storage_config', array(
-      'name' => $float_field,
+      'field_name' => $float_field,
       'entity_type' => 'node',
       'type' => 'float',
     ))->save();
 
     entity_create('field_storage_config', array(
-      'name' => $integer_field,
+      'field_name' => $integer_field,
       'entity_type' => 'node',
       'type' => 'integer',
     ))->save();

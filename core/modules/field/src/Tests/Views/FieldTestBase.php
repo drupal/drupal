@@ -67,7 +67,7 @@ abstract class FieldTestBase extends ViewTestBase {
     for ($i = 0; $i < $amount; $i++) {
       $field_names[$i] = 'field_name_' . $i;
       $this->fieldStorages[$i] = entity_create('field_storage_config', array(
-        'name' => $field_names[$i],
+        'field_name' => $field_names[$i],
         'entity_type' => 'node',
         'type' => $type,
       ));

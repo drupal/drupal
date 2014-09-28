@@ -41,7 +41,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     // \Drupal\field\ConfigImporterFieldPurger does not purge fields that are
     // not related to the configuration synchronization.
     $unrelated_field_storage = entity_create('field_storage_config', array(
-      'name' => 'field_int',
+      'field_name' => 'field_int',
       'entity_type' => 'entity_test',
       'type' => 'integer',
     ));
@@ -53,7 +53,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
 
     // Create a telephone field for validation.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'field_test',
+      'field_name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ));
@@ -115,7 +115,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
   public function testImportAlreadyDeletedUninstall() {
     // Create a telephone field for validation.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'field_test',
+      'field_name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ));

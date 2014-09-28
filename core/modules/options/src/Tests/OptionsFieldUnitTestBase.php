@@ -58,7 +58,7 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
     $this->installSchema('system', array('router'));
 
     $this->fieldStorageDefinition = array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 1,

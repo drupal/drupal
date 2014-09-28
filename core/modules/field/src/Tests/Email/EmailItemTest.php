@@ -23,7 +23,7 @@ class EmailItemTest extends FieldUnitTestBase {
 
     // Create an email field storage and field for validation.
     entity_create('field_storage_config', array(
-      'name' => 'field_email',
+      'field_name' => 'field_email',
       'entity_type' => 'entity_test',
       'type' => 'email',
     ))->save();

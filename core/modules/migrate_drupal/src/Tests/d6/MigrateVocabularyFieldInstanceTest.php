@@ -48,14 +48,14 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupalTestBase {
 
     // Create the vocab.
     entity_create('taxonomy_vocabulary', array(
-      'name' => 'Test Vocabulary',
+      'field_name' => 'Test Vocabulary',
       'description' => 'Test Vocabulary',
       'vid' => 'tags',
     ))->save();
-    // Create the field itself.
+    // Create the field storage.
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'tags',
+      'field_name' => 'tags',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(

@@ -52,7 +52,7 @@ class EntityQueryAggregateTest extends EntityUnitTestBase {
     for ($i = 1; $i <= 2; $i++) {
       $field_name = 'field_test_' . $i;
       entity_create('field_storage_config', array(
-        'name' => $field_name,
+        'field_name' => $field_name,
         'entity_type' => 'entity_test',
         'type' => 'integer',
         'cardinality' => 2,

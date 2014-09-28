@@ -65,7 +65,7 @@ class StringFormatterTest extends KernelTestBase {
     $this->fieldName = Unicode::strtolower($this->randomMachineName());
 
     $field_storage = FieldStorageConfig::create(array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => $this->entityType,
       'type' => 'string',
     ));

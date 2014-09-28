@@ -31,7 +31,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     parent::setUp();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'field_test',
+      'field_name' => 'field_test',
       'type' => 'text',
     ))->save();
     entity_create('field_config', array(
@@ -41,7 +41,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'field_test_two',
+      'field_name' => 'field_test_two',
       'type' => 'integer',
       'cardinality' => -1,
     ))->save();
@@ -52,7 +52,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'field_test_three',
+      'field_name' => 'field_test_three',
       'type' => 'decimal',
     ))->save();
     entity_create('field_config', array(
@@ -62,7 +62,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'field_test_integer_selectlist',
+      'field_name' => 'field_test_integer_selectlist',
       'type' => 'integer',
     ))->save();
     entity_create('field_config', array(
@@ -73,7 +73,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
 
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'field_multivalue',
+      'field_name' => 'field_multivalue',
       'type' => 'integer',
       'cardinality' => -1,
     ))->save();

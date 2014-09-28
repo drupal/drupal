@@ -50,7 +50,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     $this->cardinality = 3;
 
     entity_create('field_storage_config', array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => $this->entityTypeId,
       'type' => 'image',
       'cardinality' => $this->cardinality,

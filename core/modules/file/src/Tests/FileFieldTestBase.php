@@ -72,7 +72,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
     $field_storage = entity_create('field_storage_config', array(
       'entity_type' => $entity_type,
-      'name' => $name,
+      'field_name' => $name,
       'type' => 'file',
       'settings' => $storage_settings,
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,

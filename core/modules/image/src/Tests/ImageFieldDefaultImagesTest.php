@@ -300,7 +300,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    */
   public function testInvalidDefaultImage() {
     $field_storage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomMachineName()),
+      'field_name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'image',
       'settings' => array(

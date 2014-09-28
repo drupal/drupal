@@ -42,22 +42,22 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     // Create some fields so the data gets stored.
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_color',
+      'field_name' => 'profile_color',
       'type' => 'text',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_biography',
+      'field_name' => 'profile_biography',
       'type' => 'text_long',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_sell_address',
+      'field_name' => 'profile_sell_address',
       'type' => 'boolean',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_sold_to',
+      'field_name' => 'profile_sold_to',
       'type' => 'list_string',
       'settings' => array(
         'allowed_values' => array(
@@ -68,23 +68,23 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_bands',
+      'field_name' => 'profile_bands',
       'type' => 'text',
       'cardinality' => -1,
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_blog',
+      'field_name' => 'profile_blog',
       'type' => 'link',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_birthdate',
+      'field_name' => 'profile_birthdate',
       'type' => 'datetime',
     ))->save();
     entity_create('field_storage_config', array(
       'entity_type' => 'user',
-      'name' => 'profile_love_migrations',
+      'field_name' => 'profile_love_migrations',
       'type' => 'boolean',
     ))->save();
 

@@ -51,7 +51,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     // Create a field storage and a field.
     $field_name = 'test_field';
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
@@ -179,7 +179,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field_name = 'test_field';
     // Create a field storage and a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
@@ -228,7 +228,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field_name = 'test_field';
     // Create a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text'
     ));

@@ -1,7 +1,7 @@
 id: taxonomy_term.forum_container
 status: true
 langcode: en
-name: forum_container
+field_name: forum_container
 type: boolean
 settings:
   on_label: Yes

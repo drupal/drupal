@@ -35,7 +35,7 @@ class SelectionTest extends WebTestBase {
 
     // Create a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'test_field',
+      'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'settings' => array(

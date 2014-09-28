@@ -11,7 +11,7 @@ process:
   entity_type: 'constants/entity_type'
   status: active
   langcode: 'constants/langcode'
-  name: field_name
+  field_name: field_name
   type:
     -
       plugin: static_map

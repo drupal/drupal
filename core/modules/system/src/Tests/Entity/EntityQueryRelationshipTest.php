@@ -74,13 +74,16 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     $vocabulary->save();
     // Second, create the field.
     $this->fieldName = strtolower($this->randomMachineName());
-    $field = array(
-      'name' => $this->fieldName,
+    entity_create('field_storage_config', array(
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
-    );
-    $field['settings']['allowed_values']['vocabulary'] = $vocabulary->id();
-    entity_create('field_storage_config', $field)->save();
+      'settings' => array(
+        'allowed_values' => array(
+          'vocabulary' => $vocabulary->id(),
+        ),
+      ),
+    ))->save();
     entity_test_create_bundle('test_bundle');
     // Third, create the instance.
     entity_create('field_config', array(

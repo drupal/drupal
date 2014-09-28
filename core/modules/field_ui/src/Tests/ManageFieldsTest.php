@@ -41,7 +41,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $vocabulary->save();
 
     entity_create('field_storage_config', array(
-      'name' => 'field_' . $vocabulary->id(),
+      'field_name' => 'field_' . $vocabulary->id(),
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
     ))->save();
@@ -284,7 +284,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Create a test field storage and field.
     $field_name = 'test';
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field'
     ))->save();
@@ -411,7 +411,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // programatically as there's no way to create a locked field through UI.
     $field_name = strtolower($this->randomMachineName(8));
     $field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field',
       'cardinality' => 1,
@@ -423,7 +423,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'bundle' => $this->type,
     ))->save();
     entity_get_form_display('node', $this->type, 'default')
-      ->setComponent($field_storage->name, array(
+      ->setComponent($field_name, array(
         'type' => 'test_field_widget',
       ))
       ->save();
@@ -453,7 +453,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => $field_name,
     ))->save();
@@ -550,7 +550,7 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testHelpDescriptions() {
     // Create an image field
     entity_create('field_storage_config', array(
-      'name' => 'field_image',
+      'field_name' => 'field_image',
       'entity_type' => 'node',
       'type' => 'image',
     ))->save();

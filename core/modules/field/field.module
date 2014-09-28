@@ -124,15 +124,15 @@ function field_system_info_alter(&$info, Extension $file, $type) {
   // It is not safe to call entity_load_multiple_by_properties() during
   // maintenance mode.
   if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
-    $fields = entity_load_multiple_by_properties('field_storage_config', array('module' => $file->getName(), 'include_deleted' => TRUE));
-    if ($fields) {
+    $field_storages = entity_load_multiple_by_properties('field_storage_config', array('module' => $file->getName(), 'include_deleted' => TRUE));
+    if ($field_storages) {
       $info['required'] = TRUE;
 
       // Provide an explanation message (only mention pending deletions if there
       // remains no actual, non-deleted fields)
       $non_deleted = FALSE;
-      foreach ($fields as $field) {
-        if (empty($field->deleted)) {
+      foreach ($field_storages as $field_storage) {
+        if (empty($field_storage->deleted)) {
           $non_deleted = TRUE;
           break;
         }

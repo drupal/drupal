@@ -42,15 +42,16 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     // Create a node to be referenced.
     $referenced_node = $this->drupalCreateNode(array('type' => 'referenced_content'));
 
-    $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomMachineName()),
+    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_storage = entity_create('field_storage_config', array(
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'entity_reference',
       'settings' => array('target_type' => 'node'),
     ));
-    $this->fieldStorage->save();
-    $this->field = entity_create('field_config', array(
-      'field_storage' => $this->fieldStorage,
+    $field_storage->save();
+    $field = entity_create('field_config', array(
+      'field_storage' => $field_storage,
       'bundle' => 'reference_content',
       'settings' => array(
         'handler' => 'default',
@@ -60,20 +61,20 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
         ),
       ),
     ));
-    $this->field->save();
+    $field->save();
 
     // Set created node as default_value.
     $field_edit = array(
-      'default_value_input[' . $this->fieldStorage->name . '][0][target_id]' => $referenced_node->getTitle() . ' (' .$referenced_node->id() . ')',
+      'default_value_input[' . $field_name . '][0][target_id]' => $referenced_node->getTitle() . ' (' .$referenced_node->id() . ')',
     );
-    $this->drupalPostForm('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $this->fieldStorage->name, $field_edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $field_name, $field_edit, t('Save settings'));
 
     // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $this->fieldStorage->name);
-    $this->assertRaw('name="default_value_input[' . $this->fieldStorage->name . '][0][target_id]" value="' . $referenced_node->getTitle() .' (' .$referenced_node->id() . ')', 'The default value is selected in instance settings page');
+    $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $field_name);
+    $this->assertRaw('name="default_value_input[' . $field_name . '][0][target_id]" value="' . $referenced_node->getTitle() .' (' .$referenced_node->id() . ')', 'The default value is selected in instance settings page');
 
     // Check if the ID has been converted to UUID in config entity.
-    $config_entity = $this->container->get('config.factory')->get('field.field.node.reference_content.' . $this->fieldStorage->name)->get();
+    $config_entity = $this->container->get('config.factory')->get('field.field.node.reference_content.' . $field_name)->get();
     $this->assertTrue(isset($config_entity['default_value'][0]['target_uuid']), 'Default value contains target_uuid property');
     $this->assertEqual($config_entity['default_value'][0]['target_uuid'], $referenced_node->uuid(), 'Content uuid and config entity uuid are the same');
 
@@ -82,7 +83,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
 
     // Create a new node to check that UUID has been converted to numeric ID.
     $new_node = entity_create('node', array('type' => 'reference_content'));
-    $this->assertEqual($new_node->get($this->fieldStorage->name)->offsetGet(0)->target_id, $referenced_node->id());
+    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->target_id, $referenced_node->id());
   }
 
 }

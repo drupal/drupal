@@ -29,12 +29,12 @@ class NestedFormTest extends FieldTestBase {
     $this->drupalLogin($web_user);
 
     $this->fieldStorageSingle = array(
-      'name' => 'field_single',
+      'field_name' => 'field_single',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     $this->fieldStorageUnlimited = array(
-      'name' => 'field_unlimited',
+      'field_name' => 'field_unlimited',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

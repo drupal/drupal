@@ -26,7 +26,7 @@ class BooleanItemTest extends FieldUnitTestBase {
 
     // Create a boolean field and storage for validation.
     entity_create('field_storage_config', array(
-      'name' => 'field_boolean',
+      'field_name' => 'field_boolean',
       'entity_type' => 'entity_test',
       'type' => 'boolean',
     ))->save();

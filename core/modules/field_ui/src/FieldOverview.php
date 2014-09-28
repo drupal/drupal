@@ -370,7 +370,7 @@ class FieldOverview extends OverviewBase {
       $values = $form_values['_add_new_field'];
 
       $field_storage = array(
-        'name' => $values['field_name'],
+        'field_name' => $values['field_name'],
         'entity_type' => $this->entity_type,
         'type' => $values['type'],
         'translatable' => $values['translatable'],

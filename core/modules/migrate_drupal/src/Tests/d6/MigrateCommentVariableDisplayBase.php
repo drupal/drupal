@@ -51,7 +51,7 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
     parent::setUp();
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'comment',
+      'field_name' => 'comment',
       'type' => 'comment',
       'translatable' => '0',
     ))->save();

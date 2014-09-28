@@ -58,7 +58,7 @@ class DefaultViewsTest extends ViewTestBase {
     // Create a field.
     $this->field_name = drupal_strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'settings' => array(

@@ -46,7 +46,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $vocabulary->save();
 
     entity_create('field_storage_config', array(
-      'name' => 'field_test_taxonomy',
+      'field_name' => 'field_test_taxonomy',
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

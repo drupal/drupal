@@ -67,7 +67,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // Add field, so we can modify the Field and Field entities to
       // verify that changes to those indeed clear cache tags.
       entity_create('field_storage_config', array(
-        'name' => 'configurable_field',
+        'field_name' => 'configurable_field',
         'entity_type' => $this->entity->getEntityTypeId(),
         'type' => 'test_field',
         'settings' => array(),
@@ -183,7 +183,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // Add a field of the given type to the given entity type's "foo" bundle.
     $field_name = $referenced_entity->getEntityTypeId() . '_reference';
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

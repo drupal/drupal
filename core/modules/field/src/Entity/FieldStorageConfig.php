@@ -62,7 +62,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *
    * @var string
    */
-  public $name;
+  public $field_name;
 
   /**
    * The name of the entity type the field can be attached to.
@@ -201,17 +201,17 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public function __construct(array $values, $entity_type = 'field_storage_config') {
     // Check required properties.
-    if (empty($values['name'])) {
-      throw new FieldException('Attempt to create an unnamed field storage.');
+    if (empty($values['field_name'])) {
+      throw new FieldException('Attempt to create a field storage without a field name.');
     }
-    if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $values['name'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['name'])));
+    if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $values['field_name'])) {
+      throw new FieldException(String::format('Attempt to create a field storage @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['field_name'])));
     }
     if (empty($values['type'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with no type.', array('@field_name' => $values['name'])));
+      throw new FieldException(String::format('Attempt to create a field storage @field_name with no type.', array('@field_name' => $values['field_name'])));
     }
     if (empty($values['entity_type'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with no entity_type.', array('@field_name' => $values['name'])));
+      throw new FieldException(String::format('Attempt to create a field storage @field_name with no entity_type.', array('@field_name' => $values['field_name'])));
     }
 
     parent::__construct($values, $entity_type);
@@ -221,7 +221,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function id() {
-    return $this->entity_type . '.' . $this->name;
+    return $this->entity_type . '.' . $this->field_name;
   }
 
   /**
@@ -264,19 +264,19 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Field name cannot be longer than FieldStorageConfig::NAME_MAX_LENGTH characters.
     // We use Unicode::strlen() because the DB layer assumes that column widths
     // are given in characters rather than bytes.
-    if (Unicode::strlen($this->name) > static::NAME_MAX_LENGTH) {
+    if (Unicode::strlen($this->field_name) > static::NAME_MAX_LENGTH) {
       throw new FieldException(String::format(
         'Attempt to create a field storage with an name longer than @max characters: %name', array(
           '@max' => static::NAME_MAX_LENGTH,
-          '%name' => $this->name,
+          '%name' => $this->field_name,
         )
       ));
     }
 
     // Disallow reserved field names.
     $disallowed_field_names = array_keys($entity_manager->getBaseFieldDefinitions($this->entity_type));
-    if (in_array($this->name, $disallowed_field_names)) {
-      throw new FieldException(String::format('Attempt to create field storage %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $this->entity_type)));
+    if (in_array($this->field_name, $disallowed_field_names)) {
+      throw new FieldException(String::format('Attempt to create field storage %name which is reserved by entity type %type.', array('%name' => $this->field_name, '%type' => $this->entity_type)));
     }
 
     // Check that the field type is known.
@@ -368,7 +368,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     foreach ($field_storages as $field_storage) {
       if (!$field_storage->deleted) {
         foreach ($field_storage->getBundles() as $bundle) {
-          $field_ids[] = "{$field_storage->entity_type}.$bundle.{$field_storage->name}";
+          $field_ids[] = "{$field_storage->entity_type}.$bundle.{$field_storage->field_name}";
         }
       }
     }
@@ -468,8 +468,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   public function getBundles() {
     if (empty($this->deleted)) {
       $map = \Drupal::entityManager()->getFieldMap();
-      if (isset($map[$this->entity_type][$this->name]['bundles'])) {
-        return $map[$this->entity_type][$this->name]['bundles'];
+      if (isset($map[$this->entity_type][$this->field_name]['bundles'])) {
+        return $map[$this->entity_type][$this->field_name]['bundles'];
       }
     }
     return array();
@@ -479,7 +479,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function getName() {
-    return $this->name;
+    return $this->field_name;
   }
 
   /**

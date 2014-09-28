@@ -9,7 +9,7 @@ source:
     type: comment
 process:
   entity_type: 'constants/entity_type'
-  name: comment_type
+  field_name: comment_type
   type: 'constants/type'
   'settings/comment_type': comment_type
 destination:

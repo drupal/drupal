@@ -166,7 +166,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     );
     foreach ($fields as $name => $type) {
       entity_create('field_storage_config', array(
-        'name' => $name,
+        'field_name' => $name,
         'entity_type' => 'node',
         'type' => $type,
       ))->save();

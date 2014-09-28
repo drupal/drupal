@@ -50,9 +50,9 @@ class NodeFieldFilterTest extends NodeTestBase {
 
     // Make the body field translatable. The title is already translatable by
     // definition.
-    $field = FieldStorageConfig::loadByName('node', 'body');
-    $field->translatable = TRUE;
-    $field->save();
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field_storage->translatable = TRUE;
+    $field_storage->save();
 
     // Set up node titles.
     $this->node_titles = array(

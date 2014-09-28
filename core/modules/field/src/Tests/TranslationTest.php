@@ -80,7 +80,7 @@ class TranslationTest extends FieldUnitTestBase {
     $this->entity_type = 'entity_test';
 
     $this->field_storage_definition = array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
@@ -140,7 +140,7 @@ class TranslationTest extends FieldUnitTestBase {
     // Test default values.
     $field_name_default = drupal_strtolower($this->randomMachineName() . '_field_name');
     $field_storage_definition = $this->field_storage_definition;
-    $field_storage_definition['name'] = $field_name_default;
+    $field_storage_definition['field_name'] = $field_name_default;
     $field_storage = entity_create('field_storage_config', $field_storage_definition);
     $field_storage->save();
 

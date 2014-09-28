@@ -47,7 +47,7 @@ class TermFieldTest extends TaxonomyTestBase {
     // Setup a field.
     $this->field_name = drupal_strtolower($this->randomMachineName());
     $this->field_storage = entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'settings' => array(

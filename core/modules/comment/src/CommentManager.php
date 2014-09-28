@@ -145,7 +145,7 @@ class CommentManager implements CommentManagerInterface {
       // Add a default comment field for existing node comments.
       $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
         'entity_type' => $entity_type,
-        'name' => $field_name,
+        'field_name' => $field_name,
         'type' => 'comment',
         'translatable' => TRUE,
         'settings' => array(
@@ -221,7 +221,7 @@ class CommentManager implements CommentManagerInterface {
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
     if (!$field_storage) {
       $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
-        'name' => 'comment_body',
+        'field_name' => 'comment_body',
         'type' => 'text_long',
         'entity_type' => 'comment',
       ));

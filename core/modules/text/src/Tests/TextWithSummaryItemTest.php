@@ -99,7 +99,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   protected function createField($entity_type) {
     // Create a field .
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => 'summary_field',
+      'field_name' => 'summary_field',
       'entity_type' => $entity_type,
       'type' => 'text_with_summary',
       'settings' => array(

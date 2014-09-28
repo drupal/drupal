@@ -60,18 +60,18 @@ class FormTest extends FieldTestBase {
     $this->drupalLogin($web_user);
 
     $this->fieldStorageSingle = array(
-      'name' => 'field_single',
+      'field_name' => 'field_single',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     $this->fieldStorageMultiple = array(
-      'name' => 'field_multiple',
+      'field_name' => 'field_multiple',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => 4,
     );
     $this->fieldStorageUnlimited = array(
-      'name' => 'field_unlimited',
+      'field_name' => 'field_unlimited',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -91,7 +91,7 @@ class FormTest extends FieldTestBase {
 
   function testFieldFormSingle() {
     $field_storage = $this->fieldStorageSingle;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_config', $this->field)->save();
@@ -165,7 +165,7 @@ class FormTest extends FieldTestBase {
    */
   function testFieldFormDefaultValue() {
     $field_storage = $this->fieldStorageSingle;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     $default = rand(1, 127);
     $this->field['default_value'] = array(array('value' => $default));
@@ -194,7 +194,7 @@ class FormTest extends FieldTestBase {
 
   function testFieldFormSingleRequired() {
     $field_storage = $this->fieldStorageSingle;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     $this->field['required'] = TRUE;
     entity_create('field_storage_config', $field_storage)->save();
@@ -239,7 +239,7 @@ class FormTest extends FieldTestBase {
 
   function testFieldFormUnlimited() {
     $field_storage = $this->fieldStorageUnlimited;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_config', $this->field)->save();
@@ -322,7 +322,7 @@ class FormTest extends FieldTestBase {
   function testFieldFormMultivalueWithRequiredRadio() {
     // Create a multivalue test field.
     $field_storage = $this->fieldStorageUnlimited;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_config', $this->field)->save();
@@ -332,7 +332,7 @@ class FormTest extends FieldTestBase {
 
     // Add a required radio field.
     entity_create('field_storage_config', array(
-      'name' => 'required_radio_test',
+      'field_name' => 'required_radio_test',
       'entity_type' => 'entity_test',
       'type' => 'list_string',
       'settings' => array(
@@ -369,7 +369,7 @@ class FormTest extends FieldTestBase {
 
   function testFieldFormJSAddMore() {
     $field_storage = $this->fieldStorageUnlimited;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_config', $this->field)->save();
@@ -430,7 +430,7 @@ class FormTest extends FieldTestBase {
     // Create a field with fixed cardinality, configure the form to use a
     // "multiple" widget.
     $field_storage = $this->fieldStorageMultiple;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_config', $this->field)->save();
@@ -476,7 +476,7 @@ class FormTest extends FieldTestBase {
     // Create a "regular" field.
     $field_storage = $this->fieldStorageSingle;
     $field_storage['entity_type'] = $entity_type;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $field = $this->field;
     $field['field_name'] = $field_name;
     $field['entity_type'] = $entity_type;
@@ -490,11 +490,11 @@ class FormTest extends FieldTestBase {
     // Create a field with no edit access. See
     // field_test_entity_field_access().
     $field_storage_no_access = array(
-      'name' => 'field_no_edit_access',
+      'field_name' => 'field_no_edit_access',
       'entity_type' => $entity_type,
       'type' => 'test_field',
     );
-    $field_name_no_access = $field_storage_no_access['name'];
+    $field_name_no_access = $field_storage_no_access['field_name'];
     $field_no_access = array(
       'field_name' => $field_name_no_access,
       'entity_type' => $entity_type,
@@ -561,7 +561,7 @@ class FormTest extends FieldTestBase {
     $entity_type = 'entity_test_rev';
     $field_storage = $this->fieldStorageSingle;
     $field_storage['entity_type'] = $entity_type;
-    $field_name = $field_storage['name'];
+    $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     $this->field['default_value'] = array(0 => array('value' => 99));
     $this->field['entity_type'] = $entity_type;

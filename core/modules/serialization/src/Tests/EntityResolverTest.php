@@ -32,12 +32,12 @@ class EntityResolverTest extends NormalizerTestBase {
 
     // Create the test field storage.
     entity_create('field_storage_config', array(
+      'entity_type' => 'entity_test_mulrev',
+      'field_name' => 'field_test_entity_reference',
+      'type' => 'entity_reference',
       'settings' => array(
         'target_type' => 'entity_test_mulrev',
       ),
-      'name' => 'field_test_entity_reference',
-      'entity_type' => 'entity_test_mulrev',
-      'type' => 'entity_reference',
     ))->save();
 
     // Create the test field.

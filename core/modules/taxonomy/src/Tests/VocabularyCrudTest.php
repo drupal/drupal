@@ -145,7 +145,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field to the vocabulary.
     entity_create('field_storage_config', array(
-      'name' => 'field_test',
+      'field_name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'type' => 'test_field',
     ))->save();
@@ -178,7 +178,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // removed when the module is uninstalled.
     $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
     $storage_definition = array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
       'cardinality' => 4

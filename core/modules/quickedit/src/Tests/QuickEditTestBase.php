@@ -71,7 +71,7 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
   protected function createFieldWithStorage($field_name, $type, $cardinality, $label, $field_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field_storage = $field_name . '_field_storage';
     $this->fields->$field_storage = entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
       'cardinality' => $cardinality,

@@ -18,8 +18,8 @@ function entity_test_install() {
   foreach ($entity_types as $entity_type) {
     // Auto-create fields for testing.
     entity_create('field_storage_config', array(
-      'name' => 'field_test_text',
       'entity_type' => $entity_type,
+      'field_name' => 'field_test_text',
       'type' => 'text',
       'cardinality' => 1,
     ))->save();

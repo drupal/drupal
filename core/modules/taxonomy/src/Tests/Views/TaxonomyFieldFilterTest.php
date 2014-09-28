@@ -61,7 +61,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
 
     // Add a translatable field to the vocabulary.
     $field = entity_create('field_storage_config', array(
-      'name' => 'field_foo',
+      'field_name' => 'field_foo',
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
     ));

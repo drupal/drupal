@@ -38,7 +38,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
   public function testImportDeleteUninstall() {
     // Create a telephone field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'field_tel',
+      'field_name' => 'field_tel',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ));
@@ -50,7 +50,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
     // Create a text field.
     $text_field_storage = entity_create('field_storage_config', array(
-      'name' => 'field_text',
+      'field_name' => 'field_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
     ));

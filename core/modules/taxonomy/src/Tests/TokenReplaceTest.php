@@ -26,7 +26,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->field_name = 'taxonomy_' . $this->vocabulary->id();
     entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

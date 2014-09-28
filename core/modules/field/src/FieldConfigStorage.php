@@ -138,7 +138,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
     // Collect matching fields.
     $matching_fields = array();
     foreach ($fields as $field) {
-      // Some conditions are checked against the field.
+      // Some conditions are checked against the field storage.
       $field_storage = $field->getFieldStorageDefinition();
 
       // Only keep the field if it matches all conditions.
@@ -146,7 +146,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
           case 'field_name':
-            $checked_value = $field_storage->name;
+            $checked_value = $field_storage->getName();
             break;
 
           case 'field_id':

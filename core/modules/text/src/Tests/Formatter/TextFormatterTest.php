@@ -56,7 +56,7 @@ class TextFormatterTest extends EntityUnitTestBase {
     ))->save();
 
     entity_create('field_storage_config', array(
-      'name' => 'formatted_text',
+      'field_name' => 'formatted_text',
       'entity_type' => $this->entityType,
       'type' => 'text',
       'settings' => array(),

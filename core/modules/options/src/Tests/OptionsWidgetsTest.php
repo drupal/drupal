@@ -50,7 +50,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Field storage with cardinality 1.
     $this->card_1 = entity_create('field_storage_config', array(
-      'name' => 'card_1',
+      'field_name' => 'card_1',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 1,
@@ -70,7 +70,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Field storage with cardinality 2.
     $this->card_2 = entity_create('field_storage_config', array(
-      'name' => 'card_2',
+      'field_name' => 'card_2',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 2,

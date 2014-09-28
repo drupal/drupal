@@ -65,7 +65,7 @@ class BooleanFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomMachineName());
     $this->field_storage = FieldStorageConfig::create(array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
       'settings' => array(

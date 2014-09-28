@@ -54,7 +54,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     $vocabulary->save();
 
     entity_create('field_storage_config', array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

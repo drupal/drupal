@@ -91,7 +91,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
 
     $this->fieldTestData->$field_name = drupal_strtolower($this->randomMachineName() . '_field_name' . $suffix);
     $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
-      'name' => $this->fieldTestData->$field_name,
+      'field_name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 4,

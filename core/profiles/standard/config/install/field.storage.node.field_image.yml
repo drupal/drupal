@@ -1,5 +1,5 @@
 id: node.field_image
-name: field_image
+field_name: field_image
 entity_type: node
 type: image
 module: image

@@ -57,7 +57,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testNodeHandler() {
     // Create a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'test_field',
+      'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'entity_types' => array(),
@@ -200,7 +200,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testUserHandler() {
     // Create a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'test_field',
+      'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'settings' => array(
@@ -344,7 +344,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testCommentHandler() {
     // Create a field.
     $field_storage = entity_create('field_storage_config', array(
-      'name' => 'test_field',
+      'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'entity_types' => array(),

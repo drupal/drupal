@@ -32,7 +32,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupalTestBase {
 
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'tags',
+      'field_name' => 'tags',
       'type' => 'taxonomy_term_reference',
     ))->save();
 

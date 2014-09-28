@@ -55,7 +55,7 @@ class BlockContentFieldTest extends BlockContentTestBase {
 
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
-      'name' => drupal_strtolower($this->randomMachineName()),
+      'field_name' => drupal_strtolower($this->randomMachineName()),
       'entity_type' => 'block_content',
       'type' => 'link',
       'cardinality' => 2,

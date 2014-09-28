@@ -179,7 +179,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
         $this->fieldName = 'field_test_et_ui_test';
       }
       entity_create('field_storage_config', array(
-        'name' => $this->fieldName,
+        'field_name' => $this->fieldName,
         'type' => 'string',
         'entity_type' => $this->entityTypeId,
         'cardinality' => 1,

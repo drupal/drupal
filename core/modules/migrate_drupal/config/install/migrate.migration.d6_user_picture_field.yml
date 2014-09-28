@@ -13,7 +13,7 @@ source:
     cardinality: 1
 process:
   entity_type: 'constants/entity_type'
-  name: 'constants/name'
+  field_name: 'constants/name'
   type: 'constants/type'
   cardinality: 'constants/cardinality'
 destination:

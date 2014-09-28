@@ -8,7 +8,7 @@ source:
     entity_type: user
 process:
   entity_type: 'constants/entity_type'
-  name: name
+  field_name: name
   type:
     plugin: static_map
     source: type

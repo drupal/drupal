@@ -148,7 +148,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    */
   protected function createTaxonomyTermReferenceField($field_name, $vocabulary) {
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

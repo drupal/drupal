@@ -93,8 +93,12 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
       ->with('field_storage_config')
       ->will($this->returnValue($fieldStorageConfigentityType));
 
-    $values = array('name' => 'test_field', 'type' => 'test_field_type', 'entity_type' => $attached_entity_type_id, 'module' => 'test_module');
-    $field_storage = new FieldStorageConfig($values);
+    $field_storage = new FieldStorageConfig(array(
+      'entity_type' => $attached_entity_type_id,
+      'field_name' => 'test_field',
+      'type' => 'test_field_type',
+      'module' => 'test_module',
+    ));
 
     $dependencies = $field_storage->calculateDependencies();
     $this->assertContains('test_module', $dependencies['module']);

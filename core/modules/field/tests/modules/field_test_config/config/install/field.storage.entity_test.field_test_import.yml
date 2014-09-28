@@ -1,6 +1,6 @@
 id: entity_test.field_test_import
 langcode: und
-name: field_test_import
+field_name: field_test_import
 entity_type: entity_test
 type: text
 settings:

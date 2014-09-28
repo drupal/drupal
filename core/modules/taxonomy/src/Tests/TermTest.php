@@ -28,7 +28,7 @@ class TermTest extends TaxonomyTestBase {
 
     $field_name = 'taxonomy_' . $this->vocabulary->id();
     entity_create('field_storage_config', array(
-      'name' => $field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,

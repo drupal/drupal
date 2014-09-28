@@ -33,7 +33,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
 
     $this->field_name = 'test_options';
     entity_create('field_storage_config', array(
-      'name' => $this->field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'entity_test_rev',
       'type' => 'list_string',
       'cardinality' => 1,

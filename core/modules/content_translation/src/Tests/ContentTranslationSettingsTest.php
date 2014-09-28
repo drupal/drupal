@@ -228,7 +228,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     // At least one field needs to be translatable to enable article for
     // translation. Create an extra field to be used for this purpose.
     $field_storage = array(
-      'name' => 'article_text',
+      'field_name' => 'article_text',
       'entity_type' => 'node',
       'type' => 'text',
     );

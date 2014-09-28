@@ -116,7 +116,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    */
   protected function createTestField($field_settings = array()) {
     entity_create('field_storage_config', array(
-      'name' => $this->fieldName,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => $this->fieldType,
     ))->save();
