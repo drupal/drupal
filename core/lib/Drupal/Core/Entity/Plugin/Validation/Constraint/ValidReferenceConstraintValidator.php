@@ -27,7 +27,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator {
     if (empty($id)) {
       return;
     }
-    $referenced_entity = $value->get('entity')->getTarget();
+    $referenced_entity = $value->get('entity')->getValue();
     if (!$referenced_entity) {
       $type = $value->getFieldDefinition()->getSetting('target_type');
       $this->context->addViolation($constraint->message, array('%type' => $type, '%id' => $id));

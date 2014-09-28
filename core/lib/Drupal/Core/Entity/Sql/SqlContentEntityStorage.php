@@ -1632,7 +1632,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     // Create field item objects and return.
     foreach ($items_by_entity as $revision_id => $values) {
-      $items_by_entity[$revision_id] = \Drupal::typedDataManager()->create($field_definition, $values, $field_definition->getName(), $entities[$revision_id]);
+      $entity_adapter = $entities[$revision_id]->getTypedData();
+      $items_by_entity[$revision_id] = \Drupal::typedDataManager()->create($field_definition, $values, $field_definition->getName(), $entity_adapter);
     }
     return $items_by_entity;
   }

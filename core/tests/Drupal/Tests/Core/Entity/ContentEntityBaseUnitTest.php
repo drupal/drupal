@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Entity;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
@@ -138,6 +137,10 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->typedDataManager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->typedDataManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('entity')
+      ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
 
     $english = new Language(array('id' => 'en'));
     $not_specified = new Language(array('id' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'locked' => TRUE));
@@ -228,7 +231,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
     $this->typedDataManager->expects($this->any())
       ->method('getPropertyInstance')
-      ->with($this->entity, 'revision_id', NULL)
+      ->with($this->entity->getTypedData(), 'revision_id', NULL)
       ->will($this->returnValue($field_item_list));
 
     $this->fieldDefinitions['revision_id']->getItemDefinition()->setClass(get_class($field_item));
@@ -305,23 +308,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getString
-   */
-  public function testGetString() {
-    $label = $this->randomMachineName();
-    /** @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit_Framework_MockObject_MockObject $entity */
-    $entity = $this->getMockBuilder('\Drupal\Core\Entity\ContentEntityBase')
-      ->setMethods(array('label'))
-      ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
-    $entity->expects($this->once())
-      ->method('label')
-      ->will($this->returnValue($label));
-
-    $this->assertSame($label, $entity->getString());
-  }
-
-  /**
    * @covers ::validate
    */
   public function testValidate() {
@@ -335,62 +321,17 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $non_empty_violation_list->add($violation);
     $validator->expects($this->at(0))
       ->method('validate')
-      ->with($this->entity)
+      ->with($this->entity->getTypedData())
       ->will($this->returnValue($empty_violation_list));
     $validator->expects($this->at(1))
       ->method('validate')
-      ->with($this->entity)
+      ->with($this->entity->getTypedData())
       ->will($this->returnValue($non_empty_violation_list));
     $this->typedDataManager->expects($this->exactly(2))
       ->method('getValidator')
       ->will($this->returnValue($validator));
     $this->assertSame(0, count($this->entity->validate()));
     $this->assertSame(1, count($this->entity->validate()));
-  }
-
-  /**
-   * @covers ::getConstraints
-   */
-  public function testGetConstraints() {
-    $this->assertInternalType('array', $this->entity->getConstraints());
-  }
-
-  /**
-   * @covers ::getName
-   */
-  public function testGetName() {
-    $this->assertNull($this->entity->getName());
-  }
-
-  /**
-   * @covers ::getRoot
-   */
-  public function testGetRoot() {
-    $this->assertSame(spl_object_hash($this->entity), spl_object_hash($this->entity->getRoot()));
-  }
-
-  /**
-   * @covers ::getPropertyPath
-   */
-  public function testGetPropertyPath() {
-    $this->assertSame('', $this->entity->getPropertyPath());
-  }
-
-  /**
-   * @covers ::getParent
-   */
-  public function testGetParent() {
-    $this->assertNull($this->entity->getParent());
-  }
-
-  /**
-   * @covers ::setContext
-   */
-  public function testSetContext() {
-    $name = $this->randomMachineName();
-    $parent = $this->getMock('\Drupal\Core\TypedData\TypedDataInterface');
-    // Our mocked entity->setContext() returns NULL, so assert that.
-    $this->assertNull($this->entity->setContext($name, $parent));
   }
 
   /**

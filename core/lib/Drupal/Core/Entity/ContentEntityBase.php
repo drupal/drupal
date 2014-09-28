@@ -9,7 +9,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
-use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -129,13 +128,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * @var array
    */
   protected $entityKeys = array();
-
-  /**
-   * The instantiated entity data definition.
-   *
-   * @var \Drupal\Core\Entity\TypedData\EntityDataDefinition
-   */
-  protected $dataDefinition;
 
   /**
    * Overrides Entity::__construct().
@@ -261,98 +253,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function getDataDefinition() {
-    if (!$this->dataDefinition) {
-      $this->dataDefinition = EntityDataDefinition::create($this->getEntityTypeId());
-      $this->dataDefinition->setBundles(array($this->bundle()));
-    }
-    return $this->dataDefinition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getValue() {
-    // @todo: This does not make much sense, so remove once TypedDataInterface
-    // is removed. See https://drupal.org/node/2002138.
-    return $this->toArray();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValue($value, $notify = TRUE) {
-    // @todo: This does not make much sense, so remove once TypedDataInterface
-    // is removed. See https://drupal.org/node/2002138.
-    foreach ($value as $field_name => $field_value) {
-      $this->set($field_name, $field_value, $notify);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getString() {
-    return (string) $this->label();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validate() {
-    return $this->typedDataManager()->getValidator()->validate($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function applyDefaultValue($notify = TRUE) {
-    foreach ($this->getProperties() as $property) {
-      $property->applyDefaultValue(FALSE);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConstraints() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName() {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRoot() {
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPropertyPath() {
-    return '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getParent() {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContext($name = NULL, TypedDataInterface $parent = NULL) {
-    // As entities are always the root of the tree of typed data, we do not need
-    // to set any parent or name.
+    return $this->getTypedData()->validate();
   }
 
   /**
@@ -376,7 +278,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
     $this->fields = array();
     $this->fieldDefinitions = NULL;
-    $this->dataDefinition = NULL;
     $this->clearTranslationCache();
 
     return parent::__sleep();
@@ -413,11 +314,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function get($property_name) {
-    if (!isset($this->fields[$property_name][$this->activeLangcode])) {
-      return $this->getTranslatedField($property_name, $this->activeLangcode);
+  public function get($field_name) {
+    if (!isset($this->fields[$field_name][$this->activeLangcode])) {
+      return $this->getTranslatedField($field_name, $this->activeLangcode);
     }
-    return $this->fields[$property_name][$this->activeLangcode];
+    return $this->fields[$field_name][$this->activeLangcode];
   }
 
   /**
@@ -452,7 +353,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         if (isset($this->values[$name][$langcode])) {
           $value = $this->values[$name][$langcode];
         }
-        $field = \Drupal::typedDataManager()->getPropertyInstance($this, $name, $value);
+        $entity_adapter = $this->getTypedData();
+        $field = \Drupal::typedDataManager()->getPropertyInstance($entity_adapter, $name, $value);
         if ($default) {
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid
@@ -481,21 +383,21 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function getProperties($include_computed = FALSE) {
-    $properties = array();
+  public function getFields($include_computed = FALSE) {
+    $fields = array();
     foreach ($this->getFieldDefinitions() as $name => $definition) {
       if ($include_computed || !$definition->isComputed()) {
-        $properties[$name] = $this->get($name);
+        $fields[$name] = $this->get($name);
       }
     }
-    return $properties;
+    return $fields;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getIterator() {
-    return new \ArrayIterator($this->getProperties());
+    return new \ArrayIterator($this->getFields());
   }
 
   /**
@@ -525,25 +427,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function toArray() {
     $values = array();
-    foreach ($this->getProperties() as $name => $property) {
+    foreach ($this->getFields() as $name => $property) {
       $values[$name] = $property->getValue();
     }
     return $values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEmpty() {
-    if (!$this->isNew()) {
-      return FALSE;
-    }
-    foreach ($this->getProperties() as $property) {
-      if ($property->getValue() !== NULL) {
-        return FALSE;
-      }
-    }
-    return TRUE;
   }
 
   /**
@@ -644,8 +531,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Entity\ContentEntityInterface
    */
   public function getTranslation($langcode) {
     // Ensure we always use the default language code when dealing with the
@@ -826,15 +711,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Overrides Entity::translations().
-   *
-   * @todo: Remove once Entity::translations() gets removed.
-   */
-  public function translations() {
-    return $this->getTranslationLanguages(FALSE);
-  }
-
-  /**
    * Updates the original values with the interim changes.
    */
   public function updateOriginalValues() {
@@ -957,8 +833,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
     }
 
-    $duplicate->entityKeys = array();
-
     return $duplicate;
   }
 
@@ -969,6 +843,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Avoid deep-cloning when we are initializing a translation object, since
     // it will represent the same entity, only with a different active language.
     if (!$this->translationInitialize) {
+      // The translation is a different object, and needs its own TypedData object.
+      $this->typedData = NULL;
       $definitions = $this->getFieldDefinitions();
       foreach ($this->fields as $name => $values) {
         $this->fields[$name] = array();
@@ -981,7 +857,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         }
         foreach ($values as $langcode => $items) {
           $this->fields[$name][$langcode] = clone $items;
-          $this->fields[$name][$langcode]->setContext($name, $this);
+          $this->fields[$name][$langcode]->setContext($name, $this->getTypedData());
         }
       }
 
@@ -1015,11 +891,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $referenced_entities = array();
 
     // Gather a list of referenced entities.
-    foreach ($this->getProperties() as $field_items) {
+    foreach ($this->getFields() as $field_items) {
       foreach ($field_items as $field_item) {
         // Loop over all properties of a field item.
         foreach ($field_item->getProperties(TRUE) as $property) {
-          if ($property instanceof EntityReference && $entity = $property->getTarget()) {
+          if ($property instanceof EntityReference && $entity = $property->getValue()) {
             $referenced_entities[] = $entity;
           }
         }

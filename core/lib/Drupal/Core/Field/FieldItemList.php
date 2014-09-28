@@ -57,7 +57,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function getEntity() {
-    return $this->getParent();
+    // The "parent" is the TypedData object for the entity, we need to unwrap
+    // the actual entity.
+    return $this->getParent()->getValue();
   }
 
   /**

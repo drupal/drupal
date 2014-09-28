@@ -73,9 +73,9 @@ class Rss extends RowPluginBase {
     $entity = $row->_entity;
 
     $item = new \stdClass();
-    foreach ($entity->getProperties() as $name => $value) {
+    foreach ($entity as $name => $field) {
       // views_view_row_rss takes care about the escaping.
-      $item->{$name} = $value->value;
+      $item->{$name} = $field->value;
     }
 
     $item->elements = array(

@@ -68,7 +68,7 @@ class ContextPluginTest extends KernelTestBase {
     $user = entity_create('user', array('name' => $name));
     $plugin->setContextValue('user', $user);
 
-    $this->assertEqual($plugin->getContextValue('user')->getName(), $user->getName());
+    $this->assertEqual($plugin->getContextValue('user')->getUsername(), $user->getUsername());
     $this->assertEqual($user->label(), $plugin->getTitle());
 
     // Test Optional context handling.

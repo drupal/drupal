@@ -61,10 +61,10 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $content_entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getProperties'))
+      ->setMethods(array('getFields'))
       ->getMockForAbstractClass();
     $content_entity->expects($this->once())
-      ->method('getProperties')
+      ->method('getFields')
       ->will($this->returnValue($definitions));
 
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')

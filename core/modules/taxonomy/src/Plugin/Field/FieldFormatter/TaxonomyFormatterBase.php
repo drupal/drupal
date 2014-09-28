@@ -27,7 +27,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
     /* @var \Drupal\Core\Field\EntityReferenceFieldItemList $items */
     foreach ($entities_items as $items) {
       /* @var \Drupal\Core\Entity\ContentEntityBase $parent */
-      $parent = $items->getParent();
+      $parent = $items->getEntity();
       $active_langcode = $parent->language()->getId();
       /* @var \Drupal\taxonomy\Entity\Term $term */
       foreach ($items->referencedEntities() as $term) {

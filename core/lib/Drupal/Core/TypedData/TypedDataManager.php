@@ -95,7 +95,7 @@ class TypedDataManager extends DefaultPluginManager {
     if (!isset($class)) {
       throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $data_type));
     }
-    return new $class($data_definition, $configuration['name'], $configuration['parent']);
+    return $class::createInstance($data_definition, $configuration['name'], $configuration['parent']);
   }
 
   /**

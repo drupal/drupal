@@ -362,6 +362,19 @@ interface EntityInterface extends AccessibleInterface {
   public function toArray();
 
   /**
+   * Returns a typed data object for this entity object.
+   *
+   * The returned typed data object wraps this entity and allows dealing with
+   * entities based on the generic typed data API.
+   *
+   * @return \Drupal\Core\TypedData\ComplexDataInterface
+   *   The typed data object for this entity.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataInterface
+   */
+  public function getTypedData();
+
+  /**
    * The unique cache tag associated with this entity.
    *
    * @return array

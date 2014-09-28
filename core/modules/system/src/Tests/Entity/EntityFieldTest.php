@@ -416,27 +416,28 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($textfield_properties['processed']->getDataType(), 'string', $entity_type .': String processed property of the test-text field found.');
 
     // Make sure provided contextual information is right.
-    $this->assertIdentical($entity->getRoot(), $entity, 'Entity is root object.');
-    $this->assertEqual($entity->getPropertyPath(), '');
-    $this->assertEqual($entity->getName(), '');
-    $this->assertEqual($entity->getParent(), NULL);
+    $entity_adapter = $entity->getTypedData();
+    $this->assertIdentical($entity_adapter->getRoot(), $entity_adapter, 'Entity is root object.');
+    $this->assertEqual($entity_adapter->getPropertyPath(), '');
+    $this->assertEqual($entity_adapter->getName(), '');
+    $this->assertEqual($entity_adapter->getParent(), NULL);
 
     $field = $entity->user_id;
-    $this->assertIdentical($field->getRoot(), $entity, 'Entity is root object.');
+    $this->assertIdentical($field->getRoot()->getValue(), $entity, 'Entity is root object.');
     $this->assertIdentical($field->getEntity(), $entity, 'getEntity() returns the entity.');
     $this->assertEqual($field->getPropertyPath(), 'user_id');
     $this->assertEqual($field->getName(), 'user_id');
-    $this->assertIdentical($field->getParent(), $entity, 'Parent object matches.');
+    $this->assertIdentical($field->getParent()->getValue(), $entity, 'Parent object matches.');
 
     $field_item = $field[0];
-    $this->assertIdentical($field_item->getRoot(), $entity, 'Entity is root object.');
+    $this->assertIdentical($field_item->getRoot()->getValue(), $entity, 'Entity is root object.');
     $this->assertIdentical($field_item->getEntity(), $entity, 'getEntity() returns the entity.');
     $this->assertEqual($field_item->getPropertyPath(), 'user_id.0');
     $this->assertEqual($field_item->getName(), '0');
     $this->assertIdentical($field_item->getParent(), $field, 'Parent object matches.');
 
     $item_value = $field_item->get('entity');
-    $this->assertIdentical($item_value->getRoot(), $entity, 'Entity is root object.');
+    $this->assertIdentical($item_value->getRoot()->getValue(), $entity, 'Entity is root object.');
     $this->assertEqual($item_value->getPropertyPath(), 'user_id.0.entity');
     $this->assertEqual($item_value->getName(), 'entity');
     $this->assertIdentical($item_value->getParent(), $field_item, 'Parent object matches.');
@@ -476,9 +477,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
       }
     }
 
-    $properties = $entity->getProperties();
-    $this->assertEqual(array_keys($properties), array_keys($entity->getDataDefinition()->getPropertyDefinitions()), format_string('%entity_type: All properties returned.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($properties, iterator_to_array($entity->getIterator()), format_string('%entity_type: Entity iterator iterates over all properties.', array('%entity_type' => $entity_type)));
+    $fields = $entity->getFields();
+    $this->assertEqual(array_keys($fields), array_keys($entity->getTypedData()->getDataDefinition()->getPropertyDefinitions()), format_string('%entity_type: All fields returned.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($fields, iterator_to_array($entity->getIterator()), format_string('%entity_type: Entity iterator iterates over all fields.', array('%entity_type' => $entity_type)));
   }
 
   /**
@@ -504,7 +505,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // contained properties and getting all contained strings, limited by a
     // certain depth.
     $strings = array();
-    $this->getContainedStrings($entity, 0, $strings);
+    $this->getContainedStrings($entity->getTypedData(), 0, $strings);
 
     // @todo: Once the user entity has defined properties this should contain
     // the user name and other user entity strings as well.

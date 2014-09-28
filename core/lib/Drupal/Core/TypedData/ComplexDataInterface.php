@@ -31,11 +31,13 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
    *
-   * @throws \InvalidArgumentException
-   *   If an invalid property name is given.
-   *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The property object.
+   *
+   * @throws \InvalidArgumentException
+   *   If an invalid property name is given.
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no property can be created.
    */
   public function get($property_name);
 
@@ -51,11 +53,13 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    *   TRUE. If the update stems from a parent object, set it to FALSE to avoid
    *   being notified again.
    *
-   * @throws \InvalidArgumentException
-   *   If the specified property does not exist.
-   *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The property object.
+   *
+   * @throws \InvalidArgumentException
+   *   If the specified property does not exist.
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no property can be set.
    */
   public function set($property_name, $value, $notify = TRUE);
 
@@ -68,6 +72,9 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    * @return \Drupal\Core\TypedData\TypedDataInterface[]
    *   An array of property objects implementing the TypedDataInterface, keyed
    *   by property name.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no property can be created.
    */
   public function getProperties($include_computed = FALSE);
 
@@ -79,6 +86,9 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    *
    * @return array
    *   An array of property values, keyed by property name.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no property can be created.
    */
   public function toArray();
 

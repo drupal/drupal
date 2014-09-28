@@ -85,7 +85,7 @@ class ContentEntityNormalizer extends NormalizerBase {
       }
     }
     else {
-      $fields = $entity->getProperties();
+      $fields = $entity->getFields();
     }
     // Ignore the entity ID and revision ID.
     $exclude = array($entity->getEntityType()->getKey('id'), $entity->getEntityType()->getKey('revision'));

@@ -10,7 +10,6 @@ namespace Drupal\Core\Plugin\Context;
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataTrait;
 
@@ -46,11 +45,6 @@ class Context extends ComponentContext implements ContextInterface {
         throw new ContextException(String::format("The @type context is required and not present.", array('@type' => $type)));
       }
       return NULL;
-    }
-    // Special case entities.
-    // @todo: Remove once entities do not implemented TypedDataInterface.
-    if ($this->contextData instanceof ContentEntityInterface) {
-      return $this->contextData;
     }
     return $this->contextData->getValue();
   }

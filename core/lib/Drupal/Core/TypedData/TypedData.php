@@ -44,6 +44,13 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $parent;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function createInstance($definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    return new static($definition, $name, $parent);
+  }
+
+  /**
    * Constructs a TypedData object given its definition and context.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition

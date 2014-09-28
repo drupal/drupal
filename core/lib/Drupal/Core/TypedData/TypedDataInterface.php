@@ -19,6 +19,26 @@ use Drupal\user;
 interface TypedDataInterface {
 
   /**
+   * Constructs a TypedData object given its definition and context.
+   *
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   The data definition.
+   * @param string|null $name
+   *   (optional) The name of the created property, or NULL if it is the root
+   *   of a typed data tree. Defaults to NULL.
+   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
+   *   (optional) The parent object of the data property, or NULL if it is the
+   *   root of a typed data tree. Defaults to NULL.
+   *
+   * @todo When \Drupal\Core\Config\TypedConfigManager has been fixed to use
+   *   class-based definitions, type-hint $definition to
+   *   DataDefinitionInterface. https://drupal.org/node/1928868
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   */
+  public static function createInstance($definition, $name = NULL, TypedDataInterface $parent = NULL);
+
+  /**
    * Gets the data definition.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
@@ -46,7 +66,7 @@ interface TypedDataInterface {
    *
    * @throws \InvalidArgumentException
    *   If the value input is inappropriate.
-   * @throws \Drupal\Core\TypedData\ReadOnlyException
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    *   If the data is read-only.
    */
   public function setValue($value, $notify = TRUE);
@@ -136,10 +156,10 @@ interface TypedDataInterface {
    *
    * This method is supposed to be called by the factory only.
    *
-   * @param string $name
+   * @param string|null $name
    *   (optional) The name of the property or the delta of the list item,
    *   or NULL if it is the root of a typed data tree. Defaults to NULL.
-   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
+   * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */

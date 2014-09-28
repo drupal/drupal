@@ -57,6 +57,9 @@ interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \T
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The item at the specified position in this list. An empty item is created
    *   if it does not exist yet.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no item can be created.
    */
   public function get($index);
 
@@ -70,6 +73,9 @@ interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \T
    *
    * @return static
    *   Returns the list.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no item can be set.
    */
   public function set($index, $item);
 
@@ -78,6 +84,9 @@ interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \T
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The first item in this list.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   *   If the complex data structure is unset and no item can be created.
    */
   public function first();
 
