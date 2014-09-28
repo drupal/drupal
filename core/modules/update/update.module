@@ -347,7 +347,7 @@ function update_get_available($refresh = FALSE) {
 
     // If we have project data but no release data, we need to fetch. This
     // can be triggered when we fail to contact a release history server.
-    if (empty($available[$key]['releases'])) {
+    if (empty($available[$key]['releases']) && !$available[$key]['last_fetch']) {
       $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
     }
 

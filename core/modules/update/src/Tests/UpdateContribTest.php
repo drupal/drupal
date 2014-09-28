@@ -56,6 +56,9 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertNoText(t('Update available'));
     $this->assertText(t('No available releases found'));
     $this->assertNoRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'));
+
+    $available = update_get_available();
+    $this->assertFalse(isset($available['aaa_update_test']['fetch_status']), 'Results are cached even if no releases are available.');
   }
 
   /**
