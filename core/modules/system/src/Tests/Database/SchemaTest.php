@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests table creation and modification via the schema API.
@@ -30,7 +31,7 @@ class SchemaTest extends KernelTestBase {
   function testSchema() {
     // Try creating a table.
     $table_specification = array(
-      'description' => 'Schema table description.',
+      'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
       'fields' => array(
         'id'  => array(
           'type' => 'int',
@@ -39,7 +40,7 @@ class SchemaTest extends KernelTestBase {
         'test_field'  => array(
           'type' => 'int',
           'not null' => TRUE,
-          'description' => 'Schema column description.',
+          'description' => 'Schema table description may contain "quotes" and could be long—very long indeed. There could be "multiple quoted regions".',
         ),
         'test_field_string'  => array(
           'type' => 'varchar',
@@ -212,6 +213,11 @@ class SchemaTest extends KernelTestBase {
   function checkSchemaComment($description, $table, $column = NULL) {
     if (method_exists(Database::getConnection()->schema(), 'getComment')) {
       $comment = Database::getConnection()->schema()->getComment($table, $column);
+      // The schema comment truncation for mysql is different.
+      if (Database::getConnection()->databaseType() == 'mysql') {
+        $max_length = $column ? 255 : 60;
+        $description = Unicode::truncate($description, $max_length, TRUE, TRUE);
+      }
       $this->assertEqual($comment, $description, 'The comment matches the schema description.');
     }
   }

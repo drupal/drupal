@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * @addtogroup schemaapi
@@ -492,7 +493,7 @@ class Schema extends DatabaseSchema {
     // Truncate comment to maximum comment length.
     if (isset($length)) {
       // Add table prefixes before truncating.
-      $comment = substr($this->connection->prefixTables($comment), 0, $length);
+      $comment = Unicode::truncate($this->connection->prefixTables($comment), $length, TRUE, TRUE);
     }
 
     return $this->connection->quote($comment);
