@@ -125,7 +125,12 @@ class Serializer extends StylePluginBase {
       $rows[] = $this->view->rowPlugin->render($row);
     }
 
-    return $this->serializer->serialize($rows, $this->displayHandler->getContentType());
+    $content_type = $this->displayHandler->getContentType();
+    if (!empty($this->view->live_preview)) {
+      $content_type = $this->options['formats'] ? reset($this->options['formats']) : 'json';
+    }
+
+    return $this->serializer->serialize($rows, $content_type);
   }
 
   /**

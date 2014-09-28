@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the serializer style plugin.
@@ -259,9 +260,17 @@ class StyleSerializerTest extends PluginTestBase {
   }
 
   /**
-   * Tests the preview output for json output.
+   * Tests the live preview output for json output.
    */
-  public function testPreview() {
+  public function testLivePreview() {
+    // We set up a request so it looks like an request in the live preview.
+    $request = new Request();
+    $request->setFormat('drupal_ajax', 'application/vnd.drupal-ajax');
+    $request->headers->set('Accept', 'application/vnd.drupal-ajax');
+      /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+    $request_stack = \Drupal::service('request_stack');
+    $request_stack->push($request);
+
     $view = Views::getView('test_serializer_display_entity');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
@@ -276,7 +285,6 @@ class StyleSerializerTest extends PluginTestBase {
 
     $expected = String::checkPlain($serializer->serialize($entities, 'json'));
 
-    $view->display_handler->setContentType('json');
     $view->live_preview = TRUE;
 
     $build = $view->preview();
