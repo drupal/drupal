@@ -1531,12 +1531,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
       $this->database->update($table_name)
         ->fields(array('deleted' => 1))
-        ->condition('bundle', $field_definition->getBundle())
+        ->condition('bundle', $field_definition->getTargetBundle())
         ->execute();
       if ($this->entityType->isRevisionable()) {
         $this->database->update($revision_name)
           ->fields(array('deleted' => 1))
-          ->condition('bundle', $field_definition->getBundle())
+          ->condition('bundle', $field_definition->getTargetBundle())
           ->execute();
       }
     }
@@ -1606,7 +1606,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $entity_query
       ->distinct(TRUE)
       ->fields('t', array('entity_id'))
-      ->condition('bundle', $field_definition->getBundle())
+      ->condition('bundle', $field_definition->getTargetBundle())
       ->range(0, $batch_size);
 
     // Create a map of field data table column names to field column names.

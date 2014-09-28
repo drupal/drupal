@@ -594,11 +594,11 @@ class EntityFieldTest extends EntityUnitTestBase  {
     entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
     $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
     $this->assertEqual($field_definitions['name']->getDescription(), 'The default description.');
-    $this->assertNull($field_definitions['name']->getBundle());
+    $this->assertNull($field_definitions['name']->getTargetBundle());
 
     $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
     $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
-    $this->assertEqual($field_definitions['name']->getBundle(), 'some_test_bundle');
+    $this->assertEqual($field_definitions['name']->getTargetBundle(), 'some_test_bundle');
 
     // Now create a config override of the bundle field.
     $field_config = $field_definitions['name']->getConfig('some_test_bundle');
@@ -609,7 +609,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->entityManager->clearCachedFieldDefinitions();
     $field_definitions = $this->entityManager->getFieldDefinitions('entity_test_field_override', 'some_test_bundle');
     $this->assertEqual($field_definitions['name']->getDescription(), 'Custom description.');
-    $this->assertEqual($field_definitions['name']->getBundle(), 'some_test_bundle');
+    $this->assertEqual($field_definitions['name']->getTargetBundle(), 'some_test_bundle');
     $this->assertFalse($field_definitions['name']->isTranslatable());
   }
 

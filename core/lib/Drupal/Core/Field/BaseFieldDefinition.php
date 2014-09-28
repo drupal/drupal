@@ -519,7 +519,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * {@inheritdoc}
    */
-  public function getBundle() {
+  public function getTargetBundle() {
     return isset($this->definition['bundle']) ? $this->definition['bundle'] : NULL;
   }
 
@@ -531,7 +531,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return $this
    */
-  public function setBundle($bundle) {
+  public function setTargetBundle($bundle) {
     $this->definition['bundle'] = $bundle;
     return $this;
   }

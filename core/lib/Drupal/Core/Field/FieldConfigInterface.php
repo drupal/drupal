@@ -52,14 +52,6 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
   public function allowBundleRename();
 
   /**
-   * Returns the name of the bundle this field is attached to.
-   *
-   * @return string
-   *   The name of the bundle this field is attached to.
-   */
-  public function targetBundle();
-
-  /**
    * Sets a default value.
    *
    * Note that if a default value callback is set, it will take precedence over

@@ -76,13 +76,29 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function getType();
 
   /**
+   * Returns the ID of the entity type the field is attached to.
+   *
+   * This method should not be confused with EntityInterface::entityType()
+   * (configurable fields are config entities, and thus implement both
+   * interfaces):
+   *   - FieldDefinitionInterface::getTargetEntityTypeId() answers "as a field,
+   *     which entity type are you attached to?".
+   *   - EntityInterface::getEntityTypeId() answers "as a (config) entity, what
+   *     is your own entity type?".
+   *
+   * @return string
+   *   The entity type ID.
+   */
+  public function getTargetEntityTypeId();
+
+  /**
    * Gets the bundle the field is defined for.
    *
    * @return string|null
    *   The bundle the field is defined for, or NULL if it is a base field; i.e.,
    *   it is not bundle-specific.
    */
-  public function getBundle();
+  public function getTargetBundle();
 
   /**
    * Returns whether the display for the field can be configured.

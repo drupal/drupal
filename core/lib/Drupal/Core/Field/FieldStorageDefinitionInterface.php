@@ -198,18 +198,18 @@ interface FieldStorageDefinitionInterface {
   public function getMainPropertyName();
 
   /**
-   * Returns the ID of the type of the entity this field is attached to.
+   * Returns the ID of the entity type the field is attached to.
    *
    * This method should not be confused with EntityInterface::entityType()
    * (configurable fields are config entities, and thus implement both
    * interfaces):
    *   - FieldStorageDefinitionInterface::getTargetEntityTypeId() answers "as a
-   *     field, which entity type are you attached to?".
+   *     field storage, which entity type are you attached to?".
    *   - EntityInterface::getEntityTypeId() answers "as a (config) entity, what
-   *     is your own entity type".
+   *     is your own entity type?".
    *
    * @return string
-   *   The name of the entity type.
+   *   The entity type ID.
    */
   public function getTargetEntityTypeId();
 

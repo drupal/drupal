@@ -405,7 +405,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       if ($base_field_definition instanceof BaseFieldDefinition) {
         $base_field_definition->setName($field_name);
         $base_field_definition->setTargetEntityTypeId($entity_type_id);
-        $base_field_definition->setBundle(NULL);
+        $base_field_definition->setTargetBundle(NULL);
       }
     }
 
@@ -518,7 +518,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       if ($field_definition instanceof BaseFieldDefinition) {
         $field_definition->setName($field_name);
         $field_definition->setTargetEntityTypeId($entity_type_id);
-        $field_definition->setBundle($bundle);
+        $field_definition->setTargetBundle($bundle);
       }
     }
 

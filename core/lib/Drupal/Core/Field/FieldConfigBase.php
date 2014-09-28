@@ -219,7 +219,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function targetBundle() {
+  public function getTargetBundle() {
     return $this->bundle;
   }
 
@@ -423,13 +423,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
         ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBundle() {
-    return $this->bundle;
   }
 
   /**
