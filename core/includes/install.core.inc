@@ -1228,7 +1228,10 @@ function install_download_translation(&$install_state) {
   }
 
   // The download was successful, reload the page in the new language.
-  install_goto(install_redirect_url($install_state));
+  $install_state['translations'][$install_state['parameters']['langcode']] = TRUE;
+  if ($install_state['interactive']) {
+    install_goto(install_redirect_url($install_state));
+  }
 }
 
 /**
@@ -1559,6 +1562,7 @@ function install_download_additional_translations_operations(&$install_state) {
   // remove English.
   if ($langcode != 'en') {
     \Drupal::config('system.site')->set('langcode', $langcode)->save();
+    \Drupal::service('language.default')->set($language);
     entity_delete_multiple('configurable_language', array('en'));
   }
 
