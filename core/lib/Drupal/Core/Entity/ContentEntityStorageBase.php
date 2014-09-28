@@ -180,7 +180,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
   protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
     foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
       $translation = $entity->getTranslation($langcode);
-      foreach ($translation->getFields(TRUE) as $field) {
+      foreach ($translation->getFields() as $field) {
         $field->$method();
       }
     }

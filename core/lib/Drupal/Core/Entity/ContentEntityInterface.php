@@ -196,7 +196,7 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    * @return \Drupal\Core\Field\FieldItemListInterface[]
    *   An array of field item lists implementing, keyed by field name.
    */
-  public function getFields($include_computed = FALSE);
+  public function getFields($include_computed = TRUE);
 
   /**
    * Reacts to changes to a field.
