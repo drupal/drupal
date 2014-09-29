@@ -50,7 +50,7 @@ class Page extends PathPluginBase {
         'title' => array('default' => '', 'translatable' => FALSE),
         'description' => array('default' => '', 'translatable' => FALSE),
         'weight' => array('default' => 0),
-        'menu_name' => array('default' => 'navigation'),
+        'menu_name' => array('default' => 'main'),
         'parent' => array('default' => ''),
         'context' => array('default' => ''),
       ),
@@ -62,7 +62,7 @@ class Page extends PathPluginBase {
         'title' => array('default' => '', 'translatable' => FALSE),
         'description' => array('default' => '', 'translatable' => FALSE),
         'weight' => array('default' => 0),
-        'menu_name' => array('default' => 'navigation'),
+        'menu_name' => array('default' => 'main'),
       ),
     );
 
@@ -338,11 +338,11 @@ class Page extends PathPluginBase {
         );
         // Only display the menu selector if Menu UI module is enabled.
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $form['tab_options']['name'] = array(
+          $form['tab_options']['menu_name'] = array(
             '#title' => $this->t('Menu'),
             '#type' => 'select',
             '#options' => menu_ui_get_menus(),
-            '#default_value' => $tab_options['name'],
+            '#default_value' => $tab_options['menu_name'],
             '#description' => $this->t('Insert item into an available menu.'),
             '#states' => array(
               'visible' => array(

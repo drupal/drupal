@@ -154,4 +154,17 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
     return $this->pluginDefinition;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isDeletable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteLink() {
+  }
+
 }

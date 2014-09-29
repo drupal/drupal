@@ -97,6 +97,24 @@ display:
     display_title: Page
     id: page_4
     position: 0
+  page_5:
+    display_options:
+      path: test-path
+      title: 'Tests a menu with a non-existing parent'
+      menu:
+        type: normal
+        title: 'Test child'
+        parent: 'system.admin'
+        description: ''
+        name: not-existing-menu-name
+        weight: '0'
+        context: '0'
+      defaults:
+        title: '0'
+    display_plugin: page
+    display_title: Page
+    id: page_4
+    position: 0
 label: 'Test page menu'
 id: test_page_display_menu
 tag: ''

@@ -16,12 +16,20 @@ namespace Drupal\views_ui\Tests;
 class DisplayPathTest extends UITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('menu_ui');
+
+  /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = array('test_view', 'test_page_display_menu');
 
+  /**
+   * Runs the tests.
+   */
   public function testPathUI() {
     $this->doBasicPathUITest();
     $this->doAdvancedPathsValidationTest();
@@ -96,6 +104,25 @@ class DisplayPathTest extends UITestBase {
     $this->assertLink(t('Tab: @title', array('@title' => 'Test tab title')));
     // If it's a default tab, it should also have an additional settings link.
     $this->assertLinkByHref('admin/structure/views/nojs/display/test_view/page_1/tab_options');
+
+    // Ensure that you can select a parent in case the parent does not exist.
+    $this->drupalGet('admin/structure/views/nojs/display/test_page_display_menu/page_5/menu');
+    $this->assertResponse(200);
+    $menu_parent = $this->xpath('//select[@id="edit-menu-parent"]');
+    $menu_options = (array) $menu_parent[0]->option;
+    unset($menu_options['@attributes']);
+
+    $this->assertEqual([
+      '<User account menu>',
+      '-- My account',
+      '-- Log out',
+      '<Administration>',
+      '<Footer>',
+      '<Main navigation>',
+      '<Tools>',
+      '-- Compose tips (disabled)',
+      '-- Test menu link',
+    ], $menu_options);
   }
 
 }

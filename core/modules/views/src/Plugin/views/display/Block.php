@@ -8,8 +8,10 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\Block\ViewsBlock;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The plugin that handles a block.
@@ -39,6 +41,46 @@ class Block extends DisplayPluginBase {
    */
   protected $usesAttachments = TRUE;
 
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a new Block instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -316,14 +358,16 @@ class Block extends DisplayPluginBase {
     }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::remove().
+   * {@inheritdoc}
    */
   public function remove() {
     parent::remove();
 
-    $plugin_id = 'views_block:' . $this->view->storage->id() . '-' . $this->display['id'];
-    foreach (entity_load_multiple_by_properties('block', array('plugin' => $plugin_id)) as $block) {
-      $block->delete();
+    if ($this->entityManager->hasDefinition('block')) {
+      $plugin_id = 'views_block:' . $this->view->storage->id() . '-' . $this->display['id'];
+      foreach ($this->entityManager->getStorage('block')->loadByProperties(['plugin' => $plugin_id]) as $block) {
+        $block->delete();
+      }
     }
   }
 

@@ -369,6 +369,8 @@ display:
         type: normal
         title: Glossary
         weight: 0
+        menu_name: main
+        parent: ''
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   attachment_1:

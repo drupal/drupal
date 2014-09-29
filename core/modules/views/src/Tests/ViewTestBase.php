@@ -33,12 +33,6 @@ abstract class ViewTestBase extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Views' Page displays put menu links in the 'navigation' menu by default.
-    entity_create('menu', array(
-      'id' => 'navigation',
-      'label' => 'Navigation',
-    ))->save();
-
     // Ensure that the plugin definitions are cleared.
     foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
       $this->container->get("plugin.manager.views.$plugin_type")->clearCachedDefinitions();

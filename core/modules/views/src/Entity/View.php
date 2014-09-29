@@ -348,6 +348,23 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    // Call the remove() hook on the individual displays.
+    /** @var \Drupal\views\ViewStorageInterface $entity */
+    foreach ($entities as $entity) {
+      $executable = Views::executableFactory()->get($entity);
+      foreach ($entity->get('display') as $display_id => $display) {
+        $executable->setDisplay($display_id);
+        $executable->getDisplay()->remove();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 

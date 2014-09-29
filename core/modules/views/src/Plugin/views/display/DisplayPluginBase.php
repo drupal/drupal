@@ -134,6 +134,13 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @todo Replace DisplayPluginBase::$display with
    *   DisplayPluginBase::$configuration to standardize with other plugins.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
@@ -2389,6 +2396,12 @@ abstract class DisplayPluginBase extends PluginBase {
    * Reacts on deleting a display.
    */
   public function remove() {
+    $menu_links = $this->getMenuLinks();
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    foreach ($menu_links as $menu_link_id => $menu_link) {
+      $menu_link_manager->removeDefinition("views_view:$menu_link_id");
+    }
   }
 
   /**

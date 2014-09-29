@@ -37,6 +37,9 @@ views.display.page:
         menu_name:
           type: string
           label: 'Menu name'
+        parent:
+          type: string
+          label: 'Parent'
         context:
           type: string
           label: 'Context'
