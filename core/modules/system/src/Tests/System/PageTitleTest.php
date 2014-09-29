@@ -75,8 +75,6 @@ class PageTitleTest extends WebTestBase {
     $edit = array(
       'toggle_name'           => TRUE,
       'toggle_slogan'         => TRUE,
-      'toggle_main_menu'      => TRUE,
-      'toggle_secondary_menu' => TRUE,
     );
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 

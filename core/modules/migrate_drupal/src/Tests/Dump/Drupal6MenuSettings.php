@@ -23,14 +23,6 @@ class Drupal6MenuSettings extends Drupal6DumpBase {
       'value',
     ))
     ->values(array(
-      'name' => 'menu_primary_links_source',
-      'value' => 's:13:"primary-links";',
-    ))
-    ->values(array(
-      'name' => 'menu_secondary_links_source',
-      'value' => 's:15:"secondary-links";',
-    ))
-    ->values(array(
       'name' => 'menu_override_parent_selector',
       'value' => 'b:0;',
     ))

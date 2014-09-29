@@ -156,12 +156,17 @@ function system_help($route_name, RouteMatchInterface $route_match) {
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
     // Normally theme suggestion templates are only picked up when they are in
-    // themes. We explicitly define the block__system_branding_block theme
-    // suggestion here so that the template in core/modules/system/templates
-    // is picked up.
+    // themes. We explicitly define theme suggestions here so that the block
+    // templates in core/modules/system/templates are picked up.
     'block__system_branding_block' => array(
+      'render element' => 'elements',
       'base hook' => 'block',
       'template' => 'block--system-branding-block',
+    ),
+    'block__system_menu_block' => array(
+      'render element' => 'elements',
+      'base hook' => 'block',
+      'template' => 'block--system-menu-block',
     ),
     'system_themes_page' => array(
       'variables' => array(
@@ -673,14 +678,6 @@ function system_preprocess_block(&$variables) {
     case 'system_help_block':
       $variables['attributes']['role'] = 'complementary';
       break;
-
-    case 'system_menu_block':
-      $menus = menu_list_system_menus();
-      if (isset($menus[$variables['derivative_plugin_id']])) {
-        $variables['attributes']['role'] = 'navigation';
-        $variables['attributes']['class'][] = 'block-menu';
-      }
-      break;
   }
 }
 
@@ -928,8 +925,6 @@ function _system_default_theme_features() {
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',
-    'main_menu',
-    'secondary_menu',
   );
 }
 

@@ -108,7 +108,7 @@ class DisplayPageWebTest extends PluginTestBase {
     $this->drupalPlaceBlock('system_menu_block:tools');
     $this->drupalGet('<front>');
 
-    $menu_link = $this->cssSelect('div.block-menu ul.menu a');
+    $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
     $this->assertEqual((string) $menu_link[0], 'Test menu link');
 
     // Update the menu link.
@@ -117,7 +117,7 @@ class DisplayPageWebTest extends PluginTestBase {
     ], t('Save'));
 
     $this->drupalGet('<front>');
-    $menu_link = $this->cssSelect('div.block-menu ul.menu a');
+    $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
     $this->assertEqual((string) $menu_link[0], 'New title');
   }
 

@@ -64,7 +64,7 @@ class BlockUiTest extends WebTestBase {
       ),
       array(
         'label' => 'Powered by Drupal',
-        'tr' => '12',
+        'tr' => '16',
         'plugin_id' => 'system_powered_by_block',
         'settings' => array('region' => 'footer', 'id' => 'powered'),
         'test_weight' => '0',

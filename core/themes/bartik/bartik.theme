@@ -55,17 +55,6 @@ function bartik_preprocess_page(&$variables) {
   // Store back the classes to the htmlpage object.
   $attributes['class'] = $classes;
 
-  // Set additional attributes on the primary and secondary navigation menus.
-  if (!empty($variables['main_menu'])) {
-    $variables['main_menu']['#attributes']['id'] = 'main-menu-links';
-    $variables['main_menu']['#attributes']['class'][] = 'links';
-  }
-  if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
-    $variables['secondary_menu']['#attributes']['class'][] = 'links';
-    $variables['secondary_menu']['#attributes']['class'][] = 'inline';
-  }
-
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);
 

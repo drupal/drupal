@@ -26,9 +26,6 @@
  *   slogan has been disabled in theme settings.
  *
  * Navigation:
- * - main_menu: The Main menu links for the site, if they have been configured.
- * - secondary_menu: The Secondary menu links for the site, if they have been
- *   configured.
  * - breadcrumb: The breadcrumb trail for the current page.
  *
  * Page content (in order of occurrence in the default page.html.twig):
@@ -50,6 +47,8 @@
  *
  * Regions:
  * - page.header: Items for the header region.
+ * - page.primary_menu: Items for the primary menu region.
+ * - page.secondary_menu: Items for the secondary menu region.
  * - page.highlighted: Items for the highlighted content region.
  * - page.help: Dynamic help text, mostly for admin pages.
  * - page.content: The main content of the current page.
@@ -90,17 +89,13 @@
           <div class="site-slogan">{{ site_slogan }}</div>
         {% endif %}
       </div>{# ./name-and-slogan #}
-   {% endif %}
+    {% endif %}
 
     {{ page.header }}
   </header>
 
-  {% if main_menu or secondary_menu %}
-    <nav role="navigation" aria-labelledby="links__system_main_menu">
-      {{ main_menu }}
-      {{ secondary_menu }}
-    </nav>
-  {% endif %}
+  {{ page.primary_menu }}
+  {{ page.secondary_menu }}
 
   {{ breadcrumb }}
 

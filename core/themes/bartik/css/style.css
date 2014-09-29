@@ -551,20 +551,20 @@ h1.site-name {
   float: right;
 }
 
-/* --------------- Main Menu ------------ */
-#main-menu {
+/* --------------- Primary Menu ------------ */
+.region-primary-menu {
   clear: both;
 }
-#main-menu-links {
+.region-primary-menu .menu {
   font-size: 0.929em;
   margin: 0 5px;
   padding: 0;
   text-align: left; /* LTR */
 }
-[dir="rtl"] #main-menu-links {
+[dir="rtl"] .region-primary-menu .menu {
   text-align: right;
 }
-#main-menu-links li {
+.region-primary-menu .menu li {
   float: none;
   list-style: none;
   margin: 0;
@@ -572,7 +572,7 @@ h1.site-name {
   height: auto;
   width: 100%;
 }
-#main-menu-links a {
+.region-primary-menu .menu a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
@@ -584,31 +584,38 @@ h1.site-name {
   margin: 4px 0;
   padding: 0.9em 0 0.9em 10px; /* LTR */
 }
-[dir="rtl"] #main-menu-links a {
+[dir="rtl"] .region-primary-menu .menu a {
   padding: 0.9em 10px 0.9em 0;
 }
-#main-menu-links a:hover,
-#main-menu-links a:focus {
+.region-primary-menu .menu a:hover,
+.region-primary-menu .menu a:focus {
   background: #f6f6f2;
   background: rgba(255, 255, 255, 0.95);
 }
-#main-menu-links a:active {
+.region-primary-menu .menu a:active {
   background: #b3b3b3;
   background: rgba(255, 255, 255, 1);
 }
-#main-menu-links li a.active {
+.region-primary-menu .menu li a.active {
   border-bottom: none;
 }
 
-/* ---------- Main Menu Toggle ----------- */
-#nav, #no-nav {
+/* ---------- Primary Menu Toggle ----------- */
+/* Hide the toggle by default. */
+.menu-toggle,
+.menu-toggle-target {
+  display: none;
+}
+/* Unhide it for the primary menu. */
+.region-primary-menu .menu-toggle-target {
+  display: inherit;
   position: fixed;
   top: 0;
 }
-.main-menu-reveal {
+.region-primary-menu .menu-toggle {
   display: none;
 }
-body:not(:target) .main-menu-reveal {
+body:not(:target) .region-primary-menu .menu-toggle {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
@@ -620,7 +627,7 @@ body:not(:target) .main-menu-reveal {
   padding: 0.9em 10px 0.9em 10px;
   z-index: 1000;
 }
-body:not(:target) .main-menu-reveal:after {
+body:not(:target) .region-primary-menu .menu-toggle:after {
   content:"";
   background: url(../../../misc/icons/ffffff/hamburger.svg) no-repeat;
   background-size: contain;
@@ -630,62 +637,45 @@ body:not(:target) .main-menu-reveal:after {
   position: absolute;
   right: 10px; /* LTR */
 }
-body:not(:target) #nav:target ~ .main-menu-reveal,
-body:not(:target) .main-menu-reveal--hide {
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle,
+body:not(:target) .region-primary-menu .menu-toggle--hide {
   display: none;
 }
-body:not(:target) #nav:target ~ .main-menu-reveal--hide {
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle--hide {
   display: block;
 }
-[dir="rtl"] #secondary-menu-links {
-  left: 10px;
-  right: auto;
-}
-#main-menu-links .menu-hide a {
-  display: none;
-}
-body:not(:target) #nav:target ~ #main-menu-links .menu-hide a {
-  background-color: transparent;
-  border: none;
-  display: block;
-  width: 100%;
-  height: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  text-indent: -999em;
-  z-index: 1001;
-}
-body:not(:target) #main-menu-links li {
+
+body:not(:target) .region-primary-menu .menu li {
   height: 0;
   overflow: hidden;
 }
-body:not(:target) #nav:target ~ #main-menu-links li {
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu li {
   height: auto;
   overflow: visible;
 }
 
 /* --------------- Secondary Menu ------------ */
 
-#secondary-menu-links {
+.region-secondary-menu .menu {
   float: right; /* LTR */
   font-size: 0.929em;
   margin: 0 10px;
-}
-[dir="rtl"] #secondary-menu-links {
-  float: left;
-}
-#secondary-menu-links  li{
-  margin: 0;
   padding: 0;
 }
-#secondary-menu-links  a {
+[dir="rtl"] .region-secondary-menu .menu {
+  float: left;
+}
+.region-secondary-menu .menu li {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+.region-secondary-menu .menu a {
   display: inline-block;
   padding:  0.8em;
 }
-#secondary-menu-links a:hover,
-#secondary-menu-links a:focus {
+.region-secondary-menu .menu a:hover,
+.region-secondary-menu .menu a:focus {
   text-decoration: underline;
 }
 
@@ -1894,13 +1884,13 @@ div.admin-panel .description {
   .site-branding-text {
     padding: 10px 10px 8px;
   }
-  #main-menu-links {
+  .region-primary-menu .menu {
     margin: 0 5px;
     padding: 0;
     text-align: center;
   }
-  #main-menu-links li,
-  body:not(:target) #main-menu-links li {
+  .region-primary-menu .menu li,
+  body:not(:target) .region-primary-menu .menu li {
     float: left; /* LTR */
     margin-right: 5px; /* LTR */
     padding: 0;
@@ -1909,26 +1899,26 @@ div.admin-panel .description {
     height: auto;
     overflow: visible;
   }
-  [dir="rtl"] #main-menu-links li {
+  [dir="rtl"] .region-primary-menu .menu li {
     float: right;
     margin-left: 5px;
     margin-right: 0;
   }
-  #main-menu-links li:nth-child(3n) {
+  .region-primary-menu .menu li:nth-child(3n) {
     margin-right: -5px; /* LTR */
   }
-  [dir="rtl"] #main-menu-links li:nth-child(3n) {
+  [dir="rtl"] .region-primary-menu .menu li:nth-child(3n) {
     margin-left: -5px;
     margin-right: 0;
   }
-  #main-menu-links a {
+  .region-primary-menu .menu a {
     float: none;
     display: block;
     border-radius: 8px;
     margin-bottom: 5px;
     padding: 0.9em 5px;
   }
-  body:not(:target) .main-menu-reveal {
+  body:not(:target) .region-primary-menu .menu-toggle {
     display: none;
   }
 }
@@ -1959,13 +1949,13 @@ div.admin-panel .description {
   .site-name {
     font-size: 1.821em;
   }
-  #main-menu-links {
+  .region-primary-menu .block-menu .menu {
     font-size: 0.929em;
     margin: 0;
     padding: 0 15px;
   }
-  #main-menu-links li,
-  body:not(:target) #main-menu-links li {
+  .region-primary-menu .menu li,
+  body:not(:target) .region-primary-menu .menu li {
     float: left; /* LTR */
     list-style: none;
     padding: 0 1px;
@@ -1974,26 +1964,27 @@ div.admin-panel .description {
     height: auto;
     overflow: visible;
   }
-  [dir="rtl"] #main-menu-links li {
+  [dir="rtl"] .region-primary-menu .menu li,
+  [dir="rtl"] body:not(:target) .region-primary-menu .menu li {
     float: right;
   }
-  #main-menu-links a {
+  .region-primary-menu .menu a {
     float: left; /* LTR */
     padding: 0.7em 0.8em;
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  [dir="rtl"] #main-menu-links a {
+  [dir="rtl"] .region-primary-menu .menu a {
     float: right;
     padding: 0.7em 0.8em;
   }
-  .featured #main-menu-links li a:active,
-  .featured #main-menu-links li a.active {
+  .featured .region-primary-menu .menu li a:active,
+  .featured .region-primary-menu .menu li a.active {
     background: #f0f0f0;
     background: rgba(240, 240, 240, 1.0);
   }
-  body:not(:target) .main-menu-reveal {
+  body:not(:target) .region-primary-menu .menu-toggle {
     display: none;
   }
 }

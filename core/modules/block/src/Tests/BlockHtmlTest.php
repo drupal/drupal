@@ -48,7 +48,7 @@ class BlockHtmlTest extends WebTestBase {
     $this->assertFieldByXPath('//div[@id="block-test-html-block" and @data-custom-attribute="foo"]', NULL, 'HTML ID and attributes for test block are valid and on the same DOM element.');
 
     // Ensure expected markup for a menu block.
-    $elements = $this->xpath('//div[contains(@class, :div-class)]/ul[contains(@class, :ul-class)]/li', array(':div-class' => 'block-system', ':ul-class' => 'menu'));
+    $elements = $this->xpath('//nav[contains(@class, :nav-class)]/ul[contains(@class, :ul-class)]/li', array(':nav-class' => 'block-menu', ':ul-class' => 'menu'));
     $this->assertTrue(!empty($elements), 'The proper block markup was found.');
   }
 

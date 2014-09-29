@@ -35,8 +35,6 @@ class ThemeHandler implements ThemeHandlerInterface {
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',
-    'main_menu',
-    'secondary_menu',
   );
 
   /**
@@ -451,6 +449,8 @@ class ThemeHandler implements ThemeHandlerInterface {
         'sidebar_second' => 'Right sidebar',
         'content' => 'Content',
         'header' => 'Header',
+        'primary_menu' => 'Primary menu',
+        'secondary_menu' => 'Secondary menu',
         'footer' => 'Footer',
         'highlighted' => 'Highlighted',
         'help' => 'Help',

@@ -227,65 +227,6 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   }
 
   /**
-   * Tests the extractSubtreeOfActiveTrail() tree manipulator.
-   *
-   * @covers ::extractSubtreeOfActiveTrail
-   */
-  public function testExtractSubtreeOfActiveTrail() {
-    // No link in the active trail.
-    $this->mockTree();
-    // Get level 0.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 0);
-    $this->assertEquals(array(1, 2, 5, 6, 8), array_keys($tree));
-    // Get level 1.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 1);
-    $this->assertEquals(array(), array_keys($tree));
-    // Get level 2.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 1);
-    $this->assertEquals(array(), array_keys($tree));
-
-    // Link 5 in the active trail.
-    $this->mockTree();
-    $this->originalTree[5]->inActiveTrail = TRUE;
-    // Get level 0.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 0);
-    $this->assertEquals(array(1, 2, 5, 6, 8), array_keys($tree));
-    // Get level 1.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 1);
-    $this->assertEquals(array(7), array_keys($tree));
-    // Get level 2.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 2);
-    $this->assertEquals(array(), array_keys($tree));
-
-    // Link 2 in the active trail.
-    $this->mockTree();
-    $this->originalTree[2]->inActiveTrail = TRUE;
-    // Get level 0.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 0);
-    $this->assertEquals(array(1, 2, 5, 6, 8), array_keys($tree));
-    // Get level 1.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 1);
-    $this->assertEquals(array(3), array_keys($tree));
-    // Get level 2.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 2);
-    $this->assertEquals(array(), array_keys($tree));
-
-    // Links 2 and 3 in the active trail.
-    $this->mockTree();
-    $this->originalTree[2]->inActiveTrail = TRUE;
-    $this->originalTree[2]->subtree[3]->inActiveTrail = TRUE;
-    // Get level 0.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 0);
-    $this->assertEquals(array(1, 2, 5, 6, 8), array_keys($tree));
-    // Get level 1.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 1);
-    $this->assertEquals(array(3), array_keys($tree));
-    // Get level 2.
-    $tree = $this->defaultMenuTreeManipulators->extractSubtreeOfActiveTrail($this->originalTree, 2);
-    $this->assertEquals(array(4), array_keys($tree));
-  }
-
-  /**
    * Tests the optimized node access checking.
    *
    * @covers ::checkNodeAccess

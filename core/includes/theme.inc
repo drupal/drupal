@@ -1805,8 +1805,6 @@ function template_preprocess_page(&$variables) {
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
 
   if (!defined('MAINTENANCE_MODE')) {
-    $variables['main_menu']      = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
-    $variables['secondary_menu'] = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
     $variables['action_links']   = menu_get_local_actions();
     $variables['tabs']           = menu_local_tabs();
 
@@ -1824,19 +1822,9 @@ function template_preprocess_page(&$variables) {
     }
   }
   else {
-    $variables['main_menu']      = array();
-    $variables['secondary_menu'] = array();
     $variables['action_links']   = array();
     $variables['tabs']           = array();
     $variables['feed_icons']     = '';
-  }
-
-  // Pass the main menu and secondary menu to the template as render arrays.
-  if (!empty($variables['main_menu'])) {
-    $variables['main_menu']['#prefix'] = '<h2 id="links__system_main_menu" class="visually-hidden">' . t('Main menu') . '</h2>';
-  }
-  if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu']['#prefix'] = '<h2 id="links__system_secondary_menu" class="visually-hidden">' . t('Secondary menu') . '</h2>';
   }
 
   if ($node = \Drupal::routeMatch()->getParameter('node')) {

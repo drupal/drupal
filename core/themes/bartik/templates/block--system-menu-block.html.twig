@@ -1,0 +1,27 @@
+{% extends "@system/block--system-menu-block.html.twig" %}
+{#
+/**
+ * @file
+ * Bartik's theme implementation for a menu block.
+ *
+ * @ingroup themeable
+ */
+#}
+{% set show_anchor = "show-" ~ attributes.id|clean_id %}
+{% set hide_anchor = "hide-" ~ attributes.id|clean_id %}
+{% block content %}
+  {# If a label is displayed, wrap it in <div class="content">. #}
+  {% if configuration.label_display %}
+    <div{{ content_attributes.addClass('content') }}>
+  {% else %}
+    {# When rendering a menu without label, render a menu toggle. #}
+    <div class="menu-toggle-target menu-toggle-target-show" id="{{ show_anchor }}"></div>
+    <div class="menu-toggle-target" id="{{ hide_anchor }}"></div>
+    <a class="menu-toggle" href="#{{ show_anchor }}">{{ 'Menu'|t }}</a>
+    <a class="menu-toggle menu-toggle--hide" href="#{{ hide_anchor }}">{{ 'Menu'|t }}</a>
+  {% endif %}
+  {{ content }}
+  {% if configuration.label_display %}
+    </div>
+  {% endif %}
+{% endblock %}

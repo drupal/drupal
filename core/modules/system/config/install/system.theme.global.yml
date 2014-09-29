@@ -10,8 +10,6 @@ features:
   logo: true
   name: true
   node_user_picture: true
-  main_menu: true
-  secondary_menu: true
   slogan: true
 logo:
   path: ''

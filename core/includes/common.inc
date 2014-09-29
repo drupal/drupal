@@ -2451,20 +2451,6 @@ function drupal_prepare_page($page) {
   \Drupal::moduleHandler()->alter('page', $page);
   \Drupal::theme()->alter('page', $page);
 
-  // The "main" and "secondary" menus are never part of the page-level render
-  // array and therefore their cache tags will never bubble up into the page
-  // cache, even though they should be. This happens because they're rendered
-  // directly by the theme system.
-  // @todo Remove this once https://drupal.org/node/1869476 lands.
-  if (theme_get_setting('features.main_menu') && count(menu_main_menu())) {
-    $main_links_source = _menu_get_links_source('main_links', 'main');
-    $page['page_top']['#cache']['tags'][] = 'menu:' . $main_links_source;
-  }
-  if (theme_get_setting('features.secondary_menu') && count(menu_secondary_menu())) {
-    $secondary_links_source = _menu_get_links_source('secondary_links', 'account');
-    $page['page_top']['#cache']['tags'][] = 'menu:' . $secondary_links_source;
-  }
-
   // If no module has taken care of the main content, add it to the page now.
   // This allows the site to still be usable even if no modules that
   // control page regions (for example, the Block module) are enabled.

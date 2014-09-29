@@ -278,7 +278,7 @@ class BreadcrumbTest extends MenuTestBase {
       // untranslated menu links automatically generated from menu router items
       // ('taxonomy/term/%') should never be translated and appear in any menu
       // other than the breadcrumb trail.
-      $elements = $this->xpath('//div[@id=:menu]/descendant::a[@href=:href]', array(
+      $elements = $this->xpath('//nav[@id=:menu]/descendant::a[@href=:href]', array(
         ':menu' => 'block-bartik-tools',
         ':href' => url($link_path),
       ));

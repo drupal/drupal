@@ -106,8 +106,6 @@ class ThemeSettingsForm extends ConfigFormBase {
       'comment_user_picture' => t('User pictures in comments'),
       'comment_user_verification' => t('User verification status in comments'),
       'favicon' => t('Shortcut icon'),
-      'main_menu' => t('Main menu'),
-      'secondary_menu' => t('Secondary menu'),
     );
 
     // Some features are not always available

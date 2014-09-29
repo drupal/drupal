@@ -7,9 +7,3 @@ menu_ui.overview_page:
   title: 'List'
   route_name: menu_ui.overview_page
   base_route: menu_ui.overview_page
-
-menu_ui.settings:
-  title: 'Settings'
-  route_name: menu_ui.settings
-  base_route: menu_ui.overview_page
-  weight: 100

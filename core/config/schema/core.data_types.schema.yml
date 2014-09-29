@@ -161,12 +161,6 @@ theme_settings:
         node_user_picture:
           type: boolean
           label: 'User pictures in posts'
-        main_menu:
-          type: boolean
-          label: 'Main menu'
-        secondary_menu:
-          type: boolean
-          label: 'Secondary menu'
         slogan:
           type: boolean
           label: 'Site slogan'

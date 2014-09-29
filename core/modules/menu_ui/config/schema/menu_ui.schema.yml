@@ -4,12 +4,6 @@ menu_ui.settings:
   type: mapping
   label: 'Menu settings'
   mapping:
-    main_links:
-      type: string
-      label: 'Main links'
-    secondary_links:
-      type: string
-      label: 'Source for secondary links'
     override_parent_selector:
       type: boolean
       label: 'Override parent selector'

@@ -22,10 +22,13 @@ class MenuNodeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'test_page_test', 'node');
+  public static $modules = array('menu_ui', 'test_page_test', 'node', 'block');
 
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalPlaceBlock('system_menu_block:main');
+
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->admin_user = $this->drupalCreateUser(array(

@@ -24,8 +24,12 @@ class UserAccountLinksTests extends WebTestBase {
    */
   public static $modules = array('menu_ui', 'block', 'test_page_test');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_menu_block:account');
     // Make test-page default.
     \Drupal::config('system.site')->set('page.front', 'test-page')->save();
   }

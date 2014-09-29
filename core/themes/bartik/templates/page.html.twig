@@ -33,9 +33,6 @@
  *   added to make the site slogan visually hidden, but still accessible.
  *
  * Navigation:
- * - main_menu: The Main menu links for the site, if they have been configured.
- * - secondary_menu: The Secondary menu links for the site, if they have been
- *   configured.
  * - breadcrumb: The breadcrumb trail for the current page.
  *
  * Page content (in order of occurrence in the default page.html.twig):
@@ -57,6 +54,8 @@
  *
  * Regions:
  * - page.header: Items for the header region.
+ * - page.primary_menu: Items for the primary menu region.
+ * - page.secondary_menu: Items for the secondary menu region.
  * - page.featured: Items for the featured region.
  * - page.highlighted: Items for the highlighted content region.
  * - page.help: Dynamic help text, mostly for admin pages.
@@ -79,12 +78,9 @@
 #}
 <div id="page-wrapper"><div id="page">
 
-  <header id="header" class="{{ secondary_menu ? 'with-secondary-menu' : 'without-secondary-menu' }}" role="banner" aria-label="{{ 'Site header'|t}}"><div class="section clearfix">
-   {% if secondary_menu %}
-      <nav id="secondary-menu" class="navigation" role="navigation"  aria-labelledby="links__system_secondary_menu">
-        {{ secondary_menu }}
-      </nav> <!-- /#secondary-menu -->
-    {% endif %}
+  <header id="header" role="banner" aria-label="{{ 'Site header'|t}}"><div class="section clearfix">
+
+    {{ page.secondary_menu }}
 
     {% if logo %}
       <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
@@ -118,16 +114,8 @@
     {% endif %}
 
     {{ page.header }}
+    {{ page.primary_menu }}
 
-    {% if main_menu %}
-      <nav id ="main-menu" class="navigation" role="navigation" aria-labelledby="links__system_main_menu">
-        <div id="nav"></div>
-        <div id="no-nav"></div>
-        <a class="main-menu-reveal" href="#nav">{{ 'Menu'|t }}</a>
-        <a class="main-menu-reveal main-menu-reveal--hide" href="#no-nav">{{ 'Menu'|t }}</a>
-        {{ main_menu }}
-      </nav> <!-- /#main-menu -->
-    {% endif %}
   </div></header> <!-- /.section, /#header-->
 
   {% if messages %}

@@ -1,11 +1,3 @@
-menu_ui.settings:
-  path: '/admin/structure/menu/settings'
-  defaults:
-    _form: 'Drupal\menu_ui\MenuSettingsForm'
-    _title: 'Menus'
-  requirements:
-    _permission: 'administer menu'
-
 menu_ui.overview_page:
   path: '/admin/structure/menu'
   defaults:

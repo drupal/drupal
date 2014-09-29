@@ -22,8 +22,20 @@ class UserPasswordResetTest extends WebTestBase {
    */
   protected $account;
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalPlaceBlock('system_menu_block:account');
 
     // Create a user.
     $account = $this->drupalCreateUser();

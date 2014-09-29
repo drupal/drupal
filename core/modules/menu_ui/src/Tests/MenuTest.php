@@ -839,13 +839,6 @@ class MenuTest extends MenuWebTestBase {
       $this->assertText(t('Edit menu item'), 'Menu edit page was displayed');
     }
 
-    // View menu settings page.
-    $this->drupalGet('admin/structure/menu/settings');
-    $this->assertResponse($response);
-    if ($response == 200) {
-      $this->assertText(t('Menus'), 'Menu settings page was displayed');
-    }
-
     // View add menu page.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertResponse($response);
