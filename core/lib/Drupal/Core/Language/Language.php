@@ -68,7 +68,7 @@ class Language implements LanguageInterface {
    *
    * @var bool
    */
-  public $locked = FALSE;
+  protected $locked = FALSE;
 
   /**
    * Constructs a new class instance.
@@ -129,6 +129,13 @@ class Language implements LanguageInterface {
    */
   public function isDefault() {
     return static::getDefaultLangcode() == $this->getId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return (bool) $this->locked;
   }
 
   /**

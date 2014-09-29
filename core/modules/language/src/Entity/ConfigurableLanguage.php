@@ -78,7 +78,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var bool
    */
-  public $locked = FALSE;
+  protected $locked = FALSE;
 
   /**
    * Used during saving to detect when the site becomes multilingual.
@@ -98,6 +98,13 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    */
   public function isDefault() {
     return static::getDefaultLangcode() == $this->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return (bool) $this->locked;
   }
 
   /**

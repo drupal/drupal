@@ -32,7 +32,7 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
       // that is logically not a good idea.
       $access =
         !empty($target_language) &&
-        !$target_language->locked &&
+        !$target_language->isLocked() &&
         (empty($this->sourceLanguage) || ($target_language->id != $this->sourceLanguage->id));
 
       return $base_access->andIf(AccessResult::allowedIf($access));

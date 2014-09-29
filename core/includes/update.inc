@@ -751,9 +751,9 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
   }
 
   foreach ($languages as $langcode => $language) {
-    if (($language->locked && !($flags & LanguageInterface::STATE_LOCKED)) || (!$language->locked && !($flags & LanguageInterface::STATE_CONFIGURABLE))) {
+    if (($language->isLocked() && !($flags & LanguageInterface::STATE_LOCKED)) || (!$language->isLocked() && !($flags & LanguageInterface::STATE_CONFIGURABLE))) {
       continue;
-     }
+    }
     $filtered_languages[$langcode] = $language;
   }
 

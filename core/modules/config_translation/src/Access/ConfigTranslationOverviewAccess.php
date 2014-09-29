@@ -70,11 +70,12 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
     // Allow access to the translation overview if the proper permission is
     // granted, the configuration has translatable pieces, and the source
     // language is not locked if it is present.
+    $source_language_access = is_null($this->sourceLanguage) || !$this->sourceLanguage->isLocked();
     $access =
       $account->hasPermission('translate configuration') &&
       $mapper->hasSchema() &&
       $mapper->hasTranslatable() &&
-      empty($this->sourceLanguage->locked);
+      $source_language_access;
 
     return AccessResult::allowedIf($access)->cachePerRole();
   }

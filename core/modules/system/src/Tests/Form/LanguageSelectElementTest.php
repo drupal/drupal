@@ -56,7 +56,7 @@ class LanguageSelectElementTest extends WebTestBase {
       $this->assertField($id, format_string('The @id field was found on the page.', array('@id' => $id)));
       $options = array();
       foreach ($this->container->get('language_manager')->getLanguages($flags) as $langcode => $language) {
-        $options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
+        $options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->name)) : $language->name;
       }
       $this->_testLanguageSelectElementOptions($id, $options);
     }

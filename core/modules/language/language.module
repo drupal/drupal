@@ -148,7 +148,7 @@ function language_process_language_select($element) {
   if (!isset($element['#options'])) {
     $element['#options'] = array();
     foreach (\Drupal::languageManager()->getLanguages($element['#languages']) as $langcode => $language) {
-      $element['#options'][$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
+      $element['#options'][$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
   }
   // Add "Built-in English" language to the select when the default value is
@@ -434,7 +434,7 @@ function language_modules_uninstalled($modules) {
  * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
  */
 function language_configurable_language_insert(ConfigurableLanguage $language) {
-  if (!empty($language->locked)) {
+  if ($language->isLocked()) {
     return;
   }
 

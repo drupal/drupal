@@ -241,7 +241,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Check that the bundle is translatable, the entity has a language defined
     // and if we have more than one language on the site.
     $bundles = $this->entityManager()->getBundleInfo($this->entityTypeId);
-    return !empty($bundles[$this->bundle()]['translatable']) && empty($this->getUntranslated()->language()->locked) && $this->languageManager()->isMultilingual();
+    return !empty($bundles[$this->bundle()]['translatable']) && !$this->getUntranslated()->language()->isLocked() && $this->languageManager()->isMultilingual();
   }
 
   /**
@@ -562,7 +562,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           // If the entity or the requested language  is not a configured
           // language, we fall back to the entity itself, since in this case it
           // cannot have translations.
-          $translation = empty($this->languages[$this->defaultLangcode]->locked) && empty($this->languages[$langcode]->locked) ? $this->addTranslation($langcode) : $this;
+          $translation = !$this->languages[$this->defaultLangcode]->isLocked() && !$this->languages[$langcode]->isLocked() ? $this->addTranslation($langcode) : $this;
         }
       }
     }

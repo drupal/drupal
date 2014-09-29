@@ -137,4 +137,12 @@ interface LanguageInterface {
    */
   public function isDefault();
 
+  /**
+   * Returns whether this language is locked.
+   *
+   * @return bool
+   *   Whether the language is locked or not.
+   */
+  public function isLocked();
+
 }
