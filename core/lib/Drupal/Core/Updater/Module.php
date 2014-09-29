@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Updater;
 
+use Drupal\Core\Url;
+
 /**
  * Defines a class for updating modules using
  * Drupal\Core\FileTransfer\FileTransfer classes via authorize.php.
@@ -98,9 +100,9 @@ class Module extends Updater implements UpdaterInterface {
    */
   public function postInstallTasks() {
     return array(
-      \Drupal::l(t('Install another module'), 'update.module_install'),
-      \Drupal::l(t('Enable newly added modules'), 'system.modules_list'),
-      \Drupal::l(t('Administration pages'), 'system.admin'),
+      \Drupal::l(t('Install another module'), new Url('update.module_install')),
+      \Drupal::l(t('Enable newly added modules'), new Url('system.modules_list')),
+      \Drupal::l(t('Administration pages'), new Url('system.admin')),
     );
   }
 

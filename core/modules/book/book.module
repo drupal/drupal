@@ -521,7 +521,7 @@ function theme_book_link(array $variables) {
   /** @var \Drupal\Core\Url $url */
   $url = $element['#url'];
   $url->setOptions($element['#localized_options'] + $url->getOptions());
-  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
+  $output = \Drupal::l($element['#title'], $url);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 

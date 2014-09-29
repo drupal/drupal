@@ -727,17 +727,17 @@ function template_preprocess_comment(&$variables) {
     $variables['signature'] = '';
   }
   if (isset($comment->in_preview)) {
-    $variables['title'] = \Drupal::l($comment->getSubject(), '<front>');
-    $variables['permalink'] = \Drupal::l(t('Permalink'), '<front>');
+    $variables['title'] = \Drupal::l($comment->getSubject(), new Url('<front>'));
+    $variables['permalink'] = \Drupal::l(t('Permalink'), new Url('<front>'));
   }
   else {
     $uri = $comment->urlInfo();
     $attributes = $uri->getOption('attributes') ?: array();
     $attributes += array('class' => array('permalink'), 'rel' => 'bookmark');
     $uri->setOption('attributes', $attributes);
-    $variables['title'] = \Drupal::linkGenerator()->generateFromUrl($comment->getSubject(), $uri);
+    $variables['title'] = \Drupal::l($comment->getSubject(), $uri);
 
-    $variables['permalink'] = \Drupal::linkGenerator()->generateFromUrl(t('Permalink'), $comment->permalink());
+    $variables['permalink'] = \Drupal::l(t('Permalink'), $comment->permalink());
   }
 
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
@@ -764,8 +764,8 @@ function template_preprocess_comment(&$variables) {
     $attributes = $permalink_uri_parent->getOption('attributes') ?: array();
     $attributes += array('class' => array('permalink'), 'rel' => 'bookmark');
     $permalink_uri_parent->setOption('attributes', $attributes);
-    $variables['parent_title'] = \Drupal::linkGenerator()->generateFromUrl($comment_parent->getSubject(), $permalink_uri_parent);
-    $variables['parent_permalink'] = \Drupal::linkGenerator()->generateFromUrl(t('Parent permalink'), $permalink_uri_parent);
+    $variables['parent_title'] = \Drupal::l($comment_parent->getSubject(), $permalink_uri_parent);
+    $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
   }

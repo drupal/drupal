@@ -59,7 +59,7 @@ function template_preprocess_admin_block_content(&$variables) {
       $variables['attributes']['class'][] = 'compact';
     }
     foreach ($variables['content'] as $key => $item) {
-      $variables['content'][$key]['link'] = \Drupal::linkGenerator()->generateFromUrl($item['title'], $item['url']);
+      $variables['content'][$key]['link'] = \Drupal::l($item['title'], $item['url']);
       if (!$compact && isset($item['description'])) {
         $variables['content'][$key]['description'] = Xss::filterAdmin($item['description']);
       }

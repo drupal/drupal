@@ -66,7 +66,7 @@ function template_preprocess_link_formatter_link_separate(&$variables) {
   }
 
   if (!$variables['url']->isExternal()) {
-    $variables['link'] = \Drupal::linkGenerator()->generateFromUrl($variables['url_title'], $variables['url']);
+    $variables['link'] = \Drupal::l($variables['url_title'], $variables['url']);
   }
   else {
     $variables['link'] = l($variables['url_title'], $variables['url']->getPath(), $variables['url']->getOptions());

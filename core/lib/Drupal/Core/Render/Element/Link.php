@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Url;
+
 /**
  * Provides a link render element.
  *
@@ -83,7 +85,7 @@ class Link extends RenderElement {
 
     if (isset($element['#route_name'])) {
       $element['#route_parameters'] = empty($element['#route_parameters']) ? array() : $element['#route_parameters'];
-      $element['#markup'] = \Drupal::linkGenerator()->generate($element['#title'], $element['#route_name'], $element['#route_parameters'], $element['#options']);
+      $element['#markup'] = \Drupal::l($element['#title'], new Url($element['#route_name'], $element['#route_parameters'], $element['#options']));
     }
     else {
       $element['#markup'] = l($element['#title'], $element['#href'], $element['#options']);

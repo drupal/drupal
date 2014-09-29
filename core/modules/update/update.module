@@ -12,6 +12,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
@@ -592,7 +593,7 @@ function _update_project_status_sort($a, $b) {
  */
 function template_preprocess_update_last_check(&$variables) {
   $variables['time'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['last']);
-  $variables['link'] = \Drupal::l(t('Check manually'), 'update.manual_status', array(), array('query' => drupal_get_destination()));
+  $variables['link'] = \Drupal::l(t('Check manually'), new Url('update.manual_status', array(), array('query' => drupal_get_destination())));
 }
 
 /**

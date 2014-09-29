@@ -77,7 +77,7 @@ class BookController extends ControllerBase {
         $url->setOptions($book['options']);
       }
       $row = array(
-        $this->getLinkGenerator()->generateFromUrl($book['title'], $url),
+        $this->l($book['title'], $url),
       );
       $links = array();
       $links['edit'] = array(
@@ -110,7 +110,7 @@ class BookController extends ControllerBase {
   public function bookRender() {
     $book_list = array();
     foreach ($this->bookManager->getAllBooks() as $book) {
-      $book_list[] = $this->getLinkGenerator()->generateFromUrl($book['title'], $book['url']);
+      $book_list[] = $this->l($book['title'], $book['url']);
     }
     return array(
       '#theme' => 'item_list',

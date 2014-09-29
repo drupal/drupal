@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Locale module.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Language\Language;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 
@@ -260,7 +261,7 @@ function locale_requirements($phase) {
           if ($available_updates) {
             $requirements['locale_translation'] = array(
               'title' => 'Translation update status',
-              'value' => \Drupal::l(t('Updates available'), 'locale.translate_status'),
+              'value' => \Drupal::l(t('Updates available'), new Url('locale.translate_status')),
               'severity' => REQUIREMENT_WARNING,
               'description' => t('Updates available for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $available_updates), '@updates' => \Drupal::url('locale.translate_status'))),
             );
@@ -285,7 +286,7 @@ function locale_requirements($phase) {
       else {
         $requirements['locale_translation'] = array(
           'title' => 'Translation update status',
-          'value' => \Drupal::l(t('Can not determine status'), 'locale.translate_status'),
+          'value' => \Drupal::l(t('Can not determine status'), new Url('locale.translate_status')),
           'severity' => REQUIREMENT_WARNING,
           'description' => t('No translation status is available. See the <a href="@updates">Available translation updates</a> page for more information.', array('@updates' => \Drupal::url('locale.translate_status'))),
         );

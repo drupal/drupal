@@ -1062,13 +1062,13 @@ class ViewEditForm extends ViewFormBase {
       if ($handler->broken()) {
         $build['fields'][$id]['#class'][] = 'broken';
         $field_name = $handler->adminLabel();
-        $build['fields'][$id]['#link'] = \Drupal::l($field_name, 'views_ui.form_handler', array(
+        $build['fields'][$id]['#link'] = $this->l($field_name, new Url('views_ui.form_handler', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
+        ), array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE)));
         continue;
       }
 
@@ -1085,33 +1085,33 @@ class ViewEditForm extends ViewFormBase {
         // Add a [hidden] marker, if the field is excluded.
         $link_text .= ' [' . $this->t('hidden') . ']';
       }
-      $build['fields'][$id]['#link'] = \Drupal::l($link_text, 'views_ui.form_handler', array(
+      $build['fields'][$id]['#link'] = $this->l($link_text, new Url('views_ui.form_handler', array(
         'js' => 'nojs',
         'view' => $view->id(),
         'display_id' => $display['id'],
         'type' => $type,
         'id' => $id,
-      ), array('attributes' => $link_attributes, 'html' => TRUE));
+      ), array('attributes' => $link_attributes, 'html' => TRUE)));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = \Drupal::l('<span class="label">' . $this->t('Aggregation settings') . '</span>', 'views_ui.form_handler_group', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l('<span class="label">' . $this->t('Aggregation settings') . '</span>', new Url('views_ui.form_handler_group', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
+        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Aggregation settings')), 'html' => TRUE)));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = \Drupal::l('<span class="label">' . $this->t('Settings') . '</span>', 'views_ui.form_handler_extra', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l('<span class="label">' . $this->t('Settings') . '</span>', new Url('views_ui.form_handler_extra', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE));
+        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE)));
       }
 
       if ($grouping) {

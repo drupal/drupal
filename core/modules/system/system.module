@@ -1170,10 +1170,10 @@ function system_time_zones($blank = NULL) {
 function theme_system_compact_link() {
   $output = '<div class="compact-link">';
   if (system_admin_compact_mode()) {
-    $output .= \Drupal::l(t('Show descriptions'), 'system.admin_compact_page', array('mode' => 'off'), array('attributes' => array('title' => t('Expand layout to include descriptions.')), 'query' => drupal_get_destination()));
+    $output .= \Drupal::l(t('Show descriptions'), new Url('system.admin_compact_page', array('mode' => 'off'), array('attributes' => array('title' => t('Expand layout to include descriptions.')), 'query' => drupal_get_destination())));
   }
   else {
-    $output .= \Drupal::l(t('Hide descriptions'), 'system.admin_compact_page', array('mode' => 'on'), array('attributes' => array('title' => t('Compress layout by hiding descriptions.')), 'query' => drupal_get_destination()));
+    $output .= \Drupal::l(t('Hide descriptions'), new Url('system.admin_compact_page', array('mode' => 'on'), array('attributes' => array('title' => t('Compress layout by hiding descriptions.')), 'query' => drupal_get_destination())));
   }
   $output .= '</div>';
 

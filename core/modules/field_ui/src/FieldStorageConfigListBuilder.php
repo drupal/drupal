@@ -112,7 +112,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     $usage = array();
     foreach ($field_storage->getBundles() as $bundle) {
       if ($route_info = FieldUI::getOverviewRouteInfo($field_storage->entity_type, $bundle)) {
-        $usage[] = \Drupal::linkGenerator()->generateFromUrl($this->bundles[$field_storage->entity_type][$bundle]['label'], $route_info);
+        $usage[] = \Drupal::l($this->bundles[$field_storage->entity_type][$bundle]['label'], $route_info);
       }
       else {
         $usage[] = $this->bundles[$field_storage->entity_type][$bundle]['label'];

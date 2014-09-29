@@ -41,8 +41,6 @@ interface LocalTaskInterface {
    *
    * @return array
    *   An array of parameter names and values.
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
   public function getRouteParameters(Request $request);
 
@@ -61,9 +59,7 @@ interface LocalTaskInterface {
    *   The HttpRequest object representing the current request.
    *
    * @return array
-   *   An array of options.
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+   *   An associative array of options.
    */
   public function getOptions(Request $request);
 

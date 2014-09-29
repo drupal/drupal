@@ -136,7 +136,7 @@ class TermForm extends ContentEntityForm {
 
     $result = $term->save();
 
-    $link = $this->getLinkGenerator()->generateFromUrl($this->t('Edit'), $term->urlInfo('edit-form'));
+    $link = $term->link($this->t('Edit'), 'edit-form');
     switch ($result) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new term %term.', array('%term' => $term->getName())));

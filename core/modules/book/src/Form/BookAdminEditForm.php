@@ -121,7 +121,7 @@ class BookAdminEditForm extends FormBase {
           $node->book['link_title'] = $values['title'];
           $node->setNewRevision();
           $node->save();
-          $this->logger('content')->notice('book: updated %title.', array('%title' => $node->label(), 'link' => $this->getLinkGenerator()->generateFromUrl($this->t('View'), $node->urlInfo())));
+          $this->logger('content')->notice('book: updated %title.', array('%title' => $node->label(), 'link' => $node->link($this->t('View'))));
         }
       }
     }

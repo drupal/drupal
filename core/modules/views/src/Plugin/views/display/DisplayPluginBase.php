@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
+use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
@@ -1041,7 +1042,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return \Drupal::l($text, 'views_ui.form_display', ['js' => 'nojs', 'view' => $this->view->storage->id(), 'display_id' => $this->display['id'], 'type' => $section], array('attributes' => array('class' => array('views-ajax-link', $class), 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return \Drupal::l($text, new Url('views_ui.form_display', ['js' => 'nojs', 'view' => $this->view->storage->id(), 'display_id' => $this->display['id'], 'type' => $section], array('attributes' => array('class' => array('views-ajax-link', $class), 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE)));
   }
 
   /**

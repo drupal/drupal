@@ -28,7 +28,7 @@ class TaxonomyFieldTidTest extends TaxonomyTestBase {
     $this->executeView($view);
 
     $actual = $view->field['name']->advancedRender($view->result[0]);
-    $expected = \Drupal::linkGenerator()->generateFromUrl($this->term1->label(), $this->term1->urlInfo());
+    $expected = \Drupal::l($this->term1->label(), $this->term1->urlInfo());
 
     $this->assertEqual($expected, $actual);
   }

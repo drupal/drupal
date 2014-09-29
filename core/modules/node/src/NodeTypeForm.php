@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -230,7 +231,7 @@ class NodeTypeForm extends EntityForm {
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message(t('The content type %name has been added.', $t_args));
-      $context = array_merge($t_args, array('link' => \Drupal::l(t('View'), 'node.overview_types')));
+      $context = array_merge($t_args, array('link' => $this->l(t('View'), new Url('node.overview_types'))));
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 

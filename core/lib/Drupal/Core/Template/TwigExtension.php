@@ -210,7 +210,7 @@ class TwigExtension extends \Twig_Extension {
    */
   public function getLink($text, $url) {
     if ($url instanceof Url) {
-      return $this->linkGenerator->generateFromUrl($text, $url);
+      return $this->linkGenerator->generate($text, $url);
     }
     else {
       // @todo Convert once https://www.drupal.org/node/2306901 is in

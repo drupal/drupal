@@ -10,6 +10,7 @@ namespace Drupal\filter\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Provides a text format render element.
@@ -179,7 +180,7 @@ class TextFormat extends RenderElement {
     $element['format']['help'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('filter-help')),
-      '#markup' => \Drupal::l(t('About text formats'), 'filter.tips_all', array(), array('attributes' => array('target' => '_blank'))),
+      '#markup' => \Drupal::l(t('About text formats'), new Url('filter.tips_all', array(), array('attributes' => array('target' => '_blank')))),
       '#weight' => 0,
     );
 

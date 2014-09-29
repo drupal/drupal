@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -68,7 +69,7 @@ class LinkEdit extends FieldPluginBase {
       ));
       if ($term->access('update')) {
         $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
-        return \Drupal::l($text, 'entity.taxonomy.edit_form', ['taxonomy_term' => $tid], array('query' => drupal_get_destination()));
+        return \Drupal::l($text, new Url('entity.taxonomy.edit_form', ['taxonomy_term' => $tid], array('query' => drupal_get_destination())));
       }
     }
   }

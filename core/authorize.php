@@ -21,6 +21,7 @@
  */
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
@@ -109,8 +110,8 @@ if (authorize_access_allowed()) {
     }
     else {
       $links = array_merge($links, array(
-        \Drupal::l(t('Administration pages'), 'system.admin'),
-        \Drupal::l(t('Front page'), '<front>'),
+        \Drupal::l(t('Administration pages'), new Url('system.admin')),
+        \Drupal::l(t('Front page'), new Url('<front>')),
       ));
     }
 

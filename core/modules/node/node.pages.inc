@@ -10,6 +10,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\node\NodeInterface;
@@ -31,7 +32,7 @@ function template_preprocess_node_add_list(&$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->type] = array(
         'type' => $type->type,
-        'add_link' => \Drupal::l($type->name, 'node.add', array('node_type' => $type->type)),
+        'add_link' => \Drupal::l($type->name, new Url('node.add', array('node_type' => $type->type))),
         'description' => Xss::filterAdmin($type->description),
       );
     }

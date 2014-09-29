@@ -9,6 +9,7 @@ namespace Drupal\dblog\Tests\Views;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
@@ -60,12 +61,12 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     // Setup a watchdog entry without tokens.
     $entries[] = array(
       'message' => $this->randomMachineName(),
-      'variables' => array('link' => \Drupal::l('Link', '<front>')),
+      'variables' => array('link' => \Drupal::l('Link', new Url('<front>'))),
     );
     // Setup a watchdog entry with one token.
     $entries[] = array(
       'message' => '@token1',
-      'variables' => array('@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', '<front>')),
+      'variables' => array('@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', new Url('<front>'))),
     );
     // Setup a watchdog entry with two tokens.
     $entries[] = array(
@@ -75,7 +76,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
       'variables' => array(
         '@token1' => $this->randomMachineName(),
         '!token2' => $this->randomMachineName(),
-        'link' => \Drupal::l('<object>Link</object>', '<front>'),
+        'link' => \Drupal::l('<object>Link</object>', new Url('<front>')),
       ),
     );
     $logger_factory = $this->container->get('logger.factory');

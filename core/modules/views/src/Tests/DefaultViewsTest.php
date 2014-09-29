@@ -9,6 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -94,7 +95,7 @@ class DefaultViewsTest extends ViewTestBase {
       if ($i % 2) {
         $values['promote'] = TRUE;
       }
-      $values['body'][]['value'] = \Drupal::l('Node ' . 1, 'entity.node.canonical', ['node' => 1]);
+      $values['body'][]['value'] = \Drupal::l('Node ' . 1, new Url('entity.node.canonical', ['node' => 1]));
 
       $node = $this->drupalCreateNode($values);
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\Block;
 
+use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -44,19 +45,19 @@ class UserLoginBlock extends BlockBase {
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-      $items['create_account'] = \Drupal::l(t('Create new account'), 'user.register', array(), array(
+      $items['create_account'] = \Drupal::l(t('Create new account'), new Url('user.register', array(), array(
         'attributes' => array(
           'title' => t('Create a new user account.'),
           'class' => array('create-account-link'),
         ),
-      ));
+      )));
     }
-    $items['request_password'] = \Drupal::l(t('Request new password'), 'user.pass', array(), array(
+    $items['request_password'] = \Drupal::l(t('Request new password'), new Url('user.pass', array(), array(
       'attributes' => array(
         'title' => t('Request new password via email.'),
         'class' => array('request-password-link'),
       ),
-    ));
+    )));
     return array(
       'user_login_form' => $form,
       'user_links' => array(

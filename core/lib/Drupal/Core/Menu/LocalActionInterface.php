@@ -30,8 +30,6 @@ interface LocalActionInterface {
    *
    * @return array
    *   An array of parameter names and values.
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
   public function getRouteParameters(Request $request);
 
@@ -50,8 +48,6 @@ interface LocalActionInterface {
    *
    * @return array
    *   An associative array of options.
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
   public function getOptions(Request $request);
 

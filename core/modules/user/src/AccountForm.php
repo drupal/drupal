@@ -13,6 +13,7 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
@@ -132,7 +133,7 @@ abstract class AccountForm extends ContentEntityForm {
       if (!$pass_reset) {
         $protected_values['mail'] = $form['account']['mail']['#title'];
         $protected_values['pass'] = $this->t('Password');
-        $request_new = \Drupal::l($this->t('Request new password'), 'user.pass', array(), array('attributes' => array('title' => $this->t('Request new password via email.'))));
+        $request_new = $this->l($this->t('Request new password'), new Url('user.pass', array(), array('attributes' => array('title' => $this->t('Request new password via email.')))));
         $current_pass_description = $this->t('Required if you want to change the %mail or %pass below. !request_new.', array('%mail' => $protected_values['mail'], '%pass' => $protected_values['pass'], '!request_new' => $request_new));
       }
 

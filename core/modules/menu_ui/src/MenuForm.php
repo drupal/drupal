@@ -269,7 +269,7 @@ class MenuForm extends EntityForm {
         $id = 'menu_plugin_id:' . $link->getPluginId();
         $form[$id]['#item'] = $element;
         $form[$id]['#attributes'] = $link->isEnabled() ? array('class' => array('menu-enabled')) : array('class' => array('menu-disabled'));
-        $form[$id]['title']['#markup'] = $this->linkGenerator->generateFromUrl($link->getTitle(), $link->getUrlObject(), $link->getOptions());
+        $form[$id]['title']['#markup'] = $this->linkGenerator->generate($link->getTitle(), $link->getUrlObject(), $link->getOptions());
         if (!$link->isEnabled()) {
           $form[$id]['title']['#markup'] .= ' (' . $this->t('disabled') . ')';
         }

@@ -13,6 +13,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
@@ -600,8 +601,7 @@ function locale_form_language_admin_overview_form_alter(&$form, FormStateInterfa
             '@total' => $total_strings,
             '@ratio' => $stats[$langcode]['ratio'],
           )),
-          'locale.translate_page', array(),
-          array('query' => array('langcode' => $langcode))
+          new Url('locale.translate_page', array(), array('query' => array('langcode' => $langcode)))
         ),
       );
     }

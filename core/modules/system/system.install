@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
@@ -59,7 +60,7 @@ function system_requirements($phase) {
     $requirements['php'] = array(
       'title' => t('PHP'),
       // $phpversion is safe and output of l() is safe, so this value is safe.
-      'value' => SafeMarkup::set(($phase == 'runtime') ? $phpversion . ' (' . \Drupal::l(t('more information'), 'system.php') . ')' : $phpversion),
+      'value' => SafeMarkup::set(($phase == 'runtime') ? $phpversion . ' (' . \Drupal::l(t('more information'), new Url('system.php')) . ')' : $phpversion),
     );
   }
   else {

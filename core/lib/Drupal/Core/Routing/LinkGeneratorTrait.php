@@ -7,6 +7,7 @@
 namespace Drupal\Core\Routing;
 
 
+use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 
@@ -36,8 +37,8 @@ trait LinkGeneratorTrait {
    * @return string
    *   An HTML string containing a link to the given route and parameters.
    */
-  protected function l($text, $route_name, array $parameters = array(), array $options = array()) {
-    return $this->getLinkGenerator()->generate($text, $route_name, $parameters, $options);
+  protected function l($text, Url $url) {
+    return $this->getLinkGenerator()->generate($text, $url);
   }
 
   /**

@@ -372,7 +372,7 @@ class CommentForm extends ContentEntityForm {
       // Add a log entry.
       $logger->notice('Comment posted: %subject.', array(
           '%subject' => $comment->getSubject(),
-          'link' => $this->getLinkGenerator()->generateFromUrl(t('View'), $comment->urlInfo()->setOption('fragment', 'comment-' . $comment->id()))
+          'link' => $this->l(t('View'), $comment->urlInfo()->setOption('fragment', 'comment-' . $comment->id()))
         ));
 
       // Explain the approval queue if necessary.

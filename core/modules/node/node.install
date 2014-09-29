@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Url;
 use Drupal\Core\Language\Language;
 
 /**
@@ -32,7 +33,7 @@ function node_requirements($phase) {
       'value' => $value,
       // The result of t() is safe and so is the result of l(). Preserving
       // safe object.
-      'description' => SafeMarkup::set($description . ' ' . \Drupal::l(t('Rebuild permissions'), 'node.configure_rebuild_confirm')),
+      'description' => SafeMarkup::set($description . ' ' . \Drupal::l(t('Rebuild permissions'), new Url('node.configure_rebuild_confirm'))),
     );
   }
   return $requirements;

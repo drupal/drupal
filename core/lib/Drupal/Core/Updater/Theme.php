@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Updater;
 
+use Drupal\Core\Url;
+
 /**
  * Defines a class for updating themes using
  * Drupal\Core\FileTransfer\FileTransfer classes via authorize.php.
@@ -82,8 +84,8 @@ class Theme extends Updater implements UpdaterInterface {
    */
   public function postInstallTasks() {
     return array(
-      \Drupal::l(t('Install newly added themes'), 'system.themes_page'),
-      \Drupal::l(t('Administration pages'), 'system.admin'),
+      \Drupal::l(t('Install newly added themes'), new Url('system.themes_page')),
+      \Drupal::l(t('Administration pages'), new Url('system.admin')),
     );
   }
 }

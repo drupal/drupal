@@ -50,9 +50,7 @@ interface ContextualLinkInterface {
    * Returns the link options passed to the link generator.
    *
    * @return array
-   *   The options as expected by LinkGeneratorInterface::generate()
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+   *   An associative array of options.
    */
   public function getOptions();
 

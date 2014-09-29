@@ -73,7 +73,7 @@ class EngineTwigTest extends WebTestBase {
     $link_generator = $this->container->get('link_generator');
 
     $expected = [
-      'link via the linkgenerator: ' . $link_generator->generateFromUrl('register', new Url('user.register')),
+      'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register')),
     ];
 
     $content = $this->getRawContent();

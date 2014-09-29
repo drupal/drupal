@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Entity\BlockContent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +27,7 @@ function template_preprocess_block_content_add_list(&$variables) {
   $query = \Drupal::request()->query->all();
   foreach ($variables['content'] as $type) {
     $variables['types'][$type->id()] = array(
-      'link' => \Drupal::l($type->label(), 'block_content.add_form', array('block_content_type' => $type->id()), array('query' => $query)),
+      'link' => \Drupal::l($type->label(), new Url('block_content.add_form', array('block_content_type' => $type->id()), array('query' => $query))),
       'description' => Xss::filterAdmin($type->description),
       'title' => $type->label(),
       'localized_options' => array(

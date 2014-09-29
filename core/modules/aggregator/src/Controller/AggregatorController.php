@@ -119,9 +119,10 @@ class AggregatorController extends ControllerBase {
 
     $header = array($this->t('Title'), $this->t('Items'), $this->t('Last update'), $this->t('Next update'), $this->t('Operations'));
     $rows = array();
+    /** @var \Drupal\aggregator\FeedInterface[] $feeds */
     foreach ($feeds as $feed) {
       $row = array();
-      $row[] = $this->getLinkGenerator()->generateFromUrl($feed->label(), $feed->urlInfo());
+      $row[] = $feed->link();
       $row[] = $this->dateFormatter->formatInterval($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();

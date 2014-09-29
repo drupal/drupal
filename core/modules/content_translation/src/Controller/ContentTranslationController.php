@@ -125,7 +125,7 @@ class ContentTranslationController extends ControllerBase {
           $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : array('url' => $entity->urlInfo());
           if (!empty($link['url'])) {
             $link['url']->setOption('language', $language);
-            $row_title = $this->getLinkGenerator()->generateFromUrl($label, $link['url']);
+            $row_title = $this->l($label, $link['url']);
           }
 
           if (empty($link['url'])) {

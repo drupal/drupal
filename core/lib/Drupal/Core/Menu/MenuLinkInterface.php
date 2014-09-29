@@ -110,6 +110,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * Returns the route name, if available.
    *
    * @return string
+   *   The name of the route this menu link links to.
    */
   public function getRouteName();
 
@@ -117,6 +118,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * Returns the route parameters, if available.
    *
    * @return array
+   *   An array of parameter names and values.
    */
   public function getRouteParameters();
 
@@ -136,7 +138,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * Returns the options for this link.
    *
    * @return array
-   *   The options for the menu link.
+   *   An associative array of options.
    */
   public function getOptions();
 

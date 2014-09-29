@@ -8,6 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\TermForm;
 
 /**
@@ -81,7 +82,7 @@ class ForumForm extends TermForm {
 
     $route_name = $this->urlStub == 'container' ? 'forum.edit_container' : 'forum.edit_forum';
     $route_parameters  = ['taxonomy_term' => $term->id()];
-    $link = \Drupal::l($this->t('Edit'), $route_name, $route_parameters);
+    $link = $this->l($this->t('Edit'), new Url($route_name, $route_parameters));
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
