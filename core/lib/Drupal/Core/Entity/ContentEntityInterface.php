@@ -27,7 +27,7 @@ use Drupal\Core\TypedData\TranslatableInterface;
  *
  * @ingroup entity_api
  */
-interface ContentEntityInterface extends EntityInterface, RevisionableInterface, TranslatableInterface {
+interface ContentEntityInterface extends \Traversable, EntityInterface, RevisionableInterface, TranslatableInterface {
 
   /**
    * Marks the translation identified by the given language code as existing.
