@@ -73,11 +73,9 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the createFromPath method.
-   *
-   * @covers ::createFromPath()
+   * Tests creating a Url from a request.
    */
-  public function testCreateFromPath() {
+  public function testUrlFromRequest() {
     $this->router->expects($this->at(0))
       ->method('matchRequest')
       ->with($this->getRequestConstraint('/node'))
@@ -102,8 +100,8 @@ class UrlTest extends UnitTestCase {
 
     $urls = array();
     foreach ($this->map as $index => $values) {
-      $path = trim(array_pop($values), '/');
-      $url = Url::createFromPath($path);
+      $path = array_pop($values);
+      $url = Url::createFromRequest(Request::create("$path"));
       $this->assertSame($values, array_values($url->toArray()));
       $urls[$index] = $url;
     }
@@ -126,35 +124,19 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the createFromPath method with the special <front> path.
+   * Tests the fromRoute() method with the special <front> path.
    *
-   * @covers ::createFromPath()
+   * @covers ::fromRoute
    */
-  public function testCreateFromPathFront() {
-    $url = Url::createFromPath('<front>');
+  public function testFromRouteFront() {
+    $url = Url::fromRoute('<front>');
     $this->assertSame('<front>', $url->getRouteName());
-  }
-
-  /**
-   * Tests that an invalid path will thrown an exception.
-   *
-   * @covers ::createFromPath()
-   *
-   * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
-   */
-  public function testCreateFromPathInvalid() {
-    $this->router->expects($this->once())
-      ->method('matchRequest')
-      ->with($this->getRequestConstraint('/non-existent'))
-      ->will($this->throwException(new ResourceNotFoundException()));
-
-    $this->assertNull(Url::createFromPath('non-existent'));
   }
 
   /**
    * Tests the createFromRequest method.
    *
-   * @covers ::createFromRequest()
+   * @covers ::createFromRequest
    */
   public function testCreateFromRequest() {
     $attributes = array(
@@ -178,11 +160,11 @@ class UrlTest extends UnitTestCase {
   /**
    * Tests that an invalid request will thrown an exception.
    *
-   * @covers ::createFromRequest()
+   * @covers ::createFromRequest
    *
    * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
    */
-  public function testCreateFromRequestInvalid() {
+  public function testUrlFromRequestInvalid() {
     $request = Request::create('/test-path');
 
     $this->router->expects($this->once())
@@ -196,9 +178,9 @@ class UrlTest extends UnitTestCase {
   /**
    * Tests the isExternal() method.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::isExternal()
+   * @covers ::isExternal
    */
   public function testIsExternal($urls) {
     foreach ($urls as $url) {
@@ -207,28 +189,31 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getPath() method for internal URLs.
+   * Tests the getUri() method for internal URLs.
    *
-   * @depends testCreateFromPath
+   * @param \Drupal\Core\Url[] $urls
+   *   Array of URL objects.
+   *
+   * @depends testUrlFromRequest
    *
    * @expectedException \UnexpectedValueException
    *
-   * @covers ::getPath()
+   * @covers ::getUri
    */
-  public function testGetPathForInternalUrl($urls) {
+  public function testGetUriForInternalUrl($urls) {
     foreach ($urls as $url) {
-      $url->getPath();
+      $url->getUri();
     }
   }
 
   /**
-   * Tests the getPath() method for external URLs.
+   * Tests the getUri() method for external URLs.
    *
-   * @covers ::getPath
+   * @covers ::getUri
    */
-  public function testGetPathForExternalUrl() {
-    $url = Url::createFromPath('http://example.com/test');
-    $this->assertEquals('http://example.com/test', $url->getPath());
+  public function testGetUriForExternalUrl() {
+    $url = Url::fromUri('http://example.com/test');
+    $this->assertEquals('http://example.com/test', $url->getUri());
   }
 
   /**
@@ -237,9 +222,9 @@ class UrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::toString()
+   * @covers ::toString
    */
   public function testToString($urls) {
     foreach ($urls as $index => $url) {
@@ -254,9 +239,9 @@ class UrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::toArray()
+   * @covers ::toArray
    */
   public function testToArray($urls) {
     foreach ($urls as $index => $url) {
@@ -275,9 +260,9 @@ class UrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::getRouteName()
+   * @covers ::getRouteName
    */
   public function testGetRouteName($urls) {
     foreach ($urls as $index => $url) {
@@ -292,7 +277,7 @@ class UrlTest extends UnitTestCase {
    * @expectedException \UnexpectedValueException
    */
   public function testGetRouteNameWithExternalUrl() {
-    $url = Url::createFromPath('http://example.com');
+    $url = Url::fromUri('http://example.com');
     $url->getRouteName();
   }
 
@@ -302,9 +287,9 @@ class UrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::getRouteParameters()
+   * @covers ::getRouteParameters
    */
   public function testGetRouteParameters($urls) {
     foreach ($urls as $index => $url) {
@@ -319,7 +304,7 @@ class UrlTest extends UnitTestCase {
    * @expectedException \UnexpectedValueException
    */
   public function testGetRouteParametersWithExternalUrl() {
-    $url = Url::createFromPath('http://example.com');
+    $url = Url::fromUri('http://example.com');
     $url->getRouteParameters();
   }
 
@@ -329,9 +314,9 @@ class UrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
    *
-   * @depends testCreateFromPath
+   * @depends testUrlFromRequest
    *
-   * @covers ::getOptions()
+   * @covers ::getOptions
    */
   public function testGetOptions($urls) {
     foreach ($urls as $index => $url) {
@@ -345,8 +330,7 @@ class UrlTest extends UnitTestCase {
    * @param bool $access
    *
    * @covers ::access
-   * @covers ::getAccessManager
-   * @covers ::setAccessManager
+   * @covers ::accessManager
    * @dataProvider accessProvider
    */
   public function testAccess($access) {

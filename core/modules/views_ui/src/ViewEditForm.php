@@ -20,6 +20,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\user\TempStoreFactory;
 use Drupal\views\Views;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -322,13 +323,11 @@ class ViewEditForm extends ViewFormBase {
           $query->remove('destination');
         }
       }
-      if (!UrlHelper::isExternal($destination)) {
-        $destination = $GLOBALS['base_url'] . '/' . $destination;
-      }
-      $form_state->setRedirectUrl(Url::createFromPath($destination));
+      $form_state->setRedirectUrl(Url::fromUri("base://$destination"));
     }
 
     $view->save();
+
     drupal_set_message($this->t('The view %name has been saved.', array('%name' => $view->label())));
 
     // Remove this view from cache so we can edit it properly.

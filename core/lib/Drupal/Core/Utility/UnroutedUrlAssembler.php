@@ -56,7 +56,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       // UrlHelper::isExternal() only returns true for safe protocols.
       return $this->buildExternalUrl($uri, $options);
     }
-    throw new \InvalidArgumentException('You must use a valid URI scheme.  Use base:// for a path e.g. to a Drupal file that needs the base path.');
+    throw new \InvalidArgumentException('You must use a valid URI scheme. Use base:// for a path e.g. to a Drupal file that needs the base path.');
   }
 
   /**

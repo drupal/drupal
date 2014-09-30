@@ -543,7 +543,10 @@ function install_run_task($task, &$install_state) {
       }
       // Process the batch. For progressive batches, this will redirect.
       // Otherwise, the batch will complete.
-      $response = batch_process(install_redirect_url($install_state), install_full_redirect_url($install_state));
+      // install_redirect_url() returns core/install.php, so let's ensure to
+      // drop it from it and use base:// as batch_process() is using the
+      // unrouted URL assembler, which requires base://.
+      $response = batch_process(preg_replace('@^core/@', 'base://', install_redirect_url($install_state)), install_full_redirect_url($install_state));
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.
         \Drupal::service('session_manager')->save();

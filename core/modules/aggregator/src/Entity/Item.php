@@ -244,7 +244,7 @@ class Item extends ContentEntityBase implements ItemInterface {
    * Entity URI callback.
    */
   public static function buildUri(ItemInterface $item) {
-    return Url::createFromPath($item->getLink());
+    return Url::fromUri($item->getLink());
   }
 
 }

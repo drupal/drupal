@@ -298,7 +298,7 @@ function toolbar_menu_navigation_links(array $tree) {
     $url = $link->getUrlObject();
     if ($url->isExternal()) {
       // This is an unusual case, so just get a distinct, safe string.
-      $id = substr(Crypt::hashBase64($url->getPath()), 0, 16);
+      $id = substr(Crypt::hashBase64($url->getUri()), 0, 16);
     }
     else {
       $id = str_replace(array('.', '<', '>'), array('-', '', ''), $url->getRouteName());

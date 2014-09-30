@@ -12,23 +12,24 @@ namespace Drupal\Core\Utility;
 interface UnroutedUrlAssemblerInterface {
 
   /**
-   * Builds a domain-local or external URL from a path or URL.
+   * Builds a domain-local or external URL from a URI.
    *
    * For actual implementations the logic probably has to be split up between
-   * domain-local and external URLs.
+   * domain-local URIs and external URLs.
    *
    * @param string $uri
-   *   A path on the same domain or external URL being linked to, such as "foo"
+   *   A local URI or an external URL being linked to, such as "base://foo"
    *    or "http://example.com/foo".
    *   - If you provide a full URL, it will be considered an external URL as
    *     long as it has an allowed protocol.
-   *   - If you provide only a path (e.g. "foo"), it will be
-   *     considered a URL local to the same domain. Additional query
-   *     arguments for local paths must be supplied in $options['query'], not
-   *     included in $path.
+   *   - If you provide only a local URI (e.g. "base://foo"), it will be
+   *     considered a path local to Drupal, but not handled by the routing
+   *     system.  The base path (the subdirectory where the front controller
+   *     is found) will be added to the path. Additional query arguments for
+   *     local paths must be supplied in $options['query'], not part of $uri.
    *   - If your external URL contains a query (e.g. http://example.com/foo?a=b),
    *     then you can either URL encode the query keys and values yourself and
-   *     include them in $path, or use $options['query'] to let this method
+   *     include them in $uri, or use $options['query'] to let this method
    *     URL encode them.
    *
    * @param array $options
@@ -48,6 +49,9 @@ interface UnroutedUrlAssemblerInterface {
    *
    * @return
    *   A string containing a relative or absolute URL.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the passed in path has no scheme.
    */
   public function assemble($uri, array $options = array());
 

@@ -576,6 +576,7 @@ function template_preprocess_username(&$variables) {
   $variables['name'] = String::checkPlain($name);
   $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
 
+  $external = FALSE;
   // Populate link path and attributes if appropriate.
   if ($variables['uid'] && $variables['profile_access']) {
     // We are linking to a local user.
@@ -589,10 +590,19 @@ function template_preprocess_username(&$variables) {
     $variables['attributes']['rel'] = 'nofollow';
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
+    $external = TRUE;
   }
-  // We have a link path, so we should generate a link using url().
+  // We have a link path, so we should generate a URL.
   if (isset($variables['link_path'])) {
-    $variables['attributes']['href'] = url($variables['link_path'], $variables['link_options']);
+    if ($external) {
+      $variables['attributes']['href'] = Url::fromUri($variables['link_path'], $variables['link_options'])
+        ->toString();
+    }
+    else {
+      $variables['attributes']['href'] = Url::fromRoute('entity.user.canonical', array(
+        'user' => $variables['uid'],
+      ))->toString();
+    }
   }
 }
 

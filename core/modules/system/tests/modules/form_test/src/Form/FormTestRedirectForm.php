@@ -54,7 +54,7 @@ class FormTestRedirectForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('redirection')) {
       if (!$form_state->isValueEmpty('destination')) {
-        $form_state->setRedirectUrl(Url::createFromPath($GLOBALS['base_url'] . '/' . $form_state->getValue('destination')));
+        $form_state->setRedirectUrl(Url::fromUri('base://' . $form_state->getValue('destination')));
       }
     }
     else {

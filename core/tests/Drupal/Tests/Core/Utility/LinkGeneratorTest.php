@@ -40,6 +40,13 @@ class LinkGeneratorTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked URL Assembler service.
+   *
+   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Utility\UnroutedUrlAssemblerInterface
+   */
+  protected $urlAssembler;
+
+  /**
    * Contains the LinkGenerator default options.
    */
   protected $defaultOptions = array(
@@ -60,6 +67,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler);
+    $this->urlAssembler = $this->getMock('\Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
   }
 
   /**
@@ -144,8 +152,8 @@ class LinkGeneratorTest extends UnitTestCase {
    * @covers ::generate()
    */
   public function testGenerateExternal() {
-    $this->urlGenerator->expects($this->once())
-      ->method('generateFromPath')
+    $this->urlAssembler->expects($this->once())
+      ->method('assemble')
       ->with('http://drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
       ->will($this->returnArgument(0));
 
@@ -153,8 +161,14 @@ class LinkGeneratorTest extends UnitTestCase {
       ->method('alter')
       ->with('link', $this->isType('array'));
 
-    $url = Url::createFromPath('http://drupal.org');
+    $this->urlAssembler->expects($this->once())
+      ->method('assemble')
+      ->with('http://drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
+      ->willReturnArgument(0);
+
+    $url = Url::fromUri('http://drupal.org');
     $url->setUrlGenerator($this->urlGenerator);
+    $url->setUnroutedUrlAssembler($this->urlAssembler);
     $url->setOption('set_active_class', TRUE);
 
     $result = $this->linkGenerator->generate('Drupal', $url);

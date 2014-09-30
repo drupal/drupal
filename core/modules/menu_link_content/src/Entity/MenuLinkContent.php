@@ -107,7 +107,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     else {
       $path = $this->getUrl();
       if (isset($path)) {
-        $url = Url::createFromPath($path);
+        $url = Url::fromUri($path);
       }
       else {
         $url = new Url('<front>');

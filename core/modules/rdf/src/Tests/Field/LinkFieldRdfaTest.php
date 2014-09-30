@@ -75,7 +75,8 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
     // Set up test values.
     $this->testValue = 'admin';
     $this->entity = entity_create('entity_test', array());
-    $this->entity->{$this->fieldName}->url = $this->testValue;
+    $this->entity->{$this->fieldName}->route_name = 'system.admin';
+    $this->entity->{$this->fieldName}->url = 'admin';
 
     // Set up the expected result.
     // AssertFormatterRdfa looks for a full path.
@@ -94,7 +95,8 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
     // Set up test values.
     $this->testValue = '<front>';
     $this->entity = entity_create('entity_test', array());
-    $this->entity->{$this->fieldName}->url = $this->testValue;
+    $this->entity->{$this->fieldName}->route_name = $this->testValue;
+    $this->entity->{$this->fieldName}->url = '<front>';
 
     // Set up the expected result.
     $expected_rdf = array(

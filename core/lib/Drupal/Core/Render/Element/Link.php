@@ -88,6 +88,7 @@ class Link extends RenderElement {
       $element['#markup'] = \Drupal::l($element['#title'], new UrlObject($element['#route_name'], $element['#route_parameters'], $element['#options']));
     }
     else {
+      // @todo Convert to \Drupal::l(): https://www.drupal.org/node/2347045.
       $element['#markup'] = l($element['#title'], $element['#href'], $element['#options']);
     }
     return $element;

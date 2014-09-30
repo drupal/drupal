@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for project status report templates.
@@ -135,7 +136,7 @@ function template_preprocess_update_project_status(&$variables) {
 
   // Set the project title and URL.
   $variables['title'] = (isset($project['title'])) ? $project['title'] : $project['name'];
-  $variables['url'] = (isset($project['link'])) ? url($project['link']) : NULL;
+  $variables['url'] = (isset($project['link'])) ? Url::fromUri($project['link'])->toString() : NULL;
 
   $variables['install_type'] = $project['install_type'];
   if ($project['install_type'] == 'dev' && !empty($project['datestamp'])) {

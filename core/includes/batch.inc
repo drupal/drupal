@@ -452,11 +452,18 @@ function _batch_finished() {
     if ($_batch['form_state']->getRedirect() === NULL) {
       $redirect = $_batch['batch_redirect'] ?: $_batch['source_url'];
       $options = UrlHelper::parse($redirect);
-      if (!UrlHelper::isExternal($options['path'])) {
-        $options['path'] = $GLOBALS['base_url'] . '/' . $options['path'];
+      // Any path with a scheme does not correspond to a route.
+      if (parse_url($options['path'], PHP_URL_SCHEME)) {
+        $redirect = Url::fromUri($options['path'], $options);
       }
-      $redirect = Url::createFromPath($options['path']);
-      $redirect->setOptions($options);
+      else {
+        $redirect = \Drupal::pathValidator()->getUrlIfValid($options['path']);
+        if (!$redirect) {
+          // Stay on the same page if the redirect was invalid.
+          $redirect = Url::fromRoute('<current>');
+        }
+        $redirect->setOptions($options);
+      }
       $_batch['form_state']->setRedirectUrl($redirect);
     }
 

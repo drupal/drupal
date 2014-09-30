@@ -198,7 +198,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
 
     if ($extracted) {
       if ($extracted->isExternal()) {
-        $new_definition['url'] = $extracted->getPath();
+        $new_definition['url'] = $extracted->getUri();
       }
       else {
         $new_definition['route_name'] = $extracted->getRouteName();

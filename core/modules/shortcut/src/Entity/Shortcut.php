@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
 use Drupal\shortcut\ShortcutInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines the shortcut entity class.
@@ -134,7 +135,15 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    $url = Url::createFromPath($this->path->value);
+    // @todo fix PathValidatorInterface::getUrlIfValid() so we can use it
+    //   here. The problem is that we need an exception, not a FALSE
+    //   return value. https://www.drupal.org/node/2346695
+    if ($this->path->value == '<front>') {
+      $url = new Url($this->path->value);
+    }
+    else {
+      $url = Url::createFromRequest(Request::create("/{$this->path->value}"));
+    }
     $this->setRouteName($url->getRouteName());
     $this->setRouteParams($url->getRouteParameters());
   }

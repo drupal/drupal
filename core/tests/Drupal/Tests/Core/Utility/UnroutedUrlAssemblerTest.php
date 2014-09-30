@@ -33,7 +33,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
   protected $configFactory;
 
   /**
-   * The tested unrouted url assembler.
+   * The tested unrouted URL assembler.
    *
    * @var \Drupal\Core\Utility\UnroutedUrlAssembler
    */

@@ -99,7 +99,7 @@ class PathValidator implements PathValidatorInterface {
       if (empty($parsed_url['path'])) {
         return FALSE;
       }
-      return Url::createFromPath($path);
+      return Url::fromUri($path);
     }
 
     $path = ltrim($path, '/');

@@ -141,9 +141,7 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
       return new Url($this->pluginDefinition['route_name'], $this->pluginDefinition['route_parameters'], $options);
     }
     else {
-      $url = Url::createFromPath($this->pluginDefinition['url']);
-      $url->setOptions($options);
-      return $url;
+      return Url::fromUri($this->pluginDefinition['url'], $options);
     }
   }
 

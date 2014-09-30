@@ -457,7 +457,7 @@ function system_authorized_get_url(array $options = array()) {
   // Force HTTPS if available, regardless of what the caller specifies.
   $options['https'] = TRUE;
   // Prefix with $base_url so url() treats it as an external link.
-  $url = Url::createFromPath($base_url . '/core/authorize.php');
+  $url = Url::fromUri('base://core/authorize.php');
   $url_options = $url->getOptions();
   $url->setOptions($options + $url_options);
   return $url;

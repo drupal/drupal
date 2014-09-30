@@ -26,6 +26,7 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The Aggregator module is an on-site syndicator and news reader that gathers and displays fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines in feeds, using a number of standardized XML-based formats. For more information, see the <a href="!aggregator-module">online documentation for the Aggregator module</a>.', array('!aggregator-module' => 'https://drupal.org/documentation/modules/aggregator')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
+      // Check if the aggregator sources View is enabled.
       if ($url = $path_validator->getUrlIfValid('aggregator/sources')) {
         $output .= '<dt>' . t('Viewing feeds') . '</dt>';
         $output .= '<dd>' . t('Users view feed content in the <a href="!aggregator">main aggregator display</a>, or by <a href="!aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="!admin-block">Blocks administration page</a>.', array('!aggregator' => \Drupal::url('aggregator.page_last'), '!aggregator-sources' => $url->toString(), '!admin-block' => \Drupal::url('block.admin_display'))) . '</dd>';
@@ -33,6 +34,7 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
       $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href="!feededit">Feed aggregator administration page</a>.', array('!feededit' => \Drupal::url('aggregator.admin_overview'))) . '</dd>';
       $output .= '<dt>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> integration') . '</dt>';
+      // Check if the aggregator opml View is enabled.
       if ($url = $path_validator->getUrlIfValid('aggregator/opml')) {
         $output .= '<dd>' . t('A <a href="!aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="!import-opml">imported via an OPML file</a>.', array('!aggregator-opml' => $url->toString(), '!import-opml' => \Drupal::url('aggregator.opml_add'))) . '</dd>';
       }
