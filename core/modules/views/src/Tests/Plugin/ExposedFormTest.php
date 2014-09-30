@@ -129,7 +129,7 @@ class ExposedFormTest extends ViewTestBase {
 
     $this->assertFieldByXpath('//form/@id', $this->getExpectedExposedFormId($view), 'Expected form ID found.');
 
-    $expected_action = url($view->display_handler->getUrl());
+    $expected_action = _url($view->display_handler->getUrl());
     $this->assertFieldByXPath('//form/@action', $expected_action, 'The expected value for the action attribute was found.');
   }
 

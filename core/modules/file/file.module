@@ -1589,7 +1589,7 @@ function template_preprocess_file_link(&$variables) {
     $options['attributes']['title'] = String::checkPlain($file_entity->getFilename());
   }
 
-  $variables['link'] = l($link_text, $url, $options);
+  $variables['link'] = _l($link_text, $url, $options);
   $variables['attributes'] = array('class' => array('file'));
 }
 

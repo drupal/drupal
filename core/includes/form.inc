@@ -949,7 +949,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
     if ($batch['progressive']) {
       // Now that we have a batch id, we can generate the redirection link in
       // the generic error message.
-      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
+      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => _url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.
@@ -977,7 +977,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
       }
       else {
         $options['absolute'] = TRUE;
-        return new RedirectResponse(url($batch['url'], $options));
+        return new RedirectResponse(_url($batch['url'], $options));
       }
     }
     else {

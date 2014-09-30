@@ -44,7 +44,7 @@ class RelationLinkManager implements RelationLinkManagerInterface{
    */
   public function getRelationUri($entity_type, $bundle, $field_name) {
     // @todo Make the base path configurable.
-    return url("rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
+    return _url("rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
   }
 
   /**

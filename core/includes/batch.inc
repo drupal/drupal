@@ -157,7 +157,7 @@ function _batch_progress_page() {
   $batch['url_options']['query']['id'] = $batch['id'];
   $batch['url_options']['query']['op'] = $new_op;
 
-  $url = url($batch['url'], $batch['url_options']);
+  $url = _url($batch['url'], $batch['url_options']);
 
   $build = array(
     '#theme' => 'progress_bar',
@@ -486,7 +486,7 @@ function _batch_finished() {
     }
     elseif ($callback === NULL) {
       // Default to RedirectResponse objects when nothing specified.
-      $url = url($_batch['source_url'], array(
+      $url = _url($_batch['source_url'], array(
         'absolute' => TRUE,
         'query' => array('op' => 'finish', 'id' => $_batch['id']),
       ));

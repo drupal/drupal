@@ -110,7 +110,7 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     foreach (drupal_get_feeds() as $feed) {
       // Force the URL to be absolute, for consistency with other <link> tags
       // output by Drupal.
-      $link = new FeedLinkElement($feed['title'], url($feed['url'], array('absolute' => TRUE)));
+      $link = new FeedLinkElement($feed['title'], _url($feed['url'], array('absolute' => TRUE)));
       $page->addLinkElement($link);
     }
 

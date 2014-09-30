@@ -58,16 +58,16 @@ class EntityResolverTest extends NormalizerTestBase {
     $entity->set('field_test_entity_reference', array(array('target_id' => 1)));
     $entity->save();
 
-    $field_uri = url('rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE));
+    $field_uri = _url('rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE));
 
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE)),
         ),
         $field_uri => array(
           array(
-            'href' => url('entity/entity_test_mulrev/' . $entity->id()),
+            'href' => _url('entity/entity_test_mulrev/' . $entity->id()),
           ),
         ),
       ),
@@ -75,7 +75,7 @@ class EntityResolverTest extends NormalizerTestBase {
         $field_uri => array(
           array(
             '_links' => array(
-              'self' => url('entity/entity_test_mulrev/' . $entity->id()),
+              'self' => _url('entity/entity_test_mulrev/' . $entity->id()),
             ),
             'uuid' => array(
               array(

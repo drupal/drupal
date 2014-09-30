@@ -61,7 +61,7 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell_content = l($cell_content . $image, current_path(), array(
+    $cell_content = _l($cell_content . $image, current_path(), array(
       'attributes' => array('title' => $title),
       'query' => array_merge($ts['query'], array(
         'sort' => $ts['sort'],

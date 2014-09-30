@@ -79,7 +79,7 @@ class UpdateUploadTest extends UpdateTestBase {
       ->set('system_info', $setting)
       ->set('xml_map', array('drupal' => '2-sec'))
       ->save();
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     // Initialize the update status.
     $this->drupalGet('admin/reports/updates');
 

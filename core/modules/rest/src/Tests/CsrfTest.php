@@ -107,7 +107,7 @@ class CsrfTest extends RESTTestBase {
       CURLOPT_HTTPGET => FALSE,
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serialized,
-      CURLOPT_URL => url('entity/' . $this->testEntityType, array('absolute' => TRUE)),
+      CURLOPT_URL => _url('entity/' . $this->testEntityType, array('absolute' => TRUE)),
       CURLOPT_NOBODY => FALSE,
       CURLOPT_HTTPHEADER => array(
         "Content-Type: {$this->defaultMimeType}",

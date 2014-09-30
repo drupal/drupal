@@ -147,7 +147,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
           '#type' => 'more_link',
           '#href' => 'a/link',
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . url('a/link') . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . _url('a/link') . '" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag with a route",
@@ -165,7 +165,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
           '#href' => 'admin/content',
           '#options' => array('absolute' => TRUE),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . url('admin/content', array('absolute' => TRUE)) . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . _url('admin/content', array('absolute' => TRUE)) . '" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag to the front page",
@@ -173,7 +173,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
           '#type' => 'more_link',
           '#href' => '<front>',
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . url('<front>') . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . _url('<front>') . '" and text()="More"]',
       ),
     );
 

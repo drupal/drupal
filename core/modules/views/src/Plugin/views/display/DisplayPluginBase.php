@@ -2115,7 +2115,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $url_options['query'] = $this->view->exposed_raw_input;
         }
         $theme = $this->view->buildThemeFunctions('views_more');
-        $path = check_url(url($path, $url_options));
+        $path = check_url(_url($path, $url_options));
 
         return array(
           '#theme' => $theme,

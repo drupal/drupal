@@ -214,7 +214,7 @@ class TwigExtension extends \Twig_Extension {
     }
     else {
       // @todo Convert once https://www.drupal.org/node/2306901 is in
-      return l($text, $url);
+      return _l($text, $url);
     }
   }
 

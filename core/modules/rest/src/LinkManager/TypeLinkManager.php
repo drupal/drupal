@@ -42,7 +42,7 @@ class TypeLinkManager implements TypeLinkManagerInterface {
    */
   public function getTypeUri($entity_type, $bundle) {
     // @todo Make the base path configurable.
-    return url("rest/type/$entity_type/$bundle", array('absolute' => TRUE));
+    return _url("rest/type/$entity_type/$bundle", array('absolute' => TRUE));
   }
 
   /**

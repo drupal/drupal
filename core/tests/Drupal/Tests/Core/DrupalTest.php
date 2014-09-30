@@ -250,7 +250,7 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
-   * Tests the url() method.
+   * Tests the _url() method.
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
@@ -276,7 +276,7 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
-   * Tests the l() method.
+   * Tests the _l() method.
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */

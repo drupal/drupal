@@ -95,7 +95,7 @@ use Drupal\Core\Language\LanguageInterface;
  * Perform alterations on language switcher links.
  *
  * A language switcher link may need to point to a different path or use a
- * translated link text before going through l(), which will just handle the
+ * translated link text before going through _l(), which will just handle the
  * path aliases.
  *
  * @param $links

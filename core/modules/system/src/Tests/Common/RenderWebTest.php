@@ -111,7 +111,7 @@ class RenderWebTest extends WebTestBase {
       ),
     );
     $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
-      ':href' => url($element['#href'], array('absolute' => TRUE)),
+      ':href' => _url($element['#href'], array('absolute' => TRUE)),
       ':title' => $element['#title'],
     ));
 

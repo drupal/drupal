@@ -111,7 +111,7 @@ class UpdateManagerUpdate extends FormBase {
       // The project name to display can vary based on the info we have.
       if (!empty($project['title'])) {
         if (!empty($project['link'])) {
-          $project_name = l($project['title'], $project['link']);
+          $project_name = _l($project['title'], $project['link']);
         }
         else {
           $project_name = String::checkPlain($project['title']);
@@ -134,7 +134,7 @@ class UpdateManagerUpdate extends FormBase {
       }
 
       $recommended_release = $project['releases'][$project['recommended']];
-      $recommended_version = $recommended_release['version'] . ' ' . l($this->t('(Release notes)'), $recommended_release['release_link'], array('attributes' => array('title' => $this->t('Release notes for @project_title', array('@project_title' => $project['title'])))));
+      $recommended_version = $recommended_release['version'] . ' ' . _l($this->t('(Release notes)'), $recommended_release['release_link'], array('attributes' => array('title' => $this->t('Release notes for @project_title', array('@project_title' => $project['title'])))));
       if ($recommended_release['version_major'] != $project['existing_major']) {
         $recommended_version .= '<div title="Major upgrade warning" class="update-major-version-warning">' . $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version.  It is recommended that you read the release notes and proceed at your own risk.') . '</div>';
       }

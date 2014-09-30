@@ -119,7 +119,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    * Loads stylesheets recursively and returns contents with corrected paths.
    *
    * This function is used for recursive loading of stylesheets and
-   * returns the stylesheet content with all url() paths corrected.
+   * returns the stylesheet content with all _url() paths corrected.
    *
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for
@@ -138,10 +138,10 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Determine the file's directory.
     $directory = dirname($filename);
     // If the file is in the current directory, make sure '.' doesn't appear in
-    // the url() path.
+    // the _url() path.
     $directory = $directory == '.' ? '' : $directory .'/';
 
-    // Alter all internal url() paths. Leave external paths alone. We don't need
+    // Alter all internal _url() paths. Leave external paths alone. We don't need
     // to normalize absolute paths here (i.e. remove folder/... segments)
     // because that will be done later.
     return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
@@ -215,7 +215,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    *
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for
-   *   url() references in CSS files, except for external or absolute ones.
+   *   _url() references in CSS files, except for external or absolute ones.
    *
    * Note: the only reason this method is public is so color.module can call it;
    * it is not on the AssetOptimizerInterface, so future refactorings can make

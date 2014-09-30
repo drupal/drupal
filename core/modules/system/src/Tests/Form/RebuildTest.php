@@ -105,6 +105,6 @@ class RebuildTest extends WebTestBase {
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
-    $this->assert(count($forms) == 1 && $forms[0]['action'] == url('node/add/page'), 'Re-rendered form contains the correct action value.');
+    $this->assert(count($forms) == 1 && $forms[0]['action'] == _url('node/add/page'), 'Re-rendered form contains the correct action value.');
   }
 }

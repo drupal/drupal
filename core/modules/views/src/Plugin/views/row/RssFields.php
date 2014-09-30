@@ -143,7 +143,7 @@ class RssFields extends RowPluginBase {
     // Create the RSS item object.
     $item = new \stdClass();
     $item->title = $this->getField($row_index, $this->options['title_field']);
-    $item->link = url($this->getField($row_index, $this->options['link_field']), array('absolute' => TRUE));
+    $item->link = _url($this->getField($row_index, $this->options['link_field']), array('absolute' => TRUE));
     $item->description = $this->getField($row_index, $this->options['description_field']);
     $item->elements = array(
       array('key' => 'pubDate', 'value' => $this->getField($row_index, $this->options['date_field'])),
@@ -157,7 +157,7 @@ class RssFields extends RowPluginBase {
     $item_guid = $this->getField($row_index, $this->options['guid_field_options']['guid_field']);
     if ($this->options['guid_field_options']['guid_field_is_permalink']) {
       $guid_is_permalink_string = 'true';
-      $item_guid = url($item_guid, array('absolute' => TRUE));
+      $item_guid = _url($item_guid, array('absolute' => TRUE));
     }
     $item->elements[] = array(
       'key' => 'guid',

@@ -638,9 +638,24 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  *
- * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromPath().
+ * @see \Drupal\Core\Url::fromUri()
+ * @see \Drupal\Core\Url::fromRoute()
+ * @see \Drupal\Core\Url::toString()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Core\Url::fromRoute() for internal paths served by Drupal
+ *   controllers or \Drupal\Core\Url::fromUri() for external paths or
+ *   non-controller or sub-domain URIs such as core/install.php. Note that
+ *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
+ *   from the same sub-domain that are not handled by Drupal controllers should
+ *   be prepended with base://. For example:
+ * @code
+ * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
+ * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
+ * @endcode
  */
-function url($path = NULL, array $options = array()) {
+function _url($path = NULL, array $options = array()) {
   return \Drupal::urlGenerator()->generateFromPath($path, $options);
 }
 
@@ -730,10 +745,27 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * @return string
  *   An HTML string containing a link to the given path.
  *
- * @see url()
+ * @see _url()
  * @see system_page_build()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal::linkGenerator()->generate($url) where $url is an instance of
+ *   \Drupal\Core\Url. To build a \Drupal\Core\Url object for internal paths
+ *   served by Drupal controllers use \Drupal\Core\Url::fromRoute(). For
+ *   external paths or non-controller or sub-domain URIs such as
+ *   core/install.php use \Drupal\Core\Url::fromUri(). Note that
+ *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
+ *   from the same sub-domain that are not handled by Drupal controllers should
+ *   be prepended with base://. For example:
+ * @code
+ * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $installer_link = \Drupal::linkGenerator()->generate($installer_url);
+ * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
+ * $external_link = \Drupal::linkGenerator()->generate($external_url);
+ * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
+ * $internal_link = \Drupal::linkGenerator()->generate($internal_url);
+ * @endcode
  */
-function l($text, $path, array $options = array()) {
+function _l($text, $path, array $options = array()) {
   // Start building a structured representation of our link to be altered later.
   $variables = array(
     'text' => is_array($text) ? drupal_render($text) : $text,
@@ -788,7 +820,7 @@ function l($text, $path, array $options = array()) {
 
   // The result of url() is a plain-text URL. Because we are using it here
   // in an HTML argument context, we need to encode it properly.
-  $url = String::checkPlain(url($variables['path'], $variables['options']));
+  $url = String::checkPlain(_url($variables['path'], $variables['options']));
 
   // Sanitize the link text if necessary.
   $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
@@ -1509,7 +1541,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           $scriptPath = $GLOBALS['script_path'];
           $pathPrefix = '';
           $current_query = \Drupal::service('request_stack')->getCurrentRequest()->query->all();
-          url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
+          _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
           $current_path = current_path();
           $current_path_is_admin = FALSE;
           // The function path_is_admin() is not available on update.php pages.

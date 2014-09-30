@@ -86,6 +86,6 @@ function template_preprocess_image_formatter(&$variables) {
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
-    $variables['url'] = url($path, $options);
+    $variables['url'] = _url($path, $options);
   }
 }

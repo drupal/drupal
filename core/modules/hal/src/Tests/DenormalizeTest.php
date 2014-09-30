@@ -24,7 +24,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data_with_valid_type = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
         ),
       ),
     );
@@ -36,10 +36,10 @@ class DenormalizeTest extends NormalizerTestBase {
       '_links' => array(
         'type' => array(
           array(
-            'href' => url('rest/types/foo', array('absolute' => TRUE)),
+            'href' => _url('rest/types/foo', array('absolute' => TRUE)),
           ),
           array(
-            'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+            'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
           ),
         ),
       ),
@@ -51,7 +51,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data_with_invalid_type = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/types/foo', array('absolute' => TRUE)),
+          'href' => _url('rest/types/foo', array('absolute' => TRUE)),
         ),
       ),
     );
@@ -84,7 +84,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $no_field_data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
         ),
       ),
     );
@@ -94,7 +94,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $empty_field_data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
         ),
       ),
       'field_test_text' => array(),
@@ -112,7 +112,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
         ),
       ),
       'uuid' => array(
@@ -182,7 +182,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
         ),
       ),
       'field_test_text' => array(

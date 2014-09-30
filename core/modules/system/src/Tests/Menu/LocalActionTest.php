@@ -48,7 +48,7 @@ class LocalActionTest extends WebTestBase {
     $index = 0;
     foreach ($actions as $href => $title) {
       $this->assertEqual((string) $elements[$index], $title);
-      $this->assertEqual($elements[$index]['href'], url($href));
+      $this->assertEqual($elements[$index]['href'], _url($href));
       $index++;
     }
   }

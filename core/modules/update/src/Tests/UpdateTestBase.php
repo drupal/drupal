@@ -43,7 +43,7 @@ abstract class UpdateTestBase extends WebTestBase {
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
     // Tell the Update Manager module to fetch from the URL provided by
     // update_test module.
-    \Drupal::config('update.settings')->set('fetch.url', url($url, array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url($url, array('absolute' => TRUE)))->save();
     // Save the map for update_test_mock_page() to use.
     \Drupal::config('update_test.settings')->set('xml_map', $xml_map)->save();
     // Manually check the update status.
@@ -55,7 +55,7 @@ abstract class UpdateTestBase extends WebTestBase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), 'Link to the Drupal project appears.');
+    $this->assertRaw(_l(t('Drupal'), 'http://example.com/project/drupal'), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
 }

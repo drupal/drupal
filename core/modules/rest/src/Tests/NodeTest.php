@@ -68,7 +68,7 @@ class NodeTest extends RESTTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => url('rest/type/node/resttest', array('absolute' => TRUE)),
+          'href' => _url('rest/type/node/resttest', array('absolute' => TRUE)),
         ),
       ),
       'title' => array(

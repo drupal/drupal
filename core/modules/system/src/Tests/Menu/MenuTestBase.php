@@ -64,7 +64,7 @@ abstract class MenuTestBase extends WebTestBase {
     // this test would go into an infinite loop, so we need to check that too.
     while ($trail && !empty($parts)) {
       foreach ($trail as $path => $title) {
-        $url = url($path);
+        $url = _url($path);
         $part = array_shift($parts);
         $pass = ($pass && $part['href'] === $url && $part['text'] === String::checkPlain($title));
       }
@@ -101,7 +101,7 @@ abstract class MenuTestBase extends WebTestBase {
         $part_xpath .= 'li[contains(@class, :class)]/a[contains(@href, :href) and contains(text(), :title)]';
         $part_args = array(
           ':class' => 'active-trail',
-          ':href' => url($link_path),
+          ':href' => _url($link_path),
           ':title' => $link_title,
         );
         $xpath .= $this->buildXPathQuery($part_xpath, $part_args);
@@ -121,7 +121,7 @@ abstract class MenuTestBase extends WebTestBase {
     $args = array(
       ':class-trail' => 'active-trail',
       ':class-active' => 'active',
-      ':href' => url($active_link_path),
+      ':href' => _url($active_link_path),
       ':title' => $active_link_title,
     );
     $elements = $this->xpath($xpath, $args);

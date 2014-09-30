@@ -57,7 +57,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
     }
     return array(
       array(
-        'link' => url('node'),
+        'link' => _url('node'),
         'type' => 'Dummy result type',
         'title' => 'Dummy title',
         'snippet' => SafeMarkup::set("Dummy search snippet to display. Keywords: {$this->keywords}\n\nConditions: " . print_r($this->searchParameters, TRUE)),

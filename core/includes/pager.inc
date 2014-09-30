@@ -219,7 +219,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, 0),
     );
-    $items['first']['href'] = url($current_path, $options);
+    $items['first']['href'] = _url($current_path, $options);
     if (isset($tags[0])) {
       $items['first']['text'] = $tags[0];
     }
@@ -228,7 +228,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     );
-    $items['previous']['href'] = url($current_path, $options);
+    $items['previous']['href'] = _url($current_path, $options);
     if (isset($tags[1])) {
       $items['previous']['text'] = $tags[1];
     }
@@ -244,7 +244,7 @@ function template_preprocess_pager(&$variables) {
       $options = array(
         'query' => pager_query_add_page($parameters, $element, $i - 1),
       );
-      $items['pages'][$i]['href'] = url($current_path, $options);
+      $items['pages'][$i]['href'] = _url($current_path, $options);
       if ($i == $pager_current) {
         $variables['current'] = $i;
       }
@@ -261,7 +261,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     );
-    $items['next']['href'] = url($current_path, $options);
+    $items['next']['href'] = _url($current_path, $options);
     if (isset($tags[3])) {
       $items['next']['text'] = $tags[3];
     }
@@ -270,7 +270,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_max - 1),
     );
-    $items['last']['href'] = url($current_path, $options);
+    $items['last']['href'] = _url($current_path, $options);
     if (isset($tags[4])) {
       $items['last']['text'] = $tags[4];
     }

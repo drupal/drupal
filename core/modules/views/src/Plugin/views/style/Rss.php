@@ -41,7 +41,7 @@ class Rss extends StylePluginBase {
     }
     $url_options['absolute'] = TRUE;
 
-    $url = url($this->view->getUrl(NULL, $path), $url_options);
+    $url = _url($this->view->getUrl(NULL, $path), $url_options);
     if ($display->hasPath()) {
       if (empty($this->preview)) {
         // Add a call for drupal_add_feed to the view attached data.

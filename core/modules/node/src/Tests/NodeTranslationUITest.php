@@ -335,7 +335,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   protected function doTestAlternateHreflangLinks($path) {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
-      $urls[$langcode] = url($path, array('absolute' => TRUE, 'language' => $languages[$langcode]));
+      $urls[$langcode] = _url($path, array('absolute' => TRUE, 'language' => $languages[$langcode]));
     }
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, array('language' => $languages[$langcode]));

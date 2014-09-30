@@ -149,7 +149,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     sort($actual_tags);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $this->assertIdentical($actual_tags, $expected_tags);
-    $cid_parts = array(url($path, array('absolute' => TRUE)), 'html');
+    $cid_parts = array(_url($path, array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);

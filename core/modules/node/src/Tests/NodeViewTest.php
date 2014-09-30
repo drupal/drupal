@@ -24,13 +24,13 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->getSystemPath());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($result[0]['href'], url("node/{$node->id()}/revisions"));
+    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}/revisions"));
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]['href'], url("node/{$node->id()}/edit"));
+    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}/edit"));
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]['href'], url("node/{$node->id()}"));
+    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}"));
   }
 
 }

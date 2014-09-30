@@ -45,7 +45,7 @@ class Url extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
-      return l($this->sanitizeValue($value), $value, array('html' => TRUE));
+      return _l($this->sanitizeValue($value), $value, array('html' => TRUE));
     }
     else {
       return $this->sanitizeValue($value, 'url');

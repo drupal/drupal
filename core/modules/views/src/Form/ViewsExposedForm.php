@@ -114,7 +114,7 @@ class ViewsExposedForm extends FormBase {
       '#id' => drupal_html_id('edit-submit-' . $view->storage->id()),
     );
 
-    $form['#action'] = url($view->display_handler->getUrl());
+    $form['#action'] = _url($view->display_handler->getUrl());
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
     $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . String::checkPlain($view->storage->id()) . '-' . String::checkPlain($display['id']));
     // $form['#attributes']['class'] = array('views-exposed-form');

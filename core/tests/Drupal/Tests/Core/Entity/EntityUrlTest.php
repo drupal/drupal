@@ -152,7 +152,7 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the url() method.
+   * Tests the _url() method.
    *
    * @covers ::url()
    */

@@ -87,7 +87,7 @@ class AuthTest extends RESTTestBase {
     $out = $this->curlExec(
       array(
         CURLOPT_HTTPGET => TRUE,
-        CURLOPT_URL => url($path, array('absolute' => TRUE)),
+        CURLOPT_URL => _url($path, array('absolute' => TRUE)),
         CURLOPT_NOBODY => FALSE,
         CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
         CURLOPT_USERPWD => $username . ':' . $password,

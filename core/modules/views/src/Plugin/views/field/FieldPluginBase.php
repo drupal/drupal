@@ -1277,14 +1277,14 @@ abstract class FieldPluginBase extends HandlerBase {
         $more_link_path = $this->options['alter']['more_link_path'];
         $more_link_path = strip_tags(decode_entities(strtr($more_link_path, $tokens)));
 
-        // Make sure that paths which were run through url() work as well.
+        // Make sure that paths which were run through _url() work as well.
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
         if (strpos($more_link_path, $base_path) === 0) {
           $more_link_path = drupal_substr($more_link_path, drupal_strlen($base_path));
         }
 
-        $more_link = l($more_link_text, $more_link_path, array('attributes' => array('class' => array('views-more-link'))));
+        $more_link = _l($more_link_text, $more_link_path, array('attributes' => array('class' => array('views-more-link'))));
 
         $suffix .= " " . $more_link;
       }
@@ -1344,7 +1344,7 @@ abstract class FieldPluginBase extends HandlerBase {
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
     );
 
-    // $path will be run through check_url() by l() so we do not need to
+    // $path will be run through check_url() by _l() so we do not need to
     // sanitize it ourselves.
     $path = $alter['path'];
 
@@ -1456,7 +1456,7 @@ abstract class FieldPluginBase extends HandlerBase {
     // parsed values.
     if (isset($alter['query'])) {
       // Convert the query to a string, perform token replacement, and then
-      // convert back to an array form for l().
+      // convert back to an array form for _l().
       $options['query'] = UrlHelper::buildQuery($alter['query']);
       $options['query'] = strtr($options['query'], $tokens);
       $query = array();
@@ -1482,7 +1482,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $options['entity_type'] = $alter['entity_type'];
     }
 
-    $value .= l($text, $path, $options);
+    $value .= _l($text, $path, $options);
 
     if (!empty($alter['suffix'])) {
       $value .= Xss::filterAdmin(strtr($alter['suffix'], $tokens));

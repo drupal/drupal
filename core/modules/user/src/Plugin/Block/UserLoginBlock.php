@@ -41,7 +41,7 @@ class UserLoginBlock extends BlockBase {
     unset($form['pass']['#description']);
     $form['name']['#size'] = 15;
     $form['pass']['#size'] = 15;
-    $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
+    $form['#action'] = _url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

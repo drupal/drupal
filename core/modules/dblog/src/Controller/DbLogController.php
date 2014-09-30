@@ -252,11 +252,11 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Location'), 'header' => TRUE),
-          l($dblog->location, $dblog->location),
+          _l($dblog->location, $dblog->location),
         ),
         array(
           array('data' => $this->t('Referrer'), 'header' => TRUE),
-          l($dblog->referer, $dblog->referer),
+          _l($dblog->referer, $dblog->referer),
         ),
         array(
           array('data' => $this->t('Message'), 'header' => TRUE),

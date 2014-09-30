@@ -126,7 +126,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     // Create an absolute French link.
     $language = \Drupal::languageManager()->getLanguage('fr');
-    $url = url('', array(
+    $url = _url('', array(
       'absolute' => TRUE,
       'language' => $language,
     ));
@@ -135,8 +135,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     $this->assertEqual($url, $expected, 'The right port is used.');
 
-    // If we set the port explicitly in url(), it should not be overriden.
-    $url = url('', array(
+    // If we set the port explicitly in _url(), it should not be overriden.
+    $url = _url('', array(
       'absolute' => TRUE,
       'language' => $language,
       'base_url' => $request->getBaseUrl() . ':90',

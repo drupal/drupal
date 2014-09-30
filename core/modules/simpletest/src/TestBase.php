@@ -745,7 +745,7 @@ abstract class TestBase {
     $verbose_filename = $this->verboseDirectory . '/' . $this->verboseClassName . '-' . $this->verboseId . '.html';
     if (file_put_contents($verbose_filename, $message, FILE_APPEND)) {
       $url = $this->verboseDirectoryUrl . '/' . $this->verboseClassName . '-' . $this->verboseId . '.html';
-      // Not using l() to avoid invoking the theme system, so that unit tests
+      // Not using _l() to avoid invoking the theme system, so that unit tests
       // can use verbose() as well.
       $url = '<a href="' . $url . '" target="_blank">Verbose message</a>';
       $this->error($url, 'User notice');

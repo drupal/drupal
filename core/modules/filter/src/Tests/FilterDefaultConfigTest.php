@@ -21,7 +21,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Drupal\filter\FilterPermissions::permissions() calls into url() to output
+    // Drupal\filter\FilterPermissions::permissions() calls into _url() to output
     // a link in the description.
     $this->installSchema('system', 'url_alias');
 

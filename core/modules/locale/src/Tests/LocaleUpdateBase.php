@@ -53,7 +53,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
     // Update module should not go out to d.o to check for updates. We override
     // the url to the default update_test xml path. But without providing
     // a mock xml file, no update data will be found.
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
 
     // Setup timestamps to identify old and new translation sources.
     $this->timestampOld = REQUEST_TIME - 300;

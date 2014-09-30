@@ -70,8 +70,8 @@ class MenuRouterTest extends WebTestBase {
     $this->assertLink('Local task A');
     $this->assertLink('Local task B');
     // Confirm correct local task href.
-    $this->assertLinkByHref(url($base_path));
-    $this->assertLinkByHref(url($base_path . '/b'));
+    $this->assertLinkByHref(_url($base_path));
+    $this->assertLinkByHref(_url($base_path . '/b'));
   }
 
   /**

@@ -103,7 +103,7 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
 
         case 'url':
           if ($path = $view->getUrl()) {
-            $replacements[$original] = url($path, $url_options);
+            $replacements[$original] = _url($path, $url_options);
           }
           break;
         case 'base-table':

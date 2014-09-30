@@ -192,7 +192,7 @@ abstract class Entity implements EntityInterface {
       }
     }
 
-    // Pass the entity data to url() so that alter functions do not need to
+    // Pass the entity data to _url() so that alter functions do not need to
     // look up this entity again.
     $uri
       ->setOption('entity_type', $this->getEntityTypeId())

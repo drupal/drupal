@@ -124,7 +124,7 @@ class Rearrange extends ViewsFormBase {
         '#id' => 'views-removed-' . $id,
         '#attributes' => array('class' => array('views-remove-checkbox')),
         '#default_value' => 0,
-        '#suffix' => l('<span>' . $this->t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => $this->t('Remove this item'), 'title' => $this->t('Remove this item')), 'html' => TRUE)),
+        '#suffix' => _l('<span>' . $this->t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => $this->t('Remove this item'), 'title' => $this->t('Remove this item')), 'html' => TRUE)),
       );
     }
 

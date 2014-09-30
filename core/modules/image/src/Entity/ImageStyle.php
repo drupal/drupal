@@ -216,12 +216,12 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     }
 
     // If not using clean URLs, the image derivative callback is only available
-    // with the script path. If the file does not exist, use url() to ensure
+    // with the script path. If the file does not exist, use _url() to ensure
     // that it is included. Once the file exists it's fine to fall back to the
     // actual file path, this avoids bootstrapping PHP once the files are built.
     if ($clean_urls === FALSE && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
       $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
-      return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query));
+      return _url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query));
     }
 
     $file_url = file_create_url($uri);

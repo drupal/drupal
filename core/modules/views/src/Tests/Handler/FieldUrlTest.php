@@ -70,7 +70,7 @@ class FieldUrlTest extends ViewUnitTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual(l('John', 'John'), $view->field['name']->advancedRender($view->result[0]));
+    $this->assertEqual(_l('John', 'John'), $view->field['name']->advancedRender($view->result[0]));
   }
 
 }

@@ -1476,7 +1476,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $path
    *   Path to request AJAX from.
    * @param array $options
-   *   Array of options to pass to url().
+   *   Array of options to pass to _url().
    * @param array $headers
    *   Array of headers. Eg array('Accept: application/vnd.drupal-ajax').
    *
@@ -1925,11 +1925,11 @@ abstract class WebTestBase extends TestBase {
    *
    * @see WebTestBase::getAjaxPageStatePostData()
    * @see WebTestBase::curlExec()
-   * @see url()
+   * @see _url()
    */
   protected function drupalPost($path, $accept, array $post, $options = array()) {
     return $this->curlExec(array(
-      CURLOPT_URL => url($path, $options + array('absolute' => TRUE)),
+      CURLOPT_URL => _url($path, $options + array('absolute' => TRUE)),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serializePostValues($post),
       CURLOPT_HTTPHEADER => array(

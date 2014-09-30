@@ -74,7 +74,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText($node2->label());
 
     // Check if we have the feed.
-    $this->assertLinkByHref(url($view2['page[feed_properties][path]']));
+    $this->assertLinkByHref(_url($view2['page[feed_properties][path]']));
     $this->drupalGet($view2['page[feed_properties][path]']);
     $this->assertRaw('<rss version="2.0"');
     // The feed should have the same title and nodes as the page.
@@ -88,7 +88,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view2['label']);
     $this->assertText($view2['description']);
-    $this->assertLinkByHref(url($view2['page[path]']));
+    $this->assertLinkByHref(_url($view2['page[path]']));
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'If only the page option was enabled in the wizard, the resulting view does not have a REST export display.');
@@ -123,7 +123,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view3['label']);
     $this->assertText($view3['description']);
-    $this->assertLinkByHref(url($view3['page[path]']));
+    $this->assertLinkByHref(_url($view3['page[path]']));
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'If only the page and block options were enabled in the wizard, the resulting view does not have a REST export display.');

@@ -67,10 +67,10 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   - 'script': Added to the URL between the base path and the path prefix.
    *     Defaults to empty string when clean URLs are in effect, and to
    *     'index.php/' when they are not.
-   *   - 'entity_type': The entity type of the object that called url(). Only
-   *     set if url() is invoked by Drupal\Core\Entity\Entity::uri().
+   *   - 'entity_type': The entity type of the object that called _url(). Only
+   *     set if _url() is invoked by Drupal\Core\Entity\Entity::uri().
    *   - 'entity': The entity object (such as a node) for which the URL is being
-   *     generated. Only set if url() is invoked by Drupal\Core\Entity\Entity::uri().
+   *     generated. Only set if _url() is invoked by Drupal\Core\Entity\Entity::uri().
    *
    * @return
    *   A string containing a URL to the given path.

@@ -306,8 +306,8 @@ function template_preprocess_views_view_summary(&$variables) {
   }
 
   $active_urls = array(
-    url(current_path(), array('alias' => TRUE)), // force system path
-    url(current_path()), // could be an alias
+    _url(current_path(), array('alias' => TRUE)), // force system path
+    _url(current_path()), // could be an alias
   );
   $active_urls = array_combine($active_urls, $active_urls);
 
@@ -331,7 +331,7 @@ function template_preprocess_views_view_summary(&$variables) {
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
     }
-    $variables['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
+    $variables['rows'][$id]->url = _url($view->getUrl($args, $base_path), $url_options);
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$variables['rows'][$id]->url])) {
       $variables['rows'][$id]->attributes['class'][] = 'active';
@@ -366,9 +366,9 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
   $count = 0;
   $active_urls = array(
     // Force system path.
-    url(current_path(), array('alias' => TRUE)),
+    _url(current_path(), array('alias' => TRUE)),
     // Could be an alias.
-    url(current_path()),
+    _url(current_path()),
   );
   $active_urls = array_combine($active_urls, $active_urls);
 
@@ -395,7 +395,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
     }
-    $variables['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
+    $variables['rows'][$id]->url = _url($view->getUrl($args, $base_path), $url_options);
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$variables['rows'][$id]->url])) {
       $variables['rows'][$id]->attributes['class'][] = 'active';
@@ -484,7 +484,7 @@ function template_preprocess_views_view_table(&$variables) {
           'attributes' => array('title' => $title),
           'query' => $query,
         );
-        $variables['header'][$field]['content'] = l($label, current_path(), $link_options);
+        $variables['header'][$field]['content'] = _l($label, current_path(), $link_options);
       }
 
       // Set up the header label class.
@@ -901,7 +901,7 @@ function template_preprocess_views_view_rss(&$variables) {
       $path = '';
     }
 
-    $variables['link'] = check_url(url($path, $url_options));
+    $variables['link'] = check_url(_url($path, $url_options));
   }
 
   $variables['langcode'] = String::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->id);

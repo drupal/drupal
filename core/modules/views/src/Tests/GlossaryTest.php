@@ -66,7 +66,7 @@ class GlossaryTest extends ViewTestBase {
     $this->assertResponse(200);
 
     foreach ($nodes_per_char as $char => $count) {
-      $href = url('glossary/' . $char);
+      $href = _url('glossary/' . $char);
       $label = Unicode::strtoupper($char);
       // Get the summary link for a certain character. Filter by label and href
       // to ensure that both of them are correct.

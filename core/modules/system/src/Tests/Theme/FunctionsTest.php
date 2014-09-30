@@ -170,7 +170,7 @@ class FunctionsTest extends WebTestBase {
    * Tests links.html.twig.
    */
   function testLinks() {
-    // Turn off the query for the l() function to compare the active
+    // Turn off the query for the _l() function to compare the active
     // link correctly.
     $original_query = \Drupal::request()->query->all();
     \Drupal::request()->query->replace(array());
@@ -216,9 +216,9 @@ class FunctionsTest extends WebTestBase {
 
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link"><a href="' . url('a/link') . '">' . String::checkPlain('A <link>') . '</a></li>';
+    $expected_links .= '<li class="a-link"><a href="' . _url('a/link') . '">' . String::checkPlain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text">' . String::checkPlain('Plain "text"') . '</li>';
-    $expected_links .= '<li class="front-page"><a href="' . url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page"><a href="' . _url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
@@ -258,9 +258,9 @@ class FunctionsTest extends WebTestBase {
     );
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link"><a href="' . url('a/link') . '" class="a/class">' . String::checkPlain('A <link>') . '</a></li>';
+    $expected_links .= '<li class="a-link"><a href="' . _url('a/link') . '" class="a/class">' . String::checkPlain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text"><span class="a/class">' . String::checkPlain('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="front-page"><a href="' . url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page"><a href="' . _url('<front>') . '">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
@@ -273,9 +273,9 @@ class FunctionsTest extends WebTestBase {
     $variables['set_active_class'] = TRUE;
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link" data-drupal-link-system-path="a/link"><a href="' . url('a/link') . '" class="a/class" data-drupal-link-system-path="a/link">' . String::checkPlain('A <link>') . '</a></li>';
+    $expected_links .= '<li class="a-link" data-drupal-link-system-path="a/link"><a href="' . _url('a/link') . '" class="a/class" data-drupal-link-system-path="a/link">' . String::checkPlain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text"><span class="a/class">' . String::checkPlain('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="front-page" data-drupal-link-system-path="&lt;front&gt;"><a href="' . url('<front>') . '" data-drupal-link-system-path="&lt;front&gt;">' . String::checkPlain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page" data-drupal-link-system-path="&lt;front&gt;"><a href="' . _url('<front>') . '" data-drupal-link-system-path="&lt;front&gt;">' . String::checkPlain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" data-drupal-link-system-path="router_test/test1">' . String::checkPlain('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $encoded_query = String::checkPlain(Json::encode($query));

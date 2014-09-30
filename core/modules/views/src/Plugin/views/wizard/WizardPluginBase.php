@@ -218,7 +218,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $style_options = Views::fetchPluginNames('style', 'normal', array($this->base_table));
     $feed_row_options = Views::fetchPluginNames('row', 'feed', array($this->base_table));
-    $path_prefix = url(NULL, array('absolute' => TRUE));
+    $path_prefix = _url(NULL, array('absolute' => TRUE));
 
     // Add filters and sorts which apply to the view as a whole.
     $this->buildFilters($form, $form_state);

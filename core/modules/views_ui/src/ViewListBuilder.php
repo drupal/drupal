@@ -264,7 +264,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       if ($display->hasPath()) {
         $path = $display->getPath();
         if ($view->status() && strpos($path, '%') === FALSE) {
-          $all_paths[] = l('/' . $path, $path);
+          $all_paths[] = _l('/' . $path, $path);
         }
         else {
           $all_paths[] = String::checkPlain('/' . $path);

@@ -248,7 +248,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       }
 
       // Change path to URL.
-      $settings['url'] = isset($settings['path']) ? url($settings['path'], $settings['options']) : NULL;
+      $settings['url'] = isset($settings['path']) ? _url($settings['path'], $settings['options']) : NULL;
       unset($settings['path'], $settings['options']);
 
       // Add special data to $settings['submit'] so that when this element
@@ -286,7 +286,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       }
       // Change progress path to a full URL.
       if (isset($settings['progress']['path'])) {
-        $settings['progress']['url'] = url($settings['progress']['path']);
+        $settings['progress']['url'] = _url($settings['progress']['path']);
         unset($settings['progress']['path']);
       }
 

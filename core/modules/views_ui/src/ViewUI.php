@@ -693,7 +693,7 @@ class ViewUI implements ViewStorageInterface {
               Xss::filterAdmin($this->executable->getTitle()),
             );
             if (isset($path)) {
-              $path = l($path, $path);
+              $path = _l($path, $path);
             }
             else {
               $path = t('This display has no path.');

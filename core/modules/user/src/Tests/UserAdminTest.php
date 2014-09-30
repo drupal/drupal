@@ -54,7 +54,7 @@ class UserAdminTest extends WebTestBase {
     // Test for existence of edit link in table.
     // @todo This cannot be converted to \Drupal::l() until
     //   https://www.drupal.org/node/2345725 is resolved.
-    $link = l(t('Edit'), "user/" . $user_a->id() . "/edit", array('query' => array('destination' => 'admin/people')));
+    $link = _l(t('Edit'), "user/" . $user_a->id() . "/edit", array('query' => array('destination' => 'admin/people')));
     $this->assertRaw($link, 'Found user A edit link on admin users page');
 
     // Test exposed filter elements.

@@ -34,21 +34,21 @@ class Link extends RenderElement {
    * Doing so during pre_render gives modules a chance to alter the link parts.
    *
    * @param array $element
-   *   A structured array whose keys form the arguments to l():
-   *   - #title: The link text to pass as argument to l().
+   *   A structured array whose keys form the arguments to _l():
+   *   - #title: The link text to pass as argument to _l().
    *   - One of the following
    *     - #route_name and (optionally) a #route_parameters array; The route
    *       name and route parameters which will be passed into the link
    *       generator.
-   *     - #href: The system path or URL to pass as argument to l().
-   *   - #options: (optional) An array of options to pass to l() or the link
+   *     - #href: The system path or URL to pass as argument to _l().
+   *   - #options: (optional) An array of options to pass to _l() or the link
    *     generator.
    *
    * @return array
    *   The passed-in element containing a rendered link in '#markup'.
    */
   public static function preRenderLink($element) {
-    // By default, link options to pass to l() are normally set in #options.
+    // By default, link options to pass to _l() are normally set in #options.
     $element += array('#options' => array());
     // However, within the scope of renderable elements, #attributes is a valid
     // way to specify attributes, too. Take them into account, but do not override
@@ -89,7 +89,7 @@ class Link extends RenderElement {
     }
     else {
       // @todo Convert to \Drupal::l(): https://www.drupal.org/node/2347045.
-      $element['#markup'] = l($element['#title'], $element['#href'], $element['#options']);
+      $element['#markup'] = _l($element['#title'], $element['#href'], $element['#options']);
     }
     return $element;
   }

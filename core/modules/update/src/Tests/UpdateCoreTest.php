@@ -51,9 +51,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertNoText(t('Up to date'));
     $this->assertText(t('Update available'));
     $this->assertNoText(t('Security update required!'));
-    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), 'Link to release appears.');
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), 'Link to download appears.');
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), 'Link to release notes appears.');
+    $this->assertRaw(_l('7.1', 'http://example.com/drupal-7-1-release'), 'Link to release appears.');
+    $this->assertRaw(_l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(_l(t('Release notes'), 'http://example.com/drupal-7-1-release'), 'Link to release notes appears.');
   }
 
   /**
@@ -66,9 +66,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertNoText(t('Up to date'));
     $this->assertNoText(t('Update available'));
     $this->assertText(t('Security update required!'));
-    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), 'Link to release appears.');
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), 'Link to download appears.');
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), 'Link to release notes appears.');
+    $this->assertRaw(_l('7.2', 'http://example.com/drupal-7-2-release'), 'Link to release appears.');
+    $this->assertRaw(_l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(_l(t('Release notes'), 'http://example.com/drupal-7-2-release'), 'Link to release notes appears.');
   }
 
   /**
@@ -99,7 +99,7 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   function testModulePageRunCron() {
     $this->setSystemInfo7_0();
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
 
     $this->cronRun();
@@ -113,7 +113,7 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageUpToDate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
 
     $this->drupalGet('admin/reports/updates');
@@ -130,7 +130,7 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageRegularUpdate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
 
     $this->drupalGet('admin/reports/updates');
@@ -147,7 +147,7 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '2-sec'))->save();
 
     $this->drupalGet('admin/reports/updates');
@@ -219,7 +219,7 @@ class UpdateCoreTest extends UpdateTestBase {
   function testLanguageModuleUpdate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
     \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
 
     $this->drupalGet('admin/reports/updates');

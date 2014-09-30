@@ -275,7 +275,7 @@ class LinkFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
-    $expected_link = l($value, $value);
+    $expected_link = _l($value, $value);
     $this->assertRaw($expected_link);
 
     // Verify that a link with text is rendered using the link text.
@@ -287,7 +287,7 @@ class LinkFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
-    $expected_link = l($title, $value);
+    $expected_link = _l($title, $value);
     $this->assertRaw($expected_link);
   }
 
@@ -354,7 +354,7 @@ class LinkFieldTest extends WebTestBase {
     // Verify that the link is output according to the formatter settings.
     // Not using generatePermutations(), since that leads to 32 cases, which
     // would not test actual link field formatter functionality but rather
-    // l() and options/attributes. Only 'url_plain' has a dependency on
+    // _l() and options/attributes. Only 'url_plain' has a dependency on
     // 'url_only', so we have a total of ~10 cases.
     $options = array(
       'trim_length' => array(NULL, 6),
