@@ -32,7 +32,7 @@ class DateTimeFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
-    if (empty($this->getFieldDefinition()->default_value_function)) {
+    if (empty($this->getFieldDefinition()->default_value_callback)) {
       $default_value = $this->getFieldDefinition()->default_value;
 
       $element = array(

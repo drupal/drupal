@@ -7,7 +7,7 @@ label: Tags
 description: 'Enter a comma-separated list. For example: Amsterdam, Mexico City, "Cleveland, Ohio"'
 required: false
 default_value: {  }
-default_value_function: ''
+default_value_callback: ''
 settings: {  }
 status: true
 langcode: und

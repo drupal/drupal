@@ -364,9 +364,9 @@ field_config_base:
       label: 'Translatable'
     default_value:
       type: field.[%parent.field_type].value
-    default_value_function:
+    default_value_callback:
       type: string
-      label: 'Default value function'
+      label: 'Default value callback'
     settings:
       type: field.[%parent.field_type].field_settings
     third_party_settings:

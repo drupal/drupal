@@ -10,7 +10,7 @@ required: true
 default_value:
   -
     value: 0
-default_value_function: ''
+default_value_callback: ''
 settings: {  }
 field_type: boolean
 dependencies:

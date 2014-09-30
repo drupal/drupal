@@ -194,7 +194,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('', $entity_type);
 
     // Add a default value function.
-    $this->fieldTestData->field->default_value_function = 'field_test_default_value';
+    $this->fieldTestData->field->default_value_callback = 'field_test_default_value';
     $this->fieldTestData->field->save();
 
     // Verify that fields are populated with default values.

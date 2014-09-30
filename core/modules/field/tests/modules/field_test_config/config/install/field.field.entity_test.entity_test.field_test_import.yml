@@ -7,7 +7,7 @@ label: 'Test import field'
 description: ''
 required: false
 default_value: {  }
-default_value_function: ''
+default_value_callback: ''
 settings: { }
 field_type: text
 dependencies:

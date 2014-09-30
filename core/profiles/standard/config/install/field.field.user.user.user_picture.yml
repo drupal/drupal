@@ -8,7 +8,7 @@ label: Picture
 description: 'Your virtual face or picture.'
 required: false
 default_value: {  }
-default_value_function: ''
+default_value_callback: ''
 settings:
   file_extensions: 'png gif jpg jpeg'
   file_directory: pictures

@@ -159,7 +159,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'description' => '',
       'required' => FALSE,
       'default_value' => array(),
-      'default_value_function' => '',
+      'default_value_callback' => '',
       'settings' => array(),
       'dependencies' => array(),
       'field_type' => 'test_field',

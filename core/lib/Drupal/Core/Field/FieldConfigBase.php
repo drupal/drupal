@@ -135,7 +135,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * hook_field_schema(). If the number of items exceeds the cardinality of the
    * field, extraneous items will be ignored.
    *
-   * This property is overlooked if the $default_value_function is non-empty.
+   * This property is overlooked if the $default_value_callback is non-empty.
    *
    * Example for a integer field:
    * @code
@@ -165,7 +165,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $default_value_function = '';
+  public $default_value_callback = '';
 
   /**
    * The field storage object.
@@ -334,8 +334,8 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function getDefaultValue(ContentEntityInterface $entity) {
     // Allow custom default values function.
-    if ($function = $this->default_value_function) {
-      $value = call_user_func($function, $entity, $this);
+    if ($callback = $this->default_value_callback) {
+      $value = call_user_func($callback, $entity, $this);
     }
     else {
       $value = $this->default_value;

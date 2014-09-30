@@ -13,6 +13,6 @@ description: 'The title of this node, always treated as non-markup plain text.'
 required: true
 translatable: true
 default_value: {  }
-default_value_function: ''
+default_value_callback: ''
 settings: {  }
 field_type: string

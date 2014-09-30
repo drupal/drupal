@@ -318,7 +318,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
-    if (empty($this->getFieldDefinition()->default_value_function)) {
+    if (empty($this->getFieldDefinition()->default_value_callback)) {
       // Place the input in a separate place in the submitted values tree.
       $widget = $this->defaultValueWidget($form_state);
 

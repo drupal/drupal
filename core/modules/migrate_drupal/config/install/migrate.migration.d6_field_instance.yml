@@ -36,7 +36,7 @@ process:
       - widget_settings
       - global_settings
 
-  default_value_function: ''
+  default_value_callback: ''
   default_value:
     plugin: d6_field_instance_defaults
     source:

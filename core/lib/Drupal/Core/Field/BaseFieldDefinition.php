@@ -397,7 +397,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * If set, the callback overrides any set default value.
    *
-   * @param callable|null $callback
+   * @param string|null $callback
    *   The callback to invoke for getting the default value (pass NULL to unset
    *   a previously set callback). The callback will be invoked with the
    *   following arguments:
@@ -411,6 +411,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return $this
    */
   public function setDefaultValueCallback($callback) {
+    if (isset($callback) && !is_string($callback)) {
+      throw new \InvalidArgumentException('Default value callback must be a string, like "function_name" or "ClassName::methodName"');
+    }
     $this->definition['default_value_callback'] = $callback;
     return $this;
   }
