@@ -148,8 +148,9 @@ function field_ui_entity_operation(EntityInterface $entity) {
   $operations = array();
   $info = $entity->getEntityType();
   // Add manage fields and display links if this entity type is the bundle
-  // of another.
-  if ($bundle_of = $info->getBundleOf()) {
+  // of another and that type has field UI enabled.
+  $entity_manager = \Drupal::entityManager();
+  if (($bundle_of = $info->getBundleOf()) && $entity_manager->getDefinition($bundle_of)->get('field_ui_base_route')) {
     $account = \Drupal::currentUser();
     if ($account->hasPermission('administer '. $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(
