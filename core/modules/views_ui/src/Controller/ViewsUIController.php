@@ -120,7 +120,7 @@ class ViewsUIController extends ControllerBase {
     foreach ($rows as &$row) {
       // Link each view name to the view itself.
       foreach ($row['views'] as $row_name => $view) {
-        $row['views'][$row_name] = $this->l($view, 'entity.view.edit_form', array('view' => $view));
+        $row['views'][$row_name] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
       }
       $row['views'] = SafeMarkup::set(implode(', ', $row['views']));
     }
