@@ -9,9 +9,9 @@ namespace Drupal\language;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
