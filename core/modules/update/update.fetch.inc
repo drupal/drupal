@@ -6,21 +6,6 @@
  */
 
 /**
- * Batch callback: Processes a step in batch for fetching available update data.
- *
- * @param $context
- *   Reference to an array used for Batch API storage.
- *
- * @see \Drupal\update\UpdateManager::fetchDataBatch()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('update.manager')->fetchDataBatch().
- */
-function update_fetch_data_batch(&$context) {
-  \Drupal::service('update.manager')->fetchDataBatch($context);
-}
-
-/**
  * Attempts to drain the queue of tasks for release history data to fetch.
  *
  * @see \Drupal\update\UpdateFetcher::fetchData()
@@ -108,52 +93,3 @@ function _update_cron_notify() {
   }
 }
 
-/**
- * Parses the XML of the Drupal release history info files.
- *
- * @param $raw_xml
- *   A raw XML string of available release data for a given project.
- *
- * @return
- *   Array of parsed data about releases for a given project, or NULL if there
- *   was an error parsing the string.
- */
-function update_parse_xml($raw_xml) {
-  try {
-    $xml = new SimpleXMLElement($raw_xml);
-  }
-  catch (Exception $e) {
-    // SimpleXMLElement::__construct produces an E_WARNING error message for
-    // each error found in the XML data and throws an exception if errors
-    // were detected. Catch any exception and return failure (NULL).
-    return;
-  }
-  // If there is no valid project data, the XML is invalid, so return failure.
-  if (!isset($xml->short_name)) {
-    return;
-  }
-  $data = array();
-  foreach ($xml as $k => $v) {
-    $data[$k] = (string) $v;
-  }
-  $data['releases'] = array();
-  if (isset($xml->releases)) {
-    foreach ($xml->releases->children() as $release) {
-      $version = (string) $release->version;
-      $data['releases'][$version] = array();
-      foreach ($release->children() as $k => $v) {
-        $data['releases'][$version][$k] = (string) $v;
-      }
-      $data['releases'][$version]['terms'] = array();
-      if ($release->terms) {
-        foreach ($release->terms->children() as $term) {
-          if (!isset($data['releases'][$version]['terms'][(string) $term->name])) {
-            $data['releases'][$version]['terms'][(string) $term->name] = array();
-          }
-          $data['releases'][$version]['terms'][(string) $term->name][] = (string) $term->value;
-        }
-      }
-    }
-  }
-  return $data;
-}
