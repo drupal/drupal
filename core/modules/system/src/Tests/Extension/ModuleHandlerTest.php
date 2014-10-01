@@ -214,6 +214,23 @@ class ModuleHandlerTest extends KernelTestBase {
   }
 
   /**
+   * Tests whether module-provided stream wrappers are registered properly.
+   */
+  public function testModuleStreamWrappers() {
+    // file_test.module provides (among others) a 'dummy' stream wrapper.
+    // Verify that it is not registered yet to prevent false positives.
+    $stream_wrappers = file_get_stream_wrappers();
+    $this->assertFalse(isset($stream_wrappers['dummy']));
+    $this->moduleHandler()->install(['file_test']);
+    // Verify that the stream wrapper is available even without calling
+    // file_get_stream_wrappers() again. If the stream wrapper is not available
+    // file_exists() will raise a notice.
+    file_exists('dummy://');
+    $stream_wrappers = file_get_stream_wrappers();
+    $this->assertTrue(isset($stream_wrappers['dummy']));
+  }
+
+  /**
    * Tests whether the correct theme metadata is returned.
    */
   function testThemeMetaData() {

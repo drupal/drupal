@@ -858,6 +858,15 @@ class ModuleHandler implements ModuleHandlerInterface {
         // Record the fact that it was installed.
         $modules_installed[] = $module;
 
+        // file_get_stream_wrappers() needs to re-register Drupal's stream
+        // wrappers in case a module-provided stream wrapper is used later in
+        // the same request. In particular, this happens when installing Drupal
+        // via Drush, as the 'translations' stream wrapper is provided by
+        // Interface Translation module and is later used to import
+        // translations.
+        drupal_static_reset('file_get_stream_wrappers');
+        file_get_stream_wrappers();
+
         // Update the theme registry to include it.
         drupal_theme_rebuild();
 
