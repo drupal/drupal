@@ -13,4 +13,3 @@ field_type: text
 dependencies:
   entity:
     - field.storage.entity_test.field_test_import
-fixed_dependencies:
