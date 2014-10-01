@@ -78,7 +78,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   /**
    * Returns the ID of the entity type the field is attached to.
    *
-   * This method should not be confused with EntityInterface::entityType()
+   * This method should not be confused with EntityInterface::getEntityTypeId()
    * (configurable fields are config entities, and thus implement both
    * interfaces):
    *   - FieldDefinitionInterface::getTargetEntityTypeId() answers "as a field,
@@ -92,7 +92,17 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function getTargetEntityTypeId();
 
   /**
-   * Gets the bundle the field is defined for.
+   * Gets the bundle the field is attached to.
+   *
+   * This method should not be confused with EntityInterface::bundle()
+   * (configurable fields are config entities, and thus implement both
+   * interfaces):
+   *   - FieldDefinitionInterface::getTargetBundle() answers "as a field,
+   *     which bundle are you attached to?".
+   *   - EntityInterface::bundle() answers "as a (config) entity, what
+   *     is your own bundle?" (not relevant in our case, the config entity types
+   *     used to store the definitions of configurable fields do not have
+   *     bundles).
    *
    * @return string|null
    *   The bundle the field is defined for, or NULL if it is a base field; i.e.,
