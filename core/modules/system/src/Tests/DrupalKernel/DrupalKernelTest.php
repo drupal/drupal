@@ -79,9 +79,7 @@ class DrupalKernelTest extends KernelTestBase {
     );
 
     $request = Request::createFromGlobals();
-    $this->getTestKernel($request, $modules_enabled)
-      // Trigger Kernel dump.
-      ->getContainer();
+    $this->getTestKernel($request, $modules_enabled);
 
     // Instantiate it a second time and we should get the compiled Container
     // class.

@@ -411,9 +411,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function getContainer() {
-    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
-      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be written to disk');
-    }
     return $this->container;
   }
 
@@ -712,6 +709,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->container->get('session_manager')->start();
     }
     \Drupal::setContainer($this->container);
+
+    // If needs dumping flag was set, dump the container.
+    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
+      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be written to disk');
+    }
+
     return $this->container;
   }
 

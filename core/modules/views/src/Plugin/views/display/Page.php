@@ -46,9 +46,8 @@ class Page extends PathPluginBase {
     $options['menu'] = array(
       'contains' => array(
         'type' => array('default' => 'none'),
-        // Do not translate menu and title as menu system will.
-        'title' => array('default' => '', 'translatable' => FALSE),
-        'description' => array('default' => '', 'translatable' => FALSE),
+        'title' => array('default' => ''),
+        'description' => array('default' => ''),
         'weight' => array('default' => 0),
         'menu_name' => array('default' => 'main'),
         'parent' => array('default' => ''),
@@ -58,11 +57,9 @@ class Page extends PathPluginBase {
     $options['tab_options'] = array(
       'contains' => array(
         'type' => array('default' => 'none'),
-        // Do not translate menu and title as menu system will.
-        'title' => array('default' => '', 'translatable' => FALSE),
-        'description' => array('default' => '', 'translatable' => FALSE),
+        'title' => array('default' => ''),
+        'description' => array('default' => ''),
         'weight' => array('default' => 0),
-        'menu_name' => array('default' => 'main'),
       ),
     );
 
@@ -336,30 +333,6 @@ class Page extends PathPluginBase {
             ),
           ),
         );
-        // Only display the menu selector if Menu UI module is enabled.
-        if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $form['tab_options']['menu_name'] = array(
-            '#title' => $this->t('Menu'),
-            '#type' => 'select',
-            '#options' => menu_ui_get_menus(),
-            '#default_value' => $tab_options['menu_name'],
-            '#description' => $this->t('Insert item into an available menu.'),
-            '#states' => array(
-              'visible' => array(
-                ':input[name="tab_options[type]"]' => array('value' => 'normal'),
-              ),
-            ),
-          );
-        }
-        else {
-          $form['tab_options']['menu_name'] = array(
-            '#type' => 'value',
-            '#value' => $tab_options['menu_name'],
-          );
-          $form['tab_options']['markup'] = array(
-            '#markup' => $this->t('Menu selection requires the activation of Menu UI module.'),
-          );
-        }
         $form['tab_options']['weight'] = array(
           '#suffix' => '</div>',
           '#title' => $this->t('Tab weight'),
