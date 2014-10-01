@@ -156,14 +156,31 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
 
   /**
    * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    // Entity::postSave() calls Entity::invalidateTagsOnSave(), which only
+    // handles the regular cases. The Block entity has one special case: a
+    // newly created block may *also* appear on any page in the current theme,
+    // so we must invalidate the associated block's cache tag (which includes
+    // the theme cache tag).
+    if (!$update) {
+      Cache::invalidateTags($this->getCacheTag());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * Block configuration entities are a special case: one block entity stores
-   * the placement of one block in one theme. Instead of using an entity type-
-   * specific list cache tag like most entities, use the cache tag of the theme
-   * this block is placed in instead.
+   * the placement of one block in one theme. Changing these entities may affect
+   * any page that is rendered in a certain theme, even if the block doesn't
+   * appear there currently. Hence a block configuration entity must also return
+   * the associated theme's cache tag.
    */
-  public function getListCacheTags() {
-    return array('theme:' . $this->theme);
+  public function getCacheTag() {
+    return Cache::mergeTags(parent::getCacheTag(), ['theme:' . $this->theme]);
   }
 
   /**

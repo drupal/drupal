@@ -13,8 +13,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
-use Drupal\user\RoleInterface;
-use Drupal\user\UserInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_help().
@@ -371,7 +370,8 @@ function _toolbar_get_subtrees_hash($langcode) {
     // caches later, based on the user's ID regardless of language.
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user:' . $uid, 'locale', 'menu:admin', 'user_roles'));
+    $role_list_cache_tags = \Drupal::entityManager()->getDefinition('user_role')->getListCacheTags();
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, Cache::mergeTags(array('user:' . $uid, 'locale', 'menu:admin'), $role_list_cache_tags));
   }
   return $hash;
 }

@@ -100,6 +100,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')
       ->will($this->returnValue('test_entity_type'));
+    $this->entityType->expects($this->any())
+      ->method('getListCacheTags')
+      ->willReturn(array('test_entity_type_list'));
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->entityManager->expects($this->any())
@@ -426,7 +429,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->keyValueStore->expects($this->never())
       ->method('delete');
     $entity = $this->getMockEntity('Drupal\Core\Entity\ContentEntityBase', array(), array(
-      'onSaveOrDelete',
       'toArray',
       'id',
     ));

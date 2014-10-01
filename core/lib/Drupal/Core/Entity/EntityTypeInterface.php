@@ -629,4 +629,13 @@ interface EntityTypeInterface {
    */
   public function setUriCallback($callback);
 
+  /**
+   * The list cache tags associated with this entity type.
+   *
+   * Enables code listing entities of this type to ensure that newly created
+   * entities show up immediately.
+   *
+   * @return string[]
+   */
+  public function getListCacheTags();
 }

@@ -64,7 +64,8 @@ class EntityTest extends NormalizerTestBase {
       'body' => array(
         'value' => $this->randomMachineName(),
         'format' => $this->randomMachineName(),
-      )
+      ),
+      'revision_log' => $this->randomString(),
     ));
     $node->save();
 
@@ -160,13 +161,32 @@ class EntityTest extends NormalizerTestBase {
     ));
     $node->save();
 
+    $parent_comment = entity_create('comment', array(
+      'uid' => $user->id(),
+      'subject' => $this->randomMachineName(),
+      'comment_body' => [
+        'value' => $this->randomMachineName(),
+        'format' => NULL,
+      ],
+      'entity_id' => $node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+    ));
+    $parent_comment->save();
+
     $comment = entity_create('comment', array(
       'uid' => $user->id(),
       'subject' => $this->randomMachineName(),
-      'comment_body' => $this->randomMachineName(),
+      'comment_body' => [
+        'value' => $this->randomMachineName(),
+        'format' => NULL,
+      ],
       'entity_id' => $node->id(),
       'entity_type' => 'node',
-      'field_name' => 'comment'
+      'field_name' => 'comment',
+      'pid' => $parent_comment->id(),
+      'mail' => 'dries@drupal.org',
+      'homepage' => 'http://buytaert.net',
     ));
     $comment->save();
 

@@ -9,7 +9,9 @@ namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentStorageInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -68,6 +70,13 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   protected $viewBuilder;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * The entity form builder.
    *
    * @var \Drupal\Core\Entity\EntityFormBuilderInterface
@@ -87,8 +96,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('current_user'),
-      $container->get('entity.manager')->getStorage('comment'),
-      $container->get('entity.manager')->getViewBuilder('comment'),
+      $container->get('entity.manager'),
       $container->get('entity.form_builder')
     );
   }
@@ -112,18 +120,17 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *   Third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\comment\CommentStorageInterface $comment_storage
-   *   The comment storage.
-   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $comment_view_builder
-   *   The comment view builder.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager
    * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
    *   The entity form builder.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, CommentStorageInterface $comment_storage, EntityViewBuilderInterface $comment_view_builder, EntityFormBuilderInterface $entity_form_builder) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityManagerInterface $entity_manager, EntityFormBuilderInterface $entity_form_builder) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->viewBuilder = $comment_view_builder;
-    $this->storage = $comment_storage;
+    $this->viewBuilder = $entity_manager->getViewBuilder('comment');
+    $this->storage = $entity_manager->getStorage('comment');
     $this->currentUser = $current_user;
+    $this->entityManager = $entity_manager;
     $this->entityFormBuilder = $entity_form_builder;
   }
 
@@ -150,19 +157,24 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
-      if ((($entity->get($field_name)->comment_count && $this->currentUser->hasPermission('access comments')) ||
-        $this->currentUser->hasPermission('administer comments'))) {
-        $mode = $comment_settings['default_mode'];
-        $comments_per_page = $comment_settings['per_page'];
-        $comments = $this->storage->loadThread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'));
-        if ($comments) {
-          comment_prepare_thread($comments);
-          $build = $this->viewBuilder->viewMultiple($comments);
-          $build['pager']['#theme'] = 'pager';
-          if ($this->getSetting('pager_id')) {
-            $build['pager']['#element'] = $this->getSetting('pager_id');
+      if ($this->currentUser->hasPermission('access comments') || $this->currentUser->hasPermission('administer comments')) {
+        // This is a listing of Comment entities, so associate its list cache
+        // tag for correct invalidation.
+        $output['comments']['#cache']['tags'] = $this->entityManager->getDefinition('comment')->getListCacheTags();
+
+        if ($entity->get($field_name)->comment_count || $this->currentUser->hasPermission('administer comments')) {
+          $mode = $comment_settings['default_mode'];
+          $comments_per_page = $comment_settings['per_page'];
+          $comments = $this->storage->loadThread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'));
+          if ($comments) {
+            comment_prepare_thread($comments);
+            $build = $this->viewBuilder->viewMultiple($comments);
+            $build['pager']['#theme'] = 'pager';
+            if ($this->getSetting('pager_id')) {
+              $build['pager']['#element'] = $this->getSetting('pager_id');
+            }
+            $output['comments'] += $build;
           }
-          $output['comments'] = $build;
         }
       }
 

@@ -87,6 +87,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Create an entity reference field and an entity that will be referenced.
     entity_reference_create_field('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
     entity_get_display('entity_test', 'entity_test', 'full')->setComponent('reference_field', [
+      'type' => 'entity_reference_entity_view',
       'settings' => ['link' => FALSE],
     ])->save();
     $entity_test_reference = $this->createTestEntity('entity_test');
@@ -108,6 +109,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Create another entity that references the first one.
     $entity_test = $this->createTestEntity('entity_test');
     $entity_test->reference_field->entity = $entity_test_reference;
+    $entity_test->reference_field->access = TRUE;
     $entity_test->save();
 
     // Get a fully built entity view render array.
@@ -124,7 +126,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Save the entity and verify that both cache entries have been deleted.
-    $entity_test->save();
+    $entity_test_reference->save();
     $this->assertFalse($this->container->get('cache.' . $bin)->get($cid), 'The entity render cache has been cleared when the entity was deleted.');
     $this->assertFalse($this->container->get('cache.' . $bin_reference)->get($cid_reference), 'The entity render cache for the referenced entity has been cleared when the entity was deleted.');
 

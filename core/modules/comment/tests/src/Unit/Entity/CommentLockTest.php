@@ -49,8 +49,8 @@ class CommentLockTest extends UnitTestCase {
     $methods = get_class_methods('Drupal\comment\Entity\Comment');
     unset($methods[array_search('preSave', $methods)]);
     unset($methods[array_search('postSave', $methods)]);
-    $methods[] = 'onSaveOrDelete';
     $methods[] = 'onUpdateBundleEntity';
+    $methods[] = 'invalidateTagsOnSave';
     $comment = $this->getMockBuilder('Drupal\comment\Entity\Comment')
       ->disableOriginalConstructor()
       ->setMethods($methods)
@@ -79,12 +79,6 @@ class CommentLockTest extends UnitTestCase {
       ->method('get')
       ->with('status')
       ->will($this->returnValue((object) array('value' => NULL)));
-    $comment->expects($this->once())
-      ->method('getCacheTag')
-      ->will($this->returnValue(array('comment:' . $cid)));
-    $comment->expects($this->once())
-      ->method('getListCacheTags')
-      ->will($this->returnValue(array('comments')));
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
 
     // preSave() should acquire the lock. (This is what's really being tested.)

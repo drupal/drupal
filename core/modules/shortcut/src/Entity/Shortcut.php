@@ -46,6 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
  *     "delete-form" = "entity.shortcut.delete_form",
  *     "edit-form" = "entity.shortcut.canonical",
  *   },
+ *   list_cache_tags = { "shortcut_set_list" },
  *   bundle_entity_type = "shortcut_set"
  * )
  */
@@ -233,13 +234,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    */
   public function getCacheTag() {
     return $this->shortcut_set->entity->getCacheTag();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getListCacheTags() {
-    return $this->shortcut_set->entity->getListCacheTags();
   }
 
 }

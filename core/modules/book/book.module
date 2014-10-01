@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\node\Entity\Node;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
@@ -243,6 +244,11 @@ function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayI
             drupal_get_path('module', 'book') . '/css/book.theme.css',
           ),
         ),
+        // The book navigation is a listing of Node entities, so associate its
+        // list cache tag for correct invalidation.
+        '#cache' => [
+          'tags' => $node->getEntityType()->getListCacheTags(),
+        ],
       );
     }
   }

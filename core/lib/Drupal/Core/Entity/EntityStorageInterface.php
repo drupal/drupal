@@ -45,7 +45,7 @@ interface EntityStorageInterface {
    * @param $ids
    *   An array of entity IDs, or NULL to load all entities.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entity objects indexed by their IDs. Returns an empty array
    *   if no matching entities found.
    */

@@ -399,15 +399,4 @@ interface EntityInterface extends AccessibleInterface {
    */
   public function getCacheTag();
 
-  /**
-   * The list cache tags associated with this entity.
-   *
-   * Enables code listing entities of this type to ensure that newly created
-   * entities show up immediately.
-   *
-   * @return array
-   *   An array of cache tags.
-   */
-  public function getListCacheTags();
-
 }

@@ -10,6 +10,7 @@ namespace Drupal\book\Controller;
 use Drupal\book\BookExport;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -115,6 +116,9 @@ class BookController extends ControllerBase {
     return array(
       '#theme' => 'item_list',
       '#items' => $book_list,
+      '#cache' => [
+        'tags' => \Drupal::entityManager()->getDefinition('node')->getListCacheTags(),
+      ],
     );
   }
 

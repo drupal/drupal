@@ -8,6 +8,7 @@
 namespace Drupal\book;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**
@@ -84,6 +85,9 @@ class BookExport {
       '#title' => $node->label(),
       '#contents' => $contents,
       '#depth' => $node->book['depth'],
+      '#cache' => [
+        'tags' => $node->getEntityType()->getListCacheTags(),
+      ],
     );
   }
 

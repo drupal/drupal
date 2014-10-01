@@ -60,5 +60,22 @@ entity.entity_test.list_referencing_entities:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test.list_labels_alphabetically:
+  path: '/entity_test/list_labels_alphabetically/{entity_type_id}'
+  defaults:
+    _content: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesAlphabetically'
+    _title: 'List labels of entities of the given entity type alphabetically'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test.list_empty:
+  path: '/entity_test/list_empty/{entity_type_id}'
+  defaults:
+    _content: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesEmpty'
+    _title: 'Empty list of entities of the given entity type, empty because no entities match the query'
+  requirements:
+    _access: 'TRUE'
+
+
 route_callbacks:
   - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'
