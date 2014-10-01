@@ -37,7 +37,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processOutbound(Route $route, array &$parameters) {
+  public function processOutbound($route_name, Route $route, array &$parameters) {
     if ($route->hasRequirement('_csrf_token')) {
       $path = ltrim($route->getPath(), '/');
       // Replace the path parameters with values from the parameters array.

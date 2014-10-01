@@ -50,10 +50,10 @@ class RouteProcessorManager implements OutboundRouteProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processOutbound(Route $route, array &$parameters) {
+  public function processOutbound($route_name, Route $route, array &$parameters) {
     $processors = $this->getOutbound();
     foreach ($processors as $processor) {
-      $processor->processOutbound($route, $parameters);
+      $processor->processOutbound($route_name, $route, $parameters);
     }
   }
 

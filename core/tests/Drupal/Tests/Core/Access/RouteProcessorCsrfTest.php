@@ -49,7 +49,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path');
     $parameters = array();
 
-    $this->processor->processOutbound($route, $parameters);
+    $this->processor->processOutbound('test', $route, $parameters);
     // No parameters should be added to the parameters array.
     $this->assertEmpty($parameters);
   }
@@ -67,7 +67,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array();
 
-    $this->processor->processOutbound($route, $parameters);
+    $this->processor->processOutbound('test', $route, $parameters);
     // 'token' should be added to the parameters array.
     $this->assertArrayHasKey('token', $parameters);
     $this->assertSame($parameters['token'], 'test_token');
@@ -85,7 +85,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path/{slug}', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array('slug' => 100);
 
-    $this->assertNull($this->processor->processOutbound($route, $parameters));
+    $this->assertNull($this->processor->processOutbound('test', $route, $parameters));
   }
 
   /**
@@ -100,7 +100,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('{slug_1}/test-path/{slug_2}', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array('slug_1' => 100, 'slug_2' => 'test');
 
-    $this->assertNull($this->processor->processOutbound($route, $parameters));
+    $this->assertNull($this->processor->processOutbound('test', $route, $parameters));
   }
 
 }

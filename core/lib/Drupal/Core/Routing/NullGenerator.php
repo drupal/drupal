@@ -44,7 +44,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function processRoute(Route $route, array &$parameters) {
+  protected function processRoute($name, Route $route, array &$parameters) {
   }
 
   /**

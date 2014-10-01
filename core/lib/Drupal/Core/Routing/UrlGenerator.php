@@ -160,7 +160,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     $options += array('prefix' => '');
     $absolute = !empty($options['absolute']);
     $route = $this->getRoute($name);
-    $this->processRoute($route, $parameters);
+    $this->processRoute($name, $route, $parameters);
 
     // Symfony adds any parameters that are not path slugs as query strings.
     if (isset($options['query']) && is_array($options['query'])) {
@@ -331,12 +331,13 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route object to process.
-   *
    * @param array $parameters
    *   An array of parameters to be passed to the route compiler.
+   * @param string $name
+   *   The route name.
    */
-  protected function processRoute(SymfonyRoute $route, array &$parameters) {
-    $this->routeProcessor->processOutbound($route, $parameters);
+  protected function processRoute($name, SymfonyRoute $route, array &$parameters) {
+    $this->routeProcessor->processOutbound($name, $route, $parameters);
   }
 
   /**
