@@ -23,7 +23,14 @@ class CacheTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_cache');
+  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui');
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy');
 
   protected function setUp() {
     parent::setUp();
@@ -173,6 +180,21 @@ class CacheTest extends PluginTestBase {
     drupal_render($output);
     $this->assertTrue(empty($output['#attached']['css']), 'The cached view does not have attached CSS.');
     $this->assertTrue(empty($output['#attached']['js']), 'The cached view does not have attached JS.');
+  }
+
+  /**
+   * Tests that Subqueries are cached as expected.
+   */
+  public function testSubqueryStringCache() {
+    // Execute the view.
+    $view = Views::getView('test_groupwise_term_ui');
+    $view->setDisplay();
+    $this->executeView($view);
+    // Request for the cache.
+    $cid = 'views_relationship_groupwise_max:test_groupwise_term_ui:default:tid_representative';
+    $cache = \Drupal::cache('data')->get($cid);
+    $this->assertEqual($cid, $cache->cid, 'Subquery String cached as expected.');
+
   }
 
 }

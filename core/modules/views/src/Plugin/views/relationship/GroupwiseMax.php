@@ -87,6 +87,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Get the sorts that apply to our base.
     $sorts = Views::viewsDataHelper()->fetchFields($this->definition['base'], 'sort');
+    $sort_options = array();
     foreach ($sorts as $sort_id => $sort) {
       $sort_options[$sort_id] = "$sort[group]: $sort[title]";
     }
@@ -122,20 +123,14 @@ class GroupwiseMax extends RelationshipPluginBase {
     // WIP: This stuff doens't work yet: namespacing issues.
     // A list of suitable views to pick one as the subview.
     $views = array('' => '- None -');
-    $all_views = Views::getAllViews();
-    foreach ($all_views as $view) {
+    foreach (Views::getAllViews() as $view) {
       // Only get views that are suitable:
       // - base must the base that our relationship joins towards
       // - must have fields.
-      if ($view->base_table == $this->definition['base'] && !empty($view->display['default']['display_options']['fields'])) {
+      if ($view->get('base_table') == $this->definition['base'] && !empty($view->getDisplay('default')['display_options']['fields'])) {
         // TODO: check the field is the correct sort?
         // or let users hang themselves at this stage and check later?
-        if ($view->type == 'Default') {
-          $views[t('Default Views')][$view->storage->id()] = $view->storage->id();
-        }
-        else {
-          $views[t('Existing Views')][$view->storage->id()] = $view->storage->id();
-        }
+        $views[$view->id()] = $view->id();
       }
     }
 
@@ -171,11 +166,12 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $cid = 'views_relationship_groupwise_max:' . $this->view->storage->id() . ':' . $this->view->current_display . ':' . $this->options['id'];
-    \Drupal::cache('views_results')->delete($cid);
+    \Drupal::cache('data')->delete($cid);
   }
 
   /**
    * Generate a subquery given the user options, as set in the options.
+   *
    * These are passed in rather than picked up from the object because we
    * generate the subquery when the options are saved, rather than when the view
    * is run. This saves considerable time.
@@ -184,7 +180,8 @@ class GroupwiseMax extends RelationshipPluginBase {
    *   An array of options:
    *    - subquery_sort: the id of a views sort.
    *    - subquery_order: either ASC or DESC.
-   * @return
+   *
+   * @return string
    *    The subquery SQL string, ready for use in the main query.
    */
   protected function leftQuery($options) {
@@ -358,13 +355,13 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       // Get the stored subquery SQL string.
       $cid = 'views_relationship_groupwise_max:' . $this->view->storage->id() . ':' . $this->view->current_display . ':' . $this->options['id'];
-      $cache = \Drupal::cache('views_results')->get($cid);
+      $cache = \Drupal::cache('data')->get($cid);
       if (isset($cache->data)) {
         $def['left_query'] = $cache->data;
       }
       else {
         $def['left_query'] = $this->leftQuery($this->options);
-        \Drupal::cache('views_results')->set($cid, $def['left_query']);
+        \Drupal::cache('data')->set($cid, $def['left_query']);
       }
     }
 

@@ -1,0 +1,73 @@
+base_field: tid
+base_table: taxonomy_term_data
+core: 8.0-dev
+description: ''
+status: true
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          field: name
+          id: name
+          table: taxonomy_term_field_data
+          plugin_id: taxonomy
+          provider: taxonomy
+        nid:
+          field: nid
+          id: nid
+          relationship: tid_representative
+          table: node
+          plugin_id: node
+          provider: node
+      pager:
+        options:
+          items_per_page: 10
+        type: full
+      query:
+        type: views_query
+      relationships:
+        tid_representative:
+          admin_label: ''
+          field: tid_representative
+          group_type: group
+          id: tid_representative
+          label: 'Representative node'
+          relationship: none
+          required: false
+          subquery_namespace: ''
+          subquery_order: DESC
+          subquery_regenerate: false
+          subquery_sort: node.nid
+          subquery_view: ''
+          table: taxonomy_term_data
+          plugin_id: groupwise_max
+          provider: views
+      row:
+        type: fields
+      sorts:
+        tid:
+          field: tid
+          id: tid
+          order: DESC
+          table: taxonomy_term_data
+          plugin_id: standard
+          provider: views
+      style:
+        type: default
+      title: test_groupwise
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+label: test_groupwise
+langcode: und
+module: views
+id: test_groupwise_term_ui
+tag: default

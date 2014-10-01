@@ -23,7 +23,7 @@ class ViewEditTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_display');
+  public static $testViews = array('test_view', 'test_display', 'test_groupwise_term_ui');
 
   /**
    * Tests the delete link on a views UI.
@@ -151,6 +151,18 @@ class ViewEditTest extends UITestBase {
       $displays = $view->storage->get('display');
       $this->assertIdentical($displays['default']['display_options'][$plugin_type]['provider'], $plugin_options['provider'], String::format('Expected provider found for @plugin.', array('@plugin' => $plugin_type)));
     }
+  }
+
+  /**
+   * Tests Representative Node for a Taxonomy Term.
+   */
+  public function testRelationRepresentativeNode() {
+    // Populate and submit the form.
+    $edit["name[taxonomy_term_data.tid_representative]"] = TRUE;
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship', $edit, 'Add and configure relationships');
+    // Apply changes.
+    $edit = array();
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_groupwise_term_ui/default/relationship/tid_representative', $edit, 'Apply');
   }
 
 }
