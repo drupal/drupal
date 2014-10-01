@@ -16,6 +16,7 @@ $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
 const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33; // Brown.
+const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 500;
 
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
@@ -71,7 +72,6 @@ $test_list = simpletest_script_get_test_list();
 
 // Try to allocate unlimited time to run the tests.
 drupal_set_time_limit(0);
-
 simpletest_script_reporter_init();
 
 $tests_to_run = array();
@@ -907,10 +907,7 @@ function simpletest_script_reporter_display_summary($class, $results) {
 function simpletest_script_reporter_write_xml_results() {
   global $args, $test_ids, $results_map;
 
-  $results = Database::getConnection('default', 'test-runner')
-    ->query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(
-      ':test_ids' => $test_ids,
-    ));
+  $results = simpletest_script_load_messages_by_test_id($test_ids);
 
   $test_class = '';
   $xml_files = array();
@@ -995,10 +992,7 @@ function simpletest_script_reporter_display_results() {
     echo "Detailed test results\n";
     echo "---------------------\n";
 
-    $results = Database::getConnection('default', 'test-runner')
-      ->query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(
-        ':test_ids' => $test_ids,
-      ));
+    $results = simpletest_script_load_messages_by_test_id($test_ids);
     $test_class = '';
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
@@ -1115,4 +1109,41 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
       simpletest_script_print("  - $alternative\n", SIMPLETEST_SCRIPT_COLOR_FAIL);
     }
   }
+}
+
+/**
+ * Loads the simpletest messages from the database.
+ *
+ * Messages are ordered by test class and message id.
+ *
+ * @param array $test_ids
+ *   Array of test IDs of the messages to be loaded.
+ *
+ * @return array
+ *   Array of simpletest messages from the database.
+ */
+function simpletest_script_load_messages_by_test_id($test_ids) {
+  global $args;
+  $results = array();
+
+  // Sqlite has a maximum number of variables per query. If required, the
+  // database query is split into chunks.
+  if (count($test_ids) > SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT && !empty($args['sqlite'])) {
+    $test_id_chunks = array_chunk($test_ids, SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT);
+  }
+  else {
+    $test_id_chunks = array($test_ids);
+  }
+
+  foreach ($test_id_chunks as $test_id_chunk) {
+    $result_chunk = Database::getConnection('default', 'test-runner')
+      ->query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(
+        ':test_ids' => $test_id_chunk,
+      ))->fetchAll();
+    if ($result_chunk) {
+      $results = array_merge($results, $result_chunk);
+    }
+  }
+
+  return $results;
 }
