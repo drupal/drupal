@@ -28,6 +28,17 @@ use Drupal\Core\Plugin\PluginFormInterface;
  * @todo Replace the dependency on \Drupal\Core\Form\FormInterface with a new
  *   interface from https://drupal.org/node/2006248.
  *
+ * WARNING: The condition API is going to receive some additions before release.
+ * The following additions are likely to happen:
+ *  - The way configuration is handled and configuration forms are built is
+ *    likely to change in order for the plugin to be of use for Rules.
+ *  - Condition will receive a data processing API that allows for token
+ *    replacements to happen outside of the plugin implementations,
+ *    see https://www.drupal.org/node/2347023.
+ *  - Conditions will have to implement access control for checking who is
+ *    allowed to configure or perform the action at
+ *    https://www.drupal.org/node/2172017.
+ *
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see \Drupal\Core\Executable\ExecutableInterface
  * @see \Drupal\Core\Condition\ConditionManager

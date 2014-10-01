@@ -9,6 +9,9 @@ namespace Drupal\Component\Plugin\Context;
 
 /**
  * Interface for context definitions.
+ *
+ * WARNING: This interface is going to receive some additions as part of
+ * https://www.drupal.org/node/2346999.
  */
 interface ContextDefinitionInterface {
 
