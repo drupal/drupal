@@ -748,7 +748,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * @see _url()
  * @see system_page_build()
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal::linkGenerator()->generate($url) where $url is an instance of
+ *   Use \Drupal::l($text, $url) where $url is an instance of
  *   \Drupal\Core\Url. To build a \Drupal\Core\Url object for internal paths
  *   served by Drupal controllers use \Drupal\Core\Url::fromRoute(). For
  *   external paths or non-controller or sub-domain URIs such as
@@ -758,11 +758,11 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   be prepended with base://. For example:
  * @code
  * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
- * $installer_link = \Drupal::linkGenerator()->generate($installer_url);
+ * $installer_link = \Drupal::l($text, $installer_url);
  * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
- * $external_link = \Drupal::linkGenerator()->generate($external_url);
+ * $external_link = \Drupal::l($text, $external_url);
  * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
- * $internal_link = \Drupal::linkGenerator()->generate($internal_url);
+ * $internal_link = \Drupal::l($text, $internal_url);
  * @endcode
  */
 function _l($text, $path, array $options = array()) {
