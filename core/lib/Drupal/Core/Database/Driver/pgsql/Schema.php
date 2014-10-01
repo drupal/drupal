@@ -60,11 +60,21 @@ class Schema extends DatabaseSchema {
         'sequences' => array(),
       );
       // Don't use {} around information_schema.columns table.
-      $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
-        ':schema' => $schema,
-        ':table' => $table_name,
-        ':default' => '%nextval%',
-      ));
+      $this->connection->addSavepoint();
+
+      try {
+        $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
+          ':schema' => $schema,
+          ':table' => $table_name,
+          ':default' => '%nextval%',
+        ));
+      }
+      catch (\Exception $e) {
+        $this->connection->rollbackSavepoint();
+        throw $e;
+      }
+      $this->connection->releaseSavepoint();
+
       foreach ($result as $column) {
         if ($column->data_type == 'bytea') {
           $table_information->blob_fields[$column->column_name] = TRUE;
@@ -102,11 +112,22 @@ class Schema extends DatabaseSchema {
     $schema = $prefixInfo['schema'];
     $table_name = $prefixInfo['table'];
 
-    $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
-      ':schema' => $schema,
-      ':table' => $table_name,
-      ':column' => $field,
-    ));
+    $this->connection->addSavepoint();
+
+    try {
+      $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
+        ':schema' => $schema,
+        ':table' => $table_name,
+        ':column' => $field,
+      ));
+    }
+    catch (\Exception $e) {
+      $this->connection->rollbackSavepoint();
+      throw $e;
+    }
+
+    $this->connection->releaseSavepoint();
+
     $field_information = $checks->fetchCol();
 
     return $field_information;

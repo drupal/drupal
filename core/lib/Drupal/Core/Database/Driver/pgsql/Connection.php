@@ -12,6 +12,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * @addtogroup database
@@ -101,7 +102,6 @@ class Connection extends DatabaseConnection {
     return $pdo;
   }
 
-
   public function query($query, array $args = array(), $options = array()) {
 
     $options += $this->defaultOptions();
@@ -147,6 +147,9 @@ class Connection extends DatabaseConnection {
         // Match all SQLSTATE 23xxx errors.
         if (substr($e->getCode(), -6, -3) == '23') {
           $e = new IntegrityConstraintViolationException($e->getMessage(), $e->getCode(), $e);
+        }
+        else {
+          $e = new DatabaseExceptionWrapper($e->getMessage(), 0, $e);
         }
         // Add additional debug information.
         if ($query instanceof StatementInterface) {
@@ -273,6 +276,52 @@ class Connection extends DatabaseConnection {
     $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
 
     return $id;
+  }
+
+  /**
+   * Add a new savepoint with an unique name.
+   *
+   * The main use for this method is to mimic InnoDB functionality, which
+   * provides an inherent savepoint before any query in a transaction.
+   *
+   * @param $savepoint_name
+   *   A string representing the savepoint name. By default,
+   *   "mimic_implicit_commit" is used.
+   *
+   * @see Drupal\Core\Database\Connection::pushTransaction().
+   */
+  public function addSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    if ($this->inTransaction()) {
+      $this->pushTransaction($savepoint_name);
+    }
+  }
+
+  /**
+   * Release a savepoint by name.
+   *
+   * @param $savepoint_name
+   *   A string representing the savepoint name. By default,
+   *   "mimic_implicit_commit" is used.
+   *
+   * @see Drupal\Core\Database\Connection::popTransaction().
+   */
+  public function releaseSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    if (isset($this->transactionLayers[$savepoint_name])) {
+      $this->popTransaction($savepoint_name);
+    }
+  }
+
+  /**
+   * Rollback a savepoint by name if it exists.
+   *
+   * @param $savepoint_name
+   *   A string representing the savepoint name. By default,
+   *   "mimic_implicit_commit" is used.
+   */
+  public function rollbackSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    if (isset($this->transactionLayers[$savepoint_name])) {
+      $this->rollback($savepoint_name);
+    }
   }
 }
 

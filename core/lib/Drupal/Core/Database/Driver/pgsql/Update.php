@@ -66,7 +66,17 @@ class Update extends QueryUpdate {
     $options = $this->queryOptions;
     $options['already_prepared'] = TRUE;
     $options['return'] = Database::RETURN_AFFECTED;
-    return $this->connection->query($stmt, array(), $options);
+
+    $this->connection->addSavepoint();
+    try {
+      $result = $this->connection->query($stmt, array(), $options);
+      $this->connection->releaseSavepoint();
+      return $result;
+    }
+    catch (\Exception $e) {
+      $this->connection->rollbackSavepoint();
+      throw $e;
+    }
   }
 
 }

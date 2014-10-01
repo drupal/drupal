@@ -108,6 +108,23 @@ class Select extends QuerySelect {
     $this->addField(NULL, $field);
     return $return;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function execute() {
+    $this->connection->addSavepoint();
+    try {
+      $result = parent::execute();
+    }
+    catch (\Exception $e) {
+      $this->connection->rollbackSavepoint();
+      throw $e;
+    }
+    $this->connection->releaseSavepoint();
+
+    return $result;
+  }
 }
 
 /**
