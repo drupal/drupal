@@ -8,7 +8,7 @@ namespace Drupal\comment;
 
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -96,7 +96,7 @@ class CommentStatistics implements CommentStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function create(ContentEntityInterface $entity, $fields) {
+  public function create(FieldableEntityInterface $entity, $fields) {
     $query = $this->database->insert('comment_entity_statistics')
       ->fields(array(
         'entity_id',

@@ -5,7 +5,7 @@
  * Hooks provided the Entity module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
@@ -786,7 +786,7 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  * @see hook_ENTITY_TYPE_create()
  */
 function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && !$entity->foo->value) {
+  if ($entity instanceof FieldableEntityInterface && !$entity->foo->value) {
     $entity->foo->value = 'some_initial_value';
   }
 }

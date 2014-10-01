@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity\KeyValueStore;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageBase;
@@ -98,10 +98,10 @@ class KeyValueEntityStorage extends EntityStorageBase {
     $entity = new $this->entityClass($values, $this->entityTypeId);
 
     // @todo This is handled by ContentEntityStorageBase, which assumes
-    //   ContentEntityInterface. The current approach in
+    //   FieldableEntityInterface. The current approach in
     //   https://drupal.org/node/1867228 improves this but does not solve it
     //   completely.
-    if ($entity instanceof ContentEntityInterface) {
+    if ($entity instanceof FieldableEntityInterface) {
       foreach ($entity as $name => $field) {
         if (isset($values[$name])) {
           $entity->$name = $values[$name];

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -247,7 +247,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *
    * @param mixed
    *   The default value as defined for the field.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the default value is generated.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
    *   The definition of the field.
@@ -262,6 +262,6 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *     array.
    *   - NULL or array() for no default value.
    */
-  public static function processDefaultValue($default_value, ContentEntityInterface $entity, FieldDefinitionInterface $definition);
+  public static function processDefaultValue($default_value, FieldableEntityInterface $entity, FieldDefinitionInterface $definition);
 
 }

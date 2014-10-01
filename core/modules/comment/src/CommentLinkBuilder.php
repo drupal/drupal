@@ -8,7 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -66,7 +66,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildCommentedEntityLinks(ContentEntityInterface $entity, array &$context) {
+  public function buildCommentedEntityLinks(FieldableEntityInterface $entity, array &$context) {
     $entity_links = array();
     $view_mode = $context['view_mode'];
     if ($view_mode == 'search_index' || $view_mode == 'search_result' || $view_mode == 'print') {

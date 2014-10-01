@@ -6,7 +6,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -75,11 +75,11 @@ interface CommentStatisticsInterface {
   /**
    * Insert an empty record for the given entity.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The created entity for which a statistics record is to be initialized.
    * @param array $fields
    *   Array of comment field definitions for the given entity.
    */
-  public function create(ContentEntityInterface $entity, $fields);
+  public function create(FieldableEntityInterface $entity, $fields);
 
 }

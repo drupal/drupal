@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Defines an interface for entity field storage definitions.
@@ -137,13 +137,13 @@ interface FieldStorageDefinitionInterface {
    *
    * @param string $property_name
    *   The name of the property to get options for; e.g., 'value'.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the options should be provided.
    *
    * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
    *   An options provider, or NULL if no options are defined.
    */
-  public function getOptionsProvider($property_name, ContentEntityInterface $entity);
+  public function getOptionsProvider($property_name, FieldableEntityInterface $entity);
 
   /**
    * Returns whether the field can contain multiple items.

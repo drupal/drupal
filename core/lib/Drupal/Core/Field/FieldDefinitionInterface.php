@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 
 /**
@@ -172,7 +172,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   /**
    * Returns the default value for the field in a newly created entity.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the default value is generated.
    *
    * @return mixed
@@ -185,7 +185,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
    *     array.
    *   - NULL or array() for no default value.
    */
-  public function getDefaultValue(ContentEntityInterface $entity);
+  public function getDefaultValue(FieldableEntityInterface $entity);
 
   /**
    * Returns whether the field is translatable.

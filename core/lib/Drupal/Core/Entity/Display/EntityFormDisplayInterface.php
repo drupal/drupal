@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Display;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -86,7 +86,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * accessed by \Drupal\Core\Field\WidgetBaseInterface::getWidgetState() and
    * \Drupal\Core\Field\WidgetBaseInterface::setWidgetState().
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity.
    * @param array $form
    *   The form structure to fill in. This can be a full form structure, or a
@@ -98,7 +98,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function buildForm(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
+  public function buildForm(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
   /**
    * Validates submitted widget values and sets the corresponding form errors.
@@ -119,7 +119,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * It reports field constraint violations as form errors on the correct form
    * elements.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
@@ -127,7 +127,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function validateFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
+  public function validateFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
   /**
    * Extracts field values from the submitted widget values into the entity.
@@ -135,7 +135,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * This accounts for drag-and-drop reordering of field values, and filtering
    * of empty values.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
@@ -149,6 +149,6 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   if any, do not correspond to widgets and should be extracted manually by
    *   the caller if needed.
    */
-  public function extractFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state);
+  public function extractFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
 }

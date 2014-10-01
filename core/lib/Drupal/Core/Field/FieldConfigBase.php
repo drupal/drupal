@@ -9,8 +9,8 @@ namespace Drupal\Core\Field;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 
 /**
@@ -153,7 +153,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * The name of a callback function that returns default values.
    *
    * The function will be called with the following arguments:
-   * - \Drupal\Core\Entity\ContentEntityInterface $entity
+   * - \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity being created.
    * - \Drupal\Core\Field\FieldDefinitionInterface $definition
    *   The field definition.
@@ -332,7 +332,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function getDefaultValue(ContentEntityInterface $entity) {
+  public function getDefaultValue(FieldableEntityInterface $entity) {
     // Allow custom default values function.
     if ($callback = $this->default_value_callback) {
       $value = call_user_func($callback, $entity, $this);

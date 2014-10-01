@@ -353,7 +353,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definitions, keyed by field name.
@@ -366,8 +366,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $entity_type = $this->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
 
-    // Fail with an exception for config entity types.
-    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    // Fail with an exception for non-fieldable entity types.
+    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       throw new \LogicException(String::format('Getting the base fields is not supported for entity type @type.', array('@type' => $entity_type->getLabel())));
     }
 
@@ -456,7 +456,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    * @param string $bundle
    *   The bundle.
    * @param \Drupal\Core\Field\FieldDefinitionInterface[] $base_field_definitions
@@ -568,7 +568,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       else {
         // Rebuild the definitions and put it into the cache.
         foreach ($this->getDefinitions() as $entity_type_id => $entity_type) {
-          if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+          if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
             foreach ($this->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
               foreach ($this->getFieldDefinitions($entity_type_id, $bundle) as $field_name => $field_definition) {
                 $this->fieldMap[$entity_type_id][$field_name]['type'] = $field_definition->getType();
@@ -608,7 +608,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    *   An array of field storage definitions, keyed by field name.
@@ -987,7 +987,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     }
 
     $this->setLastInstalledDefinition($entity_type);
-    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->getFieldStorageDefinitions($entity_type_id));
     }
   }

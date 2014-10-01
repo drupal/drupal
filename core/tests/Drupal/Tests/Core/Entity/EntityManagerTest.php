@@ -716,7 +716,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(array()));
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
-      ->with($this->equalTo('\Drupal\Core\Entity\ContentEntityInterface'))
+      ->with($this->equalTo('\Drupal\Core\Entity\FieldableEntityInterface'))
       ->will($this->returnValue(TRUE));
     $field_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
@@ -1039,7 +1039,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue('test_entity_type'));
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
-      ->with('\Drupal\Core\Entity\ContentEntityInterface')
+      ->with('\Drupal\Core\Entity\FieldableEntityInterface')
       ->will($this->returnValue(TRUE));
 
     // Set up the module handler to return two bundles for the fieldable entity
@@ -1098,7 +1098,7 @@ class EntityManagerTest extends UnitTestCase {
     $non_content_entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
-      ->with('\Drupal\Core\Entity\ContentEntityInterface')
+      ->with('\Drupal\Core\Entity\FieldableEntityInterface')
       ->will($this->returnValue(FALSE));
 
     // Mock the base field definition override.
@@ -1182,7 +1182,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue('test_entity_type'));
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
-      ->with('\Drupal\Core\Entity\ContentEntityInterface')
+      ->with('\Drupal\Core\Entity\FieldableEntityInterface')
       ->will($this->returnValue(TRUE));
 
     // Set up the module handler to return two bundles for the fieldable entity

@@ -115,7 +115,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       throw new \InvalidArgumentException('Missing required properties for an EntityDisplay entity.');
     }
 
-    if (!$this->entityManager()->getDefinition($values['targetEntityType'])->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if (!$this->entityManager()->getDefinition($values['targetEntityType'])->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       throw new \InvalidArgumentException('EntityDisplay entities can only handle content entity types.');
     }
 
@@ -357,7 +357,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected function getFieldDefinitions() {
     // Entity displays are sometimes created for non-content entities.
     // @todo Prevent this in https://drupal.org/node/2095195.
-    if (!\Drupal::entityManager()->getDefinition($this->targetEntityType)->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if (!\Drupal::entityManager()->getDefinition($this->targetEntityType)->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       return array();
     }
 

@@ -36,7 +36,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   The array of base field definitions for the entity type, keyed by field
@@ -52,7 +52,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    * @param string $bundle
    *   The bundle.
    *

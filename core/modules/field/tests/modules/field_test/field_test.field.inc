@@ -5,8 +5,8 @@
  * Defines a field type and its formatters and widgets.
  */
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -32,7 +32,7 @@ function field_test_field_storage_config_update_forbid(FieldStorageConfigInterfa
 /**
  * Sample 'default value' callback.
  */
-function field_test_default_value(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+function field_test_default_value(FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
   return array(array('value' => 99));
 }
 

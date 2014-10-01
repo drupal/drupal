@@ -247,7 +247,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     foreach ($children as $key) {
       if (isset($build_list[$key][$entity_type_key])) {
         $entity = $build_list[$key][$entity_type_key];
-        if ($entity instanceof ContentEntityInterface) {
+        if ($entity instanceof FieldableEntityInterface) {
           $view_modes[$build_list[$key]['#view_mode']][$key] = $entity;
         }
       }

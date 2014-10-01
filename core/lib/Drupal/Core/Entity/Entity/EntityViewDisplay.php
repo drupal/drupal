@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
 
 /**
@@ -50,7 +50,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * party code to alter the display options held in the display before they are
    * used to generate render arrays.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface[] $entities
+   * @param \Drupal\Core\Entity\FieldableEntityInterface[] $entities
    *   The entities being rendered. They should all be of the same entity type.
    * @param string $view_mode
    *   The view mode being rendered.
@@ -142,7 +142,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    *
    * See the collectRenderDisplays() method for details.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity being rendered.
    * @param string $view_mode
    *   The view mode.
@@ -152,7 +152,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    *
    * @see \Drupal\entity\Entity\EntityDisplay::collectRenderDisplays()
    */
-  public static function collectRenderDisplay(ContentEntityInterface $entity, $view_mode) {
+  public static function collectRenderDisplay(FieldableEntityInterface $entity, $view_mode) {
     $displays = static::collectRenderDisplays(array($entity), $view_mode);
     return $displays[$entity->bundle()];
   }
@@ -196,7 +196,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function build(ContentEntityInterface $entity) {
+  public function build(FieldableEntityInterface $entity) {
     $build = $this->buildMultiple(array($entity));
     return $build[0];
   }

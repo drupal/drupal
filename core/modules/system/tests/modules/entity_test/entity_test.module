@@ -7,7 +7,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -422,7 +422,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
 /**
  * Field default value callback.
  *
- * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
  *   The entity being created.
  * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
  *   The field definition.
@@ -433,7 +433,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  *
  * @see \Drupal\field\Entity\FieldConfig::$default_value
  */
-function entity_test_field_default_value(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+function entity_test_field_default_value(FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
   return array(array('value' => $definition->getName() . '_' . $entity->language()->id));
 }
 

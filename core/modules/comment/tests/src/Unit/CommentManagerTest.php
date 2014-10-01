@@ -29,7 +29,7 @@ class CommentManagerTest extends UnitTestCase {
       ->will($this->returnValue('Node'));
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
-      ->with('\Drupal\Core\Entity\ContentEntityInterface')
+      ->with('\Drupal\Core\Entity\FieldableEntityInterface')
       ->will($this->returnValue(TRUE));
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

@@ -7,9 +7,9 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Defines an interface for comment entity storage classes.
@@ -46,7 +46,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
    *   The total number of comments that the entity has.
    * @param int $new_comments
    *   The number of new comments that the entity has.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity to which the comments belong.
    * @param string $field_name
    *   The field name on the entity to which comments are attached.
@@ -54,7 +54,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
    * @return array|null
    *   The page number where first new comment appears. (First page returns 0.)
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment');
+  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name = 'comment');
 
   /**
    * Gets the display ordinal or page number for a comment.

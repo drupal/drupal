@@ -247,7 +247,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
   }
   elseif (($type == 'entity' & !empty($data['entity'])) ||
     ($type == 'node' & !empty($data['node']))) {
-    /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
+    /** @var $entity \Drupal\Core\Entity\FieldableEntityInterface */
     $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
 
     foreach ($tokens as $name => $original) {

@@ -90,7 +90,7 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Gets the entity that field belongs to.
    *
-   * @return \Drupal\Core\Entity\ContentEntityInterface
+   * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity object.
    */
   public function getEntity();

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -320,7 +320,7 @@ function editor_filter_xss($html, FilterFormatInterface $format, FilterFormatInt
  */
 function editor_entity_insert(EntityInterface $entity) {
   // Only act on content entities.
-  if (!($entity instanceof ContentEntityInterface)) {
+  if (!($entity instanceof FieldableEntityInterface)) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
@@ -334,7 +334,7 @@ function editor_entity_insert(EntityInterface $entity) {
  */
 function editor_entity_update(EntityInterface $entity) {
   // Only act on content entities.
-  if (!($entity instanceof ContentEntityInterface)) {
+  if (!($entity instanceof FieldableEntityInterface)) {
     return;
   }
 
@@ -373,7 +373,7 @@ function editor_entity_update(EntityInterface $entity) {
  */
 function editor_entity_delete(EntityInterface $entity) {
   // Only act on content entities.
-  if (!($entity instanceof ContentEntityInterface)) {
+  if (!($entity instanceof FieldableEntityInterface)) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
@@ -387,7 +387,7 @@ function editor_entity_delete(EntityInterface $entity) {
  */
 function editor_entity_revision_delete(EntityInterface $entity) {
   // Only act on content entities.
-  if (!($entity instanceof ContentEntityInterface)) {
+  if (!($entity instanceof FieldableEntityInterface)) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
@@ -463,13 +463,13 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
 /**
  * Determines the formatted text fields on an entity.
  *
- * @param ContentEntityInterface $entity
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
  *   An entity whose fields to analyze.
  *
  * @return array
  *   The names of the fields on this entity that support formatted text.
  */
-function _editor_get_formatted_text_fields(ContentEntityInterface $entity) {
+function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
   $field_definitions = $entity->getFieldDefinitions();
   if (empty($field_definitions)) {
     return array();

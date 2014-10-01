@@ -145,7 +145,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
 
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface') && $field_definition instanceof FieldStorageConfigInterface) {
+    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $field_definition instanceof FieldStorageConfigInterface) {
       $schema['columns']['revision_id'] = array(
         'description' => 'The revision ID of the target entity.',
         'type' => 'int',

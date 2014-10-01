@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -50,7 +50,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * party code to alter the display options held in the display before they are
    * used to generate render arrays.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the form is being built.
    * @param string $form_mode
    *   The form mode.
@@ -61,7 +61,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * @see entity_get_form_display()
    * @see hook_entity_form_display_alter()
    */
-  public static function collectRenderDisplay(ContentEntityInterface $entity, $form_mode) {
+  public static function collectRenderDisplay(FieldableEntityInterface $entity, $form_mode) {
     $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
 
@@ -148,7 +148,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function buildForm(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state) {
+  public function buildForm(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state) {
     // Set #parents to 'top-level' by default.
     $form += array('#parents' => array());
 
@@ -197,7 +197,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state) {
+  public function extractFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state) {
     $extracted = array();
     foreach ($entity as $name => $items) {
       if ($widget = $this->getRenderer($name)) {
@@ -211,7 +211,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function validateFormValues(ContentEntityInterface $entity, array &$form, FormStateInterface $form_state) {
+  public function validateFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state) {
     foreach ($entity as $field_name => $items) {
       // Only validate the fields that actually appear in the form, and let the
       // widget assign the violations to the right form elements.

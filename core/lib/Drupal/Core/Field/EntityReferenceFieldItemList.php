@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -52,7 +52,7 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
   /**
    * {@inheritdoc}
    */
-  public static function processDefaultValue($default_value, ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+  public static function processDefaultValue($default_value, FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
     $default_value = parent::processDefaultValue($default_value, $entity, $definition);
 
     if ($default_value) {

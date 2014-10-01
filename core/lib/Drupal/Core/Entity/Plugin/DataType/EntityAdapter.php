@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Plugin\DataType;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\TypedData\ComplexDataInterface;
@@ -83,7 +83,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
     if (!isset($this->entity)) {
       throw new MissingDataException(String::format('Unable to get property @name as no entity has been provided.', array('@name' => $property_name)));
     }
-    if (!$this->entity instanceof ContentEntityInterface) {
+    if (!$this->entity instanceof FieldableEntityInterface) {
       // @todo: Add support for config entities in
       // https://www.drupal.org/node/1818574.
       throw new \InvalidArgumentException(String::format('Unable to get unknown property @name.', array('@name' => $property_name)));
@@ -99,7 +99,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
     if (!isset($this->entity)) {
       throw new MissingDataException(String::format('Unable to set property @name as no entity has been provided.', array('@name' => $property_name)));
     }
-    if (!$this->entity instanceof ContentEntityInterface) {
+    if (!$this->entity instanceof FieldableEntityInterface) {
       // @todo: Add support for config entities in
       // https://www.drupal.org/node/1818574.
       throw new \InvalidArgumentException(String::format('Unable to set unknown property @name.', array('@name' => $property_name)));
@@ -115,7 +115,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
     if (!isset($this->entity)) {
       throw new MissingDataException(String::format('Unable to get properties as no entity has been provided.'));
     }
-    if (!$this->entity instanceof ContentEntityInterface) {
+    if (!$this->entity instanceof FieldableEntityInterface) {
       // @todo: Add support for config entities in
       // https://www.drupal.org/node/1818574.
       return array();
@@ -144,7 +144,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
    * {@inheritdoc}
    */
   public function onChange($property_name) {
-    if (isset($this->entity) && $this->entity instanceof ContentEntityInterface) {
+    if (isset($this->entity) && $this->entity instanceof FieldableEntityInterface) {
       // Let the entity know of any changes.
       $this->entity->onChange($property_name);
     }

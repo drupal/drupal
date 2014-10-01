@@ -11,6 +11,8 @@ use Drupal\Core\Access\AccessibleInterface;
 
 /**
  * Defines a common interface for all entity objects.
+ *
+ * @ingroup entity_api
  */
 interface EntityInterface extends AccessibleInterface {
 

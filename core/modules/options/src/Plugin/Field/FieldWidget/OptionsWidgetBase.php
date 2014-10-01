@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -114,13 +114,13 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Returns the array of options for the widget.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which to return options.
    *
    * @return array
    *   The array of options for the widget.
    */
-  protected function getOptions(ContentEntityInterface $entity) {
+  protected function getOptions(FieldableEntityInterface $entity) {
     if (!isset($this->options)) {
       // Limit the settable options for the current user account.
       $options = $this->fieldDefinition

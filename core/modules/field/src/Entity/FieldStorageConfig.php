@@ -10,8 +10,8 @@ namespace Drupal\field\Entity;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -585,7 +585,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * {@inheritdoc}
    */
-  public function getOptionsProvider($property_name, ContentEntityInterface $entity) {
+  public function getOptionsProvider($property_name, FieldableEntityInterface $entity) {
     // If the field item class implements the interface, proxy it through.
     $item = $entity->get($this->getName())->first();
     if ($item instanceof OptionsProviderInterface) {

@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -70,7 +70,7 @@ class EntityViewController implements ContainerInjectionInterface {
     // rendered title field formatter as the page title instead of the default
     // plain text title. This allows attributes set on the field to propagate
     // correctly (e.g. RDFa, in-place editing).
-    if ($_entity instanceof ContentEntityInterface) {
+    if ($_entity instanceof FieldableEntityInterface) {
       $label_field = $_entity->getEntityType()->getKey('label');
       if ($label_field && $_entity->getFieldDefinition($label_field)->getDisplayOptions('view')) {
         // We must render the label field, because rendering the entity may be

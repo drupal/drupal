@@ -7,7 +7,7 @@
 
 namespace Drupal\quickedit\Form;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -238,13 +238,13 @@ class QuickEditFieldForm extends FormBase {
   /**
    * Finds the field name for the field carrying the changed timestamp, if any.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity.
    *
    * @return string|null
    *   The name of the field found or NULL if not found.
    */
-  protected function getChangedFieldName(ContentEntityInterface $entity) {
+  protected function getChangedFieldName(FieldableEntityInterface $entity) {
     foreach ($entity->getFieldDefinitions() as $field) {
       if ($field->getType() == 'changed') {
         return $field->getName();

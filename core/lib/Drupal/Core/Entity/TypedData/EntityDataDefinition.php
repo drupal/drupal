@@ -59,7 +59,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
       if ($entity_type_id = $this->getEntityTypeId()) {
         // Return an empty array for entities that are not content entities.
         $entity_type_class = \Drupal::entityManager()->getDefinition($entity_type_id)->getClass();
-        if (!in_array('Drupal\Core\Entity\ContentEntityInterface', class_implements($entity_type_class))) {
+        if (!in_array('Drupal\Core\Entity\FieldableEntityInterface', class_implements($entity_type_class))) {
           $this->propertyDefinitions = array();
         }
         else {

@@ -7,7 +7,7 @@
 
 namespace Drupal\hal\Normalizer;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
 use Drupal\serialization\EntityResolver\EntityResolverInterface;
 use Drupal\serialization\EntityResolver\UuidReferenceInterface;
@@ -60,7 +60,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
 
     // If this is not a content entity, let the parent implementation handle it,
     // only content entities are supported as embedded resources.
-    if (!($target_entity instanceof ContentEntityInterface)) {
+    if (!($target_entity instanceof FieldableEntityInterface)) {
       return parent::normalize($field_item, $format, $context);
     }
 

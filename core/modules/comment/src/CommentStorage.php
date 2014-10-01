@@ -9,10 +9,10 @@ namespace Drupal\comment;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -131,7 +131,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
   /**
    * {@inheritdoc}
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment') {
+  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name = 'comment') {
     $field = $entity->getFieldDefinition($field_name);
     $comments_per_page = $field->getSetting('per_page');
 

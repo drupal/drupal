@@ -111,7 +111,7 @@ class SelectionBase implements SelectionInterface {
       );
     }
 
-    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       $fields = array();
       foreach (array_keys($bundles) as $bundle) {
         $bundle_fields = array_filter($entity_manager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
