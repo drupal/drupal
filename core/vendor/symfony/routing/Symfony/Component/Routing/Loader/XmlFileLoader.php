@@ -167,6 +167,9 @@ class XmlFileLoader extends FileLoader
         if (null !== $host) {
             $subCollection->setHost($host);
         }
+        if (null !== $condition) {
+            $subCollection->setCondition($condition);
+        }
         if (null !== $schemes) {
             $subCollection->setSchemes($schemes);
         }
@@ -216,7 +219,7 @@ class XmlFileLoader extends FileLoader
         foreach ($node->getElementsByTagNameNS(self::NAMESPACE_URI, '*') as $n) {
             switch ($n->localName) {
                 case 'default':
-                    if ($n->hasAttribute('xsi:nil') && 'true' == $n->getAttribute('xsi:nil')) {
+                    if ($this->isElementValueNull($n)) {
                         $defaults[$n->getAttribute('key')] = null;
                     } else {
                         $defaults[$n->getAttribute('key')] = trim($n->textContent);
@@ -238,5 +241,16 @@ class XmlFileLoader extends FileLoader
         }
 
         return array($defaults, $requirements, $options, $condition);
+    }
+
+    private function isElementValueNull(\DOMElement $element)
+    {
+        $namespaceUri = 'http://www.w3.org/2001/XMLSchema-instance';
+
+        if (!$element->hasAttributeNS($namespaceUri, 'nil')) {
+            return false;
+        }
+
+        return 'true' === $element->getAttributeNS($namespaceUri, 'nil') || '1' === $element->getAttributeNS($namespaceUri, 'nil');
     }
 }

@@ -56,7 +56,7 @@ class Esi
      *
      * @param Request $request A Request instance
      *
-     * @return Boolean true if one surrogate has ESI/1.0 capability, false otherwise
+     * @return bool    true if one surrogate has ESI/1.0 capability, false otherwise
      */
     public function hasSurrogateEsiCapability(Request $request)
     {
@@ -99,7 +99,7 @@ class Esi
      *
      * @param Response $response A Response instance
      *
-     * @return Boolean true if the Response needs to be parsed, false otherwise
+     * @return bool    true if the Response needs to be parsed, false otherwise
      */
     public function needsEsiParsing(Response $response)
     {
@@ -107,7 +107,7 @@ class Esi
             return false;
         }
 
-        return (Boolean) preg_match('#content="[^"]*ESI/1.0[^"]*"#', $control);
+        return (bool) preg_match('#content="[^"]*ESI/1.0[^"]*"#', $control);
     }
 
     /**
@@ -115,7 +115,7 @@ class Esi
      *
      * @param string  $uri          A URI
      * @param string  $alt          An alternate URI
-     * @param Boolean $ignoreErrors Whether to ignore errors or not
+     * @param bool    $ignoreErrors Whether to ignore errors or not
      * @param string  $comment      A comment to add as an esi:include tag
      *
      * @return string
@@ -185,7 +185,7 @@ class Esi
      * @param HttpCache $cache        An HttpCache instance
      * @param string    $uri          The main URI
      * @param string    $alt          An alternative URI
-     * @param Boolean   $ignoreErrors Whether to ignore errors or not
+     * @param bool      $ignoreErrors Whether to ignore errors or not
      *
      * @return string
      *
@@ -236,9 +236,9 @@ class Esi
             throw new \RuntimeException('Unable to process an ESI tag without a "src" attribute.');
         }
 
-        return sprintf('<?php echo $this->esi->handle($this, \'%s\', \'%s\', %s) ?>'."\n",
-            $options['src'],
-            isset($options['alt']) ? $options['alt'] : null,
+        return sprintf('<?php echo $this->esi->handle($this, %s, %s, %s) ?>'."\n",
+            var_export($options['src'], true),
+            var_export(isset($options['alt']) ? $options['alt'] : '', true),
             isset($options['onerror']) && 'continue' == $options['onerror'] ? 'true' : 'false'
         );
     }

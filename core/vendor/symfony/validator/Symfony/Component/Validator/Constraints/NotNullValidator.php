@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
@@ -22,10 +23,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class NotNullValidator extends ConstraintValidator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof NotNull) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\NotNull');
+        }
+
         if (null === $value) {
             $this->context->addViolation($constraint->message);
         }

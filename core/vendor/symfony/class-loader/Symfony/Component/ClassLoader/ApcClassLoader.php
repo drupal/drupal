@@ -15,7 +15,7 @@ namespace Symfony\Component\ClassLoader;
  * ApcClassLoader implements a wrapping autoloader cached in APC for PHP 5.3.
  *
  * It expects an object implementing a findFile method to find the file. This
- * allow using it as a wrapper around the other loaders of the component (the
+ * allows using it as a wrapper around the other loaders of the component (the
  * ClassLoader and the UniversalClassLoader for instance) but also around any
  * other autoloader following this convention (the Composer one for instance)
  *
@@ -46,7 +46,7 @@ class ApcClassLoader
     /**
      * The class loader object being decorated.
      *
-     * @var \Symfony\Component\ClassLoader\ClassLoader
+     * @var object
      *   A class loader object that implements the findFile() method.
      */
     protected $decorated;
@@ -79,7 +79,7 @@ class ApcClassLoader
     /**
      * Registers this instance as an autoloader.
      *
-     * @param Boolean $prepend Whether to prepend the autoloader or not
+     * @param bool    $prepend Whether to prepend the autoloader or not
      */
     public function register($prepend = false)
     {
@@ -99,7 +99,7 @@ class ApcClassLoader
      *
      * @param string $class The name of the class
      *
-     * @return Boolean|null True, if loaded
+     * @return bool|null    True, if loaded
      */
     public function loadClass($class)
     {
@@ -133,5 +133,4 @@ class ApcClassLoader
     {
         return call_user_func_array(array($this->decorated, $method), $args);
     }
-
 }

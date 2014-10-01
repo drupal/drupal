@@ -53,12 +53,11 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
         $result = array();
 
         foreach ($profileList as $item) {
-
             if ($limit === 0) {
                 break;
             }
 
-            if ($item=='') {
+            if ($item == '') {
                 continue;
             }
 
@@ -166,7 +165,6 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
         $profileIndexed = false !== $this->getValue($this->getItemName($profile->getToken()));
 
         if ($this->setValue($this->getItemName($profile->getToken()), $data, $this->lifetime)) {
-
             if (!$profileIndexed) {
                 // Add to index
                 $indexName = $this->getIndexName();
@@ -205,7 +203,7 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
      * @param mixed  $value
      * @param int    $expiration
      *
-     * @return boolean
+     * @return bool
      */
     abstract protected function setValue($key, $value, $expiration = 0);
 
@@ -214,7 +212,7 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
      *
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     abstract protected function delete($key);
 
@@ -224,7 +222,7 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
      * @param string $value
      * @param int    $expiration
      *
-     * @return boolean
+     * @return bool
      */
     abstract protected function appendValue($key, $value, $expiration = 0);
 
@@ -304,5 +302,4 @@ abstract class BaseMemcacheProfilerStorage implements ProfilerStorageInterface
 
         return true;
     }
-
 }

@@ -27,7 +27,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 interface KernelInterface extends HttpKernelInterface, \Serializable
 {
     /**
-     * Returns an array of bundles to registers.
+     * Returns an array of bundles to register.
      *
      * @return BundleInterface[] An array of bundle instances.
      *
@@ -36,7 +36,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function registerBundles();
 
     /**
-     * Loads the container configuration
+     * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
      *
@@ -74,7 +74,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      *
      * @param string $class A class name
      *
-     * @return Boolean true if the class belongs to an active bundle, false otherwise
+     * @return bool    true if the class belongs to an active bundle, false otherwise
      *
      * @api
      */
@@ -84,7 +84,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      * Returns a bundle and optionally its descendants by its name.
      *
      * @param string  $name  Bundle name
-     * @param Boolean $first Whether to return the first bundle only or together with its descendants
+     * @param bool    $first Whether to return the first bundle only or together with its descendants
      *
      * @return BundleInterface|BundleInterface[] A BundleInterface instance or an array of BundleInterface instances if $first is false
      *
@@ -113,7 +113,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      *
      * @param string  $name  A resource name to locate
      * @param string  $dir   A directory where to look for the resource first
-     * @param Boolean $first Whether to return the first path or paths for all matching bundles
+     * @param bool    $first Whether to return the first path or paths for all matching bundles
      *
      * @return string|array The absolute path of the resource or an array if $first is false
      *
@@ -125,7 +125,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function locateResource($name, $dir = null, $first = true);
 
     /**
-     * Gets the name of the kernel
+     * Gets the name of the kernel.
      *
      * @return string The kernel name
      *
@@ -145,7 +145,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     /**
      * Checks if debug mode is enabled.
      *
-     * @return Boolean true if debug mode is enabled, false otherwise
+     * @return bool    true if debug mode is enabled, false otherwise
      *
      * @api
      */
@@ -172,7 +172,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     /**
      * Gets the request start time (not available if debug is disabled).
      *
-     * @return integer The request start timestamp
+     * @return int     The request start timestamp
      *
      * @api
      */

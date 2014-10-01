@@ -26,10 +26,14 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class LocaleValidator extends ConstraintValidator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof Locale) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Locale');
+        }
+
         if (null === $value || '' === $value) {
             return;
         }
@@ -42,7 +46,9 @@ class LocaleValidator extends ConstraintValidator
         $locales = Intl::getLocaleBundle()->getLocaleNames();
 
         if (!isset($locales[$value])) {
-            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
+            $this->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $this->formatValue($value))
+                ->addViolation();
         }
     }
 }

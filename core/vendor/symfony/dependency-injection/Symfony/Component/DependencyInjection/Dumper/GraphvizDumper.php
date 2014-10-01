@@ -12,11 +12,13 @@
 namespace Symfony\Component\DependencyInjection\Dumper;
 
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Scope;
 
 /**
  * GraphvizDumper dumps a service container as a graphviz file.
@@ -123,7 +125,7 @@ class GraphvizDumper extends Dumper
      *
      * @param string  $id        The service id used to find edges
      * @param array   $arguments An array of arguments
-     * @param Boolean $required
+     * @param bool    $required
      * @param string  $name
      *
      * @return array An array of edges
@@ -164,8 +166,14 @@ class GraphvizDumper extends Dumper
         $container = $this->cloneContainer();
 
         foreach ($container->getDefinitions() as $id => $definition) {
-            $nodes[$id] = array('class' => str_replace('\\', '\\\\', $this->container->getParameterBag()->resolveValue($definition->getClass())), 'attributes' => array_merge($this->options['node.definition'], array('style' => ContainerInterface::SCOPE_PROTOTYPE !== $definition->getScope() ? 'filled' : 'dotted')));
+            $className = $definition->getClass();
 
+            try {
+                $className = $this->container->getParameterBag()->resolveValue($className);
+            } catch (ParameterNotFoundException $e) {
+            }
+
+            $nodes[$id] = array('class' => str_replace('\\', '\\\\', $className), 'attributes' => array_merge($this->options['node.definition'], array('style' => ContainerInterface::SCOPE_PROTOTYPE !== $definition->getScope() ? 'filled' : 'dotted')));
             $container->setDefinition($id, new Definition('stdClass'));
         }
 
@@ -193,8 +201,8 @@ class GraphvizDumper extends Dumper
         $container->setDefinitions($this->container->getDefinitions());
         $container->setAliases($this->container->getAliases());
         $container->setResources($this->container->getResources());
-        foreach ($this->container->getScopes() as $scope) {
-            $container->addScope($scope);
+        foreach ($this->container->getScopes() as $scope => $parentScope) {
+            $container->addScope(new Scope($scope, $parentScope));
         }
         foreach ($this->container->getExtensions() as $extension) {
             $container->registerExtension($extension);

@@ -23,7 +23,7 @@ interface SessionInterface
     /**
      * Starts the session storage.
      *
-     * @return Boolean True if session started.
+     * @return bool    True if session started.
      *
      * @throws \RuntimeException If session fails to start.
      *
@@ -73,12 +73,12 @@ interface SessionInterface
      * Clears all session attributes and flashes and regenerates the
      * session and deletes the old session from persistence.
      *
-     * @param integer $lifetime Sets the cookie lifetime for the session cookie. A null value
+     * @param int     $lifetime Sets the cookie lifetime for the session cookie. A null value
      *                          will leave the system settings unchanged, 0 sets the cookie
      *                          to expire with browser session. Time is in seconds, and is
      *                          not a Unix timestamp.
      *
-     * @return Boolean True if session invalidated, false if error.
+     * @return bool    True if session invalidated, false if error.
      *
      * @api
      */
@@ -88,13 +88,13 @@ interface SessionInterface
      * Migrates the current session to a new session id while maintaining all
      * session attributes.
      *
-     * @param Boolean $destroy  Whether to delete the old session or leave it to garbage collection.
-     * @param integer $lifetime Sets the cookie lifetime for the session cookie. A null value
+     * @param bool    $destroy  Whether to delete the old session or leave it to garbage collection.
+     * @param int     $lifetime Sets the cookie lifetime for the session cookie. A null value
      *                          will leave the system settings unchanged, 0 sets the cookie
      *                          to expire with browser session. Time is in seconds, and is
      *                          not a Unix timestamp.
      *
-     * @return Boolean True if session migrated, false if error.
+     * @return bool    True if session migrated, false if error.
      *
      * @api
      */
@@ -114,7 +114,7 @@ interface SessionInterface
      *
      * @param string $name The attribute name
      *
-     * @return Boolean true if the attribute is defined, false otherwise
+     * @return bool    true if the attribute is defined, false otherwise
      *
      * @api
      */
@@ -179,7 +179,7 @@ interface SessionInterface
     /**
      * Checks if the session was started.
      *
-     * @return Boolean
+     * @return bool
      */
     public function isStarted();
 

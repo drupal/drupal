@@ -15,7 +15,7 @@ services:
         calls:
             - [ setBar, [] ]
             - [ setBar ]
-            - [ setBar, ['@=service("foo").foo() ~ parameter("foo")'] ]
+            - [ setBar, ['@=service("foo").foo() ~ (container.hasparameter("foo") ? parameter("foo") : "default")'] ]
     method_call2:
         class: FooClass
         calls:
@@ -30,3 +30,8 @@ services:
         synthetic: true
         synchronized: true
         lazy: true
+    decorator_service:
+        decorates: decorated
+    decorator_service_with_name:
+        decorates: decorated
+        decoration_inner_name: decorated.pif-pouf

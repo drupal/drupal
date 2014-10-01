@@ -25,10 +25,10 @@ class MemcacheMock
      * Open memcached server connection
      *
      * @param string  $host
-     * @param integer $port
-     * @param integer $timeout
+     * @param int     $port
+     * @param int     $timeout
      *
-     * @return boolean
+     * @return bool
      */
     public function connect($host, $port = null, $timeout = null)
     {
@@ -45,10 +45,10 @@ class MemcacheMock
      * Open memcached server persistent connection
      *
      * @param string  $host
-     * @param integer $port
-     * @param integer $timeout
+     * @param int     $port
+     * @param int     $timeout
      *
-     * @return boolean
+     * @return bool
      */
     public function pconnect($host, $port = null, $timeout = null)
     {
@@ -65,16 +65,16 @@ class MemcacheMock
      * Add a memcached server to connection pool
      *
      * @param string   $host
-     * @param integer  $port
-     * @param boolean  $persistent
-     * @param integer  $weight
-     * @param integer  $timeout
-     * @param integer  $retry_interval
-     * @param boolean  $status
+     * @param int      $port
+     * @param bool     $persistent
+     * @param int      $weight
+     * @param int      $timeout
+     * @param int      $retry_interval
+     * @param bool     $status
      * @param callable $failure_callback
-     * @param integer  $timeoutms
+     * @param int      $timeoutms
      *
-     * @return boolean
+     * @return bool
      */
     public function addServer($host, $port = 11211, $persistent = null, $weight = null, $timeout = null, $retry_interval = null, $status = null, $failure_callback = null, $timeoutms = null)
     {
@@ -92,10 +92,10 @@ class MemcacheMock
      *
      * @param string  $key
      * @param mixed   $var
-     * @param integer $flag
-     * @param integer $expire
+     * @param int     $flag
+     * @param int     $expire
      *
-     * @return boolean
+     * @return bool
      */
     public function add($key, $var, $flag = null, $expire = null)
     {
@@ -117,10 +117,10 @@ class MemcacheMock
      *
      * @param string  $key
      * @param string  $var
-     * @param integer $flag
-     * @param integer $expire
+     * @param int     $flag
+     * @param int     $expire
      *
-     * @return boolean
+     * @return bool
      */
     public function set($key, $var, $flag = null, $expire = null)
     {
@@ -138,10 +138,10 @@ class MemcacheMock
      *
      * @param string  $key
      * @param mixed   $var
-     * @param integer $flag
-     * @param integer $expire
+     * @param int     $flag
+     * @param int     $expire
      *
-     * @return boolean
+     * @return bool
      */
     public function replace($key, $var, $flag = null, $expire = null)
     {
@@ -162,7 +162,7 @@ class MemcacheMock
      * Retrieve item from the server.
      *
      * @param string|array  $key
-     * @param integer|array $flags
+     * @param int|array     $flags
      *
      * @return mixed
      */
@@ -191,7 +191,7 @@ class MemcacheMock
      *
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function delete($key)
     {
@@ -211,7 +211,7 @@ class MemcacheMock
     /**
      * Flush all existing items at the server
      *
-     * @return boolean
+     * @return bool
      */
     public function flush()
     {
@@ -227,7 +227,7 @@ class MemcacheMock
     /**
      * Close memcached server connection
      *
-     * @return boolean
+     * @return bool
      */
     public function close()
     {

@@ -15,6 +15,10 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
+ *
+ * @author Manuel Reinhard <manu@sprain.ch>
+ * @author Michael Schummel
  */
 class Iban extends Constraint
 {

@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
@@ -22,18 +23,18 @@ use Symfony\Component\Validator\ConstraintValidator;
 class NullValidator extends ConstraintValidator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-        if (null !== $value) {
-            if (is_object($value)) {
-                $value = get_class($value);
-            } elseif (is_array($value)) {
-                $value = 'Array';
-            }
+        if (!$constraint instanceof Null) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Null');
+        }
 
-            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
+        if (null !== $value) {
+            $this->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $this->formatValue($value))
+                ->addViolation();
         }
     }
 }

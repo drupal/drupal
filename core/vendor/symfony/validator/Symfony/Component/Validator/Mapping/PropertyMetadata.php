@@ -13,6 +13,19 @@ namespace Symfony\Component\Validator\Mapping;
 
 use Symfony\Component\Validator\Exception\ValidatorException;
 
+/**
+ * Stores all metadata needed for validating a class property.
+ *
+ * The value of the property is obtained by directly accessing the property.
+ * The property will be accessed by reflection, so the access of private and
+ * protected properties is supported.
+ *
+ * This class supports serialization and cloning.
+ *
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @see PropertyMetadataInterface
+ */
 class PropertyMetadata extends MemberMetadata
 {
     /**
@@ -33,7 +46,7 @@ class PropertyMetadata extends MemberMetadata
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPropertyValue($object)
     {
@@ -41,7 +54,7 @@ class PropertyMetadata extends MemberMetadata
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function newReflectionMember($objectOrClassName)
     {

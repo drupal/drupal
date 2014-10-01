@@ -13,12 +13,18 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\NotEqualTo;
 use Symfony\Component\Validator\Constraints\NotEqualToValidator;
+use Symfony\Component\Validator\Validation;
 
 /**
  * @author Daniel Holmes <daniel@danielholmes.org>
  */
 class NotEqualToValidatorTest extends AbstractComparisonValidatorTestCase
 {
+    protected function getApiVersion()
+    {
+        return Validation::API_VERSION_2_5;
+    }
+
     protected function createValidator()
     {
         return new NotEqualToValidator();
@@ -30,7 +36,7 @@ class NotEqualToValidatorTest extends AbstractComparisonValidatorTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function provideValidComparisons()
     {
@@ -44,16 +50,16 @@ class NotEqualToValidatorTest extends AbstractComparisonValidatorTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function provideInvalidComparisons()
     {
         return array(
-            array(3, 3, '3', 'integer'),
-            array('2', 2, '2', 'integer'),
-            array('a', 'a', "'a'", 'string'),
-            array(new \DateTime('2000-01-01'), new \DateTime('2000-01-01'), '2000-01-01 00:00:00', 'DateTime'),
-            array(new ComparisonTest_Class(5), new ComparisonTest_Class(5), '5', __NAMESPACE__.'\ComparisonTest_Class'),
+            array(3, '3', 3, '3', 'integer'),
+            array('2', '"2"', 2, '2', 'integer'),
+            array('a', '"a"', 'a', '"a"', 'string'),
+            array(new \DateTime('2000-01-01'), 'Jan 1, 2000, 12:00 AM', new \DateTime('2000-01-01'), 'Jan 1, 2000, 12:00 AM', 'DateTime'),
+            array(new ComparisonTest_Class(5), '5', new ComparisonTest_Class(5), '5', __NAMESPACE__.'\ComparisonTest_Class'),
         );
     }
 }

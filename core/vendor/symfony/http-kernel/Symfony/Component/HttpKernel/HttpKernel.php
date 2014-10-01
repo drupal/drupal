@@ -86,12 +86,31 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
+     * @throws \LogicException If the request stack is empty
+     *
+     * @internal
+     */
+    public function terminateWithException(\Exception $exception)
+    {
+        if (!$request = $this->requestStack->getMasterRequest()) {
+            throw new \LogicException('Request stack is empty', 0, $exception);
+        }
+
+        $response = $this->handleException($exception, $request, self::MASTER_REQUEST);
+
+        $response->sendHeaders();
+        $response->sendContent();
+
+        $this->terminate($request, $response);
+    }
+
+    /**
      * Handles a request to convert it to a response.
      *
      * Exceptions are not caught.
      *
      * @param Request $request A Request instance
-     * @param integer $type    The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     * @param int     $type    The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
      *
      * @return Response A Response instance
      *
@@ -153,7 +172,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      *
      * @param Response $response A Response instance
      * @param Request  $request  An error message in case the response is not a Response object
-     * @param integer  $type     The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     * @param int      $type     The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
      *
      * @return Response The filtered Response instance
      *
@@ -191,7 +210,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      *
      * @param \Exception $e       An \Exception instance
      * @param Request    $request A Request instance
-     * @param integer    $type    The type of the request
+     * @param int        $type    The type of the request
      *
      * @return Response A Response instance
      *

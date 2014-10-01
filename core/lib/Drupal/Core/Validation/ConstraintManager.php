@@ -101,7 +101,7 @@ class ConstraintManager extends DefaultPluginManager {
     ));
     $this->discovery->setDefinition('Email', array(
       'label' => new TranslationWrapper('Email'),
-      'class' => '\Symfony\Component\Validator\Constraints\Email',
+      'class' => '\Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint',
       'type' => array('string'),
     ));
   }

@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -23,10 +24,14 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class CollectionValidator extends ConstraintValidator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof Collection) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Collection');
+        }
+
         if (null === $value) {
             return;
         }
@@ -35,30 +40,52 @@ class CollectionValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array or Traversable and ArrayAccess');
         }
 
-        $group = $this->context->getGroup();
+        // We need to keep the initialized context when CollectionValidator
+        // calls itself recursively (Collection constraints can be nested).
+        // Since the context of the validator is overwritten when initialize()
+        // is called for the nested constraint, the outer validator is
+        // acting on the wrong context when the nested validation terminates.
+        //
+        // A better solution - which should be approached in Symfony 3.0 - is to
+        // remove the initialize() method and pass the context as last argument
+        // to validate() instead.
+        $context = $this->context;
+        $group = $context->getGroup();
 
         foreach ($constraint->fields as $field => $fieldConstraint) {
-            if (
-                // bug fix issue #2779
-                (is_array($value) && array_key_exists($field, $value)) ||
-                ($value instanceof \ArrayAccess && $value->offsetExists($field))
-            ) {
-                foreach ($fieldConstraint->constraints as $constr) {
-                    $this->context->validateValue($value[$field], $constr, '['.$field.']', $group);
+            // bug fix issue #2779
+            $existsInArray = is_array($value) && array_key_exists($field, $value);
+            $existsInArrayAccess = $value instanceof \ArrayAccess && $value->offsetExists($field);
+
+            if ($existsInArray || $existsInArrayAccess) {
+                if (count($fieldConstraint->constraints) > 0) {
+                    if ($context instanceof ExecutionContextInterface) {
+                        $context->getValidator()
+                            ->inContext($context)
+                            ->atPath('['.$field.']')
+                            ->validate($value[$field], $fieldConstraint->constraints, $group);
+                    } else {
+                        // 2.4 API
+                        $context->validateValue($value[$field], $fieldConstraint->constraints, '['.$field.']', $group);
+                    }
                 }
             } elseif (!$fieldConstraint instanceof Optional && !$constraint->allowMissingFields) {
-                $this->context->addViolationAt('['.$field.']', $constraint->missingFieldsMessage, array(
-                    '{{ field }}' => $field
-                ), null);
+                $this->buildViolationInContext($context, $constraint->missingFieldsMessage)
+                    ->atPath('['.$field.']')
+                    ->setParameter('{{ field }}', $this->formatValue($field))
+                    ->setInvalidValue(null)
+                    ->addViolation();
             }
         }
 
         if (!$constraint->allowExtraFields) {
             foreach ($value as $field => $fieldValue) {
                 if (!isset($constraint->fields[$field])) {
-                    $this->context->addViolationAt('['.$field.']', $constraint->extraFieldsMessage, array(
-                        '{{ field }}' => $field
-                    ), $fieldValue);
+                    $this->buildViolationInContext($context, $constraint->extraFieldsMessage)
+                        ->atPath('['.$field.']')
+                        ->setParameter('{{ field }}', $this->formatValue($field))
+                        ->setInvalidValue($fieldValue)
+                        ->addViolation();
                 }
             }
         }

@@ -29,12 +29,19 @@ class PhpExecutableFinder
     /**
      * Finds The PHP executable.
      *
+     * @param bool $includeArgs Whether or not include command arguments
+     *
      * @return string|false The PHP executable path or false if it cannot be found
      */
-    public function find()
+    public function find($includeArgs = true)
     {
+        // HHVM support
+        if (defined('HHVM_VERSION')) {
+            return (false !== ($hhvm = getenv('PHP_BINARY')) ? $hhvm : PHP_BINARY).($includeArgs ? ' '.implode(' ', $this->findArguments()) : '');
+        }
+
         // PHP_BINARY return the current sapi executable
-        if (defined('PHP_BINARY') && PHP_BINARY && ('cli' === PHP_SAPI) && is_file(PHP_BINARY)) {
+        if (defined('PHP_BINARY') && PHP_BINARY && in_array(PHP_SAPI, array('cli', 'cli-server')) && is_file(PHP_BINARY)) {
             return PHP_BINARY;
         }
 
@@ -58,5 +65,22 @@ class PhpExecutableFinder
         }
 
         return $this->executableFinder->find('php', false, $dirs);
+    }
+
+    /**
+     * Finds the PHP executable arguments.
+     *
+     * @return array The PHP executable arguments
+     */
+    public function findArguments()
+    {
+        $arguments = array();
+
+        // HHVM support
+        if (defined('HHVM_VERSION')) {
+            $arguments[] = '--php';
+        }
+
+        return $arguments;
     }
 }

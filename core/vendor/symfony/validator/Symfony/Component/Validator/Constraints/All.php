@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
@@ -26,7 +27,7 @@ class All extends Constraint
     public $constraints = array();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($options = null)
     {

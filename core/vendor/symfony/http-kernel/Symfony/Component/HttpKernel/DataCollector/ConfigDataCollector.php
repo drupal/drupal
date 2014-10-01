@@ -70,7 +70,7 @@ class ConfigDataCollector extends DataCollector
             'wincache_enabled'     => extension_loaded('wincache') && ini_get('wincache.ocenabled'),
             'zend_opcache_enabled' => extension_loaded('Zend OPcache') && ini_get('opcache.enable'),
             'bundles'              => array(),
-            'sapi_name'            => php_sapi_name()
+            'sapi_name'            => php_sapi_name(),
         );
 
         if (isset($this->kernel)) {
@@ -143,7 +143,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if the debug is enabled.
      *
-     * @return Boolean true if debug is enabled, false otherwise
+     * @return bool    true if debug is enabled, false otherwise
      */
     public function isDebug()
     {
@@ -153,7 +153,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if the XDebug is enabled.
      *
-     * @return Boolean true if XDebug is enabled, false otherwise
+     * @return bool    true if XDebug is enabled, false otherwise
      */
     public function hasXDebug()
     {
@@ -163,7 +163,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if EAccelerator is enabled.
      *
-     * @return Boolean true if EAccelerator is enabled, false otherwise
+     * @return bool    true if EAccelerator is enabled, false otherwise
      */
     public function hasEAccelerator()
     {
@@ -173,7 +173,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if APC is enabled.
      *
-     * @return Boolean true if APC is enabled, false otherwise
+     * @return bool    true if APC is enabled, false otherwise
      */
     public function hasApc()
     {
@@ -183,7 +183,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if Zend OPcache is enabled
      *
-     * @return Boolean true if Zend OPcache is enabled, false otherwise
+     * @return bool    true if Zend OPcache is enabled, false otherwise
      */
     public function hasZendOpcache()
     {
@@ -193,7 +193,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if XCache is enabled.
      *
-     * @return Boolean true if XCache is enabled, false otherwise
+     * @return bool    true if XCache is enabled, false otherwise
      */
     public function hasXCache()
     {
@@ -203,7 +203,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if WinCache is enabled.
      *
-     * @return Boolean true if WinCache is enabled, false otherwise
+     * @return bool    true if WinCache is enabled, false otherwise
      */
     public function hasWinCache()
     {
@@ -213,7 +213,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Returns true if any accelerator is enabled.
      *
-     * @return Boolean true if any accelerator is enabled, false otherwise
+     * @return bool    true if any accelerator is enabled, false otherwise
      */
     public function hasAccelerator()
     {

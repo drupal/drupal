@@ -26,10 +26,14 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class IpValidator extends ConstraintValidator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof Ip) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Ip');
+        }
+
         if (null === $value || '' === $value) {
             return;
         }
@@ -91,7 +95,9 @@ class IpValidator extends ConstraintValidator
         }
 
         if (!filter_var($value, FILTER_VALIDATE_IP, $flag)) {
-            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
+            $this->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $this->formatValue($value))
+                ->addViolation();
         }
     }
 }

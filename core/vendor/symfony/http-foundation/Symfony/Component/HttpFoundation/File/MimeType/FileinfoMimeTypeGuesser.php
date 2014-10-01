@@ -38,7 +38,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * Returns whether this guesser is supported on the current OS/PHP setup
      *
-     * @return Boolean
+     * @return bool
      */
     public static function isSupported()
     {
@@ -59,11 +59,11 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
         }
 
         if (!self::isSupported()) {
-            return null;
+            return;
         }
 
         if (!$finfo = new \finfo(FILEINFO_MIME_TYPE, $this->magicFile)) {
-            return null;
+            return;
         }
 
         return $finfo->file($path);

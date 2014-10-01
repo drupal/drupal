@@ -28,7 +28,7 @@ use Symfony\Component\Config\Loader\FileLoader;
 class YamlFileLoader extends FileLoader
 {
     private static $availableKeys = array(
-        'resource', 'type', 'prefix', 'pattern', 'path', 'host', 'schemes', 'methods', 'defaults', 'requirements', 'options', 'condition'
+        'resource', 'type', 'prefix', 'pattern', 'path', 'host', 'schemes', 'methods', 'defaults', 'requirements', 'options', 'condition',
     );
     private $yamlParser;
 
@@ -146,6 +146,7 @@ class YamlFileLoader extends FileLoader
         $requirements = isset($config['requirements']) ? $config['requirements'] : array();
         $options = isset($config['options']) ? $config['options'] : array();
         $host = isset($config['host']) ? $config['host'] : null;
+        $condition = isset($config['condition']) ? $config['condition'] : null;
         $schemes = isset($config['schemes']) ? $config['schemes'] : null;
         $methods = isset($config['methods']) ? $config['methods'] : null;
 
@@ -156,6 +157,9 @@ class YamlFileLoader extends FileLoader
         $subCollection->addPrefix($prefix);
         if (null !== $host) {
             $subCollection->setHost($host);
+        }
+        if (null !== $condition) {
+            $subCollection->setCondition($condition);
         }
         if (null !== $schemes) {
             $subCollection->setSchemes($schemes);

@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * @Annotation
+ * @Target({"CLASS", "PROPERTY", "METHOD", "ANNOTATION"})
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Bernhard Schussek <bschussek@gmail.com>
@@ -25,7 +26,7 @@ class Expression extends Constraint
     public $expression;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultOption()
     {
@@ -33,7 +34,7 @@ class Expression extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRequiredOptions()
     {
@@ -41,7 +42,7 @@ class Expression extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTargets()
     {
@@ -49,7 +50,7 @@ class Expression extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validatedBy()
     {

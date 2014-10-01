@@ -15,8 +15,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\Validation\MetadataFactory;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Core\Validation\DrupalTranslator;
-use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Manages data type plugins.
@@ -298,7 +298,7 @@ class TypedDataManager extends DefaultPluginManager {
   /**
    * Sets the validator for validating typed data.
    *
-   * @param \Symfony\Component\Validator\ValidatorInterface $validator
+   * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
    *   The validator object to set.
    */
   public function setValidator(ValidatorInterface $validator) {
@@ -308,7 +308,7 @@ class TypedDataManager extends DefaultPluginManager {
   /**
    * Gets the validator for validating typed data.
    *
-   * @return \Symfony\Component\Validator\ValidatorInterface
+   * @return \Symfony\Component\Validator\Validator\ValidatorInterface
    *   The validator object.
    */
   public function getValidator() {
@@ -316,6 +316,7 @@ class TypedDataManager extends DefaultPluginManager {
       $this->validator = Validation::createValidatorBuilder()
         ->setMetadataFactory(new MetadataFactory())
         ->setTranslator(new DrupalTranslator())
+        ->setApiVersion(Validation::API_VERSION_2_4)
         ->getValidator();
     }
     return $this->validator;

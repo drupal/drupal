@@ -17,6 +17,9 @@ use Symfony\Component\Validator\Constraint;
  * Metadata for the CardSchemeValidator.
  *
  * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
+ *
+ * @author Tim Nagel <t.nagel@infinite.net.au>
  */
 class CardScheme extends Constraint
 {

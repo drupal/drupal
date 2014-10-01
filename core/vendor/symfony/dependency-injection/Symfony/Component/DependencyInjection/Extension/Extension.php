@@ -78,7 +78,7 @@ abstract class Extension implements ExtensionInterface, ConfigurationExtensionIn
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
@@ -96,8 +96,6 @@ abstract class Extension implements ExtensionInterface, ConfigurationExtensionIn
                 return $configuration;
             }
         }
-
-        return null;
     }
 
     final protected function processConfiguration(ConfigurationInterface $configuration, array $configs)
@@ -111,7 +109,7 @@ abstract class Extension implements ExtensionInterface, ConfigurationExtensionIn
      * @param ContainerBuilder $container
      * @param array            $config
      *
-     * @return Boolean Whether the configuration is enabled
+     * @return bool    Whether the configuration is enabled
      *
      * @throws InvalidArgumentException When the config is not enableable
      */
@@ -121,6 +119,6 @@ abstract class Extension implements ExtensionInterface, ConfigurationExtensionIn
             throw new InvalidArgumentException("The config array has no 'enabled' key.");
         }
 
-        return (Boolean) $container->getParameterBag()->resolveValue($config['enabled']);
+        return (bool) $container->getParameterBag()->resolveValue($config['enabled']);
     }
 }

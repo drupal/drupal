@@ -11,15 +11,17 @@
 
 namespace Symfony\Component\Validator;
 
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Exception\NoSuchMetadataException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Default implementation of {@link ValidationVisitorInterface} and
  * {@link GlobalExecutionContextInterface}.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @deprecated Deprecated since version 2.5, to be removed in Symfony 3.0.
  */
 class ValidationVisitor implements ValidationVisitorInterface, GlobalExecutionContextInterface
 {
@@ -127,16 +129,19 @@ class ValidationVisitor implements ValidationVisitorInterface, GlobalExecutionCo
                 return;
             }
 
+            // Initialize if the object wasn't initialized before
+            if (!isset($this->validatedObjects[$hash])) {
+                foreach ($this->objectInitializers as $initializer) {
+                    if (!$initializer instanceof ObjectInitializerInterface) {
+                        throw new \LogicException('Validator initializers must implement ObjectInitializerInterface.');
+                    }
+                    $initializer->initialize($value);
+                }
+            }
+
             // Remember validating this object before starting and possibly
             // traversing the object graph
             $this->validatedObjects[$hash][$group] = true;
-
-            foreach ($this->objectInitializers as $initializer) {
-                if (!$initializer instanceof ObjectInitializerInterface) {
-                    throw new \LogicException('Validator initializers must implement ObjectInitializerInterface.');
-                }
-                $initializer->initialize($value);
-            }
         }
 
         // Validate arrays recursively by default, otherwise every driver needs

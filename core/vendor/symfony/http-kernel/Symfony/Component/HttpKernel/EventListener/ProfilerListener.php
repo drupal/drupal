@@ -41,17 +41,18 @@ class ProfilerListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param Profiler                $profiler           A Profiler instance
-     * @param RequestMatcherInterface $matcher            A RequestMatcher instance
-     * @param Boolean                 $onlyException      true if the profiler only collects data when an exception occurs, false otherwise
-     * @param Boolean                 $onlyMasterRequests true if the profiler only collects data when the request is a master request, false otherwise
+     * @param Profiler                     $profiler           A Profiler instance
+     * @param RequestMatcherInterface|null $matcher            A RequestMatcher instance
+     * @param bool                         $onlyException      true if the profiler only collects data when an exception occurs, false otherwise
+     * @param bool                         $onlyMasterRequests true if the profiler only collects data when the request is a master request, false otherwise
+     * @param RequestStack|null            $requestStack       A RequestStack instance
      */
     public function __construct(Profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false, RequestStack $requestStack = null)
     {
         $this->profiler = $profiler;
         $this->matcher = $matcher;
-        $this->onlyException = (Boolean) $onlyException;
-        $this->onlyMasterRequests = (Boolean) $onlyMasterRequests;
+        $this->onlyException = (bool) $onlyException;
+        $this->onlyMasterRequests = (bool) $onlyMasterRequests;
         $this->profiles = new \SplObjectStorage();
         $this->parents = new \SplObjectStorage();
         $this->requestStack = $requestStack;
@@ -127,7 +128,9 @@ class ProfilerListener implements EventSubscriberInterface
         foreach ($this->profiles as $request) {
             // isset call should be removed when requestStack is required
             if (isset($this->parents[$request]) && null !== $parentRequest = $this->parents[$request]) {
-                $this->profiles[$parentRequest]->addChild($this->profiles[$request]);
+                if (isset($this->profiles[$parentRequest])) {
+                    $this->profiles[$parentRequest]->addChild($this->profiles[$request]);
+                }
             }
         }
 

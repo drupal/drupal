@@ -171,7 +171,6 @@ class RedisProfilerStorage implements ProfilerStorageInterface
         $profileIndexed = false !== $this->getValue($this->getItemName($profile->getToken()));
 
         if ($this->setValue($this->getItemName($profile->getToken()), $data, $this->lifetime, self::REDIS_SERIALIZER_PHP)) {
-
             if (!$profileIndexed) {
                 // Add to index
                 $indexName = $this->getIndexName();
@@ -214,7 +213,7 @@ class RedisProfilerStorage implements ProfilerStorageInterface
                 throw new \RuntimeException('RedisProfilerStorage requires that the redis extension is loaded.');
             }
 
-            $redis = new \Redis;
+            $redis = new \Redis();
             $redis->connect($data['host'], $data['port']);
 
             if (isset($data['path'])) {
@@ -344,7 +343,7 @@ class RedisProfilerStorage implements ProfilerStorageInterface
      * @param int    $expiration
      * @param int    $serializer
      *
-     * @return Boolean
+     * @return bool
      */
     private function setValue($key, $value, $expiration = 0, $serializer = self::REDIS_SERIALIZER_NONE)
     {
@@ -361,7 +360,7 @@ class RedisProfilerStorage implements ProfilerStorageInterface
      * @param string $value
      * @param int    $expiration
      *
-     * @return Boolean
+     * @return bool
      */
     private function appendValue($key, $value, $expiration = 0)
     {
@@ -382,7 +381,7 @@ class RedisProfilerStorage implements ProfilerStorageInterface
      *
      * @param array $keys
      *
-     * @return Boolean
+     * @return bool
      */
     private function delete(array $keys)
     {

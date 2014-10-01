@@ -40,7 +40,7 @@ class ApacheUrlMatcherTest extends \PHPUnit_Framework_TestCase
 
         $_SERVER = $server;
 
-        $result = $matcher->match($pathinfo, $server);
+        $result = $matcher->match($pathinfo);
         $this->assertSame(var_export($expect, true), var_export($result, true));
     }
 
@@ -103,7 +103,7 @@ class ApacheUrlMatcherTest extends \PHPUnit_Framework_TestCase
                     'ignoreAttributes' => array('attr_a', 'attr_b'),
                     '_controller' => 'FrameworkBundle:Redirect:redirect',
                     '_route' => 'product_view',
-                )
+                ),
             ),
             array(
                 'REDIRECT_ envs',
@@ -146,7 +146,7 @@ class ApacheUrlMatcherTest extends \PHPUnit_Framework_TestCase
                     'name' => 'world',
                     '_route' => 'hello',
                 ),
-            )
+            ),
         );
     }
 }

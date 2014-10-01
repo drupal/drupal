@@ -25,10 +25,10 @@ class RedisMock
      * Add a server to connection pool
      *
      * @param string  $host
-     * @param integer $port
+     * @param int     $port
      * @param float   $timeout
      *
-     * @return boolean
+     * @return bool
      */
     public function connect($host, $port = 6379, $timeout = 0)
     {
@@ -44,10 +44,10 @@ class RedisMock
     /**
      * Set client option.
      *
-     * @param integer $name
-     * @param integer $value
+     * @param int     $name
+     * @param int     $value
      *
-     * @return boolean
+     * @return bool
      */
     public function setOption($name, $value)
     {
@@ -63,7 +63,7 @@ class RedisMock
      *
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($key)
     {
@@ -78,10 +78,10 @@ class RedisMock
      * Store data at the server with expiration time.
      *
      * @param string  $key
-     * @param integer $ttl
+     * @param int     $ttl
      * @param mixed   $value
      *
-     * @return boolean
+     * @return bool
      */
     public function setex($key, $ttl, $value)
     {
@@ -98,9 +98,9 @@ class RedisMock
      * Sets an expiration time on an item.
      *
      * @param string  $key
-     * @param integer $ttl
+     * @param int     $ttl
      *
-     * @return boolean
+     * @return bool
      */
     public function setTimeout($key, $ttl)
     {
@@ -120,7 +120,7 @@ class RedisMock
      *
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function get($key)
     {
@@ -137,7 +137,7 @@ class RedisMock
      * @param string $key
      * @param string $value
      *
-     * @return integer Size of the value after the append.
+     * @return int     Size of the value after the append.
      */
     public function append($key, $value)
     {
@@ -159,7 +159,7 @@ class RedisMock
      *
      * @param string|array $key
      *
-     * @return integer
+     * @return int
      */
     public function delete($key)
     {
@@ -191,7 +191,7 @@ class RedisMock
     /**
      * Flush all existing items from all databases at the server.
      *
-     * @return boolean
+     * @return bool
      */
     public function flushAll()
     {
@@ -207,7 +207,7 @@ class RedisMock
     /**
      * Close Redis server connection
      *
-     * @return boolean
+     * @return bool
      */
     public function close()
     {

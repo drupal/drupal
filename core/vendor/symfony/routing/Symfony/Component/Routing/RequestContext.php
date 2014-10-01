@@ -43,8 +43,8 @@ class RequestContext
      * @param string  $method       The HTTP method
      * @param string  $host         The HTTP host name
      * @param string  $scheme       The HTTP scheme
-     * @param integer $httpPort     The HTTP port
-     * @param integer $httpsPort    The HTTPS port
+     * @param int     $httpPort     The HTTP port
+     * @param int     $httpsPort    The HTTPS port
      * @param string  $path         The path
      * @param string  $queryString  The query string
      *
@@ -293,7 +293,7 @@ class RequestContext
      *
      * @param string $name A parameter name
      *
-     * @return Boolean true if the parameter value is set, false otherwise
+     * @return bool    true if the parameter value is set, false otherwise
      */
     public function hasParameter($name)
     {

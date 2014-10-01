@@ -115,6 +115,56 @@ class InlineTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, Inline::parseScalar($value));
     }
 
+    /**
+     * @dataProvider getDataForParseReferences
+     */
+    public function testParseReferences($yaml, $expected)
+    {
+        $this->assertSame($expected, Inline::parse($yaml, false, false, array('var' => 'var-value')));
+    }
+
+    public function getDataForParseReferences()
+    {
+        return array(
+            'scalar' => array('*var', 'var-value'),
+            'list' => array('[ *var ]', array('var-value')),
+            'list-in-list' => array('[[ *var ]]', array(array('var-value'))),
+            'map-in-list' => array('[ { key: *var } ]', array(array('key' => 'var-value'))),
+            'embedded-mapping-in-list' => array('[ key: *var ]', array(array('key' => 'var-value'))),
+            'map' => array('{ key: *var }', array('key' => 'var-value')),
+            'list-in-map' => array('{ key: [*var] }', array('key' => array('var-value'))),
+            'map-in-map' => array('{ foo: { bar: *var } }', array('foo' => array('bar' => 'var-value'))),
+        );
+    }
+
+    public function testParseMapReferenceInSequence()
+    {
+        $foo = array(
+            'a' => 'Steve',
+            'b' => 'Clark',
+            'c' => 'Brian',
+        );
+        $this->assertSame(array($foo), Inline::parse('[*foo]', false, false, array('foo' => $foo)));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
+     * @expectedExceptionMessage A reference must contain at least one character.
+     */
+    public function testParseUnquotedAsterisk()
+    {
+        Inline::parse('{ foo: * }');
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
+     * @expectedExceptionMessage A reference must contain at least one character.
+     */
+    public function testParseUnquotedAsteriskFollowedByAComment()
+    {
+        Inline::parse('{ foo: * #foo }');
+    }
+
     protected function getTestsForParse()
     {
         return array(
@@ -178,7 +228,7 @@ class InlineTest extends \PHPUnit_Framework_TestCase
             '[foo, {bar: foo, foo: [foo, {bar: foo}]}, [foo, {bar: foo}]]' => array('foo', array('bar' => 'foo', 'foo' => array('foo', array('bar' => 'foo'))), array('foo', array('bar' => 'foo'))),
 
             '[foo, bar: { foo: bar }]' => array('foo', '1' => array('bar' => array('foo' => 'bar'))),
-            '[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']' => array('foo', '@foo.baz', array('%foo%' => 'foo is %foo%', 'bar' => '%foo%',), true, '@service_container',),
+            '[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']' => array('foo', '@foo.baz', array('%foo%' => 'foo is %foo%', 'bar' => '%foo%'), true, '@service_container'),
         );
     }
 
@@ -225,7 +275,7 @@ class InlineTest extends \PHPUnit_Framework_TestCase
 
             '[foo, { bar: foo, foo: [foo, { bar: foo }] }, [foo, { bar: foo }]]' => array('foo', array('bar' => 'foo', 'foo' => array('foo', array('bar' => 'foo'))), array('foo', array('bar' => 'foo'))),
 
-            '[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']' => array('foo', '@foo.baz', array('%foo%' => 'foo is %foo%', 'bar' => '%foo%',), true, '@service_container',),
+            '[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']' => array('foo', '@foo.baz', array('%foo%' => 'foo is %foo%', 'bar' => '%foo%'), true, '@service_container'),
         );
     }
 }

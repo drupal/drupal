@@ -23,23 +23,31 @@ class ProcessBuilder
 {
     private $arguments;
     private $cwd;
-    private $env;
-    private $stdin;
-    private $timeout;
-    private $options;
-    private $inheritEnv;
-    private $prefix;
+    private $env = array();
+    private $input;
+    private $timeout = 60;
+    private $options = array();
+    private $inheritEnv = true;
+    private $prefix = array();
+    private $outputDisabled = false;
 
+    /**
+     * Constructor
+     *
+     * @param string[] $arguments An array of arguments
+     */
     public function __construct(array $arguments = array())
     {
         $this->arguments = $arguments;
-
-        $this->timeout = 60;
-        $this->options = array();
-        $this->env = array();
-        $this->inheritEnv = true;
     }
 
+    /**
+     * Creates a process builder instance.
+     *
+     * @param string[] $arguments An array of arguments
+     *
+     * @return ProcessBuilder
+     */
     public static function create(array $arguments = array())
     {
         return new static($arguments);
@@ -62,21 +70,26 @@ class ProcessBuilder
     /**
      * Adds an unescaped prefix to the command string.
      *
-     * The prefix is preserved when reseting arguments.
+     * The prefix is preserved when resetting arguments.
      *
-     * @param string $prefix A command prefix
+     * @param string|array $prefix A command prefix or an array of command prefixes
      *
      * @return ProcessBuilder
      */
     public function setPrefix($prefix)
     {
-        $this->prefix = $prefix;
+        $this->prefix = is_array($prefix) ? $prefix : array($prefix);
 
         return $this;
     }
 
     /**
-     * @param array $arguments
+     * Sets the arguments of the process.
+     *
+     * Arguments must not be escaped.
+     * Previous arguments are removed.
+     *
+     * @param string[] $arguments
      *
      * @return ProcessBuilder
      */
@@ -87,6 +100,13 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Sets the working directory.
+     *
+     * @param null|string $cwd The working directory
+     *
+     * @return ProcessBuilder
+     */
     public function setWorkingDirectory($cwd)
     {
         $this->cwd = $cwd;
@@ -94,6 +114,13 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Sets whether environment variables will be inherited or not.
+     *
+     * @param bool $inheritEnv
+     *
+     * @return ProcessBuilder
+     */
     public function inheritEnvironmentVariables($inheritEnv = true)
     {
         $this->inheritEnv = $inheritEnv;
@@ -101,6 +128,17 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Sets an environment variable
+     *
+     * Setting a variable overrides its previous value. Use `null` to unset a
+     * defined environment variable.
+     *
+     * @param string      $name  The variable name
+     * @param null|string $value The variable value
+     *
+     * @return ProcessBuilder
+     */
     public function setEnv($name, $value)
     {
         $this->env[$name] = $value;
@@ -108,9 +146,38 @@ class ProcessBuilder
         return $this;
     }
 
-    public function setInput($stdin)
+    /**
+     * Adds a set of environment variables.
+     *
+     * Already existing environment variables with the same name will be
+     * overridden by the new values passed to this method. Pass `null` to unset
+     * a variable.
+     *
+     * @param array $variables The variables
+     *
+     * @return ProcessBuilder
+     */
+    public function addEnvironmentVariables(array $variables)
     {
-        $this->stdin = $stdin;
+        $this->env = array_replace($this->env, $variables);
+
+        return $this;
+    }
+
+    /**
+     * Sets the input of the process.
+     *
+     * Deprecation: As of Symfony 2.5, this method only accepts string values.
+     *
+     * @param string|null $input The input as a string
+     *
+     * @return ProcessBuilder
+     *
+     * @throws InvalidArgumentException In case the argument is invalid
+     */
+    public function setInput($input)
+    {
+        $this->input = ProcessUtils::validateInput(sprintf('%s::%s', __CLASS__, __FUNCTION__), $input);
 
         return $this;
     }
@@ -145,6 +212,14 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Adds a proc_open option.
+     *
+     * @param string $name  The option name
+     * @param string $value The option value
+     *
+     * @return ProcessBuilder
+     */
     public function setOption($name, $value)
     {
         $this->options[$name] = $value;
@@ -152,23 +227,61 @@ class ProcessBuilder
         return $this;
     }
 
+    /**
+     * Disables fetching output and error output from the underlying process.
+     *
+     * @return ProcessBuilder
+     */
+    public function disableOutput()
+    {
+        $this->outputDisabled = true;
+
+        return $this;
+    }
+
+    /**
+     * Enables fetching output and error output from the underlying process.
+     *
+     * @return ProcessBuilder
+     */
+    public function enableOutput()
+    {
+        $this->outputDisabled = false;
+
+        return $this;
+    }
+
+    /**
+     * Creates a Process instance and returns it.
+     *
+     * @return Process
+     *
+     * @throws LogicException In case no arguments have been provided
+     */
     public function getProcess()
     {
-        if (!$this->prefix && !count($this->arguments)) {
+        if (0 === count($this->prefix) && 0 === count($this->arguments)) {
             throw new LogicException('You must add() command arguments before calling getProcess().');
         }
 
         $options = $this->options;
 
-        $arguments = $this->prefix ? array_merge(array($this->prefix), $this->arguments) : $this->arguments;
+        $arguments = array_merge($this->prefix, $this->arguments);
         $script = implode(' ', array_map(array(__NAMESPACE__.'\\ProcessUtils', 'escapeArgument'), $arguments));
 
         if ($this->inheritEnv) {
-            $env = $this->env ? $this->env + $_ENV : null;
+            // include $_ENV for BC purposes
+            $env = array_replace($_ENV, $_SERVER, $this->env);
         } else {
             $env = $this->env;
         }
 
-        return new Process($script, $this->cwd, $env, $this->stdin, $this->timeout, $options);
+        $process = new Process($script, $this->cwd, $env, $this->input, $this->timeout, $options);
+
+        if ($this->outputDisabled) {
+            $process->disableOutput();
+        }
+
+        return $process;
     }
 }

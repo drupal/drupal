@@ -13,6 +13,7 @@ namespace Symfony\Component\Debug;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\Exception\OutOfMemoryException;
 
 if (!defined('ENT_SUBSTITUTE')) {
     define('ENT_SUBSTITUTE', 8);
@@ -28,11 +29,15 @@ if (!defined('ENT_SUBSTITUTE')) {
  * available, the Response content is always HTML.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @author Nicolas Grekas <p@tchwork.com>
  */
 class ExceptionHandler
 {
     private $debug;
     private $charset;
+    private $handler;
+    private $caughtBuffer;
+    private $caughtLength;
 
     public function __construct($debug = true, $charset = 'UTF-8')
     {
@@ -43,7 +48,7 @@ class ExceptionHandler
     /**
      * Registers the exception handler.
      *
-     * @param Boolean $debug
+     * @param bool    $debug
      *
      * @return ExceptionHandler The registered exception handler
      */
@@ -57,21 +62,80 @@ class ExceptionHandler
     }
 
     /**
+     * Sets a user exception handler.
+     *
+     * @param callable $handler An handler that will be called on Exception
+     *
+     * @return callable|null The previous exception handler if any
+     */
+    public function setHandler($handler)
+    {
+        if (null !== $handler && !is_callable($handler)) {
+            throw new \LogicException('The exception handler must be a valid PHP callable.');
+        }
+        $old = $this->handler;
+        $this->handler = $handler;
+
+        return $old;
+    }
+
+    /**
+     * Sends a response for the given Exception.
+     *
+     * To be as fail-safe as possible, the exception is first handled
+     * by our simple exception handler, then by the user exception handler.
+     * The latter takes precedence and any output from the former is cancelled,
+     * if and only if nothing bad happens in this handling path.
+     */
+    public function handle(\Exception $exception)
+    {
+        if (null === $this->handler || $exception instanceof OutOfMemoryException) {
+            $this->failSafeHandle($exception);
+
+            return;
+        }
+
+        $caughtLength = $this->caughtLength = 0;
+
+        ob_start(array($this, 'catchOutput'));
+        $this->failSafeHandle($exception);
+        while (null === $this->caughtBuffer && ob_end_flush()) {
+            // Empty loop, everything is in the condition
+        }
+        if (isset($this->caughtBuffer[0])) {
+            ob_start(array($this, 'cleanOutput'));
+            echo $this->caughtBuffer;
+            $caughtLength = ob_get_length();
+        }
+        $this->caughtBuffer = null;
+
+        try {
+            call_user_func($this->handler, $exception);
+            $this->caughtLength = $caughtLength;
+        } catch (\Exception $e) {
+            if (!$caughtLength) {
+                // All handlers failed. Let PHP handle that now.
+                throw $exception;
+            }
+        }
+    }
+
+    /**
      * Sends a response for the given Exception.
      *
      * If you have the Symfony HttpFoundation component installed,
      * this method will use it to create and send the response. If not,
      * it will fallback to plain PHP functions.
      *
-     * @param \Exception $exception An \Exception instance
-     *
      * @see sendPhpResponse
      * @see createResponse
      */
-    public function handle(\Exception $exception)
+    private function failSafeHandle(\Exception $exception)
     {
-        if (class_exists('Symfony\Component\HttpFoundation\Response')) {
-            $this->createResponse($exception)->send();
+        if (class_exists('Symfony\Component\HttpFoundation\Response', false)) {
+            $response = $this->createResponse($exception);
+            $response->sendHeaders();
+            $response->sendContent();
         } else {
             $this->sendPhpResponse($exception);
         }
@@ -91,9 +155,11 @@ class ExceptionHandler
             $exception = FlattenException::create($exception);
         }
 
-        header(sprintf('HTTP/1.0 %s', $exception->getStatusCode()));
-        foreach ($exception->getHeaders() as $name => $value) {
-            header($name.': '.$value, false);
+        if (!headers_sent()) {
+            header(sprintf('HTTP/1.0 %s', $exception->getStatusCode()));
+            foreach ($exception->getHeaders() as $name => $value) {
+                header($name.': '.$value, false);
+            }
         }
 
         echo $this->decorate($this->getContent($exception), $this->getStylesheet($exception));
@@ -312,5 +378,31 @@ EOF;
         }
 
         return implode(', ', $result);
+    }
+
+    /**
+     * @internal
+     */
+    public function catchOutput($buffer)
+    {
+        $this->caughtBuffer = $buffer;
+
+        return '';
+    }
+
+    /**
+     * @internal
+     */
+    public function cleanOutput($buffer)
+    {
+        if ($this->caughtLength) {
+            // use substr_replace() instead of substr() for mbstring overloading resistance
+            $cleanBuffer = substr_replace($buffer, '', 0, $this->caughtLength);
+            if (isset($cleanBuffer[0])) {
+                $buffer = $cleanBuffer;
+            }
+        }
+
+        return $buffer;
     }
 }
