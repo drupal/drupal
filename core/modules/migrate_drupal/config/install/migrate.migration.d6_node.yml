@@ -20,9 +20,16 @@ process:
   promote: promote
   sticky: sticky
   'body/format':
-    plugin: migration
-    migration: d6_filter_format
-    source: format
+    -
+      plugin: static_map
+      bypass: true
+      source: format
+      map:
+        0: NULL
+    -
+      plugin: migration
+      migration: d6_filter_format
+      no_stub: 1
   'body/value': body
   'body/summary': teaser
   revision_uid: uid

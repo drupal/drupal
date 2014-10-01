@@ -311,7 +311,7 @@ class Drupal6Node extends Drupal6DumpBase {
         'teaser' => 'test page teaser rev 4',
         'log' => '',
         'timestamp' => 1390095701,
-        'format' => 1,
+        'format' => 0,
       ))
       ->execute();
 

@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\node\Entity\Node;
 
 /**
  * Node content migration.
@@ -36,7 +37,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    * Test node migration from Drupal 6 to 8.
    */
   public function testNode() {
-    $node = node_load(1);
+    $node = Node::load(1);
     $this->assertEqual($node->id(), 1, 'Node 1 loaded.');
     $this->assertEqual($node->langcode->value, 'und');
     $this->assertEqual($node->body->value, 'test');
@@ -79,12 +80,15 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $node = node_load(1);
+    $node = Node::load(1);
     $this->assertEqual($node->getTitle(), 'New node title');
     // Test a multi-column fields are correctly upgraded.
     $this->assertEqual($node->body->value, 'test');
     $this->assertEqual($node->body->format, 'full_html');
 
+    $node = Node::load(3);
+    // Test that format = 0 from source maps to NULL.
+    $this->assertIdentical($node->body->format, NULL);
   }
 
 }
