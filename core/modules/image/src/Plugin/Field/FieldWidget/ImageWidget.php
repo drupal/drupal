@@ -225,7 +225,7 @@ class ImageWidget extends FileWidget {
       '#type' => 'textfield',
       '#default_value' => isset($item['alt']) ? $item['alt'] : '',
       '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
-      // @see http://www.gawds.org/show.php?contentid=28
+      // @see https://drupal.org/node/465106#alt-text
       '#maxlength' => 512,
       '#weight' => -12,
       '#access' => (bool) $item['fids'] && $element['#alt_field'],
