@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Block;
 
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
@@ -20,7 +21,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @see \Drupal\Core\Block\BlockPluginInterface
  */
-class BlockManager extends DefaultPluginManager implements BlockManagerInterface {
+class BlockManager extends DefaultPluginManager implements BlockManagerInterface, FallbackPluginManagerInterface {
 
   use StringTranslationTrait;
   use ContextAwarePluginManagerTrait;
@@ -108,7 +109,16 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
       }
       return strnatcasecmp($a['admin_label'], $b['admin_label']);
     });
+    // Do not display the 'broken' plugin in the UI.
+    unset($definitions['broken']);
     return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+    return 'broken';
   }
 
 }

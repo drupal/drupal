@@ -21,7 +21,7 @@ interface FallbackPluginManagerInterface {
    *   An array of configuration relevant to the plugin instance.
    *
    * @return string
-   *   The id of an existing plugin to use for ... why isn't this in the factory?
+   *   The id of an existing plugin to use when the plugin does not exist.
    */
   public function getFallbackPluginId($plugin_id, array $configuration = array());
 

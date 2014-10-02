@@ -22,7 +22,7 @@ class BlockContentPageViewTest extends BlockContentTestBase {
   public static $modules = array('block', 'block_content', 'block_content_test');
 
   /**
-   * Checks block edit functionality.
+   * Checks block edit and fallback functionality.
    */
   public function testPageEdit() {
     $this->drupalLogin($this->adminUser);
@@ -33,6 +33,8 @@ class BlockContentPageViewTest extends BlockContentTestBase {
 
     // Assert response was '200' and not '403 Access denied'.
     $this->assertResponse('200', 'User was able the view the block');
+    $this->drupalGet('<front>');
+    $this->assertRaw(t('This block is broken or missing. You may be missing content or you might need to enable the original module.'));
   }
 
 }
