@@ -73,7 +73,7 @@ class BookController extends ControllerBase {
     // Add any recognized books to the table list.
     foreach ($this->bookManager->getAllBooks() as $book) {
       /** @var \Drupal\Core\Url $url */
-      $url = $book->urlInfo();
+      $url = $book['url'];
       if (isset($book['options'])) {
         $url->setOptions($book['options']);
       }

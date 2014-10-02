@@ -623,4 +623,18 @@ class BookTest extends WebTestBase {
 
     $this->assertText($this->book->label(), 'The book title is displayed on the book listing page.');
   }
+
+  /**
+   * Tests the administrative listing of all books.
+   */
+  public function testAdminBookListing() {
+    // Create a new book.
+    $this->createBook();
+
+    // Load the book page and assert the created book title is displayed.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/structure/book');
+    $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
+  }
+
 }
