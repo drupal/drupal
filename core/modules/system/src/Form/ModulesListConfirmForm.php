@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Builds a confirmation form for enabling modules with dependencies.
@@ -108,7 +107,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
 
     // Redirect to the modules list page if the key value store is empty.
     if (!$this->modules) {
-      return new RedirectResponse($this->url('system.modules_list', [], ['absolute' => TRUE]));
+      return $this->redirect('system.modules_list');
     }
 
     $items = array();

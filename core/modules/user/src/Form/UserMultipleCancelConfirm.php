@@ -11,12 +11,10 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\user\TempStoreFactory;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a confirmation form for cancelling multiple user accounts.
@@ -108,7 +106,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       ->get('user_user_operations_cancel')
       ->get($this->currentUser()->id());
     if (!$accounts) {
-      return new RedirectResponse($this->url('user.admin_account', [], ['absolute' => TRUE]));
+      return $this->redirect('user.admin_account');
     }
 
     $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
@@ -132,7 +130,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       drupal_set_message($message, $redirect ? 'error' : 'warning');
       // If only user 1 was selected, redirect to the overview.
       if ($redirect) {
-        return new RedirectResponse($this->url('user.admin_account', [], ['absolute' => TRUE]));
+        return $this->redirect('user.admin_account');
       }
     }
 

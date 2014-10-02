@@ -75,7 +75,7 @@ class AggregatorTestRssController extends ControllerBase {
    *   A response that redirects users to the test feed.
    */
   public function testRedirect() {
-    return $this->redirect('aggregator_test.feed', array(), 301);
+    return $this->redirect('aggregator_test.feed', [], [], 301);
   }
 
 }
