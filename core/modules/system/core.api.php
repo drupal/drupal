@@ -519,7 +519,7 @@
  * @{
  * API for user accounts, access checking, roles, and permissions.
  *
- * @sec sec_overview Overview and terminology
+ * @section sec_overview Overview and terminology
  * Drupal's permission system is based on the concepts of accounts, roles,
  * and permissions.
  *
@@ -550,8 +550,8 @@
  * appropriately for their particular sites.
  *
  * @section sec_define Defining permissions
- * Modules define permissions via a $module.permissions.yml file. The return
- * value defines machine names, human-readable names, and optionally
+ * Modules define permissions via a $module.permissions.yml file. This file
+ * defines machine names, human-readable names, and optionally
  * descriptions for each permission type. The machine names are the canonical
  * way to refer to permissions for access checking.
  *
