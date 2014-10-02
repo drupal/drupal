@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeTest.
+ * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeByNodeTypeTest.
  */
 
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
@@ -10,11 +10,11 @@ namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 node source plugin.
+ * Tests D6 node source plugin with 'node_type' configuration.
  *
  * @group migrate_drupal
  */
-class NodeTest extends MigrateSqlSourceTestCase {
+class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Node';
 
@@ -26,6 +26,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
     // The fake configuration for the source.
     'source' => array(
       'plugin' => 'd6_node',
+      'node_type' => 'page',
     ),
   );
 
@@ -39,6 +40,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 1',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279051598,
       'created' => 1279051598,
       'changed' => 1279051598,
       'comment' => 2,
@@ -50,9 +52,8 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 1',
       'teaser' => 'teaser for node 1',
-      'log' => '',
-      'timestamp' => 1279051598,
       'format' => 1,
+      'log' => 'log message 1',
     ),
     array(
       // Node fields.
@@ -63,6 +64,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 2',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -74,11 +76,18 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 2',
       'teaser' => 'teaser for node 2',
-      'log' => '',
-      'timestamp' => 1279308993,
       'format' => 1,
+      'log' => 'log message 2',
     ),
-    array(
+  );
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    $database_contents = $this->expectedResults;
+
+    $database_contents[] = array(
       // Node fields.
       'nid' => 5,
       'vid' => 5,
@@ -87,6 +96,7 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'title' => 'node title 5',
       'uid' => 1,
       'status' => 1,
+      'timestamp' => 1279290908,
       'created' => 1279290908,
       'changed' => 1279308993,
       'comment' => 0,
@@ -98,18 +108,14 @@ class NodeTest extends MigrateSqlSourceTestCase {
       // Node revision fields.
       'body' => 'body for node 5',
       'teaser' => 'body for node 5',
-      'log' => '',
-      'timestamp' => 1279308993,
       'format' => 1,
-    ),
-  );
+      'log' => 'log message 3',
+    );
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    foreach ($this->expectedResults as $k => $row) {
-      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'log', 'timestamp', 'format') as $i => $field) {
+    // Add another row with an article node and make sure it is not migrated.
+
+    foreach ($database_contents as $k => $row) {
+      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp', 'log') as $i => $field) {
         $this->databaseContents['node_revisions'][$k][$field] = $row[$field];
         // Keep nid and vid.
         if ($i > 1) {

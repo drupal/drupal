@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeRevisionTest.
+ * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeRevisionByNodeTypeTest.
  */
 
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
@@ -14,7 +14,7 @@ use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
  *
  * @group migrate_drupal
  */
-class NodeRevisionTest extends MigrateSqlSourceTestCase {
+class NodeRevisionByNodeTypeTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeRevision';
 
@@ -26,6 +26,7 @@ class NodeRevisionTest extends MigrateSqlSourceTestCase {
     // The fake configuration for the source.
     'source' => array(
       'plugin' => 'd6_node_revision',
+      'node_type' => 'page',
     ),
     'sourceIds' => array(
       'vid' => array(
@@ -138,37 +139,6 @@ class NodeRevisionTest extends MigrateSqlSourceTestCase {
         'field_test_one' => 'text for node 1',
       ),
     ),
-    array(
-      // Node fields.
-      'nid' => 2,
-      'type' => 'article',
-      'language' => 'en',
-      'status' => 1,
-      'created' => 1279290908,
-      'changed' => 1279308993,
-      'comment' => 0,
-      'promote' => 1,
-      'moderate' => 0,
-      'sticky' => 0,
-      'tnid' => 0,
-      'translate' => 0,
-      // Node revision fields.
-      'vid' => 2,
-      'uid' => 1,
-      'title' => 'title for revision 2 (node 2)',
-      'body' => 'body for revision 2 (node 2)',
-      'teaser' => 'teaser for revision 2 (node 2)',
-      'log' => 'log for revision 2 (node 2)',
-      'format' => 1,
-      'field_test_two' => array(
-        'test field node 2',
-      ),
-
-      // This is just to help with databaseContents and gets unset later.
-      'fields' => array(
-        'field_test_one' => 'text for node 2',
-      ),
-    ),
   );
 
   protected $fields = array(
@@ -276,7 +246,41 @@ class NodeRevisionTest extends MigrateSqlSourceTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    foreach ($this->expectedResults as $k => $row) {
+    $database_contents = $this->expectedResults;
+
+    $database_contents[] = array(
+      // Node fields.
+      'nid' => 2,
+      'type' => 'article',
+      'language' => 'en',
+      'status' => 1,
+      'created' => 1279290908,
+      'changed' => 1279308993,
+      'comment' => 0,
+      'promote' => 1,
+      'moderate' => 0,
+      'sticky' => 0,
+      'tnid' => 0,
+      'translate' => 0,
+      // Node revision fields.
+      'vid' => 2,
+      'uid' => 1,
+      'title' => 'title for revision 2 (node 2)',
+      'body' => 'body for revision 2 (node 2)',
+      'teaser' => 'teaser for revision 2 (node 2)',
+      'log' => 'log for revision 2 (node 2)',
+      'format' => 1,
+      'field_test_two' => array(
+        'test field node 2',
+      ),
+
+      // This is just to help with databaseContents and gets unset later.
+      'fields' => array(
+        'field_test_one' => 'text for node 2',
+      ),
+    );
+
+    foreach ($database_contents as $k => $row) {
       $this->databaseContents['node_revisions'][$k]['nid'] = $row['nid'];
       $this->databaseContents['node_revisions'][$k]['vid'] = $row['vid'];
       $this->databaseContents['node_revisions'][$k]['uid'] = $row['uid'];
