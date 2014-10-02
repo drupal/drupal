@@ -11,13 +11,20 @@
  * - icon_title: Text alternative for the forum icon, same as above.
  * - new_posts: '1' when this topic contains new posts, otherwise '0'.
  * - first_new: '1' when this is the first topic with new posts, otherwise '0'.
+ * - icon_status: Indicates which status icon should be used.
  *
  * @see template_preprocess_forum_icon()
  *
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
+{%
+  set classes = [
+    'icon',
+    'topic-status-' ~ icon_status,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {% if first_new -%}
     <a id="new"></a>
   {%- endif %}

@@ -683,26 +683,24 @@ function template_preprocess_forum_icon(&$variables) {
   $variables['hot_threshold'] = \Drupal::config('forum.settings')->get('topics.hot_threshold');
 
   if ($variables['num_posts'] > $variables['hot_threshold']) {
-    $icon_status_class = $variables['new_posts'] ? 'hot-new' : 'hot';
+    $variables['icon_status'] = $variables['new_posts'] ? 'hot-new' : 'hot';
     $variables['icon_title'] = $variables['new_posts'] ? t('Hot topic, new comments') : t('Hot topic');
   }
   else {
-    $icon_status_class = $variables['new_posts'] ? 'new' : 'default';
+    $variables['icon_status'] = $variables['new_posts'] ? 'new' : 'default';
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
   if ($variables['comment_mode'] == CommentItemInterface::CLOSED || $variables['comment_mode'] == CommentItemInterface::HIDDEN) {
-    $icon_status_class = 'closed';
+    $variables['icon_status'] = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }
 
   if ($variables['sticky'] == 1) {
-    $icon_status_class = 'sticky';
+    $variables['icon_status'] = 'sticky';
     $variables['icon_title'] = t('Sticky topic');
   }
 
-  $variables['attributes']['class'][] = 'icon';
-  $variables['attributes']['class'][] = 'topic-status-' . $icon_status_class;
   $variables['attributes']['title'] = $variables['icon_title'];
 }
 
