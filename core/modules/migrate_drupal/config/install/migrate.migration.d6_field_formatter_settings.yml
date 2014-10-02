@@ -35,6 +35,11 @@ process:
       plugin: extract
       index:
         - 1
+    -
+      plugin: static_map
+      bypass: true
+      map:
+        full: default
   field_name: field_name
   "options/label": label
   "options/weight": weight
