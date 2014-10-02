@@ -72,6 +72,8 @@ class ConfigImportUITest extends WebTestBase {
     $core_extension['module']['action'] = 0;
     $core_extension['module']['ban'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
+    // Bartik is a subtheme of classy so classy must be enabled.
+    $core_extension['theme']['classy'] = 0;
     $core_extension['theme']['bartik'] = 0;
     $staging->write('core.extension', $core_extension);
 
