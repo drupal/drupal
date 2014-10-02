@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Utility\String;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
@@ -33,6 +33,7 @@ class ViewEditTest extends UITestBase {
     $this->assertLink(t('Delete view'), 0, 'Ensure that the view delete link appears');
 
     $view = $this->container->get('entity.manager')->getStorage('view')->load('test_view');
+    $this->assertTrue($view instanceof View);
     $this->clickLink(t('Delete view'));
     $this->assertUrl('admin/structure/views/view/test_view/delete');
     $this->drupalPostForm(NULL, array(), t('Delete'));
