@@ -58,7 +58,7 @@ abstract class TourTestBasic extends TourTestBase {
 
     $this->permissions[] = 'view the administration theme';
 
-    //Create an admin user to view tour tips.
+    // Create an admin user to view tour tips.
     $this->adminUser = $this->drupalCreateUser($this->permissions);
     $this->drupalLogin($this->adminUser);
   }
