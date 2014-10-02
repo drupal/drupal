@@ -235,7 +235,7 @@ class SearchQuery extends SelectExtender {
     }
 
     // Classify tokens.
-    $or = FALSE;
+    $in_or = FALSE;
     $limit_combinations = \Drupal::config('search.settings')->get('and_or_limit');
     // The first search expression does not count as AND.
     $and_count = -1;
@@ -248,13 +248,14 @@ class SearchQuery extends SelectExtender {
         break;
       }
 
-      $phrase = FALSE;
       // Strip off phrase quotes.
+      $phrase = FALSE;
       if ($match[2]{0} == '"') {
         $match[2] = substr($match[2], 1, -1);
         $phrase = TRUE;
         $this->simple = FALSE;
       }
+
       // Simplify keyword according to indexing rules and external
       // preprocessors. Use same process as during search indexing, so it
       // will match search index.
@@ -275,7 +276,7 @@ class SearchQuery extends SelectExtender {
           $last = array($last);
         }
         $this->keys['positive'][] = $last;
-        $or = TRUE;
+        $in_or = TRUE;
         $or_count++;
         continue;
       }
@@ -290,7 +291,7 @@ class SearchQuery extends SelectExtender {
           // Lower-case "or" instead of "OR" is a warning condition.
           $this->status |= SearchQuery::LOWER_CASE_OR;
         }
-        if ($or) {
+        if ($in_or) {
           // Add to last element (which is an array).
           $this->keys['positive'][count($this->keys['positive']) - 1] = array_merge($this->keys['positive'][count($this->keys['positive']) - 1], $words);
         }
@@ -299,33 +300,38 @@ class SearchQuery extends SelectExtender {
           $and_count++;
         }
       }
-      $or = FALSE;
+      $in_or = FALSE;
     }
 
     // Convert keywords into SQL statements.
-    $simple_and = FALSE;
-    $simple_or = FALSE;
+    $has_and = FALSE;
+    $has_or = FALSE;
     // Positive matches.
     foreach ($this->keys['positive'] as $key) {
       // Group of ORed terms.
       if (is_array($key) && count($key)) {
-        $simple_or = TRUE;
-        $any = FALSE;
+        // If we had already found one OR, this is another one AND-ed with the
+        // first, meaning it is not a simple query.
+        if ($has_or) {
+          $this->simple = FALSE;
+        }
+        $has_or = TRUE;
+        $has_new_scores = FALSE;
         $queryor = db_or();
         foreach ($key as $or) {
           list($num_new_scores) = $this->parseWord($or);
-          $any |= $num_new_scores;
+          $has_new_scores |= $num_new_scores;
           $queryor->condition('d.data', "% $or %", 'LIKE');
         }
         if (count($queryor)) {
           $this->conditions->condition($queryor);
           // A group of OR keywords only needs to match once.
-          $this->matches += ($any > 0);
+          $this->matches += ($has_new_scores > 0);
         }
       }
       // Single ANDed term.
       else {
-        $simple_and = TRUE;
+        $has_and = TRUE;
         list($num_new_scores, $num_valid_words) = $this->parseWord($key);
         $this->conditions->condition('d.data', "% $key %", 'LIKE');
         if (!$num_valid_words) {
@@ -335,9 +341,10 @@ class SearchQuery extends SelectExtender {
         $this->matches += $num_new_scores;
       }
     }
-    if ($simple_and && $simple_or) {
+    if ($has_and && $has_or) {
       $this->simple = FALSE;
     }
+
     // Negative matches.
     foreach ($this->keys['negative'] as $key) {
       $this->conditions->condition('d.data', "% $key %", 'NOT LIKE');
@@ -409,8 +416,15 @@ class SearchQuery extends SelectExtender {
     $this
       ->condition('i.type', $this->type)
       ->groupBy('i.type')
-      ->groupBy('i.sid')
-      ->having('COUNT(*) >= :matches', array(':matches' => $this->matches));
+      ->groupBy('i.sid');
+
+    // If the query is simple, we should have calculated the number of
+    // matching words we need to find, so impose that criterion. For non-
+    // simple queries, this condition could lead to incorrectly deciding not
+    // to continue with the full query.
+    if ($this->simple) {
+      $this->having('COUNT(*) >= :matches', array(':matches' => $this->matches));
+    }
 
     // Clone the query object to calculate normalization.
     $normalize_query = clone $this->query;

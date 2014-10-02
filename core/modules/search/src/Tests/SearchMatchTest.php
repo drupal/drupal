@@ -88,15 +88,13 @@ class SearchMatchTest extends SearchTestBase {
    * Run predefine queries looking for indexed terms.
    */
   function _testQueries() {
-    /*
-      Note: OR queries that include short words in OR groups are only accepted
-      if the ORed terms are ANDed with at least one long word in the rest of the query.
-
-      e.g. enim dolore OR ut = enim (dolore OR ut) = (enim dolor) OR (enim ut) -> good
-      e.g. dolore OR ut = (dolore) OR (ut) -> bad
-
-      This is a design limitation to avoid full table scans.
-    */
+    // Note: OR queries that include short words in OR groups are only accepted
+    // if the ORed terms are ANDed with at least one long word in the rest of
+    // the query. Examples:
+    //   enim dolore OR ut = enim (dolore OR ut) = (enim dolor) OR (enim ut)
+    // is good, and
+    //   dolore OR ut = (dolore) OR (ut)
+    // is bad. This is a design limitation to avoid full table scans.
     $queries = array(
       // Simple AND queries.
       'ipsum' => array(1),
@@ -109,7 +107,7 @@ class SearchMatchTest extends SearchTestBase {
       'ut minim' => array(5),
       'xx minim' => array(),
       'enim veniam am minim ut' => array(5),
-      // Simple OR queries.
+      // Simple OR and AND/OR queries.
       'dolore OR ipsum' => array(1, 2, 7),
       'dolore OR xxxxx' => array(2, 7),
       'dolore OR ipsum OR enim' => array(1, 2, 4, 5, 6, 7),
@@ -119,6 +117,14 @@ class SearchMatchTest extends SearchTestBase {
       'minim dolore OR ipsum OR enim' => array(5, 6, 7),
       'dolore xx OR yy' => array(),
       'xxxxx dolore OR ipsum' => array(),
+      // Sequence of OR queries.
+      'minim' => array(5, 6, 7),
+      'minim OR xxxx' => array(5, 6, 7),
+      'minim OR xxxx OR minim' => array(5, 6, 7),
+      'minim OR xxxx minim' => array(5, 6, 7),
+      'minim OR xxxx minim OR yyyy' => array(5, 6, 7),
+      'minim OR xxxx minim OR cillum' => array(6, 7, 5),
+      'minim OR xxxx minim OR xxxx' => array(5, 6, 7),
       // Negative queries.
       'dolore -sit' => array(7),
       'dolore -eu' => array(2),
