@@ -83,6 +83,28 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
       'bundle' => 'test_planet',
     ))->save();
 
+    entity_create('field_storage_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_identical1',
+      'type' => 'integer',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_identical1',
+      'bundle' => 'story',
+    ))->save();
+
+    entity_create('field_storage_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_identical2',
+      'type' => 'integer',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_identical2',
+      'bundle' => 'story',
+    ))->save();
+
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
       'd6_field_formatter_settings' => array(
@@ -118,6 +140,8 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertEqual($node->field_test_two[1]->value, 20, 'Multi field second value is correct.');
     $this->assertEqual($node->field_test_three->value, '42.42', 'Single field second value is correct.');
     $this->assertEqual($node->field_test_integer_selectlist[0]->value, '3412', 'Integer select list value is correct');
+    $this->assertEqual($node->field_test_identical1->value, '1', 'Integer value is correct');
+    $this->assertEqual($node->field_test_identical2->value, '1', 'Integer value is correct');
 
     $planet_node = Node::load(3);
     $this->assertEqual($planet_node->field_multivalue->value, 33);

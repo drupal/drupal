@@ -790,6 +790,70 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       )),
       'description' => 'An example multi-valued decimal field.',
     ))
+    ->values(array(
+      'field_name' => 'field_test_identical1',
+      'type_name' => 'story',
+      'weight' => 2,
+      'label' => 'Integer Field',
+      'widget_type' => 'number',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:2:{s:5:"value";s:0:"";s:14:"_error_element";s:41:"default_value_widget][field_int][0][value";}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 2,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_0',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example integer field.',
+    ))
+    ->values(array(
+      'field_name' => 'field_test_identical2',
+      'type_name' => 'story',
+      'weight' => 2,
+      'label' => 'Integer Field',
+      'widget_type' => 'number',
+      'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:2:{s:5:"value";s:0:"";s:14:"_error_element";s:41:"default_value_widget][field_int][0][value";}}s:17:"default_value_php";N;}',
+      'display_settings' => serialize(array(
+        'weight' => 2,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_0',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example integer field.',
+    ))
     ->execute();
 
     // Create the field table.
@@ -1080,6 +1144,38 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
       'multiple' => 1,
       'db_storage' => 0,
       'db_columns' => 'a:1:{s:5:"value";a:5:{s:4:"type";s:7:"numeric";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:8:"not null";b:0;s:8:"sortable";b:1;}}',
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_identical1',
+      'module' => 'number',
+      'type' => 'number_integer',
+      'global_settings' => '',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => serialize(array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+          'sortable' => TRUE,
+        ),
+      )),
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_identical2',
+      'module' => 'number',
+      'type' => 'number_integer',
+      'global_settings' => '',
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => serialize(array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+          'sortable' => TRUE,
+        ),
+      )),
       'active' => 1,
     ))
     ->execute();

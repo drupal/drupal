@@ -115,7 +115,7 @@ class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface {
           $source = $row->getSource();
           // We diff the results with the source to find any field columns
           // in the content type's main table.
-          $new_fields = array_diff($results, $source);
+          $new_fields = array_diff_key($results, $source);
           foreach ($new_fields as $key => $value) {
             $row->setSourceProperty($key, $value);
           }

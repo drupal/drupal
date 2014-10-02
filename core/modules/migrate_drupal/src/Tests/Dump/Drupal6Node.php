@@ -350,6 +350,18 @@ class Drupal6Node extends Drupal6DumpBase {
           'unsigned' => FALSE,
           'not null' => FALSE
         ),
+        'field_test_identical1_value' => array(
+          'description' => 'Test field column.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE
+        ),
+        'field_test_identical2_value' => array(
+          'description' => 'Test field column.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE
+        ),
       ),
       'primary key' => array('vid'),
     ));
@@ -361,6 +373,8 @@ class Drupal6Node extends Drupal6DumpBase {
         'uid',
         'field_test_three_value',
         'field_test_integer_selectlist_value',
+        'field_test_identical1_value',
+        'field_test_identical2_value'
       ))
       ->values(array(
         'nid' => 1,
@@ -368,6 +382,8 @@ class Drupal6Node extends Drupal6DumpBase {
         'uid' => 1,
         'field_test_three_value' => '42.42',
         'field_test_integer_selectlist_value' => '3412',
+        'field_test_identical1_value' => 1,
+        'field_test_identical2_value' => 1,
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);
