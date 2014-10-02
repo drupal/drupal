@@ -95,7 +95,7 @@ abstract class PathFormBase extends FormBase {
       '#maxlength' => 255,
       '#size' => 45,
       '#description' => $this->t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1.'),
-      '#field_prefix' => _url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => $this->url('<none>', [], ['absolute' => TRUE]),
       '#required' => TRUE,
     );
     $form['alias'] = array(
@@ -105,7 +105,7 @@ abstract class PathFormBase extends FormBase {
       '#maxlength' => 255,
       '#size' => 45,
       '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
-      '#field_prefix' => _url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => $this->url('<none>', [], ['absolute' => TRUE]),
       '#required' => TRUE,
     );
 

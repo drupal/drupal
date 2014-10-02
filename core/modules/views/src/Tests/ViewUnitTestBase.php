@@ -55,6 +55,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
 
     // The router table is required for router rebuilds.
     $this->installSchema('system', array('router'));
+    \Drupal::service('router.builder')->rebuild();
 
     // Load the test dataset.
     $data_set = $this->dataSet();

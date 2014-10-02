@@ -2,19 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\PathProcessor\PathProcessorIntegrationTest.
+ * Contains \Drupal\system\Tests\RouteProcessor\RouteProcessorIntegrationTest.
  */
 
-namespace Drupal\system\Tests\PathProcessor;
+namespace Drupal\system\Tests\RouteProcessor;
 
 use Drupal\simpletest\KernelTestBase;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
- * @see \Drupal\Core\PathProcessor\PathProcessorCurrent
- * @group path_processor
+ * @see \Drupal\Core\RouteProcessor\RouteProcessorCurrent
+ * @group route_processor
  */
-class PathProcessorCurrentIntegrationTest extends KernelTestBase {
+class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -46,6 +48,9 @@ class PathProcessorCurrentIntegrationTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/subdir', 'GET', [], [], [], $server);
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/'));
+
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $this->assertEqual('/subdir/', \Drupal::url('<current>'));
@@ -57,6 +62,9 @@ class PathProcessorCurrentIntegrationTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/subdir/node/add', 'GET', [], [], [], $server);
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/node/add'));
+
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $this->assertEqual('/subdir/node/add', \Drupal::url('<current>'));
@@ -68,6 +76,9 @@ class PathProcessorCurrentIntegrationTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/', 'GET', [], [], [], $server);
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/'));
+
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $this->assertEqual('/', \Drupal::url('<current>'));
@@ -79,6 +90,9 @@ class PathProcessorCurrentIntegrationTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/node/add', 'GET', [], [], [], $server);
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/node/add'));
+
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $this->assertEqual('/node/add', \Drupal::url('<current>'));

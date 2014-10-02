@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -26,6 +27,8 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\views\EventSubscriber\RouteSubscriber
  */
 abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface {
+
+  use UrlGeneratorTrait;
 
   /**
    * The route provider.
@@ -393,7 +396,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           '#title' => $this->t('Path'),
           '#description' => $this->t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
           '#default_value' => $this->getOption('path'),
-          '#field_prefix' => '<span dir="ltr">' . _url(NULL, array('absolute' => TRUE)),
+          '#field_prefix' => '<span dir="ltr">' . $this->url('<none>', [], ['absolute' => TRUE]),
           '#field_suffix' => '</span>&lrm;',
           '#attributes' => array('dir' => 'ltr'),
           // Account for the leading backslash.

@@ -25,7 +25,7 @@ class CommonTestController {
       'no_query' => array(
         '#type' => 'link',
         '#title' => t('Link with no query string'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'set_active_class' => TRUE,
         ),
@@ -33,7 +33,7 @@ class CommonTestController {
       'with_query' => array(
         '#type' => 'link',
         '#title' => t('Link with a query string'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'query' => array(
             'foo' => 'bar',
@@ -45,7 +45,7 @@ class CommonTestController {
       'with_query_reversed' => array(
         '#type' => 'link',
         '#title' => t('Link with the same query string in reverse order'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'query' => array(
             'one' => 'two',

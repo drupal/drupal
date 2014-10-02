@@ -62,7 +62,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'no_language' => array(
         '#type' => 'link',
         '#title' => t('Link to the current path with no langcode provided.'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'attributes' => array(
             'id' => 'no_lang_link',
@@ -73,7 +73,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'fr' => array(
         '#type' => 'link',
         '#title' => t('Link to a French version of the current path.'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'language' => $languages['fr'],
           'attributes' => array(
@@ -85,7 +85,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'en' => array(
         '#type' => 'link',
         '#title' => t('Link to an English version of the current path.'),
-        '#href' => current_path(),
+        '#route_name' => '<current>',
         '#options' => array(
           'language' => $languages['en'],
           'attributes' => array(

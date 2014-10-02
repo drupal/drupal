@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -114,15 +115,15 @@ class UrlTest extends WebTestBase {
     // Test adding a custom class in links produced by _l() and #type 'link'.
     // Test _l().
     $class_l = $this->randomMachineName();
-    $link_l = _l($this->randomMachineName(), current_path(), array('attributes' => array('class' => array($class_l))));
-    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), format_string('Custom class @class is present on link when requested by _l()', array('@class' => $class_l)));
+    $link_l = \Drupal::l($this->randomMachineName(), new Url('<current>', [], ['attributes' => ['class' => [$class_l]]]));
+    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), format_string('Custom class @class is present on link when requested by l()', array('@class' => $class_l)));
 
     // Test #type.
     $class_theme = $this->randomMachineName();
     $type_link = array(
       '#type' => 'link',
       '#title' => $this->randomMachineName(),
-      '#href' => current_path(),
+      '#route_name' => '<current>',
       '#options' => array(
         'attributes' => array(
           'class' => array($class_theme),

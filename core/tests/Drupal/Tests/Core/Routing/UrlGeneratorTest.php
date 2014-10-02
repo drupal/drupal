@@ -178,7 +178,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $url = $this->generator->generate('test_1');
     $this->assertEquals('/hello/world', $url);
 
-    $this->routeProcessorManager->expects($this->once())
+    $this->routeProcessorManager->expects($this->exactly(2))
       ->method('processOutbound')
       ->with($this->anything());
 
@@ -195,7 +195,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * Tests URL generation in a subdirectory.
    */
   public function testGetPathFromRouteWithSubdirectory() {
-    $this->routeProcessorManager->expects($this->never())
+    $this->routeProcessorManager->expects($this->once())
       ->method('processOutbound');
 
     $path = $this->generator->getPathFromRoute('test_1');
@@ -209,7 +209,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $url = $this->generator->generate('test_2', array('narf' => '5'));
     $this->assertEquals('/goodbye/cruel/world', $url);
 
-    $this->routeProcessorManager->expects($this->exactly(3))
+    $this->routeProcessorManager->expects($this->exactly(4))
       ->method('processOutbound')
       ->with($this->anything());
 
@@ -234,7 +234,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * Tests URL generation from route with trailing start and end slashes.
    */
   public function testGetPathFromRouteTrailing() {
-    $this->routeProcessorManager->expects($this->never())
+    $this->routeProcessorManager->expects($this->once())
       ->method('processOutbound');
 
     $path = $this->generator->getPathFromRoute('test_3');

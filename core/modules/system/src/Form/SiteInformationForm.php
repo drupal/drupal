@@ -114,7 +114,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#default_value' => $front_page,
       '#size' => 40,
       '#description' => t('Optionally, specify a relative URL to display as the front page. Leave blank to display the default front page.'),
-      '#field_prefix' => _url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => $this->url('<none>', [], ['absolute' => TRUE]),
     );
     $form['error_page'] = array(
       '#type' => 'details',
@@ -127,7 +127,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#default_value' => $site_config->get('page.403'),
       '#size' => 40,
       '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
-      '#field_prefix' => _url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => $this->url('<none>', [], ['absolute' => TRUE]),
     );
     $form['error_page']['site_404'] = array(
       '#type' => 'textfield',
@@ -135,7 +135,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#default_value' => $site_config->get('page.404'),
       '#size' => 40,
       '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
-      '#field_prefix' => _url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => $this->url('<none>', [], ['absolute' => TRUE]),
     );
 
     return parent::buildForm($form, $form_state);

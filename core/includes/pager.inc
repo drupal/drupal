@@ -211,15 +211,13 @@ function template_preprocess_pager(&$variables) {
   }
   // End of generation loop preparation.
 
-  $current_path = current_path();
-
   // Create the "first" and "previous" links if we are not on the first page.
   if ($pager_page_array[$element] > 0) {
     $items['first'] = array();
     $options = array(
       'query' => pager_query_add_page($parameters, $element, 0),
     );
-    $items['first']['href'] = _url($current_path, $options);
+    $items['first']['href'] = \Drupal::url('<current>', [], $options);
     if (isset($tags[0])) {
       $items['first']['text'] = $tags[0];
     }
@@ -228,7 +226,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     );
-    $items['previous']['href'] = _url($current_path, $options);
+    $items['previous']['href'] = \Drupal::url('<current>', [], $options);
     if (isset($tags[1])) {
       $items['previous']['text'] = $tags[1];
     }
@@ -244,7 +242,7 @@ function template_preprocess_pager(&$variables) {
       $options = array(
         'query' => pager_query_add_page($parameters, $element, $i - 1),
       );
-      $items['pages'][$i]['href'] = _url($current_path, $options);
+      $items['pages'][$i]['href'] = \Drupal::url('<current>', [], $options);
       if ($i == $pager_current) {
         $variables['current'] = $i;
       }
@@ -261,7 +259,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     );
-    $items['next']['href'] = _url($current_path, $options);
+    $items['next']['href'] = \Drupal::url('<current>', [], $options);
     if (isset($tags[3])) {
       $items['next']['text'] = $tags[3];
     }
@@ -270,7 +268,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_max - 1),
     );
-    $items['last']['href'] = _url($current_path, $options);
+    $items['last']['href'] = \Drupal::url('<current>', [], $options);
     if (isset($tags[4])) {
       $items['last']['text'] = $tags[4];
     }

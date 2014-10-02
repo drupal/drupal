@@ -101,6 +101,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    */
   public function getPathFromRoute($name, $parameters = array()) {
     $route = $this->getRoute($name);
+    $this->processRoute($name, $route, $parameters);
     $path = $this->getInternalPathFromRoute($route, $parameters);
     // Router-based paths may have a querystring on them but Drupal paths may
     // not have one, so remove any ? and anything after it. For generate() this
@@ -358,7 +359,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     if ($name instanceof SymfonyRoute) {
       $route = $name;
     }
-    elseif (NULL === $route = $this->provider->getRouteByName($name)) {
+    elseif (NULL === $route = clone $this->provider->getRouteByName($name)) {
       throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
     }
     return $route;

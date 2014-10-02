@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
@@ -37,6 +38,8 @@ use Drupal\views\Plugin\views\wizard\WizardInterface;
  * base table.
  */
 abstract class WizardPluginBase extends PluginBase implements WizardInterface {
+
+  use UrlGeneratorTrait;
 
   /**
    * The base table connected with the wizard.
@@ -218,7 +221,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $style_options = Views::fetchPluginNames('style', 'normal', array($this->base_table));
     $feed_row_options = Views::fetchPluginNames('row', 'feed', array($this->base_table));
-    $path_prefix = _url(NULL, array('absolute' => TRUE));
+    $path_prefix = $this->url('<none>', [], ['absolute' => TRUE]);
 
     // Add filters and sorts which apply to the view as a whole.
     $this->buildFilters($form, $form_state);
