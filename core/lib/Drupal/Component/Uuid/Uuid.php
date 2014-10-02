@@ -13,6 +13,11 @@ namespace Drupal\Component\Uuid;
 class Uuid {
 
   /**
+   * The pattern used to validate a UUID string.
+   */
+  const VALID_PATTERN = '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}';
+
+  /**
    * Checks that a string appears to be in the format of a UUID.
    *
    * Implementations should not implement validation, since UUIDs should be in
@@ -25,7 +30,7 @@ class Uuid {
    *   TRUE if the string is well formed, FALSE otherwise.
    */
   public static function isValid($uuid) {
-    return (bool) preg_match("/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/", $uuid);
+    return (bool) preg_match('/^' . self::VALID_PATTERN . '$/', $uuid);
   }
 
 }
