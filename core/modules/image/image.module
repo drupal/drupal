@@ -281,15 +281,13 @@ function template_preprocess_image_style(&$variables) {
 
   $style->transformDimensions($dimensions);
 
-  // Add in the image style name as an HTML class.
-  $variables['attributes']['class'][] = 'image-style-' . drupal_html_class($variables['style_name']);
-
   $variables['image'] = array(
     '#theme' => 'image',
     '#width' => $dimensions['width'],
     '#height' => $dimensions['height'],
     '#attributes' => $variables['attributes'],
     '#uri' => $style->buildUrl($variables['uri']),
+    '#style_name' => $variables['style_name'],
   );
 
   if (isset($variables['alt']) || array_key_exists('alt', $variables)) {
