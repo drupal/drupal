@@ -75,7 +75,7 @@ class FilterEntityBundleTest extends ViewTestBase {
     // Test we have all the results, with all types selected.
     $this->assertEqual(count($view->result), $this->entities['count']);
 
-    // Test the value_options of the filter handler.
+    // Test the valueOptions of the filter handler.
     $expected = array();
 
     foreach ($this->entityBundles as $key => $info) {

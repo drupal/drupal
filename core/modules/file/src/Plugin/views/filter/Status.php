@@ -19,8 +19,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
 class Status extends InOperator {
 
   public function getValueOptions() {
-    if (!isset($this->value_options)) {
-      $this->value_options = _views_file_status();
+    if (!isset($this->valueOptions)) {
+      $this->valueOptions = _views_file_status();
     }
   }
 

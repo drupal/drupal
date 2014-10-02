@@ -348,14 +348,14 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   public function adminSummary() {
-    // set up $this->value_options for the parent summary
-    $this->value_options = array();
+    // set up $this->valueOptions for the parent summary
+    $this->valueOptions = array();
 
     if ($this->value) {
       $this->value = array_filter($this->value);
       $terms = Term::loadMultiple($this->value);
       foreach ($terms as $term) {
-        $this->value_options[$term->id()] = String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
+        $this->valueOptions[$term->id()] = String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
       }
     }
     return parent::adminSummary();

@@ -60,18 +60,18 @@ class Permissions extends ManyToOne {
   }
 
   public function getValueOptions() {
-    if (!isset($this->value_options)) {
+    if (!isset($this->valueOptions)) {
       $module_info = system_get_info('module');
 
       $permissions = $this->permissionHandler->getPermissions();
       foreach ($permissions as $perm => $perm_item) {
         $provider = $perm_item['provider'];
         $display_name = $module_info[$provider]['name'];
-        $this->value_options[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
+        $this->valueOptions[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
       }
     }
     else {
-      return $this->value_options;
+      return $this->valueOptions;
     }
   }
 

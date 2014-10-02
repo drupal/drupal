@@ -48,9 +48,9 @@ class Bundle extends InOperator {
    * Overrides \Drupal\views\Plugin\views\filter\InOperator::getValueOptions().
    */
   public function getValueOptions() {
-    if (!isset($this->value_options)) {
+    if (!isset($this->valueOptions)) {
       $types = entity_get_bundles($this->entityTypeId);
-      $this->value_title = $this->t('@entity types', array('@entity' => $this->entityType->getLabel()));
+      $this->valueTitle = $this->t('@entity types', array('@entity' => $this->entityType->getLabel()));
 
       $options = array();
       foreach ($types as $type => $info) {
@@ -58,10 +58,10 @@ class Bundle extends InOperator {
       }
 
       asort($options);
-      $this->value_options = $options;
+      $this->valueOptions = $options;
     }
 
-    return $this->value_options;
+    return $this->valueOptions;
   }
 
   /**

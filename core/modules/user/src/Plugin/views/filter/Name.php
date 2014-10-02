@@ -149,17 +149,17 @@ class Name extends InOperator {
   public function getValueOptions() { }
 
   public function adminSummary() {
-    // set up $this->value_options for the parent summary
-    $this->value_options = array();
+    // set up $this->valueOptions for the parent summary
+    $this->valueOptions = array();
 
     if ($this->value) {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
         if ($account->id()) {
-          $this->value_options[$account->id()] = $account->label();
+          $this->valueOptions[$account->id()] = $account->label();
         }
         else {
-          $this->value_options[$account->id()] = 'Anonymous'; // Intentionally NOT translated.
+          $this->valueOptions[$account->id()] = 'Anonymous'; // Intentionally NOT translated.
         }
       }
     }
