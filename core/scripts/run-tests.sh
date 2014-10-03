@@ -16,7 +16,9 @@ $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
 const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33; // Brown.
-const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 500;
+
+// Restricting the chunk of queries prevents memory exhaustion.
+const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 350;
 
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
