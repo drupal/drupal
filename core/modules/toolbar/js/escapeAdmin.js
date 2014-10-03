@@ -28,11 +28,14 @@
   Drupal.behaviors.escapeAdmin = {
     attach: function () {
       var $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
-      if ($toolbarEscape.length) {
-        if (pathInfo.currentPathIsAdmin && escapeAdminPath !== null) {
+      if ($toolbarEscape.length && pathInfo.currentPathIsAdmin) {
+        if (escapeAdminPath !== null) {
           $toolbarEscape.attr('href', escapeAdminPath);
-          $toolbarEscape.closest('.toolbar-tab').removeClass('hidden');
         }
+        else {
+          $toolbarEscape.text(Drupal.t('Home'));
+        }
+        $toolbarEscape.closest('.toolbar-tab').removeClass('hidden');
       }
     }
   };
