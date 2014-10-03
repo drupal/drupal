@@ -140,7 +140,7 @@ class DbLogController extends ControllerBase {
       $this->t('Message'),
       array(
         'data' => $this->t('User'),
-        'field' => 'u.name',
+        'field' => 'ufd.name',
         'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
       array(
         'data' => $this->t('Operations'),
@@ -160,6 +160,7 @@ class DbLogController extends ControllerBase {
       'variables',
       'link',
     ));
+    $query->leftJoin('users_field_data', 'ufd', 'w.uid = ufd.uid');
 
     if (!empty($filter['where'])) {
       $query->where($filter['where'], $filter['args']);

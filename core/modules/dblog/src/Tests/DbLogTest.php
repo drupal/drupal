@@ -65,6 +65,14 @@ class DbLogTest extends WebTestBase {
     $this->verifyEvents();
     $this->verifyReports();
     $this->verifyBreadcrumbs();
+    // Verify the overview table sorting.
+    $orders = array('Date', 'Type', 'User');
+    $sorts = array('asc', 'desc');
+    foreach ($orders as $order) {
+      foreach ($sorts as $sort) {
+        $this->verifySort($sort, $order);
+      }
+    }
 
     // Login the regular user.
     $this->drupalLogin($this->any_user);
@@ -215,6 +223,20 @@ class DbLogTest extends WebTestBase {
     // When a user account is canceled, any content they created remains but the
     // uid = 0. Records in the watchdog table related to that user have the uid
     // set to zero.
+  }
+
+  /**
+   * Verifies the sorting functionality of the database logging reports table.
+   *
+   * @param string $sort
+   *   The sort direction.
+   * @param string $order
+   *   The order by which the table should be sorted.
+   */
+  public function verifySort($sort = 'asc', $order = 'Date') {
+    $this->drupalGet('admin/reports/dblog', array('query' => array('sort' => $sort, 'order' => $order)));
+    $this->assertResponse(200);
+    $this->assertText(t('Recent log messages'), 'DBLog report was displayed correctly and sorting went fine.');
   }
 
   /**
