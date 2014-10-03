@@ -122,6 +122,8 @@
  */
 .dropbutton-single .dropbutton-widget {
   border: 0;
+  position: static;
+  display: inline-block;
 }
 .dropbutton-single .dropbutton-action a {
   padding: 4px 1.5em;

@@ -38,7 +38,7 @@ tbody tr:hover {
 }
 td,
 th {
-  vertical-align: top;
+  vertical-align: middle;
 }
 td {
   padding: 10px 12px;
