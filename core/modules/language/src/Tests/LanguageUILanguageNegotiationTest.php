@@ -403,12 +403,23 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
+    // Do not allow blank domain.
+    $edit = array(
+      'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => '',
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
+    $this->rebuildContainer();
+
     // Change the domain for the Italian language.
     $edit = array(
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => gethostname(),
       'domain[it]' => 'it.example.com',
     );
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
     $this->rebuildContainer();
 
     // Build the link we're going to test.

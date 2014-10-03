@@ -101,6 +101,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $language_domain = 'example.fr';
     $edit = array(
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => gethostname(),
       'domain[fr]' => $language_domain
     );
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));

@@ -59,7 +59,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#tree' => TRUE,
       '#title' => $this->t('Domain configuration'),
       '#open' => TRUE,
-      '#description' => $this->t('The domain names to use for these languages. Leave blank for the default language. Use with caution in a production environment.<strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
+      '#description' => $this->t('The domain names to use for these languages. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
       '#states' => array(
         'visible' => array(
           ':input[name="language_negotiation_url_part"]' => array(
@@ -130,10 +130,10 @@ class NegotiationUrlForm extends ConfigFormBase {
       $value = $form_state->getValue(array('domain', $langcode));
 
       if ($value === '') {
-        if (!$language->isDefault() && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
+        if ($form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
-          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may only be left blank for the default language.'));
+          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may not be left blank for %language.', array('%language' => $language->name)));
         }
       }
       elseif (isset($count[$value]) && $count[$value] > 1) {
