@@ -38,12 +38,25 @@
   margin: 0;
 }
 .filter-help a {
-  background: transparent url(../../../misc/help.png) right center no-repeat; /* LTR */
-  padding: 0 20px 0 0; /* LTR */
+  position: relative;
+  margin: 0 20px 0 0; /* LTR */
 }
 [dir="rtl"] .filter-help a {
-  background-position: left center;
-  padding: 0 0 0 20px;
+  margin: 0 0 0 20px;
+}
+.filter-help a:after {
+  position: absolute;
+  top: 0;
+  right: -20px; /* LTR */
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: transparent url(../../../misc/help.png);
+}
+[dir="rtl"] .filter-help a:after {
+  right: auto;
+  left: -20px;
 }
 
 .text-format-wrapper .description {
