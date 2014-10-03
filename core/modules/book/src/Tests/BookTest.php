@@ -96,6 +96,21 @@ class BookTest extends WebTestBase {
   }
 
   /**
+   * Tests saving the book outline on an empty book.
+   */
+  function testEmptyBook() {
+    // Create a new empty book.
+    $this->drupalLogin($this->book_author);
+    $book = $this->createBookNode('new');
+    $this->drupalLogout();
+
+    // Log in as a user with access to the book outline and save the form.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPostForm('admin/structure/book/' . $book->id(), array(), t('Save book pages'));
+    $this->assertText(t('Updated book @book.', array('@book' => $book->label())));
+  }
+
+  /**
    * Tests book functionality through node interfaces.
    */
   function testBook() {

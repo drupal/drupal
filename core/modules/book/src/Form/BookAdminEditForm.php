@@ -97,31 +97,33 @@ class BookAdminEditForm extends FormBase {
     // Save elements in the same order as defined in post rather than the form.
     // This ensures parents are updated before their children, preventing orphans.
     $user_input = $form_state->getUserInput();
-    $order = array_flip(array_keys($user_input['table']));
-    $form['table'] = array_merge($order, $form['table']);
+    if (isset($user_input['table'])) {
+      $order = array_flip(array_keys($user_input['table']));
+      $form['table'] = array_merge($order, $form['table']);
 
-    foreach (Element::children($form['table']) as $key) {
-      if ($form['table'][$key]['#item']) {
-        $row = $form['table'][$key];
-        $values = $form_state->getValue(array('table', $key));
+      foreach (Element::children($form['table']) as $key) {
+        if ($form['table'][$key]['#item']) {
+          $row = $form['table'][$key];
+          $values = $form_state->getValue(array('table', $key));
 
-        // Update menu item if moved.
-        if ($row['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
-          $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
-          $link['weight'] = $values['weight'];
-          $link['pid'] = $values['pid'];
-          $this->bookManager->saveBookLink($link, FALSE);
-        }
+          // Update menu item if moved.
+          if ($row['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
+            $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
+            $link['weight'] = $values['weight'];
+            $link['pid'] = $values['pid'];
+            $this->bookManager->saveBookLink($link, FALSE);
+          }
 
-        // Update the title if changed.
-        if ($row['title']['#default_value'] != $values['title']) {
-          $node = $this->nodeStorage->load($values['nid']);
-          $node->revision_log = $this->t('Title changed from %original to %current.', array('%original' => $node->label(), '%current' => $values['title']));
-          $node->title = $values['title'];
-          $node->book['link_title'] = $values['title'];
-          $node->setNewRevision();
-          $node->save();
-          $this->logger('content')->notice('book: updated %title.', array('%title' => $node->label(), 'link' => $node->link($this->t('View'))));
+          // Update the title if changed.
+          if ($row['title']['#default_value'] != $values['title']) {
+            $node = $this->nodeStorage->load($values['nid']);
+            $node->revision_log = $this->t('Title changed from %original to %current.', array('%original' => $node->label(), '%current' => $values['title']));
+            $node->title = $values['title'];
+            $node->book['link_title'] = $values['title'];
+            $node->setNewRevision();
+            $node->save();
+            $this->logger('content')->notice('book: updated %title.', array('%title' => $node->label(), 'link' => $node->link($this->t('View'))));
+          }
         }
       }
     }
