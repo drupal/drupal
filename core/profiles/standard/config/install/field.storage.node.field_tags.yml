@@ -15,7 +15,7 @@ indexes:
   target_id:
     - target_id
 status: true
-langcode: und
+langcode: en
 dependencies:
   module:
     - node

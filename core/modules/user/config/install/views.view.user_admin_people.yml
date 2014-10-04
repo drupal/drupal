@@ -895,7 +895,7 @@ label: People
 module: user
 id: user_admin_people
 tag: default
-langcode: und
+langcode: en
 dependencies:
   module:
     - user

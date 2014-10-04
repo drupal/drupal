@@ -10,7 +10,7 @@ default_value: {  }
 default_value_callback: ''
 settings: {  }
 status: true
-langcode: und
+langcode: en
 dependencies:
   entity:
     - field.storage.node.field_tags
