@@ -39,7 +39,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
    */
   public function testAggregatorFeedImport() {
     /** @var Feed $feed */
-    $feed = entity_load('aggregator_feed', 5);
+    $feed = Feed::load(5);
     $this->assertNotNull($feed->uuid());
     $this->assertEqual($feed->title->value, 'Know Your Meme');
     $this->assertEqual($feed->language()->id, 'en');

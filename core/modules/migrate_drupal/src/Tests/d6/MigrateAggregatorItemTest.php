@@ -59,7 +59,7 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
    */
   public function testAggregatorItem() {
     /** @var Item $item */
-    $item = entity_load('aggregator_item', 1);
+    $item = Item::load(1);
     $this->assertEqual($item->id(), 1);
     $this->assertEqual($item->getFeedId(), 5);
     $this->assertEqual($item->label(), 'This (three) weeks in Drupal Core - January 10th 2014');
