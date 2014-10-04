@@ -65,16 +65,16 @@ class EntityReferenceItem extends FieldItemBase {
       // @todo: Lookup the entity type's ID data type and use it here.
       // https://drupal.org/node/2107249
       $target_id_definition = DataDefinition::create('integer')
-        ->setLabel(t('Entity ID'))
+        ->setLabel(t('@label ID', array($target_type_info->getLabel())))
         ->setSetting('unsigned', TRUE);
     }
     else {
       $target_id_definition = DataDefinition::create('string')
-        ->setLabel(t('Entity ID'));
+        ->setLabel(t('@label ID', array($target_type_info->getLabel())));
     }
     $properties['target_id'] = $target_id_definition;
     $properties['entity'] = DataReferenceDefinition::create('entity')
-      ->setLabel(t('Entity'))
+      ->setLabel($target_type_info->getLabel())
       ->setDescription(t('The referenced entity'))
       // The entity object is computed out of the entity ID.
       ->setComputed(TRUE)

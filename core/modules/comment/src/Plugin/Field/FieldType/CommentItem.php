@@ -55,7 +55,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['status'] = DataDefinition::create('integer')
-      ->setLabel(t('Comment status value'));
+      ->setLabel(t('Comment status'));
 
     $properties['cid'] = DataDefinition::create('integer')
       ->setLabel(t('Last comment ID'));
