@@ -495,3 +495,39 @@ function hook_themes_uninstalled(array $themes) {
     \Drupal::state()->delete('example.' . $theme);
   }
 }
+
+/**
+ * Declare a template file extension to be used with a theme engine.
+ *
+ * This hook is used in a theme engine implementation in the format of
+ * ENGINE_extension().
+ *
+ * @return string
+ *   The file extension the theme engine will recognize.
+ */
+function hook_extension() {
+  // Extension for template base names in Twig.
+  return '.html.twig';
+}
+
+/**
+ * Render a template using the theme engine.
+ *
+ * @param string $template_file
+ *   The path (relative to the Drupal root directory) to the template to be
+ *   rendered including its extension in the format 'path/to/TEMPLATE_NAME.EXT'.
+ * @param array $variables
+ *   A keyed array of variables that are available for composing the output. The
+ *   theme engine is responsible for passing all the variables to the template.
+ *   Depending on the code in the template, all or just a subset of the
+ *   variables might be used in the template.
+ *
+ * @return string
+ *   The output generated from the template. In most cases this will be a string
+ *   containing HTML markup.
+ */
+function hook_render_template($template_file, $variables) {
+  $twig_service = \Drupal::service('twig');
+
+  return $twig_service->loadTemplate($template_file)->render($variables);
+}

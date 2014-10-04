@@ -31,6 +31,8 @@ function phptemplate_extension() {
 }
 
 /**
+ * Implements hook_render_template().
+ *
  * Renders a system default template, which is essentially a PHP template.
  *
  * @param $template_file
