@@ -52,6 +52,11 @@ interface LanguageInterface {
   const LANGCODE_DEFAULT = 'x-default';
 
   /**
+   * Language code referring to site's default language.
+   */
+  const LANGCODE_SITE_DEFAULT = 'site_default';
+
+  /**
    * The language state when referring to configurable languages.
    */
   const STATE_CONFIGURABLE = 1;

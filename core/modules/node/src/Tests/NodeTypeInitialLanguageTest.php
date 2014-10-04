@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\LanguageInterface;
+
 /**
  * Tests node type initial language settings.
  *
@@ -36,7 +38,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    */
   function testNodeTypeInitialLanguageDefaults() {
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertOptionSelected('edit-language-configuration-langcode', 'site_default', 'The default initial language is the site default.');
+    $this->assertOptionSelected('edit-language-configuration-langcode', LanguageInterface::LANGCODE_SITE_DEFAULT, 'The default initial language is the site default.');
     $this->assertNoFieldChecked('edit-language-configuration-language-show', 'Language selector is hidden by default.');
 
     // Tests if the language field cannot be rearranged on the manage fields tab.

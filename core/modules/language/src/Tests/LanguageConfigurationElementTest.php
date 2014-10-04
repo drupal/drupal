@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -86,7 +87,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertTrue($configurable_language->isDefault(), 'The en language entity is flagged as the default language.');
 
     \Drupal::config('system.site')->set('langcode', 'cc')->save();
-    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'site_default', 'language_show' => TRUE));
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => LanguageInterface::LANGCODE_SITE_DEFAULT, 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
     $this->assertEqual($langcode, 'cc');
 

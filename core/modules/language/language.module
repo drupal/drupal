@@ -232,7 +232,7 @@ function language_get_default_configuration($entity_type, $bundle) {
   if (is_null($configuration)) {
     $configuration = array();
   }
-  $configuration += array('langcode' => 'site_default', 'language_show' => FALSE);
+  $configuration += array('langcode' => LanguageInterface::LANGCODE_SITE_DEFAULT, 'language_show' => FALSE);
   return $configuration;
 }
 
@@ -294,13 +294,13 @@ function language_get_default_langcode($entity_type, $bundle) {
   $configuration = language_get_default_configuration($entity_type, $bundle);
 
   if (!isset($configuration['langcode'])) {
-    $configuration['langcode'] = 'site_default';
+    $configuration['langcode'] = LanguageInterface::LANGCODE_SITE_DEFAULT;
   }
 
   $default_value = NULL;
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   switch ($configuration['langcode']) {
-    case 'site_default':
+    case LanguageInterface::LANGCODE_SITE_DEFAULT:
       $default_value = \Drupal::languageManager()->getDefaultLanguage()->id;
       break;
 

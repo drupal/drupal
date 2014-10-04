@@ -52,6 +52,13 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   const INCLUDE_NEGOTIATED = 16;
 
   /**
+   * Query string to indicate the site default language.
+   *
+   * @see \Drupal\Core\Language\LanguageInterface::LANGCODE_DEFAULT
+   */
+  const VIEWS_QUERY_LANGUAGE_SITE_DEFAULT = '***LANGUAGE_site_default***';
+
+  /**
    * Options for this plugin will be held here.
    *
    * @var array
@@ -409,13 +416,13 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     $list = array();
 
     // The Language Manager class takes care of the STATE_SITE_DEFAULT case.
-    // It comes in with ID set to 'site_default'. Since this is not a real
-    // language, surround it by '***LANGUAGE_...***', like the negotiated
-    // languages below.
+    // It comes in with ID set to LanguageInterface::LANGCODE_SITE_DEFAULT.
+    // Since this is not a real language, surround it by '***LANGUAGE_...***',
+    // like the negotiated languages below.
     $languages = $manager->getLanguages($flags);
     foreach ($languages as $id => $language) {
-      if ($id == 'site_default') {
-        $id = '***LANGUAGE_' . $id . '***';
+      if ($id == LanguageInterface::LANGCODE_SITE_DEFAULT) {
+        $id = PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT;
       }
       $list[$id] = $this->t($language->name);
     }
@@ -455,7 +462,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
 
     // Handle default language.
     $default = $manager->getDefaultLanguage()->id;
-    $changes['***LANGUAGE_site_default***'] = $default;
+    $changes[PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT] = $default;
 
     // Handle negotiated languages.
     $types = $manager->getDefinedLanguageTypesInfo();

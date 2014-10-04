@@ -747,7 +747,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
     $default = isset($default) ? $default : \Drupal::languageManager()->getDefaultLanguage();
     // Rename the default language.
     $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
-    $filtered_languages['site_default'] = $default;
+    $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
   }
 
   foreach ($languages as $langcode => $language) {

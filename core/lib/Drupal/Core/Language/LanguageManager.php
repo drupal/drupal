@@ -150,7 +150,7 @@ class LanguageManager implements LanguageManagerInterface {
       // if we're acting on a global object, so clone the object first.
       $default = clone $default;
       $default->name = $this->t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
-      $filtered_languages['site_default'] = $default;
+      $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
     }
 
     foreach ($this->languages as $id => $language) {
