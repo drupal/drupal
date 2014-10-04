@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
 class BasicAuthTest extends WebTestBase {
 
   /**
-   * Modules enabled for all tests.
+   * Modules installed for all tests.
    *
    * @var array
    */
