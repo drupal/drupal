@@ -13,8 +13,8 @@ use Drupal\Core\Executable\ExecutableInterface;
 /**
  * Provides an interface for an Action plugin.
  *
- * WARNING: The action API is going to receive some additions before release.
- * The following additions are likely to happen:
+ * @todo WARNING: The action API is going to receive some additions before
+ * release. The following additions are likely to happen:
  *  - The way configuration is handled and configuration forms are built is
  *    likely to change in order for the plugin to be of use for Rules.
  *  - Actions are going to become context-aware in
