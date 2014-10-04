@@ -106,7 +106,7 @@ class FilterCaption extends FilterBase {
         </ul>');
     }
     else {
-      return $this->t('You can caption images (<code>data-caption="Text"<code>), but also videos, blockquotes, and so on.');
+      return $this->t('You can caption images (<code>data-caption="Text"</code>), but also videos, blockquotes, and so on.');
     }
   }
 

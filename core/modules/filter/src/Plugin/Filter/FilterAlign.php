@@ -66,7 +66,7 @@ class FilterAlign extends FilterBase {
         </ul>');
     }
     else {
-      return $this->t('You can align images (<code>data-align="center"</code>code>), but also videos, blockquotes, and so on.');
+      return $this->t('You can align images (<code>data-align="center"</code>), but also videos, blockquotes, and so on.');
     }
   }
 
