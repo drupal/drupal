@@ -894,7 +894,7 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
  * @see theme_status_messages()
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
-  if ($message) {
+  if (isset($message)) {
     if (!isset($_SESSION['messages'][$type])) {
       $_SESSION['messages'][$type] = array();
     }
