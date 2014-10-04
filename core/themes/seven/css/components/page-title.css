@@ -13,6 +13,3 @@
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
 }
-[dir="rtl"] #branding h1.page-title {
-  float: right;
-}
