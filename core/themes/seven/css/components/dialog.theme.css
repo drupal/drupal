@@ -11,7 +11,7 @@
   padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar {
-  background: rgba(107,107,107,0.65);
+  background: #6b6b6b;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   padding: 15px 49px 15px 15px;
