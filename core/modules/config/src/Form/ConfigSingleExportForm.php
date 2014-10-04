@@ -155,7 +155,7 @@ class ConfigSingleExportForm extends FormBase {
     }
     // Read the raw data for this config name, encode it, and display it.
     $form['export']['#value'] = Yaml::encode($this->configStorage->read($name));
-    $form['export']['#description'] = $this->t('The filename is %name.', array('%name' => $name . '.yml'));
+    $form['export']['#description'] = $this->t('Filename: %name', array('%name' => $name . '.yml'));
     return $form['export'];
   }
 
