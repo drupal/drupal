@@ -95,7 +95,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
 5. Re-apply any modifications to files such as .htaccess or robots.txt.
 
-6. Run update.php by visiting http://www.example.com/core/update.php (replace
+6. Run update.php by visiting http://www.example.com/update.php (replace
    www.example.com with your domain name). This will update the core database
    tables.
 

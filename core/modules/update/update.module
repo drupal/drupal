@@ -615,7 +615,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   // Make sure this isn't a tarball of Drupal core.
   if (
     file_exists("$directory/$project/index.php")
-    && file_exists("$directory/$project/core/update.php")
+    && file_exists("$directory/$project/core/install.php")
     && file_exists("$directory/$project/core/includes/bootstrap.inc")
     && file_exists("$directory/$project/core/modules/node/node.module")
     && file_exists("$directory/$project/core/modules/system/system.module")

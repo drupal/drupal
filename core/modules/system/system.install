@@ -448,7 +448,7 @@ function system_requirements($phase) {
         if (max($updates) > $default) {
           $requirements['update']['severity'] = REQUIREMENT_ERROR;
           $requirements['update']['value'] = t('Out of date');
-          $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'core/update.php'));
+          $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
           break;
         }
       }
@@ -456,7 +456,7 @@ function system_requirements($phase) {
     if (!isset($requirements['update']['severity']) && \Drupal::service('entity.definition_update_manager')->needsUpdates()) {
       $requirements['update']['severity'] = REQUIREMENT_ERROR;
       $requirements['update']['value'] = t('Out of date');
-      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'update.php'));
+      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
     }
   }
 
