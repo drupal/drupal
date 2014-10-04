@@ -125,14 +125,14 @@ class Tid extends ArgumentDefaultPluginBase {
   public function getArgument() {
     // Load default argument from taxonomy page.
     if (!empty($this->options['term_page'])) {
-      if (($taxonomy_term = $this->request->attributes->get('taxonomy_term')) && $taxonomy_term instanceof TermInterface) {
+      if (($taxonomy_term = $this->view->getRequest()->attributes->get('taxonomy_term')) && $taxonomy_term instanceof TermInterface) {
         return $taxonomy_term->id();
       }
     }
     // Load default argument from node.
     if (!empty($this->options['node'])) {
       // Just check, if a node could be detected.
-      if (($node = $this->view->getRequest()->attributes->has('node')) && $node instanceof NodeInterface) {
+      if (($node = $this->view->getRequest()->attributes->get('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
         foreach ($node->getFieldDefinitions() as $field) {
           if ($field->getType() == 'taxonomy_term_reference') {
