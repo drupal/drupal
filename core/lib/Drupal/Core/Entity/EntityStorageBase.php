@@ -335,7 +335,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   public function delete(array $entities) {
     if (!$entities) {
-      // If no IDs or invalid IDs were passed, do nothing.
+      // If no entities were passed, do nothing.
       return;
     }
 
