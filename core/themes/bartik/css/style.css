@@ -46,6 +46,22 @@ h1 {
 h2 {
   font-size: 1.143em;
 }
+h3 {
+  font-size: 1.092em;
+}
+h4 {
+  font-size: 1.05em;
+}
+h5 {
+  font-size: 0.889em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+h6 {
+  font-size: 0.67em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
 p {
   margin: 0 0 1.2em;
 }
