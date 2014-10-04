@@ -28,6 +28,11 @@ main:after {
   position: relative;
 }
 
+details,
+summary {
+  display: block;
+}
+
 @media all and (min-width: 480px) and (max-width: 959px) {
   .layout-content {
     width: 67%;
