@@ -1476,6 +1476,7 @@ input.form-color,
 textarea.form-textarea,
 select.form-select {
   border: 1px solid #ccc;
+  color: #3b3b3b;
 }
 input.form-submit:hover,
 input.form-submit:focus {
