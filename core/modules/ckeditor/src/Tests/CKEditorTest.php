@@ -7,7 +7,7 @@
 
 namespace Drupal\ckeditor\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\editor\Plugin\EditorManager;
 use Drupal\ckeditor\Plugin\Editor\CKEditor;
 
@@ -16,7 +16,7 @@ use Drupal\ckeditor\Plugin\Editor\CKEditor;
  *
  * @group ckeditor
  */
-class CKEditorTest extends DrupalUnitTestBase {
+class CKEditorTest extends KernelTestBase {
 
   /**
    * Modules to enable.
