@@ -123,7 +123,7 @@ field.image.value:
           label: 'File ID'
         alt:
           type: string
-          label: 'Alternate text'
+          label: 'Alternative text'
         title:
           type: string
           label: 'Title text'

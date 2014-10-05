@@ -221,7 +221,7 @@ class ImageWidget extends FileWidget {
 
     // Add the additional alt and title fields.
     $element['alt'] = array(
-      '#title' => t('Alternate text'),
+      '#title' => t('Alternative text'),
       '#type' => 'textfield',
       '#default_value' => isset($item['alt']) ? $item['alt'] : '',
       '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),

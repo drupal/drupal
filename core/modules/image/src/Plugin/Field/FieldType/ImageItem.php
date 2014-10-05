@@ -411,7 +411,7 @@ class ImageItem extends FileItem {
     );
     $element['default_image']['alt'] = array(
       '#type' => 'textfield',
-      '#title' => t('Alternate text'),
+      '#title' => t('Alternative text'),
       '#description' => t('This text will be used by screen readers, search engines, and when the image cannot be loaded.'),
       '#default_value' => $settings['default_image']['alt'],
       '#maxlength' => 512,

@@ -231,7 +231,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $schema = $field->getFieldStorageDefinition()->getSchema();
-    $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
+    $this->assertRaw(t('Alternative text cannot be longer than %max characters but is currently %length characters long.', array(
       '%max' => $schema['columns']['alt']['length'],
       '%length' => $test_size,
     )));
