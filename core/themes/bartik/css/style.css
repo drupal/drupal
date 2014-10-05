@@ -669,13 +669,13 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu l
 /* --------------- Secondary Menu ------------ */
 
 .region-secondary-menu .menu {
-  float: right; /* LTR */
+  text-align: right; /* LTR */
   font-size: 0.929em;
   margin: 0 10px;
   padding: 0;
 }
 [dir="rtl"] .region-secondary-menu .menu {
-  float: left;
+  text-align: left;
 }
 .region-secondary-menu .menu li {
   margin: 0;

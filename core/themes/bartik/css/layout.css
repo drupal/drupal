@@ -35,7 +35,6 @@ body,
 .region-secondary-menu .block-menu {
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
 }
 #main-wrapper {
   min-height: 300px;
