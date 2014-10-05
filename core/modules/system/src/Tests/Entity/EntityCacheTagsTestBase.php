@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Provides helper methods for Entity cache tags tests.
@@ -53,7 +54,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Give anonymous users permission to view test entities, so that we can
     // verify the cache tags of cached versions of test entity pages.
-    $user_role = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
+    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('view test entity');
     $user_role->save();
 

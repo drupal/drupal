@@ -9,6 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the Node entity's cache tags.
@@ -30,7 +31,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
     // Give anonymous users permission to view nodes, so that we can verify the
     // cache tags of cached versions of node pages.
-    $user_role = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
+    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('acess content');
     $user_role->save();
   }

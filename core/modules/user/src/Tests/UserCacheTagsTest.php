@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the User entity's cache tags.
@@ -29,7 +30,7 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
     // Give anonymous users permission to view user profiles, so that we can
     // verify the cache tags of cached versions of user profile pages.
-    $user_role = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
+    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('access user profiles');
     $user_role->save();
   }

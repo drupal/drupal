@@ -9,6 +9,7 @@ namespace Drupal\aggregator\Tests;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the Feed entity's cache tags.
@@ -35,7 +36,7 @@ class FeedCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
     // Give anonymous users permission to access feeds, so that we can verify
     // the cache tags of cached versions of feeds.
-    $user_role = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
+    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('access news feeds');
     $user_role->save();
   }

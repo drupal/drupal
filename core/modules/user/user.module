@@ -387,7 +387,7 @@ function user_role_permissions(array $roles) {
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
     return _user_role_permissions_update($roles);
   }
-  $entities = entity_load_multiple('user_role', $roles);
+  $entities = Role::loadMultiple($roles);
   $role_permissions = array();
   foreach ($roles as $rid) {
     $role_permissions[$rid] = isset($entities[$rid]) ? $entities[$rid]->getPermissions() : array();
@@ -1155,7 +1155,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     }
   }
 
-  $roles = entity_load_multiple('user_role');
+  $roles = Role::loadMultiple();
   if ($membersonly) {
     unset($roles[DRUPAL_ANONYMOUS_RID]);
   }
@@ -1245,7 +1245,7 @@ function user_role_change_permissions($rid, array $permissions = array()) {
  */
 function user_role_grant_permissions($rid, array $permissions = array()) {
   // Grant new permissions for the role.
-  $role = entity_load('user_role', $rid);
+  $role = Role::load($rid);
   foreach ($permissions as $permission) {
     $role->grantPermission($permission);
   }
@@ -1265,7 +1265,7 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
  */
 function user_role_revoke_permissions($rid, array $permissions = array()) {
   // Revoke permissions for the role.
-  $role = entity_load('user_role', $rid);
+  $role = Role::load($rid);
   foreach ($permissions as $permission) {
     $role->revokePermission($permission);
   }

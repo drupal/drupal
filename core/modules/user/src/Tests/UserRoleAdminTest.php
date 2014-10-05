@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests adding, editing and deleting user roles and changing role weights.
@@ -42,7 +43,7 @@ class UserRoleAdminTest extends WebTestBase {
     $edit = array('label' => $role_name, 'id' => $role_name);
     $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
     $this->assertRaw(t('Role %label has been added.', array('%label' => 123)));
-    $role = entity_load('user_role', $role_name);
+    $role = Role::load($role_name);
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
 
     // Check that the role was created in site default language.
@@ -57,7 +58,8 @@ class UserRoleAdminTest extends WebTestBase {
     $edit = array('label' => $role_name);
     $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
     $this->assertRaw(t('Role %label has been updated.', array('%label' => $role_name)));
-    $new_role = entity_load('user_role', $role->id(), TRUE);
+    \Drupal::entityManager()->getStorage('user_role')->resetCache(array($role->id()));
+    $new_role = Role::load($role->id());
     $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
@@ -66,7 +68,8 @@ class UserRoleAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
-    $this->assertFalse(entity_load('user_role', $role->id(), TRUE), 'A deleted role can no longer be loaded.');
+    \Drupal::entityManager()->getStorage('user_role')->resetCache(array($role->id()));
+    $this->assertFalse(Role::load($role->id()), 'A deleted role can no longer be loaded.');
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.
