@@ -842,12 +842,6 @@ function template_preprocess_views_view_list(&$variables) {
     $variables['list']['attributes'] = new Attribute(array('class' => $class));
   }
 
-  // Fetch wrapper classes from handler options.
-  if ($handler->options['wrapper_class']) {
-    $wrapper_class = explode(' ', $handler->options['wrapper_class']);
-    $variables['attributes']['class'] = array_map('drupal_clean_css_identifier', $wrapper_class);
-  }
-
   $variables['list']['type'] = $handler->options['type'];
 
   template_preprocess_views_view_unformatted($variables);

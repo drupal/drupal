@@ -4,7 +4,6 @@
  * Default theme implementation for a view template to display a list of rows.
  *
  * Available variables:
- * - attributes: HTML attributes for the container.
  * - rows: A list of rows for this list.
  *   - attributes: The row's HTML attributes.
  *   - content: The row's contents.
@@ -18,21 +17,14 @@
  * @ingroup themeable
  */
 #}
-{% if attributes -%}
-  <div{{ attributes }}>
+{% if title %}
+  <h3>{{ title }}</h3>
 {% endif %}
-  {% if title %}
-    <h3>{{ title }}</h3>
-  {% endif %}
 
-  <{{ list.type }}{{ list.attributes }}>
+<{{ list.type }}{{ list.attributes }}>
 
-    {% for row in rows %}
-      <li{{ row.attributes }}>{{ row.content }}</li>
-    {% endfor %}
+  {% for row in rows %}
+    <li{{ row.attributes }}>{{ row.content }}</li>
+  {% endfor %}
 
-  </{{ list.type }}>
-
-{% if attributes -%}
-  </div>
-{% endif %}
+</{{ list.type }}>

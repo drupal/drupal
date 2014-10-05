@@ -93,8 +93,8 @@ details.fieldset-no-legend {
 
 /* @group Lists */
 
-.views-admin ul.secondary,
-.views-admin .item-list ul {
+.views-admin ul,
+.views-admin ul.secondary {
   margin: 0;
   padding: 0;
 }

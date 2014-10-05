@@ -912,7 +912,7 @@ td.group-title {
   content: "\00A0\003E";
 }
 
-.views-ui-dialog details .item-list {
+.views-ui-dialog details ul {
   padding-left: 2em;
 }
 /* @end */
@@ -1059,11 +1059,11 @@ td.group-title {
 
 /* @group HTML list */
 
-#views-live-preview .view-content > .item-list > ul {
+#views-live-preview .view-content > ul {
   list-style-position: outside;
   padding-left: 21px; /* LTR */
 }
-[dir="rtl"] #views-live-preview .view-content > .item-list > ul {
+[dir="rtl"] #views-live-preview .view-content > ul {
   padding-left: 0;
   padding-right: 21px;
 }

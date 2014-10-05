@@ -69,8 +69,8 @@ class UserAdminListingTest extends WebTestBase {
     foreach ($result as $account) {
       $name = (string) $account->td[0]->span;
       $roles = array();
-      if (isset($account->td[2]->div->ul)) {
-        foreach ($account->td[2]->div->ul->li as $element) {
+      if (isset($account->td[2]->ul)) {
+        foreach ($account->td[2]->ul->li as $element) {
           $roles[] = (string) $element;
         }
       }

@@ -326,11 +326,11 @@ ul.menu li {
 [dir="rtl"] .region-content ol {
   padding: 0 15px 0.25em 0;
 }
-.item-list ul li {
+li {
   margin: 0;
   padding: 0.2em 0.5em 0 0; /* LTR */
 }
-[dir="rtl"] .item-list ul li {
+[dir="rtl"] li {
   padding: 0.2em 0 0 0.5em;
 }
 ul.tips {
@@ -494,30 +494,30 @@ h1.site-name {
   margin: 0;
   padding: 0;
 }
-.region-header #block-user-login div.item-list,
+.region-header #block-user-login ul,
 .region-header #block-user-login div.description {
   font-size: 0.916em;
   margin: 0;
 }
-.region-header #block-user-login div.item-list {
+.region-header #block-user-login ul {
   clear: both;
 }
 .region-header #block-user-login div.description {
   display: inline;
 }
-.region-header #block-user-login .item-list ul {
+.region-header #block-user-login ul {
   padding: 0;
   line-height: 1;
 }
-.region-header #block-user-login .item-list li {
+.region-header #block-user-login li {
   list-style: none;
   float: left; /* LTR */
   padding: 3px 0 1px;
 }
-.region-header #block-user-login .item-list li:last-child {
+.region-header #block-user-login li:last-child {
   padding-left: 0.5em; /* LTR */
 }
-[dir="rtl"] .region-header #block-user-login .item-list li:last-child {
+[dir="rtl"] .region-header #block-user-login li:last-child {
   padding-left: 0;
   padding-right: 0.5em;
 }
@@ -559,7 +559,7 @@ h1.site-name {
 [dir="rtl"] .site-branding-text,
 [dir="rtl"] .region-header .block,
 [dir="rtl"] .region-header #block-user-login .form-item,
-[dir="rtl"] .region-header #block-user-login .item-list li {
+[dir="rtl"] .region-header #block-user-login li {
   float: right;
 }
 

@@ -45,7 +45,6 @@ display:
           row_class: ''
           default_row_class: true
           type: ul
-          wrapper_class: item-list
           class: ''
         provider: views
       row:

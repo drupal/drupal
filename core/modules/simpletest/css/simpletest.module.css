@@ -35,7 +35,7 @@ table#simpletest-form-table tr.simpletest-group label {
   display: inline;
 }
 
-div.message > div.item-list {
+div.message > ul {
   font-weight: normal;
 }
 

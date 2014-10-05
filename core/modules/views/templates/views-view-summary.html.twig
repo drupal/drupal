@@ -19,14 +19,12 @@
  * @ingroup themeable
  */
 #}
-<div class="item-list">
-  <ul class="views-summary">
-  {% for row in rows %}
-    <li><a href="{{ row.url }}"{{ row.attributes }}>{{ row.link }}</a>
-      {% if options.count %}
-        ({{ row.count }})
-      {% endif %}
-    </li>
-  {% endfor %}
-  </ul>
-</div>
+<ul class="views-summary">
+{% for row in rows %}
+  <li><a href="{{ row.url }}"{{ row.attributes }}>{{ row.link }}</a>
+    {% if options.count %}
+      ({{ row.count }})
+    {% endif %}
+  </li>
+{% endfor %}
+</ul>
