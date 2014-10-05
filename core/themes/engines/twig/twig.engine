@@ -59,7 +59,7 @@ function twig_render_template($template_file, $variables) {
   );
   if ($twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-    $output['debug_prefix'] .= "\n<!-- CALL: _theme('{$variables['theme_hook_original']}') -->";
+    $output['debug_prefix'] .= "\n<!-- THEME HOOK: '{$variables['theme_hook_original']}' -->";
     // If there are theme suggestions, reverse the array so more specific
     // suggestions are shown first.
     if (!empty($variables['theme_hook_suggestions'])) {
