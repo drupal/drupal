@@ -18,28 +18,6 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 interface EntityFormInterface extends BaseFormIdInterface {
 
   /**
-   * Returns the code identifying the active form language.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return string
-   *   The form language code.
-   */
-  public function getFormLangcode(FormStateInterface $form_state);
-
-  /**
-   * Checks whether the current form language matches the entity one.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return boolean
-   *   Returns TRUE if the entity form language matches the entity one.
-   */
-  public function isDefaultFormLangcode(FormStateInterface $form_state);
-
-  /**
    * Sets the operation for this form.
    *
    * @param string $operation

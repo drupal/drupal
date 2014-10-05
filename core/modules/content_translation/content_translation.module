@@ -7,7 +7,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -364,7 +364,7 @@ function content_translation_access(EntityInterface $entity, $op) {
  */
 function content_translation_form_alter(array &$form, FormStateInterface $form_state) {
   $form_object = $form_state->getFormObject();
-  if (!($form_object instanceof EntityFormInterface)) {
+  if (!($form_object instanceof ContentEntityFormInterface)) {
     return;
   }
   $entity = $form_object->getEntity();

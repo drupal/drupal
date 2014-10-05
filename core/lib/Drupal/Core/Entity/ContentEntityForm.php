@@ -135,4 +135,17 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     return $this;
   }
 
+  /**
+   * Updates the form language to reflect any change to the entity language.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function updateFormLangcode(FormStateInterface $form_state) {
+    // Update the form language as it might have changed.
+    if ($form_state->hasValue('langcode') && $this->isDefaultFormLangcode($form_state)) {
+      $form_state->set('langcode', $form_state->getValue('langcode'));
+    }
+  }
+
 }
