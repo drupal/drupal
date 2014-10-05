@@ -6,3 +6,4 @@ core: 8.x
 hidden: true
 dependencies:
   - locale
+keep_english: true

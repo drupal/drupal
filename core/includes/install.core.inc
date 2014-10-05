@@ -1566,7 +1566,9 @@ function install_download_additional_translations_operations(&$install_state) {
   if ($langcode != 'en') {
     \Drupal::config('system.site')->set('langcode', $langcode)->save();
     \Drupal::service('language.default')->set($language);
-    entity_delete_multiple('configurable_language', array('en'));
+    if (empty($install_state['profile_info']['keep_english'])) {
+      entity_delete_multiple('configurable_language', array('en'));
+    }
   }
 
   // If there is more than one language or the single one is not English, we
