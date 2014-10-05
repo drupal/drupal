@@ -72,6 +72,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove the translated values.
+    $this->entity = $this->entity->getUntranslated();
     $this->entity->removeTranslation($this->language->id);
     $this->entity->save();
 

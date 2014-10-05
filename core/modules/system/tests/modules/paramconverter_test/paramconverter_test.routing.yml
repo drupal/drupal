@@ -37,3 +37,10 @@ paramconverter_test.node_set_parent:
     parameters:
       parent:
         type: 'entity:node'
+
+paramconverter_test.node_check_language:
+  path: '/paramconverter_test/node/{node}/test_language'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _content: '\Drupal\paramconverter_test\TestControllers::testEntityLanguage'

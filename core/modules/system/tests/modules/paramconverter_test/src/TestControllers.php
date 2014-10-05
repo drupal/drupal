@@ -25,4 +25,8 @@ class TestControllers {
   public function testNodeSetParent(NodeInterface $node, NodeInterface $parent) {
     return "Setting '{$parent->label()}' as parent of '{$node->label()}'.";
   }
+
+  public function testEntityLanguage(NodeInterface $node) {
+    return $node->label();
+  }
 }
