@@ -116,7 +116,7 @@ function theme_authorize_report($variables) {
   $messages = $variables['messages'];
   $output = '';
   if (!empty($messages)) {
-    $output .= '<div id="authorize-results">';
+    $output .= '<div class="authorize-results">';
     foreach ($messages as $heading => $logs) {
       $items = array();
       foreach ($logs as $number => $log_message) {
@@ -158,10 +158,10 @@ function theme_authorize_message($variables) {
   $message = $variables['message'];
   $success = $variables['success'];
   if ($success) {
-    $item = array('data' => $message, 'class' => array('success'));
+    $item = array('data' => $message, 'class' => array('authorize-results__success'));
   }
   else {
-    $item = array('data' => '<strong>' . $message . '</strong>', 'class' => array('failure'));
+    $item = array('data' => $message, 'class' => array('authorize-results__failure'));
   }
   return $item;
 }
