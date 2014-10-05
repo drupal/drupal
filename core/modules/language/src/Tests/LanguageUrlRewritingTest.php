@@ -98,10 +98,13 @@ class LanguageUrlRewritingTest extends WebTestBase {
    * Check URL rewriting when using a domain name and a non-standard port.
    */
   function testDomainNameNegotiationPort() {
+    global $base_url;
     $language_domain = 'example.fr';
+    // Get the current host URI we're running on.
+    $base_url_host = parse_url($base_url, PHP_URL_HOST);
     $edit = array(
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
-      'domain[en]' => gethostname(),
+      'domain[en]' => $base_url_host,
       'domain[fr]' => $language_domain
     );
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));

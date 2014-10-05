@@ -391,6 +391,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    * Tests _url() when separate domains are used for multiple languages.
    */
   function testLanguageDomain() {
+    global $base_url;
+
+    // Get the current host URI we're running on.
+    $base_url_host = parse_url($base_url, PHP_URL_HOST);
+
     // Add the Italian language.
     ConfigurableLanguage::createFromLangcode('it')->save();
 
@@ -415,7 +420,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Change the domain for the Italian language.
     $edit = array(
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
-      'domain[en]' => gethostname(),
+      'domain[en]' => $base_url_host,
       'domain[it]' => 'it.example.com',
     );
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
