@@ -132,7 +132,7 @@ Markup
 
 Migrate
 - Ben Dougherty 'benjy' https://drupal.org/user/1852732
-- Claudiu Cristea "claudiu.cristea"  https://drupal.org/user/56348
+- Michael Anello 'ultimike' https://drupal.org/user/51132
 - Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Menu system
@@ -338,10 +338,14 @@ Menu Link module
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
 Migrate module
-- ?
+- Ben Dougherty 'benjy' https://drupal.org/user/1852732
+- Michael Anello 'ultimike' https://drupal.org/user/51132
+- Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Migrate (Drupal) module
-- ?
+- Ben Dougherty 'benjy' https://drupal.org/user/1852732
+- Michael Anello 'ultimike' https://drupal.org/user/51132
+- Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
