@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Site\Settings;
+
 /**
  * Storage to access configuration and schema in enabled extensions.
  *
@@ -23,6 +25,13 @@ class ExtensionInstallStorage extends InstallStorage {
   protected $configStorage;
 
   /**
+   * Flag to include the profile in the list of enabled modules.
+   *
+   * @var bool
+   */
+  protected $includeProfile = TRUE;
+
+  /**
    * Overrides \Drupal\Core\Config\InstallStorage::__construct().
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
@@ -34,11 +43,15 @@ class ExtensionInstallStorage extends InstallStorage {
    * @param string $collection
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
+   * @param bool $include_profile
+   *   (optional) Whether to include the install profile in extensions to
+   *   search.
    */
-  public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION, $include_profile = TRUE) {
     $this->configStorage = $config_storage;
     $this->directory = $directory;
     $this->collection = $collection;
+    $this->includeProfile = $include_profile;
   }
 
   /**
@@ -71,7 +84,13 @@ class ExtensionInstallStorage extends InstallStorage {
 
       $extensions = $this->configStorage->read('core.extension');
       if (!empty($extensions['module'])) {
-        $this->folders += $this->getComponentNames('module', array_keys($extensions['module']));
+        $modules = $extensions['module'];
+        if (!$this->includeProfile) {
+          if ($install_profile = Settings::get('install_profile')) {
+            unset($modules[$install_profile]);
+          }
+        }
+        $this->folders += $this->getComponentNames('module', array_keys($modules));
       }
       if (!empty($extensions['theme'])) {
         $this->folders += $this->getComponentNames('theme', array_keys($extensions['theme']));

@@ -9,6 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigInstaller implements ConfigInstallerInterface {
@@ -105,8 +106,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // Read enabled extensions directly from configuration to avoid circular
     // dependencies with ModuleHandler and ThemeHandler.
     $extension_config = $this->configFactory->get('core.extension');
-    $enabled_extensions = array_keys((array) $extension_config->get('module'));
+    $modules = (array) $extension_config->get('module');
+    // Unless we are installing the profile, remove it from the list.
+    if ($install_profile = Settings::get('install_profile')) {
+      if ($name !== $install_profile) {
+        unset($modules[$install_profile]);
+      }
+    }
+    $enabled_extensions = array_keys($modules);
     $enabled_extensions += array_keys((array) $extension_config->get('theme'));
+
     // Core can provide configuration.
     $enabled_extensions[] = 'core';
 
@@ -284,8 +293,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
   public function getSourceStorage($collection = StorageInterface::DEFAULT_COLLECTION) {
     if (!isset($this->sourceStorage)) {
       // Default to using the ExtensionInstallStorage which searches extension's
-      // config directories for default configuration.
-      $this->sourceStorage = new ExtensionInstallStorage($this->activeStorage, InstallStorage::CONFIG_INSTALL_DIRECTORY, $collection);
+      // config directories for default configuration. Only include the profile
+      // configuration during Drupal installation.
+      $this->sourceStorage = new ExtensionInstallStorage($this->activeStorage, InstallStorage::CONFIG_INSTALL_DIRECTORY, $collection, drupal_installation_attempted());
     }
     if ($this->sourceStorage->getCollectionName() != $collection) {
       $this->sourceStorage = $this->sourceStorage->createCollection($collection);
