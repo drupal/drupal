@@ -1293,7 +1293,7 @@
           // Remove all whitespace from the name, lowercase it and ensure
           // HTML-safe encoding, then use this as the group ID for CKEditor
           // configuration UI accessibility purposes only.
-          var groupID = 'ckeditor-toolbar-group-aria-label-for-' + Drupal.checkPlain(name.toLowerCase().replace(/ /g, '-'));
+          var groupID = 'ckeditor-toolbar-group-aria-label-for-' + Drupal.checkPlain(name.toLowerCase().replace(/\s/g, '-'));
           $group
             // Update the group container.
             .removeAttr('aria-label')
