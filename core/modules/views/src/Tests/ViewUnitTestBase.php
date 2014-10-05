@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsBundle;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see \Drupal\views\Tests\ViewTestBase
  */
-abstract class ViewUnitTestBase extends DrupalUnitTestBase {
+abstract class ViewUnitTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.
