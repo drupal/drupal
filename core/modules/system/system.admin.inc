@@ -236,8 +236,9 @@ function theme_system_modules_details($variables) {
 
     // Add the description, along with any modules it requires.
     $description = '';
+    $description .= '<div class="requirements">';
+    $description .= '<div class="admin-requirements">' . t('Machine name: !key', array('!key' => $key)) . '</div>';
     if ($version || $requires || $required_by) {
-      $description .= ' <div class="requirements">';
       if ($version) {
         $description .= '<div class="admin-requirements">' . t('Version: !module-version', array('!module-version' => drupal_render($module['version']))) . '</div>';
       }
@@ -247,8 +248,8 @@ function theme_system_modules_details($variables) {
       if ($required_by) {
         $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
       }
-      $description .= '</div>';
     }
+    $description .= '</div>';
     $links = '';
     foreach (array('help', 'permissions', 'configure') as $key) {
       $links .= drupal_render($module['links'][$key]);
