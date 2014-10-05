@@ -1544,7 +1544,7 @@ function template_preprocess_container(&$variables) {
 /**
  * Prepares variables for maintenance task list templates.
  *
- * Default template: task-list.html.twig.
+ * Default template: maintenance-task-list.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
@@ -1553,7 +1553,7 @@ function template_preprocess_container(&$variables) {
  *     dangerous HTML such as SCRIPT tags.
  *   - active: The key for the currently active maintenance task.
  */
-function template_preprocess_task_list(&$variables) {
+function template_preprocess_maintenance_task_list(&$variables) {
   $items = $variables['items'];
   $active = $variables['active'];
 
@@ -2306,9 +2306,9 @@ function drupal_common_theme() {
       'render element' => 'page',
       'template' => 'install-page',
     ),
-    'task_list' => array(
+    'maintenance_task_list' => array(
       'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
-      'template' => 'task-list',
+      'template' => 'maintenance-task-list',
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),

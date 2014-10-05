@@ -506,7 +506,7 @@ class DbUpdateController extends ControllerBase {
     );
 
     $task_list = array(
-      '#theme' => 'task_list',
+      '#theme' => 'maintenance_task_list',
       '#items' => $tasks,
       '#active' => $active,
     );
