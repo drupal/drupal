@@ -319,7 +319,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
     '#open' => (bool) $definition['id'],
     '#group' => 'advanced',
     '#attached' => array(
-      'library' => array('menu/drupal.menu'),
+      'library' => array('menu_ui/drupal.menu_ui'),
     ),
     '#tree' => TRUE,
     '#weight' => -2,
