@@ -58,6 +58,12 @@ class TermUnitTest extends TaxonomyTestBase {
       $term[$i] = $this->createTerm($vocabulary);
     }
 
+    // Set the weight on $term[1] so it appears before $term[5] when fetching
+    // the parents for $term[2], in order to test for a regression on
+    // \Drupal\taxonomy\TermStorageInterface::loadAllParents().
+    $term[1]->weight = -1;
+    $term[1]->save();
+
     // $term[2] is a child of 1 and 5.
     $term[2]->parent = array($term[1]->id(), $term[5]->id());
     $term[2]->save();
@@ -98,5 +104,23 @@ class TermUnitTest extends TaxonomyTestBase {
     $this->assertEqual(2, $depth_count[1], 'Two elements in taxonomy tree depth 1.');
     $this->assertEqual(2, $depth_count[2], 'Two elements in taxonomy tree depth 2.');
     $this->assertEqual(1, $depth_count[3], 'One element in taxonomy tree depth 3.');
+
+    /** @var \Drupal\taxonomy\TermStorageInterface $storage */
+    $storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    // Count parents of $term[2].
+    $parents = $storage->loadParents($term[2]->id());
+    $this->assertEqual(2, count($parents), 'The term has two parents.');
+
+    // Count parents of $term[3].
+    $parents = $storage->loadParents($term[3]->id());
+    $this->assertEqual(1, count($parents), 'The term has one parent.');
+
+    // Identify all ancestors of $term[2].
+    $ancestors = $storage->loadAllParents($term[2]->id());
+    $this->assertEqual(4, count($ancestors), 'The term has four ancestors including the term itself.');
+
+    // Identify all ancestors of $term[3].
+    $ancestors = $storage->loadAllParents($term[3]->id());
+    $this->assertEqual(5, count($ancestors), 'The term has five ancestors including the term itself.');
   }
 }

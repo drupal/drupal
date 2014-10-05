@@ -161,11 +161,18 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     if (!isset($this->parentsAll[$tid])) {
       $parents = array();
       if ($term = $this->load($tid)) {
-        $parents[] = $term;
-        $n = 0;
-        while ($parent = $this->loadParents($parents[$n]->id())) {
-          $parents = array_merge($parents, $parent);
-          $n++;
+        $parents[$term->id()] = $term;
+        $terms_to_search[] = $term->id();
+
+        while ($tid = array_shift($terms_to_search)) {
+          if ($new_parents = $this->loadParents($tid)) {
+            foreach ($new_parents as $new_parent) {
+              if (!isset($parents[$new_parent->id()])) {
+                $parents[$new_parent->id()] = $new_parent;
+                $terms_to_search[] = $new_parent->id();
+              }
+            }
+          }
         }
       }
 
