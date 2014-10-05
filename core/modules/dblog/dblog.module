@@ -7,8 +7,6 @@
  * The Database Logging module monitors your site and keeps a list of recorded
  * events containing usage and performance data, errors, warnings, and similar
  * operational information.
- *
- * @see watchdog()
  */
 
 use Drupal\Core\Form\FormStateInterface;

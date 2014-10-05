@@ -3358,8 +3358,9 @@ function element_set_attributes(array &$element, array $map) {
  *   Array of the possible severity levels for log messages.
  *
  * @see http://www.ietf.org/rfc/rfc3164.txt
- * @see watchdog()
  * @ingroup logging_severity_levels
+ *
+ * @todo Move this in https://www.drupal.org/node/2267545 in \Drupal\Core\Log.
  */
 function watchdog_severity_levels() {
   return array(

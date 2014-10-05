@@ -13,22 +13,16 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-// @todo Remove once watchdog() is removed.
+// @todo Remove in https://www.drupal.org/node/2267545.
 if (!defined('WATCHDOG_EMERGENCY')) {
   define('WATCHDOG_EMERGENCY', 0);
   define('WATCHDOG_ALERT', 1);
   define('WATCHDOG_CRITICAL', 2);
+  define('WATCHDOG_ERROR', 3);
   define('WATCHDOG_WARNING', 4);
+  define('WATCHDOG_NOTICE', 5);
   define('WATCHDOG_INFO', 6);
   define('WATCHDOG_DEBUG', 7);
-}
-// WATCHDOG_NOTICE is also defined in FormValidatorTest, so check independently.
-if (!defined('WATCHDOG_NOTICE')) {
-  define('WATCHDOG_NOTICE', 5);
-}
-// WATCHDOG_ERROR is also defined in FormBuilderTest, so check independently.
-if (!defined('WATCHDOG_ERROR')) {
-  define('WATCHDOG_ERROR', 3);
 }
 
 /**

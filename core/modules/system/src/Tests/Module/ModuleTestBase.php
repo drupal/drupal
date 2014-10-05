@@ -165,7 +165,6 @@ abstract class ModuleTestBase extends WebTestBase {
 
   /**
    * Verify a log entry was entered for a module's status change.
-   * Called in the same way of the expected original watchdog() execution.
    *
    * @param $type
    *   The category to which this message belongs.

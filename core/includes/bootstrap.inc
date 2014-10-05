@@ -68,7 +68,6 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
  * @see http://bugs.php.net/bug.php?id=18090
  * @see http://php.net/manual/function.syslog.php
  * @see http://php.net/manual/network.constants.php
- * @see watchdog()
  * @see watchdog_severity_levels()
  */
 
@@ -757,8 +756,7 @@ function request_uri($omit_query_string = FALSE) {
 /**
  * Logs an exception.
  *
- * This is a wrapper function for watchdog() which automatically decodes an
- * exception.
+ * This is a wrapper logging function which automatically decodes an exception.
  *
  * @param $type
  *   The category to which this message belongs.
@@ -776,7 +774,6 @@ function request_uri($omit_query_string = FALSE) {
  * @param $link
  *   A link to associate with the message.
  *
- * @see watchdog()
  * @see \Drupal\Core\Utility\Error::decodeException()
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
@@ -796,49 +793,6 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
   $variables += Error::decodeException($exception);
 
   \Drupal::logger($type)->log($severity, $message, $variables);
-}
-
-/**
- * Logs a system message.
- *
- * @param $type
- *   The category to which this message belongs. Can be any string, but the
- *   general practice is to use the name of the module calling watchdog().
- * @param $message
- *   The message to store in the log. Keep $message translatable
- *   by not concatenating dynamic values into it! Variables in the
- *   message should be added by using placeholder strings alongside
- *   the variables argument to declare the value of the placeholders.
- *   See t() for documentation on how $message and $variables interact.
- * @param $variables
- *   Array of variables to replace in the message on display or array() if
- *   message is already translated or not possible to translate.
- * @param $severity
- *   The severity of the message; one of the following values as defined in
- *   @link http://www.faqs.org/rfcs/rfc3164.html RFC 3164: @endlink
- *   - WATCHDOG_EMERGENCY: Emergency, system is unusable.
- *   - WATCHDOG_ALERT: Alert, action must be taken immediately.
- *   - WATCHDOG_CRITICAL: Critical conditions.
- *   - WATCHDOG_ERROR: Error conditions.
- *   - WATCHDOG_WARNING: Warning conditions.
- *   - WATCHDOG_NOTICE: (default) Normal but significant conditions.
- *   - WATCHDOG_INFO: Informational messages.
- *   - WATCHDOG_DEBUG: Debug-level messages.
- * @param $link
- *   A link to associate with the message.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::logger($channel)->log($severity, $message, $context), or any
- *   of the shortcut methods of \Psr\Log\LoggerTrait.
- *
- * @see watchdog_severity_levels()
- * @see hook_watchdog()
- */
-function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
-  if ($link) {
-    $variables['link'] = $link;
-  }
-  \Drupal::service('logger.factory')->get($type)->log($severity, $message, $variables);
 }
 
 /**

@@ -29,7 +29,7 @@ class LoggerChannel implements LoggerChannelInterface {
   /**
    * Map of PSR Log constants to Watchdog log constants.
    *
-   * @todo Move watchdog constants here when watchdog() is removed.
+   * @todo Move watchdog constants here in https://www.drupal.org/node/2267545.
    *
    * @var array
    */
