@@ -7,7 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\editor\Plugin\EditorManager;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\editor\Plugin\EditorManager;
  *
  * @group editor
  */
-class EditorManagerTest extends DrupalUnitTestBase {
+class EditorManagerTest extends KernelTestBase {
 
   /**
    * Modules to enable.
