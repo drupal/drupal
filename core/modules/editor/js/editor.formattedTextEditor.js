@@ -69,6 +69,14 @@
           if (from !== 'inactive' && from !== 'highlighted') {
             this.textEditor.detach(this.$textElement.get(0), this.textFormat);
           }
+          // A field model's editor view revert() method is invoked when an
+          // 'active' field becomes a 'candidate' field. But, in the case of
+          // this in-place editor, the content will have been *replaced* if the
+          // text format has transformation filters. Therefore, if we stop
+          // in-place editing this entity, revert explicitly.
+          if (from === 'active' && this.textFormatHasTransformations) {
+            this.revert();
+          }
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
