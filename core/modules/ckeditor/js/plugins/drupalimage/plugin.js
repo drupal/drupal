@@ -197,20 +197,6 @@
           icon: this.path + '/image.png'
         });
       }
-
-      // Register context menu option for editing widget.
-      if (editor.contextMenu) {
-        editor.addMenuItem('drupalimage', {
-          label: Drupal.t('Image Properties'),
-          command: 'editdrupalimage',
-          group: 'image'
-        });
-        editor.contextMenu.addListener(function (element, selection) {
-          if (isImageWidget(editor, element)) {
-            return { drupalimage: CKEDITOR.TRISTATE_OFF };
-          }
-        });
-      }
     },
 
     // Disable image2's integration with the link/drupallink plugins: don't
@@ -233,10 +219,5 @@
     }
 
   });
-
-  function isImageWidget(editor, element) {
-    var widget = editor.widgets.getByElement(element.getChild(0), true);
-    return widget && widget.name === 'image';
-  }
 
 })(jQuery, Drupal, CKEDITOR);

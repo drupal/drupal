@@ -368,7 +368,7 @@ class CKEditorTest extends KernelTestBase {
     $editor = entity_load('editor', 'filtered_html');
     $this->ckeditor->getJSSettings($editor);
     $localeStorage = $this->container->get('locale.storage');
-    $string = $localeStorage->findString(array('source' => 'Image Properties', 'context' => ''));
+    $string = $localeStorage->findString(array('source' => 'Edit Link', 'context' => ''));
     $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
   }
 
