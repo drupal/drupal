@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\options\Plugin\Field\FieldWidget\SelectWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsSelectWidget.
  */
 
-namespace Drupal\options\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
 
 /**
  * Plugin implementation of the 'options_select' widget.
@@ -25,7 +24,7 @@ use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
  *   multiple_values = TRUE
  * )
  */
-class SelectWidget extends OptionsWidgetBase {
+class OptionsSelectWidget extends OptionsWidgetBase {
 
   /**
    * {@inheritdoc}

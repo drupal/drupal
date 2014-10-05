@@ -42,7 +42,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'entity_test', 'entity_reference', 'options');
+  public static $modules = array('config_test', 'entity_test', 'entity_reference');
 
   /**
    * {@inheritdoc}

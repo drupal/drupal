@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase.
  */
 
-namespace Drupal\options\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;

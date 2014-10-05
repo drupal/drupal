@@ -39,7 +39,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('taxonomy', 'options', 'text', 'filter');
+  public static $modules = array('taxonomy', 'text', 'filter');
 
   protected function setUp() {
     parent::setUp();

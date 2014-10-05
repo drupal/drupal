@@ -19,7 +19,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'options');
+  public static $modules = array('taxonomy');
 
   /**
    * @var \Drupal\Core\Entity\Query\QueryFactory

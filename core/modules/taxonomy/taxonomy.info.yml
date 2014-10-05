@@ -6,6 +6,5 @@ version: VERSION
 core: 8.x
 dependencies:
   - node
-  - options
   - text
 configure: taxonomy.vocabulary_list

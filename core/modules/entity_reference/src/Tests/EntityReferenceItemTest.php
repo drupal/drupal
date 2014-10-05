@@ -24,7 +24,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'taxonomy', 'options', 'text', 'filter');
+  public static $modules = array('entity_reference', 'taxonomy', 'text', 'filter');
 
   /**
    * The taxonomy vocabulary to test with.

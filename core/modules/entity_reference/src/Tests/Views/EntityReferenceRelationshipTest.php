@@ -34,7 +34,7 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'field', 'entity_test', 'options', 'entity_reference', 'views', 'entity_reference_test_views');
+  public static $modules = array('user', 'field', 'entity_test', 'entity_reference', 'views', 'entity_reference_test_views');
 
   /**
    * The entity_test entities used by the test.

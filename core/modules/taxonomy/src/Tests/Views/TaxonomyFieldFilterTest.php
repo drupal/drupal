@@ -22,7 +22,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node', 'options');
+  public static $modules = array('language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node');
 
   /**
    * Views used by this test.

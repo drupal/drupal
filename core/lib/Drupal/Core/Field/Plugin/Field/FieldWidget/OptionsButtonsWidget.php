@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\options\Plugin\Field\FieldWidget\ButtonsWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsButtonsWidget.
  */
 
-namespace Drupal\options\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,7 +25,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   multiple_values = TRUE
  * )
  */
-class ButtonsWidget extends OptionsWidgetBase {
+class OptionsButtonsWidget extends OptionsWidgetBase {
 
   /**
    * {@inheritdoc}
