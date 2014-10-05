@@ -147,12 +147,6 @@ class SiteConfigureForm extends FormBase {
       '#type' => 'fieldgroup',
       '#title' => $this->t('Site maintenance account'),
     );
-    $form['admin_account']['account']['#tree'] = TRUE;
-    $form['admin_account']['account']['mail'] = array(
-      '#type' => 'email',
-      '#title' => $this->t('Email address'),
-      '#required' => TRUE,
-    );
     $form['admin_account']['account']['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
@@ -165,6 +159,12 @@ class SiteConfigureForm extends FormBase {
       '#type' => 'password_confirm',
       '#required' => TRUE,
       '#size' => 25,
+    );
+    $form['admin_account']['account']['#tree'] = TRUE;
+    $form['admin_account']['account']['mail'] = array(
+      '#type' => 'email',
+      '#title' => $this->t('Email address'),
+      '#required' => TRUE,
     );
 
     $form['regional_settings'] = array(
