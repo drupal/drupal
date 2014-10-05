@@ -171,6 +171,9 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @return string
    *   The internal path for this entity.
+   *
+   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0. Use
+   *    static::urlInfo() instead.
    */
   public function getSystemPath($rel = 'canonical');
 
