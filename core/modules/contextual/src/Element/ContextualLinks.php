@@ -12,8 +12,7 @@ use Drupal\Core\Render\Element\RenderElement;
 /**
  * Provides a contextual_links element.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("contextual_links")
+ * @RenderElement("contextual_links")
  */
 class ContextualLinks extends RenderElement {
 

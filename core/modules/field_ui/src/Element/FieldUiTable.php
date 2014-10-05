@@ -12,8 +12,7 @@ use Drupal\Core\Render\Element\RenderElement;
 /**
  * Provides a field_ui table element.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("field_ui_table")
+ * @RenderElement("field_ui_table")
  */
 class FieldUiTable extends RenderElement {
 

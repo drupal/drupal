@@ -16,8 +16,7 @@ use Drupal\filter\Plugin\FilterInterface;
 /**
  * Provides a processed text render element.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("processed_text")
+ * @RenderElement("processed_text")
  */
 class ProcessedText extends RenderElement {
 

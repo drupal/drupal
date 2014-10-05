@@ -13,8 +13,7 @@ use Drupal\Core\Render\Element\RenderElement;
 /**
  * Provides a contextual_links_placeholder element.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("contextual_links_placeholder")
+ * @RenderElement("contextual_links_placeholder")
  */
 class ContextualLinksPlaceholder extends RenderElement {
 

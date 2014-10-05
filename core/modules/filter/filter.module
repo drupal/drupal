@@ -87,34 +87,6 @@ function filter_theme() {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @see filter_process_format()
- * @see text_format_wrapper()
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function filter_element_info() {
-  $type['text_format'] = array(
-    '#process' => array(
-      '\Drupal\filter\Element\TextFormat::processFormat',
-    ),
-    '#base_type' => 'textarea',
-    '#theme_wrappers' => array('text_format_wrapper'),
-  );
-  $type['processed_text'] = array(
-    '#text' => '',
-    '#format' => NULL,
-    '#filter_types_to_skip' => array(),
-    '#langcode' => '',
-    '#pre_render' => array(
-      '\Drupal\filter\Element\ProcessedText::preRenderText',
-    ),
-  );
-  return $type;
-}
-
-/**
  * Retrieves a list of enabled text formats, ordered by weight.
  *
  * @param \Drupal\Core\Session\AccountInterface|null $account

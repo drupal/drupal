@@ -3446,9 +3446,6 @@ function drupal_flush_all_caches() {
   // Reset all static caches.
   drupal_static_reset();
 
-  // Clear all non-drupal_static() static caches.
-  \Drupal::entityManager()->clearCachedDefinitions();
-
   // Wipe the PHP Storage caches.
   PhpStorageFactory::get('service_container')->deleteAll();
   PhpStorageFactory::get('twig')->deleteAll();
@@ -3497,6 +3494,9 @@ function drupal_flush_all_caches() {
 
   // Rebuild all information based on new module data.
   $module_handler->invokeAll('rebuild');
+
+  // Clear all plugin caches.
+  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed

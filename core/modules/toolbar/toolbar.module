@@ -48,59 +48,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function toolbar_element_info() {
-  $elements = array();
-
-  $elements['toolbar'] = array(
-    '#pre_render' => array(
-      '\Drupal\toolbar\Element\Toolbar::preRenderToolbar',
-    ),
-    '#theme' => 'toolbar',
-    '#attached' => array(
-      'library' => array(
-        'toolbar/toolbar',
-      ),
-    ),
-    // Metadata for the toolbar wrapping element.
-    '#attributes' => array(
-      // The id cannot be simply "toolbar" or it will clash with the simpletest
-      // tests listing which produces a checkbox with attribute id="toolbar"
-      'id' => 'toolbar-administration',
-      'role' => 'group',
-      'aria-label' => t('Site administration toolbar'),
-    ),
-    // Metadata for the administration bar.
-    '#bar' => array(
-      '#heading' => t('Toolbar items'),
-      '#attributes' => array(
-        'id' => 'toolbar-bar',
-        'role' => 'navigation',
-        'aria-label' => t('Toolbar items'),
-      ),
-    ),
-  );
-
-  // A toolbar item is wrapped in markup for common styling.  The 'tray'
-  // property contains a renderable array.
-  $elements['toolbar_item'] = array(
-    '#pre_render' => array(
-      '\Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem',
-    ),
-    '#theme' => 'toolbar_item',
-    'tab' => array(
-      '#type' => 'link',
-      '#title' => NULL,
-      '#href' => '',
-    ),
-  );
-  return $elements;
-}
-
-/**
  * Implements hook_page_build().
  *
  * Add admin toolbar to the page_top region automatically.

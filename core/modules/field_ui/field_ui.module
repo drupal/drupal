@@ -71,20 +71,6 @@ function field_ui_theme() {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function field_ui_element_info() {
-  return array(
-    'field_ui_table' => array(
-      '#theme' => 'field_ui_table',
-      '#regions' => array('' => array()),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function field_ui_entity_type_build(array &$entity_types) {

@@ -170,22 +170,6 @@ function language_process_language_select($element) {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function language_element_info() {
-  $types['language_configuration'] = array(
-    '#input' => TRUE,
-    '#tree' => TRUE,
-    '#process' => array(
-      '\Drupal\language\Element\LanguageConfiguration::processLanguageConfiguration',
-    ),
-  );
-  return $types;
-}
-
-/**
  * Submit handler for the forms that have a language_configuration element.
  */
 function language_configuration_element_submit(&$form, FormStateInterface $form_state) {

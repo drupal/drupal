@@ -13,8 +13,7 @@ use Drupal\views\Views;
 /**
  * Provides a render element to display a view.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("view")
+ * @RenderElement("view")
  */
 class View extends RenderElement {
 

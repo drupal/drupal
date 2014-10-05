@@ -12,8 +12,7 @@ use Drupal\Core\Render\Element\RenderElement;
 /**
  * Provides a render element for the default Drupal toolbar.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("toolbar")
+ * @RenderElement("toolbar")
  */
 class Toolbar extends RenderElement {
 

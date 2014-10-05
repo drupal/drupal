@@ -14,8 +14,7 @@ use Drupal\Core\Render\Element\FormElement;
 /**
  * Provides language element configuration.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   FormElement("language_configuration")
+ * @FormElement("language_configuration")
  */
 class LanguageConfiguration extends FormElement {
 

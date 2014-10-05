@@ -15,8 +15,7 @@ use Drupal\Core\Url;
 /**
  * Provides a text format render element.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("text_format")
+ * @RenderElement("text_format")
  */
 class TextFormat extends RenderElement {
 

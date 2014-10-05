@@ -86,30 +86,6 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function contextual_element_info() {
-  $types['contextual_links_placeholder'] = array(
-    '#pre_render' => array('\Drupal\contextual\Element\ContextualLinksPlaceholder::preRenderPlaceholder'),
-    '#id' => NULL,
-  );
-  $types['contextual_links'] = array(
-    '#pre_render' => array('\Drupal\contextual\Element\ContextualLinks::preRenderLinks'),
-    '#theme' => 'links__contextual',
-    '#links' => array(),
-    '#attributes' => array('class' => array('contextual-links')),
-    '#attached' => array(
-      'library' => array(
-        'contextual/drupal.contextual-links',
-      ),
-    ),
-  );
-  return $types;
-}
-
-/**
  * Implements hook_preprocess().
  *
  * @see contextual_pre_render_placeholder()

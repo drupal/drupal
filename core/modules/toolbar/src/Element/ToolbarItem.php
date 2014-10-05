@@ -15,8 +15,7 @@ use Drupal\Core\Render\Element\RenderElement;
  *
  * The 'tray' property contains a renderable array.
  *
- * @todo Annotate once https://www.drupal.org/node/2326409 is in.
- *   RenderElement("toolbar_item")
+ * @RenderElement("toolbar_item")
  */
 class ToolbarItem extends RenderElement {
 

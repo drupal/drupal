@@ -48,22 +48,6 @@ function views_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_element_info().
- *
- * @todo Remove once https://www.drupal.org/node/2326409 is in.
- */
-function views_element_info() {
-  $types['view'] = array(
-    '#theme_wrappers' => array('container'),
-    '#pre_render' => array('\Drupal\views\Element\View::preRenderViewElement'),
-    '#name' => NULL,
-    '#display_id' => 'default',
-    '#arguments' => array(),
-  );
-  return $types;
-}
-
-/**
  * Implements hook_views_pre_render().
  */
 function views_views_pre_render($view) {
