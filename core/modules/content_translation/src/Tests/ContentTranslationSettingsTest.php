@@ -213,7 +213,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSettings($entity_type, $bundle, $enabled, $edit) {
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     $args = array('@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled');
     $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
     \Drupal::entityManager()->clearCachedDefinitions();

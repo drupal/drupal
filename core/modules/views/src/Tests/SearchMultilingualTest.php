@@ -54,7 +54,7 @@ class SearchMultilingualTest extends ViewTestBase {
       'settings[node][' . $type->type . '][fields][title]' => TRUE,
       'settings[node][' . $type->type . '][fields][body]' => TRUE,
     );
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
 
     // Add a node in English, with title "sandwich".
     $values = array(

@@ -63,7 +63,7 @@ class LanguageConfigSchemaTest extends WebTestBase {
     $edit['settings[user][user][settings][language][language_show]'] = TRUE;
     $edit['settings[user][user][settings][language][langcode]'] = 'en';
 
-    $this->drupalPostForm($settings_path, $edit, t('Save'));
+    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
     $config_data = \Drupal::config('language.settings')->get();
     // Make sure configuration saved correctly.

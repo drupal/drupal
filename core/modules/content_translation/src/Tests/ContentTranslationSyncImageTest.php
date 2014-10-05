@@ -107,7 +107,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'settings[entity_test_mul][entity_test_mul][columns][field_test_et_ui_image][alt]' => TRUE,
       'settings[entity_test_mul][entity_test_mul][columns][field_test_et_ui_image][title]' => TRUE,
     );
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     $errors = $this->xpath('//div[contains(@class, "messages--error")]');
     $this->assertFalse($errors, 'Settings correctly stored.');
     $this->assertFieldChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-alt');

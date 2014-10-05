@@ -137,10 +137,6 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
     }
 
     $form = parent::buildForm($form, $form_state);
-    // @todo Remove this override. There are tests that check for explicitly for
-    //   the button label which need to be adapted for that.
-    //   https://drupal.org/node/2241727
-    $form['actions']['submit']['#value'] = $this->t('Save');
 
     return $form;
   }
