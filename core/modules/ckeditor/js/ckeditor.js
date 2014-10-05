@@ -11,6 +11,12 @@
         format: format.format
       };
 
+      // Set a title on the CKEditor instance that includes the text field's
+      // label so that screen readers say something that is understandable
+      // for end users.
+      var label = $('label[for=' + element.getAttribute('id') + ']').text();
+      format.editorSettings.title = Drupal.t("Rich Text Editor, !label field", {'!label': label});
+
       // CKEditor initializes itself in a read-only state if the 'disabled'
       // attribute is set. It does not respect the 'readonly' attribute,
       // however, so we set the 'readOnly' configuration property manually in
