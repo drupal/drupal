@@ -62,6 +62,8 @@ function image_help($route_name, RouteMatchInterface $route_match) {
       $output .=  t('After you create an image style, you can add effects: crop, scale, resize, rotate, and desaturate (other contributed modules provide additional effects). For example, by combining effects as crop, scale, and desaturate, you can create square, grayscale thumbnails.') . '<dd>';
       $output .= '<dt>' . t('Attaching images to content as fields') . '</dt>';
       $output .= '<dd>' . t("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => \Drupal::url('node.overview_types'))) . '</dd>';
+      $output .= '<dt>' . t('Configuring image fields for accessibility') . '</dt>';
+      $output .= '<dd>' . t('For accessibility and search engine optimization, all images that convey meaning on web sites should have alternate text. Drupal also allows entry of title text for images, but it can lead to confusion for screen reader users and its use is not recommended. Image fields can be configured so that alternate and title text fields are enabled or disabled; if enabled, the fields can be set to be required. The recommended setting is to enable and require alternate text and disable title text.') . '</dd>';
       $output .= '</dl>';
       return $output;
 
