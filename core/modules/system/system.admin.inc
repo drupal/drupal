@@ -53,14 +53,10 @@ function _system_is_incompatible(&$incompatible, $files, Extension $file) {
  */
 function template_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
-    $compact = system_admin_compact_mode();
-    $variables['attributes'] = array('class' => array('admin-list'));
-    if ($compact) {
-      $variables['attributes']['class'][] = 'compact';
-    }
+    $variables['compact'] = system_admin_compact_mode();
     foreach ($variables['content'] as $key => $item) {
       $variables['content'][$key]['link'] = \Drupal::l($item['title'], $item['url']);
-      if (!$compact && isset($item['description'])) {
+      if (!$variables['compact'] && isset($item['description'])) {
         $variables['content'][$key]['description'] = Xss::filterAdmin($item['description']);
       }
       else {
@@ -164,19 +160,19 @@ function template_preprocess_status_report(&$variables) {
   $severities = array(
     REQUIREMENT_INFO => array(
       'title' => t('Info'),
-      'class' => 'info',
+      'status' => 'info',
     ),
     REQUIREMENT_OK => array(
       'title' => t('OK'),
-      'class' => 'ok',
+      'status' => 'ok',
     ),
     REQUIREMENT_WARNING => array(
       'title' => t('Warning'),
-      'class' => 'warning',
+      'status' => 'warning',
     ),
     REQUIREMENT_ERROR => array(
       'title' => t('Error'),
-      'class' => 'error',
+      'status' => 'error',
     ),
   );
 
@@ -194,8 +190,8 @@ function template_preprocess_status_report(&$variables) {
     else {
       $severity = $severities[REQUIREMENT_INFO];
     }
-    $variables['requirements'][$i]['severity_class'] = $severity['class'];
     $variables['requirements'][$i]['severity_title'] = $severity['title'];
+    $variables['requirements'][$i]['severity_status'] = $severity['status'];
   }
 }
 
@@ -375,7 +371,7 @@ function template_preprocess_system_themes_page(&$variables) {
     $theme_group['state'] = $state;
     $theme_group['title'] = $title;
     $theme_group['themes'] = array();
-    $theme_group['attributes'] = new Attribute(array('class' => array('system-themes-list', 'system-themes-list-' . $state, 'clearfix')));
+    $theme_group['attributes'] = new Attribute();
 
     foreach ($theme_groups[$state] as $theme) {
       $current_theme = array();
@@ -403,13 +399,12 @@ function template_preprocess_system_themes_page(&$variables) {
       // Localize the theme description.
       $current_theme['description'] = t($theme->info['description']);
 
-      // Style theme info.
-      $theme->classes[] = 'theme-selector';
-      $theme->classes[] = 'clearfix';
-      $current_theme['attributes'] = new Attribute(array('class' => $theme->classes));
+      $current_theme['attributes'] = new Attribute();
       $current_theme['name'] = $theme->info['name'];
       $current_theme['version'] = isset($theme->info['version']) ? $theme->info['version'] : '';
       $current_theme['notes'] = $theme->notes;
+      $current_theme['is_default'] = $theme->is_default;
+      $current_theme['is_admin'] = $theme->is_admin;
 
       // Make sure to provide feedback on compatibility.
       $current_theme['incompatible'] = '';

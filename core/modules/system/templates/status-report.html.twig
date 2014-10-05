@@ -10,7 +10,7 @@
  *   - value: (optional) The requirement's status.
  *   - description: (optional) The requirement's description.
  *   - severity_title: The title of the severity.
- *   - severity_class: The HTML class of the severity.
+ *   - severity_status: Indicates the severity status.
  *
  * @see template_preprocess_status_report()
  *
@@ -25,7 +25,7 @@
   </thead>
   <tbody>
   {% for requirement in requirements %}
-    <tr class="{{ requirement.severity_class }}">
+    <tr class="{{ requirement.severity_status }}">
       <td class="status-icon">
         <div title="{{ requirement.severity_title }}">
           <span class="visually-hidden">{{ requirement.severity_title }}</span>

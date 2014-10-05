@@ -15,6 +15,10 @@
  *     - description: Description of the theme.
  *     - name: Theme name.
  *     - version: The theme's version number.
+ *     - is_default: Boolean indicating whether the theme is the default theme
+ *       or not.
+ *     - is_admin: Boolean indicating whether the theme is the admin theme or
+ *       not.
  *     - notes: Identifies what context this theme is being used in, e.g.,
  *       default theme, admin theme.
  *     - incompatible: Text describing any compatibility issues.
@@ -28,10 +32,25 @@
 #}
 <div{{ attributes }}>
   {% for theme_group in theme_groups %}
-    <div{{ theme_group.attributes }}>
+    {%
+      set theme_group_classes = [
+        'system-themes-list',
+        'system-themes-list-' ~ theme_group.state,
+        'clearfix',
+      ]
+    %}
+    <div{{ theme_group.attributes.addClass(theme_group_classes) }}>
       <h2>{{ theme_group.title }}</h2>
       {% for theme in theme_group.themes %}
-        <div{{ theme.attributes }}>
+        {%
+          set theme_classes = [
+            theme.is_default ? 'theme-default',
+            theme.is_admin ? 'theme-admin',
+            'theme-selector',
+            'clearfix',
+          ]
+        %}
+        <div{{ theme.attributes.addClass(theme_classes) }}>
           {% if theme.screenshot %}
             {{ theme.screenshot }}
           {% endif %}
