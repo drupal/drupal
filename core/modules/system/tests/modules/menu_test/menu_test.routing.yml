@@ -367,3 +367,27 @@ menu_test.custom:
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
     _access: 'TRUE'
+
+menu_test.breadcrumb1:
+  path: '/menu-test/breadcrumb1'
+  defaults:
+    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
+    _title: '<script>alert(12);</script>'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.breadcrumb2:
+  path: '/menu-test/breadcrumb1/breadcrumb2'
+  defaults:
+    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
+    _title_callback: '\Drupal\menu_test\Controller\MenuTestController::breadcrumbTitleCallback'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.breadcrumb3:
+  path: '/menu-test/breadcrumb1/breadcrumb2/breadcrumb3'
+  defaults:
+    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
+    _title: 'Normal title'
+  requirements:
+    _access: 'TRUE'

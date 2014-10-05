@@ -43,4 +43,13 @@ class MenuTestController {
     return menu_test_theme_page_callback($inherited);
   }
 
+  /**
+   * A title callback for XSS breadcrumb check.
+   *
+   * @return string
+   */
+  public function breadcrumbTitleCallback() {
+    return '<script>alert(123);</script>';
+  }
+
 }
