@@ -132,7 +132,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
       $display = $displays[$entity->bundle()];
       if ($display->getComponent('links')) {
-        $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
+        $callback = get_class() . '::renderLinks';
         $context = array(
           'comment_entity_id' => $entity->id(),
           'view_mode' => $view_mode,
@@ -197,7 +197,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    *   A renderable array representing the comment links.
    */
   public static function renderLinks(array $element, array $context) {
-    $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
+    $callback = get_class() . '::renderLinks';
     $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
     $links = array(
       '#theme' => 'links__comment',
@@ -209,8 +209,7 @@ class CommentViewBuilder extends EntityViewBuilder {
       $entity = entity_load('comment', $context['comment_entity_id']);
       $commented_entity = entity_load($context['commented_entity_type'], $context['commented_entity_id']);
 
-      $links['comment'] = self::buildLinks($entity, $commented_entity);
-
+      $links['comment'] = static::buildLinks($entity, $commented_entity);
       // Allow other modules to alter the comment links.
       $hook_context = array(
         'view_mode' => $context['view_mode'],
