@@ -15,7 +15,7 @@
     "symfony/routing": "2.5.*",
     "symfony/serializer": "2.5.*",
     "symfony/validator": "2.5.*",
-    "symfony/yaml": "2.5.*",
+    "symfony/yaml": "dev-master#089129be9f9828f41f0f345e09ff322ecf92cfb2",
     "twig/twig": "1.15.*",
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
     "doctrine/annotations": "1.2.*",
