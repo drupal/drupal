@@ -73,6 +73,13 @@ class RouteBuilder implements RouteBuilderInterface {
   protected $routeCollection;
 
   /**
+   * Flag that indiciates if we are currently rebuilding the routes.
+   *
+   * @var bool
+   */
+  protected $building = FALSE;
+
+  /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
@@ -101,6 +108,10 @@ class RouteBuilder implements RouteBuilderInterface {
    * {@inheritdoc}
    */
   public function rebuild() {
+    if ($this->building) {
+      throw new \RuntimeException('Recursive router rebuild detected.');
+    }
+
     if (!$this->lock->acquire('router_rebuild')) {
       // Wait for another request that is already doing this work.
       // We choose to block here since otherwise the routes might not be
@@ -108,6 +119,8 @@ class RouteBuilder implements RouteBuilderInterface {
       $this->lock->wait('router_rebuild');
       return FALSE;
     }
+
+    $this->building = TRUE;
 
     $collection = new RouteCollection();
     $this->routeCollection = $collection;
@@ -165,6 +178,7 @@ class RouteBuilder implements RouteBuilderInterface {
     $this->state->delete(static::REBUILD_NEEDED);
     $this->lock->release('router_rebuild');
     $this->dispatcher->dispatch(RoutingEvents::FINISHED, new Event());
+    $this->building = FALSE;
 
     $this->routeCollection = NULL;
 

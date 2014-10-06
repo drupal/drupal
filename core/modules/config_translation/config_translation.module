@@ -109,19 +109,8 @@ function config_translation_config_translation_info(&$info) {
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
     foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
-      $base_route = NULL;
-      try {
-        $base_route = $route_provider->getRouteByName('field_ui.field_edit_' . $entity_type_id);
-      }
-      catch (RouteNotFoundException $e) {
-        if ($collection = \Drupal::service('router.builder')->getCollectionDuringRebuild()) {
-          $base_route = $collection->get('field_ui.field_edit_' . $entity_type_id);
-        }
-        // Ignore non-existent routes.
-      }
-
       // Make sure entity type has field UI enabled and has a base route.
-      if ($entity_type->get('field_ui_base_route') && !empty($base_route)) {
+      if ($entity_type->get('field_ui_base_route')) {
         $info[$entity_type_id . '_fields'] = array(
           'base_route_name' => 'field_ui.field_edit_' . $entity_type_id,
           'entity_type' => 'field_config',

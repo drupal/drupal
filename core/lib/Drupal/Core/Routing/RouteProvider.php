@@ -172,8 +172,9 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
 
-    $routes_to_load = array_diff($names, array_keys($this->routes));
+    $this->routeBuilder->rebuildIfNeeded();
 
+    $routes_to_load = array_diff($names, array_keys($this->routes));
     if ($routes_to_load) {
       $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
       $routes = $result->fetchAllKeyed();
@@ -258,6 +259,7 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    */
   public function getRoutesByPattern($pattern) {
     $path = RouteCompiler::getPatternOutline($pattern);
+    $this->routeBuilder->rebuildIfNeeded();
 
     return $this->getRoutesByPath($path);
   }

@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Provides a resource plugin definition for every entity type.
+ *
+ * @see \Drupal\rest\Plugin\rest\resource\EntityResource
  */
 class EntityDerivative implements ContainerDeriverInterface {
 
@@ -113,21 +115,20 @@ class EntityDerivative implements ContainerDeriverInterface {
             // @todo remove the try/catch as part of
             // http://drupal.org/node/2158571
             try {
-              $route = $this->routeProvider->getRouteByName($route_name);
+              if (($collection = $this->routeBuilder->getCollectionDuringRebuild()) && $route = $collection->get($route_name)) {
+              }
+              else {
+                $route = $this->routeProvider->getRouteByName($route_name);
+              }
               $this->derivatives[$entity_type_id]['uri_paths'][$link_relation] = $route->getPath();
             }
             catch (RouteNotFoundException $e) {
-              if (($collection = $this->routeBuilder->getCollectionDuringRebuild()) && $route = $collection->get($route_name)) {
-                $this->derivatives[$entity_type_id]['uri_paths'][$link_relation] = $route->getPath();
-              }
-              else {
-                // If the route does not exist it means we are in a brittle state
-                // of module enabling/disabling, so we simply exclude this entity
-                // type.
-                unset($this->derivatives[$entity_type_id]);
-                // Continue with the next entity type;
-                continue 2;
-              }
+              // If the route does not exist it means we are in a brittle state
+              // of module enabling/disabling, so we simply exclude this entity
+              // type.
+              unset($this->derivatives[$entity_type_id]);
+              // Continue with the next entity type;
+              continue 2;
             }
           }
           else {

@@ -28,6 +28,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *     "http://drupal.org/link-relations/create" = "/entity/{entity_type}"
  *   }
  * )
+ *
+ * @see \Drupal\rest\Plugin\Derivative\EntityDerivative
  */
 class EntityResource extends ResourceBase {
 
