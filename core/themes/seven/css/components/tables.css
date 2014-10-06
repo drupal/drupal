@@ -93,7 +93,7 @@ th.active > a:focus:after,
 th.active > a:hover:after {
   border-bottom-color: #008ee6;
 }
-td ul {
+td .item-list ul {
   margin: 0;
 }
 td.active {

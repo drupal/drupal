@@ -20,9 +20,10 @@
 /**
  * Very specific overrides for Drupal system CSS.
  */
-.toolbar ul,
 .toolbar li,
 .toolbar .menu li,
+.toolbar .item-list,
+.toolbar .item-list li,
 .toolbar .menu li.expanded {
   list-style-type: none;
   list-style-image: none;

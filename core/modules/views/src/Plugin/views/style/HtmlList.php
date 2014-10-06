@@ -46,6 +46,7 @@ class HtmlList extends StylePluginBase {
 
     $options['type'] = array('default' => 'ul');
     $options['class'] = array('default' => '');
+    $options['wrapper_class'] = array('default' => 'item-list');
 
     return $options;
   }
@@ -60,6 +61,13 @@ class HtmlList extends StylePluginBase {
       '#title' => $this->t('List type'),
       '#options' => array('ul' => $this->t('Unordered list'), 'ol' => $this->t('Ordered list')),
       '#default_value' => $this->options['type'],
+    );
+    $form['wrapper_class'] = array(
+      '#title' => $this->t('Wrapper class'),
+      '#description' => $this->t('The class to provide on the wrapper, outside the list.'),
+      '#type' => 'textfield',
+      '#size' => '30',
+      '#default_value' => $this->options['wrapper_class'],
     );
     $form['class'] = array(
       '#title' => $this->t('List class'),

@@ -1,7 +1,15 @@
 /**
  * Menus and lists.
  */
-li,
+.item-list ul {
+  list-style-type: disc;
+  list-style-image: none;
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+}
+[dir="rtl"] .item-list ul {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+.item-list ul li,
 li.leaf,
 ul.menu li {
   list-style-type: disc;
@@ -10,11 +18,13 @@ ul.menu li {
 ul.menu li {
   margin: 0;
 }
-li.collapsed {
+.item-list ul li.collapsed,
+ul.menu li.collapsed {
   list-style-image: url(../../../../misc/menu-collapsed.png);
   list-style-type: disc;
 }
-li.expanded {
+.item-list ul li.expanded,
+ul.menu li.expanded {
   list-style-image: url(../../../../misc/menu-expanded.png);
   list-style-type: circle;
 }

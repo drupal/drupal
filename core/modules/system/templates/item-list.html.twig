@@ -19,16 +19,18 @@
  */
 #}
 {%- if items or empty -%}
-  {%- if title is not empty -%}
-    <h3>{{ title }}</h3>
-  {%- endif -%}
-  {%- if items -%}
-    <{{ list_type }}{{ attributes }}>
-      {%- for item in items -%}
-        <li{{ item.attributes }}>{{ item.value }}</li>
-      {%- endfor -%}
-    </{{ list_type }}>
-  {%- else -%}
-    {{- empty -}}
-  {%- endif -%}
+  <div class="item-list">
+    {%- if title is not empty -%}
+      <h3>{{ title }}</h3>
+    {%- endif -%}
+    {%- if items -%}
+      <{{ list_type }}{{ attributes }}>
+        {%- for item in items -%}
+          <li{{ item.attributes }}>{{ item.value }}</li>
+        {%- endfor -%}
+      </{{ list_type }}>
+    {%- else -%}
+      {{- empty -}}
+    {%- endif -%}
+  </div>
 {%- endif %}
