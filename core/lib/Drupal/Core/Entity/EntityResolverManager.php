@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Symfony\Component\Routing\Route;
 
@@ -28,13 +26,6 @@ class EntityResolverManager {
   protected $entityManager;
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
    * The class resolver.
    *
    * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
@@ -46,49 +37,77 @@ class EntityResolverManager {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ControllerResolverInterface $controller_resolver, ClassResolverInterface $class_resolver) {
+  public function __construct(EntityManagerInterface $entity_manager, ClassResolverInterface $class_resolver) {
     $this->entityManager = $entity_manager;
-    $this->controllerResolver = $controller_resolver;
     $this->classResolver = $class_resolver;
   }
 
   /**
-   * Creates a controller instance using route defaults.
+   * Gets the controller class using route defaults.
    *
    * By design we cannot support all possible routes, but just the ones which
    * use the defaults provided by core, which are _content, _controller
    * and _form.
    *
+   * Rather than creating an instance of every controller determine the class
+   * and method that would be used. This is not possible for the service:method
+   * notation as the runtime container does not allow static introspection.
+   *
+   * @see \Drupal\Core\Controller\ControllerResolver::getControllerFromDefinition()
+   * @see \Drupal\Core\Controller\ClassResolver::getInstanceFromDefinition()
+   *
    * @param array $defaults
    *   The default values provided by the route.
    *
-   * @return array|null
-   *   Returns the controller instance if it is possible to instantiate it, NULL
+   * @return string|null
+   *   Returns the controller class, otherwise NULL.
    */
-  protected function getController(array $defaults) {
+  protected function getControllerClass(array $defaults) {
     $controller = NULL;
     if (isset($defaults['_content'])) {
-      $controller = $this->controllerResolver->getControllerFromDefinition($defaults['_content']);
+      $controller = $defaults['_content'];
     }
     if (isset($defaults['_controller'])) {
-      $controller = $this->controllerResolver->getControllerFromDefinition($defaults['_controller']);
+      $controller = $defaults['_controller'];
     }
 
     if (isset($defaults['_form'])) {
-      $form_arg = $defaults['_form'];
-      // Check if the class exists first as the class resolver will throw an
-      // exception if it doesn't. This also means a service cannot be used here.
-      if (class_exists($form_arg)) {
-        $controller = array($this->classResolver->getInstanceFromDefinition($form_arg), 'buildForm');
+      $controller = $defaults['_form'];
+      // Check if the class exists and if so use the buildForm() method from the
+      // interface.
+      if (class_exists($controller)) {
+        return array($controller, 'buildForm');
       }
     }
 
-    return $controller;
+    if (strpos($controller, ':') === FALSE) {
+      if (method_exists($controller, '__invoke')) {
+        return array($controller, '__invoke');
+      }
+      if (function_exists($controller)) {
+        return $controller;
+      }
+      return NULL;
+    }
+
+    $count = substr_count($controller, ':');
+    if ($count == 1) {
+      // Controller in the service:method notation. Get the information from the
+      // service. This is dangerous as the controller could depend on services
+      // that could not exist at this point. There is however no other way to
+      // do it, as the container does not allow static introspection.
+      list($class_or_service, $method) = explode(':', $controller, 2);
+      return array($this->classResolver->getInstanceFromDefinition($class_or_service), $method);
+    }
+    elseif (strpos($controller, '::') !== FALSE) {
+      // Controller in the class::method notation.
+      return explode('::', $controller, 2);
+    }
+
+    return NULL;
   }
 
   /**
@@ -190,7 +209,7 @@ class EntityResolverManager {
    *   The route object to add the upcasting information onto.
    */
   public function setRouteOptions(Route $route) {
-    if ($controller = $this->getController($route->getDefaults())) {
+    if ($controller = $this->getControllerClass($route->getDefaults())) {
       // Try to use reflection.
       if ($this->setParametersFromReflection($controller, $route)) {
         return;

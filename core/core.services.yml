@@ -604,7 +604,7 @@ services:
     arguments: ['@module_handler']
   resolver_manager.entity:
     class: Drupal\Core\Entity\EntityResolverManager
-    arguments: ['@entity.manager', '@controller_resolver', '@class_resolver']
+    arguments: ['@entity.manager', '@class_resolver']
   route_subscriber.entity:
     class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     tags:
