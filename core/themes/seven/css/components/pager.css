@@ -28,8 +28,8 @@
   color: #2a678c;
   font-weight: 700;
 }
-.pager__item a:focus,
-.pager__item a:hover {
+.pager__item a:hover,
+.pager__item a:focus {
   border-bottom-color: #3395d2;
   color: #3395d2;
 }

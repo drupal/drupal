@@ -33,7 +33,8 @@ tr {
 thead > tr {
   border-bottom: 1px solid #000;
 }
-tbody tr:hover {
+tbody tr:hover,
+tbody tr:focus {
   background: #f7fcff;
 }
 td,
@@ -80,17 +81,17 @@ th.active img {
 th.active > a:after {
   border-bottom-color: #004875;
 }
-th > a:focus,
 th > a:hover,
-th.active > a:focus,
-th.active > a:hover {
+th > a:focus,
+th.active > a:hover,
+th.active > a:focus {
   color: #008ee6;
   text-decoration: none;
 }
-th > a:focus:after,
 th > a:hover:after,
-th.active > a:focus:after,
-th.active > a:hover:after {
+th > a:focus:after,
+th.active > a:hover:after,
+th.active > a:focus:after {
   border-bottom-color: #008ee6;
 }
 td .item-list ul {

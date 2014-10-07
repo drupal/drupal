@@ -30,10 +30,10 @@
   -webkit-font-smoothing: antialiased;
   margin-top: 2px;
 }
-.quickedit-button.action-save:focus,
 .quickedit-button.action-save:hover,
-.quickedit-button.action-saving:focus
-.quickedit-button.action-saving:hover {
+.quickedit-button.action-save:focus,
+.quickedit-button.action-saving:hover,
+.quickedit-button.action-saving:focus {
   background-color: #2369a6;
   background-image: -webkit-linear-gradient(top, #0c97ed, #1f86c7);
   background-image:   linear-gradient(to bottom, #0c97ed, #1f86c7);
@@ -41,7 +41,9 @@
   color: #fff;
 }
 .quickedit-button.action-save:hover,
-.quickedit-button.action-saving:hover {
+.quickedit-button.action-save:focus,
+.quickedit-button.action-saving:hover,
+.quickedit-button.action-saving:focus {
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
 }
 .quickedit-button.action-save:active,

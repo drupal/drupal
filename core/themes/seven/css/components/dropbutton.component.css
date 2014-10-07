@@ -141,8 +141,8 @@
   -webkit-font-smoothing: antialiased;
   width: auto!important;
 }
-.dropbutton-single .dropbutton-action a:focus,
-.dropbutton-single .dropbutton-action a:hover {
+.dropbutton-single .dropbutton-action a:hover,
+.dropbutton-single .dropbutton-action a:focus {
   background-color: #f9f8f6;
   background-image: -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
   background-image: linear-gradient(to bottom, #fcfcfa, #e9e9dd);
@@ -150,7 +150,8 @@
   text-decoration: none;
   outline: none;
 }
-.dropbutton-single .dropbutton-action a:hover {
+.dropbutton-single .dropbutton-action a:hover,
+.dropbutton-single .dropbutton-action a:focus {
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
 }
 .dropbutton-single .dropbutton-action a:active {

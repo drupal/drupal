@@ -28,8 +28,8 @@
           transition: all 0.1s;
   -webkit-font-smoothing: antialiased;  /* 3 */
 }
-.button:focus,
-.button:hover {
+.button:hover,
+.button:focus {
   background-color: #f9f8f6;
   background-image: -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
   background-image:   linear-gradient(to bottom, #fcfcfa, #e9e9dd);
@@ -64,8 +64,8 @@
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
-.button--primary:focus,
-.button--primary:hover {
+.button--primary:hover,
+.button--primary:focus {
   background-color: #2369a6;
   background-image: -webkit-linear-gradient(top, #0c97ed, #1f86c7);
   background-image:   linear-gradient(to bottom, #0c97ed, #1f86c7);
@@ -129,8 +129,8 @@
   color: #0074bd;
   text-decoration: none;
 }
-.link:focus,
-.link:hover {
+.link:hover,
+.link:focus {
   color: #008ee6;
   text-decoration: underline;
 }
@@ -155,8 +155,8 @@
   font-weight: 400;
   text-decoration: underline;
 }
-.button--danger:focus,
 .button--danger:hover,
+.button--danger:focus,
 .button--danger:active {
   color: #ff2a00;
   text-decoration: underline;

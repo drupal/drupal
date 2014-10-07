@@ -181,7 +181,8 @@ details.fieldset-no-legend {
   border-radius: 7px 7px 0 0;
 }
 
-.views-displays .secondary .open > a:hover {
+.views-displays .secondary .open > a:hover,
+.views-displays .secondary .open > a:focus {
   background-color: #f1f1f1;
   color: #008BCB;
 }

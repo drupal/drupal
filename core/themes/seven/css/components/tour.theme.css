@@ -71,7 +71,8 @@
   font-size: 1.4em;
   font-weight: bold;
 }
-.joyride-close-tip:hover {
+.joyride-close-tip:hover,
+.joyride-close-tip:focus {
   color: rgba(255,255,255, 0.9);
   text-decoration: none;
 }

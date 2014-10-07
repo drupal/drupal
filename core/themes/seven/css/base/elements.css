@@ -12,8 +12,11 @@ a,
   text-decoration: none;
 }
 a:hover,
-.link:hover {
+.link:hover,
+a:focus,
+.link:focus {
   text-decoration: underline;
+  outline: 0;
 }
 hr {
   margin: 0;

@@ -46,7 +46,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.tabs__tab:hover {
+.tabs__tab:hover,
+.tabs__tab:focus {
   color: #008ee6;
   background-color: #fafaf7;
 }
@@ -238,7 +239,8 @@ li.tabs__tab a {
   border-left: 2px solid #004f80;
   padding-left: 15px;
 }
-.tabs.secondary .tabs__tab:hover {
+.tabs.secondary .tabs__tab:hover,
+.tabs.secondary .tabs__tab:focus {
   color: #008ee6;
   border-left: 2px solid #008ee6;
   padding-left: 15px;
@@ -273,6 +275,7 @@ li.tabs__tab a {
 .is-horizontal .tabs.secondary .tabs__tab.active {
   border-bottom-color: #004f80;
 }
-.is-horizontal .tabs.secondary .tabs__tab:hover {
+.is-horizontal .tabs.secondary .tabs__tab:hover,
+.is-horizontal .tabs.secondary .tabs__tab:focus {
   border-bottom-color: #008ee6;
 }

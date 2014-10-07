@@ -34,9 +34,9 @@
 .skip-link:active {
   outline: 0;
 }
-.skip-link.visually-hidden.focusable:active,
+.skip-link.visually-hidden.focusable:hover,
 .skip-link.visually-hidden.focusable:focus,
-.skip-link.visually-hidden.focusable:hover
+.skip-link.visually-hidden.focusable:active
 {
   position: absolute !important;
 }
