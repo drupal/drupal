@@ -173,7 +173,7 @@ services:
     arguments: [default]
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token', '@?http_kernel']
+    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token', '@?kernel']
   form_validator:
     class: Drupal\Core\Form\FormValidator
     arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form']

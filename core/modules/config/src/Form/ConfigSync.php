@@ -396,7 +396,6 @@ class ConfigSync extends FormBase {
       $message = \Drupal::translation()->translate('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
       drupal_set_message($message, 'error');
     }
-    drupal_flush_all_caches();
   }
 
 

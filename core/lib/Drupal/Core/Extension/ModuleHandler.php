@@ -810,8 +810,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         // Now install the module's schema if necessary.
         drupal_install_schema($module);
 
-        // Clear plugin manager caches.
+        // Clear plugin manager caches and flag router to rebuild if requested.
         \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
+        \Drupal::service('router.builder')->setRebuildNeeded();
 
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
@@ -999,7 +1000,9 @@ class ModuleHandler implements ModuleHandlerInterface {
       // its statically cached list.
       drupal_static_reset('system_rebuild_module_data');
 
+      // Clear plugin manager caches and flag router to rebuild if requested.
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
+      \Drupal::service('router.builder')->setRebuildNeeded();
 
       // Update the kernel to exclude the uninstalled modules.
       \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
@@ -1021,8 +1024,6 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     // Let other modules react.
     $this->invokeAll('modules_uninstalled', array($module_list));
-
-    drupal_flush_all_caches();
 
     return TRUE;
   }

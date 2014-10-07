@@ -511,7 +511,6 @@ class ModulesListForm extends FormBase {
     // Gets module list after install process, flushes caches and displays a
     // message if there are changes.
     if ($before != $this->moduleHandler->getModuleList()) {
-      drupal_flush_all_caches();
       drupal_set_message(t('The configuration options have been saved.'));
     }
   }

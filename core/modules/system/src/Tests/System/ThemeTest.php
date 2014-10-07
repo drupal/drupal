@@ -244,8 +244,6 @@ class ThemeTest extends WebTestBase {
     $this->clickLink(t('Set as default'));
     $this->assertEqual(\Drupal::config('system.theme')->get('default'), 'bartik');
 
-    drupal_flush_all_caches();
-
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
     $this->assertText('Bartik(' . t('active tab') . ')', 'Default local task on blocks admin page is the default theme.');

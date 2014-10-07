@@ -14,6 +14,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Site\Settings;
@@ -61,11 +62,15 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected $csrfToken;
 
   /**
-   * The HTTP kernel to handle forms returning response objects.
+   * The kernel to handle forms returning response objects.
    *
-   * @var \Symfony\Component\HttpKernel\HttpKernel
+   * Explicitly use the DrupalKernel as that is consistent with index.php for
+   * terminating the request and in case someone rebuilds the container,
+   * this kernel is synthetic and always points to the new container.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
    */
-  protected $httpKernel;
+  protected $kernel;
 
   /**
    * The class resolver.
@@ -126,10 +131,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The theme manager.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
-   *   The HTTP kernel.
+   * @param \Drupal\Core\DrupalKernelInterface $kernel
+   *   The kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernelInterface $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, DrupalKernelInterface $kernel = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->formCache = $form_cache;
@@ -138,7 +143,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $this->requestStack = $request_stack;
     $this->classResolver = $class_resolver;
     $this->csrfToken = $csrf_token;
-    $this->httpKernel = $http_kernel;
+    $this->kernel = $kernel;
     $this->themeManager = $theme_manager;
   }
 
@@ -1075,14 +1080,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   protected function sendResponse(Response $response) {
     $request = $this->requestStack->getCurrentRequest();
-    $event = new FilterResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+    $event = new FilterResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
 
     $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
     // Prepare and send the response.
     $event->getResponse()
       ->prepare($request)
       ->send();
-    $this->httpKernel->terminate($request, $response);
+    $this->kernel->terminate($request, $response);
   }
 
   /**
