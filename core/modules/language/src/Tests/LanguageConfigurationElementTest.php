@@ -96,7 +96,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertFalse($configurable_language->isDefault(), 'The en language entity is not flagged as the default language.');
     $configurable_language = entity_load('configurable_language', 'cc');
     // Check calling the
-    // \Drupal\language\Entity\ConfigurableLanguage::isDefault() method
+    // \Drupal\language\ConfigurableLanguageInterface::isDefault() method
     // directly.
     $this->assertTrue($configurable_language->isDefault(), 'The cc language entity is flagged as the default language.');
 
