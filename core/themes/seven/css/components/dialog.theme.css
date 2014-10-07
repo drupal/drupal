@@ -10,6 +10,11 @@
   overflow: visible;
   padding: 0;
 }
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog {
+    width: 92% !important;
+  }
+}
 .ui-dialog .ui-dialog-titlebar {
   background: #6b6b6b;
   border-top-left-radius: 5px;

@@ -11,6 +11,11 @@
   border: solid 1px #ccc;
   padding: 0;
 }
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog {
+    width: 92% !important;
+  }
+}
 .ui-dialog .ui-dialog-titlebar {
   font-weight: bold;
   background: #f3f4ee;
