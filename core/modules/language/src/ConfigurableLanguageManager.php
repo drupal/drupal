@@ -298,7 +298,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         $data['default'] = ($langcode == $default->id);
         $data['name'] = $data['label'];
         $this->languages[$langcode] = new Language($data);
-        $weight = max(array($weight, $this->languages[$langcode]->weight));
+        $weight = max(array($weight, $this->languages[$langcode]->getWeight()));
       }
 
       // Add locked languages, they will be filtered later if needed.
@@ -337,8 +337,8 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
 
     // Get maximum weight to update the system languages to keep them on bottom.
     foreach ($this->getLanguages(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-      if (!$language->isLocked() && $language->weight > $max_weight) {
-        $max_weight = $language->weight;
+      if (!$language->isLocked() && $language->getWeight() > $max_weight) {
+        $max_weight = $language->getWeight();
       }
     }
 

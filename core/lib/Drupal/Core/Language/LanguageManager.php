@@ -135,7 +135,7 @@ class LanguageManager implements LanguageManagerInterface {
       $default = $this->getDefaultLanguage();
       $this->languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
-      $this->languages += $this->getDefaultLockedLanguages($default->weight);
+      $this->languages += $this->getDefaultLockedLanguages($default->getWeight());
     }
 
     // Filter the full list of languages based on the value of the $all flag. By

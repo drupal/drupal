@@ -733,7 +733,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
       // No language module, so use the default language only.
       $languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
-      $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->weight);
+      $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->getWeight());
     }
   }
 

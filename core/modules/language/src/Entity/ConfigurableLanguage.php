@@ -71,7 +71,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var integer
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * Locked languages cannot be edited.

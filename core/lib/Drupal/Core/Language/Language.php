@@ -57,7 +57,7 @@ class Language implements LanguageInterface {
    *
    * @var int
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * Locked indicates a language used by the system, not an actual language.
