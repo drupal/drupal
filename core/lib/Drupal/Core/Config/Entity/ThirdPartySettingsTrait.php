@@ -68,6 +68,19 @@ trait ThirdPartySettingsTrait {
   }
 
   /**
+   * Gets all third-party settings of a given module.
+   *
+   * @param string $module
+   *   The module providing the third-party settings.
+   *
+   * @return array
+   *   An array of key-value pairs.
+   */
+  public function getThirdPartySettings($module) {
+    return isset($this->third_party_settings[$module]) ? $this->third_party_settings[$module] : array();
+  }
+
+  /**
    * Unsets a third-party setting.
    *
    * @param string $module

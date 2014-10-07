@@ -19,6 +19,7 @@ class ThirdPartySettingsTraitTest extends UnitTestCase {
   /**
    * @covers ::getThirdPartySetting
    * @covers ::setThirdPartySetting
+   * @covers ::getThirdPartySettings
    * @covers ::unsetThirdPartySetting
    * @covers ::getThirdPartyProviders
    */
@@ -37,6 +38,10 @@ class ThirdPartySettingsTraitTest extends UnitTestCase {
     $trait_object->setThirdPartySetting($third_party, $key, $value);
     $this->assertEquals($value, $trait_object->getThirdPartySetting($third_party, $key));
     $this->assertEquals($value, $trait_object->getThirdPartySetting($third_party, $key, $this->randomGenerator->string()));
+
+    // Test getThirdPartySettings().
+    $trait_object->setThirdPartySetting($third_party, 'test2', 'value2');
+    $this->assertEquals(array($key => $value, 'test2' => 'value2'), $trait_object->getThirdPartySettings($third_party));
 
     // Test getThirdPartyProviders().
     $trait_object->setThirdPartySetting('test_provider2', $key, $value);
