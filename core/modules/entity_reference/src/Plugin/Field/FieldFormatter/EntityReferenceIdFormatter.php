@@ -30,21 +30,15 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
-    foreach ($items as $delta => $item) {
-      if (!$item->access) {
-        // User doesn't have access to the referenced entity.
-        continue;
-      }
-      if (!empty($item->entity) && !empty($item->target_id)) {
-        /** @var $referenced_entity \Drupal\Core\Entity\EntityInterface */
-        $referenced_entity = $item->entity;
+    foreach ($this->getEntitiesToView($items) as $delta => $entity) {
+      if ($entity->id()) {
         $elements[$delta] = array(
-          '#markup' => String::checkPlain($item->target_id),
+          '#markup' => String::checkPlain($entity->id()),
           // Create a cache tag entry for the referenced entity. In the case
           // that the referenced entity is deleted, the cache for referring
           // entities must be cleared.
           '#cache' => array(
-            'tags' => $referenced_entity->getCacheTag(),
+            'tags' => $entity->getCacheTag(),
           ),
         );
       }

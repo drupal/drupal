@@ -62,35 +62,28 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
-    foreach ($items as $delta => $item) {
-      if (!$item->access) {
-        // User doesn't have access to the referenced entity.
-        continue;
-      }
-      /** @var $referenced_entity \Drupal\Core\Entity\EntityInterface */
-      if ($referenced_entity = $item->entity) {
-        $label = $referenced_entity->label();
-        // If the link is to be displayed and the entity has a uri, display a
-        // link.
-        if ($this->getSetting('link') && $uri = $referenced_entity->urlInfo()) {
-          $elements[$delta] = array(
-            '#type' => 'link',
-            '#title' => $label,
-          ) + $uri->toRenderArray();
+    foreach ($this->getEntitiesToView($items) as $delta => $entity) {
+      $label = $entity->label();
+      // If the link is to be displayed and the entity has a uri, display a
+      // link.
+      if ($this->getSetting('link') && $uri = $entity->urlInfo()) {
+        $elements[$delta] = array(
+          '#type' => 'link',
+          '#title' => $label,
+        ) + $uri->toRenderArray();
 
-          if (!empty($item->_attributes)) {
-            $elements[$delta]['#options'] += array('attributes' => array());
-            $elements[$delta]['#options']['attributes'] += $item->_attributes;
-            // Unset field item attributes since they have been included in the
-            // formatter output and shouldn't be rendered in the field template.
-            unset($item->_attributes);
-          }
+        if (!empty($items[$delta]->_attributes)) {
+          $elements[$delta]['#options'] += array('attributes' => array());
+          $elements[$delta]['#options']['attributes'] += $items[$delta]->_attributes;
+          // Unset field item attributes since they have been included in the
+          // formatter output and shouldn't be rendered in the field template.
+          unset($items[$delta]->_attributes);
         }
-        else {
-          $elements[$delta] = array('#markup' => String::checkPlain($label));
-        }
-        $elements[$delta]['#cache']['tags'] = $referenced_entity->getCacheTag();
       }
+      else {
+        $elements[$delta] = array('#markup' => String::checkPlain($label));
+      }
+      $elements[$delta]['#cache']['tags'] = $entity->getCacheTag();
     }
 
     return $elements;

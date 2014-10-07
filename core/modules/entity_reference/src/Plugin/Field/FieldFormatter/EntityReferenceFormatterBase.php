@@ -8,11 +8,45 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Parent plugin for entity reference formatters.
  */
 abstract class EntityReferenceFormatterBase extends FormatterBase {
+
+  /**
+   * Returns the accessible and translated entities for view.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The item list.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   The entities to view.
+   */
+  protected function getEntitiesToView(FieldItemListInterface $items) {
+    $entities = array();
+
+    $parent_entity_langcode = $items->getEntity()->language()->getId();
+    foreach ($items as $delta => $item) {
+      if ($item->originalEntity instanceof TranslatableInterface && $item->originalEntity->hasTranslation($parent_entity_langcode)) {
+        $entity = $item->originalEntity->getTranslation($parent_entity_langcode);
+      }
+      else {
+        $entity = $item->originalEntity;
+      }
+
+      if ($item->access || $entity->access('view')) {
+        $entities[$delta] = $entity;
+
+        // Mark item as accessible.
+        $item->access = TRUE;
+      }
+    }
+
+    return $entities;
+  }
 
   /**
    * {@inheritdoc}
@@ -68,19 +102,12 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
             $rekey = TRUE;
             continue;
           }
-
-          $item->entity = $target_entities[$identifier];
-
-          if (!$item->entity->access('view')) {
-            continue;
-          }
         }
         else {
           // This is an "auto_create" item, just leave the entity in place.
         }
 
-        // Mark item as accessible.
-        $item->access = TRUE;
+        $item->originalEntity = $target_entities[$identifier];
       }
 
       // Rekey the items array if needed.

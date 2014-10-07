@@ -69,34 +69,29 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $view_mode = $this->getSetting('view_mode');
-
     $elements = array();
 
-    foreach ($items as $delta => $item) {
-      if (!$item->access) {
-        // User doesn't have access to the referenced entity.
-        continue;
-      }
+    foreach ($this->getEntitiesToView($items) as $delta => $entity) {
       // Protect ourselves from recursive rendering.
       static $depth = 0;
       $depth++;
       if ($depth > 20) {
-        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $item->entity->getEntityTypeId(), '@entity_id' => $item->target_id)));
+        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $entity->getEntityTypeId(), '@entity_id' => $entity->id())));
       }
 
-      if (!empty($item->target_id)) {
-        $elements[$delta] = entity_view($item->entity, $view_mode, $item->getLangcode());
+      if ($entity->id()) {
+        $elements[$delta] = entity_view($entity, $view_mode, $entity->language()->getId());
 
         // Add a resource attribute to set the mapping property's value to the
         // entity's url. Since we don't know what the markup of the entity will
         // be, we shouldn't rely on it for structured data such as RDFa.
-        if (!empty($item->_attributes)) {
-          $item->_attributes += array('resource' => $item->entity->url());
+        if (!empty($items[$delta]->_attributes)) {
+          $items[$delta]->_attributes += array('resource' => $entity->url());
         }
       }
       else {
         // This is an "auto_create" item.
-        $elements[$delta] = array('#markup' => $item->entity->label());
+        $elements[$delta] = array('#markup' => $entity->label());
       }
       $depth = 0;
     }
