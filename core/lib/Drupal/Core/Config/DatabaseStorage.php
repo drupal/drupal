@@ -269,10 +269,11 @@ class DatabaseStorage implements StorageInterface {
    */
   public function listAll($prefix = '') {
     try {
-      return $this->connection->query('SELECT name FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name LIKE :name', array(
-        ':collection' => $this->collection,
-        ':name' => $this->connection->escapeLike($prefix) . '%',
-      ), $this->options)->fetchCol();
+      $query = $this->connection->select($this->table);
+      $query->fields($this->table, array('name'));
+      $query->condition('collection', $this->collection, '=');
+      $query->condition('name', $prefix . '%', 'LIKE');
+      return $query->execute()->fetchCol();
     }
     catch (\Exception $e) {
       return array();
