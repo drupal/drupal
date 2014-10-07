@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\HttpKernel;
 
 use Drupal\simpletest\KernelTestBase;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the stacked kernel functionality.
@@ -38,14 +40,13 @@ class StackKernelIntegrationTest extends KernelTestBase {
    * Tests a request.
    */
   public function testRequest() {
-    $request = new Request();
+    $request = Request::create((new Url('httpkernel_test.empty'))->toString());
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel */
     $http_kernel = \Drupal::service('http_kernel');
-    $http_kernel->handle($request);
+    $http_kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, FALSE);
 
     $this->assertEqual($request->attributes->get('_hello'), 'world');
     $this->assertEqual($request->attributes->get('_previous_optional_argument'), 'test_argument');
   }
 
 }
-
