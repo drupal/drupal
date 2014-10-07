@@ -178,16 +178,12 @@ class Sql extends QueryPluginBase {
     $options = parent::defineOptions();
     $options['disable_sql_rewrite'] = array(
       'default' => FALSE,
-      'translatable' => FALSE,
-      'bool' => TRUE,
     );
     $options['distinct'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
     $options['replica'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
     $options['query_comment'] = array(
       'default' => '',

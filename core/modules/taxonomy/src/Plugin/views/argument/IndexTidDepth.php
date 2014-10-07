@@ -27,8 +27,8 @@ class IndexTidDepth extends ArgumentPluginBase {
     $options = parent::defineOptions();
 
     $options['depth'] = array('default' => 0);
-    $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['use_taxonomy_term_path'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['break_phrase'] = array('default' => FALSE);
+    $options['use_taxonomy_term_path'] = array('default' => FALSE);
 
     return $options;
   }

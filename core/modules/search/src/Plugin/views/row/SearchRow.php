@@ -27,7 +27,7 @@ class SearchRow extends RowPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['score'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['score'] = array('default' => TRUE);
 
     return $options;
   }

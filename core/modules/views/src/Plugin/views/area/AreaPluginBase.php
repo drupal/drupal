@@ -67,7 +67,7 @@ abstract class AreaPluginBase extends HandlerBase {
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
     $label = !empty($this->definition['label']) ? $this->definition['label'] : $this->definition['field'];
     $options['admin_label']['default'] = $label;
-    $options['empty'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['empty'] = array('default' => FALSE);
 
     return $options;
   }

@@ -80,7 +80,7 @@ class BulkForm extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['action_title'] = array('default' => 'With selection', 'translatable' => TRUE);
+    $options['action_title'] = array('default' => 'With selection');
     $options['include_exclude'] = array(
       'default' => 'exclude',
     );

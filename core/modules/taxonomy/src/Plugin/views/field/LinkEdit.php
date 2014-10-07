@@ -36,7 +36,7 @@ class LinkEdit extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['text'] = array('default' => '', 'translatable' => TRUE);
+    $options['text'] = array('default' => '');
 
     return $options;
   }

@@ -22,7 +22,7 @@ class Type extends Node {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['machine_name'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['machine_name'] = array('default' => FALSE);
 
     return $options;
   }

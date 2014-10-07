@@ -30,7 +30,7 @@ abstract class Links extends FieldPluginBase {
     $options = parent::defineOptions();
 
     $options['fields'] = array('default' => array());
-    $options['destination'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['destination'] = array('default' => TRUE);
 
     return $options;
   }

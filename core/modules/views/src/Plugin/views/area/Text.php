@@ -23,7 +23,7 @@ class Text extends TokenizeAreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['content'] = array('default' => '', 'translatable' => TRUE, 'format_key' => 'format');
+    $options['content'] = array('default' => '', 'format_key' => 'format');
     $options['format'] = array('default' => NULL);
     return $options;
   }

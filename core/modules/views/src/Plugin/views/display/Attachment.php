@@ -42,10 +42,10 @@ class Attachment extends DisplayPluginBase {
 
     $options['displays'] = array('default' => array());
     $options['attachment_position'] = array('default' => 'before');
-    $options['inherit_arguments'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['inherit_exposed_filters'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['inherit_pager'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['render_pager'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['inherit_arguments'] = array('default' => TRUE);
+    $options['inherit_exposed_filters'] = array('default' => FALSE);
+    $options['inherit_pager'] = array('default' => FALSE);
+    $options['render_pager'] = array('default' => FALSE);
 
     return $options;
   }

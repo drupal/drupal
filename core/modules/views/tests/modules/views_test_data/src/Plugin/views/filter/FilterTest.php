@@ -23,7 +23,7 @@ class FilterTest extends FilterPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['test_enable'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['test_enable'] = array('default' => TRUE);
     return $options;
   }
 

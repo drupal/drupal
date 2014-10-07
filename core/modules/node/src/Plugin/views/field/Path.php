@@ -33,7 +33,7 @@ class Path extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['absolute'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['absolute'] = array('default' => FALSE);
 
     return $options;
   }

@@ -24,7 +24,7 @@ class Title extends AreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['title'] = array('default' => '', 'translatable' => TRUE);
+    $options['title'] = array('default' => '');
     return $options;
   }
 

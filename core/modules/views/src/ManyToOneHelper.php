@@ -31,7 +31,7 @@ class ManyToOneHelper {
   }
 
   public static function defineOptions(&$options) {
-    $options['reduce_duplicates'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['reduce_duplicates'] = array('default' => FALSE);
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {

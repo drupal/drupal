@@ -74,13 +74,13 @@ class Table extends StylePluginBase {
     $options['columns'] = array('default' => array());
     $options['default'] = array('default' => '');
     $options['info'] = array('default' => array());
-    $options['override'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['sticky'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['override'] = array('default' => TRUE);
+    $options['sticky'] = array('default' => FALSE);
     $options['order'] = array('default' => 'asc');
-    $options['caption'] = array('default' => '', 'translatable' => TRUE);
-    $options['summary'] = array('default' => '', 'translatable' => TRUE);
-    $options['description'] = array('default' => '', 'translatable' => TRUE);
-    $options['empty_table'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['caption'] = array('default' => '');
+    $options['summary'] = array('default' => '');
+    $options['description'] = array('default' => '');
+    $options['empty_table'] = array('default' => FALSE);
 
     return $options;
   }

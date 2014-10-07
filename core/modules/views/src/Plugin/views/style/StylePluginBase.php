@@ -254,9 +254,9 @@ abstract class StylePluginBase extends PluginBase {
     $options['grouping'] = array('default' => array());
     if ($this->usesRowClass()) {
       $options['row_class'] = array('default' => '');
-      $options['default_row_class'] = array('default' => TRUE, 'bool' => TRUE);
+      $options['default_row_class'] = array('default' => TRUE);
     }
-    $options['uses_fields'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['uses_fields'] = array('default' => FALSE);
 
     return $options;
   }

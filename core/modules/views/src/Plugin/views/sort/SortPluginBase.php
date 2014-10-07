@@ -46,10 +46,10 @@ abstract class SortPluginBase extends HandlerBase {
     $options = parent::defineOptions();
 
     $options['order'] = array('default' => 'ASC');
-    $options['exposed'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['exposed'] = array('default' => FALSE);
     $options['expose'] = array(
       'contains' => array(
-        'label' => array('default' => '', 'translatable' => TRUE),
+        'label' => array('default' => ''),
       ),
     );
     return $options;

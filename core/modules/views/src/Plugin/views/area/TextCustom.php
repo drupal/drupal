@@ -23,7 +23,7 @@ class TextCustom extends TokenizeAreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['content'] = array('default' => '', 'translatable' => TRUE);
+    $options['content'] = array('default' => '');
     return $options;
   }
 

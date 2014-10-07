@@ -47,10 +47,10 @@ class Tid extends ArgumentDefaultPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['term_page'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['node'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['term_page'] = array('default' => TRUE);
+    $options['node'] = array('default' => FALSE);
     $options['anyall'] = array('default' => ',');
-    $options['limit'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['limit'] = array('default' => FALSE);
     $options['vids'] = array('default' => array());
 
     return $options;

@@ -46,11 +46,11 @@ class ManyToOne extends ArgumentPluginBase {
     $options = parent::defineOptions();
 
     if (!empty($this->definition['numeric'])) {
-      $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
+      $options['break_phrase'] = array('default' => FALSE);
     }
 
-    $options['add_table'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['require_value'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['add_table'] = array('default' => FALSE);
+    $options['require_value'] = array('default' => FALSE);
 
     if (isset($this->helper)) {
       $this->helper->defineOptions($options);

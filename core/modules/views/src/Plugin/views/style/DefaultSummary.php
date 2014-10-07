@@ -29,8 +29,8 @@ class DefaultSummary extends StylePluginBase {
     $options = parent::defineOptions();
 
     $options['base_path'] = array('default' => '');
-    $options['count'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['override'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['count'] = array('default' => TRUE);
+    $options['override'] = array('default' => FALSE);
     $options['items_per_page'] = array('default' => 25);
 
     return $options;

@@ -27,7 +27,7 @@ class String extends FilterPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['expose']['contains']['required'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['expose']['contains']['required'] = array('default' => FALSE);
 
     return $options;
   }

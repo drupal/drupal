@@ -64,7 +64,7 @@ class Raw extends ArgumentDefaultPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['index'] = array('default' => '');
-    $options['use_alias'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['use_alias'] = array('default' => FALSE);
 
     return $options;
   }

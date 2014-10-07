@@ -36,7 +36,7 @@ class Username extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_user'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['link_to_user'] = array('default' => TRUE);
     return $options;
   }
 

@@ -46,7 +46,7 @@ class TermName extends Entity {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['transform'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['transform'] = array('default' => FALSE);
 
     return $options;
   }

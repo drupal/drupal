@@ -34,8 +34,8 @@ class Custom extends FieldPluginBase {
     $options = parent::defineOptions();
 
     // Override the alter text option to always alter the text.
-    $options['alter']['contains']['alter_text'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['hide_alter_empty'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['alter']['contains']['alter_text'] = array('default' => TRUE);
+    $options['hide_alter_empty'] = array('default' => FALSE);
     return $options;
   }
 

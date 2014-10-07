@@ -22,7 +22,7 @@ class Url extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['display_as_link'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['display_as_link'] = array('default' => TRUE);
 
     return $options;
   }

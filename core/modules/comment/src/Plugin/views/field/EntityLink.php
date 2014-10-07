@@ -29,7 +29,7 @@ class EntityLink extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['teaser'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['teaser'] = array('default' => FALSE);
     return $options;
   }
 

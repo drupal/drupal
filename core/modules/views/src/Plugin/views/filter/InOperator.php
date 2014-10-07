@@ -102,7 +102,7 @@ class InOperator extends FilterPluginBase {
 
     $options['operator']['default'] = 'in';
     $options['value']['default'] = array();
-    $options['expose']['contains']['reduce'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['expose']['contains']['reduce'] = array('default' => FALSE);
 
     return $options;
   }

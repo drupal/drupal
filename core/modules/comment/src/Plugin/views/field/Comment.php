@@ -52,8 +52,8 @@ class Comment extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_comment'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['link_to_entity'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_comment'] = array('default' => TRUE);
+    $options['link_to_entity'] = array('default' => FALSE);
 
     return $options;
   }

@@ -119,18 +119,18 @@ abstract class FilterPluginBase extends HandlerBase {
     $options['operator'] = array('default' => '=');
     $options['value'] = array('default' => '');
     $options['group'] = array('default' => '1');
-    $options['exposed'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['exposed'] = array('default' => FALSE);
     $options['expose'] = array(
       'contains' => array(
         'operator_id' => array('default' => FALSE),
-        'label' => array('default' => '', 'translatable' => TRUE),
-        'description' => array('default' => '', 'translatable' => TRUE),
-        'use_operator' => array('default' => FALSE, 'bool' => TRUE),
+        'label' => array('default' => ''),
+        'description' => array('default' => ''),
+        'use_operator' => array('default' => FALSE),
         'operator' => array('default' => ''),
         'identifier' => array('default' => ''),
-        'required' => array('default' => FALSE, 'bool' => TRUE),
-        'remember' => array('default' => FALSE, 'bool' => TRUE),
-        'multiple' => array('default' => FALSE, 'bool' => TRUE),
+        'required' => array('default' => FALSE),
+        'remember' => array('default' => FALSE),
+        'multiple' => array('default' => FALSE),
         'remember_roles' => array('default' => array(
           DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID,
         )),
@@ -145,15 +145,15 @@ abstract class FilterPluginBase extends HandlerBase {
     // an identifier and other settings like the widget and the label.
     // This settings are saved in another array to allow users to switch
     // between a normal filter and a group of filters with a single click.
-    $options['is_grouped'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['is_grouped'] = array('default' => FALSE);
     $options['group_info'] = array(
       'contains' => array(
-        'label' => array('default' => '', 'translatable' => TRUE),
-        'description' => array('default' => '', 'translatable' => TRUE),
+        'label' => array('default' => ''),
+        'description' => array('default' => ''),
         'identifier' => array('default' => ''),
-        'optional' => array('default' => TRUE, 'bool' => TRUE),
+        'optional' => array('default' => TRUE),
         'widget' => array('default' => 'select'),
-        'multiple' => array('default' => FALSE, 'bool' => TRUE),
+        'multiple' => array('default' => FALSE),
         'remember' => array('default' => 0),
         'default_group' => array('default' => 'All'),
         'default_group_multiple' => array('default' => array()),

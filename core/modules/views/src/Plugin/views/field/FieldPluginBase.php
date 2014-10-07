@@ -428,42 +428,42 @@ abstract class FieldPluginBase extends HandlerBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['label'] = array('default' => '', 'translatable' => TRUE);
+    $options['label'] = array('default' => '');
     // Some styles (for example table) should have labels enabled by default.
     $style = $this->view->getStyle();
     if (isset($style) && $style->defaultFieldLabels()) {
       $options['label']['default'] = $this->definition['title'];
     }
 
-    $options['exclude'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['exclude'] = array('default' => FALSE);
     $options['alter'] = array(
       'contains' => array(
-        'alter_text' => array('default' => FALSE, 'bool' => TRUE),
-        'text' => array('default' => '', 'translatable' => TRUE),
-        'make_link' => array('default' => FALSE, 'bool' => TRUE),
+        'alter_text' => array('default' => FALSE),
+        'text' => array('default' => ''),
+        'make_link' => array('default' => FALSE),
         'path' => array('default' => ''),
-        'absolute' => array('default' => FALSE, 'bool' => TRUE),
-        'external' => array('default' => FALSE, 'bool' => TRUE),
-        'replace_spaces' => array('default' => FALSE, 'bool' => TRUE),
-        'path_case' => array('default' => 'none', 'translatable' => FALSE),
-        'trim_whitespace' => array('default' => FALSE, 'bool' => TRUE),
-        'alt' => array('default' => '', 'translatable' => TRUE),
+        'absolute' => array('default' => FALSE),
+        'external' => array('default' => FALSE),
+        'replace_spaces' => array('default' => FALSE),
+        'path_case' => array('default' => 'none'),
+        'trim_whitespace' => array('default' => FALSE),
+        'alt' => array('default' => ''),
         'rel' => array('default' => ''),
         'link_class' => array('default' => ''),
-        'prefix' => array('default' => '', 'translatable' => TRUE),
-        'suffix' => array('default' => '', 'translatable' => TRUE),
+        'prefix' => array('default' => ''),
+        'suffix' => array('default' => ''),
         'target' => array('default' => ''),
-        'nl2br' => array('default' => FALSE, 'bool' => TRUE),
+        'nl2br' => array('default' => FALSE),
         'max_length' => array('default' => ''),
-        'word_boundary' => array('default' => TRUE, 'bool' => TRUE),
-        'ellipsis' => array('default' => TRUE, 'bool' => TRUE),
-        'more_link' => array('default' => FALSE, 'bool' => TRUE),
-        'more_link_text' => array('default' => '', 'translatable' => TRUE),
+        'word_boundary' => array('default' => TRUE),
+        'ellipsis' => array('default' => TRUE),
+        'more_link' => array('default' => FALSE),
+        'more_link_text' => array('default' => ''),
         'more_link_path' => array('default' => ''),
-        'strip_tags' => array('default' => FALSE, 'bool' => TRUE),
-        'trim' => array('default' => FALSE, 'bool' => TRUE),
+        'strip_tags' => array('default' => FALSE),
+        'trim' => array('default' => FALSE),
         'preserve_tags' => array('default' => ''),
-        'html' => array('default' => FALSE, 'bool' => TRUE),
+        'html' => array('default' => FALSE),
       ),
     );
     $options['element_type'] = array('default' => '');
@@ -471,17 +471,17 @@ abstract class FieldPluginBase extends HandlerBase {
 
     $options['element_label_type'] = array('default' => '');
     $options['element_label_class'] = array('default' => '');
-    $options['element_label_colon'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['element_label_colon'] = array('default' => TRUE);
 
     $options['element_wrapper_type'] = array('default' => '');
     $options['element_wrapper_class'] = array('default' => '');
 
-    $options['element_default_classes'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['element_default_classes'] = array('default' => TRUE);
 
-    $options['empty'] = array('default' => '', 'translatable' => TRUE);
-    $options['hide_empty'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['empty_zero'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['hide_alter_empty'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['empty'] = array('default' => '');
+    $options['hide_empty'] = array('default' => FALSE);
+    $options['empty_zero'] = array('default' => FALSE);
+    $options['hide_alter_empty'] = array('default' => TRUE);
 
     return $options;
   }

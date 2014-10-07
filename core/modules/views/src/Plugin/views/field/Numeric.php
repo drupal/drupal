@@ -26,15 +26,15 @@ class Numeric extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['set_precision'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['set_precision'] = array('default' => FALSE);
     $options['precision'] = array('default' => 0);
-    $options['decimal'] = array('default' => '.', 'translatable' => TRUE);
-    $options['separator'] = array('default' => ',', 'translatable' => TRUE);
-    $options['format_plural'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['decimal'] = array('default' => '.');
+    $options['separator'] = array('default' => ',');
+    $options['format_plural'] = array('default' => FALSE);
     $options['format_plural_singular'] = array('default' => '1');
     $options['format_plural_plural'] = array('default' => '@count');
-    $options['prefix'] = array('default' => '', 'translatable' => TRUE);
-    $options['suffix'] = array('default' => '', 'translatable' => TRUE);
+    $options['prefix'] = array('default' => '');
+    $options['suffix'] = array('default' => '');
 
     return $options;
   }

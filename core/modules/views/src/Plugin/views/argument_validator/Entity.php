@@ -76,9 +76,9 @@ class Entity extends ArgumentValidatorPluginBase {
     $options = parent::defineOptions();
 
     $options['bundles'] = array('default' => array());
-    $options['access'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['access'] = array('default' => FALSE);
     $options['operation'] = array('default' => 'view');
-    $options['multiple'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['multiple'] = array('default' => FALSE);
 
     return $options;
   }

@@ -35,7 +35,7 @@ class File extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_file'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_file'] = array('default' => FALSE);
     return $options;
   }
 

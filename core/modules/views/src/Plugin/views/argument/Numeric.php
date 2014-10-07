@@ -34,8 +34,8 @@ class Numeric extends ArgumentPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['not'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['break_phrase'] = array('default' => FALSE);
+    $options['not'] = array('default' => FALSE);
 
     return $options;
   }

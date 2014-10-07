@@ -400,7 +400,6 @@ class Field extends FieldPluginBase {
     // Options used for multiple value fields.
     $options['group_rows'] = array(
       'default' => TRUE,
-      'bool' => TRUE,
     );
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
@@ -412,11 +411,9 @@ class Field extends FieldPluginBase {
     );
     $options['delta_reversed'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
     $options['delta_first_last'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
 
     $options['multi_type'] = array(
@@ -428,7 +425,6 @@ class Field extends FieldPluginBase {
 
     $options['field_api_classes'] = array(
       'default' => FALSE,
-      'bool' => TRUE,
     );
 
     return $options;

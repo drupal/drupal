@@ -39,9 +39,9 @@ class Name extends User {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['overwrite_anonymous'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['anonymous_text'] = array('default' => '', 'translatable' => TRUE);
-    $options['format_username'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['overwrite_anonymous'] = array('default' => FALSE);
+    $options['anonymous_text'] = array('default' => '');
+    $options['format_username'] = array('default' => TRUE);
 
     return $options;
   }

@@ -72,7 +72,7 @@ class View extends AreaPluginBase {
     $options = parent::defineOptions();
 
     $options['view_to_insert'] = array('default' => '');
-    $options['inherit_arguments'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['inherit_arguments'] = array('default' => FALSE);
     return $options;
   }
 

@@ -50,7 +50,7 @@ class HistoryUserTimestamp extends Node {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['comments'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['comments'] = array('default' => FALSE);
 
     return $options;
   }

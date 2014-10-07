@@ -25,7 +25,7 @@ class Extension extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['extension_detect_tar'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['extension_detect_tar'] = array('default' => FALSE);
     return $options;
   }
 

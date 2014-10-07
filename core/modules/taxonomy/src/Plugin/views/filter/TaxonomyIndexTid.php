@@ -46,10 +46,10 @@ class TaxonomyIndexTid extends ManyToOne {
     $options = parent::defineOptions();
 
     $options['type'] = array('default' => 'textfield');
-    $options['limit'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['limit'] = array('default' => TRUE);
     $options['vid'] = array('default' => '');
     $options['hierarchy'] = array('default' => 0);
-    $options['error_message'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['error_message'] = array('default' => TRUE);
 
     return $options;
   }

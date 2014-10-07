@@ -29,7 +29,6 @@ class Result extends AreaPluginBase {
 
     $options['content'] = array(
       'default' => 'Displaying @start - @end of @total',
-      'translatable' => TRUE,
     );
 
     return $options;

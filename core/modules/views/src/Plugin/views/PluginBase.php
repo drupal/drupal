@@ -137,13 +137,11 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @code
    * 'option_name' => array(
    *  - 'default' => default value,
-   *  - 'translatable' => (optional) TRUE/FALSE (wrap in $this->t() on export if true),
    *  - 'contains' => (optional) array of items this contains, with its own
    *      defaults, etc. If contains is set, the default will be ignored and
    *      assumed to be array().
-   *  - 'bool' => (optional) TRUE/FALSE Is the value a boolean value. This will
-   *      change the export format to TRUE/FALSE instead of 1/0.
    *  ),
+   * @endcode
    *
    * @return array
    *   Returns the options of this handler/plugin.

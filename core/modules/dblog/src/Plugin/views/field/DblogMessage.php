@@ -39,7 +39,7 @@ class DblogMessage extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['replace_variables'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['replace_variables'] = array('default' => TRUE);
 
     return $options;
   }

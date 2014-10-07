@@ -122,15 +122,15 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $options['exception'] = array(
       'contains' => array(
         'value' => array('default' => 'all'),
-        'title_enable' => array('default' => FALSE, 'bool' => TRUE),
-        'title' => array('default' => 'All', 'translatable' => TRUE),
+        'title_enable' => array('default' => FALSE),
+        'title' => array('default' => 'All'),
       ),
     );
-    $options['title_enable'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['title'] = array('default' => '', 'translatable' => TRUE);
+    $options['title_enable'] = array('default' => FALSE);
+    $options['title'] = array('default' => '');
     $options['default_argument_type'] = array('default' => 'fixed');
     $options['default_argument_options'] = array('default' => array());
-    $options['default_argument_skip_url'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['default_argument_skip_url'] = array('default' => FALSE);
     $options['summary_options'] = array('default' => array());
     $options['summary'] = array(
       'contains' => array(
@@ -139,7 +139,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
         'format' => array('default' => 'default_summary'),
       ),
     );
-    $options['specify_validation'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['specify_validation'] = array('default' => FALSE);
     $options['validate'] = array(
       'contains' => array(
         'type' => array('default' => 'none'),

@@ -29,7 +29,7 @@ class User extends ArgumentDefaultPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['user'] = array('default' => '', 'bool' => TRUE, 'translatable' => FALSE);
+    $options['user'] = array('default' => '');
 
     return $options;
   }

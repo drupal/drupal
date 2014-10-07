@@ -20,7 +20,7 @@ class Null extends ArgumentPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['must_not_be'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['must_not_be'] = array('default' => FALSE);
     return $options;
   }
 

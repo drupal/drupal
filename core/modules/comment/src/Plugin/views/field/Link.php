@@ -61,8 +61,8 @@ class Link extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['text'] = array('default' => '', 'translatable' => TRUE);
-    $options['link_to_entity'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['text'] = array('default' => '');
+    $options['link_to_entity'] = array('default' => FALSE);
     return $options;
   }
 

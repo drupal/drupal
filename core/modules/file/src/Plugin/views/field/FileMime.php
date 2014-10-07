@@ -21,7 +21,7 @@ class FileMime extends File {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['filemime_image'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['filemime_image'] = array('default' => FALSE);
     return $options;
   }
 

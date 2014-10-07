@@ -47,7 +47,7 @@ class ListString extends String {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['summary']['contains']['human'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['summary']['contains']['human'] = array('default' => FALSE);
 
     return $options;
   }

@@ -26,7 +26,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['tokenize'] = array('default' => FALSE);
     return $options;
   }
 

@@ -24,7 +24,7 @@ class StaticTest extends AccessPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['access'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['access'] = array('default' => FALSE);
 
     return $options;
   }

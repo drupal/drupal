@@ -43,7 +43,7 @@ class User extends Entity {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['restrict_roles'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['restrict_roles'] = array('default' => FALSE);
     $options['roles'] = array('default' => array());
 
     return $options;

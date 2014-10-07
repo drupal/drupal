@@ -84,8 +84,8 @@ class Block extends DisplayPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['block_description'] = array('default' => '', 'translatable' => TRUE);
-    $options['block_category'] = array('default' => 'Lists (Views)', 'translatable' => TRUE);
+    $options['block_description'] = array('default' => '');
+    $options['block_category'] = array('default' => 'Lists (Views)');
     $options['block_hide_empty'] = array('default' => FALSE);
 
     $options['allow'] = array(

@@ -41,8 +41,8 @@ class Taxonomy extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_taxonomy'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['convert_spaces'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_taxonomy'] = array('default' => FALSE);
+    $options['convert_spaces'] = array('default' => FALSE);
     return $options;
   }
 

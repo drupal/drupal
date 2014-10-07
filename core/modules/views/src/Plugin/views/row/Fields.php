@@ -39,8 +39,8 @@ class Fields extends RowPluginBase {
 
     $options['inline'] = array('default' => array());
     $options['separator'] = array('default' => '');
-    $options['hide_empty'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['default_field_elements'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['hide_empty'] = array('default' => FALSE);
+    $options['default_field_elements'] = array('default' => TRUE);
     return $options;
   }
 

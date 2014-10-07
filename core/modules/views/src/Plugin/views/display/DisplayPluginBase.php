@@ -542,47 +542,36 @@ abstract class DisplayPluginBase extends PluginBase {
 
       'title' => array(
         'default' => '',
-        'translatable' => TRUE,
       ),
       'enabled' => array(
         'default' => TRUE,
-        'translatable' => FALSE,
-        'bool' => TRUE,
       ),
       'display_comment' => array(
         'default' => '',
       ),
       'css_class' => array(
         'default' => '',
-        'translatable' => FALSE,
       ),
       'display_description' => array(
         'default' => '',
-        'translatable' => TRUE,
       ),
       'use_ajax' => array(
         'default' => FALSE,
-        'bool' => TRUE,
       ),
       'hide_attachment_summary' => array(
         'default' => FALSE,
-        'bool' => TRUE,
       ),
       'show_admin_links' => array(
         'default' => TRUE,
-        'bool' => TRUE,
       ),
       'use_more' => array(
         'default' => FALSE,
-        'bool' => TRUE,
       ),
       'use_more_always' => array(
         'default' => TRUE,
-        'bool' => TRUE,
       ),
       'use_more_text' => array(
         'default' => 'more',
-        'translatable' => TRUE,
       ),
       'link_display' => array(
         'default' => '',
@@ -592,14 +581,12 @@ abstract class DisplayPluginBase extends PluginBase {
       ),
       'group_by' => array(
         'default' => FALSE,
-        'bool' => TRUE,
       ),
       'field_langcode' => array(
         'default' => '***LANGUAGE_language_content***',
       ),
       'field_langcode_add_to_query' => array(
         'default' => TRUE,
-        'bool' => TRUE,
       ),
 
       // These types are all plugins that can have individual settings

@@ -21,7 +21,7 @@ class LanguageField extends FieldPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['native_language'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['native_language'] = array('default' => FALSE);
 
     return $options;
   }

@@ -72,7 +72,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $options['subquery_sort'] = array('default' => NULL);
     // Descending more useful.
     $options['subquery_order'] = array('default' => 'DESC');
-    $options['subquery_regenerate'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['subquery_regenerate'] = array('default' => FALSE);
     $options['subquery_view'] = array('default' => FALSE);
     $options['subquery_namespace'] = array('default' => FALSE);
 

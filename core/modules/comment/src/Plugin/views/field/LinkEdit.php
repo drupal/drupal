@@ -21,7 +21,7 @@ class LinkEdit extends Link {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['destination'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['destination'] = array('default' => FALSE);
 
     return $options;
   }

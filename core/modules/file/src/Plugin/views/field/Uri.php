@@ -19,7 +19,7 @@ class Uri extends File {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['file_download_path'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['file_download_path'] = array('default' => FALSE);
     return $options;
   }
 

@@ -22,20 +22,20 @@ abstract class SqlBase extends PagerPluginBase {
     $options['total_pages'] = array('default' => '');
     $options['expose'] = array(
       'contains' => array(
-        'items_per_page' => array('default' => FALSE, 'bool' => TRUE),
-        'items_per_page_label' => array('default' => 'Items per page', 'translatable' => TRUE),
+        'items_per_page' => array('default' => FALSE),
+        'items_per_page_label' => array('default' => 'Items per page'),
         'items_per_page_options' => array('default' => '5, 10, 25, 50'),
-        'items_per_page_options_all' => array('default' => FALSE, 'bool' => TRUE),
-        'items_per_page_options_all_label' => array('default' => '- All -', 'translatable' => TRUE),
+        'items_per_page_options_all' => array('default' => FALSE),
+        'items_per_page_options_all_label' => array('default' => '- All -'),
 
-        'offset' => array('default' => FALSE, 'bool' => TRUE),
-        'offset_label' => array('default' => 'Offset', 'translatable' => TRUE),
+        'offset' => array('default' => FALSE),
+        'offset_label' => array('default' => 'Offset'),
       ),
     );
     $options['tags'] = array(
       'contains' => array(
-        'previous' => array('default' => '‹ previous', 'translatable' => TRUE),
-        'next' => array('default' => 'next ›', 'translatable' => TRUE),
+        'previous' => array('default' => '‹ previous'),
+        'next' => array('default' => 'next ›'),
       ),
     );
     return $options;

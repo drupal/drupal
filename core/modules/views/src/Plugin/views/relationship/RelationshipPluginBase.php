@@ -97,7 +97,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     }
 
     $options['admin_label']['default'] = $label;
-    $options['required'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['required'] = array('default' => FALSE);
 
     return $options;
   }

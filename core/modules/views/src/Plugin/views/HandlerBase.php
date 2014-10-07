@@ -164,7 +164,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     $options['field'] = array('default' => '');
     $options['relationship'] = array('default' => 'none');
     $options['group_type'] = array('default' => 'group');
-    $options['admin_label'] = array('default' => '', 'translatable' => TRUE);
+    $options['admin_label'] = array('default' => '');
     $options['dependencies'] = array('default' => array());
 
     return $options;

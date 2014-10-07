@@ -26,7 +26,7 @@ class UnformattedSummary extends DefaultSummary {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['inline'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['inline'] = array('default' => FALSE);
     $options['separator'] = array('default' => '');
     return $options;
   }

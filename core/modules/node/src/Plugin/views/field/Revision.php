@@ -35,7 +35,7 @@ class Revision extends Node {
   }
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_node_revision'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_node_revision'] = array('default' => FALSE);
     return $options;
   }
 

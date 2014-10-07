@@ -69,7 +69,7 @@ class Rss extends StylePluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['description'] = array('default' => '', 'translatable' => TRUE);
+    $options['description'] = array('default' => '');
 
     return $options;
   }

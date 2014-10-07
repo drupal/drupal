@@ -61,7 +61,6 @@ abstract class Mapping extends StylePluginBase {
       if (!empty($value['#toggle'])) {
         $options['mapping']['contains']["toggle_$key"] = array(
           'default' => FALSE,
-          'bool' => TRUE,
         );
       }
     }

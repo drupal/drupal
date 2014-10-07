@@ -40,8 +40,8 @@ class TaxonomyIndexTid extends PrerenderList {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['link_to_taxonomy'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['limit'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_taxonomy'] = array('default' => TRUE);
+    $options['limit'] = array('default' => FALSE);
     $options['vids'] = array('default' => array());
 
     return $options;
