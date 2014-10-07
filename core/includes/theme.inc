@@ -2027,19 +2027,6 @@ function template_preprocess_field(&$variables, $hook) {
   // readers.
   $variables['label'] = String::checkPlain($element['#title']);
 
-  // We want other preprocess functions and the theme implementation to have
-  // fast access to the field item render arrays. The item render array keys
-  // (deltas) should always be numerically indexed starting from 0, and looping
-  // on those keys is faster than calling
-  // \Drupal\Core\Render\Element::children() or looping on all keys within
-  // $element, since that requires traversal of all element properties.
-  $variables['items'] = array();
-  $delta = 0;
-  while (!empty($element[$delta])) {
-    $variables['items'][$delta] = $element[$delta];
-    $delta++;
-  }
-
   // Add default CSS classes. Since there can be many fields rendered on a page,
   // save some overhead by calling strtr() directly instead of
   // drupal_html_class().
@@ -2053,6 +2040,7 @@ function template_preprocess_field(&$variables, $hook) {
     'field-type-' . $variables['field_type_css'],
     'field-label-' . $element['#label_display'],
   );
+
   // Add a "clearfix" class to the wrapper since we float the label and the
   // field items in field.module.css if the label is inline.
   if ($element['#label_display'] == 'inline') {
@@ -2069,15 +2057,26 @@ function template_preprocess_field(&$variables, $hook) {
     $default_attributes = new Attribute;
   }
 
-  // Modules (e.g., rdf.module) can add field item attributes (to
-  // $item->_attributes) within hook_entity_prepare_view(). Some field
-  // formatters move those attributes into some nested formatter-specific
-  // element in order have them rendered on the desired HTML element (e.g., on
-  // the <a> element of a field item being rendered as a link). Other field
-  // formatters leave them within $element['#items'][$delta]['_attributes'] to
-  // be rendered on the item wrappers provided by field.html.twig.
-  foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
+  // We want other preprocess functions and the theme implementation to have
+  // fast access to the field item render arrays. The item render array keys
+  // (deltas) should always be numerically indexed starting from 0, and looping
+  // on those keys is faster than calling element_children() or looping on all
+  // keys within $element, since that requires traversal of all element
+  // properties.
+  $variables['items'] = array();
+  $delta = 0;
+  while (!empty($element[$delta])) {
+    $variables['items'][$delta]['content'] = $element[$delta];
+
+    // Modules (e.g., rdf.module) can add field item attributes (to
+    // $item->_attributes) within hook_entity_prepare_view(). Some field
+    // formatters move those attributes into some nested formatter-specific
+    // element in order have them rendered on the desired HTML element (e.g., on
+    // the <a> element of a field item being rendered as a link). Other field
+    // formatters leave them within $element['#items'][$delta]['_attributes'] to
+    // be rendered on the item wrappers provided by field.html.twig.
+    $variables['items'][$delta]['attributes'] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
+    $delta++;
   }
 }
 

@@ -8,11 +8,17 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the containing span element.
- * - items: List of all the field items.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item content.
  *
  * @see field.html.twig
  *
  * @ingroup themeable
  */
 #}
-<span{{ attributes }}>{{ items }}</span>
+<span{{ attributes }}>
+  {%- for item in items -%}
+    {{ item.content }}
+  {%- endfor -%}
+</span>

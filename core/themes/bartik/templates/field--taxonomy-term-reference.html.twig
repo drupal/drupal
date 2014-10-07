@@ -9,20 +9,21 @@
  * - title_attributes: HTML attributes for the label.
  * - label: The label for the field.
  * - content_attributes: HTML attributes for the content.
- * - items: List of all the field items.
- * - item_attributes: List of HTML attributes for each item.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item's content.
  *
  * @see template_preprocess_field()
  * @see bartik_preprocess_field()
  */
 #}
-<div class="{{ attributes.class }} clearfix"{{ attributes|without('class') }}>
+<div{{ attributes.addClass('clearfix') }}>
   {% if not label_hidden %}
     <h3{{ title_attributes }}>{{ label }}: </h3>
   {% endif %}
-  <ul class="links field-items {{ content_attributes.class }}"{{ content_attributes|without('class') }}>
-    {% for delta, item in items %}
-      <li class="taxonomy-term-reference-{{ delta }}"{{ item_attributes[delta] }}>{{ item }}</li>
+  <ul{{ content_attributes.addClass('links', 'field-items') }}>
+    {% for item in items %}
+      <li{{ item.attributes }}>{{ item.content }}</li>
     {% endfor %}
   </ul>
 </div>
