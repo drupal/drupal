@@ -338,6 +338,4 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // Ensure entity and menu router information are correctly rebuilt.
   \Drupal::entityManager()->clearCachedDefinitions();
   \Drupal::service('router.builder')->setRebuildNeeded();
-
-  drupal_set_message(t('Settings successfully updated.'));
 }
