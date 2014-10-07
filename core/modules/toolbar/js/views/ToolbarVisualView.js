@@ -1,6 +1,6 @@
 /**
  * @file
- * A Backbone view for the toolbar element.
+ * A Backbone view for the toolbar element. Listens to mouse & touch.
  */
 
 (function ($, Drupal, drupalSettings, Backbone) {
@@ -8,13 +8,23 @@
   "use strict";
 
   /**
-   * Backbone view for the toolbar element.
+   * Backbone view for the toolbar element. Listens to mouse & touch.
    */
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend({
 
-    events: {
-      'click .toolbar-bar .toolbar-tab': 'onTabClick',
-      'click .toolbar-toggle-orientation button': 'onOrientationToggleClick'
+    events: function () {
+      // Prevents delay and simulated mouse events.
+      var touchEndToClick = function (event) {
+        event.preventDefault();
+        event.target.click();
+      };
+
+      return {
+        'click .toolbar-bar .toolbar-tab': 'onTabClick',
+        'click .toolbar-toggle-orientation button': 'onOrientationToggleClick',
+        'touchend .toolbar-bar .toolbar-tab': touchEndToClick,
+        'touchend .toolbar-toggle-orientation button': touchEndToClick
+      };
     },
 
     /**
