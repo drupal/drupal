@@ -242,25 +242,19 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * Processes the default value before being applied.
    *
    * Defined or configured default values of a field might need some processing
-   * in order to be a valid value for the field type; e.g., a date field could
-   * process the defined value of 'NOW' to a valid date.
+   * in order to be a valid runtime value for the field type; e.g., a date field
+   * could process the defined value of 'NOW' to a valid date.
    *
-   * @param mixed
-   *   The default value as defined for the field.
+   * @param array
+   *   The unprocessed default value defined for the field, as a numerically
+   *   indexed array of items, each item being an array of property/value pairs.
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the default value is generated.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
    *   The definition of the field.
    *
-   * @return mixed
-   *   The default value for the field, as accepted by
-   *   \Drupal\field\Plugin\Core\Entity\FieldItemListInterface::setValue(). This
-   *   can be either:
-   *   - a literal, in which case it will be assigned to the first property of
-   *     the first item.
-   *   - a numerically indexed array of items, each item being a property/value
-   *     array.
-   *   - NULL or array() for no default value.
+   * @return array
+   *   The return default value for the field.
    */
   public static function processDefaultValue($default_value, FieldableEntityInterface $entity, FieldDefinitionInterface $definition);
 

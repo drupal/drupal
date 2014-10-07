@@ -340,6 +340,14 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     else {
       $value = $this->default_value;
     }
+    // Normalize into the "array keyed by delta" format.
+    if (isset($value) && !is_array($value)) {
+      $properties = $this->getFieldStorageDefinition()->getPropertyNames();
+      $property = reset($properties);
+      $value = array(
+        array($property => $value),
+      );
+    }
     // Allow the field type to process default values.
     $field_item_list_class = $this->getClass();
     return $field_item_list_class::processDefaultValue($value, $entity, $this);

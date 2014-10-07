@@ -387,6 +387,14 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     else {
       $value = isset($this->definition['default_value']) ? $this->definition['default_value'] : NULL;
     }
+    // Normalize into the "array keyed by delta" format.
+    if (isset($value) && !is_array($value)) {
+      $properties = $this->getPropertyNames();
+      $property = reset($properties);
+      $value = array(
+        array($property => $value),
+      );
+    }
     // Allow the field type to process default values.
     $field_item_list_class = $this->getClass();
     return $field_item_list_class::processDefaultValue($value, $entity, $this);
@@ -405,8 +413,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *     The entity being created.
    *   - \Drupal\Core\Field\FieldDefinitionInterface $definition
    *     The field definition.
-   *   It should return the default value as documented by
-   *   \Drupal\Core\Field\FieldDefinitionInterface::getDefaultValue().
+   *   It should return the default value in the format accepted by the
+   *   setDefaultValue() method.
    *
    * @return $this
    */
@@ -425,8 +433,12 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * any value set here.
    *
    * @param mixed $value
-   *   The default value in the format as returned by
-   *   \Drupal\Core\Field\FieldDefinitionInterface::getDefaultValue().
+   *   The default value for the field. This can be either:
+   *   - a literal, in which case it will be assigned to the first property of
+   *     the first item.
+   *   - a numerically indexed array of items, each item being a property/value
+   *     array.
+   *   - NULL or array() for no default value.
    *
    * @return $this
    */

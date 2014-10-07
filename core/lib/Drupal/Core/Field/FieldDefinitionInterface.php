@@ -175,15 +175,9 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the default value is generated.
    *
-   * @return mixed
-   *   The default value for the field, as accepted by
-   *   \Drupal\field\Plugin\Core\Entity\FieldItemListInterface::setValue(). This
-   *   can be either:
-   *   - a literal, in which case it will be assigned to the first property of
-   *     the first item.
-   *   - a numerically indexed array of items, each item being a property/value
-   *     array.
-   *   - NULL or array() for no default value.
+   * @return array
+   *   The default value for the field, as a numerically indexed array of items,
+   *   each item being a property/value array (array() for no default value).
    */
   public function getDefaultValue(FieldableEntityInterface $entity);
 
