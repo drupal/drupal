@@ -61,17 +61,6 @@ class XmlEncoderTest extends UnitTestCase {
    * Tests the encode() method.
    */
   public function testEncode() {
-    $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
-      ->disableOriginalConstructor()
-      ->setMethods(array('normalize'))
-      ->getMock();
-    $serializer->expects($this->once())
-      ->method('normalize')
-      ->with($this->testArray, 'test', array())
-      ->will($this->returnValue($this->testArray));
-
-    $this->encoder->setSerializer($serializer);
-
     $this->baseEncoder->expects($this->once())
       ->method('encode')
       ->with($this->testArray, 'test', array())
