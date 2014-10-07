@@ -27,9 +27,9 @@
 /**
  * Adjust the style of in-place editing CKEditor instances.
  */
-.edit-toolgroup.wysiwyg-main .cke_chrome,
-.edit-toolgroup.wysiwyg-main .cke_inner,
-.edit-toolgroup.wysiwyg-main .cke_top {
+.quickedit-toolgroup.wysiwyg-main .cke_chrome,
+.quickedit-toolgroup.wysiwyg-main .cke_inner,
+.quickedit-toolgroup.wysiwyg-main .cke_top {
   background: transparent;
   border-top: none;
   border-right: none;
