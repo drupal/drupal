@@ -96,9 +96,9 @@
  * data and other methods.
  *
  * REST requests can be authenticated. The Drupal Core Basic Auth module
- * provides authentication using the HTTP Basic protocol; contributed module
+ * provides authentication using the HTTP Basic protocol; the contributed module
  * OAuth (https://www.drupal.org/project/oauth) implements the OAuth
- * authenticaion protocol. You can also use cookie-based authentication, which
+ * authentication protocol. You can also use cookie-based authentication, which
  * would require users to be logged into the Drupal site while using the
  * application on the third-party site that is using the REST service.
  *
