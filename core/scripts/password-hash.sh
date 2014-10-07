@@ -15,11 +15,11 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-if (version_compare(PHP_VERSION, "5.4.2", "<")) {
+if (version_compare(PHP_VERSION, '5.4.4-14+deb7u14') < 0 && version_compare(PHP_VERSION, '5.4.5') < 0) {
   $version  = PHP_VERSION;
   echo <<<EOF
 
-ERROR: This script requires at least PHP version 5.4.2. You invoked it with
+ERROR: This script requires at least PHP version 5.4.5. You invoked it with
        PHP version {$version}.
 \n
 EOF;

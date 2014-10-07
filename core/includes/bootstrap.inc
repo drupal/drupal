@@ -22,7 +22,14 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Minimum supported version of PHP.
  */
-const DRUPAL_MINIMUM_PHP = '5.4.2';
+const DRUPAL_MINIMUM_PHP = '5.4.5';
+
+/**
+ * Minimum supported version of PHP on Debian.
+ *
+ * @see https://www.drupal.org/node/2267551.
+ */
+const DRUPAL_MINIMUM_PHP_DEBIAN = '5.4.4-14+deb7u14';
 
 /**
  * Minimum recommended value of PHP memory_limit.

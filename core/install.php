@@ -21,8 +21,8 @@ define('MAINTENANCE_MODE', 'install');
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not
 // yet available. It is defined in bootstrap.inc, but it is not possible to
 // load that file yet as it would cause a fatal error on older versions of PHP.
-if (version_compare(PHP_VERSION, '5.4.2') < 0) {
-  print 'Your PHP installation is too old. Drupal requires at least PHP 5.4.2. See the <a href="http://drupal.org/requirements">system requirements</a> page for more information.';
+if (version_compare(PHP_VERSION, '5.4.4-14+deb7u14') < 0 && version_compare(PHP_VERSION, '5.4.5') < 0) {
+  print 'Your PHP installation is too old. Drupal requires at least PHP 5.4.5. See the <a href="http://drupal.org/requirements">system requirements</a> page for more information.';
   exit;
 }
 

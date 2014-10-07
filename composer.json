@@ -4,7 +4,7 @@
   "type": "drupal-core",
   "license": "GPL-2.0+",
   "require": {
-    "php": ">=5.4.2",
+    "php": ">5.4.4-13",
     "sdboyer/gliph": "0.1.*",
     "symfony/class-loader": "2.5.*",
     "symfony/css-selector": "2.5.*",
