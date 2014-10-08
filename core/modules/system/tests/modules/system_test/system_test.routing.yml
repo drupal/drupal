@@ -13,6 +13,14 @@ system_test.main_content_handling:
   requirements:
     _access: 'TRUE'
 
+system_test.drupal_set_message:
+  path: '/system-test/drupal-set-message'
+  defaults:
+    _title: 'Set messages with drupal_set_message()'
+    _content: '\Drupal\system_test\Controller\SystemTestController::drupalSetMessageTest'
+  requirements:
+    _access: 'TRUE'
+
 system_test.main_content_fallback:
   path: '/system-test/main-content-fallback'
   defaults:

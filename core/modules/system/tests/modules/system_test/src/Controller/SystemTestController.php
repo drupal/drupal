@@ -25,6 +25,22 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Tests setting messages and removing one before it is displayed.
+   *
+   * @return string
+   *   Empty string, we just test the setting of messages.
+   */
+  public function drupalSetMessageTest() {
+    // Set two messages.
+    drupal_set_message('First message (removed).');
+    drupal_set_message('Second message (not removed).');
+
+    // Remove the first.
+    unset($_SESSION['messages']['status'][0]);
+    return '';
+  }
+
+  /**
    * @todo Remove system_test_lock_acquire().
    */
   public function lockAcquire() {
