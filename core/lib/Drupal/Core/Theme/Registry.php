@@ -401,6 +401,9 @@ class Registry implements DestructableInterface {
    * @see _theme()
    * @see hook_theme()
    * @see list_themes()
+   * @see twig_render_template()
+   *
+   * @throws \BadFunctionCallException
    */
   protected function processExtension(&$cache, $name, $type, $theme, $path) {
     $result = array();
@@ -430,12 +433,6 @@ class Registry implements DestructableInterface {
         $result[$hook]['type'] = $type;
         $result[$hook]['theme path'] = $path;
 
-        // If function and file are omitted, default to standard naming
-        // conventions.
-        if (!isset($info['template']) && !isset($info['function'])) {
-          $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name . '_') . $hook;
-        }
-
         if (isset($cache[$hook]['includes'])) {
           $result[$hook]['includes'] = $cache[$hook]['includes'];
         }
@@ -451,18 +448,35 @@ class Registry implements DestructableInterface {
           $result[$hook]['includes'][] = $include_file;
         }
 
+        // A template file is the default implementation for a theme hook, but
+        // if the theme hook specifies a function callback instead, check to
+        // ensure the function actually exists.
+        if (isset($info['function']) && !function_exists($info['function'])) {
+          throw new \BadFunctionCallException(sprintf(
+            'Theme hook "%s" refers to a theme function callback that does not exist: "%s"',
+            $hook,
+            $info['function']
+          ));
+        }
+        // Provide a default naming convention for 'template' based on the
+        // hook used. If the template does not exist, the theme engine used
+        // should throw an exception at runtime when attempting to include
+        // the template file.
+        elseif (!isset($info['template'])) {
+          $info['template'] = strtr($hook, '_', '-');
+          $result[$hook]['template'] = $info['template'];
+        }
+
+        // Prepend the current theming path when none is set. This is required
+        // for the default theme engine to know where the template lives.
+        if (isset($result[$hook]['template']) && !isset($info['path'])) {
+          $result[$hook]['path'] = $path . '/templates';
+        }
+
         // If the default keys are not set, use the default values registered
         // by the module.
         if (isset($cache[$hook])) {
           $result[$hook] += array_intersect_key($cache[$hook], $hook_defaults);
-        }
-
-        // The following apply only to theming hooks implemented as templates.
-        if (isset($info['template'])) {
-          // Prepend the current theming path when none is set.
-          if (!isset($info['path'])) {
-            $result[$hook]['template'] = $path . '/templates/' . $info['template'];
-          }
         }
 
         // Preprocess variables for all theming hooks, whether the hook is

@@ -63,6 +63,7 @@ function book_theme() {
     ),
     'book_link' => array(
       'render element' => 'element',
+      'function' => 'theme_book_link',
     ),
     'book_export_html' => array(
       'variables' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
@@ -71,6 +72,7 @@ function book_theme() {
     'book_admin_table' => array(
       'render element' => 'form',
       'file' => 'book.admin.inc',
+      'function' => 'theme_book_admin_table',
     ),
     'book_all_books_block' => array(
       'render element' => 'book_menus',

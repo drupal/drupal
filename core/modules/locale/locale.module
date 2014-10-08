@@ -182,6 +182,7 @@ function locale_theme() {
     'locale_translate_edit_form_strings' => array(
       'render element' => 'form',
       'file' => 'locale.pages.inc',
+      'function' => 'theme_locale_translate_edit_form_strings',
     ),
     'locale_translation_last_check' => array(
       'variables' => array('last' => NULL),

@@ -42,9 +42,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
     'render element' => 'element',
     'template' => 'toolbar',
   );
-  $items['toolbar_item'] = array(
-    'render element' => 'element',
-  );
 
   return $items;
 }

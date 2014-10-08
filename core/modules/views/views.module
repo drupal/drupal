@@ -129,6 +129,7 @@ function views_theme($existing, $type, $theme, $path) {
   // Default view themes
   $hooks['views_view_field'] = $base + array(
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
+    'function' => 'theme_views_view_field',
   );
   $hooks['views_view_grouping'] = $base + array(
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
@@ -149,9 +150,9 @@ function views_theme($existing, $type, $theme, $path) {
       if (!isset($def['theme']) || empty($def['register_theme'])) {
         continue;
       }
-      // For each theme registration we a base directory to look for the
-      // templates folder. This will be in any case the root of the given module
-      // so we always need a module definition.
+      // For each theme registration, we have a base directory to check for the
+      // templates folder. This will be relative to the root of the given module
+      // folder, so we always need a module definition.
       // @todo: watchdog or exception?
       if (!isset($def['provider']) || !$module_handler->moduleExists($def['provider'])) {
         continue;
@@ -161,35 +162,44 @@ function views_theme($existing, $type, $theme, $path) {
         'variables' => $variables[$type],
       );
 
-      // For the views module we ensure views.theme.inc is included.
-      if ($def['provider'] == 'views') {
-        $def['theme_file'] = 'views.theme.inc';
-      }
       // We always use the module directory as base dir.
       $module_dir = drupal_get_path('module', $def['provider']);
+      $hooks[$def['theme']]['path'] = $module_dir;
 
+      // For the views module we ensure views.theme.inc is included.
+      if ($def['provider'] == 'views') {
+        if (!isset($hooks[$def['theme']]['includes'])) {
+          $hooks[$def['theme']]['includes'] = array();
+        }
+        if (!in_array('views.theme.inc', $hooks[$def['theme']]['includes'])) {
+          $hooks[$def['theme']]['includes'][] = $module_dir . '/views.theme.inc';
+        }
+      }
       // The theme_file definition is always relative to the modules directory.
-      if (isset($def['theme_file'])) {
-        $hooks[$def['theme']]['path'] = $module_dir;
+      elseif (!empty($def['theme_file'])) {
         $hooks[$def['theme']]['file'] = $def['theme_file'];
       }
-      // Whenever we got a theme file, we include it directly so we can
+
+      // Whenever we have a theme file, we include it directly so we can
       // auto-detect the theme function.
       if (isset($def['theme_file'])) {
-        $include = DRUPAL_ROOT . '/' . $module_dir. '/' . $def['theme_file'];
+        $include = DRUPAL_ROOT . '/' . $module_dir . '/' . $def['theme_file'];
         if (is_file($include)) {
           require_once $include;
         }
       }
-     // If there is no theme function for the given theme definition, we assume
-     // a template file shall be used. By default this file is located in the
-     // /templates directory of the module's folder.
-     // If a module wants to define its own location it has to set
-     // register_theme of the plugin to FALSE and implement hook_theme() by
-     // itself.
+
+      // If there is no theme function for the given theme definition, it must
+      // be a template file. By default this file is located in the /templates
+      // directory of the module's folder. If a module wants to define its own
+      // location it has to set register_theme of the plugin to FALSE and
+      // implement hook_theme() by itself.
       if (!function_exists('theme_' . $def['theme'])) {
-        $hooks[$def['theme']]['path'] = $module_dir;
-        $hooks[$def['theme']]['template'] = 'templates/' . drupal_clean_css_identifier($def['theme']);
+        $hooks[$def['theme']]['path'] .= '/templates';
+        $hooks[$def['theme']]['template'] = drupal_clean_css_identifier($def['theme']);
+      }
+      else {
+        $hooks[$def['theme']]['function'] = 'theme_' . $def['theme'];
       }
     }
   }

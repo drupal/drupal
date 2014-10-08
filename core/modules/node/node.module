@@ -141,6 +141,7 @@ function node_theme() {
     ),
     'node_search_admin' => array(
       'render element' => 'form',
+      'function' => 'theme_node_search_admin',
     ),
     'node_add_list' => array(
       'variables' => array('content' => NULL),

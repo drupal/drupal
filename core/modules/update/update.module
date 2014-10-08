@@ -205,11 +205,11 @@ function update_theme() {
       'file' => 'update.report.inc',
       'template' => 'update-project-status',
     ),
+    // We are using template instead of '#type' => 'table' here to keep markup
+    // out of preprocess and allow for easier changes to markup.
     'update_version' => array(
       'variables' => array('version' => NULL, 'title' => NULL, 'attributes' => array()),
       'file' => 'update.report.inc',
-      // We are using template instead of '#type' => 'table' here to keep markup
-      // out of preprocess and allow for easier changes to markup.
       'template' => 'update-version',
     ),
   );

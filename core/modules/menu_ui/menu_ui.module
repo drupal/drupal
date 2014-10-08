@@ -78,6 +78,7 @@ function menu_ui_theme() {
     'menu_overview_form' => array(
       'file' => 'menu_ui.admin.inc',
       'render element' => 'form',
+      'function' => 'theme_menu_overview_form',
     ),
   );
 }

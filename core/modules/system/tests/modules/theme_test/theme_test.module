@@ -9,6 +9,7 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test'] = array(
     'file' => 'theme_test.inc',
     'variables' => array('foo' => ''),
+    'function' => 'theme_theme_test',
   );
   $items['theme_test_template_test'] = array(
     'template' => 'theme_test.template_test',
@@ -34,12 +35,15 @@ function theme_test_theme($existing, $type, $theme, $path) {
   );
   $items['theme_test_function_suggestions'] = array(
     'variables' => array(),
+    'function' => 'theme_theme_test_function_suggestions',
   );
   $items['theme_test_suggestions_include'] = array(
     'variables' => array(),
+    'function' => 'theme_theme_test_suggestions_include',
   );
   $items['theme_test_foo'] = array(
     'variables' => array('foo' => NULL),
+    'function' => 'theme_theme_test_foo',
   );
   $items['theme_test_render_element'] = array(
     'render element' => 'elements',
@@ -47,9 +51,11 @@ function theme_test_theme($existing, $type, $theme, $path) {
   );
   $items['theme_test_render_element_children'] = array(
     'render element' => 'element',
+    'function' => 'theme_theme_test_render_element_children',
   );
   $items['theme_test_function_template_override'] = array(
     'variables' => array(),
+    'function' => 'theme_theme_test_function_template_override',
   );
   $info['test_theme_not_existing_function'] = array(
     'function' => 'test_theme_not_existing_function',

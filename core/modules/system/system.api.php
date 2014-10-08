@@ -981,17 +981,17 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
  *     theme path will be used, but if the file will not be in the default
  *     path, include it here. This path should be relative to the Drupal root
  *     directory.
- *   - template: If specified, this theme implementation is a template, and
- *     this is the template file without an extension. Do not put .html.twig on
- *     this file; that extension will be added automatically by the default
- *     rendering engine (which is Twig). If 'path' above is specified, the
- *     template should also be in this path.
+ *   - template: If specified, the theme implementation is a template file, and
+ *     this is the template name. Do not add 'html.twig' on the end of the
+ *     template name. The extension will be added automatically by the default
+ *     rendering engine (which is Twig.) If 'path' is specified, 'template'
+ *     should also be specified. If neither 'template' nor 'function' are
+ *     specified, a default template name will be assumed. For example, if a
+ *     module registers the 'search_result' theme hook, 'search-result' will be
+ *     assigned as its template name.
  *   - function: If specified, this will be the function name to invoke for
- *     this implementation. If neither 'template' nor 'function' is specified,
- *     a default function name will be assumed. For example, if a module
- *     registers the 'node' theme hook, 'theme_node' will be assigned to its
- *     function. If the chameleon theme registers the node hook, it will be
- *     assigned 'chameleon_node' as its function.
+ *     this implementation. If neither 'template' nor 'function' are specified,
+ *     a default template name will be assumed. See above for more details.
  *   - base hook: Used for _theme() suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.

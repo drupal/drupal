@@ -123,6 +123,7 @@ function common_test_theme() {
     ),
     'common_test_empty' => array(
       'variables' => array('foo' => 'foo'),
+      'function' => 'theme_common_test_empty',
     ),
   );
 }

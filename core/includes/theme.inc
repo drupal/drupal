@@ -2295,6 +2295,7 @@ function drupal_common_theme() {
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
+      'function' => 'theme_indentation',
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(
@@ -2311,9 +2312,15 @@ function drupal_common_theme() {
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),
+      'function' => 'theme_authorize_message',
+      'path' => 'core/includes',
+      'file' => 'theme.maintenance.inc',
     ),
     'authorize_report' => array(
       'variables' => array('messages' => array()),
+      'function' => 'theme_authorize_report',
+      'path' => 'core/includes',
+      'file' => 'theme.maintenance.inc',
     ),
     // From pager.inc.
     'pager' => array(

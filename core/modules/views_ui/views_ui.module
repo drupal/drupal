@@ -100,6 +100,7 @@ function views_ui_theme() {
     'views_ui_build_group_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
+      'function' => 'theme_views_ui_build_group_filter_form',
     ),
 
     // On behalf of a plugin

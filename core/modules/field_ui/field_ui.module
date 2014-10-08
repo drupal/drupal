@@ -66,6 +66,7 @@ function field_ui_theme() {
   return array(
     'field_ui_table' => array(
       'render element' => 'elements',
+      'function' => 'theme_field_ui_table',
     ),
   );
 }

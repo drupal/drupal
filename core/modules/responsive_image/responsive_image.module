@@ -80,6 +80,7 @@ function responsive_image_theme() {
         'attributes' => array(),
         'mapping_id' => array(),
       ),
+      'function' => 'theme_responsive_image',
     ),
     'responsive_image_formatter' => array(
       'variables' => array(
@@ -88,6 +89,7 @@ function responsive_image_theme() {
         'image_style' => NULL,
         'mapping_id' => array(),
       ),
+      'function' => 'theme_responsive_image_formatter',
     ),
     'responsive_image_source' => array(
       'variables' => array(
@@ -96,6 +98,7 @@ function responsive_image_theme() {
         'dimensions' => NULL,
         'media' => NULL,
       ),
+      'function' => 'theme_responsive_image_source',
     ),
   );
 }

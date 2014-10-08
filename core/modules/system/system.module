@@ -187,10 +187,12 @@ function system_theme() {
     'system_modules_details' => array(
       'render element' => 'form',
       'file' => 'system.admin.inc',
+      'function' => 'theme_system_modules_details',
     ),
     'system_modules_uninstall' => array(
       'render element' => 'form',
       'file' => 'system.admin.inc',
+      'function' => 'theme_system_modules_uninstall',
     ),
     'status_report' => array(
       'variables' => array('requirements' => NULL),
@@ -219,6 +221,7 @@ function system_theme() {
     ),
     'system_compact_link' => array(
       'variables' => array(),
+      'function' => 'theme_system_compact_link',
     ),
   ));
 }
