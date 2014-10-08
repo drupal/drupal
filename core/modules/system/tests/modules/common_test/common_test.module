@@ -143,6 +143,30 @@ function theme_common_test_empty($variables) {
 }
 
 /**
+ * Implements MODULE_preprocess().
+ *
+ * @see RenderTest::testDrupalRenderThemePreprocessAttached()
+ */
+function common_test_preprocess(&$variables, $hook) {
+  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'test/generic_preprocess';
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ *
+ * @see RenderTest::testDrupalRenderThemePreprocessAttached()
+ */
+function common_test_preprocess_common_test_render_element(&$variables) {
+  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'test/specific_preprocess';
+}
+
+/**
  * Implements hook_library_info_alter().
  */
 function common_test_library_info_alter(&$libraries, $module) {

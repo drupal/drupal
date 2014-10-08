@@ -372,6 +372,15 @@ function _theme($hook, $variables = array()) {
         $preprocessor_function($variables, $hook, $info);
       }
     }
+    // Allow theme preprocess functions to set $variables['#attached'] and use
+    // it like the #attached property on render arrays. In Drupal 8, this is the
+    // (only) officially supported method of attaching assets from preprocess
+    // functions. Assets attached here should be associated with the template
+    // that we're preprocessing variables for.
+    if (isset($variables['#attached'])) {
+      $preprocess_attached = ['#attached' => $variables['#attached']];
+      drupal_render($preprocess_attached, TRUE);
+    }
   }
 
   // Generate the output using either a function or a template.
@@ -1946,15 +1955,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $attributes['class'] = $classes;
 
   // @see system_page_build()
-  $attached = array(
-    '#attached' => array(
-      'library' => array(
-        'core/normalize',
-        'system/maintenance',
-      ),
-    ),
-  );
-  drupal_render($attached);
+  $variables['#attached']['library'][] = 'core/normalize';
+  $variables['#attached']['library'][] = 'system/maintenance';
 }
 
 /**

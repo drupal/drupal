@@ -159,6 +159,21 @@
  * suggestions as input, and can change this array (adding suggestions and
  * removing them).
  *
+ * @section Assets
+ *
+ * We can distinguish between two types of assets:
+ * 1. global assets (loaded on all pages where the theme is in use): these are
+ *    defined in the theme's *.info.yml file.
+ * 2. template-specific assets (loaded on all pages where a specific template is
+ *    in use): these can be added by in preprocessing functions, using @code
+ *    $variables['#attached'] @endcode, e.g.:
+ *    @code
+ *    function seven_preprocess_menu_local_action(array &$variables) {
+ *      // We require Modernizr's touch test for button styling.
+ *      $variables['#attached']['library'][] = 'core/modernizr';
+ *    }
+ *    @endcode
+ *
  * @see hooks
  * @see callbacks
  * @see theme_render

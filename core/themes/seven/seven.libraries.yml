@@ -16,7 +16,7 @@ install-page:
     theme:
       css/theme/install-page.css: {}
   dependencies:
-    - system/maintenance
+    - seven/maintenance-page
 
 drupal.nav-tabs:
   version: VERSION

@@ -128,14 +128,7 @@ function seven_preprocess_menu_local_action(array &$variables) {
   $variables['link']['#options']['attributes']['class'][] = 'button--small';
 
   // We require Modernizr's touch test for button styling.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        'core/modernizr',
-      ),
-    ),
-  );
-  drupal_render($libraries);
+  $variables['#attached']['library'][] = 'core/modernizr';
 }
 
 /**
@@ -158,17 +151,8 @@ function seven_preprocess_install_page(&$variables) {
   $classes[] = 'install-background';
   $attributes['class'] = $classes;
 
-  // Normally we could attach libraries via hook_page_alter(), but when the
-  // database is inactive it's not called so we add them here.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        'seven/maintenance-page',
-        'seven/install-page',
-      ),
-    ),
-  );
-  drupal_render($libraries);
+  // Seven has custom styling for the install page.
+  $variables['#attached']['library'][] = 'seven/install-page';
 }
 
 /**
@@ -181,16 +165,8 @@ function seven_preprocess_maintenance_page(&$variables) {
   $classes[] = 'maintenance-background';
   $attributes['class'] = $classes;
 
-  // // Normally we could attach libraries via hook_page_alter(), but when the
-  // // database is inactive it's not called so we add them here.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        'seven/maintenance-page',
-      ),
-    ),
-  );
-  drupal_render($libraries);
+  // Seven has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'seven/maintenance-page';
 }
 
 /**

@@ -87,16 +87,9 @@ function bartik_preprocess_maintenance_page(&$variables) {
   if (!$variables['db_is_active']) {
     $variables['site_name'] = '';
   }
-  // Normally we could attach libraries via hook_page_alter(), but when the
-  // database is inactive it's not called so we add them here.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        'bartik/maintenance_page',
-      ),
-    ),
-  );
-  drupal_render($libraries);
+
+  // Bartik has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'bartik/maintenance_page';
 
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);

@@ -329,8 +329,7 @@ function views_preprocess_page(&$variables) {
       unset($class[$key]);
       $attributes['class'] = $class;
       $attributes['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
-      $attached['#attached']['library'][] = 'views/views.contextual-links';
-      drupal_render($attached);
+      $variables['#attached']['library'][] = 'views/views.contextual-links';
     }
   }
 }
