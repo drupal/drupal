@@ -19,8 +19,8 @@
 }
 
 /* Span the full width of the viewport */
-#branding .is-horizontal .tabs:before,
-#branding .is-collapse-enabled .tabs:before {
+.content-header .is-horizontal .tabs:before,
+.content-header .is-collapse-enabled .tabs:before {
   left: -2.5em;
   right: -2.5em;
 }

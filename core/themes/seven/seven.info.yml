@@ -14,7 +14,7 @@ stylesheets:
     - css/components/admin-options.css
     - css/components/admin-panel.css
     - css/components/block-recent-content.css
-    - css/components/branding.css
+    - css/components/content-header.css
     - css/components/breadcrumb.css
     - css/components/buttons.css
     - css/components/buttons.theme.css

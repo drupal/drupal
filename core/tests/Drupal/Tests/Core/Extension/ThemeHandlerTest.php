@@ -180,7 +180,7 @@ class ThemeHandlerTest extends UnitTestCase {
         'css/components/admin-options.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-options.css',
         'css/components/admin-panel.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-panel.css',
         'css/components/block-recent-content.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/block-recent-content.css',
-        'css/components/branding.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/branding.css',
+        'css/components/content-header.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/content-header.css',
         'css/components/breadcrumb.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/breadcrumb.css',
         'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
         'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',

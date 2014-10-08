@@ -4,7 +4,7 @@
 #page-title {
   padding-top: 20px;
 }
-#branding .page-title {
+.content-header .page-title {
   color: #333;
   display: inline-block;
   margin: 0;
