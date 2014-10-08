@@ -63,13 +63,6 @@ class AdvancedSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('sql_signature'),
     );
 
-    $form['debug']['no_javascript'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Disable JavaScript with Views'),
-      '#description' => $this->t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
-      '#default_value' => $config->get('no_javascript'),
-    );
-
     $options = Views::fetchPluginNames('display_extender');
     if (!empty($options)) {
       $form['extenders'] = array(
@@ -95,7 +88,6 @@ class AdvancedSettingsForm extends ConfigFormBase {
     $this->config('views.settings')
       ->set('skip_cache', $form_state->getValue('skip_cache'))
       ->set('sql_signature', $form_state->getValue('sql_signature'))
-      ->set('no_javascript', $form_state->getValue('no_javascript'))
       ->set('display_extenders', $form_state->getValue('display_extenders', array()))
       ->save();
 

@@ -1,5 +1,4 @@
 display_extenders: {  }
-no_javascript: false
 skip_cache: false
 sql_signature: false
 ui:

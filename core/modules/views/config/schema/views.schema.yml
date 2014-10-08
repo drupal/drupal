@@ -10,9 +10,6 @@ views.settings:
       sequence:
         - type: string
           label: 'Display extender'
-    no_javascript:
-      type: boolean
-      label: 'Disable JavaScript with Views'
     skip_cache:
       type: boolean
       label: 'Disable views data caching'

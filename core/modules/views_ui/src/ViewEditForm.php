@@ -106,10 +106,7 @@ class ViewEditForm extends ViewFormBase {
     $form['#attached']['library'][] = 'core/jquery.ui.dialog';
     $form['#attached']['library'][] = 'core/drupal.states';
     $form['#attached']['library'][] = 'core/drupal.tabledrag';
-
-    if (!\Drupal::config('views.settings')->get('no_javascript')) {
-      $form['#attached']['library'][] = 'views_ui/views_ui.admin';
-    }
+    $form['#attached']['library'][] = 'views_ui/views_ui.admin';
 
     $form['#attached']['css'] = static::getAdminCSS();
 
