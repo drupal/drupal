@@ -7,7 +7,7 @@
 
 namespace Drupal\contextual\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests all edge cases of converting from #contextual_links to ids and vice
@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group contextual
  */
-class ContextualUnitTest extends DrupalUnitTestBase {
+class ContextualUnitTest extends KernelTestBase {
 
   /**
    * Modules to enable.
