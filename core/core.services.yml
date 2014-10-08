@@ -393,7 +393,12 @@ services:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation']
   http_kernel:
-    class: Stack\StackedHttpKernel
+    class: Symfony\Component\HttpKernel\HttpKernel
+    factory_method: resolve
+    factory_service: http_kernel_factory
+    arguments: ['@http_kernel.basic']
+  http_kernel_factory:
+    class: Stack\Builder
   http_kernel.basic:
     class: Symfony\Component\HttpKernel\HttpKernel
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']

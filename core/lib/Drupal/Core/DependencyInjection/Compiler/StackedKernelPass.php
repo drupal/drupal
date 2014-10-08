@@ -9,7 +9,6 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Provides a compiler pass for stacked HTTP kernels.
@@ -22,44 +21,25 @@ class StackedKernelPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container) {
-
-    if (!$container->hasDefinition('http_kernel')) {
+    if (!$container->hasDefinition('http_kernel_factory')) {
       return;
     }
 
-    $stacked_kernel = $container->getDefinition('http_kernel');
-
-    // Return now if this is not a stacked kernel.
-    if ($stacked_kernel->getClass() !== 'Stack\StackedHttpKernel') {
-      return;
-    }
-
-    $middlewares = [];
-    $priorities = [];
-
+    $http_kernel_factory = $container->getDefinition('http_kernel_factory');
+    $middleware_priorities = array();
+    $middleware_arguments = array();
     foreach ($container->findTaggedServiceIds('http_middleware') as $id => $attributes) {
-      $priorities[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
-      $middlewares[$id] = $container->getDefinition($id);
+      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $middleware_priorities[$id] = $priority;
+      $definition = $container->getDefinition($id);
+      $middleware_arguments[$id] = $definition->getArguments();
+      array_unshift($middleware_arguments[$id], $definition->getClass());
     }
+    array_multisort($middleware_priorities, SORT_DESC, $middleware_arguments, SORT_DESC);
 
-    array_multisort($priorities, SORT_ASC, $middlewares);
-
-    $decorated_id = 'http_kernel.basic';
-    $middlewares_param = [new Reference($decorated_id)];
-    foreach ($middlewares as $id => $decorator) {
-      // Prepend a reference to the middlewares container parameter.
-      array_unshift($middlewares_param, new Reference($id));
-
-      // Prepend the inner kernel as first constructor argument.
-      $arguments = $decorator->getArguments();
-      array_unshift($arguments, new Reference($decorated_id));
-      $decorator->setArguments($arguments);
-
-      $decorated_id = $id;
+    foreach ($middleware_arguments as $id => $push_arguments) {
+      $http_kernel_factory->addMethodCall('push', $push_arguments);
     }
-
-    $arguments = [$middlewares_param[0], $middlewares_param];
-    $stacked_kernel->setArguments($arguments);
   }
 
 }
