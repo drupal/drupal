@@ -5,8 +5,7 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the fieldset element.
- * - required: The required marker or empty if the associated fieldset is
- *   not required.
+ * - required: Boolean indicating whether the fieldeset element is required.
  * - legend: The legend element containing the following properties:
  *   - title: Title of the fieldset, intended for use as the text of the legend.
  *   - attributes: HTML attributes to apply to the legend.
@@ -22,11 +21,17 @@
  * @ingroup themeable
  */
 #}
-<fieldset{{ attributes }}>
-  {% if legend.title is not empty or required -%}
-    {#  Always wrap fieldset legends in a SPAN for CSS positioning. #}
-    <legend{{ legend.attributes }}><span class="{{ legend_span.attributes.class }}">{{ legend.title }}{{ required }}</span></legend>
-  {%- endif %}
+<fieldset{{ attributes.addClass('form-item', 'form-wrapper') }}>
+  {%
+    set legend_span_classes = [
+      'fieldset-legend',
+      required ? 'form-required',
+    ]
+  %}
+  {#  Always wrap fieldset legends in a SPAN for CSS positioning. #}
+  <legend{{ legend.attributes }}>
+    <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>
+  </legend>
   <div class="fieldset-wrapper">
     {% if prefix %}
       <span class="field-prefix">{{ prefix }}</span>
@@ -36,7 +41,7 @@
       <span class="field-suffix">{{ suffix }}</span>
     {% endif %}
     {% if description.content %}
-      <div{{ description.attributes }}>{{ description.content }}</div>
+      <div{{ description.attributes.addClass('description') }}>{{ description.content }}</div>
     {% endif %}
   </div>
 </fieldset>

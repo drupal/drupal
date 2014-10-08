@@ -303,29 +303,21 @@ function form_get_options($element, $key) {
 function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, array('id'));
-  Element\RenderElement::setAttributes($element, array('form-wrapper'));
+  Element\RenderElement::setAttributes($element);
   $variables['attributes'] = $element['#attributes'];
-  $variables['attributes']['class'][] = 'form-item';
   $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
   $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
+  $variables['title_display'] = isset($element['#title_display']) ? $element['#title_display'] : NULL;
   $variables['children'] = $element['#children'];
-  $legend_attributes = array();
-  if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
-    $legend_attributes['class'][] = 'visually-hidden';
-  }
-  $variables['legend']['attributes'] = new Attribute($legend_attributes);
+  $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
+
   $variables['legend']['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
-  $legend_span_attributes = array('class' => array('fieldset-legend'));
-  if (!empty($element['#required'])) {
-    $legend_span_attributes['class'][] = 'form-required';
-    $variables['legend_span']['attributes'] = new Attribute($legend_span_attributes);
-  }
+  $variables['legend']['attributes'] = new Attribute();
+  $variables['legend_span']['attributes'] = new Attribute();
+
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
-    $description_attributes = array(
-      'class' => 'description',
-      'id' => $description_id,
-    );
+    $description_attributes['id'] = $description_id;
     $variables['description']['attributes'] = new Attribute($description_attributes);
     $variables['description']['content'] = $element['#description'];
 
@@ -380,10 +372,6 @@ function template_preprocess_radios(&$variables) {
   if (isset($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
   }
-  $variables['attributes']['class'][] = 'form-radios';
-  if (!empty($element['#attributes']['class'])) {
-    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $element['#attributes']['class']);
-  }
   if (isset($element['#attributes']['title'])) {
     $variables['attributes']['title'] = $element['#attributes']['title'];
   }
@@ -405,11 +393,6 @@ function template_preprocess_checkboxes(&$variables) {
   $variables['attributes'] = array();
   if (isset($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
-  }
-  $variables['attributes']['class'] = array();
-  $variables['attributes']['class'][] = 'form-checkboxes';
-  if (!empty($element['#attributes']['class'])) {
-    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $element['#attributes']['class']);
   }
   if (isset($element['#attributes']['title'])) {
     $variables['attributes']['title'] = $element['#attributes']['title'];
@@ -487,18 +470,11 @@ function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
   Element\RenderElement::setAttributes($element, array('form-textarea'));
-  $variables['wrapper_attributes'] = new Attribute(array(
-    'class' => array('form-textarea-wrapper'),
-  ));
-
-  // Add resizable behavior.
-  if (!empty($element['#resizable'])) {
-    $element['#attributes']['class'][] = 'resize-' . $element['#resizable'];
-  }
-
+  $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
-
   $variables['value'] = String::checkPlain($element['#value']);
+  $variables['resizable'] = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
+  $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
 
 /**
@@ -506,14 +482,6 @@ function template_preprocess_textarea(&$variables) {
  * Prepares variables for form element templates.
  *
  * Default template: form-element.html.twig.
- *
- * Each form element is wrapped in a DIV container having the following CSS
- * classes:
- * - form-item: Generic for all form elements.
- * - form-type-#type: The internal element #type.
- * - form-item-#name: The internal form element #name (usually derived from the
- *   $form structure and set via form_builder()).
- * - form-disabled: Only set if the form element is #disabled.
  *
  * In addition to the element itself, the DIV contains a label for the element
  * based on the optional #title_display property, and an optional #description.
@@ -570,27 +538,23 @@ function template_preprocess_form_element(&$variables) {
     $variables['attributes']['id'] = $element['#id'];
   }
 
-  // Add element's #type and #name as class to aid with JS/CSS selectors.
-  $variables['attributes']['class'][] = 'form-item';
+  // Pass elements #type and #name to template.
   if (!empty($element['#type'])) {
-    $variables['attributes']['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
+    $variables['type'] = $element['#type'];
   }
   if (!empty($element['#name'])) {
-    $variables['attributes']['class'][] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+    $variables['name'] = $element['#name'];
   }
-  // Add a class for disabled elements to facilitate cross-browser styling.
-  if (!empty($element['#attributes']['disabled'])) {
-    $variables['attributes']['class'][] = 'form-disabled';
-  }
+
+  // Pass elements disabled status to template.
+  $variables['disabled'] = !empty($element['#attributes']['disabled']) ? $element['#attributes']['disabled'] : NULL;
 
   // If #title is not set, we don't display any label.
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
   }
-  // If #title_dislay is not some of the visible options, add a CSS class.
-  if ($element['#title_display'] != 'before' && $element['#title_display'] != 'after') {
-    $variables['attributes']['class'][] = 'form-no-label';
-  }
+
+  $variables['title_display'] = $element['#title_display'];
 
   $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
   $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
@@ -598,10 +562,7 @@ function template_preprocess_form_element(&$variables) {
   $variables['description'] = NULL;
   if (!empty($element['#description'])) {
     $variables['description_display'] = $element['#description_display'];
-    $description_attributes = array('class' => array('description'));
-    if ($element['#description_display'] === 'invisible') {
-      $description_attributes['class'][] = 'visually-hidden';
-    }
+    $description_attributes = [];
     if (!empty($element['#id'])) {
       $description_attributes['id'] = $element['#id'] . '--description';
     }
@@ -643,14 +604,9 @@ function template_preprocess_form_element_label(&$variables) {
   // If title and required marker are both empty, output no label.
   $variables['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
   $variables['attributes'] = array();
-  // Style the label as class option to display inline with the element.
-  if ($element['#title_display'] == 'after') {
-    $variables['attributes']['class'][] = 'option';
-  }
-  // Show label only to screen readers to avoid disruption in visual flows.
-  elseif ($element['#title_display'] == 'invisible') {
-    $variables['attributes']['class'][] = 'visually-hidden';
-  }
+
+  // Pass elements title_display to template.
+  $variables['title_display'] = $element['#title_display'];
 
   // A #for property of a dedicated #type 'label' element as precedence.
   if (!empty($element['#for'])) {
@@ -666,13 +622,8 @@ function template_preprocess_form_element_label(&$variables) {
     $variables['attributes']['for'] = $element['#id'];
   }
 
-  // For required elements a 'form-required' class is appended to the
-  // label attributes.
-  $variables['required'] = FALSE;
-  if (!empty($element['#required'])) {
-    $variables['required'] = TRUE;
-    $variables['attributes']['class'][] = 'form-required';
-  }
+  // Pass elements required to template.
+  $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
 
 /**

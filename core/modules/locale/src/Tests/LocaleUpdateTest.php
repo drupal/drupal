@@ -139,7 +139,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations/check');
 
     // Check the status on the Available translation status page.
-    $this->assertRaw('<label class="visually-hidden" for="edit-langcodes-de">Update German</label>', 'German language found');
+    $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>', 'German language found');
     $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     $this->assertText('Contributed module one (' . format_date($this->timestamp_now, 'html_date') . ')', 'Updates for Contrib module one');
     $this->assertText('Contributed module two (' . format_date($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module two');

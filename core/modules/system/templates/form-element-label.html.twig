@@ -5,6 +5,7 @@
  *
  * Available variables:
  * - title: The label's text.
+ * - title_display: Elements title_display setting.
  * - required: An indicator for whether the associated form element is required.
  * - attributes: A list of HTML attributes for the label.
  *
@@ -13,6 +14,13 @@
  * @ingroup themeable
  */
 #}
+{%
+  set classes = [
+    title_display == 'after' ? 'option',
+    title_display == 'invisible' ? 'visually-hidden',
+    required ? 'form-required',
+  ]
+%}
 {% if title is not empty or required -%}
-  <label{{ attributes }}>{{ title }}</label>
+  <label{{ attributes.addClass(classes) }}>{{ title }}</label>
 {%- endif %}
