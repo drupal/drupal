@@ -64,7 +64,6 @@ class LinksTest extends WebTestBase {
       'title' => 'Menu link test',
       'provider' => $module,
       'menu_name' => 'menu_test',
-      'bundle' => 'menu_link_content'
     );
 
     $parent = $base_options + array(

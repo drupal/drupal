@@ -134,7 +134,6 @@ class MenuNodeTest extends WebTestBase {
       'route_parameters' => array('node' => $node->id()),
       'title' => $this->randomMachineName(16),
       'menu_name' => 'admin',
-      'bundle' => 'menu_link_content',
     ));
     $item->save();
 
@@ -159,7 +158,6 @@ class MenuNodeTest extends WebTestBase {
       'title' => $this->randomMachineName(16),
       'parent' => $item->getPluginId(),
       'menu_name' => $item->getMenuName(),
-      'bundle' => 'menu_link_content',
     ));
     $child_item->save();
     // Edit the first node.

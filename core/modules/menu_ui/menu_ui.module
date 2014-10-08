@@ -182,7 +182,6 @@ function menu_ui_node_save(EntityInterface $node) {
           'parent' => $definition['parent'],
           'weight' => isset($definition['weight']) ? $definition['weight'] : 0,
           'enabled' => 1,
-          'bundle' => 'menu_link_content',
           'langcode' => $node->getUntranslated()->language()->id,
         ));
       }
