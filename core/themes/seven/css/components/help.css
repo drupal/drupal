@@ -1,15 +1,15 @@
 /**
  * Help.
  */
-#help {
+.help {
   font-size: 0.923em;
 }
-#help p {
+.help p {
   margin: 0 0 10px;
 }
-#help div.more-help-link {
+.help div.more-help-link {
   text-align: right; /* LTR */
 }
-[dir="rtl"] #help div.more-help-link {
+[dir="rtl"] .help div.more-help-link {
   text-align: left;
 }

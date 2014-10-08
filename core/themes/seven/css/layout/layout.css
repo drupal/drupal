@@ -39,6 +39,6 @@
 /**
  * Add spacing to bottom of pages
  */
-#content {
+.page-content {
   margin-bottom: 80px;
 }
