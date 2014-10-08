@@ -176,6 +176,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals(array(
       'screen' => array(
         'css/base/elements.css' => DRUPAL_ROOT . '/core/themes/seven/css/base/elements.css',
+        'css/base/typography.css' => DRUPAL_ROOT . '/core/themes/seven/css/base/typography.css',
         'css/components/admin-list.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-list.css',
         'css/components/admin-options.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-options.css',
         'css/components/admin-panel.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-panel.css',

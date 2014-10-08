@@ -10,6 +10,7 @@ core: 8.x
 stylesheets:
   screen:
     - css/base/elements.css
+    - css/base/typography.css
     - css/components/admin-list.css
     - css/components/admin-options.css
     - css/components/admin-panel.css

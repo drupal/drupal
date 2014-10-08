@@ -35,24 +35,38 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.header-a,
+.header-b,
+.header-c,
+.header-d,
+.header-e,
+.header-f {
   font-weight: bold;
   margin: 10px 0;
 }
-h1 {
+h1,
+.header-a {
   font-size: 1.538em;
 }
-h2 {
+h2,
+.header-b {
   font-size: 1.385em;
 }
-h3 {
+h3,
+.header-c {
   font-size: 1.231em;
 }
-h4 {
+h4,
+.header-d {
   font-size: 1.154em;
 }
 h5,
-h6 {
+.header-e {
+  font-size: 1.077em;
+}
+h6,
+.header-f {
   font-size: 1.077em;
 }
 p {
