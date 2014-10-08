@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * Unit tests for taxonomy term functions.
  *
@@ -39,11 +41,14 @@ class TermUnitTest extends TaxonomyTestBase {
     $child_term_id = $child_term->id();
 
     $parent_term1->delete();
-    $child_term = entity_load('taxonomy_term', $child_term_id, TRUE);
+    $term_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+    $term_storage->resetCache(array($child_term_id));
+    $child_term = Term::load($child_term_id);
     $this->assertTrue(!empty($child_term), 'Child term is not deleted if only one of its parents is removed.');
 
     $parent_term2->delete();
-    $child_term = entity_load('taxonomy_term', $child_term_id, TRUE);
+    $term_storage->resetCache(array($child_term_id));
+    $child_term = Term::load($child_term_id);
     $this->assertTrue(empty($child_term), 'Child term is deleted if all of its parents are removed.');
   }
 

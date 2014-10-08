@@ -12,6 +12,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\block\Entity\Block;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the invocation of hooks when creating, inserting, loading, updating or
@@ -384,7 +385,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $GLOBALS['entity_crud_hook_test'] = array();
-    $term = entity_load('taxonomy_term', $term->id());
+    $term = Term::load($term->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type taxonomy_term',

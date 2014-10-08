@@ -7,9 +7,13 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Component\Utility\String;
+use Drupal\taxonomy\Entity\Term;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler for taxonomy terms with depth.
@@ -21,7 +25,28 @@ use Drupal\Component\Utility\String;
  *
  * @ViewsArgument("taxonomy_index_tid_depth")
  */
-class IndexTidDepth extends ArgumentPluginBase {
+class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * @var EntityStorageInterface
+   */
+  protected $termStorage;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->termStorage = $termStorage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager')->getStorage('taxonomy_term'));
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -113,7 +138,7 @@ class IndexTidDepth extends ArgumentPluginBase {
   }
 
   function title() {
-    $term = entity_load('taxonomy_term', $this->argument);
+    $term = $this->termStorage->load($this->argument);
     if (!empty($term)) {
       return String::checkPlain($term->getName());
     }

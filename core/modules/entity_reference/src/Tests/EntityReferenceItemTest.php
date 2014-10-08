@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the new entity API for the entity reference field type.
@@ -92,7 +93,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy_term->entity->setName($new_name);
     $entity->field_test_taxonomy_term->entity->save();
     // Verify it is the correct name.
-    $term = entity_load('taxonomy_term', $tid);
+    $term = Term::load($tid);
     $this->assertEqual($term->getName(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.

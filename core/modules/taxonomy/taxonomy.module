@@ -267,7 +267,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  * Constructs a drupal_render() style array from an array of loaded terms.
  *
  * @param array $terms
- *   An array of taxonomy terms as returned by entity_load_multiple('taxonomy_term').
+ *   An array of taxonomy terms as returned by Term::loadMultiple().
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param string $langcode

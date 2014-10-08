@@ -7,8 +7,11 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\argument\Numeric;
 use Drupal\Component\Utility\String;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler for basic taxonomy tid.
@@ -17,7 +20,33 @@ use Drupal\Component\Utility\String;
  *
  * @ViewsArgument("taxonomy")
  */
-class Taxonomy extends Numeric {
+class Taxonomy extends Numeric implements ContainerFactoryPluginInterface {
+
+  /**
+   * @var EntityStorageInterface
+   */
+  protected $termStorage;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->termStorage = $term_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')->getStorage('taxonomy_term')
+    );
+  }
 
   /**
    * Override the behavior of title(). Get the title of the node.
@@ -25,7 +54,7 @@ class Taxonomy extends Numeric {
   function title() {
     // There might be no valid argument.
     if ($this->argument) {
-      $term = entity_load('taxonomy_term', $this->argument);
+      $term = $this->termStorage->load($this->argument);
       if (!empty($term)) {
         return String::checkPlain($term->getName());
       }
