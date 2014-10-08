@@ -73,7 +73,7 @@ class NodeTypeForm extends EntityForm {
       '#title' => t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     );
