@@ -8,13 +8,14 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * Handle a random sort.
  *
  * @ViewsSort("random")
  */
-class Random extends SortPluginBase {
+class Random extends SortPluginBase implements CacheablePluginInterface {
 
   /**
    * {@inheritdoc}
@@ -30,6 +31,20 @@ class Random extends SortPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['order']['#access'] = FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return [];
   }
 
 }

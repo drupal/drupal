@@ -298,6 +298,48 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    // @todo Check whether isSyncing is needed.
+    if (!$this->isSyncing()) {
+      $this->addCacheMetadata();
+    }
+  }
+
+  /**
+   * Fills in the cache metadata of this view.
+   *
+   * Cache metadata is set per view and per display, and ends up being stored in
+   * the view's configuration. This allows Views to determine very efficiently:
+   * - whether a view is cacheable at all
+   * - what the cache key for a given view should be
+   *
+   * In other words: this allows us to do the (expensive) work of initializing
+   * Views plugins and handlers to determine their effect on the cacheability of
+   * a view at save time rather than at runtime.
+   */
+  protected function addCacheMetadata() {
+    $executable = $this->getExecutable();
+
+    $current_display = $executable->current_display;
+    $displays = $this->get('display');
+    foreach ($displays as $display_id => $display) {
+      $executable->setDisplay($display_id);
+
+      list($display['cache_metadata']['cacheable'], $display['cache_metadata']['contexts']) = $executable->getDisplay()->calculateCacheMetadata();
+      // Always include at least the language context as there will be most
+      // probable translatable strings in the view output.
+      $display['cache_metadata']['contexts'][] = 'cache.context.language';
+      $display['cache_metadata']['contexts'] = array_unique($display['cache_metadata']['contexts']);
+    }
+    // Restore the previous active display.
+    $executable->setDisplay($current_display);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 

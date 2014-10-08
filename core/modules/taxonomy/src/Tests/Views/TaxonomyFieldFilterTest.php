@@ -11,6 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\views\Views;
 
 /**
  * Tests taxonomy field filters with translations.
@@ -82,6 +83,8 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
       $translation->field_foo->value = $this->term_names[$langcode];
     }
     $taxonomy->save();
+
+    Views::viewsData()->clear();
 
     ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
 

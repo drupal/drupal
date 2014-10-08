@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   title = @Translation("Raw value from URL")
  * )
  */
-class Raw extends ArgumentDefaultPluginBase {
+class Raw extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
 
   /**
    * The alias manager.
@@ -100,6 +101,20 @@ class Raw extends ArgumentDefaultPluginBase {
     if (isset($args[$this->options['index']])) {
       return $args[$this->options['index']];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['cache.context.url'];
   }
 
 }

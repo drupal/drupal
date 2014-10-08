@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   title = @Translation("Taxonomy term ID from URL")
  * )
  */
-class Tid extends ArgumentDefaultPluginBase {
+class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
 
   /**
    * Overrides \Drupal\views\Plugin\views\Plugin\views\PluginBase::init().
@@ -165,6 +166,20 @@ class Tid extends ArgumentDefaultPluginBase {
     if ($views_page && isset($views_page->argument['tid'])) {
       return $views_page->argument['tid']->argument;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['cache.context.url'];
   }
 
 }

@@ -15,6 +15,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
@@ -2279,6 +2280,50 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $this->view->setShowAdminLinks($this->getOption('show_admin_links'));
+  }
+
+  /**
+   * Calculates the display's cache metadata by inspecting each handler/plugin.
+   *
+   * @return array
+   *   Returns an array:
+   *     - first value: (boolean) Whether the display is cacheable.
+   *     - second value: (string[]) The cache contexts the display varies by.
+   */
+  public function calculateCacheMetadata () {
+    $is_cacheable = TRUE;
+    $cache_contexts = [];
+
+    // Iterate over ordinary views plugins.
+    foreach (Views::getPluginTypes('plugin') as $plugin_type) {
+      $plugin = $this->getPlugin($plugin_type);
+      if ($plugin instanceof CacheablePluginInterface) {
+        $cache_contexts = array_merge($cache_contexts, $plugin->getCacheContexts());
+        $is_cacheable &= $plugin->isCacheable();
+      }
+      else {
+        $is_cacheable = FALSE;
+      }
+    }
+
+    // Iterate over all handlers. Note that at least the argument handler will
+    // need to ask all its subplugins.
+    foreach (array_keys(Views::getHandlerTypes()) as $handler_type) {
+      $handlers = $this->getHandlers($handler_type);
+      foreach ($handlers as $handler) {
+        if ($handler instanceof CacheablePluginInterface) {
+          $cache_contexts = array_merge($cache_contexts, $handler->getCacheContexts());
+          $is_cacheable &= $handler->isCacheable();
+        }
+      }
+    }
+
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache_plugin */
+    if ($cache_plugin = $this->getPlugin('cache')) {
+      $cache_plugin->alterCacheMetadata($is_cacheable, $cache_contexts);
+    }
+
+    return [$is_cacheable, $cache_contexts];
   }
 
   /**

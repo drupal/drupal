@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -43,7 +44,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Base class for Views filters handler plugins.
  */
-abstract class FilterPluginBase extends HandlerBase {
+abstract class FilterPluginBase extends HandlerBase implements CacheablePluginInterface {
 
   /**
    * Contains the actual value of the field,either configured in the views ui
@@ -1465,6 +1466,27 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   protected static function arrayFilterZero($var) {
     return trim($var) != '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $cache_contexts = [];
+    // An exposed filter allows the user to change a view's filters. They accept
+    // input from GET parameters, which are part of the URL. Hence a view with
+    // an exposed filter is cacheable per URL.
+    if ($this->isExposed()) {
+      $cache_contexts[] = 'cache.context.url';
+    }
+    return $cache_contexts;
   }
 
 }

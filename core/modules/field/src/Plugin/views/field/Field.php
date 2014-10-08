@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -34,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("field")
  */
-class Field extends FieldPluginBase {
+class Field extends FieldPluginBase implements CacheablePluginInterface {
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -946,5 +947,23 @@ class Field extends FieldPluginBase {
     return array('entity' => array($this->getFieldStorageConfig()->getConfigDependencyName()));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    // @todo what to do about field access?
+    $contexts = [];
+
+    $contexts[] = 'cache.context.user';
+
+    return $contexts;
+  }
 
 }

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
+
 /**
  * Provides a base class for a testing a relationship.
  *
@@ -39,6 +41,8 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
     $this->installSchema('system', 'sequences');
     $this->root_user = entity_create('user', array('name' => $this->randomMachineName()));
     $this->root_user->save();
+
+    Views::viewsData()->clear();
   }
 
   /**

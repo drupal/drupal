@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\argument;
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -55,7 +56,7 @@ use Drupal\views\Views;
  * - numeric: If set to TRUE this field is numeric and will use %d instead of
  *            %s in queries.
  */
-abstract class ArgumentPluginBase extends HandlerBase {
+abstract class ArgumentPluginBase extends HandlerBase implements CacheablePluginInterface {
 
   var $validator = NULL;
   var $argument = NULL;
@@ -1013,14 +1014,23 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $options = array();
     switch ($type) {
       case 'argument_default':
+        if (!isset($this->options['default_argument_type'])) {
+          return;
+        }
         $plugin_name = $this->options['default_argument_type'];
         $options_name = 'default_argument_options';
         break;
       case 'argument_validator':
+        if (!isset($this->options['validate']['type'])) {
+          return;
+        }
         $plugin_name = $this->options['validate']['type'];
         $options_name = 'validate_options';
         break;
       case 'style':
+        if (!isset($this->options['summary']['format'])) {
+          return;
+        }
         $plugin_name = $this->options['summary']['format'];
         $options_name = 'summary_options';
     }
@@ -1032,7 +1042,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // we only fetch the options if we're fetching the plugin actually
     // in use.
     if ($name == $plugin_name) {
-      $options = $this->options[$options_name];
+      $options = isset($this->options[$options_name]) ? $this->options[$options_name] : [];
     }
 
     $plugin = Views::pluginManager($type)->createInstance($name);
@@ -1163,6 +1173,56 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->value = $break->value;
     $this->operator = $break->operator;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    $result = TRUE;
+
+    // Asks all subplugins (argument defaults, argument validator and styles).
+    if (($plugin = $this->getPlugin('argument_default')) && $plugin instanceof CacheablePluginInterface) {
+      $result &= $plugin->isCacheable();
+    }
+
+    if (($plugin = $this->getPlugin('argument_validator')) && $plugin instanceof CacheablePluginInterface) {
+      $result &= $plugin->isCacheable();
+    }
+
+    // Summaries use style plugins.
+    if (($plugin = $this->getPlugin('style')) && $plugin instanceof CacheablePluginInterface) {
+      $result &= $plugin->isCacheable();
+    }
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = [];
+    // By definition arguments depends on the URL.
+    // @todo Once contexts are properly injected into block views we could pull
+    //   the information from there.
+    $contexts[] = 'cache.context.url';
+
+    // Asks all subplugins (argument defaults, argument validator and styles).
+    if (($plugin = $this->getPlugin('argument_default')) && $plugin instanceof CacheablePluginInterface) {
+      $contexts = array_merge($plugin->getCacheContexts(), $contexts);
+    }
+
+    if (($plugin = $this->getPlugin('argument_validator')) && $plugin instanceof CacheablePluginInterface) {
+      $contexts = array_merge($plugin->getCacheContexts(), $contexts);
+    }
+
+    if (($plugin = $this->getPlugin('style')) && $plugin instanceof CacheablePluginInterface) {
+      $contexts = array_merge($plugin->getCacheContexts(), $contexts);
+    }
+
+    return $contexts;
+  }
+
 }
 
 /**

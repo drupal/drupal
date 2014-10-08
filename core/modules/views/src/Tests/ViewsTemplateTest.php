@@ -25,10 +25,14 @@ class ViewsTemplateTest extends ViewTestBase {
    */
   public static $testViews = array('test_view_display_template');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
-    parent::setUp();
+    parent::setUp(FALSE);
 
     $this->enableViewsTestModule();
+    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
   }
 
   /**

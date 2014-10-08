@@ -367,6 +367,17 @@ abstract class CachePluginBase extends PluginBase {
     return $tags;
   }
 
+  /**
+   * Alters the cache metadata of a display upon saving a view.
+   *
+   * @param bool $is_cacheable
+   *   Whether the display is cacheable.
+   * @param string[] $cache_contexts
+   *   The cache contexts the display varies by.
+   */
+  public function alterCacheMetadata(&$is_cacheable, array &$cache_contexts) {
+  }
+
 }
 
 /**

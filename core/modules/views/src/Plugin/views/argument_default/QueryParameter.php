@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * A query parameter argument default handler.
@@ -19,7 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   title = @Translation("Query parameter")
  * )
  */
-class QueryParameter extends ArgumentDefaultPluginBase {
+class QueryParameter extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
 
   /**
    * {@inheritdoc}
@@ -81,6 +82,20 @@ class QueryParameter extends ArgumentDefaultPluginBase {
       // Otherwise, use the fixed fallback value.
       return $this->options['fallback'];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['cache.context.url'];
   }
 
 }

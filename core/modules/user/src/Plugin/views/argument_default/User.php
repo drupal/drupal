@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ use Drupal\node\NodeInterface;
  *   title = @Translation("User ID from route context")
  * )
  */
-class User extends ArgumentDefaultPluginBase {
+class User extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
 
   /**
    * {@inheritdoc}
@@ -72,6 +73,20 @@ class User extends ArgumentDefaultPluginBase {
     if ($view && isset($view->argument['uid'])) {
       return $view->argument['uid']->argument;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['cache.context.url'];
   }
 
 }

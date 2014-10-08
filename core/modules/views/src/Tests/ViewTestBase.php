@@ -30,14 +30,16 @@ abstract class ViewTestBase extends WebTestBase {
    */
   public static $modules = array('views', 'views_test_config');
 
-  protected function setUp() {
+  protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
     // Ensure that the plugin definitions are cleared.
     foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
       $this->container->get("plugin.manager.views.$plugin_type")->clearCachedDefinitions();
     }
-    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    if ($import_test_views) {
+      ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    }
   }
 
   /**

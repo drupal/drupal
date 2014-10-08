@@ -167,6 +167,9 @@ class DisplayTest extends PluginTestBase {
    * Tests the readmore functionality.
    */
   public function testReadMore() {
+    if (!isset($this->options['validate']['type'])) {
+      return;
+    }
     $expected_more_text = 'custom more text';
 
     $view = Views::getView('test_display_more');

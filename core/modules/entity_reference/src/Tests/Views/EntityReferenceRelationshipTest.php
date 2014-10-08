@@ -93,6 +93,8 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
     $entity->save();
     $this->assertEqual($entity->field_test[0]->entity->id(), $referenced_entity->id());
     $this->entities[$entity->id()] = $entity;
+
+    Views::viewsData()->clear();
   }
 
   /**

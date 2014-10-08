@@ -47,4 +47,16 @@ class Access extends FilterPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+
+    // Node access is potentially cacheable per user.
+    $contexts[] = 'cache.context.user';
+
+    return $contexts;
+  }
+
 }

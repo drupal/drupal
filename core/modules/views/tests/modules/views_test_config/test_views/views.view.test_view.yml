@@ -10,6 +10,8 @@ display:
         pager: '0'
         pager_options: '0'
         sorts: '0'
+      row:
+        type: fields
       fields:
         age:
           field: age

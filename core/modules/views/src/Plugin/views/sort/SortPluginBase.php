@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
@@ -26,7 +27,7 @@ use Drupal\views\Plugin\views\HandlerBase;
 /**
  * Base sort handler that has no options and performs a simple sort.
  */
-abstract class SortPluginBase extends HandlerBase {
+abstract class SortPluginBase extends HandlerBase implements CacheablePluginInterface {
 
   /**
    * Determine if a sort can be exposed.
@@ -222,6 +223,27 @@ abstract class SortPluginBase extends HandlerBase {
       'order' => $this->options['order'],
       'label' => $this->definition['title'],
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // The result of a sort does not depend on outside information, so by
+    // default it is cacheable.
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $cache_contexts = [];
+    // Exposed sorts use GET parameters, so it depends on the current URL.
+    if ($this->isExposed()) {
+      $cache_contexts[] = 'cache.context.url';
+    }
+    return $cache_contexts;
   }
 
 }

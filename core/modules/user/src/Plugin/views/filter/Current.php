@@ -47,4 +47,16 @@ class Current extends BooleanOperator {
     $this->query->addWhere($this->options['group'], $or);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+
+    // This filter depends on the current user.
+    $contexts[] = 'cache.context.user';
+
+    return $contexts;
+  }
+
 }

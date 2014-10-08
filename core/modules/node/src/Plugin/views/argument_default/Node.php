@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument_default;
 
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
 
@@ -20,7 +21,7 @@ use Drupal\node\NodeInterface;
  *   title = @Translation("Content ID from URL")
  * )
  */
-class Node extends ArgumentDefaultPluginBase {
+class Node extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
 
   /**
    * {@inheritdoc}
@@ -29,6 +30,20 @@ class Node extends ArgumentDefaultPluginBase {
     if (($node = $this->view->getRequest()->attributes->get('node')) && $node instanceof NodeInterface) {
       return $node->id();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['cache.context.url'];
   }
 
 }
