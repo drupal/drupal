@@ -170,14 +170,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
       // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
       if ($this->requestStack->getCurrentRequest()->isSecure()) {
-        $key['ssid'] = Crypt::hashBase64($sid);
-        $cookies = $this->requestStack->getCurrentRequest()->cookies;
+        $key['ssid'] = $key['sid'];
         // The "secure pages" setting allows a site to simultaneously use both
         // secure and insecure session cookies. If enabled and both cookies
         // are presented then use both keys. The session ID from the cookie is
         // hashed before being stored in the database as a security measure.
         if ($this->sessionManager->isMixedMode()) {
           $insecure_session_name = $this->sessionManager->getInsecureName();
+          $cookies = $this->requestStack->getCurrentRequest()->cookies;
           if ($cookies->has($insecure_session_name)) {
             $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
           }
