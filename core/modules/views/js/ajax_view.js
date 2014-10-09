@@ -70,7 +70,7 @@
       // Don't attach to nested views. Doing so would attach multiple behaviors
       // to a given element.
       .filter(jQuery.proxy(this.filterNestedViews, this))
-      .once('ajax-pager', jQuery.proxy(this.attachPagerAjax, this));
+      .once('ajax-pager').each(jQuery.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.

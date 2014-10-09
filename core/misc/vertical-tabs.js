@@ -20,7 +20,7 @@
         return;
       }
 
-      $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs', function () {
+      $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         var $this = $(this).addClass('vertical-tabs-panes');
         var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
         var tab_focus;

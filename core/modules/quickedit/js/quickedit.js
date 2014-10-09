@@ -66,7 +66,7 @@
   Drupal.behaviors.quickedit = {
     attach: function (context) {
       // Initialize the Quick Edit app once per page load.
-      $('body').once('quickedit-init', initQuickEdit);
+      $('body').once('quickedit-init').each(initQuickEdit);
 
       // Find all in-place editable fields, if any.
       var $fields = $(context).find('[data-quickedit-field-id]').once('quickedit');

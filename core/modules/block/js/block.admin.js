@@ -74,7 +74,7 @@
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function (context, settings) {
       if (settings.blockPlacement) {
-        $('#blocks').once('block-highlight', function () {
+        $('#blocks').once('block-highlight').each(function () {
           var $container = $(this);
           // Just scrolling the document.body will not work in Firefox. The html
           // element is needed as well.
