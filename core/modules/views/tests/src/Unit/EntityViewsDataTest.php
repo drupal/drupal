@@ -16,6 +16,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\IntegerItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Core\Field\Plugin\Field\FieldType\UuidItem;
 use Drupal\text\Plugin\Field\FieldType\TextLongItem;
 use Drupal\entity_test\Entity\EntityTest;
@@ -138,6 +139,13 @@ class EntityViewsDataTest extends UnitTestCase {
         ))
       ->setDisplayConfigurable('form', TRUE);
 
+    // Add a URL field; this example is from the Comment entity.
+    $base_fields['homepage'] = BaseFieldDefinition::create('uri')
+      ->setLabel(t('Homepage'))
+      ->setDescription(t("The comment author's home page address."))
+      ->setTranslatable(TRUE)
+      ->setSetting('max_length', 255);
+
     foreach ($base_fields as $name => $base_field) {
       $base_field->setName($name);
     }
@@ -246,6 +254,10 @@ class EntityViewsDataTest extends UnitTestCase {
     $description_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(TextLongItem::schema($description_field_storage_definition));
+    $homepage_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $homepage_field_storage_definition->expects($this->any())
+      ->method('getSchema')
+      ->willReturn(UriItem::schema($homepage_field_storage_definition));
 
     // Setup the user_id entity reference field.
     $this->entityManager->expects($this->any())
@@ -277,6 +289,7 @@ class EntityViewsDataTest extends UnitTestCase {
         'langcode' => $langcode_field_storage_definition,
         'name' => $name_field_storage_definition,
         'description' => $description_field_storage_definition,
+        'homepage' => $homepage_field_storage_definition,
         'user_id' => $user_id_field_storage_definition,
         'revision_id' => $revision_id_field_storage_definition,
       ]);
@@ -307,12 +320,13 @@ class EntityViewsDataTest extends UnitTestCase {
         ['langcode', ['value' => 'langcode']],
         ['name', ['value' => 'name']],
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
+        ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
       ]);
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
       ->willReturnMap([
-        ['entity_test', ['id', 'uuid', 'type', 'langcode', 'name', 'description', 'user_id']]
+        ['entity_test', ['id', 'uuid', 'type', 'langcode', 'name', 'description', 'homepage', 'user_id']]
       ]);
 
     $this->entityStorage->expects($this->once())
@@ -333,6 +347,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertStringField($data['entity_test']['name']);
 
     $this->assertLongTextField($data['entity_test'], 'description');
+
+    $this->assertUriField($data['entity_test']['homepage']);
 
     $this->assertEntityReferenceField($data['entity_test']['user_id']);
     $relationship = $data['entity_test']['user_id']['relationship'];
@@ -386,13 +402,14 @@ class EntityViewsDataTest extends UnitTestCase {
         ['langcode', ['value' => 'langcode']],
         ['name', ['value' => 'name']],
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
+        ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
       ]);
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
       ->willReturnMap([
         ['entity_test_mul', ['id', 'uuid', 'type', 'langcode']],
-        ['entity_test_mul_property_data', ['id', 'langcode', 'name', 'description', 'user_id']],
+        ['entity_test_mul_property_data', ['id', 'langcode', 'name', 'description', 'homepage', 'user_id']],
       ]);
 
     $this->entityStorage->expects($this->once())
@@ -417,6 +434,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertFalse(isset($data['entity_test_mul']['description__value']));
     $this->assertFalse(isset($data['entity_test_mul']['description__format']));
     $this->assertFalse(isset($data['entity_test_mul']['user_id']));
+    $this->assertFalse(isset($data['entity_test_mul']['homepage']));
 
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mul_property_data']['id']);
@@ -427,6 +445,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertStringField($data['entity_test_mul_property_data']['name']);
 
     $this->assertLongTextField($data['entity_test_mul_property_data'], 'description');
+
+    $this->assertUriField($data['entity_test_mul_property_data']['homepage']);
 
     $this->assertEntityReferenceField($data['entity_test_mul_property_data']['user_id']);
     $relationship = $data['entity_test_mul_property_data']['user_id']['relationship'];
@@ -466,6 +486,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ['langcode', ['value' => 'langcode']],
         ['name', ['value' => 'name']],
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
+        ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
         ['revision_id', ['value' => 'id']],
       ]);
@@ -474,8 +495,8 @@ class EntityViewsDataTest extends UnitTestCase {
       ->willReturnMap([
         ['entity_test_mulrev', ['id', 'revision_id', 'uuid', 'type']],
         ['entity_test_mulrev_revision', ['id', 'revision_id', 'langcode']],
-        ['entity_test_mulrev_property_data', ['id', 'revision_id', 'langcode', 'name', 'description', 'user_id']],
-        ['entity_test_mulrev_property_revision', ['id', 'revision_id', 'langcode', 'name', 'description', 'user_id']],
+        ['entity_test_mulrev_property_data', ['id', 'revision_id', 'langcode', 'name', 'description', 'homepage', 'user_id']],
+        ['entity_test_mulrev_property_revision', ['id', 'revision_id', 'langcode', 'name', 'description', 'homepage', 'user_id']],
       ]);
 
     $this->entityStorage->expects($this->once())
@@ -497,6 +518,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertFalse(isset($data['entity_test_mul']['description']));
     $this->assertFalse(isset($data['entity_test_mul']['description__value']));
     $this->assertFalse(isset($data['entity_test_mul']['description__format']));
+    $this->assertFalse(isset($data['entity_test_mul']['homepage']));
     $this->assertFalse(isset($data['entity_test_mulrev']['langcode']));
     $this->assertFalse(isset($data['entity_test_mulrev']['user_id']));
 
@@ -512,6 +534,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description__value']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description__format']));
+    $this->assertFalse(isset($data['entity_test_mulrev_revision']['homepage']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['user_id']));
 
     // Check the data fields.
@@ -520,6 +543,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertStringField($data['entity_test_mulrev_property_data']['name']);
 
     $this->assertLongTextField($data['entity_test_mulrev_property_data'], 'description');
+    $this->assertUriField($data['entity_test_mulrev_property_data']['homepage']);
 
     $this->assertEntityReferenceField($data['entity_test_mulrev_property_data']['user_id']);
     $relationship = $data['entity_test_mulrev_property_data']['user_id']['relationship'];
@@ -536,6 +560,8 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->assertLongTextField($data['entity_test_mulrev_property_revision'], 'description');
 
+    $this->assertUriField($data['entity_test_mulrev_property_revision']['homepage']);
+
     $this->assertEntityReferenceField($data['entity_test_mulrev_property_revision']['user_id']);
     $relationship = $data['entity_test_mulrev_property_revision']['user_id']['relationship'];
     $this->assertEquals('users', $relationship['base']);
@@ -550,6 +576,19 @@ class EntityViewsDataTest extends UnitTestCase {
    */
   protected function assertStringField($data) {
     $this->assertEquals('standard', $data['field']['id']);
+    $this->assertEquals('string', $data['filter']['id']);
+    $this->assertEquals('string', $data['argument']['id']);
+    $this->assertEquals('standard', $data['sort']['id']);
+  }
+
+  /**
+   * Tests views data for a URI field.
+   *
+   * @param $data
+   *   The views data to check.
+   */
+  protected function assertUriField($data) {
+    $this->assertEquals('url', $data['field']['id']);
     $this->assertEquals('string', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);

@@ -7,186 +7,44 @@
 
 namespace Drupal\comment;
 
-use Drupal\views\EntityViewsDataInterface;
+use Drupal\views\EntityViewsData;
 
 /**
  * Provides views data for the comment entity type.
  */
-class CommentViewsData implements EntityViewsDataInterface {
+class CommentViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}
    */
   public function getViewsData() {
-    // Define the base group of this table. Fields that don't have a group defined
-    // will go into this field by default.
-    $data['comment']['table']['group']  = t('Comment');
+    $data = parent::getViewsData();
 
-    $data['comment']['table']['base'] = array(
-      'field' => 'cid',
-      'title' => t('Comment'),
-      'help' => t("Comments are responses to node content."),
-      'access query tag' => 'comment_access',
-    );
-    $data['comment']['table']['entity type'] = 'comment';
+    $data['comment']['table']['base']['help'] = t('Comments are responses to content.');
+    $data['comment']['table']['base']['access query tag'] = 'comment_access';
+
     $data['comment']['table']['wizard_id'] = 'comment';
 
-    $data['comment_field_data']['table']['group'] = t('Comment');
-    $data['comment_field_data']['table']['entity type'] = 'comment';
-    $data['comment_field_data']['table']['join']['comment'] = array(
-      'type' => 'INNER',
-      'left_field' => 'cid',
-      'field' => 'cid',
-    );
+    $data['comment_field_data']['subject']['title'] = t('Title');
+    $data['comment_field_data']['subject']['help'] = t('The title of the comment.');
+    $data['comment_field_data']['subject']['field']['id'] = 'comment';
 
-    $data['comment_field_data']['subject'] = array(
-      'title' => t('Title'),
-      'help' => t('The title of the comment.'),
-      'field' => array(
-        'id' => 'comment',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['comment']['cid']['field']['id'] = 'comment';
 
-    $data['comment']['cid'] = array(
-      'title' => t('ID'),
-      'help' => t('The comment ID of the field'),
-      'field' => array(
-        'id' => 'comment',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'numeric',
-      ),
-    );
+    $data['comment_field_data']['name']['title'] = t('Author');
+    $data['comment_field_data']['name']['help'] = t("The name of the comment's author. Can be rendered as a link to the author's homepage.");
+    $data['comment_field_data']['name']['field']['id'] = 'comment_username';
 
-    $data['comment_field_data']['name'] = array(
-      'title' => t('Author'),
-      'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
-      'field' => array(
-        'id' => 'comment_username',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['comment_field_data']['homepage']['title'] = t("Author's website");
+    $data['comment_field_data']['homepage']['help'] = t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user.");
 
-    $data['comment_field_data']['homepage'] = array(
-      'title' => t("Author's website"),
-      'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
-      'field' => array(
-        'id' => 'url',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['comment_field_data']['mail']['help'] = t('Email of user that posted the comment. Will be empty if the author is a registered user.');
 
-    $data['comment_field_data']['hostname'] = array(
-      'title' => t('Hostname'),
-      'help' => t('Hostname of user that posted the comment.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['comment_field_data']['created']['title'] = t('Post date');
+    $data['comment_field_data']['created']['help'] = t('Date and time of when the comment was created.');
 
-    $data['comment_field_data']['mail'] = array(
-      'title' => t('Email'),
-      'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
-
-    $data['comment_field_data']['created'] = array(
-      'title' => t('Post date'),
-      'help' => t('Date and time of when the comment was created.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date',
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
-
-    if (\Drupal::moduleHandler()->moduleExists('language')) {
-      $data['comment']['langcode'] = array(
-        'title' => t('Language'),
-        'help' => t('The language the comment is in.'),
-        'field' => array(
-          'id' => 'language',
-        ),
-        'filter' => array(
-          'id' => 'language',
-        ),
-        'argument' => array(
-          'id' => 'language',
-        ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-      );
-    }
-
-    $data['comment_field_data']['changed'] = array(
-      'title' => t('Updated date'),
-      'help' => t('Date and time of when the comment was last updated.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date',
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
+    $data['comment_field_data']['changed']['title'] = t('Updated date');
+    $data['comment_field_data']['changed']['help'] = t('Date and time of when the comment was last updated.');
 
     $data['comment_field_data']['changed_fulldata'] = array(
       'title' => t('Created date'),
@@ -242,24 +100,13 @@ class CommentViewsData implements EntityViewsDataInterface {
       ),
     );
 
-    $data['comment_field_data']['status'] = array(
-      'title' => t('Approved status'),
-      'help' => t('Whether the comment is approved (or still in the moderation queue).'),
-      'field' => array(
-        'id' => 'boolean',
-        'output formats' => array(
-          'approved-not-approved' => array(t('Approved'), t('Not Approved')),
-        ),
-      ),
-      'filter' => array(
-        'id' => 'boolean',
-        'label' => t('Approved comment status'),
-        'type' => 'yes-no',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
+    $data['comment_field_data']['status']['title'] = t('Approved status');
+    $data['comment_field_data']['status']['help'] = t('Whether the comment is approved (or still in the moderation queue).');
+    $data['comment_field_data']['status']['field']['output formats'] = array(
+      'approved-not-approved' => array(t('Approved'), t('Not Approved')),
     );
+    $data['comment_field_data']['status']['filter']['label'] = t('Approved comment status');
+    $data['comment_field_data']['status']['filter']['type'] = 'yes-no';
 
     $data['comment']['view_comment'] = array(
       'field' => array(
@@ -301,73 +148,22 @@ class CommentViewsData implements EntityViewsDataInterface {
       ),
     );
 
-    $data['comment_field_data']['thread'] = array(
-      'field' => array(
-        'title' => t('Depth'),
-        'help' => t('Display the depth of the comment if it is threaded.'),
-        'id' => 'comment_depth',
-      ),
-      'sort' => array(
-        'title' => t('Thread'),
-        'help' => t('Sort by the threaded order. This will keep child comments together with their parents.'),
-        'id' => 'comment_thread',
-      ),
+    $data['comment_field_data']['thread']['field'] = array(
+      'title' => t('Depth'),
+      'help' => t('Display the depth of the comment if it is threaded.'),
+      'id' => 'comment_depth',
     );
-
-    $data['comment_field_data']['entity_id'] = array(
-      'title' => t('Entity ID'),
-      'help' => t('The Entity ID to which the comment is a reply to.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-      'argument' => array(
-        'id' => 'numeric',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
+    $data['comment_field_data']['thread']['sort'] = array(
+      'title' => t('Thread'),
+      'help' => t('Sort by the threaded order. This will keep child comments together with their parents.'),
+      'id' => 'comment_thread',
     );
-
-    $data['comment_field_data']['entity_type'] = array(
-      'title' => t('Entity type'),
-      'help' => t('The Entity type to which the comment is a reply to.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
+    unset($data['comment_field_data']['thread']['filter']);
+    unset($data['comment_field_data']['thread']['argument']);
 
     $data['comment_field_data']['field_name'] = array(
       'title' => t('Comment field name'),
       'help' => t('The Field name from which the comment originated.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
-
-    $data['comment']['comment_type'] = array(
-      'title' => t('Comment type'),
-      'help' => t('The comment type for this comment.'),
       'field' => array(
         'id' => 'standard',
       ),
@@ -411,43 +207,17 @@ class CommentViewsData implements EntityViewsDataInterface {
       }
     }
 
-    $data['comment_field_data']['uid'] = array(
-      'title' => t('Author uid'),
-      'help' => t('If you need more fields than the uid add the comment: author relationship'),
-      'relationship' => array(
-        'title' => t('Author'),
-        'help' => t("The User ID of the comment's author."),
-        'base' => 'users',
-        'base field' => 'uid',
-        'id' => 'standard',
-        'label' => t('author'),
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-      'argument' => array(
-        'id' => 'numeric',
-      ),
-      'field' => array(
-        'id' => 'user',
-      ),
-    );
+    $data['comment_field_data']['uid']['title'] = t('Author uid');
+    $data['comment_field_data']['uid']['help'] = t('If you need more fields than the uid add the comment: author relationship');
+    $data['comment_field_data']['uid']['relationship']['title'] = t('Author');
+    $data['comment_field_data']['uid']['relationship']['help'] = t("The User ID of the comment's author.");
+    $data['comment_field_data']['uid']['relationship']['label'] = t('author');
+    $data['comment_field_data']['uid']['field']['id'] = 'user';
 
-    $data['comment_field_data']['pid'] = array(
-      'title' => t('Parent CID'),
-      'help' => t('The Comment ID of the parent comment.'),
-      'field' => array(
-        'id' => 'standard',
-      ),
-      'relationship' => array(
-        'title' => t('Parent comment'),
-        'help' => t('The parent comment.'),
-        'base' => 'comment',
-        'base field' => 'cid',
-        'id' => 'standard',
-        'label' => t('Parent comment'),
-      ),
-    );
+    $data['comment_field_data']['pid']['title'] = t('Parent CID');
+    $data['comment_field_data']['pid']['relationship']['title'] = t('Parent comment');
+    $data['comment_field_data']['pid']['relationship']['help'] = t('The parent comment');
+    $data['comment_field_data']['pid']['relationship']['label'] = t('parent');
 
     if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       $data['comment']['translation_link'] = array(

@@ -306,6 +306,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         $views_field['sort']['id'] = 'standard';
         break;
 
+      case 'uri':
+        $views_field['field']['id'] = 'url';
+        $views_field['argument']['id'] = 'string';
+        $views_field['filter']['id'] = 'string';
+        $views_field['sort']['id'] = 'standard';
+        break;
+
       case 'text':
       case 'text_with_summary':
         // Treat these three long text fields the same.
