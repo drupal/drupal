@@ -92,7 +92,7 @@ language.entity.*:
       type: label
       label: 'Label'
     direction:
-      type: integer
+      type: string
       label: 'Direction'
     weight:
       type: integer

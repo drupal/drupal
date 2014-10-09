@@ -248,7 +248,7 @@ function hook_library_alter(array &$library, $name) {
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(
-      'isRTL' => $language_interface->direction == LanguageInterface::DIRECTION_RTL,
+      'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
     );
     $library['js'][] = array(

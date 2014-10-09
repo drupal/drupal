@@ -557,7 +557,7 @@ function locale_library_alter(array &$library, $name) {
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(
-      'isRTL' => $language_interface->direction == LanguageInterface::DIRECTION_RTL,
+      'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
     );
     $library['js'][] = array(
@@ -738,11 +738,10 @@ function locale_preprocess_node(&$variables) {
       // add markup to identify the language. Otherwise the page language is
       // inherited.
       $variables['attributes']['lang'] = $node_language->id;
-      if ($node_language->direction != $language_interface->direction) {
+      if ($node_language->getDirection() != $language_interface->getDirection()) {
         // If text direction is different form the page's text direction, add
         // direction information as well.
-        $dir = array('ltr', 'rtl');
-        $variables['attributes']['dir'] = $dir[$node_language->direction];
+        $variables['attributes']['dir'] = $node_language->getDirection();
       }
     }
   }

@@ -7,6 +7,7 @@
 
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Prepares variables for CKEditor settings toolbar templates.
@@ -19,9 +20,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *   - plugins: A list of plugins.
  */
 function template_preprocess_ckeditor_settings_toolbar(&$variables) {
-  // Simplify the language direction information for toolbar buttons.
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-  $language_direction = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Create lists of active and disabled buttons.
   $editor = $variables['editor'];
@@ -61,7 +60,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   }
   $disabled_buttons = array_diff_key($buttons, $multiple_buttons);
 
-  $rtl = $language_direction === 'rtl' ? '_rtl' : '';
+  $rtl = $language_interface->getDirection() === LanguageInterface::DIRECTION_RTL ? '_rtl' : '';
 
   $build_button_item = function($button, $rtl) {
     // Value of the button item.

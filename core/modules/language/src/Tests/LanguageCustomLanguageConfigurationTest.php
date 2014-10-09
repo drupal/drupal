@@ -43,7 +43,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->assertText(t('!name field is required.', array('!name' => t('Language code'))));
     $this->assertText(t('!name field is required.', array('!name' => t('Language name in English'))));
     $empty_language = new Language();
-    $this->assertFieldChecked('edit-direction-' . $empty_language->direction, 'Consistent usage of language direction.');
+    $this->assertFieldChecked('edit-direction-' . $empty_language->getDirection(), 'Consistent usage of language direction.');
     $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Test validation of invalid values.

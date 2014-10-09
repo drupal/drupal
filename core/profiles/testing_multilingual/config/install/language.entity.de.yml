@@ -1,6 +1,6 @@
 id: de
 label: German
-direction: 0
+direction: 'ltr'
 weight: 0
 locked: false
 status: true

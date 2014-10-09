@@ -1798,7 +1798,6 @@ function template_preprocess_page(&$variables) {
   $variables['base_path']         = base_path();
   $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
-  $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo.url');
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');

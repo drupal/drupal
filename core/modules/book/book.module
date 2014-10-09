@@ -478,13 +478,13 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['title'] = String::checkPlain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
-  $variables['language_rtl'] = ($language_interface->direction == LanguageInterface::DIRECTION_RTL);
+  $variables['language_rtl'] = ($language_interface->getDirection() == LanguageInterface::DIRECTION_RTL);
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.
   $attributes = array();
   $attributes['lang'] = $language_interface->id;
-  $attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+  $attributes['dir'] = $language_interface->getDirection();
   $variables['html_attributes'] = new Attribute($attributes);
 }
 

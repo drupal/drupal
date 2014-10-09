@@ -1,6 +1,6 @@
 id: zxx
 label: 'Not applicable'
-direction: 0
+direction: 'ltr'
 weight: 2
 locked: true
 status: true

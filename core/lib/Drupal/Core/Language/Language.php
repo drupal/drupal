@@ -50,7 +50,7 @@ class Language implements LanguageInterface {
    *
    * @var int
    */
-  public $direction = self::DIRECTION_LTR;
+  protected $direction = self::DIRECTION_LTR;
 
   /**
    * The weight, used for ordering languages in lists, like selects or tables.

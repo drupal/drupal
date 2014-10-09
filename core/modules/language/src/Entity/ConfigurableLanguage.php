@@ -64,7 +64,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var integer
    */
-  public $direction = '';
+  protected $direction = self::DIRECTION_LTR;
 
   /**
    * The weight of the language, used in lists of languages.

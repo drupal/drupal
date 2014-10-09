@@ -94,12 +94,12 @@ interface LanguageInterface {
   /**
    * Language written left to right. Possible value of $language->direction.
    */
-  const DIRECTION_LTR = 0;
+  const DIRECTION_LTR = 'ltr';
 
   /**
    * Language written right to left. Possible value of $language->direction.
    */
-  const DIRECTION_RTL = 1;
+  const DIRECTION_RTL = 'rtl';
 
   /**
    * Gets the name of the language.
@@ -120,7 +120,7 @@ interface LanguageInterface {
   /**
    * Gets the text direction (left-to-right or right-to-left).
    *
-   * @return int
+   * @return string
    *   Either self::DIRECTION_LTR or self::DIRECTION_RTL.
    */
   public function getDirection();
