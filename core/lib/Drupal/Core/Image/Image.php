@@ -151,6 +151,13 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
+  public function convert($extension) {
+    return $this->apply('convert', array('extension' => $extension));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function crop($x, $y, $width, $height = NULL) {
     return $this->apply('crop', array('x' => $x, 'y' => $y, 'width' => $width, 'height' => $height));
   }

@@ -369,6 +369,29 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
+   * Returns the IMAGETYPE_xxx constant for the given extension.
+   *
+   * This is the reverse of the image_type_to_extension() function.
+   *
+   * @param string $extension
+   *   The extension to get the IMAGETYPE_xxx constant for.
+   *
+   * @return int
+   *   The IMAGETYPE_xxx constant for the given extension, or IMAGETYPE_UNKNOWN
+   *   for unsupported extensions.
+   *
+   * @see image_type_to_extension()
+   */
+  public function extensionToImageType($extension) {
+    foreach ($this->supportedTypes() as $type) {
+      if (image_type_to_extension($type, FALSE) === $extension) {
+        return $type;
+      }
+    }
+    return IMAGETYPE_UNKNOWN;
+  }
+
+  /**
    * Returns a list of image types supported by the toolkit.
    *
    * @return array

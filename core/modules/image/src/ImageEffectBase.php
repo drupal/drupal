@@ -77,6 +77,16 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
   /**
    * {@inheritdoc}
    */
+  public function getDerivativeExtension($extension) {
+    // Most image effects will not change the extension. This base
+    // implementation represents this behavior. Override this method if your
+    // image effect does change the extension.
+    return $extension;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSummary() {
     return array(
       '#markup' => '',

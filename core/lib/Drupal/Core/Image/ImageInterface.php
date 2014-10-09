@@ -149,6 +149,21 @@ interface ImageInterface {
   public function scaleAndCrop($width, $height);
 
   /**
+   * Instructs the toolkit to save the image in the format specified by the
+   * extension.
+   *
+   * @param string $extension
+   *   The extension to convert to (e.g. 'jpeg' or 'png'). Allowed values depend
+   *   on the current image toolkit.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   *
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::getSupportedExtensions()
+   */
+  public function convert($extension);
+
+  /**
    * Crops an image to a rectangle specified by the given dimensions.
    *
    * @param int $x

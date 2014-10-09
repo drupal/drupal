@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Image;
 
 use Drupal\Core\Image\ImageInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use \Drupal\simpletest\KernelTestBase;
 use Drupal\Component\Utility\String;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\Component\Utility\String;
  *
  * @group Image
  */
-class ToolkitGdTest extends DrupalUnitTestBase {
+class ToolkitGdTest extends KernelTestBase {
 
   /**
    * The image factory service.
@@ -174,6 +174,27 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         'height' => 8,
         'corners' => array_fill(0, 4, $this->black),
       ),
+      'convert_jpg' => array(
+        'function' => 'convert',
+        'width' => 40,
+        'height' => 20,
+        'arguments' => array('extension' => 'jpeg'),
+        'corners' => $default_corners,
+      ),
+      'convert_gif' => array(
+        'function' => 'convert',
+        'width' => 40,
+        'height' => 20,
+        'arguments' => array('extension' => 'gif'),
+        'corners' => $default_corners,
+      ),
+      'convert_png' => array(
+        'function' => 'convert',
+        'width' => 40,
+        'height' => 20,
+        'arguments' => array('extension' => 'png'),
+        'corners' => $default_corners,
+      ),
     );
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
@@ -240,6 +261,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
           $this->fail(String::format('Could not load image %file.', array('%file' => $file)));
           continue 2;
         }
+        $image_original_type = $image->getToolkit()->getType();
 
         // All images should be converted to truecolor when loaded.
         $image_truecolor = imageistruecolor($toolkit->getResource());
@@ -291,8 +313,9 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $this->assertTrue($correct_dimensions_real, String::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, String::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
-        // JPEG colors will always be messed up due to compression.
-        if ($image->getToolkit()->getType() != IMAGETYPE_JPEG) {
+        // JPEG colors will always be messed up due to compression. So we skip
+        // these tests if the original or the result is in jpeg format.
+        if ($image->getToolkit()->getType() != IMAGETYPE_JPEG && $image_original_type != IMAGETYPE_JPEG) {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
             // The test gif that does not have transparency has yellow where the
@@ -320,8 +343,13 @@ class ToolkitGdTest extends DrupalUnitTestBase {
                 break;
             }
             $color = $this->getPixelColor($image, $x, $y);
-            $correct_colors = $this->colorsAreEqual($color, $corner);
-            $this->assertTrue($correct_colors, String::format('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
+            // We also skip the color test for transparency for gif <-> png
+            // conversion. The convert operation cannot handle that correctly.
+            if ($image->getToolkit()->getType() == $image_original_type || $corner != $this->transparent) {
+              $correct_colors = $this->colorsAreEqual($color, $corner);
+              $this->assertTrue($correct_colors, String::format('Image %file object after %action action has the correct color placement at corner %corner.',
+                array('%file'   => $file, '%action' => $op, '%corner' => $key)));
+            }
           }
         }
 

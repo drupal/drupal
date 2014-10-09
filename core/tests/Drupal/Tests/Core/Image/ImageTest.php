@@ -389,6 +389,19 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
+   * Tests \Drupal\Core\Image\Image::convert().
+   */
+  public function testConvert() {
+    $this->getTestImageForOperation('Convert');
+    $this->toolkitOperation->expects($this->once())
+      ->method('execute')
+      ->will($this->returnArgument(0));
+
+    $ret = $this->image->convert('png');
+    $this->assertEquals('png', $ret['extension']);
+  }
+
+  /**
    * Tests \Drupal\Core\Image\Image::resize().
    */
   public function testResize() {

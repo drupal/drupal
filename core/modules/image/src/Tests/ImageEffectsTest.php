@@ -89,6 +89,21 @@ class ImageEffectsTest extends ToolkitTestBase {
   }
 
   /**
+   * Tests the ConvertImageEffect plugin.
+   */
+  function testConvertEffect() {
+    // Test jpeg.
+    $this->assertImageEffect('image_convert', array(
+      'extension' => 'jpeg',
+    ));
+    $this->assertToolkitOperationsCalled(array('convert'));
+
+    // Check the parameters.
+    $calls = $this->imageTestGetAllCalls();
+    $this->assertEqual($calls['convert'][0][0], 'jpeg', 'Extension was passed correctly');
+  }
+
+  /**
    * Test the image_scale_and_crop_effect() function.
    */
   function testScaleAndCropEffect() {
