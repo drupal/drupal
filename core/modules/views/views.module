@@ -597,16 +597,6 @@ function views_hook_info() {
 }
 
 /**
- * Get enabled display extenders.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getEnabledDisplayExtenders().
- */
-function views_get_enabled_display_extenders() {
-  return Views::getEnabledDisplayExtenders();
-}
-
-/**
  * Return a list of all views and display IDs that have a particular
  * setting in their display's plugin settings.
  *
