@@ -1,0 +1,8 @@
+name: 'Views UI Test'
+type: module
+description: 'Test module for Views UI.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views_ui

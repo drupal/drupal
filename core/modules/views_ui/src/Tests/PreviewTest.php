@@ -202,6 +202,24 @@ class PreviewTest extends UITestBase {
   }
 
   /**
+   * Tests the additional information query info area.
+   */
+  public function testPreviewAdditionalInfo() {
+    \Drupal::moduleHandler()->install(array('views_ui_test'));
+    $this->resetAll();
+
+    $this->drupalGet('admin/structure/views/view/test_preview/edit');
+    $this->assertResponse(200);
+
+    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+
+    // Check for implementation of hook_views_preview_info_alter().
+    // @see views_ui_test.module
+    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', array(':text' => t('Test row count')));
+    $this->assertEqual(count($elements), 1, 'Views Query Preview Info area altered.');
+  }
+
+  /**
    * Get the preview form and force an AJAX preview update.
    *
    * @param string $view_name

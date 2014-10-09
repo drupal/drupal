@@ -707,7 +707,7 @@ class ViewUI implements ViewStorageInterface {
             $rows['statistics'][] = array('<strong>' . t('View render time') . '</strong>', t('@time ms', array('@time' => intval($this->executable->render_time * 100000) / 100)));
 
           }
-          \Drupal::moduleHandler()->alter('views_preview_info', $rows, $this);
+          \Drupal::moduleHandler()->alter('views_preview_info', $rows, $this->executable);
         }
         else {
           // No query was run. Display that information in place of either the
