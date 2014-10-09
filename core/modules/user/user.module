@@ -60,7 +60,7 @@ function user_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing users') . '</dt>';
-      $output .= '<dd>' . t('Through the <a href="!people">People administration page</a> you can add and cancel user accounts and assign users to roles. By editing one particular user you can change their user name, email address, password, and information in other fields.', array('!people' => \Drupal::url('user.admin_account'))) . '</dd>';
+      $output .= '<dd>' . t('Through the <a href="!people">People administration page</a> you can add and cancel user accounts and assign users to roles. By editing one particular user you can change their username, email address, password, and information in other fields.', array('!people' => \Drupal::url('user.admin_account'))) . '</dd>';
       $output .= '<dt>' . t('Configuring user roles') . '</dt>';
       $output .= '<dd>' . t('<em>Roles</em> are used to group and classify users; each user can be assigned one or more roles. Typically there are two pre-defined roles: <em>Anonymous user</em> (users that are not logged in), and <em>Authenticated user</em> (users that are registered and logged in). Depending on how your site was set up, an <em>Administrator</em> role may also be available: users with this role will automatically be assigned any new permissions whenever a module is enabled. You can create additional roles on the <a href="!roles">Roles administration page</a>.', array('!roles' => \Drupal::url('user.role_list'))) . '</dd>';
       $output .= '<dt>' . t('Setting permissions') . '</dt>';
@@ -896,7 +896,7 @@ function user_cancel_methods() {
   $methods = array(
     'user_cancel_block' => array(
       'title' => t('Disable the account and keep its content.'),
-      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your user name.'),
+      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.'),
     ),
     'user_cancel_block_unpublish' => array(
       'title' => t('Disable the account and unpublish its content.'),

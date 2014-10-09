@@ -137,13 +137,13 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $new_user = $this->createUser();
     $entity->user_id->entity = $new_user;
     $this->assertEqual($new_user->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($new_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($new_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated username value can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by id.
     $new_user = $this->createUser();
     $entity->user_id->target_id = $new_user->id();
     $this->assertEqual($new_user->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($new_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($new_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated username value can be read.', array('%entity_type' => $entity_type)));
 
     // Try unsetting a field.
     $entity->name->value = NULL;

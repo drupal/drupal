@@ -55,7 +55,7 @@ class Drupal6User extends Drupal6DumpBase {
             'length' => 60,
             'not null' => TRUE,
             'default' => '',
-            'description' => 'Unique user name.',
+            'description' => 'Unique username.',
           ),
           'pass' => array(
             'type' => 'varchar',

@@ -160,7 +160,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
-    $this->assertText(t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your user name.'), 'Informs that all content will be remain as is.');
+    $this->assertText(t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.'), 'Informs that all content will be remain as is.');
     $this->assertNoText(t('Select the method to cancel the account above.'), 'Does not allow user to select account cancellation method.');
 
     // Confirm account cancellation.

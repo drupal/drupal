@@ -45,13 +45,13 @@ class UserSearchTest extends WebTestBase {
     $keys = $user1->getUsername();
     $edit = array('keys' => $keys);
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertLink($keys, 0, 'Search by user name worked for non-admin user');
+    $this->assertLink($keys, 0, 'Search by username worked for non-admin user');
 
     // Verify that searching by sub-string works too.
     $subkey = substr($keys, 1, 5);
     $edit = array('keys' => $subkey);
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertLink($keys, 0, 'Search by user name substring worked for non-admin user');
+    $this->assertLink($keys, 0, 'Search by username substring worked for non-admin user');
 
     // Verify that wildcard search works.
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
@@ -67,27 +67,27 @@ class UserSearchTest extends WebTestBase {
     $edit = array('keys' => $keys);
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText($keys, 'Search by email works for administrative user');
-    $this->assertText($user2->getUsername(), 'Search by email resulted in user name on page for administrative user');
+    $this->assertText($user2->getUsername(), 'Search by email resulted in username on page for administrative user');
 
     // Verify that a substring works too for email.
     $subkey = substr($keys, 1, 5);
     $edit = array('keys' => $subkey);
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText($keys, 'Search by email substring works for administrative user');
-    $this->assertText($user2->getUsername(), 'Search by email substring resulted in user name on page for administrative user');
+    $this->assertText($user2->getUsername(), 'Search by email substring resulted in username on page for administrative user');
 
     // Verify that wildcard search works for email
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
     $edit = array('keys' => $subkey);
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertText($user2->getUsername(), 'Search for email wildcard resulted in user name on page for administrative user');
+    $this->assertText($user2->getUsername(), 'Search for email wildcard resulted in username on page for administrative user');
 
     // Verify that if they search by user name, they see email address too.
     $keys = $user1->getUsername();
     $edit = array('keys' => $keys);
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertText($keys, 'Search by user name works for admin user');
-    $this->assertText($user1->getEmail(), 'Search by user name for admin shows email address too');
+    $this->assertText($keys, 'Search by username works for admin user');
+    $this->assertText($user1->getEmail(), 'Search by username for admin shows email address too');
 
     // Create a blocked user.
     $blocked_user = $this->drupalCreateUser();

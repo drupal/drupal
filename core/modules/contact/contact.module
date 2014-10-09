@@ -64,7 +64,7 @@ function contact_entity_extra_field_info() {
     );
     if ($bundle == 'personal') {
       $fields['contact_message'][$bundle]['form']['recipient'] = array(
-        'label' => t('Recipient user name'),
+        'label' => t('Recipient username'),
         'description' => t('User'),
         'weight' => -30,
       );

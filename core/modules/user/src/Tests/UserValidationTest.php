@@ -97,7 +97,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found on name collision.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
-    $this->assertEqual($violations[0]->getMessage(), t('The name %name is already taken.', array('%name' => 'existing')));
+    $this->assertEqual($violations[0]->getMessage(), t('The username %name is already taken.', array('%name' => 'existing')));
 
     // Make the name valid.
     $user->set('name', $this->randomMachineName());

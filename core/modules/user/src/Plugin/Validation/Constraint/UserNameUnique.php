@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class UserNameUnique extends Constraint {
 
-  public $message = 'The name %value is already taken.';
+  public $message = 'The username %value is already taken.';
 
   /**
    * {@inheritdoc}

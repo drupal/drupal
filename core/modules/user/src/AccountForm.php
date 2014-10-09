@@ -341,7 +341,7 @@ abstract class AccountForm extends ContentEntityForm {
           ->execute();
 
         if ($name_taken) {
-          $form_state->setErrorByName('name', $this->t('The name %name is already taken.', array('%name' => $form_state->getValue('name'))));
+          $form_state->setErrorByName('name', $this->t('The username %name is already taken.', array('%name' => $form_state->getValue('name'))));
         }
       }
     }
