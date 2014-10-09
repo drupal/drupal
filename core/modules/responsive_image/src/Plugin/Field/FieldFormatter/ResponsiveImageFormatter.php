@@ -8,9 +8,13 @@
 namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin for responsive image formatter.
@@ -23,7 +27,54 @@ use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
  *   }
  * )
  */
-class ResponsiveImageFormatter extends ImageFormatterBase {
+class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * @var EntityStorageInterface
+   */
+  protected $responsiveImageMappingStorage;
+
+  /**
+   * Constructs a ResponsiveImageFormatter object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $responsive_image_mapping_storage
+   *   The responsive image mapping storage.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $responsive_image_mapping_storage) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+
+    $this->responsiveImageMappingStorage = $responsive_image_mapping_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('entity.manager')->getStorage('responsive_image_mapping')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -41,7 +92,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $responsive_image_options = array();
-    $responsive_image_mappings = entity_load_multiple('responsive_image_mapping');
+    $responsive_image_mappings = $this->responsiveImageMappingStorage->loadMultiple();
     if ($responsive_image_mappings && !empty($responsive_image_mappings)) {
       foreach ($responsive_image_mappings as $machine_name => $responsive_image_mapping) {
         if ($responsive_image_mapping->hasMappings()) {
@@ -88,7 +139,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
   public function settingsSummary() {
     $summary = array();
 
-    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
+    $responsive_image_mapping = $this->responsiveImageMappingStorage->load($this->getSetting('responsive_image_mapping'));
     if ($responsive_image_mapping) {
       $summary[] = t('Responsive image mapping: @responsive_image_mapping', array('@responsive_image_mapping' => $responsive_image_mapping->label()));
 
@@ -140,7 +191,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     }
 
     // Collect cache tags to be added for each item in the field.
-    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
+    $responsive_image_mapping = $this->responsiveImageMappingStorage->load($this->getSetting('responsive_image_mapping'));
     $image_styles_to_load = array();
     if ($fallback_image_style) {
       $image_styles_to_load[] = $fallback_image_style;

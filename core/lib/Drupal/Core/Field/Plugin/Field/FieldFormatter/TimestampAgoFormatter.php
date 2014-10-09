@@ -52,7 +52,7 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
    * @param string $view_mode
    *   The view mode.
    * @param array $third_party_settings
-   *   Any third party settings settings.
+   *   Any third party settings.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */

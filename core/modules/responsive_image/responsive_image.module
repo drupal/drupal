@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Template\Attribute;
+use Drupal\responsive_image\Entity\ResponsiveImageMapping;
 
 /**
  * The machine name for the empty image breakpoint image style option.
@@ -193,7 +194,7 @@ function theme_responsive_image($variables) {
     'src' => _responsive_image_image_style_url($variables['style_name'], $variables['uri']),
     'dimensions' => responsive_image_get_image_dimensions($variables),
   );
-  $responsive_image_mapping = entity_load('responsive_image_mapping', $variables['mapping_id']);
+  $responsive_image_mapping = ResponsiveImageMapping::load($variables['mapping_id']);
   // All breakpoints and multipliers.
   $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_mapping->getBreakpointGroup());
   foreach ($responsive_image_mapping->getKeyedMappings() as $breakpoint_id => $multipliers) {
