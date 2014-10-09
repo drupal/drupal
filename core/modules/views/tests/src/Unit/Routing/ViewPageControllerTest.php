@@ -73,10 +73,24 @@ class ViewPageControllerTest extends UnitTestCase {
       ->with('default');
     $executable->expects($this->once())
       ->method('initHandlers');
+
+    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $views_display->expects($this->any())
+      ->method('getDefinition')
+      ->willReturn([]);
+    $executable->display_handler = $views_display;
+
+    $build = [
+      '#type' => 'view',
+      '#name' => 'test_page_view',
+      '#display_id' => 'default'
+    ];
     $executable->expects($this->once())
-      ->method('executeDisplay')
-      ->with('default', array())
-      ->will($this->returnValue(array('#markup' => 'example output')));
+      ->method('buildRenderable')
+      ->with('default', [])
+      ->will($this->returnValue($build));
 
     $this->executableFactory->expects($this->any())
       ->method('get')
@@ -91,7 +105,7 @@ class ViewPageControllerTest extends UnitTestCase {
 
     $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
     $this->assertInternalType('array', $output);
-    $this->assertEquals(array('#markup' => 'example output'), $output);
+    $this->assertEquals($build, $output);
   }
 
   /**
@@ -114,6 +128,14 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->expects($this->once())
       ->method('initHandlers');
 
+    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $views_display->expects($this->any())
+      ->method('getDefinition')
+      ->willReturn([]);
+    $executable->display_handler = $views_display;
+
     // Manually setup a argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
       ->disableOriginalConstructor()
@@ -121,7 +143,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->argument['test_id'] = $argument;
 
     $executable->expects($this->once())
-      ->method('executeDisplay')
+      ->method('buildRenderable')
       ->with('page_1', array('test-argument'));
 
     $this->executableFactory->expects($this->any())
@@ -162,6 +184,14 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->expects($this->once())
       ->method('initHandlers');
 
+    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $views_display->expects($this->any())
+      ->method('getDefinition')
+      ->willReturn([]);
+    $executable->display_handler = $views_display;
+
     // Manually setup a argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
       ->disableOriginalConstructor()
@@ -169,7 +199,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->argument['test_id'] = $argument;
 
     $executable->expects($this->once())
-      ->method('executeDisplay')
+      ->method('buildRenderable')
       ->with('page_1', array('test-argument'));
 
     $this->executableFactory->expects($this->any())
@@ -213,6 +243,14 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->expects($this->once())
       ->method('initHandlers');
 
+    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $views_display->expects($this->any())
+      ->method('getDefinition')
+      ->willReturn([]);
+    $executable->display_handler = $views_display;
+
     // Manually setup a argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
       ->disableOriginalConstructor()
@@ -220,7 +258,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $executable->argument['test_id'] = $argument;
 
     $executable->expects($this->once())
-      ->method('executeDisplay')
+      ->method('buildRenderable')
       ->with('page_1', array('example_id'));
 
     $this->executableFactory->expects($this->any())

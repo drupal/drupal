@@ -131,4 +131,11 @@ class ViewsDisplay extends ViewsPluginAnnotationBase {
    */
   public $no_ui;
 
+  /**
+   * Whether the display returns a response object.
+   *
+   * @var bool
+   */
+  public $returns_response;
+
 }

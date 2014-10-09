@@ -24,7 +24,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   title = @Translation("Feed"),
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_route = TRUE,
- *   admin = @Translation("Feed")
+ *   admin = @Translation("Feed"),
+ *   returns_response = TRUE
  * )
  */
 class Feed extends PathPluginBase {

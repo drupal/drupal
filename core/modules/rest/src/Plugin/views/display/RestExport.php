@@ -27,7 +27,8 @@ use Symfony\Component\Routing\RouteCollection;
  *   title = @Translation("REST export"),
  *   help = @Translation("Create a REST export resource."),
  *   uses_route = TRUE,
- *   admin = @Translation("REST export")
+ *   admin = @Translation("REST export"),
+ *   returns_response = TRUE
  * )
  */
 class RestExport extends PathPluginBase {

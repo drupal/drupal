@@ -77,7 +77,7 @@ class UserBlocksTest extends WebTestBase {
     $block = $this->drupalPlaceBlock('views_block:who_s_online-who_s_online_block');
 
     // Generate users.
-    $user1 = $this->drupalCreateUser(array());
+    $user1 = $this->drupalCreateUser(array('access user profiles'));
     $user2 = $this->drupalCreateUser(array());
     $user3 = $this->drupalCreateUser(array());
 
@@ -92,6 +92,7 @@ class UserBlocksTest extends WebTestBase {
     $this->updateAccess($this->adminUser->id(), $inactive_time);
 
     // Test block output.
+    \Drupal::currentUser()->setAccount($user1);
     $content = entity_view($block, 'block');
     $this->drupalSetContent(render($content));
     $this->assertRaw(t('2 users'), 'Correct number of online users (2 users).');

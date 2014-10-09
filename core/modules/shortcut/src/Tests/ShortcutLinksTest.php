@@ -170,6 +170,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertResponse(200);
     // Disable the view.
     entity_load('view', 'content')->disable()->save();
+    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+    $router_builder = \Drupal::service('router.builder');
+    $router_builder->rebuildIfNeeded();
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
   }

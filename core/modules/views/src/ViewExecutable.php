@@ -1397,6 +1397,33 @@ class ViewExecutable {
   }
 
   /**
+   * Builds the render array outline for the given display.
+   *
+   * This render array has a #pre_render callback which will call
+   * ::executeDisplay in order to actually execute the view and then build the
+   * final render array structure.
+   *
+   * @param string $display_id
+   *   The display ID.
+   * @param array $args
+   *   An array of arguments passed along to the view.
+   *
+   * @return array|null
+   *   A renderable array with #type 'view' or NULL if the display ID was
+   *   invalid.
+   */
+  public function buildRenderable($display_id = NULL, $args = array()) {
+    // @todo Extract that into a generic method.
+    if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
+      if (!$this->setDisplay($display_id)) {
+        return NULL;
+      }
+    }
+
+    return $this->display_handler->buildRenderable($args);
+  }
+
+  /**
    * Execute the given display, with the given arguments.
    * To be called externally by whatever mechanism invokes the view,
    * such as a page callback, hook_block, etc.
@@ -2083,6 +2110,9 @@ class ViewExecutable {
    *  Returns TRUE if admin links should be rendered, else FALSE.
    */
   public function getShowAdminLinks() {
+    if (!isset($this->showAdminLinks)) {
+      return $this->getDisplay()->getOption('show_admin_links');
+    }
     return $this->showAdminLinks;
   }
 

@@ -104,7 +104,13 @@ class ViewPageController implements ContainerInjectionInterface {
       }
     }
 
-    return $view->executeDisplay($display_id, $args);
+    $plugin_definition = $view->display_handler->getPluginDefinition();
+    if (!empty($plugin_definition['returns_response'])) {
+      return $view->executeDisplay($display_id, $args);
+    }
+    else {
+      return $view->buildRenderable($display_id, $args);
+    }
   }
 
 }

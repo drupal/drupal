@@ -30,6 +30,7 @@ class View extends RenderElement {
       '#name' => NULL,
       '#display_id' => 'default',
       '#arguments' => array(),
+      '#embed' => FALSE,
     );
   }
 
@@ -39,9 +40,29 @@ class View extends RenderElement {
   public static function preRenderViewElement($element) {
     $element['#attributes']['class'][] = 'views-element-container';
 
-    $view = Views::getView($element['#name']);
+    if (!isset($element['#view'])) {
+      $view = Views::getView($element['#name']);
+    }
+    else {
+      $view = $element['#view'];
+    }
+
     if ($view && $view->access($element['#display_id'])) {
-      $element['view'] = $view->preview($element['#display_id'], $element['#arguments']);
+      if (!empty($element['embed'])) {
+        $element += $view->preview($element['#display_id'], $element['#arguments']);
+      }
+      else {
+        // Add contextual links to the view. We need to attach them to the dummy
+        // $view_array variable, since contextual_preprocess() requires that they
+        // be attached to an array (not an object) in order to process them. For
+        // our purposes, it doesn't matter what we attach them to, since once they
+        // are processed by contextual_preprocess() they will appear in the
+        // $title_suffix variable (which we will then render in
+        // views-view.html.twig).
+        $view->setDisplay($element['#display_id']);
+        $element += $view->executeDisplay($element['#display_id'], $element['#arguments']);
+        views_add_contextual_links($element, 'view', $view, $view->current_display);
+      }
     }
 
     return $element;

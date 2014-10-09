@@ -345,6 +345,13 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
 
     // @todo Remove if views implements a view_builder controller.
     views_invalidate_cache();
+
+    // Rebuild the router case the view got enabled.
+    if (!isset($this->original) || ($this->status() != $this->original->status())) {
+      /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+      $router_builder = \Drupal::service('router.builder');
+      $router_builder->setRebuildNeeded();
+    }
   }
 
   /**

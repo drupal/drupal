@@ -42,14 +42,6 @@ function template_preprocess_views_view(&$variables) {
     $variables['attributes']['class'][] = $variables['css_class'];
   }
 
-  // Add contextual links to the view. We need to attach them to the dummy
-  // $view_array variable, since contextual_preprocess() requires that they be
-  // attached to an array (not an object) in order to process them. For our
-  // purposes, it doesn't matter what we attach them to, since once they are
-  // processed by contextual_preprocess() they will appear in the $title_suffix
-  // variable (which we will then render in views-view.html.twig).
-  views_add_contextual_links($variables['view_array'], 'view', $view, $view->current_display);
-
   // Attachments are always updated with the outer view, never by themselves,
   // so they do not have dom ids.
   if (empty($view->is_attachment)) {

@@ -254,7 +254,7 @@ class Attachment extends DisplayPluginBase {
       $view->display_handler->setOption('pager', $this->view->displayHandlers->get($display_id)->getOption('pager'));
     }
 
-    $attachment = $view->executeDisplay($this->display['id'], $args);
+    $attachment = $view->buildRenderable($this->display['id'], $args);
 
     switch ($this->getOption('attachment_position')) {
       case 'before':

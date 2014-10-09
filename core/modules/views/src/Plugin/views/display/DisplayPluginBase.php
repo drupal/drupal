@@ -2278,8 +2278,6 @@ abstract class DisplayPluginBase extends PluginBase {
     foreach ($this->extender as $extender) {
       $extender->preExecute();
     }
-
-    $this->view->setShowAdminLinks($this->getOption('show_admin_links'));
   }
 
   /**
@@ -2333,6 +2331,27 @@ abstract class DisplayPluginBase extends PluginBase {
    * The base class cannot be executed.
    */
   public function execute() { }
+
+  /**
+   * Builds a renderable array of the view.
+   *
+   * Note: This does not yet contain the executed view, but just the loaded view
+   * executable.
+   *
+   * @return array
+   *   The render array of a view.
+   */
+  public function buildRenderable(array $args = []) {
+    return [
+      '#type' => 'view',
+      '#name' => $this->view->storage->id(),
+      '#display_id' => $this->display['id'],
+      '#arguments' => $args,
+      '#embed' => FALSE,
+      '#pre_render' => [['\Drupal\views\Element\View', 'preRenderViewElement'], [$this, 'elementPreRender']],
+      '#view' => $this->view,
+    ];
+  }
 
   /**
    * Fully render the display for the purposes of a live preview or
