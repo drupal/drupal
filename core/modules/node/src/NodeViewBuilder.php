@@ -35,7 +35,7 @@ class NodeViewBuilder extends EntityViewBuilder {
       $display = $displays[$bundle];
 
       if ($display->getComponent('links')) {
-        $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
+        $callback = get_called_class() . '::renderLinks';
         $context = array(
           'node_entity_id' => $entity->id(),
           'view_mode' => $view_mode,
@@ -98,7 +98,7 @@ class NodeViewBuilder extends EntityViewBuilder {
    *   A renderable array representing the node links.
    */
   public static function renderLinks(array $element, array $context) {
-    $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
+    $callback = get_called_class() . '::renderLinks';
     $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
 
     $links = array(
@@ -109,7 +109,7 @@ class NodeViewBuilder extends EntityViewBuilder {
 
     if (!$context['in_preview']) {
       $entity = entity_load('node', $context['node_entity_id'])->getTranslation($context['langcode']);
-      $links['node'] = self::buildLinks($entity, $context['view_mode']);
+      $links['node'] = static::buildLinks($entity, $context['view_mode']);
 
       // Allow other modules to alter the node links.
       $hook_context = array(
