@@ -19,7 +19,7 @@ class UrlCacheContext implements CacheContextInterface {
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * Constructs a new UrlCacheContext service.
