@@ -9,12 +9,12 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Parent class for Field API unit tests.
  */
-abstract class FieldUnitTestBase extends DrupalUnitTestBase {
+abstract class FieldUnitTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.
