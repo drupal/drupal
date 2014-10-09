@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -272,7 +273,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
         '#value_callback' => 'color_palette_color_value',
         '#default_value' => $value,
         '#size' => 8,
-        '#attributes' => array('dir' => 'ltr'),
+        '#attributes' => array('dir' => LanguageInterface::DIRECTION_LTR),
       );
     }
   }

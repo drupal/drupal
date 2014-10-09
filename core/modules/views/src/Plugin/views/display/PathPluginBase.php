@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
@@ -398,7 +399,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . $this->url('<none>', [], ['absolute' => TRUE]),
           '#field_suffix' => '</span>&lrm;',
-          '#attributes' => array('dir' => 'ltr'),
+          '#attributes' => array('dir' => LanguageInterface::DIRECTION_LTR),
           // Account for the leading backslash.
           '#maxlength' => 254,
         );

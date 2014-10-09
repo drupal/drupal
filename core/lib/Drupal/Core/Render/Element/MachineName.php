@@ -10,6 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides a machine name render element.
@@ -131,7 +132,7 @@ class MachineName extends Textfield {
     if (!isset($element['#attributes'])) {
       $element['#attributes'] = array();
     }
-    $element['#attributes'] += array('dir' => 'ltr');
+    $element['#attributes'] += array('dir' => LanguageInterface::DIRECTION_LTR);
 
     // The source element defaults to array('name'), but may have been overridden.
     if (empty($element['#machine_name']['source'])) {
