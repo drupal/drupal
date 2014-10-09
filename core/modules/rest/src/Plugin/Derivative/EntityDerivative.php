@@ -9,7 +9,6 @@ namespace Drupal\rest\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
-use Drupal\Core\Routing\RouteBuilder;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -113,7 +112,7 @@ class EntityDerivative implements ContainerDeriverInterface {
           // use the path from the route instead of the default.
           if ($route_name = $entity_type->getLinkTemplate($link_relation)) {
             // @todo remove the try/catch as part of
-            // http://drupal.org/node/2158571
+            // http://drupal.org/node/2281645
             try {
               if (($collection = $this->routeBuilder->getCollectionDuringRebuild()) && $route = $collection->get($route_name)) {
               }
