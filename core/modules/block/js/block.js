@@ -91,7 +91,7 @@
       };
 
       // Add the behavior to each region select list.
-      $(context).find('select.block-region-select').once('block-region-select', function () {
+      $(context).find('select.block-region-select').once('block-region-select').each(function () {
         $(this).on('change', function (event) {
           // Make our new row and select field.
           var row = $(this).closest('tr');

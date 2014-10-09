@@ -140,7 +140,7 @@
         return;
       }
 
-      $(context).find('.editor').once('editor', function () {
+      $(context).find('.editor').once('editor').each(function () {
         var $this = $(this);
         var activeFormatID = $this.val();
         $this.attr('data-editor-active-text-format', activeFormatID);
@@ -182,19 +182,7 @@
     },
 
     detach: function (context, settings, trigger) {
-      var editors;
-      // The 'serialize' trigger indicates that we should simply update the
-      // underlying element with the new text, without destroying the editor.
-      if (trigger === 'serialize') {
-        // Removing the editor-processed class guarantees that the editor will
-        // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(context).find('.editor-processed');
-      }
-      else {
-        editors = $(context).find('.editor').removeOnce('editor');
-      }
-
-      editors.each(function () {
+      $(context).find('.editor').removeOnce('editor').each(function () {
         var $this = $(this);
         var activeFormatID = $this.val();
         var field = findFieldForFormatSelector($this);
