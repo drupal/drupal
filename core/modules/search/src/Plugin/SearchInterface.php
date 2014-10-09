@@ -83,6 +83,14 @@ interface SearchInterface extends PluginInspectionInterface {
   public function buildResults();
 
   /**
+   * Provides a suggested title for a page of search results.
+   *
+   * @return string
+   *   The translated suggested page title.
+   */
+  public function suggestedTitle();
+
+  /**
    * Alters the search form when being built for a given plugin.
    *
    * The core search module only invokes this method on active module plugins

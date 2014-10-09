@@ -79,6 +79,7 @@ class SearchController extends ControllerBase {
       $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
     }
 
+    $build['#title'] = $plugin->suggestedTitle();
     $build['search_form'] = $this->entityFormBuilder()->getForm($entity, 'search');
 
     // Build search results, if keywords or other search parameters are in the

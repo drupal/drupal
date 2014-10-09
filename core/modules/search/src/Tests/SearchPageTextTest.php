@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Tests the bike shed text on no results page, and text on the search page.
  *
@@ -30,23 +32,38 @@ class SearchPageTextTest extends SearchTestBase {
     $this->drupalGet('search/node');
     $this->assertText(t('Enter your keywords'));
     $this->assertText(t('Search'));
-    $title = t('Search') . ' | Drupal';
-    $this->assertTitle($title, 'Search page title is correct');
+    $this->assertTitle(t('Search') . ' | Drupal', 'Search page title is correct');
 
     $edit = array();
-    $edit['keys'] = 'bike shed ' . $this->randomMachineName();
+    $search_terms = 'bike shed ' . $this->randomMachineName();
+    $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
-    $this->assertTitle($title, 'Search page title is correct');
+    $title_source = 'Search for @keywords | Drupal';
+    $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE))), 'Search page title is correct');
     $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
     $this->assertNoText(t('Node'), 'Erroneous translated tab and breadcrumb text is not present');
     $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
 
+    // Search for a longer text, and see that it is in the title, truncated.
+    $edit = array();
+    $search_terms = 'Every word is like an unnecessary stain on silence and nothingness.';
+    $edit['keys'] = $search_terms;
+    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->assertTitle(t($title_source, array('@keywords' => 'Every word is like an unnecessary stain on silence and…')), 'Search page title is correct');
+
+    // Search for a string with a lot of special characters.
+    $search_terms = 'Hear nothing > "see nothing" `feel' . " '1982.";
+    $edit['keys'] = $search_terms;
+    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $actual_title = (string) current($this->xpath('//title'));
+    $this->assertEqual($actual_title, decode_entities(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)))), 'Search page title is correct');
+
     $edit['keys'] = $this->searching_user->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
-    $this->assertTitle($title, 'Search page title is correct');
+    $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($this->searching_user->getUsername(), 60, TRUE, TRUE))));
 
     // Test that search keywords containing slashes are correctly loaded
     // from the GET params and displayed in the search form.

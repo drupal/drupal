@@ -10,6 +10,7 @@ namespace Drupal\search\Plugin;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Component\Utility\Unicode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -107,6 +108,19 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
    */
   public function searchFormAlter(array &$form, FormStateInterface $form_state) {
     // Empty default implementation.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function suggestedTitle() {
+    // If the user entered a search string, truncate it and append it to the
+    // title.
+    if (!empty($this->keywords)) {
+      return $this->t('Search for @keywords', array('@keywords' => Unicode::truncate($this->keywords, 60, TRUE, TRUE)));
+    }
+    // Use the default 'Search' title.
+    return $this->t('Search');
   }
 
   /*

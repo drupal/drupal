@@ -132,7 +132,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for $title.
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $this->assertNoText($comment_body, 'Comment body text not found in search results.');
+    $this->assertText(t('Your search yielded no results.'));
   }
 
   /**
@@ -226,8 +226,8 @@ class SearchCommentTest extends SearchTestBase {
       $expected_comment_result = $this->assertText($this->comment_subject);
     }
     else {
-      $expected_node_result = $this->assertNoText($this->node->label());
-      $expected_comment_result = $this->assertNoText($this->comment_subject);
+      $expected_node_result = $this->assertText(t('Your search yielded no results.'));
+      $expected_comment_result = $this->assertText(t('Your search yielded no results.'));
     }
     $this->assertTrue($expected_node_result && $expected_comment_result, $message);
   }

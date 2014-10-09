@@ -32,7 +32,7 @@ class UserSearchTest extends WebTestBase {
     $keys = $user1->getEmail();
     $edit = array('keys' => $keys);
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertNoText($keys, 'Search by email did not work for non-admin user');
+    $this->assertText(t('Your search yielded no results.'), 'Search by email did not work for non-admin user');
     $this->assertText('no results', 'Search by email gave no-match message');
 
     // Verify that a non-matching query gives an appropriate message.
@@ -105,7 +105,7 @@ class UserSearchTest extends WebTestBase {
     $this->drupalLogin($user1);
     $edit = array('keys' => $blocked_user->getUsername());
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertNoText($blocked_user->getUsername(), 'Blocked users are hidden from the user search results.');
+    $this->assertText(t('Your search yielded no results.'), 'Blocked users are hidden from the user search results.');
 
     // Create a user without search permission, and one without user page view
     // permission. Verify that neither one can access the user search page.
