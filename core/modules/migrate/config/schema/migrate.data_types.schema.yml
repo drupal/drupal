@@ -15,6 +15,15 @@ migrate_source:
   type: migrate_plugin
   label: 'Source'
 
+# Base schema for migrate source plugins that extend
+# \Drupal\migrate\Plugin\migrate\source\SqlBase.
+migrate_source_sql:
+  type: migrate_source
+  mapping:
+    target:
+      type: string
+      label: 'The migration database target'
+
 migrate_load:
   type: migrate_plugin
   label: 'Load'

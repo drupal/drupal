@@ -5,7 +5,7 @@ migrate.source.*:
   label: 'Default source'
 
 migrate.source.variable:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Variable'
   mapping:
     variables:
@@ -38,7 +38,7 @@ migrate.source.variable:
           label: 'Plugin'
 
 migrate.source.d6_comment:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 comment'
   mapping:
     constants:
@@ -50,7 +50,7 @@ migrate.source.d6_comment:
           label: 'Entity type'
 
 migrate.source.d6_comment_variable_per_comment_type:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 comment variable'
   mapping:
     constants:
@@ -58,7 +58,7 @@ migrate.source.d6_comment_variable_per_comment_type:
       label: 'Constants'
 
 migrate.source.d6_comment_entity_form_display_subject:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 comment subject entity form display'
   mapping:
     constants:
@@ -66,7 +66,7 @@ migrate.source.d6_comment_entity_form_display_subject:
       label: 'Constants'
 
 migrate.source.d6_box:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 box'
   mapping:
     constants:
@@ -78,7 +78,7 @@ migrate.source.d6_box:
           label: 'Type'
 
 migrate.source.d6_taxonomy_vocabulary:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
   mapping:
     constants:
@@ -86,7 +86,7 @@ migrate.source.d6_taxonomy_vocabulary:
       label: 'Constants'
 
 migrate.source.d6_field_instance_per_form_display:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
   mapping:
     constants:
@@ -94,7 +94,7 @@ migrate.source.d6_field_instance_per_form_display:
       label: 'Constants'
 
 migrate.source.d6_taxonomy_vocabulary_per_type:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
   mapping:
     constants:
@@ -102,7 +102,7 @@ migrate.source.d6_taxonomy_vocabulary_per_type:
       label: 'Constants'
 
 migrate.source.d6_taxonomy_vocabulary_per_type:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
   mapping:
     constants:
@@ -110,7 +110,7 @@ migrate.source.d6_taxonomy_vocabulary_per_type:
       label: 'Constants'
 
 migrate.source.d6_field:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 box'
   mapping:
     constants:
@@ -118,7 +118,7 @@ migrate.source.d6_field:
       label: 'Constants'
 
 migrate.source.variable_multirow:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 box'
   mapping:
     variables:
@@ -129,7 +129,7 @@ migrate.source.variable_multirow:
           label: 'Variable'
 
 migrate.source.d6_comment_variable:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 comment variable'
   mapping:
     constants:
@@ -137,7 +137,7 @@ migrate.source.d6_comment_variable:
       label: 'Constants'
 
 migrate.source.d6_contact_settings:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 contact settings'
   mapping:
     variables:
@@ -148,7 +148,7 @@ migrate.source.d6_contact_settings:
           label: 'Variable'
 
 migrate.source.d6_view_mode:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 view mode'
   mapping:
     constants:
@@ -163,7 +163,7 @@ migrate.source.d6_view_mode:
           label: 'Status'
 
 migrate.source.d6_profile_field:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 profile field'
   mapping:
     constants:
@@ -171,7 +171,7 @@ migrate.source.d6_profile_field:
       label: 'Constants'
 
 migrate.source.d6_field_formatter_settings:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field formatter settings'
   mapping:
     constants:
@@ -179,7 +179,7 @@ migrate.source.d6_field_formatter_settings:
       label: 'Constants'
 
 migrate.source.d6_node_type:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 node type'
   mapping:
     constants:
@@ -187,7 +187,7 @@ migrate.source.d6_node_type:
       label: 'Constants'
 
 migrate.source.d6_node:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 node'
   mapping:
     node_type:
@@ -197,7 +197,7 @@ migrate.source.d6_node:
       label: 'Node type'
 
 migrate.source.d6_node_revision:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 node'
   mapping:
     node_type:
@@ -207,7 +207,7 @@ migrate.source.d6_node_revision:
       label: 'Node type'
 
 migrate.source.d6_upload_instance:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 upload form display'
   mapping:
     constants:
@@ -215,7 +215,7 @@ migrate.source.d6_upload_instance:
       label: 'Constants'
 
 migrate.source.d6_field_instance:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field instance'
   mapping:
     constants:
@@ -223,7 +223,7 @@ migrate.source.d6_field_instance:
       label: 'Constants'
 
 migrate.source.d6_field_instance_per_view_mode:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field formatter'
   mapping:
     constants:
@@ -231,7 +231,7 @@ migrate.source.d6_field_instance_per_view_mode:
       label: 'Constants'
 
 migrate.source.empty:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 field formatter'
   mapping:
     provider:
@@ -258,7 +258,7 @@ migrate.source.empty:
           label: 'Display field'
 
 migrate.source.d6_user:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 user'
   mapping:
     constants:
@@ -273,7 +273,7 @@ migrate.source.d6_user:
           label: 'Module name'
 
 migrate.source.d6_user_picture_file:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 user picure display'
   mapping:
     constants:
@@ -285,7 +285,7 @@ migrate.source.d6_user_picture_file:
           label: 'Public'
 
 migrate.source.d6_user_picture_instance:
-  type: migrate_source
+  type: migrate_source_sql
   label: 'Drupal 6 user picure display'
   mapping:
     provider:
