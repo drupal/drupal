@@ -8,6 +8,7 @@
 namespace Drupal\Tests\config_translation\Unit;
 
 use Drupal\config_translation\ConfigEntityMapper;
+use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
@@ -188,11 +189,11 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $expected = array(
       'list' => array(
         'title' => 'List',
-        'href' => 'admin/config/regional/config-translation/configurable_language',
-      )
+        'url' => Url::fromRoute('config_translation.entity_list', ['mapper_id' => 'configurable_language']),
+      ),
     );
 
-    $this->assertSame($expected, $result);
+    $this->assertEquals($expected, $result);
   }
 
 }

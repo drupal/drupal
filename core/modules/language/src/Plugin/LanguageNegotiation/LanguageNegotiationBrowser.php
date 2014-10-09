@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   cache = 0,
  *   name = @Translation("Browser"),
  *   description = @Translation("Language from the browser's language settings."),
- *   config_path = "admin/config/regional/language/detection/browser"
+ *   config_route_name = "language.negotiation_browser"
  * )
  */
 class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {

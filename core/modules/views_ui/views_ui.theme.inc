@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for Views UI display tab setting templates.
@@ -283,7 +284,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
 
         $remove_link = array(
           '#type' => 'link',
-          '#href' => '',
+          '#url' => Url::fromRoute('<none>'),
           '#title' => '<span>' . t('Remove') . '</span>',
           '#weight' => '1',
           '#options' => array(

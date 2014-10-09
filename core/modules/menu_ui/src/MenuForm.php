@@ -18,6 +18,7 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\UrlGeneratorTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -306,23 +307,21 @@ class MenuForm extends EntityForm {
         // Allow for a custom edit link per plugin.
         $edit_route = $link->getEditRoute();
         if ($edit_route) {
-          $operations['edit'] += $edit_route;
+          $operations['edit']['url'] = $edit_route;
           // Bring the user back to the menu overview.
           $operations['edit']['query']['destination'] = $this->entity->url();
         }
         else {
           // Fall back to the standard edit link.
           $operations['edit'] += array(
-            'route_name' => 'menu_ui.link_edit',
-            'route_parameters' => array('menu_link_plugin' => $link->getPluginId()),
+            'url' => Url::fromRoute('menu_ui.link_edit', ['menu_link_plugin' => $link->getPluginId()]),
           );
         }
         // Links can either be reset or deleted, not both.
         if ($link->isResettable()) {
           $operations['reset'] = array(
             'title' => $this->t('Reset'),
-            'route_name' => 'menu_ui.link_reset',
-            'route_parameters' => array('menu_link_plugin' => $link->getPluginId()),
+            'url' => Url::fromRoute('menu_ui.link_reset', ['menu_link_plugin' => $link->getPluginId()]),
           );
         }
         elseif ($delete_link = $link->getDeleteRoute()) {
@@ -333,7 +332,8 @@ class MenuForm extends EntityForm {
         if ($link->isTranslatable()) {
           $operations['translate'] = array(
             'title' => $this->t('Translate'),
-          ) + (array) $link->getTranslateRoute();
+            'url' => $link->getTranslateRoute(),
+          );
         }
         $form[$id]['operations'] = array(
           '#type' => 'operations',

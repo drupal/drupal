@@ -102,7 +102,8 @@ class UrlTest extends UnitTestCase {
     foreach ($this->map as $index => $values) {
       $path = array_pop($values);
       $url = Url::createFromRequest(Request::create("$path"));
-      $this->assertSame($values, array_values($url->toArray()));
+      $expected = Url::fromRoute($values[0], $values[1], $values[2]);
+      $this->assertEquals($expected, $url);
       $urls[$index] = $url;
     }
     return $urls;
@@ -245,12 +246,9 @@ class UrlTest extends UnitTestCase {
    */
   public function testToArray($urls) {
     foreach ($urls as $index => $url) {
-      $expected = array(
-        'route_name' => $this->map[$index][0],
-        'route_parameters' => $this->map[$index][1],
-        'options' => $this->map[$index][2],
-      );
-      $this->assertSame($expected, $url->toArray());
+      $expected = Url::fromRoute($this->map[$index][0], $this->map[$index][1], $this->map[$index][2]);
+      $expected->setUrlGenerator(\Drupal::urlGenerator());
+      $this->assertEquals($expected, $url);
     }
   }
 
@@ -350,9 +348,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testRenderAccess($access) {
     $element = array(
-      '#route_name' => 'entity.node.canonical',
-      '#route_parameters' => ['node' => 3],
-      '#options' => [],
+      '#url' => Url::fromRoute('entity.node.canonical', ['node' => 3]),
     );
     $this->container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
     $this->container->set('access_manager', $this->getMockAccessManager($access));

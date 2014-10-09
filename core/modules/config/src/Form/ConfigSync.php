@@ -20,7 +20,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -72,13 +72,6 @@ class ConfigSync extends FormBase {
   protected $configManager;
 
   /**
-   * URL generator service.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
    * The typed config manager.
    *
    * @var \Drupal\Core\Config\TypedConfigManagerInterface
@@ -114,8 +107,6 @@ class ConfigSync extends FormBase {
    *   Event dispatcher.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   Configuration manager.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -123,14 +114,13 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler
    */
-  public function __construct(StorageInterface $staging_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, UrlGeneratorInterface $url_generator, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct(StorageInterface $staging_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     $this->stagingStorage = $staging_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
-    $this->urlGenerator = $url_generator;
     $this->typedConfigManager = $typed_config;
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
@@ -147,7 +137,6 @@ class ConfigSync extends FormBase {
       $container->get('lock'),
       $container->get('event_dispatcher'),
       $container->get('config.manager'),
-      $container->get('url_generator'),
       $container->get('config.typed'),
       $container->get('module_handler'),
       $container->get('theme_handler')
@@ -268,15 +257,15 @@ class ConfigSync extends FormBase {
             $route_options = array('source_name' => $config_name);
           }
           if ($collection != StorageInterface::DEFAULT_COLLECTION) {
+            $route_name = 'config.diff_collection';
             $route_options['collection'] = $collection;
-            $href = $this->urlGenerator->getPathFromRoute('config.diff_collection', $route_options);
           }
           else {
-            $href = $this->urlGenerator->getPathFromRoute('config.diff', $route_options);
+            $route_name = 'config.diff';
           }
           $links['view_diff'] = array(
             'title' => $this->t('View differences'),
-            'href' => $href,
+            'url' => Url::fromRoute($route_name, $route_options),
             'attributes' => array(
               'class' => array('use-ajax'),
               'data-accepts' => 'application/vnd.drupal-modal',

@@ -184,16 +184,14 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
           if ($revert_permission) {
             $links['revert'] = array(
               'title' => $this->t('Revert'),
-              'route_name' => 'node.revision_revert_confirm',
-              'route_parameters' => array('node' => $node->id(), 'node_revision' => $vid),
+              'url' => Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
             );
           }
 
           if ($delete_permission) {
             $links['delete'] = array(
               'title' => $this->t('Delete'),
-              'route_name' => 'node.revision_delete_confirm',
-              'route_parameters' => array('node' => $node->id(), 'node_revision' => $vid),
+              'url' => Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
             );
           }
 

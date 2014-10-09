@@ -213,7 +213,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
           'class' => array('button', 'button--danger'),
         ),
       );
-      $actions['delete'] += $route_info->toRenderArray();
+      $actions['delete']['#url'] = $route_info;
     }
 
     return $actions;

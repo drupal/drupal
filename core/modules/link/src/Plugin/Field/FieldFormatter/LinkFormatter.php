@@ -163,13 +163,7 @@ class LinkFormatter extends FormatterBase {
           '#title' => $link_title,
           '#options' => $url->getOptions(),
         );
-        if ($url->isExternal()) {
-          $element[$delta]['#href'] = $url->getUri();
-        }
-        else {
-          $element[$delta]['#route_name'] = $url->getRouteName();
-          $element[$delta]['#route_parameters'] = $url->getRouteParameters();
-        }
+        $element[$delta]['#url'] = $url;
 
         if (!empty($item->_attributes)) {
           $element[$delta]['#options'] += array ('attributes' => array());

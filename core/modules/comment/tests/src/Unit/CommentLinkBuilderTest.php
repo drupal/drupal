@@ -9,6 +9,7 @@ namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\TestBase;
 use Drupal\Tests\UnitTestCase;
@@ -129,12 +130,12 @@ class CommentLinkBuilderTest extends UnitTestCase {
           if (is_array($detail)) {
             // Array of link attributes.
             foreach ($detail as $key => $value) {
-              $this->assertEquals($links['comment__comment']['#links'][$link][$key], $value);
+              $this->assertEquals($value, $links['comment__comment']['#links'][$link][$key]);
             }
           }
           else {
             // Just the title.
-            $this->assertEquals($links['comment__comment']['#links'][$link]['title'], $detail);
+            $this->assertEquals($detail, $links['comment__comment']['#links'][$link]['title']);
           }
         }
       }
@@ -236,11 +237,11 @@ class CommentLinkBuilderTest extends UnitTestCase {
               $expected['comment-add'] = array('title' => 'Add new comment');
               if ($combination['form_location'] == CommentItemInterface::FORM_BELOW) {
                 // On the same page.
-                $expected['comment-add']['route_name'] = 'node.view';
+                $expected['comment-add']['url'] = Url::fromRoute('node.view');
               }
               else {
                 // On a separate page.
-                $expected['comment-add']['route_name'] = 'comment.reply';
+                $expected['comment-add']['url'] = Url::fromRoute('comment.reply', ['entity_type' => 'node', 'entity' => 1, 'field_name' => 'comment']);
               }
             }
           }
@@ -314,12 +315,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->method('id')
       ->willReturn(1);
 
-    $url = $this->getMockBuilder('\Drupal\Core\Url')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $url->expects($this->any())
-      ->method('toArray')
-      ->willReturn(array('route_name' => 'node.view'));
+    $url = Url::fromRoute('node.view');
     $node->expects($this->any())
       ->method('urlInfo')
       ->willReturn($url);

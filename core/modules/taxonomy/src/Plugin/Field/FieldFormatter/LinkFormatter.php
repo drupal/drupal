@@ -42,11 +42,14 @@ class LinkFormatter extends TaxonomyFormatterBase {
         $elements[$delta] = array(
           '#type' => 'link',
           '#title' => $term->getName(),
-        ) + $term->urlInfo()->toRenderArray();
+          '#url' => $term->urlInfo(),
+        );
 
         if (!empty($item->_attributes)) {
-          $elements[$delta]['#options'] += array('attributes' => array());
-          $elements[$delta]['#options']['attributes'] += $item->_attributes;
+          $options = $elements[$delta]['#url']->getOptions();
+          $options += ['attributes' => []];
+          $options['attributes'] += $item->_attributes;
+          $elements[$delta]['#url']->setOptions($options);
           // Unset field item attributes since they have been included in the
           // formatter output and should not be rendered in the field template.
           unset($item->_attributes);

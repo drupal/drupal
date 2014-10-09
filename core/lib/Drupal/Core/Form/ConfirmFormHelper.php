@@ -34,19 +34,20 @@ class ConfirmFormHelper {
     // If a destination is specified, that serves as the cancel link.
     if ($query->has('destination')) {
       $options = UrlHelper::parse($query->get('destination'));
-      $link = array(
-        '#href' => $options['path'],
-        '#options' => $options,
-      );
+      // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
+      //   resolved.
+      $url = Url::fromUri('base://' . $options['path'], $options);
     }
     // Check for a route-based cancel link.
-    elseif ($url = $form->getCancelUrl()) {
-      $link = $url->toRenderArray();
+    else {
+      $url = $form->getCancelUrl();
     }
 
-    $link['#type'] = 'link';
-    $link['#title'] = $form->getCancelText();
-    return $link;
+    return [
+      '#type' => 'link',
+      '#title' => $form->getCancelText(),
+      '#url' => $url,
+    ];
   }
 
 }

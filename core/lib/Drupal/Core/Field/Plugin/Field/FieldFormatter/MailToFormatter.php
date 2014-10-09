@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'email_mailto' formatter.
@@ -33,7 +34,7 @@ class MailToFormatter extends FormatterBase {
       $elements[$delta] = array(
         '#type' => 'link',
         '#title' => $item->value,
-        '#href' => 'mailto:' . $item->value,
+        '#url' => Url::fromUri('mailto:' . $item->value),
       );
     }
 

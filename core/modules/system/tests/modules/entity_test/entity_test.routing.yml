@@ -76,6 +76,19 @@ entity.entity_test.list_empty:
   requirements:
     _access: 'TRUE'
 
+entity.block.test_operation:
+  path: '/admin/structure/block/manage/{block}/test_operation'
+  defaults:
+    _entity_view: 'entity_test'
+  requirements:
+    _access: 'TRUE'
+
+entity.user_role.test_operation:
+  path: '/admin/people/roles/manage/{user_role}/test_operation'
+  defaults:
+    _entity_view: 'entity_test'
+  requirements:
+    _access: 'TRUE'
 
 route_callbacks:
   - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'

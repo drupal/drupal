@@ -218,9 +218,9 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
   /**
    * Returns route information for a route to delete the menu link.
    *
-   * @return array|null
-   *   An array with keys route_name and route_parameters, or NULL if there is
-   *   no route (e.g. when the link is not deletable).
+   * @return \Drupal\Core\Url|null
+   *   A Url object, or NULL if there is no route (e.g. when the link is not
+   *   deletable).
    */
   public function getDeleteRoute();
 
@@ -231,18 +231,18 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * they need to define additional local tasks, local actions, etc. that are
    * visible from the edit form.
    *
-   * @return array|null
-   *   An array with keys route_name and route_parameters, or NULL if there is
-   *   no route because there is no custom edit route for this instance.
+   * @return \Drupal\Core\Url|null
+   *   A Url object, or NULL if there is no route because there is no custom
+   *   edit route for this instance.
    */
   public function getEditRoute();
 
   /**
    * Returns route information for a route to translate the menu link.
    *
-   * @return array
-   *   An array with keys route_name and route_parameters, or NULL if there is
-   *   no route (e.g. when the link is not translatable).
+   * @return \Drupal\Core\Url|null
+   *   A Url object, or NULL if there is no route (e.g. when the link is not
+   *   translatable).
    */
   public function getTranslateRoute();
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\ajax_test\Controller;
 
+use Drupal\Core\Url;
+
 /**
  * Provides content for dialog tests.
  */
@@ -56,7 +58,7 @@ class AjaxTestController {
     $build['link'] = array(
       '#type' => 'link',
       '#title' => 'Link 1 (modal)',
-      '#href' => 'ajax-test/dialog-contents',
+      '#url' => Url::fromRoute('ajax_test.dialog_contents'),
       '#attributes' => array(
         'class' => array('use-ajax'),
         'data-accepts' => 'application/vnd.drupal-modal',
@@ -69,7 +71,7 @@ class AjaxTestController {
       '#links' => array(
         'link2' => array(
           'title' => 'Link 2 (modal)',
-          'href' => 'ajax-test/dialog-contents',
+          'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-modal',
@@ -80,7 +82,7 @@ class AjaxTestController {
         ),
         'link3' => array(
           'title' => 'Link 3 (non-modal)',
-          'href' => 'ajax-test/dialog-contents',
+          'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-dialog',
@@ -92,14 +94,14 @@ class AjaxTestController {
         ),
         'link4' => array(
           'title' => 'Link 4 (close non-modal if open)',
-          'href' => 'ajax-test/dialog-close',
+          'url' => Url::fromRoute('ajax_test.dialog_close'),
           'attributes' => array(
             'class' => array('use-ajax'),
           ),
         ),
         'link5' => array(
           'title' => 'Link 5 (form)',
-          'href' => 'ajax-test/dialog-form',
+          'url' => Url::fromRoute('ajax_test.dialog_form'),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-modal',
@@ -107,7 +109,7 @@ class AjaxTestController {
         ),
         'link6' => array(
           'title' => 'Link 6 (entity form)',
-          'href' => 'admin/structure/contact/add',
+          'url' => Url::fromRoute('contact.form_add'),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-modal',
@@ -119,7 +121,7 @@ class AjaxTestController {
         ),
         'link7' => array(
           'title' => 'Link 7 (non-modal, no target)',
-          'href' => 'ajax-test/dialog-contents',
+          'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-dialog',

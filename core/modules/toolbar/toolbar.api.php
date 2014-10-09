@@ -4,6 +4,7 @@
  * @file
  * Hooks provided by the toolbar module.
  */
+use Drupal\Core\Url;
 
 /**
  * @addtogroup hooks
@@ -72,7 +73,7 @@ function hook_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => t('Home'),
-      '#href' => '<front>',
+      '#url' => Url::fromRoute('<front>'),
       '#options' => array(
         'attributes' => array(
           'title' => t('Home page'),
@@ -96,7 +97,7 @@ function hook_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => t('Shopping cart'),
-      '#href' => '/cart',
+      '#url' => Url::fromRoute('cart'),
       '#options' => array(
         'html' => FALSE,
         'attributes' => array(
@@ -131,7 +132,7 @@ function hook_toolbar() {
       '#theme' => 'user_message_toolbar_tab',
       '#theme_wrappers' => array(),
       '#title' => t('Messages'),
-      '#href' => '/user/messages',
+      '#url' => Url::fromRoute('user.message'),
       '#options' => array(
         'attributes' => array(
           'title' => t('Messages'),

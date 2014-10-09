@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\book\BookManager;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Returns HTML for a book administration form.
@@ -45,19 +46,17 @@ function theme_book_admin_table($variables) {
     $links = array();
     $links['view'] = array(
       'title' => t('View'),
-      'href' => $href,
+      'url' => Url::fromRoute('entity.node.canonical', ['node' => $nid]),
     );
     if ($access) {
       $links['edit'] = array(
         'title' => t('Edit'),
-        'route_name' => 'entity.node.edit_form',
-        'route_parameters' => array('node' => $nid),
+        'url' => Url::fromRoute('entity.node.edit_form', ['node' => $nid]),
         'query' => $destination,
       );
       $links['delete'] = array(
         'title' => t('Delete'),
-        'route_name' => 'entity.node.delete_form',
-        'route_parameters' => array('node' => $nid),
+        'url' => Url::fromRoute('entity.node.delete_form', ['node' => $nid]),
         'query' => $destination,
       );
     }

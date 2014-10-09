@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for language negotiation configuration form.
@@ -113,7 +114,7 @@ function theme_language_negotiation_configure_browser_form_table($variables) {
     $links = array();
     $links['delete'] = array(
       'title' => t('Delete'),
-      'href' => "admin/config/regional/language/detection/browser/delete/$key",
+      'url' => Url::fromRoute('language.negotiation_browser_delete', ['browser_langcode' => $key]),
       'attributes' => array(
         'class' => array('image-style-link'),
       ),

@@ -115,7 +115,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function setRouteParams($route_parameters) {
-    $this->set('route_parameters', array($route_parameters));
+    $this->set('route_parameters', $route_parameters);
     return $this;
   }
 

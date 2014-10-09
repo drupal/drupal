@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\aggregator\FeedInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -128,25 +129,21 @@ class AggregatorController extends ControllerBase {
       $refresh_rate = $feed->getRefreshRate();
       $row[] = ($last_checked ? $this->t('@time ago', array('@time' => $this->dateFormatter->formatInterval(REQUEST_TIME - $last_checked))) : $this->t('never'));
       $row[] = ($last_checked && $refresh_rate ? $this->t('%time left', array('%time' => $this->dateFormatter->formatInterval($last_checked + $refresh_rate - REQUEST_TIME))) : $this->t('never'));
-      $links['edit'] = array(
+      $links['edit'] = [
         'title' => $this->t('Edit'),
-        'route_name' => 'entity.aggregator_feed.edit_form',
-        'route_parameters' => array('aggregator_feed' => $feed->id()),
-      );
+        'url' => Url::fromRoute('entity.aggregator_feed.edit_form', ['aggregator_feed' => $feed->id()]),
+      ];
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'route_name' => 'entity.aggregator_feed.delete_form',
-        'route_parameters' => array('aggregator_feed' => $feed->id()),
+        'url' => Url::fromRoute('entity.aggregator_feed.delete_form', ['aggregator_feed' => $feed->id()]),
       );
       $links['delete_items'] = array(
         'title' => $this->t('Delete items'),
-        'route_name' => 'aggregator.feed_items_delete',
-        'route_parameters' => array('aggregator_feed' => $feed->id()),
+        'url' => Url::fromRoute('aggregator.feed_items_delete', ['aggregator_feed' => $feed->id()]),
       );
       $links['update'] = array(
         'title' => $this->t('Update items'),
-        'route_name' => 'aggregator.feed_refresh',
-        'route_parameters' => array('aggregator_feed' => $feed->id()),
+        'url' => Url::fromRoute('aggregator.feed_refresh', ['aggregator_feed' => $feed->id()])
       );
       $row[] = array(
         'data' => array(

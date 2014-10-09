@@ -113,7 +113,8 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $link = array(
       '#type' => 'link',
       '#title' => $this->menuLink->getTitle(),
-    ) + $this->menuLink->getUrlObject()->toRenderArray();
+      '#url' => $this->menuLink->getUrlObject(),
+    );
     $form['path'] = array(
       'link' => $link,
       '#type' => 'item',

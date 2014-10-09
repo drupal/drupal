@@ -15,6 +15,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -174,9 +175,7 @@ class ConfigTranslationController extends ControllerBase {
         if ($edit_access) {
           $operations['edit'] = array(
             'title' => $this->t('Edit'),
-            'route_name' => $mapper->getBaseRouteName(),
-            'route_parameters' => $mapper->getBaseRouteParameters(),
-            'query' => array('destination' => $mapper->getOverviewPath()),
+            'url' => Url::fromRoute($mapper->getBaseRouteName(), $mapper->getBaseRouteParameters(), ['query' => ['destination' => $mapper->getOverviewPath()]]),
           );
         }
       }
@@ -188,22 +187,19 @@ class ConfigTranslationController extends ControllerBase {
         if (!$mapper->hasTranslation($language)) {
           $operations['add'] = array(
             'title' => $this->t('Add'),
-            'route_name' => $mapper->getAddRouteName(),
-            'route_parameters' => $mapper->getAddRouteParameters(),
+            'url' => Url::fromRoute($mapper->getAddRouteName(), $mapper->getAddRouteParameters()),
           );
         }
         else {
           // Otherwise, link to edit the existing translation.
           $operations['edit'] = array(
             'title' => $this->t('Edit'),
-            'route_name' => $mapper->getEditRouteName(),
-            'route_parameters' => $mapper->getEditRouteParameters(),
+            'url' => Url::fromRoute($mapper->getEditRouteName(), $mapper->getEditRouteParameters()),
           );
 
           $operations['delete'] = array(
             'title' => $this->t('Delete'),
-            'route_name' => $mapper->getDeleteRouteName(),
-            'route_parameters' => $mapper->getDeleteRouteParameters(),
+            'url' => Url::fromRoute($mapper->getDeleteRouteName(), $mapper->getDeleteRouteParameters()),
           );
         }
       }

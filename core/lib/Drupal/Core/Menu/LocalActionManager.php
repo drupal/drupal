@@ -16,6 +16,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -166,8 +167,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
         '#theme' => 'menu_local_action',
         '#link' => array(
           'title' => $this->getTitle($plugin),
-          'route_name' => $route_name,
-          'route_parameters' => $route_parameters,
+          'url' => Url::fromRoute($route_name, $route_parameters),
           'localized_options' => $plugin->getOptions($request),
         ),
         '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account),

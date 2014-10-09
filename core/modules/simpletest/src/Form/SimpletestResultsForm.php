@@ -12,6 +12,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -238,7 +239,7 @@ class SimpletestResultsForm extends FormBase {
     $form['action']['return'] = array(
       '#type' => 'link',
       '#title' => $this->t('Return to list'),
-      '#href' => 'admin/config/development/testing',
+      '#url' => Url::fromRoute('simpletest.test_form'),
     );
 
     if (is_numeric($test_id)) {

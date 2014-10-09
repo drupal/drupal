@@ -122,9 +122,9 @@ abstract class ViewFormBase extends EntityForm {
         '#link' => array(
           'title' => $this->getDisplayLabel($view, $id),
           'localized_options' => array(),
-        ) + $view->urlInfo('edit-display-form')->toArray(),
+          'url' => $view->urlInfo('edit-display-form')->setRouteParameter('display_id', $id),
+        ),
       );
-      $tabs[$id]['#link']['route_parameters']['display_id'] = $id;
       if (!empty($display['deleted'])) {
         $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'views-display-deleted-link';
       }

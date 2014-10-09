@@ -13,6 +13,7 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Diff\DiffFormatter;
+use Drupal\Core\Url;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -156,7 +157,7 @@ class ConfigController implements ContainerInjectionInterface {
         ),
       ),
       '#title' => "Back to 'Synchronize configuration' page.",
-      '#href' => 'admin/config/development/configuration',
+      '#url' => Url::fromRoute('config.sync'),
     );
 
     return $build;

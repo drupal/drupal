@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views_ui\ViewUI;
 
 /**
@@ -120,7 +121,7 @@ class ReorderDisplays extends ViewsFormBase {
         'link' => array(
           '#type' => 'link',
           '#title' => '<span>' . $this->t('Remove') . '</span>',
-          '#href' => 'javascript:void()',
+          '#url' => Url::fromRoute('<none>'),
           '#options' => array(
             'html' => TRUE,
           ),

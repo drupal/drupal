@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -118,7 +119,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $row['url'] = array(
         '#type' => 'link',
         '#title' => $row['url'],
-        '#route_name' => 'search.view_' . $entity->id(),
+        '#url' => Url::fromRoute('search.view_' . $entity->id()),
       );
     }
 
@@ -305,10 +306,9 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     else {
       $operations['default'] = array(
         'title' => $this->t('Set as default'),
-        'route_name' => 'entity.search_page.set_default',
-        'route_parameters' => array(
+        'url' => Url::fromRoute('entity.search_page.set_default', [
           'search_page' => $entity->id(),
-        ),
+        ]),
         'weight' => 50,
       );
     }

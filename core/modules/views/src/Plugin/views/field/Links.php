@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url as UrlObject;
 
 /**
  * A abstract handler which provides a collection of links.
@@ -79,7 +80,7 @@ abstract class Links extends FieldPluginBase {
       $path = strip_tags(decode_entities(strtr($path, $tokens)));
 
       $links[$field] = array(
-        'href' => $path,
+        'url' => UrlObject::fromUri('base://' . $path),
         'title' => $title,
       );
       if (!empty($this->options['destination'])) {

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   weight = 12,
  *   name = @Translation("Selected language"),
  *   description = @Translation("Language based on a selected language."),
- *   config_path = "admin/config/regional/language/detection/selected"
+ *   config_route_name = "language.negotiation_selected"
  * )
  */
 class LanguageNegotiationSelected extends LanguageNegotiationMethodBase {

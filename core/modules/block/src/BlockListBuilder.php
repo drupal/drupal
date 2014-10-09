@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -356,11 +357,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       }
       $form['place_blocks']['list'][$category_key]['content']['#links'][$plugin_id] = array(
         'title' => $plugin_definition['admin_label'],
-        'route_name' => 'block.admin_add',
-        'route_parameters' => array(
+        'url' => Url::fromRoute('block.admin_add', [
           'plugin_id' => $plugin_id,
           'theme' => $this->theme
-        ),
+        ]),
         'attributes' => array(
           'class' => array('use-ajax', 'block-filter-text-source'),
           'data-accepts' => 'application/vnd.drupal-modal',

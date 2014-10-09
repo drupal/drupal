@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Url as UrlObject;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Provides a link render element.
@@ -36,11 +36,7 @@ class Link extends RenderElement {
    * @param array $element
    *   A structured array whose keys form the arguments to _l():
    *   - #title: The link text to pass as argument to _l().
-   *   - One of the following
-   *     - #route_name and (optionally) a #route_parameters array; The route
-   *       name and route parameters which will be passed into the link
-   *       generator.
-   *     - #href: The system path or URL to pass as argument to _l().
+   *   - #url: The URL info either pointing to a route or a non routed path.
    *   - #options: (optional) An array of options to pass to _l() or the link
    *     generator.
    *
@@ -75,21 +71,12 @@ class Link extends RenderElement {
       if (!isset($element['#id'])) {
         $element['#id'] = $element['#options']['attributes']['id'] = drupal_html_id('ajax-link');
       }
-      // If #ajax['path] was not specified, use the href as Ajax request URL.
-      if (!isset($element['#ajax']['path'])) {
-        $element['#ajax']['path'] = $element['#href'];
-        $element['#ajax']['options'] = $element['#options'];
-      }
       $element = static::preRenderAjaxForm($element);
     }
 
-    if (isset($element['#route_name'])) {
-      $element['#route_parameters'] = empty($element['#route_parameters']) ? array() : $element['#route_parameters'];
-      $element['#markup'] = \Drupal::l($element['#title'], new UrlObject($element['#route_name'], $element['#route_parameters'], $element['#options']));
-    }
-    else {
-      // @todo Convert to \Drupal::l(): https://www.drupal.org/node/2347045.
-      $element['#markup'] = _l($element['#title'], $element['#href'], $element['#options']);
+    if (!empty($element['#url'])) {
+      $options = NestedArray::mergeDeep($element['#url']->getOptions(), $element['#options']);
+      $element['#markup'] = \Drupal::l($element['#title'], $element['#url']->setOptions($options));
     }
     return $element;
   }

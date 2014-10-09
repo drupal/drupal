@@ -146,7 +146,7 @@ class NodeViewBuilder extends EntityViewBuilder {
         'title' => t('Read more<span class="visually-hidden"> about @title</span>', array(
           '@title' => $node_title_stripped,
         )),
-        'href' => 'node/' . $entity->id(),
+        'url' => $entity->urlInfo(),
         'language' => $entity->language(),
         'html' => TRUE,
         'attributes' => array(

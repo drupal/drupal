@@ -48,21 +48,24 @@ class ConfigEntityListTest extends WebTestBase {
       'edit' => array (
         'title' => t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo()->toArray(),
+        'url' => $entity->urlInfo(),
+      ),
       'disable' => array(
         'title' => t('Disable'),
         'weight' => 40,
-      ) + $entity->urlInfo('disable')->toArray(),
+        'url' => $entity->urlInfo('disable'),
+      ),
       'delete' => array (
         'title' => t('Delete'),
         'weight' => 100,
-      ) + $entity->urlInfo('delete-form')->toArray(),
+        'url' => $entity->urlInfo('delete-form'),
+      ),
     );
 
     $actual_operations = $controller->getOperations($entity);
     // Sort the operations to normalize link order.
     uasort($actual_operations, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
-    $this->assertIdentical($expected_operations, $actual_operations, 'The operations are identical.');
+    $this->assertEqual($expected_operations, $actual_operations, 'The operations are identical.');
 
     // Test buildHeader() method.
     $expected_items = array(
@@ -71,7 +74,7 @@ class ConfigEntityListTest extends WebTestBase {
       'operations' => 'Operations',
     );
     $actual_items = $controller->buildHeader();
-    $this->assertIdentical($expected_items, $actual_items, 'Return value from buildHeader matches expected.');
+    $this->assertEqual($expected_items, $actual_items, 'Return value from buildHeader matches expected.');
 
     // Test buildRow() method.
     $build_operations = $controller->buildOperations($entity);
@@ -83,7 +86,7 @@ class ConfigEntityListTest extends WebTestBase {
       ),
     );
     $actual_items = $controller->buildRow($entity);
-    $this->assertIdentical($expected_items, $actual_items, 'Return value from buildRow matches expected.');
+    $this->assertEqual($expected_items, $actual_items, 'Return value from buildRow matches expected.');
     // Test sorting.
     $storage = $controller->getStorage();
     $entity = $storage->create(array(
@@ -120,17 +123,19 @@ class ConfigEntityListTest extends WebTestBase {
       'edit' => array(
         'title' => t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo()->toArray(),
+        'url' => $entity->urlInfo(),
+      ),
       'delete' => array(
         'title' => t('Delete'),
         'weight' => 100,
-      ) + $entity->urlInfo('delete-form')->toArray(),
+        'url' => $entity->urlInfo('delete-form'),
+      ),
     );
 
     $actual_operations = $controller->getOperations($entity);
     // Sort the operations to normalize link order.
     uasort($actual_operations, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
-    $this->assertIdentical($expected_operations, $actual_operations, 'The operations are identical.');
+    $this->assertEqual($expected_operations, $actual_operations, 'The operations are identical.');
   }
 
   /**

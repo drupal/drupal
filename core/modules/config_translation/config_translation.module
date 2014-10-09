@@ -162,7 +162,8 @@ function config_translation_entity_operation(EntityInterface $entity) {
     $operations['translate'] = array(
       'title' => t('Translate'),
       'weight' => 50,
-    ) + $entity->urlInfo('drupal:config-translation-overview')->toArray();
+      'url' => $entity->urlInfo('drupal:config-translation-overview'),
+    );
   }
 
   return $operations;

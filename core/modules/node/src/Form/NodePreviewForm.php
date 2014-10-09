@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -81,7 +82,7 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
     $form['backlink'] = array(
       '#type' => 'link',
       '#title' => $this->t('Back to content editing'),
-      '#href' => $node->isNew() ? 'node/add/' . $node->bundle() :  'node/' . $node->id() . '/edit',
+      '#url' => $node->isNew() ? Url::fromRoute('node.add', ['node_type' => $node->bundle()]) : $node->urlInfo('edit-form'),
       '#options' => array('attributes' => array('class' => array('node-preview-backlink'))) + $query_options,
     );
 

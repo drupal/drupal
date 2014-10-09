@@ -41,7 +41,8 @@ class ResponsiveImageMappingListBuilder extends ConfigEntityListBuilder {
     $operations['duplicate'] = array(
       'title' => t('Duplicate'),
       'weight' => 15,
-    ) + $entity->urlInfo('duplicate-form')->toArray();
+      'url' => $entity->urlInfo('duplicate-form'),
+    );
     return $operations;
   }
 

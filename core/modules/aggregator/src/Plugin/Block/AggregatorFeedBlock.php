@@ -164,7 +164,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
 
       $more_link = array(
         '#type' => 'more_link',
-        '#href' => 'aggregator/sources/' . $feed->id(),
+        '#url' => $feed->urlInfo(),
         '#attributes' => array('title' => $this->t("View this feed's recent news.")),
       );
       $read_more = drupal_render($more_link);

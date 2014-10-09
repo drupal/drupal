@@ -52,8 +52,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
       $more_help_link = array(
         '#type' => 'link',
-        '#route_name' => 'help.page',
-        '#route_parameters' => array('name' => 'forum'),
+        '#url' => Url::fromRoute('help.page', ['name' => 'forum']),
         '#title' => t('More help'),
       );
       $container = array(
@@ -105,8 +104,6 @@ function forum_theme() {
  * Implements hook_menu_local_tasks().
  */
 function forum_menu_local_tasks(&$data, $route_name) {
-  $user = \Drupal::currentUser();
-
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if (in_array($route_name, array('forum.index', 'forum.page'))) {
     $forum_term = \Drupal::routeMatch()->getParameter('taxonomy_term');
@@ -120,7 +117,7 @@ function forum_menu_local_tasks(&$data, $route_name) {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => t('Add new @node_type', array('@node_type' => entity_load('node_type', $type)->label())),
-            'href' => 'node/add/' . $type,
+            'url' => Url::fromRoute('node.add', ['node_type' => $type]),
           ),
         );
         if ($forum_term && $forum_term->bundle() == $vid) {
@@ -130,31 +127,9 @@ function forum_menu_local_tasks(&$data, $route_name) {
         }
       }
     }
-    if (empty($links)) {
-      // Authenticated user does not have access to create new topics.
-      if ($user->isAuthenticated()) {
-        $links['disallowed'] = array(
-          '#theme' => 'menu_local_action',
-          '#link' => array(
-            'title' => t('You are not allowed to post new content in the forum.'),
-          ),
-        );
-      }
-      // Anonymous user does not have access to create new topics.
-      else {
-        $links['login'] = array(
-          '#theme' => 'menu_local_action',
-          '#link' => array(
-            'title' => t('<a href="@login">Log in</a> to post new content in the forum.', array(
-              '@login' => \Drupal::url('user.login', [], array('query' => drupal_get_destination())),
-            )),
-            'localized_options' => array('html' => TRUE),
-          ),
-        );
-      }
-    }
     $data['actions'] += $links;
   }
+  // @todo Bring back functionality in https://www.drupal.org/node/1853072.
 }
 
 /**
@@ -186,12 +161,7 @@ function forum_entity_bundle_info_alter(&$bundles) {
  * Entity URI callback used in forum_entity_bundle_info_alter().
  */
 function forum_uri($forum) {
-  return array(
-    'route_name' => 'forum.page',
-    'route_parameters' => array(
-      'taxonomy_term' => $forum->id(),
-    ),
-  );
+  return Url::fromRoute('forum.page', ['taxonomy_term' => $forum->id()]);
 }
 
 /**

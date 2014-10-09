@@ -146,17 +146,13 @@ class UnroutedUrlTest extends UnitTestCase {
    * @covers ::toArray
    */
   public function testToArray(array $urls) {
-    $expected = array(
-      'path' => $this->unroutedExternal,
-      'options' => array('external' => TRUE),
-    );
-    $this->assertSame($expected, $urls[0]->toArray());
+    $expected = Url::fromUri($this->unroutedExternal, ['external' => TRUE]);
+    $expected->setUnroutedUrlAssembler(\Drupal::service('unrouted_url_assembler'));
+    $this->assertEquals($expected, $urls[0]);
 
-    $expected = array(
-      'path' => $this->unroutedInternal,
-      'options' => array(),
-    );
-    $this->assertSame($expected, $urls[1]->toArray());
+    $expected = Url::fromUri($this->unroutedInternal);
+    $expected->setUnroutedUrlAssembler(\Drupal::service('unrouted_url_assembler'));
+    $this->assertEquals($expected, $urls[1]);
   }
 
   /**

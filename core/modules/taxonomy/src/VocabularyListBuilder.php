@@ -43,11 +43,13 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $operations['list'] = array(
       'title' => t('List terms'),
       'weight' => 0,
-    ) + $entity->urlInfo('overview-form')->toArray();
+      'url' => $entity->urlInfo('overview-form'),
+    );
     $operations['add'] = array(
       'title' => t('Add terms'),
       'weight' => 10,
-    ) + $entity->urlInfo('add-form')->toArray();
+      'url' => $entity->urlInfo('add-form'),
+    );
     unset($operations['delete']);
 
     return $operations;

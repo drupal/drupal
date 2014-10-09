@@ -59,6 +59,8 @@ class FieldUI {
         $options['query']['destinations'] = $destinations;
       }
       // Redirect to any given path within the same domain.
+      // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
+      //   resolved.
       $next_destination = Url::fromUri('base://' . $options['path']);
     }
     return $next_destination;

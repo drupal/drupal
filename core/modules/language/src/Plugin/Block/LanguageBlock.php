@@ -11,6 +11,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,9 +76,9 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function build() {
     $build = array();
-    $path = drupal_is_front_page() ? '<front>' : current_path();
+    $route_name = drupal_is_front_page() ? '<front>' : '<current>';
     $type = $this->getDerivativeId();
-    $links = $this->languageManager->getLanguageSwitchLinks($type, $path);
+    $links = $this->languageManager->getLanguageSwitchLinks($type, Url::fromRoute($route_name));
 
     if (isset($links->links)) {
       $build = array(

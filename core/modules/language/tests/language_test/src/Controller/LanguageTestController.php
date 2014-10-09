@@ -9,6 +9,7 @@ namespace Drupal\language_test\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -62,7 +63,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'no_language' => array(
         '#type' => 'link',
         '#title' => t('Link to the current path with no langcode provided.'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'attributes' => array(
             'id' => 'no_lang_link',
@@ -73,7 +74,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'fr' => array(
         '#type' => 'link',
         '#title' => t('Link to a French version of the current path.'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'language' => $languages['fr'],
           'attributes' => array(
@@ -85,7 +86,7 @@ class LanguageTestController implements ContainerInjectionInterface {
       'en' => array(
         '#type' => 'link',
         '#title' => t('Link to an English version of the current path.'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'language' => $languages['en'],
           'attributes' => array(

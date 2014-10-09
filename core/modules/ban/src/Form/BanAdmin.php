@@ -10,6 +10,7 @@ namespace Drupal\ban\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,8 +66,7 @@ class BanAdmin extends FormBase {
       $links = array();
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'route_name' => 'ban.delete',
-        'route_parameters' => array('ban_id' => $ip->iid),
+        'url' => Url::fromRoute('ban.delete', ['ban_id' => $ip->iid]),
       );
       $row[] = array(
         'data' => array(

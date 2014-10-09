@@ -14,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -135,8 +136,7 @@ class FieldOverview extends OverviewBase {
         'type' => array(
           '#type' => 'link',
           '#title' => $field_types[$field_storage->getType()]['label'],
-          '#route_name' => 'field_ui.storage_edit_' . $this->entity_type,
-          '#route_parameters' => $route_parameters,
+          '#url' => Url::fromRoute('field_ui.storage_edit_' . $this->entity_type, $route_parameters),
           '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
       );

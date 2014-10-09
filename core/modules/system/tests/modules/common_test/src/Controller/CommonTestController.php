@@ -8,6 +8,7 @@
 namespace Drupal\common_test\Controller;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -25,7 +26,7 @@ class CommonTestController {
       'no_query' => array(
         '#type' => 'link',
         '#title' => t('Link with no query string'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'set_active_class' => TRUE,
         ),
@@ -33,7 +34,7 @@ class CommonTestController {
       'with_query' => array(
         '#type' => 'link',
         '#title' => t('Link with a query string'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'query' => array(
             'foo' => 'bar',
@@ -45,7 +46,7 @@ class CommonTestController {
       'with_query_reversed' => array(
         '#type' => 'link',
         '#title' => t('Link with the same query string in reverse order'),
-        '#route_name' => '<current>',
+        '#url' => Url::fromRoute('<current>'),
         '#options' => array(
           'query' => array(
             'one' => 'two',

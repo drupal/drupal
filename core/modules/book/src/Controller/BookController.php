@@ -10,6 +10,7 @@ namespace Drupal\book\Controller;
 use Drupal\book\BookExport;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -83,8 +84,7 @@ class BookController extends ControllerBase {
       $links = array();
       $links['edit'] = array(
         'title' => t('Edit order and titles'),
-        'route_name' => 'book.admin_edit',
-        'route_parameters' => array('node' => $book['nid']),
+        'url' => Url::fromRoute('book.admin_edit', ['node' => $book['nid']]),
       );
       $row[] = array(
         'data' => array(

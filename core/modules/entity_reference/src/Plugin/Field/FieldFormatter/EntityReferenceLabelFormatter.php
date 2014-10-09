@@ -67,10 +67,12 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       // If the link is to be displayed and the entity has a uri, display a
       // link.
       if ($this->getSetting('link') && $uri = $entity->urlInfo()) {
-        $elements[$delta] = array(
+        $elements[$delta] = [
           '#type' => 'link',
           '#title' => $label,
-        ) + $uri->toRenderArray();
+          '#url' => $uri,
+          '#options' => $uri->getOptions(),
+        ];
 
         if (!empty($items[$delta]->_attributes)) {
           $elements[$delta]['#options'] += array('attributes' => array());

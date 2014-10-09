@@ -7,6 +7,7 @@
  */
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_type_alter().
@@ -36,9 +37,8 @@ function comment_test_comment_links_alter(array &$links, CommentInterface &$enti
     '#links' => array(
       'comment-report' => array(
         'title' => t('Report'),
-        'href' => "comment/{$entity->id()}/report",
+        'url' => Url::fromRoute('comment_test.report', ['comment' => $entity->id()], ['query' => ['token' => \Drupal::getContainer()->get('csrf_token')->get("comment/{$entity->id()}/report")]]),
         'html' => TRUE,
-        'query' => array('token' => \Drupal::getContainer()->get('csrf_token')->get("comment/{$entity->id()}/report")),
       ),
     ),
   );

@@ -51,7 +51,8 @@ class RoleListBuilder extends DraggableListBuilder {
       $operations['permissions'] = array(
         'title' => t('Edit permissions'),
         'weight' => 20,
-      ) + $entity->urlInfo('edit-permissions-form')->toArray();
+        'url' => $entity->urlInfo('edit-permissions-form'),
+      );
     }
     return $operations;
   }

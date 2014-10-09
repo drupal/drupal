@@ -22,6 +22,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -258,7 +259,7 @@ class ModulesListForm extends FormBase {
         $row['links']['help'] = array(
           '#type' => 'link',
           '#title' => $this->t('Help'),
-          '#href' => 'admin/help/' . $module->getName(),
+          '#url' => Url::fromRoute('help.page', ['name' => $module->getName()]),
           '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
         );
       }
@@ -270,7 +271,7 @@ class ModulesListForm extends FormBase {
       $row['links']['permissions'] = array(
         '#type' => 'link',
         '#title' => $this->t('Permissions'),
-        '#href' => 'admin/people/permissions',
+        '#url' => Url::fromRoute('user.admin_permissions'),
         '#options' => array('fragment' => 'module-' . $module->getName(), 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => $this->t('Configure permissions'))),
       );
     }
@@ -301,8 +302,7 @@ class ModulesListForm extends FormBase {
         $row['links']['configure'] = array(
           '#type' => 'link',
           '#title' => $this->t('Configure'),
-          '#route_name' => $module->info['configure'],
-          '#route_parameters' => $route_parameters,
+          '#url' => Url::fromRoute($module->info['configure'], $route_parameters),
           '#options' => array(
             'attributes' => array(
               'class' => array('module-link', 'module-link-configure'),

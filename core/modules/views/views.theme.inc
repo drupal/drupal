@@ -1049,7 +1049,7 @@ function template_preprocess_views_mini_pager(&$variables) {
     $li_previous = array(
       '#type' => 'link',
       '#title' => $tags[1],
-      '#route_name' => '<current>',
+      '#url' => Url::fromRoute('<current>'),
       '#options' => array(
         'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
         'attributes' => array(
@@ -1072,7 +1072,7 @@ function template_preprocess_views_mini_pager(&$variables) {
     $li_next = array(
       '#type' => 'link',
       '#title' => $tags[3],
-      '#route_name' => '<current>',
+      '#url' => Url::fromRoute('<current>'),
       '#options' => array(
         'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
         'attributes' => array(

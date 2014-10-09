@@ -48,6 +48,10 @@ class DisplayPathTest extends UITestBase {
 
     // Save a path and make sure the summary appears as expected.
     $random_path = $this->randomMachineName();
+    // @todo Once https://www.drupal.org/node/2351379 is resolved, Views will no
+    //   longer use Url::fromUri(), and this path will be able to contain ':'.
+    $random_path = str_replace(':', '', $random_path);
+
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $this->assertLink(t('View @display', array('@display' => 'Page')), 0, 'view page link found on the page.');

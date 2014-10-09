@@ -16,6 +16,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\LocalActionManager;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -196,8 +197,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 1',
-            'route_name' => 'test_route_2',
-            'route_parameters' => array(),
+            'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
           '#access' => FALSE,
@@ -231,8 +231,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 1',
-            'route_name' => 'test_route_2',
-            'route_parameters' => array(),
+            'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
           '#access' => FALSE,
@@ -267,8 +266,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 1',
-            'route_name' => 'test_route_2',
-            'route_parameters' => array(),
+            'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
           '#access' => FALSE,
@@ -278,8 +276,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 2',
-            'route_name' => 'test_route_3',
-            'route_parameters' => array(),
+            'url' => Url::fromRoute('test_route_3'),
             'localized_options' => '',
           ),
           '#access' => FALSE,
@@ -316,8 +313,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 1',
-            'route_name' => 'test_route_2',
-            'route_parameters' => array('test1'),
+            'url' => Url::fromRoute('test_route_2', ['test1']),
             'localized_options' => '',
           ),
           '#access' => FALSE,
@@ -327,8 +323,7 @@ class LocalActionManagerTest extends UnitTestCase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => 'Plugin ID 2',
-            'route_name' => 'test_route_2',
-            'route_parameters' => array('test2'),
+            'url' => Url::fromRoute('test_route_2', ['test2']),
             'localized_options' => '',
           ),
           '#access' => FALSE,

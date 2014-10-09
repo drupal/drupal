@@ -47,7 +47,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
       ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
-    $this->assertSame($route_name, $link['#route_name']);
+    $this->assertEquals(Url::fromRoute($route_name), $link['#url']);
   }
 
   /**
@@ -56,23 +56,13 @@ class ConfirmFormHelperTest extends UnitTestCase {
    * Tests a cancel link route with parameters.
    */
   public function testCancelLinkRouteWithParams() {
-    $cancel_route = array(
-      'route_name' => 'foo_bar.baz',
-      'route_parameters' => array(
-        'baz' => 'banana',
-      ),
-      'options' => array(
-        'absolute' => TRUE,
-      ),
-    );
+    $expected = Url::fromRoute('foo_bar.baz', ['baz' => 'banana'], ['absolute' => TRUE]);
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
       ->method('getCancelUrl')
-      ->will($this->returnValue(new Url($cancel_route['route_name'], $cancel_route['route_parameters'], $cancel_route['options'])));
+      ->will($this->returnValue($expected));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
-    $this->assertSame($cancel_route['route_name'], $link['#route_name']);
-    $this->assertSame($cancel_route['route_parameters'], $link['#route_parameters']);
-    $this->assertSame($cancel_route['options'], $link['#options']);
+    $this->assertEquals($expected, $link['#url']);
   }
 
   /**
@@ -94,9 +84,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
       ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
-    $this->assertSame($cancel_route->getRouteName(), $link['#route_name']);
-    $this->assertSame($cancel_route->getRouteParameters(), $link['#route_parameters']);
-    $this->assertSame($cancel_route->getOptions(), $link['#options']);
+    $this->assertSame($cancel_route, $link['#url']);
   }
 
   /**
@@ -108,7 +96,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
     $query = array('destination' => 'baz');
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $link = ConfirmFormHelper::buildCancelLink($form, new Request($query));
-    $this->assertSame($query['destination'], $link['#href']);
+    $this->assertSame('base://' . $query['destination'], $link['#url']->getUri());
   }
 
 }

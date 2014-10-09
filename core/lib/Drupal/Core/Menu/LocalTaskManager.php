@@ -21,6 +21,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -306,8 +307,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
 
           $link = array(
             'title' => $this->getTitle($child),
-            'route_name' => $route_name,
-            'route_parameters' => $route_parameters,
+            'url' => Url::fromRoute($route_name, $route_parameters),
             'localized_options' => $child->getOptions($request),
           );
           $build[$level][$plugin_id] = array(

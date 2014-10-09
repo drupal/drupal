@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Url;
 
 /**
  * Menu callback: Returns an element suitable for use by
@@ -108,7 +109,7 @@ function ajax_test_dialog_contents() {
     'cancel' => array(
       '#type' => 'link',
       '#title' => 'Cancel',
-      '#href' => '',
+      '#url' => Url::fromRoute('<front>'),
       '#attributes' => array(
         // This is a special class to which JavaScript assigns dialog closing
         // behavior.

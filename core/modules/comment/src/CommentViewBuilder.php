@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -245,7 +246,7 @@ class CommentViewBuilder extends EntityViewBuilder {
       if ($entity->access('delete')) {
         $links['comment-delete'] = array(
           'title' => t('Delete'),
-          'href' => "comment/{$entity->id()}/delete",
+          'url' => $entity->urlInfo('delete-form'),
           'html' => TRUE,
         );
       }
@@ -253,22 +254,26 @@ class CommentViewBuilder extends EntityViewBuilder {
       if ($entity->access('update')) {
         $links['comment-edit'] = array(
           'title' => t('Edit'),
-          'href' => "comment/{$entity->id()}/edit",
+          'url' => $entity->urlInfo('edit-form'),
           'html' => TRUE,
         );
       }
       if ($entity->access('create')) {
         $links['comment-reply'] = array(
           'title' => t('Reply'),
-          'href' => "comment/reply/{$entity->getCommentedEntityTypeId()}/{$entity->getCommentedEntityId()}/{$entity->getFieldName()}/{$entity->id()}",
+          'url' => Url::fromRoute('comment.reply', [
+            'entity_type' => $entity->getCommentedEntityTypeId(),
+            'entity' => $entity->getCommentedEntityId(),
+            'field_name' => $entity->getFieldName(),
+            'pid' => $entity->id(),
+          ]),
           'html' => TRUE,
         );
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = array(
           'title' => t('Approve'),
-          'route_name' => 'comment.approve',
-          'route_parameters' => array('comment' => $entity->id()),
+          'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
           'html' => TRUE,
         );
       }
@@ -282,7 +287,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     if (\Drupal::moduleHandler()->moduleExists('content_translation') && content_translation_translate_access($entity)->isAllowed()) {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
-        'href' => 'comment/' . $entity->id() . '/translations',
+        'url' => $entity->urlInfo('drupal:content-translation-overview'),
         'html' => TRUE,
       );
     }

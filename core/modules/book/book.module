@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\Entity\Node;
@@ -110,15 +111,17 @@ function book_node_links_alter(array &$node_links, NodeInterface $node, array &$
         if (($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines')) && $access_control_handler->createAccess($child_type) && $node->isPublished() && $node->book['depth'] < BookManager::BOOK_MAX_DEPTH) {
           $links['book_add_child'] = array(
             'title' => t('Add child page'),
-            'href' => 'node/add/' . $child_type,
-            'query' => array('parent' => $node->id()),
+            'url' => Url::fromRoute('node.add', ['node_type' => $child_type], ['query' => ['parent' => $node->id()]]),
           );
         }
 
         if ($account->hasPermission('access printer-friendly version')) {
           $links['book_printer'] = array(
             'title' => t('Printer-friendly version'),
-            'href' => 'book/export/html/' . $node->id(),
+            'url' => Url::fromRoute('book.export', [
+              'type' => 'html',
+              'node' => $node->id(),
+            ]),
             'attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
           );
         }

@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Theme\ThemeAccessCheck;
+use Drupal\Core\Url;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -243,8 +244,7 @@ class SystemController extends ControllerBase {
         if ($this->themeAccess->checkAccess($theme->getName())) {
           $theme->operations[] = array(
             'title' => $this->t('Settings'),
-            'route_name' => 'system.theme_settings_theme',
-            'route_parameters' => array('theme' => $theme->getName()),
+            'url' => Url::fromRoute('system.theme_settings_theme', ['theme' => $theme->getName()]),
             'attributes' => array('title' => $this->t('Settings for !theme theme', array('!theme' => $theme->info['name']))),
           );
         }
@@ -253,14 +253,14 @@ class SystemController extends ControllerBase {
             if ($theme->getName() != $admin_theme) {
               $theme->operations[] = array(
                 'title' => $this->t('Uninstall'),
-                'route_name' => 'system.theme_uninstall',
+                'url' => Url::fromRoute('system.theme_uninstall'),
                 'query' => $query,
                 'attributes' => array('title' => $this->t('Uninstall !theme theme', array('!theme' => $theme->info['name']))),
               );
             }
             $theme->operations[] = array(
               'title' => $this->t('Set as default'),
-              'route_name' => 'system.theme_set_default',
+              'url' => Url::fromRoute('system.theme_set_default'),
               'query' => $query,
               'attributes' => array('title' => $this->t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
             );
@@ -270,13 +270,13 @@ class SystemController extends ControllerBase {
         else {
           $theme->operations[] = array(
             'title' => $this->t('Install'),
-            'route_name' => 'system.theme_install',
+            'url' => Url::fromRoute('system.theme_install'),
             'query' => $query,
             'attributes' => array('title' => $this->t('Install !theme theme', array('!theme' => $theme->info['name']))),
           );
           $theme->operations[] = array(
             'title' => $this->t('Install and set as default'),
-            'route_name' => 'system.theme_set_default',
+            'url' => Url::fromRoute('system.theme_set_default'),
             'query' => $query,
             'attributes' => array('title' => $this->t('Install !theme as default theme', array('!theme' => $theme->info['name']))),
           );

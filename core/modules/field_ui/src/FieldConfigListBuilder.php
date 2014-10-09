@@ -66,7 +66,8 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
       'title' => $this->t('Storage settings'),
       'weight' => 20,
       'attributes' => array('title' => $this->t('Edit storage settings.')),
-    ) + $entity->urlInfo('storage-edit-form')->toArray();
+      'url' => $entity->urlInfo('storage-edit-form'),
+    );
     $operations['edit']['attributes']['title'] = $this->t('Edit field settings.');
     $operations['delete']['attributes']['title'] = $this->t('Delete field.');
 

@@ -14,6 +14,7 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\user\Entity\Role;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -125,7 +126,7 @@ function toolbar_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => t('Back to site'),
-      '#href' => '<front>',
+      '#url' => Url::fromRoute('<front>'),
       '#attributes' => array(
         'title' => t('Return to site content'),
         'class' => array('toolbar-icon', 'toolbar-icon-escape-admin'),
@@ -164,7 +165,7 @@ function toolbar_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => t('Manage'),
-      '#href' => 'admin',
+      '#url' => Url::fromRoute('system.admin'),
       '#attributes' => array(
         'title' => t('Admin menu'),
         'class' => array('toolbar-icon', 'toolbar-icon-menu'),

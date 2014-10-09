@@ -742,8 +742,8 @@ trait AssertContentTrait {
    */
   protected function assertThemeOutput($callback, array $variables = array(), $expected = '', $message = '', $group = 'Other') {
     $output = \Drupal::theme()->render($callback, $variables);
-    $this->verbose('Variables:' . '<pre>' . String::checkPlain(var_export($variables, TRUE)) . '</pre>'
-      . '<hr />' . 'Result:' . '<pre>' . String::checkPlain(var_export($output, TRUE)) . '</pre>'
+    $this->verbose(
+      '<hr />' . 'Result:' . '<pre>' . String::checkPlain(var_export($output, TRUE)) . '</pre>'
       . '<hr />' . 'Expected:' . '<pre>' . String::checkPlain(var_export($expected, TRUE)) . '</pre>'
       . '<hr />' . $output
     );

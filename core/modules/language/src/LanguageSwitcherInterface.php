@@ -7,6 +7,7 @@
 
 namespace Drupal\language;
 
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,12 +22,12 @@ interface LanguageSwitcherInterface {
    *   The current request.
    * @param string $type
    *   The language type.
-   * @param string $path
-   *   The path links should point to.
+   * @param \Drupal\Core\Url $url
+   *   The URL the switch links will be relative to.
    *
    * @return array
    *   An array of link arrays keyed by language code.
    */
-  public function getLanguageSwitchLinks(Request $request, $type, $path);
+  public function getLanguageSwitchLinks(Request $request, $type, Url $url);
 
 }

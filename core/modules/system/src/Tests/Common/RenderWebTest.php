@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -105,13 +106,13 @@ class RenderWebTest extends WebTestBase {
     $element = array(
       '#type' => 'link',
       '#title' => $this->randomMachineName(),
-      '#href' => $this->randomMachineName(),
+      '#url' => Url::fromRoute('common_test.destination'),
       '#options' => array(
         'absolute' => TRUE,
       ),
     );
     $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
-      ':href' => _url($element['#href'], array('absolute' => TRUE)),
+      ':href' => \Drupal::urlGenerator()->generateFromPath('common-test/destination', ['absolute' => TRUE]),
       ':title' => $element['#title'],
     ));
 
@@ -148,10 +149,7 @@ class RenderWebTest extends WebTestBase {
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
     $original_element = $element;
     $this->drupalSetContent(drupal_render($element));
-    $this->verbose('<pre>' .  String::checkPlain(var_export($original_element, TRUE)) . '</pre>'
-      . '<pre>' .  String::checkPlain(var_export($element, TRUE)) . '</pre>'
-      . '<hr />' . $this->drupalGetContent()
-    );
+    $this->verbose('<hr />' . $this->drupalGetContent());
 
     // @see \Drupal\simpletest\WebTestBase::xpath()
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);

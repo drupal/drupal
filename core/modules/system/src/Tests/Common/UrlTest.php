@@ -39,15 +39,10 @@ class UrlTest extends WebTestBase {
     $sanitized_path = check_url(_url($path));
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by _l().', array('@path' => $path)));
 
-    // Test #type 'link'.
-    $link_array =  array(
-      '#type' => 'link',
-      '#title' => $this->randomMachineName(),
-      '#href' => $path,
-    );
-    $type_link = drupal_render($link_array);
+    // Test _url().
+    $link = _url($path);
     $sanitized_path = check_url(_url($path));
-    $this->assertTrue(strpos($type_link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by #theme', array('@path' => $path)));
+    $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by #theme', ['@path' => $path]));
   }
 
   /**
@@ -61,7 +56,7 @@ class UrlTest extends WebTestBase {
       '#options' => array(
         'language' => $language,
       ),
-      '#href' => 'http://drupal.org',
+      '#url' => Url::fromUri('http://drupal.org'),
       '#title' => 'bar',
     );
     $langcode = $language->id;
@@ -123,7 +118,7 @@ class UrlTest extends WebTestBase {
     $type_link = array(
       '#type' => 'link',
       '#title' => $this->randomMachineName(),
-      '#route_name' => '<current>',
+      '#url' => Url::fromRoute('<current>'),
       '#options' => array(
         'attributes' => array(
           'class' => array($class_theme),
@@ -150,7 +145,7 @@ class UrlTest extends WebTestBase {
     $type_link_plain_array = array(
       '#type' => 'link',
       '#title' => 'foo',
-      '#href' => 'http://drupal.org',
+      '#url' => Url::fromUri('http://drupal.org'),
     );
     $type_link_plain = drupal_render($type_link_plain_array);
     $this->assertEqual($type_link_plain, $l);
@@ -159,7 +154,7 @@ class UrlTest extends WebTestBase {
     $type_link_nested_array = array(
       '#type' => 'link',
       '#title' => array('#markup' => 'foo'),
-      '#href' => 'http://drupal.org',
+      '#url' => Url::fromUri('http://drupal.org'),
     );
     $type_link_nested = drupal_render($type_link_nested_array);
     $this->assertEqual($type_link_nested, $l);

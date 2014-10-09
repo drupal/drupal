@@ -10,6 +10,7 @@ namespace Drupal\image\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageEffectManager;
 use Drupal\Component\Utility\String;
@@ -126,12 +127,18 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       if ($is_configurable) {
         $links['edit'] = array(
           'title' => $this->t('Edit'),
-          'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key,
+          'url' => Url::fromRoute('image.effect_edit_form', [
+            'image_style' => $this->entity->id(),
+            'image_effect' => $key,
+          ]),
         );
       }
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key . '/delete',
+        'url' => Url::fromRoute('image.effect_delete', [
+          'image_style' => $this->entity->id(),
+          'image_effect' => $key,
+        ]),
       );
       $form['effects'][$key]['operations'] = array(
         '#type' => 'operations',

@@ -10,6 +10,7 @@ namespace Drupal\telephone\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'telephone_link' formatter.
@@ -78,7 +79,7 @@ class TelephoneLinkFormatter extends FormatterBase {
         // itself as title.
         '#title' => $title_setting ?: $item->value,
         // Prepend 'tel:' to the telephone number.
-        '#href' => 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value)),
+        '#url' => Url::fromUri('tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value))),
         '#options' => array('external' => TRUE),
       );
 

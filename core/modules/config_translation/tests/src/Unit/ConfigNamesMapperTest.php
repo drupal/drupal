@@ -9,7 +9,9 @@ namespace Drupal\Tests\config_translation\Unit;
 
 use Drupal\config_translation\ConfigNamesMapper;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,6 +74,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   protected $routeProvider;
 
+  /**
+   * The mocked URL generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $urlGenerator;
+
   protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
@@ -90,6 +99,11 @@ class ConfigNamesMapperTest extends UnitTestCase {
       ->getMock();
 
     $this->configMapperManager = $this->getMock('Drupal\config_translation\ConfigMapperManagerInterface');
+
+    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $container = new ContainerBuilder();
+    $container->set('url_generator', $this->urlGenerator);
+    \Drupal::setContainer($container);
 
     $this->baseRoute = new Route('/admin/config/system/site-information');
 
@@ -147,6 +161,10 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getBasePath().
    */
   public function testGetBasePath() {
+    $this->urlGenerator->expects($this->once())
+      ->method('getPathFromRoute')
+      ->with('system.site_information_settings', [])
+      ->willReturn('/admin/config/system/site-information');
     $result = $this->configNamesMapper->getBasePath();
     $this->assertSame('/admin/config/system/site-information', $result);
   }
@@ -189,6 +207,11 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getOverviewPath().
    */
   public function testGetOverviewPath() {
+    $this->urlGenerator->expects($this->once())
+      ->method('getPathFromRoute')
+      ->with('config_translation.item.overview.system.site_information_settings', [])
+      ->willReturn('/admin/config/system/site-information/translate');
+
     $result = $this->configNamesMapper->getOverviewPath();
     $this->assertSame('/admin/config/system/site-information/translate', $result);
   }
@@ -605,7 +628,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $expected = array(
       'translate' => array(
         'title' => 'Translate',
-        'href' => '/admin/config/system/site-information/translate',
+        'url' => Url::fromRoute('config_translation.item.overview.system.site_information_settings'),
       ),
     );
     $result = $this->configNamesMapper->getOperations();

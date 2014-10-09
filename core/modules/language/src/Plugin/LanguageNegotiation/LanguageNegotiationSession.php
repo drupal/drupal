@@ -9,6 +9,7 @@ namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
+use Drupal\Core\Url;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\language\LanguageSwitcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   weight = -6,
  *   name = @Translation("Session"),
  *   description = @Translation("Language from a request/session parameter."),
- *   config_path = "admin/config/regional/language/detection/session"
+ *   config_route_name = "language.negotiation_session"
  * )
  */
 class LanguageNegotiationSession extends LanguageNegotiationMethodBase implements OutboundPathProcessorInterface, LanguageSwitcherInterface {
@@ -121,7 +122,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   /**
    * {@inheritdoc}
    */
-  function getLanguageSwitchLinks(Request $request, $type, $path) {
+  public function getLanguageSwitchLinks(Request $request, $type, Url $url) {
     $links = array();
     $config = $this->config->get('language.negotiation')->get('session');
     $param = $config['parameter'];
@@ -132,7 +133,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $langcode = $language->id;
       $links[$langcode] = array(
-        'href' => $path,
+        'url' => $url,
         'title' => $language->getName(),
         'attributes' => array('class' => array('language-link')),
         'query' => $query,

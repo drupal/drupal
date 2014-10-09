@@ -169,7 +169,8 @@ function content_translation_entity_operation_alter(array &$operations, \Drupal\
   if ($entity instanceof NodeInterface && $entity->isTranslatable()) {
     $operations['translate'] = array(
       'title' => t('Translate'),
-    ) + $entity->urlInfo('drupal:content-translation-overview')->toArray();
+      'url' => $entity->urlInfo('drupal:content-translation-overview'),
+    );
   }
 }
 

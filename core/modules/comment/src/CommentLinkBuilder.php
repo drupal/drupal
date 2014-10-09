@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a class for building markup for comment links on a commented entity.
@@ -110,11 +111,12 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 'title' => $this->formatPlural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
                 'attributes' => array('title' => $this->t('Jump to the first comment of this posting.')),
                 'fragment' => 'comments',
-              ) + $entity->urlInfo()->toArray();
+                'url' => $entity->urlInfo(),
+              );
               if ($this->moduleHandler->moduleExists('history')) {
                 $links['comment-new-comments'] = array(
                   'title' => '',
-                  'href' => '',
+                  'url' => Url::fromRoute('<current>'),
                   'attributes' => array(
                     'class' => 'hidden',
                     'title' => $this->t('Jump to the first new comment of this posting.'),
@@ -136,15 +138,14 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 'fragment' => 'comment-form',
               );
               if ($comment_form_location == CommentItemInterface::FORM_SEPARATE_PAGE) {
-                $links['comment-add']['route_name'] = 'comment.reply';
-                $links['comment-add']['route_parameters'] = array(
+                $links['comment-add']['url'] = Url::fromRoute('comment.reply', [
                   'entity_type' => $entity->getEntityTypeId(),
                   'entity' => $entity->id(),
                   'field_name' => $field_name,
-                );
+                ]);
               }
               else {
-                $links['comment-add'] += $entity->urlInfo()->toArray();
+                $links['comment-add'] += ['url' => $entity->urlInfo()];
               }
             }
             elseif ($this->currentUser->isAnonymous()) {
@@ -171,15 +172,14 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                   'fragment' => 'comment-form',
                 );
                 if ($comment_form_location == CommentItemInterface::FORM_SEPARATE_PAGE) {
-                  $links['comment-add']['route_name'] = 'comment.reply';
-                  $links['comment-add']['route_parameters'] = array(
+                  $links['comment-add']['url'] = Url::fromRoute('comment.reply', [
                     'entity_type' => $entity->getEntityTypeId(),
                     'entity' => $entity->id(),
                     'field_name' => $field_name,
-                  );
+                  ]);
                 }
                 else {
-                  $links['comment-add'] += $entity->urlInfo()->toArray();
+                  $links['comment-add']['url'] = $entity->urlInfo();
                 }
               }
             }

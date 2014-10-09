@@ -216,7 +216,8 @@ class DbUpdateController extends ControllerBase {
       '#type' => 'link',
       '#title' => $this->t('Continue'),
       '#attributes' => array('class' => array('button', 'button--primary')),
-    ) + $url->toRenderArray();
+      '#url' => $url,
+    );
     return $build;
   }
 
@@ -347,7 +348,8 @@ class DbUpdateController extends ControllerBase {
         '#title' => $this->t('Apply pending updates'),
         '#attributes' => array('class' => array('button', 'button--primary')),
         '#weight' => 5,
-      ) + $url->toRenderArray();
+        '#url' => $url,
+      );
     }
 
     return $build;
@@ -620,12 +622,12 @@ class DbUpdateController extends ControllerBase {
   protected function helpfulLinks() {
     $links['front'] = array(
       'title' => $this->t('Front page'),
-      'href' => '<front>',
+      'url' => Url::fromRoute('<front>'),
     );
     if ($this->account->hasPermission('access administration pages')) {
       $links['admin-pages'] = array(
         'title' => $this->t('Administration pages'),
-        'href' => 'admin',
+        'url' => Url::fromRoute('system.admin'),
       );
     }
     return $links;

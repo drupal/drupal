@@ -902,14 +902,8 @@ function template_preprocess_status_messages(&$variables) {
  *     is used as its CSS class. Each link should be itself an array, with the
  *     following elements:
  *     - title: The link text.
- *     - route_name: (optional) The name of the route to link to. If omitted
- *       (and if 'href' is omitted as well), the 'title' is shown as
- *       a plain text item in the links list.
- *     - route_parameters: (optional) An array of route parameters for the link.
- *     - href: (optional) The link URL. It is preferred to use 'route_name' and
- *       'route parameters' for internal links. Use 'href' for links to external
- *       URLs. If omitted (and if 'route_name' is omitted as well), the 'title'
- *       is shown as a plain text item in the links list.
+ *     - url: (optional) The url object to link to. If omitted, no a tag is
+ *       printed out.
  *     - html: (optional) Whether or not 'title' is HTML. If set, the title
  *       will not be passed through
  *       \Drupal\Component\Utility\String::checkPlain().
@@ -986,30 +980,26 @@ function template_preprocess_links(&$variables) {
     foreach ($links as $key => $link) {
       $item = array();
       $link += array(
-        'href' => NULL,
-        'route_name' => NULL,
-        'route_parameters' => NULL,
         'ajax' => NULL,
+        'url' => NULL,
       );
 
       $li_attributes = array('class' => array());
       // Use the array key as class name.
       $li_attributes['class'][] = drupal_html_class($key);
 
-      $keys = array('title', 'href', 'route_name', 'route_parameters');
+      $keys = ['title', 'url'];
       $link_element = array(
         '#type' => 'link',
         '#title' => $link['title'],
         '#options' => array_diff_key($link, array_combine($keys, $keys)),
-        '#href' => $link['href'],
-        '#route_name' => $link['route_name'],
-        '#route_parameters' => $link['route_parameters'],
+        '#url' => $link['url'],
         '#ajax' => $link['ajax'],
       );
 
       // Handle links and ensure that the active class is added on the LIs, but
       // only if the 'set_active_class' option is not empty.
-      if (isset($link['href']) || isset($link['route_name'])) {
+      if (isset($link['url'])) {
         if (!empty($variables['set_active_class'])) {
 
           // Also enable set_active_class for the contained link.
@@ -1027,16 +1017,16 @@ function template_preprocess_links(&$variables) {
             $li_attributes['data-drupal-link-query'] = Json::encode($query);
           }
 
-          if (isset($link['route_name'])) {
-            $path = \Drupal::service('url_generator')->getPathFromRoute($link['route_name'], $link['route_parameters']);
+          /** @var \Drupal\Core\Url $url */
+          $url = $link['url'];
+          if ($url->isRouted()) {
+            // Add a "data-drupal-link-system-path" attribute to let the
+            // drupal.active-link library know the path in a standardized manner.
+            $system_path = $url->getInternalPath();
+            // @todo System path is deprecated - use the route name and parameters.
+            // Special case for the front page.
+            $li_attributes['data-drupal-link-system-path'] = $system_path == '' ? '<front>' : $system_path;
           }
-          else {
-            $path = $link['href'];
-          }
-
-          // Add a "data-drupal-link-system-path" attribute to let the
-          // drupal.active-link library know the path in a standardized manner.
-          $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager')->getPathByAlias($path);
         }
 
         $item['link'] = $link_element;

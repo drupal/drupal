@@ -205,6 +205,8 @@ class LinkWidget extends WidgetBase {
           return $values;
         }
 
+        // @todo Don't use the toArray method here. Removed once it is
+        //   deprecated.
         $value += $url->toArray();
 
         // Reset the URL value to contain only the path.

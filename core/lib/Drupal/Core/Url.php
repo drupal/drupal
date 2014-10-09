@@ -7,6 +7,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -203,7 +204,7 @@ class Url {
    */
   public static function fromUri($uri, $options = array()) {
     if (!parse_url($uri, PHP_URL_SCHEME)) {
-      throw new \InvalidArgumentException('You must use a valid URI scheme. Use base:// for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.');
+      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base:// for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.', ['@uri' => $uri]));
     }
 
     $url = new static($uri, array(), $options);
@@ -455,22 +456,16 @@ class Url {
    *
    * @return array
    *   An associative array containing all the properties of the route.
+   *
+   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.
+   *   Most usecases should use the URL object directly, like #type links. Other
+   *   usecases should get the information from the URL object manually.
    */
   public function toArray() {
-    if ($this->unrouted) {
-      return array(
-        // @todo Change 'path' to 'href': https://www.drupal.org/node/2347025.
-        'path' => $this->getUri(),
-        'options' => $this->getOptions(),
-      );
-    }
-    else {
-      return array(
-        'route_name' => $this->getRouteName(),
-        'route_parameters' => $this->getRouteParameters(),
-        'options' => $this->getOptions(),
-      );
-    }
+    return [
+      'url' => $this,
+      'options' => $this->getOptions(),
+    ];
   }
 
   /**
@@ -480,20 +475,14 @@ class Url {
    *   An associative array suitable for a render array.
    */
   public function toRenderArray() {
-    if ($this->unrouted) {
-      return array(
-        '#href' => $this->getUri(),
-        '#options' => $this->getOptions(),
-      );
+    $render_array = [
+      '#url' => $this,
+      '#options' => $this->getOptions(),
+    ];
+    if (!$this->unrouted) {
+      $render_array['#access_callback'] = [get_class(), 'renderAccess'];
     }
-    else {
-      return array(
-        '#route_name' => $this->getRouteName(),
-        '#route_parameters' => $this->getRouteParameters(),
-        '#options' => $this->getOptions(),
-        '#access_callback' => array(get_class(), 'renderAccess'),
-      );
-    }
+    return $render_array;
   }
 
   /**
@@ -543,7 +532,7 @@ class Url {
    *   Returns TRUE if the current user has access to the url, otherwise FALSE.
    */
   public static function renderAccess(array $element) {
-    return (new static($element['#route_name'], $element['#route_parameters'], $element['#options']))->access();
+    return $element['#url']->access();
   }
 
   /**

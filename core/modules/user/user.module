@@ -1455,7 +1455,7 @@ function user_toolbar() {
     $links = array(
       'account' => array(
         'title' => t('View profile'),
-        'href' => 'user',
+        'url' => Url::fromRoute('user.page'),
         'html' => TRUE,
         'attributes' => array(
           'title' => t('User account'),
@@ -1463,7 +1463,7 @@ function user_toolbar() {
       ),
       'account_edit' => array(
         'title' => t('Edit profile'),
-        'href' => 'user/' . $user->id() . '/edit',
+        'url' => Url::fromRoute('entity.user.edit_form', ['user' => $user->id()]),
         'html' => TRUE,
         'attributes' => array(
           'title' => t('Edit user account'),
@@ -1471,7 +1471,7 @@ function user_toolbar() {
       ),
       'logout' => array(
         'title' => t('Log out'),
-        'href' => 'user/logout',
+        'url' => Url::fromRoute('user.logout'),
       ),
     );
   }
@@ -1479,7 +1479,7 @@ function user_toolbar() {
      $links = array(
       'login' => array(
         'title' => t('Log in'),
-        'href' => 'user',
+        'url' => Url::fromRoute('user.page'),
       ),
     );
   }
@@ -1489,7 +1489,7 @@ function user_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => $user->getUsername(),
-      '#href' => 'user',
+      '#url' => Url::fromRoute('user.page'),
       '#attributes' => array(
         'title' => t('My account'),
         'class' => array('toolbar-icon', 'toolbar-icon-user'),

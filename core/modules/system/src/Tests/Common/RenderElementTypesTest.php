@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -112,7 +113,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag generation without extra classes",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
         ),
         'expected' => '//div[@class="more-link"]/a[@href="http://drupal.org" and text()="More"]',
       ),
@@ -120,7 +121,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag generation with different link text",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#title' => 'More Titles',
         ),
         'expected' => '//div[@class="more-link"]/a[@href="http://drupal.org" and text()="More Titles"]',
@@ -129,7 +130,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag generation with attributes on wrapper",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#theme_wrappers' => array(
             'container' => array(
               '#attributes' => array(
@@ -145,16 +146,15 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag with a relative path",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => 'a/link',
+          '#url' => Url::fromRoute('router_test.1'),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . _url('a/link') . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . _url('router_test/test1') . '" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag with a route",
         'value' => array(
           '#type' => 'more_link',
-          '#route_name' => 'router_test.1',
-          '#route_parameters' => array(),
+          '#url' => Url::fromRoute('router_test.1'),
         ),
         'expected' => '//div[@class="more-link"]/a[@href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" and text()="More"]',
       ),
@@ -162,7 +162,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag with an absolute path",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => 'admin/content',
+          '#url' => Url::fromRoute('system.admin_content'),
           '#options' => array('absolute' => TRUE),
         ),
         'expected' => '//div[@class="more-link"]/a[@href="' . _url('admin/content', array('absolute' => TRUE)) . '" and text()="More"]',
@@ -171,7 +171,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
         'name' => "#type 'more_link' anchor tag to the front page",
         'value' => array(
           '#type' => 'more_link',
-          '#href' => '<front>',
+          '#url' => Url::fromRoute('<front>'),
         ),
         'expected' => '//div[@class="more-link"]/a[@href="' . _url('<front>') . '" and text()="More"]',
       ),

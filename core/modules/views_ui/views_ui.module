@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
@@ -181,13 +182,13 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/handler/{$view->storage->id()}/{$display['id']}/$type/$id",
+      'url' => Url::fromRoute('views_ui.form_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type, 'id' => $id]),
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-handler/{$view->storage->id()}/{$display['id']}/$type",
+    'url' => Url::fromRoute('views_ui.form_add_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -202,7 +203,7 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->storage->id()}/{$display['id']}/$type",
+      'url' => Url::fromRoute('views_ui.form_display', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -253,8 +254,8 @@ function views_ui_contextual_links_view_alter(&$element, $items) {
   // screen.
   elseif (!empty($element['#links']['entityviewedit-form'])) {
     $display_id = $items['entity.view.edit_form']['metadata']['display_id'];
-    $element['#links']['entityviewedit-form']['route_parameters']['display_id'] = $display_id;
-    $element['#links']['entityviewedit-form']['route_name'] = 'entity.view.edit_display_form';
+    $route_parameters = $element['#links']['entityviewedit-form']['url']->getRouteParameters() + ['display_id' => $display_id];
+    $element['#links']['entityviewedit-form']['url'] = Url::fromRoute('entity.view.edit_display_form', $route_parameters);
   }
 }
 

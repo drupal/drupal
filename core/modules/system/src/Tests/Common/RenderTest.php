@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -120,7 +121,7 @@ class RenderTest extends DrupalUnitTestBase {
             ),
           ),
           '#attributes' => array('id' => 'foo'),
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#title' => 'bar',
         ),
         'expected' => '<div class="baz"><a href="http://drupal.org" id="foo">bar</a></div>' . "\n",
@@ -131,7 +132,7 @@ class RenderTest extends DrupalUnitTestBase {
         'name' => '#theme_wrappers attribute disambiguation with undefined #theme attribute',
         'value' => array(
           '#type' => 'link',
-          '#href' => 'http://drupal.org',
+          '#url' => Url::fromUri('http://drupal.org'),
           '#title' => 'foo',
           '#theme_wrappers' => array(
             'container' => array(

@@ -344,19 +344,9 @@ function template_preprocess_menu_local_task(&$variables) {
   $variables['link'] = array(
     '#type' => 'link',
     '#title' => $link_text,
+    '#url' => $link['url'],
     '#options' => $link['localized_options'],
   );
-
-  if (!empty($link['href'])) {
-    // @todo - Remove this once all pages are converted to routes.
-    $variables['link']['#href'] = $link['href'];
-  }
-  else {
-    $variables['link'] += array(
-      '#route_name' => $link['route_name'],
-      '#route_parameters' => $link['route_parameters'],
-    );
-  }
 }
 
 /**
@@ -373,9 +363,7 @@ function template_preprocess_menu_local_task(&$variables) {
 function template_preprocess_menu_local_action(&$variables) {
   $link = $variables['element']['#link'];
   $link += array(
-    'href' => '',
     'localized_options' => array(),
-    'route_parameters' => array(),
   );
   $link['localized_options']['attributes']['class'][] = 'button';
   $link['localized_options']['attributes']['class'][] = 'button-action';
@@ -385,19 +373,8 @@ function template_preprocess_menu_local_action(&$variables) {
     '#type' => 'link',
     '#title' => $link['title'],
     '#options' => $link['localized_options'],
+    '#url' => $link['url'],
   );
-
-  // @todo Figure out how to support local actions without a href properly.
-  if ($link['href'] === '' && !empty($link['route_name'])) {
-    $variables['link'] += array(
-      '#route_name' => $link['route_name'],
-      '#route_parameters' => $link['route_parameters'],
-    );
-  }
-  else {
-    // @todo - Remove this once all pages are converted to routes.
-    $variables['link']['#href'] = $link['href'];
-  }
 }
 
 /**

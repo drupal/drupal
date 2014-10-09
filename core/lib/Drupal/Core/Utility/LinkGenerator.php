@@ -109,7 +109,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
       // Add a "data-drupal-link-system-path" attribute to let the
       // drupal.active-link library know the path in a standardized manner.
-      if (!isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
         // @todo System path is deprecated - use the route name and parameters.
         $system_path = $url->getInternalPath();
         // Special case for the front page.

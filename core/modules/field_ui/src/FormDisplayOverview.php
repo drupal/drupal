@@ -16,6 +16,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -171,14 +172,10 @@ class FormDisplayOverview extends DisplayOverviewBase {
    * {@inheritdoc}
    */
   protected function getOverviewRoute($mode) {
-    return array(
-      'route_name' => 'field_ui.form_display_overview_form_mode_' . $this->entity_type,
-      'route_parameters' => array(
-        $this->bundleEntityType => $this->bundle,
-        'form_mode_name' => $mode,
-      ),
-      'options' => array(),
-    );
+    return Url::fromRoute('field_ui.form_display_overview_form_mode_' . $this->entity_type, [
+      $this->bundleEntityType => $this->bundle,
+      'form_mode_name' => $mode,
+    ]);
   }
 
   /**

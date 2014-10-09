@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -216,7 +217,9 @@ class ConfigEntityMapper extends ConfigNamesMapper {
     return array(
       'list' => array(
         'title' => $this->t('List'),
-        'href' => 'admin/config/regional/config-translation/' . $this->getPluginId(),
+        'url' => Url::fromRoute('config_translation.entity_list', [
+          'mapper_id' => $this->getPluginId(),
+        ]),
       ),
     );
   }

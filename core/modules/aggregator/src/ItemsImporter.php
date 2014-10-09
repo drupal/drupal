@@ -120,7 +120,7 @@ class ItemsImporter implements ItemsImporterInterface {
       // Parse the feed.
       try {
         if ($this->parserManager->createInstance($this->config->get('parser'))->parse($feed)) {
-          if ($feed->getWebsiteUrl()) {
+          if (!$feed->getWebsiteUrl()) {
             $feed->setWebsiteUrl($feed->getUrl());
           }
           $feed->setHash($hash);

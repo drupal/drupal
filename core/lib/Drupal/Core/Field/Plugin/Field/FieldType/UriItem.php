@@ -61,4 +61,15 @@ class UriItem extends StringItem {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    $value = $this->getValue();
+    if (!isset($value['value']) || $value['value'] === '') {
+      return TRUE;
+    }
+    return parent::isEmpty();
+  }
+
 }

@@ -412,7 +412,7 @@ function hook_menu_local_tasks(&$data, $route_name) {
     '#theme' => 'menu_local_action',
     '#link' => array(
       'title' => t('Add content'),
-      'href' => 'node/add',
+      'url' => Url::fromRoute('node.add_page'),
       'localized_options' => array(
         'attributes' => array(
           'title' => t('Add content'),
@@ -426,7 +426,7 @@ function hook_menu_local_tasks(&$data, $route_name) {
     '#theme' => 'menu_local_task',
     '#link' => array(
       'title' => t('Example tab'),
-      'href' => 'node/add',
+      'url' => Url::fromRoute('node.add_page'),
       'localized_options' => array(
         'attributes' => array(
           'title' => t('Add content'),
@@ -2277,7 +2277,7 @@ function hook_system_themes_page_alter(&$theme_groups) {
       // Add a foo link to each list of theme operations.
       $theme->operations[] = array(
         'title' => t('Foo'),
-        'href' => 'admin/appearance/foo',
+        'url' => Url::fromRoute('system.themes_page'),
         'query' => array('theme' => $theme->getName())
       );
     }

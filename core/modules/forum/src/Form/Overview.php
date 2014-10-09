@@ -10,6 +10,7 @@ namespace Drupal\forum\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -65,22 +66,20 @@ class Overview extends OverviewTerms {
     foreach (Element::children($form['terms']) as $key) {
       if (isset($form['terms'][$key]['#term'])) {
         $term = $form['terms'][$key]['#term'];
-        $form['terms'][$key]['term']['#href'] = 'forum/' . $term->id();
+        $form['terms'][$key]['term']['#url'] = Url::fromRoute('forum.page', ['taxonomy_term' => $term->id()]);
         unset($form['terms'][$key]['operations']['#links']['delete']);
+        $route_parameters = $form['terms'][$key]['operations']['#links']['edit']['url']->getRouteParameters();
         if (!empty($term->forum_container->value)) {
           $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit container');
-          $form['terms'][$key]['operations']['#links']['edit']['route_name'] = 'forum.edit_container';
-          // We don't want the redirect from the link so we can redirect the
-          // delete action.
-          unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
+          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('forum.edit_container', $route_parameters);
         }
         else {
           $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit forum');
-          $form['terms'][$key]['operations']['#links']['edit']['route_name'] = 'forum.edit_forum';
-          // We don't want the redirect from the link so we can redirect the
-          // delete action.
-          unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
+          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('forum.edit_forum', $route_parameters);
         }
+        // We don't want the redirect from the link so we can redirect the
+        // delete action.
+        unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
       }
     }
 

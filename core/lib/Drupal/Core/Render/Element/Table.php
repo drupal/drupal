@@ -281,7 +281,7 @@ class Table extends FormElement {
    *   $form['table'][$row]['edit'] = array(
    *     '#type' => 'link',
    *     '#title' => t('Edit'),
-   *     '#href' => 'thing/' . $row . '/edit',
+   *     '#url' => Url::fromRoute('entity.test_entity.edit_form', ['test_entity' => $row]),
    *   );
    * }
    * @endcode

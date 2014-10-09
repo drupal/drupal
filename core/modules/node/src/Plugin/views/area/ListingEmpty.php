@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\area;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -67,7 +68,7 @@ class ListingEmpty extends AreaPluginBase {
         '#theme' => 'links',
         '#links' => array(
           array(
-            'href' => 'node/add',
+            'url' => Url::fromRoute('node.add_page'),
             'title' => $this->t('Add content'),
           ),
         ),

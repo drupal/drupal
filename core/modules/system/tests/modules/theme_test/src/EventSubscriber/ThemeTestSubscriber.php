@@ -7,6 +7,7 @@
 
 namespace Drupal\theme_test\EventSubscriber;
 
+use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -44,7 +45,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
       // returning output and theming the page as a whole.
       $more_link = array(
         '#type' => 'more_link',
-        '#href' => 'user',
+        '#url' => Url::fromRoute('user.page'),
         '#attributes' => array('title' => 'Themed output generated in a KernelEvents::REQUEST listener'),
       );
       $GLOBALS['theme_test_output'] = drupal_render($more_link);

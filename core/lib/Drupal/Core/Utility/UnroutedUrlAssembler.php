@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,7 +57,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       // UrlHelper::isExternal() only returns true for safe protocols.
       return $this->buildExternalUrl($uri, $options);
     }
-    throw new \InvalidArgumentException('You must use a valid URI scheme. Use base:// for a path e.g. to a Drupal file that needs the base path.');
+    throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base:// for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.', ['@uri' => $uri]));
   }
 
   /**

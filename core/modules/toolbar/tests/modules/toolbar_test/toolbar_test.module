@@ -17,7 +17,7 @@ function toolbar_test_toolbar() {
     'tab' => array(
       '#type' => 'link',
       '#title' => t('Test tab'),
-      '#href' => '',
+      '#url' => Url::fromRoute('<front>'),
       '#options' => array(
         'html' => FALSE,
         'attributes' => array(

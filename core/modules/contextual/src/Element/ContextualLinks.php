@@ -8,6 +8,7 @@
 namespace Drupal\contextual\Element;
 
 use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Url;
 
 /**
  * Provides a contextual_links element.
@@ -81,8 +82,7 @@ class ContextualLinks extends RenderElement {
       $class = drupal_html_class($class);
       $links[$class] = array(
         'title' => $item['title'],
-        'route_name' => isset($item['route_name']) ? $item['route_name'] : '',
-        'route_parameters' => isset($item['route_parameters']) ? $item['route_parameters'] : array(),
+        'url' => Url::fromRoute(isset($item['route_name']) ? $item['route_name'] : '', isset($item['route_parameters']) ? $item['route_parameters'] : []),
       );
     }
     $element['#links'] = $links;

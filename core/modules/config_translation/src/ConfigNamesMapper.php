@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -200,7 +201,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getBasePath() {
-    return $this->getPathFromRoute($this->getBaseRoute(), $this->getBaseRouteParameters());
+    return Url::fromRoute($this->getBaseRouteName(), $this->getBaseRouteParameters())->getInternalPath();
   }
 
   /**
@@ -237,7 +238,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getOverviewPath() {
-    return $this->getPathFromRoute($this->getOverviewRoute(), $this->getOverviewRouteParameters());
+    return Url::fromRoute($this->getOverviewRouteName(), $this->getOverviewRouteParameters())->getInternalPath();
   }
 
   /**
@@ -332,25 +333,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     );
     $this->processRoute($route);
     return $route;
-  }
-
-  /**
-   * Gets the path for a certain route, given a set of route parameters.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route object.
-   * @param array $parameters
-   *   An array of route parameters.
-   *
-   * @return string
-   *   Processed path with placeholders replaced.
-   */
-  public function getPathFromRoute(Route $route, array $parameters) {
-    $path = $route->getPath();
-    foreach ($parameters as $key => $value) {
-      $path = str_replace('{' . $key . '}', $value, $path);
-    }
-    return $path;
   }
 
   /**
@@ -492,7 +474,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     return array(
       'translate' => array(
         'title' => $this->t('Translate'),
-        'href' => $this->getOverviewPath(),
+        'url' => Url::fromRoute($this->getOverviewRouteName(), $this->getOverviewRouteParameters()),
       ),
     );
   }

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\Url;
 
 /**
  * Class responsible for providing language support on language-unaware sites.
@@ -239,7 +240,7 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLanguageSwitchLinks($type, $path) {
+  public function getLanguageSwitchLinks($type, Url $url) {
     return array();
   }
 

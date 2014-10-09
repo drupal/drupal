@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -200,7 +201,8 @@ class CommentAdminOverview extends FormBase {
           'data' => array(
             '#type' => 'link',
             '#title' => $comment->getSubject(),
-          ) + $comment_permalink->toRenderArray(),
+            '#url' => $comment_permalink,
+          ),
         ),
         'author' => drupal_render($username),
         'posted_in' => array(
@@ -208,7 +210,8 @@ class CommentAdminOverview extends FormBase {
             '#type' => 'link',
             '#title' => $commented_entity->label(),
             '#access' => $commented_entity->access('view'),
-          ) + $commented_entity->urlInfo()->toRenderArray(),
+            '#url' => $commented_entity->urlInfo(),
+          ),
         ),
         'changed' => $this->dateFormatter->format($comment->getChangedTime(), 'short'),
       );
@@ -216,18 +219,12 @@ class CommentAdminOverview extends FormBase {
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'route_name' => 'entity.comment.edit_form',
-        'route_parameters' => array('comment' => $comment->id()),
-        'options' => $comment_uri_options,
-        'query' => $destination,
+        'url' => Url::fromRoute('entity.comment.edit_form', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
       );
       if ($this->moduleHandler->moduleExists('content_translation') && $this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))->isAllowed()) {
         $links['translate'] = array(
           'title' => $this->t('Translate'),
-          'route_name' => 'content_translation.translation_overview_comment',
-          'route_parameters' => array('comment' => $comment->id()),
-          'options' => $comment_uri_options,
-          'query' => $destination,
+          'url' => Url::fromRoute('content_translation.translation_overview_comment', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
         );
       }
       $options[$comment->id()]['operations']['data'] = array(

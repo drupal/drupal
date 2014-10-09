@@ -107,10 +107,7 @@ class ForumForm extends TermForm {
     $actions = parent::actions($form, $form_state);
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('forum-delete-form')) {
-      $route_info = $this->entity->urlInfo('forum-delete-form');
-      $actions['delete']['#options'] = $route_info->getOptions();
-      $actions['delete']['#route_name'] = $route_info->getRouteName();
-      $actions['delete']['#route_parameters'] = $route_info->getRouteParameters();
+      $actions['delete']['#url'] = $this->entity->urlInfo('forum-delete-form');
     }
     else {
       unset($actions['delete']);

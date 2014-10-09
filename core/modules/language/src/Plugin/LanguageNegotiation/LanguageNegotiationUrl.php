@@ -10,6 +10,7 @@ namespace Drupal\language\Plugin\LanguageNegotiation;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
+use Drupal\Core\Url;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\language\LanguageSwitcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   weight = -8,
  *   name = @Translation("URL"),
  *   description = @Translation("Language from the URL (Path prefix or domain)."),
- *   config_path = "admin/config/regional/language/detection/url"
+ *   config_route_name = "language.negotiation_url"
  * )
  */
 class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements InboundPathProcessorInterface, OutboundPathProcessorInterface, LanguageSwitcherInterface {
@@ -187,12 +188,12 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   /**
    * {@inheritdoc}
    */
-  function getLanguageSwitchLinks(Request $request, $type, $path) {
+  public function getLanguageSwitchLinks(Request $request, $type, Url $url) {
     $links = array();
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $links[$language->id] = array(
-        'href' => $path,
+        'url' => $url,
         'title' => $language->getName(),
         'language' => $language,
         'attributes' => array('class' => array('language-link')),

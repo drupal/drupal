@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'uri_link' formatter.
@@ -30,11 +31,13 @@ class UriLinkFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array(
-        '#type' => 'link',
-        '#href' => $item->value,
-        '#title' => $item->value,
-      );
+      if (!$item->isEmpty()) {
+        $elements[$delta] = [
+          '#type' => 'link',
+          '#url' => Url::fromUri($item->value),
+          '#title' => $item->value,
+        ];
+      }
     }
 
     return $elements;

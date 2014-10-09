@@ -118,13 +118,15 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       $operations['edit'] = array(
         'title' => $this->t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo('edit-form')->toArray();
+        'url' => $entity->urlInfo('edit-form'),
+      );
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = array(
         'title' => $this->t('Delete'),
         'weight' => 100,
-      ) + $entity->urlInfo('delete-form')->toArray();
+        'url' => $entity->urlInfo('delete-form'),
+      );
     }
 
     return $operations;

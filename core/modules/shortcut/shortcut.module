@@ -258,7 +258,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
     $shortcut = \Drupal::entityManager()->getTranslationFromContext($shortcut);
     $links[] = array(
       'title' => $shortcut->label(),
-      'href' => $shortcut->path->value,
+      'url' => Url::fromRoute($shortcut->getRouteName(), $shortcut->getRouteParams()),
     );
     $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTag());
   }
@@ -343,8 +343,7 @@ function shortcut_preprocess_page(&$variables) {
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
         '#title' => '<span class="icon"></span><span class="text">'. $link_text .'</span>',
-        '#route_name' => $route_name,
-        '#route_parameters' => $route_parameters,
+        '#url' => Url::fromRoute($route_name, $route_parameters),
         '#options' => array('query' => $query, 'html' => TRUE),
         '#suffix' => '</div>',
       );
@@ -367,8 +366,7 @@ function shortcut_toolbar() {
       $configure_link = array(
         '#type' => 'link',
         '#title' => t('Edit shortcuts'),
-        '#route_name' => 'entity.shortcut_set.customize_form',
-        '#route_parameters' => array('shortcut_set' => $shortcut_set->id()),
+        '#url' => Url::fromRoute('entity.shortcut_set.customize_form', ['shortcut_set' => $shortcut_set->id()]),
         '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
       );
     }
@@ -378,7 +376,7 @@ function shortcut_toolbar() {
         'tab' => array(
           '#type' => 'link',
           '#title' => t('Shortcuts'),
-          '#href' => 'admin/config/user-interface/shortcut',
+          '#url' => Url::fromRoute('shortcut.set_admin'),
           '#attributes' => array(
             'title' => t('Shortcuts'),
             'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),

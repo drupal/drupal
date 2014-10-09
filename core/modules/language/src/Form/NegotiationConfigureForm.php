@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
@@ -295,10 +296,10 @@ class NegotiationConfigureForm extends FormBase {
         $table_form['description'][$method_id] = array('#markup' => Xss::filterAdmin($method['description']));
 
         $config_op = array();
-        if (isset($method['config_path'])) {
+        if (isset($method['config_route_name'])) {
           $config_op['configure'] = array(
             'title' => $this->t('Configure'),
-            'href' => $method['config_path'],
+            'url' => Url::fromRoute($method['config_route_name']),
           );
           // If there is at least one operation enabled show the operation
           // column.

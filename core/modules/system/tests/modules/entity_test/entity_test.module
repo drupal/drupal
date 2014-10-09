@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Url;
 
 /**
  * Filter that limits test entity list to revisable ones.
@@ -384,11 +385,19 @@ function entity_test_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_operation_alter().
  */
 function entity_test_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  $operations['test_operation'] = array(
-    'title' => format_string('Test Operation: @label', array('@label' => $entity->label())),
-    'href' => $entity->url() . '/test_operation',
-    'weight' => 50,
-  );
+  $valid_entity_type_ids = [
+    'user_role',
+    'block',
+  ];
+  if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
+    if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {
+      $operations['test_operation'] = [
+        'title' => format_string('Test Operation: @label', ['@label' => $entity->label()]),
+        'url' => Url::fromRoute("entity.{$entity->getEntityTypeId()}.test_operation", [$entity->getEntityTypeId() => $entity->id()]),
+        'weight' => 50,
+      ];
+    }
+  }
 }
 
 /**

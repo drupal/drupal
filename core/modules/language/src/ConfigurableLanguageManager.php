@@ -14,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Url;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\HttpFoundation\Request;
@@ -395,7 +396,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
-  public function getLanguageSwitchLinks($type, $path) {
+  public function getLanguageSwitchLinks($type, Url $url) {
     $links = FALSE;
 
     if ($this->negotiator) {
@@ -403,7 +404,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         $reflector = new \ReflectionClass($method['class']);
 
         if ($reflector->implementsInterface('\Drupal\language\LanguageSwitcherInterface')) {
-          $result = $this->negotiator->getNegotiationMethodInstance($method_id)->getLanguageSwitchLinks($this->requestStack->getCurrentRequest(), $type, $path);
+          $result = $this->negotiator->getNegotiationMethodInstance($method_id)->getLanguageSwitchLinks($this->requestStack->getCurrentRequest(), $type, $url);
 
           if (!empty($result)) {
             // Allow modules to provide translations for specific links.
