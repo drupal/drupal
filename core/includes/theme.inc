@@ -2206,39 +2206,30 @@ function drupal_common_theme() {
     // From theme.inc.
     'html' => array(
       'variables' => array('page_object' => NULL),
-      'template' => 'html',
     ),
     'page' => array(
       'render element' => 'page',
-      'template' => 'page',
     ),
     'region' => array(
       'render element' => 'elements',
-      'template' => 'region',
     ),
     'time' => array(
       'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
-      'template' => 'time',
     ),
     'datetime_form' => array(
-      'template' => 'datetime-form',
       'render element' => 'element',
     ),
     'datetime_wrapper' => array(
-      'template' => 'datetime-wrapper',
       'render element' => 'element',
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
-      'template' => 'status-messages',
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array(), 'set_active_class' => FALSE),
-      'template' => 'links',
     ),
     'dropbutton_wrapper' => array(
       'variables' => array('children' => NULL),
-      'template' => 'dropbutton-wrapper',
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
@@ -2254,35 +2245,27 @@ function drupal_common_theme() {
       // The title attribute is optional in all cases, so it is omitted by
       // default.
       'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL, 'srcset' => array(), 'style_name' => NULL),
-      'template' => 'image',
     ),
     'breadcrumb' => array(
       'variables' => array('links' => array()),
-      'template' => 'breadcrumb',
     ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
-      'template' => 'table',
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),
-      'template' => 'tablesort-indicator',
     ),
     'mark' => array(
       'variables' => array('status' => MARK_NEW),
-      'template' => 'mark',
     ),
     'item_list' => array(
       'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL),
-      'template' => 'item-list',
     ),
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),
-      'template' => 'feed-icon',
     ),
     'progress_bar' => array(
       'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),
-      'template' => 'progress-bar',
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
@@ -2291,15 +2274,12 @@ function drupal_common_theme() {
     // From theme.maintenance.inc.
     'maintenance_page' => array(
       'render element' => 'page',
-      'template' => 'maintenance-page',
     ),
     'install_page' => array(
       'render element' => 'page',
-      'template' => 'install-page',
     ),
     'maintenance_task_list' => array(
       'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
-      'template' => 'maintenance-task-list',
     ),
     'authorize_message' => array(
       'variables' => array('message' => NULL, 'success' => TRUE),
@@ -2316,82 +2296,63 @@ function drupal_common_theme() {
     // From pager.inc.
     'pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
-      'template' => 'pager',
     ),
     // From menu.inc.
     'menu' => array(
       'variables' => array('items' => array(), 'attributes' => array()),
-      'template' => 'menu',
     ),
     'menu_local_task' => array(
       'render element' => 'element',
-      'template' => 'menu-local-task',
     ),
     'menu_local_action' => array(
       'render element' => 'element',
-      'template' => 'menu-local-action',
     ),
     'menu_local_tasks' => array(
       'variables' => array('primary' => array(), 'secondary' => array()),
-      'template' => 'menu-local-tasks',
     ),
     // From form.inc.
     'input' => array(
       'render element' => 'element',
-      'template' => 'input',
     ),
     'select' => array(
       'render element' => 'element',
-      'template' => 'select',
     ),
     'fieldset' => array(
       'render element' => 'element',
-      'template' => 'fieldset',
     ),
     'details' => array(
       'render element' => 'element',
-      'template' => 'details',
     ),
     'radios' => array(
       'render element' => 'element',
-      'template' => 'radios',
     ),
     'checkboxes' => array(
       'render element' => 'element',
-      'template' => 'checkboxes',
     ),
     'form' => array(
       'render element' => 'element',
-      'template' => 'form',
     ),
     'textarea' => array(
       'render element' => 'element',
-      'template' => 'textarea',
     ),
     'form_element' => array(
       'render element' => 'element',
-      'template' => 'form-element',
     ),
     'form_element_label' => array(
       'render element' => 'element',
-      'template' => 'form-element-label',
     ),
     'vertical_tabs' => array(
       'render element' => 'element',
-      'template' => 'vertical-tabs',
     ),
     'container' => array(
       'render element' => 'element',
-      'template' => 'container',
     ),
     // From field system.
     'field' => array(
       'render element' => 'element',
-      'template' => 'field',
     ),
     'field_multiple_value_form' => array(
       'render element' => 'element',
-      'template' => 'field-multiple-value-form',
     ),
   );
 }

@@ -49,7 +49,6 @@
  *       'plugin_id' => NULL,
  *     ),
  *    'file' => 'search.pages.inc',
- *    'template' => 'search-result',
  *   ),
  * );
  * @endcode

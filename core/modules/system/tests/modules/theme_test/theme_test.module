@@ -18,19 +18,15 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'template' => 'theme_test.template_test',
   );
   $items['theme_test_suggestion_provided'] = array(
-    'template' => 'theme-test-suggestion-provided',
     'variables' => array(),
   );
   $items['theme_test_specific_suggestions'] = array(
-    'template' => 'theme-test-specific-suggestions',
     'variables' => array(),
   );
   $items['theme_test_suggestions'] = array(
-    'template' => 'theme-test-suggestions',
     'variables' => array(),
   );
   $items['theme_test_general_suggestions'] = array(
-    'template' => 'theme-test-general-suggestions',
     'variables' => array(),
   );
   $items['theme_test_function_suggestions'] = array(
@@ -47,7 +43,6 @@ function theme_test_theme($existing, $type, $theme, $path) {
   );
   $items['theme_test_render_element'] = array(
     'render element' => 'elements',
-    'template' => 'theme-test-render-element',
   );
   $items['theme_test_render_element_children'] = array(
     'render element' => 'element',

@@ -100,11 +100,9 @@ function user_theme() {
     'user' => array(
       'render element' => 'elements',
       'file' => 'user.pages.inc',
-      'template' => 'user',
     ),
     'username' => array(
       'variables' => array('account' => NULL, 'attributes' => array(), 'link_options' => array()),
-      'template' => 'username',
     ),
   );
 }

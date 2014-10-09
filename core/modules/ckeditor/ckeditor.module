@@ -40,7 +40,6 @@ function ckeditor_theme() {
     'ckeditor_settings_toolbar' => array(
       'file' => 'ckeditor.admin.inc',
       'variables' => array('editor' => NULL, 'plugins' => NULL),
-      'template' => 'ckeditor-settings-toolbar',
     ),
   );
 }

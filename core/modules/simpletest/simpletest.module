@@ -44,7 +44,6 @@ function simpletest_theme() {
   return array(
     'simpletest_result_summary' => array(
       'variables' => array('label' => NULL, 'items' => array(), 'pass' => 0, 'fail' => 0, 'exception' => 0, 'debug' => 0),
-      'template' => 'simpletest-result-summary',
     ),
   );
 }

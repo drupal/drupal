@@ -41,7 +41,6 @@ function toolbar_help($route_name, RouteMatchInterface $route_match) {
 function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
     'render element' => 'element',
-    'template' => 'toolbar',
   );
 
   return $items;

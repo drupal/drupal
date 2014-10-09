@@ -56,11 +56,9 @@ function book_theme() {
   return array(
     'book_navigation' => array(
       'variables' => array('book_link' => NULL),
-      'template' => 'book-navigation',
     ),
     'book_tree' => array(
       'render element' => 'tree',
-      'template' => 'book-tree',
     ),
     'book_link' => array(
       'render element' => 'element',
@@ -68,7 +66,6 @@ function book_theme() {
     ),
     'book_export_html' => array(
       'variables' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
-      'template' => 'book-export-html',
     ),
     'book_admin_table' => array(
       'render element' => 'form',
@@ -77,11 +74,9 @@ function book_theme() {
     ),
     'book_all_books_block' => array(
       'render element' => 'book_menus',
-      'template' => 'book-all-books-block',
     ),
     'book_node_export_html' => array(
       'variables' => array('node' => NULL, 'children' => NULL),
-      'template' => 'book-node-export-html',
     ),
   );
 }

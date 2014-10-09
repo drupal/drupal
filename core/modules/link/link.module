@@ -41,7 +41,6 @@ function link_theme() {
   return array(
     'link_formatter_link_separate' => array(
       'variables' => array('title' => NULL, 'url_title' => NULL, 'url' => NULL),
-      'template' => 'link-formatter-link-separate',
     ),
   );
 }

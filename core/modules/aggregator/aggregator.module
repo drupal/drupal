@@ -65,17 +65,14 @@ function aggregator_theme() {
     'aggregator_feed' => array(
       'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-feed',
     ),
     'aggregator_block_item' => array(
       'variables' => array('item' => NULL, 'feed' => 0),
       'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-block-item',
     ),
     'aggregator_item' => array(
       'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
-      'template' => 'aggregator-item',
     ),
   );
 }

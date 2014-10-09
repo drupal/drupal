@@ -82,19 +82,15 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
 function forum_theme() {
   return array(
     'forums' => array(
-      'template' => 'forums',
       'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL, 'header' => array()),
     ),
     'forum_list' => array(
-      'template' => 'forum-list',
       'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
     'forum_icon' => array(
-      'template' => 'forum-icon',
       'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0, 'first_new' => FALSE),
     ),
     'forum_submitted' => array(
-      'template' => 'forum-submitted',
       'variables' => array('topic' => NULL),
     ),
   );

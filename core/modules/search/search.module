@@ -104,7 +104,6 @@ function search_theme() {
     'search_result' => array(
       'variables' => array('result' => NULL, 'plugin_id' => NULL),
       'file' => 'search.pages.inc',
-      'template' => 'search-result',
     ),
   );
 }

@@ -71,30 +71,25 @@ function views_ui_theme() {
     // edit a view
     'views_ui_display_tab_setting' => array(
       'variables' => array('description' => '', 'link' => '', 'settings_links' => array(), 'overridden' => FALSE, 'defaulted' => FALSE, 'description_separator' => TRUE, 'class' => array()),
-      'template' => 'views-ui-display-tab-setting',
       'file' => 'views_ui.theme.inc',
     ),
     'views_ui_display_tab_bucket' => array(
       'render element' => 'element',
-      'template' => 'views-ui-display-tab-bucket',
       'file' => 'views_ui.theme.inc',
     ),
     'views_ui_rearrange_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
-      'template' => 'views-ui-rearrange-filter-form',
     ),
     'views_ui_expose_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
-      'template' => 'views-ui-expose-filter-form',
     ),
 
     // list views
     'views_ui_view_info' => array(
       'variables' => array('view' => NULL, 'displays' => NULL),
       'file' => 'views_ui.theme.inc',
-      'template' => 'views-ui-view-info',
     ),
 
     // Group of filters.
@@ -108,21 +103,18 @@ function views_ui_theme() {
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
-      'template' => 'views-ui-style-plugin-table',
     ),
 
     // When previewing a view.
     'views_ui_view_preview_section' => array(
       'variables' => array('view' => NULL, 'section' => NULL, 'content' => NULL, 'links' => ''),
       'file' => 'views_ui.theme.inc',
-      'template' => 'views-ui-view-preview-section',
     ),
 
     // Generic container wrapper, to use instead of theme_container when an id
     // is not desired.
     'views_ui_container' => array(
       'variables' => array('children' => NULL, 'attributes' => array()),
-      'template' => 'views-ui-container',
       'file' => 'views_ui.theme.inc',
     ),
   );

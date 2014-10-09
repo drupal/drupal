@@ -60,7 +60,6 @@ function filter_theme() {
   return array(
     'filter_tips' => array(
       'variables' => array('tips' => NULL, 'long' => FALSE),
-      'template' => 'filter-tips',
     ),
     'text_format_wrapper' => array(
       'variables' => array(
@@ -68,11 +67,9 @@ function filter_theme() {
         'description' => NULL,
         'attributes' => array(),
       ),
-      'template' => 'text-format-wrapper',
     ),
     'filter_guidelines' => array(
       'variables' => array('format' => NULL),
-      'template' => 'filter-guidelines',
     ),
     'filter_caption' => array(
       'variables' => array(
@@ -81,7 +78,6 @@ function filter_theme() {
         'caption' => NULL,
         'classes' => NULL,
       ),
-      'template' => 'filter-caption',
     )
   );
 }

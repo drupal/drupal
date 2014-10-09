@@ -21,11 +21,9 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
   );
   $items['twig_raw_test'] = array(
     'variables' => array('script' => ''),
-    'template' => 'twig-raw-test',
   );
   $items['twig_autoescape_test'] = array(
     'variables' => array('script' => ''),
-    'template' => 'twig-autoescape-test',
   );
   $items['twig_theme_test_url_generator'] = array(
     'variables' => array(),

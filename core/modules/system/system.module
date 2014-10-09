@@ -161,12 +161,10 @@ function system_theme() {
     'block__system_branding_block' => array(
       'render element' => 'elements',
       'base hook' => 'block',
-      'template' => 'block--system-branding-block',
     ),
     'block__system_menu_block' => array(
       'render element' => 'elements',
       'base hook' => 'block',
-      'template' => 'block--system-menu-block',
     ),
     'system_themes_page' => array(
       'variables' => array(
@@ -174,15 +172,12 @@ function system_theme() {
         'theme_group_titles' => array(),
       ),
       'file' => 'system.admin.inc',
-      'template' => 'system-themes-page',
     ),
     'system_config_form' => array(
       'render element' => 'form',
-      'template' => 'system-config-form',
     ),
     'confirm_form' => array(
       'render element' => 'form',
-      'template' => 'confirm-form',
     ),
     'system_modules_details' => array(
       'render element' => 'form',
@@ -197,27 +192,22 @@ function system_theme() {
     'status_report' => array(
       'variables' => array('requirements' => NULL),
       'file' => 'system.admin.inc',
-      'template' => 'status-report',
     ),
     'admin_page' => array(
       'variables' => array('blocks' => NULL),
       'file' => 'system.admin.inc',
-      'template' => 'admin-page',
     ),
     'admin_block' => array(
       'variables' => array('block' => NULL),
       'file' => 'system.admin.inc',
-      'template' => 'admin-block',
     ),
     'admin_block_content' => array(
       'variables' => array('content' => NULL),
       'file' => 'system.admin.inc',
-      'template' => 'admin-block-content',
     ),
     'system_admin_index' => array(
       'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
-      'template' => 'system-admin-index',
     ),
     'system_compact_link' => array(
       'variables' => array(),

@@ -137,7 +137,6 @@ function node_theme() {
   return array(
     'node' => array(
       'render element' => 'elements',
-      'template' => 'node',
     ),
     'node_search_admin' => array(
       'render element' => 'form',
@@ -146,23 +145,18 @@ function node_theme() {
     'node_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',
-      'template' => 'node-add-list',
     ),
     'node_edit_form' => array(
       'render element' => 'form',
-      'template' => 'node-edit-form',
     ),
     'field__node__title' => array(
       'base hook' => 'field',
-      'template' => 'field--node--title',
     ),
     'field__node__uid' => array(
       'base hook' => 'field',
-      'template' => 'field--node--uid',
     ),
     'field__node__created' => array(
       'base hook' => 'field',
-      'template' => 'field--node--created',
     ),
   );
 }

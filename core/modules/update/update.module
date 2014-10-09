@@ -193,24 +193,20 @@ function update_theme() {
   return array(
     'update_last_check' => array(
       'variables' => array('last' => 0),
-      'template' => 'update-last-check',
     ),
     'update_report' => array(
       'variables' => array('data' => NULL),
       'file' => 'update.report.inc',
-      'template' => 'update-report',
     ),
     'update_project_status' => array(
       'variables' => array('project' => array(), 'includes_status' => array()),
       'file' => 'update.report.inc',
-      'template' => 'update-project-status',
     ),
     // We are using template instead of '#type' => 'table' here to keep markup
     // out of preprocess and allow for easier changes to markup.
     'update_version' => array(
       'variables' => array('version' => NULL, 'title' => NULL, 'attributes' => array()),
       'file' => 'update.report.inc',
-      'template' => 'update-version',
     ),
   );
 }

@@ -250,7 +250,6 @@ function rdf_theme() {
   return array(
     'rdf_metadata' => array(
       'variables' => array('metadata' => array()),
-      'template' => 'rdf-metadata',
     ),
   );
 }

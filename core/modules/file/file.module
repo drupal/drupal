@@ -577,27 +577,22 @@ function file_theme() {
     // From file.module.
     'file_link' => array(
       'variables' => array('file' => NULL, 'icon_directory' => NULL, 'description' => NULL, 'attributes' => array()),
-      'template' => 'file-link',
     ),
     'file_managed_file' => array(
       'render element' => 'element',
-      'template' => 'file-managed-file',
     ),
 
     // From file.field.inc.
     'file_widget' => array(
       'render element' => 'element',
-      'template' => 'file-widget',
       'file' => 'file.field.inc',
     ),
     'file_widget_multiple' => array(
       'render element' => 'element',
-      'template' => 'file-widget-multiple',
       'file' => 'file.field.inc',
     ),
     'file_upload_help' => array(
       'variables' => array('description' => NULL, 'upload_validators' => NULL, 'cardinality' => NULL),
-      'template' => 'file-upload-help',
       'file' => 'file.field.inc',
     ),
   );

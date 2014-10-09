@@ -195,7 +195,6 @@ function taxonomy_theme() {
   return array(
     'taxonomy_term' => array(
       'render element' => 'elements',
-      'template' => 'taxonomy-term',
     ),
   );
 }

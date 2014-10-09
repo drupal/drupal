@@ -39,7 +39,6 @@ function color_theme() {
   return array(
     'color_scheme_form' => array(
       'render element' => 'form',
-      'template' => 'color-scheme-form',
     ),
   );
 }

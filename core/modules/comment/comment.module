@@ -129,11 +129,9 @@ function comment_theme() {
   return array(
     'comment' => array(
       'render element' => 'elements',
-      'template' => 'comment',
     ),
     'field__comment' => array(
       'base hook' => 'field',
-      'template' => 'field--comment',
     ),
   );
 }

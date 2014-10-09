@@ -95,7 +95,6 @@ function views_theme($existing, $type, $theme, $path) {
   // Our extra version of pager from pager.inc
   $hooks['views_mini_pager'] = $base + array(
     'variables' => array('tags' => array(), 'quantity' => 9, 'element' => 0, 'parameters' => array()),
-    'template' => 'views-mini-pager',
   );
 
   $variables = array(
@@ -133,7 +132,6 @@ function views_theme($existing, $type, $theme, $path) {
   );
   $hooks['views_view_grouping'] = $base + array(
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
-    'template' => 'views-view-grouping',
   );
 
   $plugins = Views::getPluginDefinitions();
@@ -209,13 +207,11 @@ function views_theme($existing, $type, $theme, $path) {
   );
 
   $hooks['views_exposed_form'] = $base + array(
-    'template' => 'views-exposed-form',
     'render element' => 'form',
   );
 
   $hooks['views_more'] = $base + array(
     'variables' => array('more_url' => NULL, 'link_text' => 'more', 'view' => NULL),
-    'template' => 'views-more',
   );
 
   return $hooks;

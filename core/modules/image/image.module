@@ -109,47 +109,38 @@ function image_theme() {
         'title' => NULL,
         'attributes' => array(),
       ),
-      'template' => 'image-style',
     ),
 
     // Theme functions in image.admin.inc.
     'image_style_preview' => array(
       'variables' => array('style' => NULL),
       'file' => 'image.admin.inc',
-      'template' => 'image-style-preview',
     ),
     'image_anchor' => array(
       'render element' => 'element',
       'file' => 'image.admin.inc',
-      'template' => 'image-anchor',
     ),
     'image_resize_summary' => array(
       'variables' => array('data' => NULL, 'effect' => array()),
-      'template' => 'image-resize-summary',
     ),
     'image_scale_summary' => array(
       'variables' => array('data' => NULL, 'effect' => array()),
-      'template' => 'image-scale-summary',
     ),
     'image_crop_summary' => array(
       'variables' => array('data' => NULL, 'effect' => array()),
-      'template' => 'image-crop-summary',
     ),
     'image_rotate_summary' => array(
       'variables' => array('data' => NULL, 'effect' => array()),
-      'template' => 'image-rotate-summary',
     ),
 
     // Theme functions in image.field.inc.
     'image_widget' => array(
       'render element' => 'element',
       'file' => 'image.field.inc',
-      'template' => 'image-widget',
     ),
     'image_formatter' => array(
       'variables' => array('item' => NULL, 'item_attributes' => NULL, 'path' => NULL, 'image_style' => NULL),
       'file' => 'image.field.inc',
-      'template' => 'image-formatter',
     ),
   );
 }

@@ -187,12 +187,10 @@ function locale_theme() {
     'locale_translation_last_check' => array(
       'variables' => array('last' => NULL),
       'file' => 'locale.pages.inc',
-      'template' => 'locale-translation-last-check',
     ),
     'locale_translation_update_info' => array(
       'variables' => array('updates' => array(), 'not_found' => array()),
       'file' => 'locale.pages.inc',
-      'template' => 'locale-translation-update-info',
     ),
   );
 }

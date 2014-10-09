@@ -46,7 +46,6 @@ function block_content_theme($existing, $type, $theme, $path) {
     'block_content_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'block_content.pages.inc',
-      'template' => 'block-content-add-list',
     ),
   );
 }
