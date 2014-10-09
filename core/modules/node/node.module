@@ -1302,7 +1302,7 @@ function _node_access_rebuild_batch_operation(&$context) {
   $limit = 20;
   $nids = \Drupal::entityQuery('node')
     ->condition('nid', $context['sandbox']['current_node'], '>')
-    ->sort('nid', 'DESC')
+    ->sort('nid', 'ASC')
     ->range(0, $limit)
     ->execute();
   $nodes = node_load_multiple($nids, TRUE);
