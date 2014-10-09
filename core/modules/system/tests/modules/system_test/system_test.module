@@ -4,17 +4,6 @@ use Drupal\Core\Extension\Extension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Sets a header.
- *
- * @deprecated \Drupal\system_test\Controller\SystemTestController::setHeader()
- */
-function system_test_set_header() {
-  $query = \Drupal::request()->query->all();
-  drupal_add_http_header($query['name'], $query['value']);
-  return t('The following header was set: %name: %value', array('%name' => $query['name'], '%value' => $query['value']));
-}
-
-/**
  * Implements hook_modules_installed().
  */
 function system_test_modules_installed($modules) {

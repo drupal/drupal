@@ -668,8 +668,6 @@ function _url($path = NULL, array $options = array()) {
  * @return
  *   A ; separated string ready for insertion in a HTTP header. No escaping is
  *   performed for HTML entities, so this string is not safe to be printed.
- *
- * @see drupal_add_http_header()
  */
 function drupal_http_header_attributes(array $attributes = array()) {
   foreach ($attributes as $attribute => &$data) {

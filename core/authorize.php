@@ -23,6 +23,7 @@
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 
@@ -71,6 +72,7 @@ drupal_maintenance_theme();
 $output = '';
 $show_messages = TRUE;
 
+$response = new Response();
 if (authorize_access_allowed()) {
   // Load both the Form API and Batch API.
   require_once __DIR__ . '/includes/form.inc';
@@ -140,15 +142,16 @@ if (authorize_access_allowed()) {
   $show_messages = !(($batch = batch_get()) && isset($batch['running']));
 }
 else {
-  drupal_add_http_header('Status', '403 Forbidden');
+  $response->setStatusCode(403);
   \Drupal::logger('access denied')->warning('authorize.php');
   $page_title = t('Access denied');
   $output = t('You are not allowed to access this page.');
 }
 
 if (!empty($output)) {
-  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  print DefaultHtmlPageRenderer::renderPage($output, $page_title, 'maintenance', array(
+  $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+  $response->setContent(DefaultHtmlPageRenderer::renderPage($output, $page_title, 'maintenance', array(
     '#show_messages' => $show_messages,
-  ));
+  )));
+  $response->send();
 }

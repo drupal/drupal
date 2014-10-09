@@ -890,8 +890,6 @@ function install_display_output($output, $install_state) {
   // reached in case of an early installer error.
   drupal_maintenance_theme();
 
-  drupal_page_header();
-
   // Prevent install.php from being indexed when installed in a sub folder.
   // robots.txt rules are not read if the site is within domain.com/subfolder
   // resulting in /subfolder/install.php being found through search engines.
@@ -922,7 +920,16 @@ function install_display_output($output, $install_state) {
     $regions['sidebar_first'] = $task_list;
   }
 
-  print DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions);
+  $response = new Response();
+  $default_headers = array(
+    'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
+    'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
+    'Cache-Control' => 'no-cache, must-revalidate, post-check=0, pre-check=0',
+    'ETag' => '"' . REQUEST_TIME . '"',
+  );
+  $response->headers->add($default_headers);
+  $response->setContent(DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions));
+  $response->send();
   exit;
 }
 

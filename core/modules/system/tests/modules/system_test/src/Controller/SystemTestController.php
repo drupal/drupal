@@ -8,6 +8,8 @@
 namespace Drupal\system_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for system_test routes.
@@ -86,10 +88,15 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_test_set_header().
+   * Sets a header.
    */
-  public function setHeader() {
-    return system_test_set_header();
+  public function setHeader(Request $request) {
+    $query = $request->query->all();
+    $response = new Response();
+    $response->headers->set($query['name'], $query['value']);
+    $response->setContent($this->t('The following header was set: %name: %value', array('%name' => $query['name'], '%value' => $query['value'])));
+
+    return $response;
   }
 
   /**
