@@ -1082,5 +1082,101 @@ function hook_views_plugins_wizard_alter(array &$plugins) {
 }
 
 /**
+ * Modify the list of available views area handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_area_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views argument handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_argument_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views field handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_field_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views filter handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_filter_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views relationship handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_relationship_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
+ * Modify the list of available views sort handler plugins.
+ *
+ * This hook may be used to modify handler properties after they have been
+ * specified by other modules.
+ *
+ * @param array $plugins
+ *   An array of all the existing handler definitions, passed by reference.
+ *
+ * @see \Drupal\views\Plugin\ViewsHandlerManager
+ */
+function hook_views_plugins_sort_alter(array &$plugins) {
+  // Change the 'title' handler class.
+  $plugins['title']['class'] = 'Drupal\\example\\ExampleClass';
+}
+
+/**
  * @}
  */
