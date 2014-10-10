@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -448,6 +449,15 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $errors = array();
     if (strpos($path, '%') === 0) {
       $errors[] = $this->t('"%" may not be used for the first segment of a path.');
+    }
+
+    $parsed_url = UrlHelper::parse($path);
+    if (empty($parsed_url['path'])) {
+      $errors[] = $this->t('Path is empty.');
+    }
+
+    if (!empty($parsed_url['query'])) {
+      $errors[] = $this->t('No query allowed.');
     }
 
     $path_sections = explode('/', $path);

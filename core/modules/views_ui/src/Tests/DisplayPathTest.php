@@ -92,8 +92,24 @@ class DisplayPathTest extends UITestBase {
 
     // Add a new page display.
     $this->drupalPostForm(NULL, array(), 'Add Page');
+
+    // Add an invalid path (only fragment).
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => '#foo'), t('Apply'));
+    $this->assertText('Path is empty');
+
+    // Add an invalid path with a query.
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => 'foo?bar'), t('Apply'));
+    $this->assertText('No query allowed.');
+
+    // Add an invalid path with just a query.
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => '?bar'), t('Apply'));
+    $this->assertText('Path is empty');
+
+    // Provide a random, valid path string.
+    $random_string = str_replace(['?', '#'], '_', $this->randomString());
+
     // Save a path.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $this->randomString()), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_string), t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_view');
 
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', array('menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'), t('Apply'));
