@@ -4,6 +4,47 @@
  */
 
 /**
+ * Reusable layout styles.
+ */
+.layout-container {
+  margin: 0 1.5em;
+}
+.layout-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (min-width: 38em) {
+  .layout-container {
+    margin: 0 2.5em;
+  }
+  .layout-column {
+    float: left;  /* LTR */
+    box-sizing: border-box;
+  }
+  [dir="rtl"] .layout-column {
+    float: right;
+  }
+  .layout-column + .layout-column {
+    padding-left: 10px; /* LTR */
+  }
+  [dir="rtl"] .layout-column + .layout-column {
+    padding-right: 10px;
+    padding-left: 0;
+  }
+  .layout-column.half {
+    width: 50%;
+  }
+  .layout-column.quarter {
+    width: 25%;
+  }
+  .layout-column.three-quarter {
+    width: 75%;
+  }
+}
+
+/**
  * Administration blocks.
  */
 div.admin-panel {
