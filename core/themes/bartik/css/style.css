@@ -845,7 +845,6 @@ ul.links {
 }
 .node--unpublished,
 .unpublished {
-  margin: -20px -15px 0;
   padding: 20px 15px 0;
 }
 .node--unpublished .comment-text .comment-arrow,
