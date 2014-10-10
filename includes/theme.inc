@@ -1153,7 +1153,7 @@ function theme($hook, $variables = array()) {
 
   // Generate the output using either a function or a template.
   $output = '';
-  if (isset($info['function']) && is_callable(function_exists($info['function']))) {
+  if (isset($info['function']) && is_callable($info['function'])) {
     $output = $info['function']($variables);
   }
   else {
