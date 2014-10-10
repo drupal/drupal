@@ -18,6 +18,7 @@ class RegisterKernelListenersPass implements CompilerPassInterface {
 
     $definition = $container->getDefinition('event_dispatcher');
 
+    $event_subscriber_info = [];
     foreach ($container->findTaggedServiceIds('event_subscriber') as $id => $attributes) {
 
       // We must assume that the class value has been correctly filled, even if the service is created by a factory
@@ -28,7 +29,30 @@ class RegisterKernelListenersPass implements CompilerPassInterface {
       if (!$refClass->implementsInterface($interface)) {
         throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
       }
-      $definition->addMethodCall('addSubscriberService', array($id, $class));
+
+      // Get all subscribed events.
+      foreach ($class::getSubscribedEvents() as $event_name => $params) {
+        if (is_string($params)) {
+          $priority = 0;
+          $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params]];
+        }
+        elseif (is_string($params[0])) {
+          $priority = isset($params[1]) ? $params[1] : 0;
+          $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params[0]]];
+        }
+        else {
+          foreach ($params as $listener) {
+            $priority = isset($listener[1]) ? $listener[1] : 0;
+            $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $listener[0]]];
+          }
+        }
+      }
     }
+
+    foreach (array_keys($event_subscriber_info) as $event_name) {
+      krsort($event_subscriber_info[$event_name]);
+    }
+
+    $definition->addArgument($event_subscriber_info);
   }
 }

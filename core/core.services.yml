@@ -380,7 +380,7 @@ services:
      class: Drupal\Core\Routing\CurrentRouteMatch
      arguments: ['@request_stack']
   event_dispatcher:
-    class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
+    class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
