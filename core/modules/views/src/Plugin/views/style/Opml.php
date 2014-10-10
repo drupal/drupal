@@ -44,7 +44,7 @@ class Opml extends StylePluginBase {
     $url = _url($this->view->getUrl(NULL, $path), $url_options);
     if ($display->hasPath()) {
       if (empty($this->preview)) {
-        $build['#attached']['drupal_add_feed'][] = array($url, $title);
+        $build['#attached']['feed'][] = array($url, $title);
       }
     }
     else {

@@ -173,7 +173,7 @@ class AggregatorController extends ControllerBase {
   public function pageLast() {
     $items = $this->entityManager()->getStorage('aggregator_item')->loadAll(20);
     $build = $this->buildPageList($items);
-    $build['#attached']['drupal_add_feed'][] = array('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
+    $build['#attached']['feed'][] = array('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
     return $build;
   }
 

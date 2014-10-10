@@ -165,7 +165,7 @@ function _batch_progress_page() {
     '#message' => $message,
     '#label' => $label,
     '#attached' => array(
-      'drupal_add_html_head' => array(
+      'html_head' => array(
         array(
           array(
             // Redirect through a 'Refresh' meta tag if JavaScript is disabled.

@@ -145,49 +145,6 @@ const JS_THEME = 100;
 const LOCALE_PLURAL_DELIMITER = "\03";
 
 /**
- * Adds content to a specified region.
- *
- * @param $region
- *   Page region the content is added to.
- * @param $data
- *   Content to be added.
- */
-function drupal_add_region_content($region = NULL, $data = NULL) {
-  static $content = array();
-
-  if (isset($region) && isset($data)) {
-    $content[$region][] = $data;
-  }
-  return $content;
-}
-
-/**
- * Gets assigned content for a given region.
- *
- * @param $region
- *   A specified region to fetch content for. If NULL, all regions will be
- *   returned.
- * @param $delimiter
- *   Content to be inserted between imploded array elements.
- */
-function drupal_get_region_content($region = NULL, $delimiter = ' ') {
-  $content = drupal_add_region_content();
-  if (isset($region)) {
-    if (isset($content[$region]) && is_array($content[$region])) {
-      return implode($delimiter, $content[$region]);
-    }
-  }
-  else {
-    foreach (array_keys($content) as $region) {
-      if (is_array($content[$region])) {
-        $content[$region] = implode($delimiter, $content[$region]);
-      }
-    }
-    return $content;
-  }
-}
-
-/**
  * Gets the name of the currently active installation profile.
  *
  * When this function is called during Drupal's initial installation process,
@@ -237,8 +194,11 @@ function drupal_get_profile() {
  *   An array of all stored HEAD elements.
  *
  * @see \Drupal\Core\Render\Element\HtmlTag::preRenderHtmlTag()
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_html_head($data = NULL, $key = NULL) {
+function _drupal_add_html_head($data = NULL, $key = NULL) {
   $stored_head = &drupal_static(__FUNCTION__, array());
 
   if (isset($data) && isset($key)) {
@@ -258,9 +218,12 @@ function drupal_add_html_head($data = NULL, $key = NULL) {
  *
  * @return string|array
  *   Return the rendered HTML head or the elements itself.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function drupal_get_html_head($render = TRUE) {
-  $elements = drupal_add_html_head();
+  $elements = _drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);
   if ($render) {
     return drupal_render($elements);
@@ -279,8 +242,11 @@ function drupal_get_html_head($render = TRUE) {
  *   An internal system path or a fully qualified external URL of the feed.
  * @param $title
  *   The title of the feed.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_feed($url = NULL, $title = '') {
+function _drupal_add_feed($url = NULL, $title = '') {
   $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
   if (isset($url)) {
@@ -291,9 +257,12 @@ function drupal_add_feed($url = NULL, $title = '') {
 
 /**
  * Gets the feed URLs for the current page.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function drupal_get_feeds() {
-  $feeds = drupal_add_feed();
+  $feeds = _drupal_add_feed();
   return $feeds;
 }
 
@@ -906,8 +875,11 @@ function base_path() {
  *   Associative array of element attributes including 'href' and 'rel'.
  * @param $header
  *   Optional flag to determine if a HTTP 'Link:' header should be sent.
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
-function drupal_add_html_head_link($attributes, $header = FALSE) {
+function _drupal_add_html_head_link($attributes, $header = FALSE) {
   $element = array(
     '#tag' => 'link',
     '#attributes' => $attributes,
@@ -918,10 +890,10 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
     // Also add a HTTP header "Link:".
     $href = '<' . String::checkPlain($attributes['href']) . '>;';
     unset($attributes['href']);
-    $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
+    $element['#attached']['http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
 
-  drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . $href);
+  _drupal_add_html_head($element, 'html_head_link:' . $attributes['rel'] . ':' . $href);
 }
 
 /**
@@ -1816,7 +1788,7 @@ function drupal_merge_attached(array $a, array $b) {
  * other kind of attached data, the array key must be the full name of the
  * callback function and each value an array of arguments. For example:
  * @code
- * $build['#attached']['drupal_add_http_header'] = array(
+ * $build['#attached']['http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
  * );
  * @endcode
@@ -1894,7 +1866,23 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
   // special handling.
   foreach ($elements['#attached'] as $callback => $options) {
     foreach ($elements['#attached'][$callback] as $args) {
-      call_user_func_array($callback, $args);
+      // Limit the amount allowed entries.
+      switch ($callback) {
+        case 'html_head':
+          call_user_func_array('_drupal_add_html_head', $args);
+          break;
+        case 'feed':
+          call_user_func_array('_drupal_add_feed', $args);
+          break;
+        case 'html_head_link':
+          call_user_func_array('_drupal_add_html_head_link', $args);
+          break;
+        case 'http_header':
+          call_user_func_array('_drupal_add_http_header', $args);
+          break;
+        default:
+          throw new \LogicException(sprintf('You are not allowed to use %s in #attached', $callback));
+      }
     }
   }
 
@@ -2055,6 +2043,9 @@ function drupal_process_states(&$elements) {
  *
  * @see \Drupal\Core\Asset\LibraryDiscovery
  * @see hook_library_info_alter()
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use #attached on render arrays.
  */
 function _drupal_add_library($library_name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());

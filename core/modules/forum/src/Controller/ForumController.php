@@ -145,7 +145,7 @@ class ForumController extends ControllerBase {
     );
     $build['#attached']['library'][] = 'forum/forum.index';
     if (empty($term->forum_container->value)) {
-      $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
+      $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
     }
 
     return $build;

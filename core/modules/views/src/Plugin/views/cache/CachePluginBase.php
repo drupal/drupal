@@ -231,10 +231,10 @@ abstract class CachePluginBase extends PluginBase {
    * duplicate it. Later on, when gatherHeaders() is run, this information
    * will be removed so that we don't hold onto it.
    *
-   * @see drupal_add_html_head()
+   * @see _drupal_add_html_head()
    */
   public function cacheStart() {
-    $this->storage['head'] = drupal_add_html_head();
+    $this->storage['head'] = _drupal_add_html_head();
   }
 
   /**
@@ -246,7 +246,7 @@ abstract class CachePluginBase extends PluginBase {
   protected function gatherHeaders(array $render_array = []) {
     // Simple replacement for head
     if (isset($this->storage['head'])) {
-      $this->storage['head'] = str_replace($this->storage['head'], '', drupal_add_html_head());
+      $this->storage['head'] = str_replace($this->storage['head'], '', _drupal_add_html_head());
     }
     else {
       $this->storage['head'] = '';
@@ -261,7 +261,7 @@ abstract class CachePluginBase extends PluginBase {
    */
   public function restoreHeaders() {
     if (!empty($this->storage['head'])) {
-      drupal_add_html_head($this->storage['head']);
+      _drupal_add_html_head($this->storage['head']);
     }
     if (!empty($this->storage['css'])) {
       foreach ($this->storage['css'] as $args) {

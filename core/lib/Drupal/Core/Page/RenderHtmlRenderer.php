@@ -52,23 +52,23 @@ class RenderHtmlRenderer implements RenderHtmlRendererInterface {
 
     $attached = isset($render_array['#attached']) ? $render_array['#attached'] : [];
     $attached += [
-      'drupal_add_feed' => [],
-      'drupal_add_html_head' => [],
-      'drupal_add_html_head_link' => [],
+      'feed' => [],
+      'html_head' => [],
+      'html_head_link' => [],
     ];
 
 
     // Add feed links from the page content.
-    foreach ($attached['drupal_add_feed'] as $feed) {
+    foreach ($attached['feed'] as $feed) {
       $fragment->addLinkElement(new FeedLinkElement($feed[1], $this->urlGenerator->generateFromPath($feed[0])));
     }
 
     // Add generic links from the page content.
-    foreach ($attached['drupal_add_html_head_link'] as $link) {
+    foreach ($attached['html_head_link'] as $link) {
       $fragment->addLinkElement(new LinkElement($this->urlGenerator->generateFromPath($link[0]['href']), $link[0]['rel']));
     }
 
-    // @todo Also transfer the contents of "drupal_add_html_head" once
+    // @todo Also transfer the contents of "_drupal_add_html_head" once
     // https://www.drupal.org/node/2296951 lands.
 
     // @todo Transfer CSS and JS over to the fragment once those are supported

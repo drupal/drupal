@@ -366,7 +366,7 @@ function rdf_preprocess_user(&$variables) {
           'lang' => '',
         ),
       );
-      drupal_add_html_head($username_meta, 'rdf_user_username');
+      $variables['#attached']['html_head'][] = [$username_meta, 'rdf_user_username'];
     }
   }
 }

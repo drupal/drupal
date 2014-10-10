@@ -902,7 +902,7 @@ function install_display_output($output, $install_state) {
       'content' => 'noindex, nofollow',
     ),
   );
-  drupal_add_html_head($noindex_meta_tag, 'install_meta_robots');
+  $output['#attached']['html_head'][] = [$noindex_meta_tag, 'install_meta_robots'];
 
   // Only show the task list if there is an active task; otherwise, the page
   // request has ended before tasks have even been started, so there is nothing

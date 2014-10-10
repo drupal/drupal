@@ -44,11 +44,12 @@ class Rss extends StylePluginBase {
     $url = _url($this->view->getUrl(NULL, $path), $url_options);
     if ($display->hasPath()) {
       if (empty($this->preview)) {
-        // Add a call for drupal_add_feed to the view attached data.
-        $build['#attached']['drupal_add_feed'][] = array($url, $title);
+        // Add a call for _drupal_add_feed to the view attached data.
+        $build['#attached']['feed'][] = array($url, $title);
       }
     }
     else {
+      // Add the RSS icon to the view.
       $feed_icon = array(
         '#theme' => 'feed_icon',
         '#url' => $url,
@@ -56,8 +57,8 @@ class Rss extends StylePluginBase {
       );
       $this->view->feed_icon = $feed_icon;
 
-      // Add a call for drupal_add_html_head_link to the view attached data.
-      $build['#attached']['drupal_add_html_head_link'][][] = array(
+      // Attach a link to the RSS feed, which is an alternate representation.
+      $build['#attached']['html_head_link'][][] = array(
         'rel' => 'alternate',
         'type' => 'application/rss+xml',
         'title' => $title,

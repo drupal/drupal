@@ -746,7 +746,7 @@ function content_translation_page_alter(&$page) {
           ->setOption('language', $language)
           ->setAbsolute()
           ->toString();
-        $page['#attached']['drupal_add_html_head_link'][] = array(
+        $page['#attached']['html_head_link'][] = array(
           array(
             'rel' => 'alternate',
             'hreflang' => $language->id,

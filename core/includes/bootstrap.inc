@@ -414,7 +414,7 @@ function drupal_page_get_cache(Request $request) {
  *   Use \Symfony\Component\HttpFoundation\Response->headers->set().
  *   See https://drupal.org/node/2181523.
  */
-function drupal_add_http_header($name, $value, $append = FALSE) {
+function _drupal_add_http_header($name, $value, $append = FALSE) {
   // The headers as name/value pairs.
   $headers = &drupal_static('drupal_http_headers', array());
 
@@ -481,8 +481,8 @@ function _drupal_set_preferred_header_name($name = NULL) {
 /**
  * Sends the HTTP response headers that were previously set, adding defaults.
  *
- * Headers are set in drupal_add_http_header(). Default headers are not set
- * if they have been replaced or unset using drupal_add_http_header().
+ * Headers are set in _drupal_add_http_header(). Default headers are not set
+ * if they have been replaced or unset using _drupal_add_http_header().
  *
  * @param array $default_headers
  *   (optional) An array of headers as name/value pairs.
@@ -571,7 +571,7 @@ function drupal_page_header() {
  *
  * The headers allow as much as possible in proxies and browsers without any
  * particular knowledge about the pages. Modules can override these headers
- * using drupal_add_http_header().
+ * using _drupal_add_http_header().
  *
  * If the request is conditional (using If-Modified-Since and If-None-Match),
  * and the conditions match those currently in the cache, a 304 Not Modified

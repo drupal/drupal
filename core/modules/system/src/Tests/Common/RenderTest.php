@@ -1181,4 +1181,20 @@ class RenderTest extends DrupalUnitTestBase {
     return $tokens[mt_rand(0, 4)];
   }
 
+  /**
+   * Tests drupal_process_attached().
+   */
+  public function testDrupalProcessAttached() {
+    // Specify invalid attachments in a render array.
+    $build['#attached']['library'][] = 'core/drupal.states';
+    $build['#attached']['drupal_process_states'][] = [];
+    try {
+      drupal_process_attached($build);
+      $this->fail("Invalid #attachment 'drupal_process_states' allowed");
+    }
+    catch (\Exception $e) {
+      $this->pass("Invalid #attachment 'drupal_process_states' not allowed");
+    }
+  }
+
 }

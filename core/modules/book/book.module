@@ -405,7 +405,7 @@ function template_preprocess_book_navigation(&$variables) {
 
     if ($prev = $book_outline->prevLink($book_link)) {
       $prev_href = \Drupal::url('entity.node.canonical', array('node' => $prev['nid']));
-      $build['#attached']['drupal_add_html_head_link'][][] = array(
+      $build['#attached']['html_head_link'][][] = array(
         'rel' => 'prev',
         'href' => $prev_href,
       );
@@ -417,7 +417,7 @@ function template_preprocess_book_navigation(&$variables) {
     $book_manager = \Drupal::service('book.manager');
     if ($book_link['pid'] && $parent = $book_manager->loadBookLink($book_link['pid'])) {
       $parent_href = \Drupal::url('entity.node.canonical', array('node' => $book_link['pid']));
-      $build['#attached']['drupal_add_html_head_link'][][] = array(
+      $build['#attached']['html_head_link'][][] = array(
         'rel' => 'up',
         'href' => $parent_href,
       );
@@ -427,7 +427,7 @@ function template_preprocess_book_navigation(&$variables) {
 
     if ($next = $book_outline->nextLink($book_link)) {
       $next_href = \Drupal::url('entity.node.canonical', array('node' => $next['nid']));
-      $build['#attached']['drupal_add_html_head_link'][][] = array(
+      $build['#attached']['html_head_link'][][] = array(
         'rel' => 'next',
         'href' => $next_href,
       );

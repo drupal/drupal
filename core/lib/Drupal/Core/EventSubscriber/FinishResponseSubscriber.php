@@ -98,7 +98,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.
-    // @todo remove this once we have removed all drupal_add_http_header()
+    // @todo remove this once we have removed all _drupal_add_http_header()
     //   calls.
     $headers = drupal_get_http_header();
     foreach ($headers as $name => $value) {
