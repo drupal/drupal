@@ -45,9 +45,10 @@ class Schema extends DatabaseSchema {
   /**
    * Make sure to limit identifiers according to PostgreSQL compiled in length.
    *
-   * PostgreSQL allows in standard configuration no longer identifiers than 63 chars for
-   * table/relation names, indexes, primary keys, and constraints. So we map all to long
-   * identifiers to drupal_base64hash_tag, where tag is one of:
+   * PostgreSQL allows in standard configuration no longer identifiers than 63
+   * chars for table/relation names, indexes, primary keys, and constraints. So
+   * we map all identifiers that are too long to drupal_base64hash_tag, where
+   * tag is one of:
    *   - idx for indexes
    *   - key for constraints
    *   - pkey for primary keys
