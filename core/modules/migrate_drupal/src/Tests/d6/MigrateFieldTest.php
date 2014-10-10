@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUserRoleTest.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFieldTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;
