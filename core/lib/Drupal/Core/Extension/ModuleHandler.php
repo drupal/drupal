@@ -812,7 +812,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
         // Clear plugin manager caches and flag router to rebuild if requested.
         \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-        \Drupal::service('router.builder')->setRebuildNeeded();
+        \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
@@ -1002,7 +1002,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
       // Clear plugin manager caches and flag router to rebuild if requested.
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-      \Drupal::service('router.builder')->setRebuildNeeded();
+      \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 
       // Update the kernel to exclude the uninstalled modules.
       \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);

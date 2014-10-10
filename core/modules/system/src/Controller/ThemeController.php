@@ -9,7 +9,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Routing\RouteBuilderInterface;
+use Drupal\Core\Routing\RouteBuilderIndicatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -29,21 +29,21 @@ class ThemeController extends ControllerBase {
   /**
    * The route builder service.
    *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface
    */
-  protected $routeBuilder;
+  protected $routeBuilderIndicator;
 
   /**
    * Constructs a new ThemeController.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder_indicator
    *   The route builder.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, RouteBuilderInterface $route_builder) {
+  public function __construct(ThemeHandlerInterface $theme_handler, RouteBuilderIndicatorInterface $route_builder_indicator) {
     $this->themeHandler = $theme_handler;
-    $this->routeBuilder = $route_builder;
+    $this->routeBuilderIndicator = $route_builder_indicator;
   }
 
   /**
@@ -52,7 +52,7 @@ class ThemeController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('theme_handler'),
-      $container->get('router.builder')
+      $container->get('router.builder_indicator')
     );
   }
 
@@ -157,7 +157,7 @@ class ThemeController extends ControllerBase {
         // Set the default theme.
         $config->set('default', $theme)->save();
 
-        $this->routeBuilder->setRebuildNeeded();
+        $this->routeBuilderIndicator->setRebuildNeeded();
 
         // The status message depends on whether an admin theme is currently in
         // use: a value of 0 means the admin theme is set to be the default

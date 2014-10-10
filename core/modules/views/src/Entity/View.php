@@ -348,9 +348,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
 
     // Rebuild the router case the view got enabled.
     if (!isset($this->original) || ($this->status() != $this->original->status())) {
-      /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
-      $router_builder = \Drupal::service('router.builder');
-      $router_builder->setRebuildNeeded();
+      \Drupal::service('router.builder_indicator')->setRebuildNeeded();
     }
   }
 

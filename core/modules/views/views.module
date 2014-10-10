@@ -486,7 +486,7 @@ function views_invalidate_cache() {
   Cache::deleteTags(array('extension' => 'views'));
 
   // Set the menu as needed to be rebuilt.
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 
   $module_handler = \Drupal::moduleHandler();
 

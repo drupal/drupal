@@ -1393,11 +1393,9 @@ function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
   $rid = \Drupal::config('user.settings')->get('admin_role');
   if ($rid) {
-    /** @var \Drupal\Core\Routing\RouteBuilderInterface $route_builder */
-    $route_builder = \Drupal::service('router.builder');
     // Some permissions call the url generator, so ensure that the routes are
     // up to date.
-    $route_builder->setRebuildNeeded();
+    \Drupal::service('router.builder_indicator')->setRebuildNeeded();
     /** @var \Drupal\user\PermissionHandlerInterface $permission_handler */
     $permission_handler = \Drupal::service('user.permissions');
     $permissions = $permission_handler->getPermissions();

@@ -9,8 +9,6 @@ namespace Drupal\Core\Routing;
 
 interface RouteBuilderInterface {
 
-  const REBUILD_NEEDED = 'router_rebuild_needed';
-
   /**
    * Rebuilds the route info and dumps to dumper.
    *

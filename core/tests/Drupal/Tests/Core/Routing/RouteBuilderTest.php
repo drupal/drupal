@@ -74,9 +74,9 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The key value store.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $state;
+  protected $routeBuilderIndicator;
 
   protected function setUp() {
     $this->dumper = $this->getMock('Drupal\Core\Routing\MatcherDumperInterface');
@@ -87,9 +87,9 @@ class RouteBuilderTest extends UnitTestCase {
     $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Component\Discovery\YamlDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
+    $this->routeBuilderIndicator = $this->getMock('\Drupal\Core\Routing\RouteBuilderIndicatorInterface');
 
-    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->state);
+    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->routeBuilderIndicator);
     $this->routeBuilder->setYamlDiscovery($this->yamlDiscovery);
   }
 
@@ -106,9 +106,8 @@ class RouteBuilderTest extends UnitTestCase {
       ->method('release')
       ->with('router_rebuild');
 
-    $this->state->expects($this->once())
-       ->method('delete')
-       ->with('router_rebuild_needed');
+    $this->routeBuilderIndicator->expects($this->once())
+       ->method('setRebuildDone');
 
     $this->yamlDiscovery->expects($this->any())
       ->method('findAll')
@@ -257,17 +256,14 @@ class RouteBuilderTest extends UnitTestCase {
                ->method('release')
                ->with('router_rebuild');
 
-    $this->state->expects($this->once())
-                ->method('set')
-                ->with('router_rebuild_needed');
+    $this->routeBuilderIndicator->expects($this->once())
+                ->method('setRebuildNeeded');
 
-    $this->state->expects($this->once())
-                ->method('delete')
-                ->with('router_rebuild_needed');
+    $this->routeBuilderIndicator->expects($this->once())
+                ->method('setRebuildDone');
 
-    $this->state->expects($this->exactly(2))
-                ->method('get')
-                ->with('router_rebuild_needed')
+    $this->routeBuilderIndicator->expects($this->exactly(2))
+                ->method('isRebuildNeeded')
                 ->will($this->onConsecutiveCalls(TRUE, FALSE));
 
     $this->yamlDiscovery->expects($this->any())

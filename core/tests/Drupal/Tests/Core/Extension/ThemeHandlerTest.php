@@ -22,11 +22,11 @@ use Drupal\Tests\UnitTestCase;
 class ThemeHandlerTest extends UnitTestCase {
 
   /**
-   * The mocked route builder.
+   * The mocked route builder indicator.
    *
-   * @var \Drupal\Core\Routing\RouteBuilder|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $routeBuilder;
+  protected $routeBuilderIndicator;
 
   /**
    * The mocked info parser.
@@ -109,9 +109,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
     $this->configInstaller = $this->getMock('Drupal\Core\Config\ConfigInstallerInterface');
     $this->configManager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
-    $this->routeBuilder = $this->getMockBuilder('Drupal\Core\Routing\RouteBuilder')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->routeBuilderIndicator = $this->getMock('Drupal\Core\Routing\RouteBuilderIndicatorInterface');
     $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
@@ -119,7 +117,7 @@ class ThemeHandlerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilder, $this->extensionDiscovery);
+    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilderIndicator, $this->extensionDiscovery);
 
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheBins($cache_backend);

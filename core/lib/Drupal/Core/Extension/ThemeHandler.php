@@ -13,8 +13,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Routing\RouteBuilderIndicatorInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\Routing\RouteBuilder;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -87,11 +87,11 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $logger;
 
   /**
-   * The route builder to rebuild the routes if a theme is installed.
+   * The route builder indicator to rebuild the routes if a theme is installed.
    *
-   * @var \Drupal\Core\Routing\RouteBuilder
+   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface
    */
-  protected $routeBuilder;
+  protected $routeBuilderIndicator;
 
   /**
    * An extension discovery instance.
@@ -135,13 +135,13 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   database.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The config manager used to uninstall a theme.
-   * @param \Drupal\Core\Routing\RouteBuilder $route_builder
-   *   (optional) The route builder to rebuild the routes if a theme is
-   *   installed.
+   * @param \Drupal\Core\Routing\RouteBuilderIndicatorInterface $route_builder_indicator
+   *   (optional) The route builder indicator service to rebuild the routes if a
+   *   theme is installed.
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, ConfigManagerInterface $config_manager = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, ConfigManagerInterface $config_manager = NULL, RouteBuilderIndicatorInterface $route_builder_indicator = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
@@ -150,7 +150,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     $this->cssCollectionOptimizer = $css_collection_optimizer;
     $this->configInstaller = $config_installer;
     $this->configManager = $config_manager;
-    $this->routeBuilder = $route_builder;
+    $this->routeBuilderIndicator = $route_builder_indicator;
     $this->extensionDiscovery = $extension_discovery;
   }
 
@@ -648,8 +648,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    * Resets some other systems like rebuilding the route information or caches.
    */
   protected function resetSystem() {
-    if ($this->routeBuilder) {
-      $this->routeBuilder->setRebuildNeeded();
+    if ($this->routeBuilderIndicator) {
+      $this->routeBuilderIndicator->setRebuildNeeded();
     }
     $this->systemListReset();
 

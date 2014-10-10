@@ -98,7 +98,7 @@ function field_ui_entity_type_build(array &$entity_types) {
 function field_ui_entity_bundle_create($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add our
   // menu item tabs.
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
@@ -107,7 +107,7 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
 function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   // When a bundle is renamed, the menu needs to be rebuilt to add our
   // menu item tabs.
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
@@ -182,14 +182,14 @@ function field_ui_form_node_type_form_submit($form, FormStateInterface $form_sta
  * Implements hook_view_mode_presave().
  */
 function field_ui_view_mode_presave(EntityViewModeInterface $view_mode) {
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
  * Implements hook_view_mode_delete().
  */
 function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
-  \Drupal::service('router.builder')->setRebuildNeeded();
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
