@@ -102,6 +102,16 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $staging->write('core.extension', $core_extension);
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText('This synchronization will delete data from the fields: entity_test.field_tel, entity_test.field_text.');
+    // Delete all the text fields in staging, entity_test_install() adds quite
+    // a few.
+    foreach (\Drupal::entityManager()->getFieldMap() as $entity_type => $fields) {
+      foreach ($fields as $field_name => $info) {
+        if ($info['type'] == 'text') {
+          $staging->delete("field.storage.$entity_type.$field_name");
+          $staging->delete("field.field.$entity_type.$entity_type.$field_name");
+        }
+      }
+    }
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone and Text modules.

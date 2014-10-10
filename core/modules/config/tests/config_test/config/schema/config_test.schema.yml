@@ -68,6 +68,9 @@ config_test.types:
     float:
       type: float
       label: 'Float'
+    float_as_integer:
+      type: float
+      label: 'Float'
     exp:
       type: float
       label: 'Exponential'

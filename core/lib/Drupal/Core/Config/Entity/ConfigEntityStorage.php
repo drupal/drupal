@@ -347,7 +347,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function importCreate($name, Config $new_config, Config $old_config) {
-    $entity = $this->create($new_config->get());
+    $entity = $this->createFromStorageRecord($new_config->get());
     $entity->setSyncing(TRUE);
     $entity->save();
     return TRUE;
@@ -363,16 +363,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       throw new ConfigImporterException(String::format('Attempt to update non-existing entity "@id".', array('@id' => $id)));
     }
     $entity->setSyncing(TRUE);
-    $entity->original = clone $entity;
-
-    foreach ($old_config->get() as $property => $value) {
-      $entity->original->set($property, $value);
-    }
-
-    foreach ($new_config->get() as $property => $value) {
-      $entity->set($property, $value);
-    }
-
+    $entity = $this->updateFromStorageRecord($entity, $new_config->get());
     $entity->save();
     return TRUE;
   }
@@ -392,15 +383,44 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function importRename($old_name, Config $new_config, Config $old_config) {
-    $id = static::getIDFromConfigName($old_name, $this->entityType->getConfigPrefix());
-    $entity = $this->load($id);
-    $entity->setSyncing(TRUE);
-    $data = $new_config->get();
-    foreach ($data as $key => $value) {
-      $entity->set($key, $value);
+    return $this->importUpdate($old_name, $new_config, $old_config);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createFromStorageRecord(array $values) {
+    // Assign a new UUID if there is none yet.
+    if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
+      $values[$this->uuidKey] = $this->uuidService->generate();
     }
-    $entity->save();
-    return TRUE;
+    $data = $this->mapFromStorageRecords(array($values));
+    $entity = current($data);
+    $entity->original = clone $entity;
+    $entity->enforceIsNew();
+    $entity->postCreate($this);
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('create', $entity);
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateFromStorageRecord(ConfigEntityInterface $entity, array $values) {
+    $entity->original = clone $entity;
+
+    $data = $this->mapFromStorageRecords(array($values));
+    $updated_entity = current($data);
+
+    foreach (array_keys($values) as $property) {
+      $value = $updated_entity->get($property);
+      $entity->set($property, $value);
+    }
+
+    return $entity;
   }
 
 }

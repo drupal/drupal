@@ -225,16 +225,12 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($this->getActiveStorage($collection)->exists($name)) {
           $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
           $entity = $entity_storage->load($id);
-          foreach ($new_config->get() as $property => $value) {
-            $entity->set($property, $value);
-          }
-          $entity->save();
+          $entity = $entity_storage->updateFromStorageRecord($entity, $new_config->get());
         }
         else {
-          $entity_storage
-            ->create($new_config->get())
-            ->save();
+          $entity = $entity_storage->createFromStorageRecord($new_config->get());
         }
+        $entity->save();
       }
       else {
         $new_config->save();

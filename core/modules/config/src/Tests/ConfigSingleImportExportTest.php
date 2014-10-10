@@ -98,6 +98,26 @@ EOD;
     $this->assertIdentical($entity->id(), 'second');
     $this->assertFalse($entity->status());
     $this->assertIdentical($entity->uuid(), $second_uuid);
+
+    // Perform an update.
+    $import = <<<EOD
+id: second
+uuid: $second_uuid
+label: 'Second updated'
+weight: 0
+style: ''
+status: '0'
+EOD;
+    $edit = array(
+      'config_type' => 'config_test',
+      'import' => $import,
+    );
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertRaw(t('Are you sure you want to update the %name @type?', array('%name' => 'second', '@type' => 'test configuration')));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $entity = $storage->load('second');
+    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+    $this->assertIdentical($entity->label(), 'Second updated');
   }
 
   /**

@@ -226,6 +226,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
       'boolean' => TRUE,
       'exp' => 1.2e+34,
       'float' => 3.14159,
+      'float_as_integer' => (float) 1,
       'hex' => 0xC,
       'int' => 99,
       'octal' => 0775,

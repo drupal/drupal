@@ -29,4 +29,40 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    */
   public static function getIDFromConfigName($config_name, $config_prefix);
 
+  /**
+   * Creates a configuration entity from storage values.
+   *
+   * Allows the configuration entity storage to massage storage values before
+   * creating an entity.
+   *
+   * @param array $values
+   *   The array of values from the configuration storage.
+   *
+   * @return ConfigEntityInterface
+   *   The configuration entity.
+   *
+   * @see \Drupal\Core\Entity\EntityStorageBase::mapFromStorageRecords()
+   * @see \Drupal\field\FieldStorageConfigStorage::mapFromStorageRecords()
+   */
+  public function createFromStorageRecord(array $values);
+
+  /**
+   * Updates a configuration entity from storage values.
+   *
+   * Allows the configuration entity storage to massage storage values before
+   * updating an entity.
+   *
+   * @param ConfigEntityInterface $entity
+   *   The configuration entity to update.
+   * @param array $values
+   *   The array of values from the configuration storage.
+   *
+   * @return ConfigEntityInterface
+   *   The configuration entity.
+   *
+   * @see \Drupal\Core\Entity\EntityStorageBase::mapFromStorageRecords()
+   * @see \Drupal\field\FieldStorageConfigStorage::mapFromStorageRecords()
+   */
+  public function updateFromStorageRecord(ConfigEntityInterface $entity, array $values);
+
 }

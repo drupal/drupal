@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  entity:
+    - field.storage.node.field_options_float
+    - node.type.options_install_test
+id: node.options_install_test.field_options_float
+field_name: field_options_float
+entity_type: node
+bundle: options_install_test
+label: field_options_float
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+third_party_settings: {  }
+field_type: list_float
