@@ -331,14 +331,17 @@ class ContactSitewideTest extends WebTestBase {
    *   form.
    * @param boolean $selected
    *   A Boolean indicating whether the form should be selected by default.
+   * @param array $third_party_settings
+   *   Array of third party settings to be added to the posted form data.
    */
-  function addContactForm($id, $label, $recipients, $reply, $selected) {
+  function addContactForm($id, $label, $recipients, $reply, $selected, $third_party_settings = []) {
     $edit = array();
     $edit['label'] = $label;
     $edit['id'] = $id;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
+    $edit += $third_party_settings;
     $this->drupalPostForm('admin/structure/contact/add', $edit, t('Save'));
   }
 
