@@ -32,6 +32,7 @@ trait CompositeFormElementTrait {
 
     if (isset($element['#title']) || isset($element['#description'])) {
       // @see #type 'fieldgroup'
+      $element['#attributes']['id'] = $element['#id'] . '--wrapper';
       $element['#theme_wrappers'][] = 'fieldset';
       $element['#attributes']['class'][] = 'fieldgroup';
       $element['#attributes']['class'][] = 'form-composite';

@@ -88,6 +88,21 @@ class ElementTest extends WebTestBase {
   }
 
   /**
+   * Tests wrapper ids for checkboxes and radios.
+   */
+  function testWrapperIds() {
+    $this->drupalGet('form-test/checkboxes-radios');
+
+    // Verify that wrapper id is different from element id.
+    foreach (array('checkboxes', 'radios') as $type) {
+      $element_ids = $this->xpath('//div[@id=:id]', array(':id' => 'edit-' . $type));
+      $wrapper_ids = $this->xpath('//fieldset[@id=:id]', array(':id' => 'edit-' . $type . '--wrapper'));
+      $this->assertTrue(count($element_ids) == 1, format_string('A single element id found for type %type', array('%type' => $type)));
+      $this->assertTrue(count($wrapper_ids) == 1, format_string('A single wrapper id found for type %type', array('%type' => $type)));
+    }
+  }
+
+  /**
    * Tests button classes.
    */
   function testButtonClasses() {
