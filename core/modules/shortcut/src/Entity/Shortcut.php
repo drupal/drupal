@@ -86,7 +86,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function getUrl() {
-    return new Url($this->getRouteName(), $this->getRouteParams());
+    return new Url($this->getRouteName(), $this->getRouteParameters());
   }
 
   /**
@@ -107,14 +107,14 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRouteParams() {
+  public function getRouteParameters() {
     return $this->get('route_parameters')->first()->getValue();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setRouteParams($route_parameters) {
+  public function setRouteParameters($route_parameters) {
     $this->set('route_parameters', $route_parameters);
     return $this;
   }
@@ -146,7 +146,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       $url = Url::createFromRequest(Request::create("/{$this->path->value}"));
     }
     $this->setRouteName($url->getRouteName());
-    $this->setRouteParams($url->getRouteParameters());
+    $this->setRouteParameters($url->getRouteParameters());
   }
 
   /**

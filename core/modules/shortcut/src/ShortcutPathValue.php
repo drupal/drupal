@@ -25,7 +25,7 @@ class ShortcutPathValue extends TypedData {
 
       $entity = $this->parent->getEntity();
       if ($route_name = $entity->getRouteName()) {
-        $path = \Drupal::urlGenerator()->getPathFromRoute($route_name, $entity->getRouteParams());
+        $path = \Drupal::urlGenerator()->getPathFromRoute($route_name, $entity->getRouteParameters());
         $this->value = trim($path, '/');
       }
       else {

@@ -85,7 +85,7 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @return array
    *   The route parameters of this shortcut.
    */
-  public function getRouteParams();
+  public function getRouteParameters();
 
   /**
    * Sets the route parameters associated with this shortcut.
@@ -96,6 +96,6 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @return \Drupal\shortcut\ShortcutInterface
    *   The called shortcut entity.
    */
-  public function setRouteParams($route_parameters);
+  public function setRouteParameters($route_parameters);
 
 }
