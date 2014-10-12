@@ -224,7 +224,7 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, \Drupal\Core\Form\F
  */
 function hook_field_formatter_info_alter(array &$info) {
   // Let a new field type re-use an existing formatter.
-  $info['text_default']['field types'][] = 'my_field_type';
+  $info['text_default']['field_types'][] = 'my_field_type';
 }
 
 /**
