@@ -62,56 +62,84 @@ class InstallerTranslationVersionUnitTest extends DrupalUnitTestBase {
    * Tests version fallback of install_get_localization_release().
    */
   public function testVersionFallback() {
-    $version = '8.0';
-    $fallback = array('8.0', '8.0-rc1', '7.0');
+    $version = '8.0.0';
+    $fallback = array('8.0.0', '8.0.0-rc1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.1';
-    $fallback = array('8.1', '8.0', '7.0');
+    $version = '8.1.0';
+    $fallback = array('8.1.0', '8.1.0-rc1', '8.0.0', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.12';
-    $fallback = array('8.12', '8.11', '7.0');
+    $version = '8.12.0';
+    $fallback = array('8.12.0', '8.12.0-rc1', '8.11.0', '8.0.0', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-dev';
-    $fallback = array('8.0-rc1', '8.0-beta1', '8.0-alpha12', '7.0');
+    $version = '8.0.0-dev';
+    $fallback = array('8.0.0-rc1', '8.0.0-beta1', '8.0.0-alpha1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.9-dev';
-    $fallback = array('8.8', '7.0');
+    $version = '8.9.0-dev';
+    $fallback = array('8.9.0-rc1', '8.9.0-beta1', '8.9.0-alpha1', '8.8.0', '8.0.0', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-alpha3';
-    $fallback = array('8.0-alpha3', '8.0-alpha2', '7.0');
+    $version = '8.0.0-alpha3';
+    $fallback = array('8.0.0-alpha3', '8.0.0-alpha2', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-alpha1';
-    $fallback = array('8.0-alpha1', '7.0');
+    $version = '8.0.0-alpha1';
+    $fallback = array('8.0.0-alpha1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-beta2';
-    $fallback = array('8.0-beta2', '8.0-beta1', '7.0');
+    $version = '8.0.0-beta2';
+    $fallback = array('8.0.0-beta2', '8.0.0-beta1', '8.0.0-alpha1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-beta1';
-    $fallback = array('8.0-beta1', '8.0-alpha2', '7.0');
+    $version = '8.0.0-beta1';
+    $fallback = array('8.0.0-beta1', '8.0.0-alpha1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-rc8';
-    $fallback = array('8.0-rc8', '8.0-rc7', '7.0');
+    $version = '8.0.0-rc8';
+    $fallback = array('8.0.0-rc8', '8.0.0-rc7', '8.0.0-beta1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-rc1';
-    $fallback = array('8.0-rc1', '8.0-beta1', '7.0');
+    $version = '8.0.0-rc1';
+    $fallback = array('8.0.0-rc1', '8.0.0-beta1', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '8.0-foo2';
-    $fallback = array('7.0');
+    $version = '8.2.0-beta1';
+    $fallback = array('8.2.0-beta1', '8.2.0-alpha1', '8.1.0', '8.0.0', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
-    $version = '99.2';
-    $fallback = array('99.2', '99.1', '98.0');
+    $version = '8.2.0-beta7';
+    $fallback = array('8.2.0-beta7', '8.2.0-beta6', '8.2.0-alpha1', '8.1.0', '8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '8.2.0-rc1';
+    $fallback = array('8.2.0-rc1', '8.2.0-beta1', '8.1.0', '8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '8.2.0-rc2';
+    $fallback = array('8.2.0-rc2', '8.2.0-rc1', '8.2.0-beta1', '8.1.0', '8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '8.0.0-foo2';
+    $fallback = array('8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '8.0.4';
+    $fallback = array('8.0.4', '8.0.3', '8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '8.3.5';
+    $fallback = array('8.3.5', '8.3.4', '8.3.0', '8.2.0', '8.0.0', '7.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '99.0.1';
+    $fallback = array('99.0.1', '99.0.0' ,'98.0.0');
+    $this->assertVersionFallback($version, $fallback);
+
+    $version = '99.7.1';
+    $fallback = array('99.7.1', '99.7.0', '99.6.0', '99.0.0' ,'98.0.0');
     $this->assertVersionFallback($version, $fallback);
   }
 }
