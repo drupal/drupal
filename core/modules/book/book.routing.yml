@@ -30,7 +30,7 @@ book.export:
     _permission: 'access printer-friendly version'
     _entity_access: 'node.view'
 
-book.outline:
+entity.node.book_outline_form:
   path: '/node/{node}/outline'
   defaults:
     _entity_form: 'node.book_outline'
@@ -51,7 +51,7 @@ book.admin_edit:
     _entity_access: 'node.view'
     node: \d+
 
-book.remove:
+entity.node.book_remove_form:
   path: '/node/{node}/outline/remove'
   defaults:
     _form: '\Drupal\book\Form\BookRemoveForm'

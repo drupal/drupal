@@ -44,7 +44,7 @@ function book_help($route_name, RouteMatchInterface $route_match) {
     case 'book.admin':
       return '<p>' . t('The book module offers a means to organize a collection of related content pages, collectively known as a book. When viewed, this content automatically displays links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') . '</p>';
 
-    case 'book.outline':
+    case 'entity.node.book_outline_form':
       return '<p>' . t('The outline feature allows you to include pages in the <a href="!book">Book hierarchy</a>, as well as move them within the hierarchy or to <a href="!book-admin">reorder an entire book</a>.', array('!book' => \Drupal::url('book.render'), '!book-admin' => \Drupal::url('book.admin'))) . '</p>';
   }
 }
@@ -88,8 +88,8 @@ function book_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['node']
     ->setFormClass('book_outline', 'Drupal\book\Form\BookOutlineForm')
-    ->setLinkTemplate('book-outline-form', 'book.outline')
-    ->setLinkTemplate('book-remove-form', 'book.remove');
+    ->setLinkTemplate('book-outline-form', 'entity.node.book_outline_form')
+    ->setLinkTemplate('book-remove-form', 'entity.node.book_remove_form');
 }
 
 /**

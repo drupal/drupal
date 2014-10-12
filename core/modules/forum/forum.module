@@ -137,8 +137,9 @@ function forum_entity_type_build(array &$entity_types) {
   $entity_types['taxonomy_term']
     ->setFormClass('forum', 'Drupal\forum\Form\ForumForm')
     ->setFormClass('container', 'Drupal\forum\Form\ContainerForm')
-    ->setLinkTemplate('forum-delete-form', 'forum.delete')
-    ->setLinkTemplate('forum-edit-form', 'forum.edit_forum');
+    ->setLinkTemplate('forum-delete-form', 'entity.taxonomy_term.forum_delete_form')
+    ->setLinkTemplate('forum-edit-container-form', 'entity.taxonomy_term.forum_edit_container_form')
+    ->setLinkTemplate('forum-edit-form', 'entity.taxonomy_term.forum_edit_form');
 }
 
 /**

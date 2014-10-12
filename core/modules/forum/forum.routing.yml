@@ -1,4 +1,4 @@
-forum.delete:
+entity.taxonomy_term.forum_delete_form:
   path: '/admin/structure/forum/delete/forum/{taxonomy_term}'
   defaults:
     _form: '\Drupal\forum\Form\DeleteForm'
@@ -46,7 +46,7 @@ forum.add_forum:
   requirements:
     _permission: 'administer forums'
 
-forum.edit_container:
+entity.taxonomy_term.forum_edit_container_form:
   path: '/admin/structure/forum/edit/container/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.container'
@@ -54,7 +54,7 @@ forum.edit_container:
   requirements:
     _permission: 'administer forums'
 
-forum.edit_forum:
+entity.taxonomy_term.forum_edit_form:
   path: '/admin/structure/forum/edit/forum/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.forum'

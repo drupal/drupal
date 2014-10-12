@@ -71,11 +71,11 @@ class Overview extends OverviewTerms {
         $route_parameters = $form['terms'][$key]['operations']['#links']['edit']['url']->getRouteParameters();
         if (!empty($term->forum_container->value)) {
           $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit container');
-          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('forum.edit_container', $route_parameters);
+          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('entity.taxonomy_term.forum_edit_container_form', $route_parameters);
         }
         else {
           $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit forum');
-          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('forum.edit_forum', $route_parameters);
+          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('entity.taxonomy_term.forum_edit_form', $route_parameters);
         }
         // We don't want the redirect from the link so we can redirect the
         // delete action.
