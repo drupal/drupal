@@ -116,3 +116,5 @@ More about developing:
    https://drupal.org/developing/best-practices
  * Refer to the API documentation:
    https://api.drupal.org/api/drupal/8
+ * Learn from documented Drupal API examples:
+   https://www.drupal.org/project/examples
