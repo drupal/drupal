@@ -8,10 +8,12 @@ source:
     - preprocess_css
     - preprocess_js
     - cache_lifetime
+    - cache
 process:
   'css/preprocess': preprocess_css
   'js/preprocess': preprocess_js
   'cache/page/max_age': cache_lifetime
+  'cache/page/use_internal': cache
 destination:
   plugin: config
   config_name: system.performance

@@ -33,6 +33,10 @@ class Drupal6SystemPerformance extends Drupal6DumpBase {
       'name' => 'cache_lifetime',
       'value' => 'i:0;',
     ))
+    ->values(array(
+      'name' => 'cache',
+      'value' => 'i:1;',
+    ))
     ->execute();
   }
 

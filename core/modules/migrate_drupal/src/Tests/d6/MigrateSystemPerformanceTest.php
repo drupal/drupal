@@ -40,6 +40,7 @@ class MigrateSystemPerformanceTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('css.preprocess'), FALSE);
     $this->assertIdentical($config->get('js.preprocess'), FALSE);
     $this->assertIdentical($config->get('cache.page.max_age'), 0);
+    $this->assertIdentical($config->get('cache.page.use_internal'), TRUE);
   }
 
 }
