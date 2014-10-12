@@ -1897,6 +1897,12 @@ abstract class WebTestBase extends TestBase {
           break;
         case 'add_css':
           break;
+        case 'update_build_id':
+          $buildId = $xpath->query('//input[@name="form_build_id" and @value="' . $command['old'] . '"]')->item(0);
+          if ($buildId) {
+            $buildId->setAttribute('value', $command['new']);
+          }
+          break;
       }
     }
     $content = $dom->saveHTML();

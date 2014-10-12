@@ -43,7 +43,11 @@ class FileWidgetAjaxController extends FormAjaxController {
     }
 
     try {
-      list($form, $form_state) = $this->getForm($request);
+      /** @var $ajaxForm \Drupal\system\FileAjaxForm */
+      $ajaxForm = $this->getForm($request);
+      $form = $ajaxForm->getForm();
+      $form_state = $ajaxForm->getFormState();
+      $commands = $ajaxForm->getCommands();
     }
     catch (HttpExceptionInterface $e) {
       // Invalid form_build_id.
@@ -80,6 +84,9 @@ class FileWidgetAjaxController extends FormAjaxController {
     $settings = drupal_merge_js_settings($js['settings']['data']);
 
     $response = new AjaxResponse();
+    foreach ($commands as $command) {
+      $response->addCommand($command, TRUE);
+    }
     return $response->addCommand(new ReplaceCommand(NULL, $output, $settings));
   }
 

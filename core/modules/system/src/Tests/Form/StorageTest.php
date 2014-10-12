@@ -15,9 +15,9 @@ use Drupal\simpletest\WebTestBase;
  *
  * The tested form puts data into the storage during the initial form
  * construction. These tests verify that there are no duplicate form
- * constructions, with and without manual form caching activiated. Furthermore
+ * constructions, with and without manual form caching activated. Furthermore
  * when a validation error occurs, it makes sure that changed form element
- * values aren't lost due to a wrong form rebuild.
+ * values are not lost due to a wrong form rebuild.
  *
  * @group Form
  */
@@ -28,7 +28,7 @@ class StorageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = array('form_test', 'dblog');
 
   protected function setUp() {
     parent::setUp();
@@ -159,4 +159,81 @@ class StorageTest extends WebTestBase {
       $this->assertText('State persisted.');
     }
   }
+
+  /**
+   * Verify that the form build-id remains the same when validation errors
+   * occur on a mutable form.
+   */
+  public function testMutableForm() {
+    // Request the form with 'cache' query parameter to enable form caching.
+    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by submitting an empty title.
+    $edit = ['title' => ''];
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id did not change.
+    $this->assertFieldByName('form_build_id', $buildId, 'Build id remains the same when form validation fails');
+  }
+
+  /**
+   * Verifies that form build-id is regenerated when loading an immutable form
+   * from the cache.
+   */
+  public function testImmutableForm() {
+    // Request the form with 'cache' query parameter to enable form caching.
+    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by submitting an empty title.
+    $edit = ['title' => ''];
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id did change.
+    $this->assertNoFieldByName('form_build_id', $buildId, 'Build id changes when form validation fails');
+
+    // Retrieve the new build-id.
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by again submitting an empty title.
+    $edit = ['title' => ''];
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id does not change the second time.
+    $this->assertFieldByName('form_build_id', $buildId, 'Build id remains the same when form validation fails subsequently');
+  }
+
+  /**
+   * Verify that existing contrib code cannot overwrite immutable form state.
+   */
+  public function testImmutableFormLegacyProtection() {
+    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
+    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($build_id_fields), 1, 'One form build id field on the page');
+    $build_id = (string) $build_id_fields[0]['value'];
+
+    // Try to poison the form cache.
+    $original = $this->drupalGetAJAX('form-test/form-storage-legacy/' . $build_id);
+    $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
+    $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
+
+    // Assert that a watchdog message was logged by form_set_cache.
+    $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message', 0, 1, [':message' => 'Form build-id mismatch detected while attempting to store a form in the cache.']);
+    $this->assert($status, 'A watchdog message was logged by form_set_cache');
+
+    // Ensure that the form state was not poisoned by the preceding call.
+    $original = $this->drupalGetAJAX('form-test/form-storage-legacy/' . $build_id);
+    $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
+    $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
+    $this->assert(empty($original['form']['#poisoned']), 'Original form structure was preserved');
+    $this->assert(empty($original['form_state']['poisoned']), 'Original form state was preserved');
+  }
+
 }

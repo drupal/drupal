@@ -433,3 +433,19 @@ form_test.two_instances:
   requirements:
     _module_dependencies: 'node'
     _permission: 'create page content'
+
+form_test.storage_legacy_handler:
+  path: '/form-test/form-storage-legacy/{form_build_id}'
+  defaults:
+    _controller: '\Drupal\form_test\Controller\FormTestController::storageLegacyHandler'
+    form_build_id: NULL
+  requirements:
+    _access: 'TRUE'
+
+form_test.form_storage_page_cache:
+  path: '/form-test/form-storage-page-cache'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestStoragePageCacheForm'
+    _title: 'Form storage with page cache test'
+  requirements:
+    _access: 'TRUE'

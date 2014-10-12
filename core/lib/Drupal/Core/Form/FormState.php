@@ -57,6 +57,12 @@ class FormState implements FormStateInterface {
    *     processed.
    *   - base_form_id: Identification for a base form, as declared in the form
    *     class's \Drupal\Core\Form\BaseFormIdInterface::getBaseFormId() method.
+   *   - immutable: If this flag is set to TRUE, a new form build id is
+   *     generated when the form is loaded from the cache. If it is subsequently
+   *     saved to the cache again, it will have another cache id and therefore
+   *     the original form and form-state will remain unaltered. This is
+   *     important when page caching is enabled in order to prevent form state
+   *     from leaking between anonymous users.
    *
    * @var array
    */

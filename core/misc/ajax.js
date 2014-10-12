@@ -719,6 +719,13 @@
     },
 
     /**
+     * Command to update a form's build ID.
+     */
+    update_build_id: function(ajax, response, status) {
+      $('input[name="form_build_id"][value="' + response.old + '"]').val(response.new);
+    },
+
+    /**
      * Command to add css.
      *
      * Uses the proprietary addImport method if available as browsers which

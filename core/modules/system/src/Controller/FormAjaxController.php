@@ -7,8 +7,10 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\system\FileAjaxForm;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +65,12 @@ class FormAjaxController implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
    */
   public function content(Request $request) {
-    list($form, $form_state) = $this->getForm($request);
+    /** @var $ajaxForm \Drupal\system\FileAjaxForm */
+    $ajaxForm = $this->getForm($request);
+    $form = $ajaxForm->getForm();
+    $form_state = $ajaxForm->getFormState();
+    $commands = $ajaxForm->getCommands();
+
     drupal_process_form($form['#form_id'], $form, $form_state);
 
     // We need to return the part of the form (or some other content) that needs
@@ -81,7 +88,12 @@ class FormAjaxController implements ContainerInjectionInterface {
     if (empty($callback) || !is_callable($callback)) {
       throw new HttpException(500, t('Internal Server Error'));
     }
-    return call_user_func_array($callback, array(&$form, &$form_state));
+    /** @var \Drupal\Core\Ajax\AjaxResponse $response */
+    $response = call_user_func_array($callback, [&$form, &$form_state]);
+    foreach ($commands as $command) {
+      $response->addCommand($command, TRUE);
+    }
+    return $response;
   }
 
   /**
@@ -93,14 +105,11 @@ class FormAjaxController implements ContainerInjectionInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
    *
-   * @return array
-   *   An array containing the $form and $form_state. Use the list() function
-   *   to break these apart:
-   *   @code
-   *     list($form, $form_state, $form_id, $form_build_id) = $this->getForm();
-   *   @endcode
+   * @return \Drupal\system\FileAjaxForm
+   *   A wrapper object containing the $form, $form_state, $form_id,
+   *   $form_build_id and an initial list of Ajax $commands.
    *
-   * @throws Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
+   * @throws \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
    */
   protected function getForm(Request $request) {
     $form_state = new FormState();
@@ -118,6 +127,17 @@ class FormAjaxController implements ContainerInjectionInterface {
       throw new BadRequestHttpException();
     }
 
+    // When a page level cache is enabled, the form-build id might have been
+    // replaced from within form_get_cache. If this is the case, it is also
+    // necessary to update it in the browser by issuing an appropriate Ajax
+    // command.
+    $commands = [];
+    if (isset($form['#build_id_old']) && $form['#build_id_old'] != $form['#build_id']) {
+      // If the form build ID has changed, issue an Ajax command to update it.
+      $commands[] = new UpdateBuildIdCommand($form['#build_id_old'], $form['#build_id']);
+      $form_build_id = $form['#build_id'];
+    }
+
     // Since some of the submit handlers are run, redirects need to be disabled.
     $form_state->disableRedirect();
 
@@ -129,12 +149,12 @@ class FormAjaxController implements ContainerInjectionInterface {
       '#action' => TRUE,
     ]);
 
-    // The form needs to be processed; prepare for that by setting a few internal
-    // variables.
+    // The form needs to be processed; prepare for that by setting a few
+    // internal variables.
     $form_state->setUserInput($request->request->all());
     $form_id = $form['#form_id'];
 
-    return array($form, $form_state, $form_id, $form_build_id);
+    return new FileAjaxForm($form, $form_state, $form_id, $form_build_id, $commands);
   }
 
 }

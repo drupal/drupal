@@ -88,6 +88,10 @@ class FormTestStorageForm extends FormBase {
       $form_state->setCached();
     }
 
+    if ($this->getRequest()->get('immutable')) {
+      $form_state->addBuildInfo('immutable', TRUE);
+    }
+
     return $form;
   }
 
