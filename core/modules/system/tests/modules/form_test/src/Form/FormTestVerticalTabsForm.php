@@ -23,29 +23,26 @@ class FormTestVerticalTabsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $tab_count = 3;
+
     $form['vertical_tabs'] = array(
       '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-tab' . $tab_count,
     );
-    $form['tab1'] = array(
-      '#type' => 'details',
-      '#title' => t('Tab 1'),
-      '#group' => 'vertical_tabs',
-      '#access' => \Drupal::currentUser()->hasPermission('access vertical_tab_test tabs'),
-    );
-    $form['tab1']['field1'] = array(
-      '#title' => t('Field 1'),
-      '#type' => 'textfield',
-    );
-    $form['tab2'] = array(
-      '#type' => 'details',
-      '#title' => t('Tab 2'),
-      '#group' => 'vertical_tabs',
-      '#access' => \Drupal::currentUser()->hasPermission('access vertical_tab_test tabs'),
-    );
-    $form['tab2']['field2'] = array(
-      '#title' => t('Field 2'),
-      '#type' => 'textfield',
-    );
+
+    for ($i = 1; $i <= $tab_count; $i++) {
+      $form['tab' . $i] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Tab !num', array('!num' => $i)),
+        '#group' => 'vertical_tabs',
+        '#access' => \Drupal::currentUser()->hasPermission('access vertical_tab_test tabs'),
+      );
+      $form['tab' . $i]['field' . $i] = array(
+        '#title' => t('Field !num', array('!num' => $i)),
+        '#type' => 'textfield',
+
+      );
+    }
 
     return $form;
   }

@@ -58,4 +58,12 @@ class ElementsVerticalTabsTest extends WebTestBase {
     $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
     $this->assertFalse(isset($wrapper[0]), 'Vertical tab wrappers are not displayed to unprivileged users.');
   }
+
+ /**
+  * Ensures that default vertical tab is correctly selected.
+  */
+  function testDefaultTab() {
+    $this->drupalGet('form_test/vertical-tabs');
+    $this->assertFieldByName('vertical_tabs__active_tab', 'edit-tab3', t('The default vertical tab is correctly selected.'));
+  }
 }
