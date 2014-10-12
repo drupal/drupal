@@ -338,8 +338,8 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
 
     // Get maximum weight to update the system languages to keep them on bottom.
     foreach ($this->getLanguages(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-      if (!$language->isLocked() && $language->getWeight() > $max_weight) {
-        $max_weight = $language->getWeight();
+      if (!$language->isLocked()) {
+        $max_weight = max($max_weight, $language->getWeight());
       }
     }
 

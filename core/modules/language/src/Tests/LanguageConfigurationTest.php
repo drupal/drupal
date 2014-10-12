@@ -173,8 +173,8 @@ class LanguageConfigurationTest extends WebTestBase {
     /* @var $languages \Drupal\Core\Language\LanguageInterface[] */
     $languages = entity_load_multiple('configurable_language', NULL, TRUE);
     foreach ($languages as $language) {
-      if (!$language->isLocked() && $language->getWeight() > $max_weight) {
-        $max_weight = $language->getWeight();
+      if (!$language->isLocked()) {
+        $max_weight = max($max_weight, $language->getWeight());
       }
     }
 
