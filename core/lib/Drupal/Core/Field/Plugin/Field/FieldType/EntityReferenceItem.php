@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -193,8 +194,7 @@ class EntityReferenceItem extends FieldItemBase {
     if ($target_id !== NULL) {
       return FALSE;
     }
-    // Allow auto-create entities.
-    if ($this->hasUnsavedEntity()) {
+    if ($this->entity && $this->entity instanceof Entity) {
       return FALSE;
     }
     return TRUE;
@@ -206,6 +206,12 @@ class EntityReferenceItem extends FieldItemBase {
   public function preSave() {
     if ($this->hasUnsavedEntity()) {
       $this->entity->save();
+    }
+    // Handle the case where an unsaved entity was directly set using the public
+    // 'entity' property and then saved before this entity. In this case
+    // ::hasUnsavedEntity() will return FALSE but $this->target_id will still be
+    // empty.
+    if (empty($this->target_id) && $this->entity) {
       $this->target_id = $this->entity->id();
     }
   }

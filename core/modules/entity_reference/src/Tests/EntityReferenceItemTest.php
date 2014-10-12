@@ -168,4 +168,25 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->save();
   }
 
+  /**
+   * Test saving order sequence doesn't matter.
+   */
+  public function testEntitySaveOrder() {
+    // The term entity is unsaved here.
+    $term = entity_create('taxonomy_term', array(
+      'name' => $this->randomMachineName(),
+      'vid' => $this->term->bundle(),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ));
+    $entity = entity_create('entity_test');
+    // Now assign the unsaved term to the field.
+    $entity->field_test_taxonomy_term->entity = $term;
+    $entity->name->value = $this->randomMachineName();
+    // Now save the term.
+    $term->save();
+    // And then the entity.
+    $entity->save();
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term->id());
+  }
+
 }
