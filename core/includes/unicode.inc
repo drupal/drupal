@@ -123,7 +123,8 @@ function drupal_xml_parser_create(&$data) {
  * @return string|bool
  *   Converted data or FALSE.
  *
- * @see \Drupal\Component\Utility\Unicode::convertToUtf8().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::convertToUtf8().
  */
 function drupal_convert_to_utf8($data, $encoding) {
   $out = Unicode::convertToUtf8($data, $encoding);
@@ -145,7 +146,8 @@ function drupal_convert_to_utf8($data, $encoding) {
  * @return string
  *   The truncated string.
  *
- * @see \Drupal\Component\Utility\Unicode::truncateBytes().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::truncateBytes().
  */
 function drupal_truncate_bytes($string, $len) {
   return Unicode::truncateBytes($string, $len);
@@ -185,7 +187,8 @@ function drupal_truncate_bytes($string, $len) {
  * @return string
  *   The truncated string.
  *
- * @see \Drupal\Component\Utility\Unicode::truncate().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::truncate().
  */
 function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = FALSE, $min_wordsafe_length = 1) {
   return Unicode::truncate($string, $max_length, $wordsafe, $add_ellipsis, $min_wordsafe_length);
@@ -201,7 +204,8 @@ function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = 
  *   The mime-encoded header.
  *
  * @see mime_header_decode()
- * @see \Drupal\Component\Utility\Unicode::mimeHeaderEncode().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::mimeHeaderEncode().
  */
 function mime_header_encode($string) {
   return Unicode::mimeHeaderEncode($string);
@@ -217,7 +221,8 @@ function mime_header_encode($string) {
  *   The mime-decoded header.
  *
  * @see mime_header_encode()
- * @see \Drupal\Component\Utility\Unicode::mimeHeaderDecode().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::mimeHeaderDecode().
  */
 function mime_header_decode($header) {
   return Unicode::mimeHeaderDecode($header);
@@ -229,10 +234,11 @@ function mime_header_decode($header) {
  * @param $text
  *   The text to decode entities in.
  *
- * @return
+ * @return string
  *   The input $text, with all HTML entities decoded once.
  *
- * @see \Drupal\Component\Utility\String::decodeEntities().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\String::decodeEntities().
  */
 function decode_entities($text) {
   return String::decodeEntities($text);
@@ -247,7 +253,8 @@ function decode_entities($text) {
  * @return integer
  *   The length of the string.
  *
- * @see \Drupal\Component\Utility\Unicode::strlen().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::strlen().
  * @ingroup php_wrappers
  */
 function drupal_strlen($text) {
@@ -263,7 +270,8 @@ function drupal_strlen($text) {
  * @return string
  *   The string in uppercase.
  *
- * @see \Drupal\Component\Utility\Unicode::strtoupper().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::strtoupper().
  * @ingroup php_wrappers
  */
 function drupal_strtoupper($text) {
@@ -279,7 +287,8 @@ function drupal_strtoupper($text) {
  * @return string
  *   The string in lowercase.
  *
- * @see \Drupal\Component\Utility\Unicode::strtolower().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::strtolower().
  * @ingroup php_wrappers
  */
 function drupal_strtolower($text) {
@@ -292,10 +301,11 @@ function drupal_strtolower($text) {
  * @param $text
  *   The string to convert.
  *
- * @return
+ * @return string
  *   The string with the first letter as uppercase.
  *
- * @see \Drupal\Component\Utility\Unicode::ucfirst().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::ucfirst().
  * @ingroup php_wrappers
  */
 function drupal_ucfirst($text) {
@@ -312,10 +322,11 @@ function drupal_ucfirst($text) {
  * @param $length
  *   The number of characters to read.
  *
- * @return
+ * @return string
  *   The shortened string.
  *
- * @see \Drupal\Component\Utility\Unicode::substr().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::substr().
  * @ingroup php_wrappers
  */
 function drupal_substr($text, $start, $length = NULL) {
