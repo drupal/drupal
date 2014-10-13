@@ -311,7 +311,7 @@ class Token {
    */
   public function getInfo() {
     if (is_null($this->tokenInfo)) {
-      $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
+      $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       $cache = $this->cache->get($cache_id);
       if ($cache) {
         $this->tokenInfo = $cache->data;

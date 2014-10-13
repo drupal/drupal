@@ -188,8 +188,10 @@ class LocaleStringTest extends WebTestBase {
    */
   public function createAllTranslations($source, $values = array()) {
     $list = array();
-    foreach ($this->container->get('language_manager')->getLanguages() as $language) {
-      $list[$language->id] = $this->createTranslation($source, $language->id, $values);
+    /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
+    $language_manager = $this->container->get('language_manager');
+    foreach ($language_manager->getLanguages() as $language) {
+      $list[$language->getId()] = $this->createTranslation($source, $language->getId(), $values);
     }
     return $list;
   }

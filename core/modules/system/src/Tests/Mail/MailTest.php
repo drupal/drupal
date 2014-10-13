@@ -60,7 +60,7 @@ class MailTest extends WebTestBase {
     \Drupal::state()->set('system.test_mail_collector', array());
 
     // Send a test message that simpletest_mail_alter should cancel.
-    drupal_mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->id);
+    drupal_mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->getId());
     // Retrieve sent message.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);

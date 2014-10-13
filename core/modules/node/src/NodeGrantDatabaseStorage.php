@@ -202,7 +202,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
             $grant['nid'] = $node->id();
             $grant['langcode'] = $grant_langcode;
             // The record with the original langcode is used as the fallback.
-            if ($grant['langcode'] == $node->language()->id) {
+            if ($grant['langcode'] == $node->language()->getId()) {
               $grant['fallback'] = 1;
             }
             else {

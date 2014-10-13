@@ -47,8 +47,8 @@ class UserInstallTest extends DrupalUnitTestBase {
 
     // Test that the anonymous and administrators languages are equal to the
     // site's default language.
-    $this->assertEqual($anon->langcode, \Drupal::languageManager()->getDefaultLanguage()->id);
-    $this->assertEqual($admin->langcode, \Drupal::languageManager()->getDefaultLanguage()->id);
+    $this->assertEqual($anon->langcode, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Anon user language is the default.');
+    $this->assertEqual($admin->langcode, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Admin user language is the default.');
 
     // Test that the administrator is active.
     $this->assertEqual($admin->status, 1);

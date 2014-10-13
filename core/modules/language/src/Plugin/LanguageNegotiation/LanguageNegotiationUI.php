@@ -32,7 +32,7 @@ class LanguageNegotiationUI extends LanguageNegotiationMethodBase {
    * {@inheritdoc}
    */
   public function getLangcode(Request $request = NULL) {
-    return $this->languageManager ? $this->languageManager->getCurrentLanguage()->id : NULL;
+    return $this->languageManager ? $this->languageManager->getCurrentLanguage()->getId() : NULL;
   }
 
 }

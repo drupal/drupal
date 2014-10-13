@@ -206,7 +206,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
         $entry = reset($entry);
       }
       else {
-        $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->id));
+        $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->getId()));
       }
       if ($item['timestamp']) {
         $entry->setPostedTime($item['timestamp']);

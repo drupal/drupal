@@ -326,7 +326,7 @@ class LocaleConfigManager {
    *   A boolean indicating if a language has configuration translations.
    */
   public function hasTranslation($name, LanguageInterface $language) {
-    $translation = $this->languageManager->getLanguageConfigOverride($language->id, $name);
+    $translation = $this->languageManager->getLanguageConfigOverride($language->getId(), $name);
     return !$translation->isNew();
   }
 

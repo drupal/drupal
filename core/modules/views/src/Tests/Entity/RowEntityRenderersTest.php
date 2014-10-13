@@ -55,7 +55,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     // The entity.node.canonical route must exist when nodes are rendered.
     $this->container->get('router.builder')->rebuild();
 
-    $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->id);
+    $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->getId());
     for ($i = 0; $i < 2; $i++) {
       $langcode = 'l' . $i;
       $this->langcodes[] = $langcode;

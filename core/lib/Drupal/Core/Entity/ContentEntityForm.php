@@ -91,7 +91,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       // Imply a 'view' operation to ensure users edit entities in the same
       // language they are displayed. This allows to keep contextual editing
       // working also for multilingual entities.
-      $form_state->set('langcode', $this->entityManager->getTranslationFromContext($this->entity)->language()->id);
+      $form_state->set('langcode', $this->entityManager->getTranslationFromContext($this->entity)->language()->getId());
     }
     return $form_state->get('langcode');
   }
@@ -100,7 +100,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * {@inheritdoc}
    */
   public function isDefaultFormLangcode(FormStateInterface $form_state) {
-    return $this->getFormLangcode($form_state) == $this->entity->getUntranslated()->language()->id;
+    return $this->getFormLangcode($form_state) == $this->entity->getUntranslated()->language()->getId();
   }
 
   /**

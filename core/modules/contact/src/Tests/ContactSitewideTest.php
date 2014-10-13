@@ -118,7 +118,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Check that the form was created in site default language.
     $langcode = \Drupal::config('contact.form.' . $id)->get('langcode');
-    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $this->assertEqual($langcode, $default_langcode);
 
     // Make sure the newly created form is included in the list of forms.

@@ -45,7 +45,7 @@ class LanguageCacheContext implements CacheContextInterface {
     $context_parts = array();
     if ($this->languageManager->isMultilingual()) {
       foreach ($this->languageManager->getLanguageTypes() as $type) {
-        $context_parts[] = $this->languageManager->getCurrentLanguage($type)->id;
+        $context_parts[] = $this->languageManager->getCurrentLanguage($type)->getId();
       }
     }
     return implode(':', $context_parts);

@@ -72,7 +72,7 @@ class ShortcutForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $this->entity->getUntranslated()->language()->id,
+      '#default_value' => $this->entity->getUntranslated()->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
     );
 

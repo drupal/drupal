@@ -752,7 +752,7 @@ function _l($text, $path, array $options = array()) {
   // Add a hreflang attribute if we know the language of this link's url and
   // hreflang has not already been set.
   if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
-    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
+    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();
   }
 
   // Set the "active" class if the 'set_active_class' option is not empty.
@@ -1525,7 +1525,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
             'currentPath' => $current_path,
             'currentPathIsAdmin' => $current_path_is_admin,
             'isFront' => drupal_is_front_page(),
-            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
+            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
           );
           if (!empty($current_query)) {
             ksort($current_query);

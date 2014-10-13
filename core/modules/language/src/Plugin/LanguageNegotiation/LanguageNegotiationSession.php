@@ -72,7 +72,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   public function persist(LanguageInterface $language) {
     // We need to update the session parameter with the request value only if we
     // have an authenticated user.
-    $langcode = $language->id;
+    $langcode = $language->getId();
     if ($langcode && $this->languageManager) {
       $languages = $this->languageManager->getLanguages();
       if ($this->currentUser->isAuthenticated() && isset($languages[$langcode])) {
@@ -126,12 +126,12 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
     $links = array();
     $config = $this->config->get('language.negotiation')->get('session');
     $param = $config['parameter'];
-    $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $this->languageManager->getCurrentLanguage($type)->id;
+    $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $this->languageManager->getCurrentLanguage($type)->getId();
     $query = array();
     parse_str($request->getQueryString(), $query);
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
-      $langcode = $language->id;
+      $langcode = $language->getId();
       $links[$langcode] = array(
         'url' => $url,
         'title' => $language->getName(),

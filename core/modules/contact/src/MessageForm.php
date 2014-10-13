@@ -102,7 +102,7 @@ class MessageForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $message->getUntranslated()->language()->id,
+      '#default_value' => $message->getUntranslated()->language()->getId(),
       '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
@@ -217,7 +217,7 @@ class MessageForm extends ContentEntityForm {
     // set.
     if ($message->isNew() && !$message->langcode->value) {
       $language_content = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-      $message->langcode->value = $language_content->id;
+      $message->langcode->value = $language_content->getId();
     }
 
     parent::init($form_state);

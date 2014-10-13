@@ -404,28 +404,28 @@ function entity_test_entity_operation_alter(array &$operations, EntityInterface 
  * Implements hook_entity_translation_insert().
  */
 function entity_test_entity_translation_insert(EntityInterface $translation) {
-  _entity_test_record_hooks('entity_translation_insert', $translation->language()->id);
+  _entity_test_record_hooks('entity_translation_insert', $translation->language()->getId());
 }
 
 /**
  * Implements hook_entity_translation_delete().
  */
 function entity_test_entity_translation_delete(EntityInterface $translation) {
-  _entity_test_record_hooks('entity_translation_delete', $translation->language()->id);
+  _entity_test_record_hooks('entity_translation_delete', $translation->language()->getId());
 }
 
 /**
  * Implements hook_ENTITY_TYPE_translation_insert().
  */
 function entity_test_entity_test_mul_translation_insert(EntityInterface $translation) {
-  _entity_test_record_hooks('entity_test_mul_translation_insert', $translation->language()->id);
+  _entity_test_record_hooks('entity_test_mul_translation_insert', $translation->language()->getId());
 }
 
 /**
  * Implements hook_ENTITY_TYPE_translation_delete().
  */
 function entity_test_entity_test_mul_translation_delete(EntityInterface $translation) {
-  _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->id);
+  _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->getId());
 }
 
 /**
@@ -443,7 +443,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  * @see \Drupal\field\Entity\FieldConfig::$default_value
  */
 function entity_test_field_default_value(FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
-  return array(array('value' => $definition->getName() . '_' . $entity->language()->id));
+  return array(array('value' => $definition->getName() . '_' . $entity->language()->getId()));
 }
 
 /**

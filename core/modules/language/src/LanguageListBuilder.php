@@ -50,7 +50,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     $default = language_default();
 
     // Deleting the site default language is not allowed.
-    if ($entity->id() == $default->id) {
+    if ($entity->id() == $default->getId()) {
       unset($operations['delete']);
     }
 

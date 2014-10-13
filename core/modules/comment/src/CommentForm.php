@@ -64,7 +64,7 @@ class CommentForm extends ContentEntityForm {
     // set.
     if ($comment->isNew()) {
       $language_content = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-      $comment->langcode->value = $language_content->id;
+      $comment->langcode->value = $language_content->getId();
     }
 
     parent::init($form_state);
@@ -165,7 +165,7 @@ class CommentForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $comment->getUntranslated()->language()->id,
+      '#default_value' => $comment->getUntranslated()->language()->getId(),
       '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );

@@ -109,7 +109,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
         'label' => $this->randomString(),
         'weight' => $i,
       ));
-      $this->langcodes[$i] = $language->id();
+      $this->langcodes[$i] = $language->getId();
       $language->save();
     }
   }

@@ -56,7 +56,7 @@ class Language extends TypedData {
   public function setValue($value, $notify = TRUE) {
     // Support passing language objects.
     if (is_object($value)) {
-      $this->id = $value->id;
+      $this->id = $value->getId();
       $this->language = $value;
     }
     elseif (isset($value) && !is_scalar($value)) {
@@ -88,7 +88,7 @@ class Language extends TypedData {
       return $this->id;
     }
     elseif (isset($this->language)) {
-      return $this->language->id;
+      return $this->language->getId();
     }
   }
 

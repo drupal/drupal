@@ -42,7 +42,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
     $feed = Feed::load(5);
     $this->assertNotNull($feed->uuid());
     $this->assertEqual($feed->title->value, 'Know Your Meme');
-    $this->assertEqual($feed->language()->id, 'en');
+    $this->assertEqual($feed->language()->getId(), 'en');
     $this->assertEqual($feed->url->value, 'http://knowyourmeme.com/newsfeed.rss');
     $this->assertEqual($feed->refresh->value, 900);
     $this->assertEqual($feed->checked->value, 1387659487);

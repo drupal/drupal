@@ -43,7 +43,7 @@ class DrupalDateTime extends DateTimePlus {
    */
   public function __construct($time = 'now', $timezone = NULL, $settings = array()) {
     if (!isset($settings['langcode'])) {
-      $settings['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->id;
+      $settings['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
 
     // Instantiate the parent class.

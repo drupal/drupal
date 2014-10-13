@@ -283,7 +283,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       // Prepopulate the language list with the default language to keep things
       // working even if we have no configuration.
       $default = $this->getDefaultLanguage();
-      $this->languages = array($default->id => $default);
+      $this->languages = array($default->getId() => $default);
 
       // Retrieve the list of languages defined in configuration.
       $prefix = 'language.entity.';
@@ -296,7 +296,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         $langcode = $data['id'];
         // Initialize default property so callers have an easy reference and can
         // save the same object without data loss.
-        $data['default'] = ($langcode == $default->id);
+        $data['default'] = ($langcode == $default->getId());
         $data['name'] = $data['label'];
         $this->languages[$langcode] = new Language($data);
         $weight = max(array($weight, $this->languages[$langcode]->getWeight()));
@@ -345,7 +345,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
 
     // Loop locked languages to maintain the existing order.
     $locked_languages = $this->getLanguages(LanguageInterface::STATE_LOCKED);
-    $config_ids = array_map(function($language) { return 'language.entity.' . $language->id; }, $locked_languages);
+    $config_ids = array_map(function($language) { return 'language.entity.' . $language->getId(); }, $locked_languages);
     foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
       // Update system languages weight.
       $max_weight++;

@@ -1112,8 +1112,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $this->dataTable;
     }
     $record = $this->mapToStorageRecord($entity, $table_name);
-    $record->langcode = $entity->language()->id;
-    $record->default_langcode = intval($record->langcode == $entity->getUntranslated()->language()->id);
+    $record->langcode = $entity->language()->getId();
+    $record->default_langcode = intval($record->langcode == $entity->getUntranslated()->language()->getId());
     return $record;
   }
 
@@ -1199,7 +1199,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     foreach ($entities as $key => $entity) {
       $bundles[$entity->bundle()] = TRUE;
       $ids[] = $load_current ? $key : $entity->getRevisionId();
-      $default_langcodes[$key] = $entity->getUntranslated()->language()->id;
+      $default_langcodes[$key] = $entity->getUntranslated()->language()->getId();
     }
 
     // Collect impacted fields.
@@ -1275,7 +1275,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $id = $entity->id();
     $bundle = $entity->bundle();
     $entity_type = $entity->getEntityTypeId();
-    $default_langcode = $entity->getUntranslated()->language()->id;
+    $default_langcode = $entity->getUntranslated()->language()->getId();
     $translation_langcodes = array_keys($entity->getTranslationLanguages());
     $table_mapping = $this->getTableMapping();
 

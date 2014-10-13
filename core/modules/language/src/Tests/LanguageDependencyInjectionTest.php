@@ -48,7 +48,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
     // The language system creates a Language object which contains the
     // same properties as the new default language object.
     $result = \Drupal::languageManager()->getCurrentLanguage();
-    $this->assertIdentical($result->id, 'fr');
+    $this->assertIdentical($result->getId(), 'fr');
 
     // Delete the language to check that we fallback to the default.
     try {
@@ -64,7 +64,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
 
     entity_delete_multiple('configurable_language', array('fr'));
     $result = \Drupal::languageManager()->getCurrentLanguage();
-    $this->assertIdentical($result->id, $default_language->id);
+    $this->assertIdentical($result->getId(), $default_language->getId());
   }
 
 }

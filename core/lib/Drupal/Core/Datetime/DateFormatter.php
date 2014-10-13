@@ -133,7 +133,7 @@ class DateFormatter {
     }
 
     if (empty($langcode)) {
-      $langcode = $this->languageManager->getCurrentLanguage()->id;
+      $langcode = $this->languageManager->getCurrentLanguage()->getId();
     }
 
     // Create a DrupalDateTime object from the timestamp and timezone.

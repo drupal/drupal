@@ -32,7 +32,7 @@ class DateFormat implements ElementInterface {
       '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
       '#description' => $description,
       '#default_value' => $value,
-      '#attributes' => array('lang' => $language->id),
+      '#attributes' => array('lang' => $language->getId()),
       '#field_suffix' => ' <div class="edit-date-format-suffix"><small id="edit-date-format-suffix">' . $format . '</small></div>',
       '#ajax' => array(
         'callback' => 'Drupal\config_translation\FormElement\DateFormat::ajaxSample',

@@ -295,7 +295,7 @@ function locale_get_plural($count, $langcode = NULL) {
   // individually for each language.
   $plural_indexes = &drupal_static(__FUNCTION__ . ':plurals', array());
 
-  $langcode = $langcode ? $langcode : $language_interface->id;
+  $langcode = $langcode ? $langcode : $language_interface->getId();
 
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
@@ -517,11 +517,11 @@ function locale_js_translate(array $files = array()) {
   }
 
   // If necessary, rebuild the translation file for the current language.
-  if (!empty($parsed['refresh:' . $language_interface->id])) {
+  if (!empty($parsed['refresh:' . $language_interface->getId()])) {
     // Don't clear the refresh flag on failure, so that another try will
     // be performed later.
     if (_locale_rebuild_js()) {
-      unset($parsed['refresh:' . $language_interface->id]);
+      unset($parsed['refresh:' . $language_interface->getId()]);
     }
     // Store any changes after refresh was attempted.
     \Drupal::state()->set('system.javascript_parsed', $parsed);
@@ -535,9 +535,9 @@ function locale_js_translate(array $files = array()) {
   // Add the translation JavaScript file to the page.
   $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
   $translation_file = NULL;
-  if (!empty($files) && !empty($locale_javascripts[$language_interface->id])) {
+  if (!empty($files) && !empty($locale_javascripts[$language_interface->getId()])) {
     // Add the translation JavaScript file to the page.
-    $translation_file = $dir . '/' . $language_interface->id . '_' . $locale_javascripts[$language_interface->id] . '.js';
+    $translation_file = $dir . '/' . $language_interface->getId() . '_' . $locale_javascripts[$language_interface->getId()] . '.js';
   }
   return $translation_file;
 }
@@ -727,16 +727,18 @@ function locale_system_file_system_settings_submit(&$form, FormStateInterface $f
  * Implements hook_preprocess_HOOK() for node templates.
  */
 function locale_preprocess_node(&$variables) {
-  if ($variables['node']->language()->id != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  /* @var $node \Drupal\node\NodeInterface */
+  $node = $variables['node'];
+  if ($node->language()->getId() != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+    $interface_language = \Drupal::languageManager()->getCurrentLanguage();
 
-    $node_language = $variables['node']->language();
-    if ($node_language->id != $language_interface->id) {
+    $node_language = $node->language();
+    if ($node_language->getId() != $interface_language->getId()) {
       // If the node language was different from the page language, we should
       // add markup to identify the language. Otherwise the page language is
       // inherited.
-      $variables['attributes']['lang'] = $node_language->id;
-      if ($node_language->getDirection() != $language_interface->getDirection()) {
+      $variables['attributes']['lang'] = $node_language->getId();
+      if ($node_language->getDirection() != $interface_language->getDirection()) {
         // If text direction is different form the page's text direction, add
         // direction information as well.
         $variables['attributes']['dir'] = $node_language->getDirection();
@@ -1193,7 +1195,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // Only add strings with a translation to the translations array.
   $conditions = array(
     'type' => 'javascript',
-    'language' => $language->id,
+    'language' => $language->getId(),
     'translated' => TRUE,
   );
   $translations = array();
@@ -1210,8 +1212,8 @@ function _locale_rebuild_js($langcode = NULL) {
     );
 
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
-    if (!empty($locale_plurals[$language->id]['formula'])) {
-      $data['pluralFormula'] = $locale_plurals[$language->id]['formula'];
+    if (!empty($locale_plurals[$language->getId()]['formula'])) {
+      $data['pluralFormula'] = $locale_plurals[$language->getId()]['formula'];
     }
 
     $data = 'Drupal.locale = ' . Json::encode($data) . ';';
@@ -1225,23 +1227,23 @@ function _locale_rebuild_js($langcode = NULL) {
   // Delete old file, if we have no translations anymore, or a different file to
   // be saved.
   $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
-  $changed_hash = !isset($locale_javascripts[$language->id]) || ($locale_javascripts[$language->id] != $data_hash);
-  if (!empty($locale_javascripts[$language->id]) && (!$data || $changed_hash)) {
-    file_unmanaged_delete($dir . '/' . $language->id . '_' . $locale_javascripts[$language->id] . '.js');
-    $locale_javascripts[$language->id] = '';
+  $changed_hash = !isset($locale_javascripts[$language->getId()]) || ($locale_javascripts[$language->getId()] != $data_hash);
+  if (!empty($locale_javascripts[$language->getId()]) && (!$data || $changed_hash)) {
+    file_unmanaged_delete($dir . '/' . $language->getId() . '_' . $locale_javascripts[$language->getId()] . '.js');
+    $locale_javascripts[$language->getId()] = '';
     $status = 'deleted';
   }
 
   // Only create a new file if the content has changed or the original file got
   // lost.
-  $dest = $dir . '/' . $language->id . '_' . $data_hash . '.js';
+  $dest = $dir . '/' . $language->getId() . '_' . $data_hash . '.js';
   if ($data && ($changed_hash || !file_exists($dest))) {
     // Ensure that the directory exists and is writable, if possible.
     file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
 
     // Save the file.
     if (file_unmanaged_save_data($data, $dest)) {
-      $locale_javascripts[$language->id] = $data_hash;
+      $locale_javascripts[$language->getId()] = $data_hash;
       // If we deleted a previous version of the file and we replace it with a
       // new one we have an update.
       if ($status == 'deleted') {
@@ -1259,7 +1261,7 @@ function _locale_rebuild_js($langcode = NULL) {
       }
     }
     else {
-      $locale_javascripts[$language->id] = '';
+      $locale_javascripts[$language->getId()] = '';
       $status = 'error';
     }
   }
@@ -1279,7 +1281,7 @@ function _locale_rebuild_js($langcode = NULL) {
       return TRUE;
 
     case 'rebuilt':
-      $logger->warning('JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->id]));
+      $logger->warning('JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->getId()]));
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
 

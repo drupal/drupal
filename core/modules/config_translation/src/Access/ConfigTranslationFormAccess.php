@@ -33,7 +33,7 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
       $access =
         !empty($target_language) &&
         !$target_language->isLocked() &&
-        (empty($this->sourceLanguage) || ($target_language->id != $this->sourceLanguage->id));
+        (empty($this->sourceLanguage) || ($target_language->getId() != $this->sourceLanguage->getId()));
 
       return $base_access->andIf(AccessResult::allowedIf($access));
     }

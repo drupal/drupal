@@ -180,7 +180,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
 
     if (empty($view->editing) || !$skip_cache) {
-      $cid = 'views:unpack_options:' . hash('sha256', serialize(array($this->options, $options))) . ':' . \Drupal::languageManager()->getCurrentLanguage()->id;
+      $cid = 'views:unpack_options:' . hash('sha256', serialize(array($this->options, $options))) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
       if (empty(static::$unpackOptions[$cid])) {
         $cache = \Drupal::cache('data')->get($cid);
         if (!empty($cache->data)) {

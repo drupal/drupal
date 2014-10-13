@@ -200,14 +200,14 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Change the language by code.
-    $entity->langcode->value = \Drupal::languageManager()->getDefaultLanguage()->id;
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->id, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $entity->langcode->value = \Drupal::languageManager()->getDefaultLanguage()->getId();
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Revert language by code then try setting it by language object.
     $entity->langcode->value = $langcode;
     $entity->langcode->language = \Drupal::languageManager()->getDefaultLanguage();
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->id, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Access the text field and test updating.

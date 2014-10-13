@@ -271,8 +271,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     // Map the interface language code to a CKEditor translation.
     $ckeditor_langcodes = $this->getLangcodes();
     $language_interface = $this->languageManager->getCurrentLanguage();
-    if (isset($ckeditor_langcodes[$language_interface->id])) {
-      $display_langcode = $ckeditor_langcodes[$language_interface->id];
+    if (isset($ckeditor_langcodes[$language_interface->getId()])) {
+      $display_langcode = $ckeditor_langcodes[$language_interface->getId()];
     }
 
     // Next, set the most fundamental CKEditor settings.

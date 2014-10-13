@@ -129,7 +129,7 @@ class UserPasswordForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $this->languageManager->getCurrentLanguage()->id;
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
 
     $account = $form_state->getValue('account');
     // Mail one time login URL and instructions using current language.

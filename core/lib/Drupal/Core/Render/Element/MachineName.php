@@ -170,7 +170,7 @@ class MachineName extends Textfield {
         'machineName' => array(
           '#' . $source['#id'] => $element['#machine_name'],
         ),
-        'langcode' => $language->id,
+        'langcode' => $language->getId(),
       ),
     );
     $element['#attached']['library'][] = 'core/drupal.machine-name';

@@ -108,7 +108,7 @@ class ViewsData {
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
 
-    $this->langcode = $this->languageManager->getCurrentLanguage()->id;
+    $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
   }
 

@@ -478,7 +478,7 @@ function template_preprocess_book_export_html(&$variables) {
 
   // HTML element attributes.
   $attributes = array();
-  $attributes['lang'] = $language_interface->id;
+  $attributes['lang'] = $language_interface->getId();
   $attributes['dir'] = $language_interface->getDirection();
   $variables['html_attributes'] = new Attribute($attributes);
 }

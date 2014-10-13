@@ -148,7 +148,7 @@ function toolbar_toolbar() {
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
-  $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $subtrees_attached['js'][] = array(
     'type' => 'setting',
     'data' => array('toolbar' => array(

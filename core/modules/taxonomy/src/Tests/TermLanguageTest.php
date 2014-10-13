@@ -57,7 +57,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
-    $this->assertEqual($term->language()->id, $edit['langcode'], 'The term contains the correct langcode.');
+    $this->assertEqual($term->language()->getId(), $edit['langcode'], 'The term contains the correct langcode.');
 
     // Check if on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');

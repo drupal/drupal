@@ -306,7 +306,7 @@ abstract class CachePluginBase extends PluginBase {
         'build_info' => $build_info,
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
-        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
+        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
         'base_url' => $GLOBALS['base_url'],
       );
       foreach (array('exposed_info', 'page', 'sort', 'order', 'items_per_page', 'offset') as $key) {
@@ -335,7 +335,7 @@ abstract class CachePluginBase extends PluginBase {
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
         'theme' => \Drupal::theme()->getActiveTheme()->getName(),
-        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
+        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
         'base_url' => $GLOBALS['base_url'],
       );
 

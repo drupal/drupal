@@ -67,7 +67,7 @@ function user_install() {
   $storage = \Drupal::entityManager()->getStorage('user');
   // @todo Rely on the default value for langcode in
   //   https://drupal.org/node/1966436
-  $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+  $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
   // Insert a row for the anonymous user.
   $storage
     ->create(array(

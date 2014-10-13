@@ -102,13 +102,13 @@ function filter_formats(AccountInterface $account = NULL) {
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    if ($cache = \Drupal::cache()->get("filter_formats:{$language_interface->id}")) {
+    if ($cache = \Drupal::cache()->get("filter_formats:{$language_interface->getId()}")) {
       $formats['all'] = $cache->data;
     }
     else {
       $formats['all'] = \Drupal::entityManager()->getStorage('filter_format')->loadByProperties(array('status' => TRUE));
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-      \Drupal::cache()->set("filter_formats:{$language_interface->id}", $formats['all'], Cache::PERMANENT, \Drupal::entityManager()->getDefinition('filter_format')->getListCacheTags());
+      \Drupal::cache()->set("filter_formats:{$language_interface->getId()}", $formats['all'], Cache::PERMANENT, \Drupal::entityManager()->getDefinition('filter_format')->getListCacheTags());
     }
   }
 

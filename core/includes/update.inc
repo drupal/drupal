@@ -719,7 +719,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
         $langcode = substr($langcode_config_name, strlen('language.entity.'));
         $info = \Drupal::config($langcode_config_name)->get();
         $languages[$langcode] = new Language(array(
-          'default' => ($info['id'] == $default->id),
+          'default' => ($info['id'] == $default->getId()),
           'name' => $info['label'],
           'id' => $info['id'],
           'direction' => $info['direction'],
@@ -731,7 +731,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
     }
     else {
       // No language module, so use the default language only.
-      $languages = array($default->id => $default);
+      $languages = array($default->getId() => $default);
       // Add the special languages, they will be filtered later if needed.
       $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->getWeight());
     }

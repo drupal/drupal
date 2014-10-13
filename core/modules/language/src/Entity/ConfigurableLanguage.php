@@ -50,7 +50,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable label for the language.

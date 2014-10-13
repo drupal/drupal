@@ -45,7 +45,7 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL) {
     if (empty($options['alias'])) {
-      $langcode = isset($options['language']) ? $options['language']->id : NULL;
+      $langcode = isset($options['language']) ? $options['language']->getId() : NULL;
       $path = $this->aliasManager->getAliasByPath($path, $langcode);
     }
     return $path;

@@ -70,8 +70,10 @@ class TokenTest extends UnitTestCase {
       ),
     );
 
-    $language = $this->getMock('\Drupal\Core\Language\Language');
-    $language->id = $this->randomMachineName();
+    $values = array('id' => $this->randomMachineName());
+    $language = $this->getMockBuilder('\Drupal\Core\Language\Language')
+      ->setConstructorArgs(array($values))
+      ->getMock();
 
     $this->languageManager->expects($this->once())
       ->method('getCurrentLanguage')
@@ -84,7 +86,7 @@ class TokenTest extends UnitTestCase {
       ->method('get');
     $this->cache->expects($this->once())
       ->method('set')
-      ->with('token_info:' . $language->id, $token_info);
+      ->with('token_info:' . $language->getId(), $token_info);
 
     $this->moduleHandler->expects($this->once())
       ->method('invokeAll')

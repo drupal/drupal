@@ -215,7 +215,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     foreach ($this->mapper->getConfigNames() as $name) {
       // Set configuration values based on form submission and source values.
       $base_config = $config_factory->get($name);
-      $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->id, $name);
+      $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name);
       $locations = $this->localeStorage->getLocations(array('type' => 'configuration', 'name' => $name));
 
       $this->setConfig($this->language, $base_config, $config_translation, $form_values[$name], !empty($locations));
@@ -311,7 +311,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
           '#theme' => 'config_translation_manage_form_element',
         );
         $build[$element_key]['source'] = array(
-          '#markup' => $base_config_data[$key] ? ('<span lang="' . $this->sourceLanguage->id . '">' . nl2br($base_config_data[$key] . '</span>')) : t('(Empty)'),
+          '#markup' => $base_config_data[$key] ? ('<span lang="' . $this->sourceLanguage->getId() . '">' . nl2br($base_config_data[$key] . '</span>')) : t('(Empty)'),
           '#title' => $this->t(
             '!label <span class="visually-hidden">(!source_language)</span>',
             array(
@@ -377,7 +377,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
           // Get the translation for this original source string from locale.
           $conditions = array(
             'lid' => $source_string->lid,
-            'language' => $language->id,
+            'language' => $language->getId(),
           );
           $translations = $this->localeStorage->getTranslations($conditions + array('translated' => TRUE));
           // If we got a translation, take that, otherwise create a new one.

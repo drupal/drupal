@@ -930,7 +930,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
       // no data for the selected language. FieldItemListInterface::view() does
       // this as well, but since the returned language code is used before
       // calling it, the fallback needs to happen explicitly.
-      $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->id;
+      $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->getId();
 
       return $langcode;
     }

@@ -50,7 +50,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    * {@inheritdoc}
    */
   public function retranslate(EntityInterface $entity, $langcode = NULL) {
-    $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->id;
+    $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->getId();
     $translations = $entity->getTranslationLanguages();
     foreach ($translations as $langcode => $language) {
       $entity->translation[$langcode]['outdated'] = $langcode != $updated_langcode;
@@ -79,7 +79,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
    */
   public function getSourceLangcode(FormStateInterface $form_state) {
     if ($source = $form_state->get(['content_translation', 'source'])) {
-      return $source->id;
+      return $source->getId();
     }
     return FALSE;
   }
@@ -90,7 +90,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
   public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     $form_object = $form_state->getFormObject();
     $form_langcode = $form_object->getFormLangcode($form_state);
-    $entity_langcode = $entity->getUntranslated()->language()->id;
+    $entity_langcode = $entity->getUntranslated()->language()->getId();
     $source_langcode = $this->getSourceLangcode($form_state);
 
     $new_translation = !empty($source_langcode);
@@ -138,8 +138,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
         ),
       );
       foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-        if (isset($translations[$language->id])) {
-          $form['source_langcode']['source']['#options'][$language->id] = $language->name;
+        if (isset($translations[$language->getId()])) {
+          $form['source_langcode']['source']['#options'][$language->getId()] = $language->name;
         }
       }
     }
@@ -151,8 +151,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     if ($language_widget && $has_translations) {
       $form['langcode']['#options'] = array();
       foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-        if (empty($translations[$language->id]) || $language->id == $entity_langcode) {
-          $form['langcode']['#options'][$language->id] = $language->name;
+        if (empty($translations[$language->getId()]) || $language->getId() == $entity_langcode) {
+          $form['langcode']['#options'][$language->getId()] = $language->name;
         }
       }
     }

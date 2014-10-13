@@ -356,7 +356,7 @@
  *
  * Example:
  * @code
- * $cid = 'mymodule_example:' . \Drupal::languageManager()->getCurrentLanguage()->id();
+ * $cid = 'mymodule_example:' . \Drupal::languageManager()->getCurrentLanguage()->getId();
  *
  * $data = NULL;
  * if ($cache = \Drupal::cache()->get($cid)) {

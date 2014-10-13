@@ -901,7 +901,7 @@ function template_preprocess_views_view_rss(&$variables) {
     $variables['link'] = check_url(_url($path, $url_options));
   }
 
-  $variables['langcode'] = String::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->id);
+  $variables['langcode'] = String::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->getId());
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
   $variables['channel_elements'] = format_xml_elements($style->channel_elements);

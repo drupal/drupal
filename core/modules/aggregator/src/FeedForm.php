@@ -32,7 +32,7 @@ class FeedForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $feed->language()->id,
+      '#default_value' => $feed->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
       '#weight' => -4,
     );

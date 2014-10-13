@@ -161,7 +161,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? String::checkPlain($node->language()->id) : $node->language()->id;
+          $replacements[$original] = $sanitize ? String::checkPlain($node->language()->getId()) : $node->language()->getId();
           break;
 
         case 'url':

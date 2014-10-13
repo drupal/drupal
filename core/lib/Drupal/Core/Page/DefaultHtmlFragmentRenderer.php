@@ -100,7 +100,7 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     // HTML element attributes.
     $language_interface = $this->languageManager->getCurrentLanguage();
     $html_attributes = $page->getHtmlAttributes();
-    $html_attributes['lang'] = $language_interface->id;
+    $html_attributes['lang'] = $language_interface->getId();
     $html_attributes['dir'] = $language_interface->getDirection();
 
     $this->setDefaultMetaTags($page);

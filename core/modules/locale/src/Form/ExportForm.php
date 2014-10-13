@@ -83,7 +83,7 @@ class ExportForm extends FormBase {
         '#type' => 'select',
         '#title' => $this->t('Language'),
         '#options' => $language_options,
-        '#default_value' => $language_default->id,
+        '#default_value' => $language_default->getId(),
         '#empty_option' => $this->t('Source text only, no translations'),
         '#empty_value' => LanguageInterface::LANGCODE_SYSTEM,
       );
@@ -140,11 +140,11 @@ class ExportForm extends FormBase {
     $reader = new PoDatabaseReader();
     $language_name = '';
     if ($language != NULL) {
-      $reader->setLangcode($language->id);
+      $reader->setLangcode($language->getId());
       $reader->setOptions($content_options);
       $languages = $this->languageManager->getLanguages();
-      $language_name = isset($languages[$language->id]) ? $languages[$language->id]->name : '';
-      $filename = $language->id . '.po';
+      $language_name = isset($languages[$language->getId()]) ? $languages[$language->getId()]->name : '';
+      $filename = $language->getId() .'.po';
     }
     else {
       // Template required.

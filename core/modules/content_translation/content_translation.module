@@ -593,7 +593,7 @@ function content_translation_entity_presave(EntityInterface $entity) {
     // @todo Avoid using request attributes once translation metadata become
     //   regular fields.
     $attributes = \Drupal::request()->attributes;
-    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
   }
 }
 
@@ -749,7 +749,7 @@ function content_translation_page_alter(&$page) {
         $page['#attached']['html_head_link'][] = array(
           array(
             'rel' => 'alternate',
-            'hreflang' => $language->id,
+            'hreflang' => $language->getId(),
             'href' => $url,
           ),
           TRUE,

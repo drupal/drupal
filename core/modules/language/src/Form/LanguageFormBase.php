@@ -51,7 +51,7 @@ abstract class LanguageFormBase extends EntityForm {
   public function commonForm(array &$form) {
     /* @var $language \Drupal\language\ConfigurableLanguageInterface */
     $language = $this->entity;
-    if ($language->id()) {
+    if ($language->getId()) {
       $form['langcode_view'] = array(
         '#type' => 'item',
         '#title' => $this->t('Language code'),

@@ -64,7 +64,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     // Set up an additional language.
-    $this->langcodes = array(language_default()->id, 'es');
+    $this->langcodes = array(language_default()->getId(), 'es');
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a content type.
@@ -101,7 +101,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
     // Enable content translation.
     $configuration = array(
-      'langcode' => language_default()->id,
+      'langcode' => language_default()->getId(),
       'language_show' => TRUE,
     );
     language_save_default_configuration('node', $this->bundle, $configuration);

@@ -49,7 +49,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = \Drupal::token()->replace($input, array('node' => $node), array('langcode' => $language_interface->id));
+      $output = \Drupal::token()->replace($input, array('node' => $node), array('langcode' => $language_interface->getId()));
       $this->assertEqual($output, $expected, format_string('Statistics token %token replaced.', array('%token' => $input)));
     }
   }

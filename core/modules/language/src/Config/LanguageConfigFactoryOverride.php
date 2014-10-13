@@ -116,7 +116,7 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
    * {@inheritdoc}
    */
   public function getCacheSuffix() {
-    return $this->language ? $this->language->id : NULL;
+    return $this->language ? $this->language->getId() : NULL;
   }
 
   /**

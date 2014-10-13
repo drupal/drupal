@@ -55,7 +55,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
   public function clearRevisionsLanguage($language) {
     return $this->database->update('node_revision')
       ->fields(array('langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))
-      ->condition('langcode', $language->id)
+      ->condition('langcode', $language->getId())
       ->execute();
   }
 

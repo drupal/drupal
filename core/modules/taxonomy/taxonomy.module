@@ -683,7 +683,7 @@ function taxonomy_build_node_index($node) {
       $field_name = $field->getName();
       if ($field->getType() == 'taxonomy_term_reference') {
         foreach ($node->getTranslationLanguages() as $language) {
-          foreach ($node->getTranslation($language->id)->$field_name as $item) {
+          foreach ($node->getTranslation($language->getId())->$field_name as $item) {
             if (!$item->isEmpty()) {
               $tid_all[$item->target_id] = $item->target_id;
             }

@@ -73,14 +73,14 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove the translated values.
     $this->entity = $this->entity->getUntranslated();
-    $this->entity->removeTranslation($this->language->id);
+    $this->entity->removeTranslation($this->language->getId());
     $this->entity->save();
 
     // Remove any existing path alias for the removed translation.
     // @todo This should be taken care of by the Path module.
     if (\Drupal::moduleHandler()->moduleExists('path')) {
       $path = $this->entity->getSystemPath();
-      $conditions = array('source' => $path, 'langcode' => $this->language->id);
+      $conditions = array('source' => $path, 'langcode' => $this->language->getId());
       \Drupal::service('path.alias_storage')->delete($conditions);
     }
 

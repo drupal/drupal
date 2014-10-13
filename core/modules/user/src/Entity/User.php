@@ -372,10 +372,10 @@ class User extends ContentEntityBase implements UserInterface {
     $language_list = language_list();
     $preferred_langcode = $this->get('preferred_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
-      return $language_list[$preferred_langcode]->id;
+      return $language_list[$preferred_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->id : '';
+      return $fallback_to_default ? language_default()->getId() : '';
     }
   }
 
@@ -386,10 +386,10 @@ class User extends ContentEntityBase implements UserInterface {
     $language_list = language_list();
     $preferred_langcode = $this->get('preferred_admin_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
-      return $language_list[$preferred_langcode]->id;
+      return $language_list[$preferred_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->id : '';
+      return $fallback_to_default ? language_default()->getId() : '';
     }
   }
 

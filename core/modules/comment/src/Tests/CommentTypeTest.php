@@ -74,7 +74,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertTrue($comment_type, 'The new comment type has been created.');
 
     // Check that the comment type was created in site default language.
-    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $this->assertEqual($comment_type->language()->getId(), $default_langcode);
 
     // Edit the comment-type and ensure that we cannot change the entity-type.

@@ -56,8 +56,8 @@ class FeedLanguageTest extends AggregatorTestBase {
     $feeds[2] = $this->createFeed(NULL, array('langcode' => $this->langcodes[2]));
 
     // Make sure that the language has been assigned.
-    $this->assertEqual($feeds[1]->language()->id, $this->langcodes[1]);
-    $this->assertEqual($feeds[2]->language()->id, $this->langcodes[2]);
+    $this->assertEqual($feeds[1]->language()->getId(), $this->langcodes[1]);
+    $this->assertEqual($feeds[2]->language()->getId(), $this->langcodes[2]);
 
     // Create example nodes to create feed items from and then update the feeds.
     $this->createSampleNodes();
@@ -70,7 +70,7 @@ class FeedLanguageTest extends AggregatorTestBase {
       $items = entity_load_multiple_by_properties('aggregator_item', array('fid' => $feed->id()));
       $this->assertTrue(count($items) > 0, 'Feed items were created.');
       foreach ($items as $item) {
-        $this->assertEqual($item->language()->id, $feed->language()->id);
+        $this->assertEqual($item->language()->getId(), $feed->language()->getId());
       }
     }
   }

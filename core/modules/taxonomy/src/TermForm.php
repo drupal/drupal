@@ -33,7 +33,7 @@ class TermForm extends ContentEntityForm {
       '#type' => 'language_select',
       '#title' => $this->t('Language'),
       '#languages' => LanguageInterface::STATE_ALL,
-      '#default_value' => $term->getUntranslated()->language()->id,
+      '#default_value' => $term->getUntranslated()->language()->getId(),
       '#access' => !empty($language_configuration['language_show']),
     );
 

@@ -61,7 +61,7 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
     $entity = $this->entityManager->getStorage('entity_test_default_value')->create();
     // The description field has a default value callback for testing, see
     // entity_test_field_default_value().
-    $this->assertEqual($entity->description->value, 'description_' . $entity->language()->id);
+    $this->assertEqual($entity->description->value, 'description_' . $entity->language()->getId());
   }
 
 }

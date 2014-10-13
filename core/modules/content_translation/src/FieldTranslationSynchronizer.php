@@ -51,7 +51,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     // If the entity language is being changed there is nothing to synchronize.
     $entity_type = $entity->getEntityTypeId();
     $entity_unchanged = isset($entity->original) ? $entity->original : $this->entityManager->getStorage($entity_type)->loadUnchanged($entity->id());
-    if ($entity->getUntranslated()->language()->id != $entity_unchanged->getUntranslated()->language()->id) {
+    if ($entity->getUntranslated()->language()->getId() != $entity_unchanged->getUntranslated()->language()->getId()) {
       return;
     }
 

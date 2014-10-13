@@ -240,9 +240,9 @@ abstract class AccountForm extends ContentEntityForm {
       );
     }
 
-    $user_preferred_langcode = $register ? $language_interface->id : $account->getPreferredLangcode();
+    $user_preferred_langcode = $register ? $language_interface->getId() : $account->getPreferredLangcode();
 
-    $user_preferred_admin_langcode = $register ? $language_interface->id : $account->getPreferredAdminLangcode(FALSE);
+    $user_preferred_admin_langcode = $register ? $language_interface->getId() : $account->getPreferredAdminLangcode(FALSE);
 
     // Is the user preferred language added?
     $user_language_added = FALSE;

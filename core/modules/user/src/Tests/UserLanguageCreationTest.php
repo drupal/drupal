@@ -63,7 +63,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     $user = user_load_by_name($username);
     $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->language()->id, $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($user->language()->getId(), $langcode, 'New user has correct profile language set.');
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -81,7 +81,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     $user = user_load_by_name($username);
     $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->language()->id, $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($user->language()->getId(), $langcode, 'New user has correct profile language set.');
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.

@@ -128,7 +128,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
 
     // If no language code was provided, default to the node revision's langcode.
     if (empty($langcode)) {
-      $langcode = $node->language()->id;
+      $langcode = $node->language()->getId();
     }
 
     // Statically cache access by revision ID, language code, user account ID,

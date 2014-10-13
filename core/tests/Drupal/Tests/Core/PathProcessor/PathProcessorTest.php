@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\PathProcessor;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
@@ -44,10 +45,8 @@ class PathProcessorTest extends UnitTestCase {
 
     // Set up some languages to be used by the language-based path processor.
     $languages = array();
-    foreach (array('en' => 'English', 'fr' => 'French') as $langcode => $language_name) {
-      $language = new \stdClass();
-      $language->id = $langcode;
-      $language->name = $language_name;
+    foreach (array('en', 'fr') as $langcode) {
+      $language = new Language(array('id' => $langcode));
       $languages[$langcode] = $language;
     }
     $this->languages = $languages;

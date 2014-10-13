@@ -55,7 +55,7 @@ class DrupalTranslator implements TranslatorInterface {
    * Implements \Symfony\Component\Translation\TranslatorInterface::getLocale().
    */
   public function getLocale() {
-    return $this->locale ? $this->locale : \Drupal::languageManager()->getCurrentLanguage()->id;
+    return $this->locale ? $this->locale : \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**

@@ -186,7 +186,7 @@ use Drupal\Core\Render\Element;
  * To make a render array for a loaded entity:
  * @code
  * // You can omit the language ID if the default language is being used.
- * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * @endcode
  * You can also use the viewMultiple() method to view multiple entities.
  *
@@ -469,7 +469,7 @@ use Drupal\Core\Render\Element;
  * Then, to build and render the entity:
  * @code
  * // You can omit the language ID if the default language is being used.
- * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * // $build is a render array.
  * $rendered = drupal_render($build);
  * @endcode
@@ -893,7 +893,7 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
 function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
    $attributes = \Drupal::request()->attributes;
-   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
   }
 }
 
@@ -909,7 +909,7 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 function hook_ENTITY_TYPE_presave(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->isTranslatable()) {
     $attributes = \Drupal::request()->attributes;
-    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
   }
 }
 

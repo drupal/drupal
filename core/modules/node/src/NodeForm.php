@@ -112,7 +112,7 @@ class NodeForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $node->getUntranslated()->language()->id,
+      '#default_value' => $node->getUntranslated()->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );

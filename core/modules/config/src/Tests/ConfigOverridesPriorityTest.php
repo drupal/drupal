@@ -56,7 +56,7 @@ class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
     ));
     \Drupal::languageManager()->setConfigOverrideLanguage($language);
     \Drupal::languageManager()
-      ->getLanguageConfigOverride($language->id, 'system.site')
+      ->getLanguageConfigOverride($language->getId(), 'system.site')
       ->set('name', $language_overridden_name)
       ->set('mail', $language_overridden_mail)
       ->save();

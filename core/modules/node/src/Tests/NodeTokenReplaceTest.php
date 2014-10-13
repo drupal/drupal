@@ -68,20 +68,20 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:title]'] = String::checkPlain($node->getTitle());
     $tests['[node:body]'] = $node->body->processed;
     $tests['[node:summary]'] = $node->body->summary_processed;
-    $tests['[node:langcode]'] = String::checkPlain($node->language()->id);
+    $tests['[node:langcode]'] = String::checkPlain($node->language()->getId());
     $tests['[node:url]'] = $node->url('canonical', $url_options);
     $tests['[node:edit-url]'] = $node->url('edit-form', $url_options);
     $tests['[node:author]'] = String::checkPlain($account->getUsername());
     $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = String::checkPlain($account->getUsername());
-    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getCreatedTime(), 2, $this->interfaceLanguage->id);
-    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getChangedTime(), 2, $this->interfaceLanguage->id);
+    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getCreatedTime(), 2, $this->interfaceLanguage->getId());
+    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getChangedTime(), 2, $this->interfaceLanguage->getId());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->id));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->getId()));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -89,11 +89,11 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:title]'] = $node->getTitle();
     $tests['[node:body]'] = $node->body->value;
     $tests['[node:summary]'] = $node->body->summary;
-    $tests['[node:langcode]'] = $node->language()->id;
+    $tests['[node:langcode]'] = $node->language()->getId();
     $tests['[node:author:name]'] = $account->getUsername();
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->id, 'sanitize' => FALSE));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->getId(), 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 

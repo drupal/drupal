@@ -475,7 +475,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected function setDefaultLangcode() {
     // Get the language code if the property exists.
     if ($this->hasField('langcode') && ($item = $this->get('langcode')) && isset($item->language)) {
-      $this->defaultLangcode = $item->language->id;
+      $this->defaultLangcode = $item->language->getId();
     }
 
     if (empty($this->defaultLangcode)) {

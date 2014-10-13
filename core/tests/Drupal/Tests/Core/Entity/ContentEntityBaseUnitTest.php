@@ -277,11 +277,11 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->languageManager->expects($this->any())
       ->method('isMultilingual')
       ->will($this->returnValue(TRUE));
-    $this->assertTrue($this->entity->language()->id == 'en');
+    $this->assertTrue($this->entity->language()->getId() == 'en');
     $this->assertFalse($this->entity->language()->isLocked());
     $this->assertTrue($this->entity->isTranslatable());
 
-    $this->assertTrue($this->entityUnd->language()->id == LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $this->assertTrue($this->entityUnd->language()->getId() == LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->assertTrue($this->entityUnd->language()->isLocked());
     $this->assertFalse($this->entityUnd->isTranslatable());
   }

@@ -90,7 +90,7 @@ use Drupal\Core\Session\AccountInterface;
  *       // If we are on an administrative path, override with the default
  *       language.
  *       if ($request->query->has('q') && strtok($request->query->get('q'), '/') == 'admin') {
- *         return $this->languageManager->getDefaultLanguage()->id;
+ *         return $this->languageManager->getDefaultLanguage()->getId();
  *       }
  *       return $langcode;
  *     }

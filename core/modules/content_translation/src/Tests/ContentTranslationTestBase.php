@@ -103,7 +103,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     foreach ($this->langcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
-    array_unshift($this->langcodes, \Drupal::languageManager()->getDefaultLanguage()->id);
+    array_unshift($this->langcodes, \Drupal::languageManager()->getDefaultLanguage()->getId());
   }
 
   /**

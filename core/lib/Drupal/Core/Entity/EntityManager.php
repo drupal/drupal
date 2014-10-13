@@ -335,7 +335,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Check the static cache.
     if (!isset($this->baseFieldDefinitions[$entity_type_id])) {
       // Not prepared, try to load from cache.
-      $cid = 'entity_base_field_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->id;
+      $cid = 'entity_base_field_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->getId();
       if ($cache = $this->cacheBackend->get($cid)) {
         $this->baseFieldDefinitions[$entity_type_id] = $cache->data;
       }
@@ -433,7 +433,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     if (!isset($this->fieldDefinitions[$entity_type_id][$bundle])) {
       $base_field_definitions = $this->getBaseFieldDefinitions($entity_type_id);
       // Not prepared, try to load from cache.
-      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->id;
+      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
       if ($cache = $this->cacheBackend->get($cid)) {
         $bundle_field_definitions = $cache->data;
       }
@@ -541,7 +541,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         }
       }
       // Not prepared, try to load from cache.
-      $cid = 'entity_field_storage_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->id;
+      $cid = 'entity_field_storage_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->getId();
       if ($cache = $this->cacheBackend->get($cid)) {
         $field_storage_definitions = $cache->data;
       }
@@ -680,7 +680,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    */
   public function getAllBundleInfo() {
     if (empty($this->bundleInfo)) {
-      $langcode = $this->languageManager->getCurrentLanguage()->id;
+      $langcode = $this->languageManager->getCurrentLanguage()->getId();
       if ($cache = $this->cacheBackend->get("entity_bundle_info:$langcode")) {
         $this->bundleInfo = $cache->data;
       }
@@ -721,7 +721,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
-    $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->id;
+    $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheBackend->get($cache_id);
     if ($cached) {
       $this->extraFields[$entity_type_id][$bundle] = $cached->data;
@@ -783,7 +783,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     if ($entity instanceof TranslatableInterface) {
       if (empty($langcode)) {
-        $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
+        $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       }
 
       // Retrieve language fallback candidates to perform the entity language
@@ -794,7 +794,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
       // Ensure the default language has the proper language code.
       $default_language = $entity->getUntranslated()->language();
-      $candidates[$default_language->id] = LanguageInterface::LANGCODE_DEFAULT;
+      $candidates[$default_language->getId()] = LanguageInterface::LANGCODE_DEFAULT;
 
       // Return the most fitting entity translation.
       foreach ($candidates as $candidate) {
@@ -849,7 +849,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     if (!isset($this->displayModeInfo[$display_type])) {
       $key = 'entity_' . $display_type . '_info';
       $entity_type_id = 'entity_' . $display_type;
-      $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->id;
+      $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
       if ($cache = $this->cacheBackend->get("$key:$langcode")) {
         $this->displayModeInfo[$display_type] = $cache->data;
       }

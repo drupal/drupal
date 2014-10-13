@@ -59,7 +59,7 @@ class UrlTest extends WebTestBase {
       '#url' => Url::fromUri('http://drupal.org'),
       '#title' => 'bar',
     );
-    $langcode = $language->id;
+    $langcode = $language->getId();
 
     // Test that the default hreflang handling for links does not override a
     // hreflang attribute explicitly set in the render array.

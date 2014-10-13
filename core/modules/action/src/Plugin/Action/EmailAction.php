@@ -101,7 +101,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
       $langcode = $recipient_account->getPreferredLangcode();
     }
     else {
-      $langcode = language_default()->id;
+      $langcode = language_default()->getId();
     }
     $params = array('context' => $this->configuration);
 

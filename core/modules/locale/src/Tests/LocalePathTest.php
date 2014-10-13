@@ -121,7 +121,7 @@ class LocalePathTest extends WebTestBase {
     $edit = array(
       'source'   => 'node/' . $first_node->id(),
       'alias'    => $custom_path,
-      'langcode' => $first_node->language()->id,
+      'langcode' => $first_node->language()->getId(),
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
@@ -130,7 +130,7 @@ class LocalePathTest extends WebTestBase {
     $edit = array(
       'source'   => 'node/' . $second_node->id(),
       'alias'    => $custom_path,
-      'langcode' => $second_node->language()->id,
+      'langcode' => $second_node->language()->getId(),
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
 

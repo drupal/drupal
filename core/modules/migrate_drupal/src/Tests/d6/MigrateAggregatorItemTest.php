@@ -67,7 +67,7 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
     $this->assertEqual($item->getDescription(), "<h2 id='new'>What's new with Drupal 8?</h2>");
     $this->assertEqual($item->getLink(), 'https://groups.drupal.org/node/395218');
     $this->assertEqual($item->getPostedTime(), 1389297196);
-    $this->assertEqual($item->language()->id, 'en');
+    $this->assertEqual($item->language()->getId(), 'en');
     $this->assertEqual($item->getGuid(), '395218 at https://groups.drupal.org');
 
   }

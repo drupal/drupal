@@ -31,7 +31,7 @@ class Textarea implements ElementInterface {
       '#default_value' => $value,
       '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
       '#rows' => $rows,
-      '#attributes' => array('lang' => $language->id),
+      '#attributes' => array('lang' => $language->getId()),
     );
   }
 

@@ -136,7 +136,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->mapper->getConfigNames() as $name) {
-      $this->languageManager->getLanguageConfigOverride($this->language->id, $name)->delete();
+      $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name)->delete();
     }
 
     // Flush all persistent caches.

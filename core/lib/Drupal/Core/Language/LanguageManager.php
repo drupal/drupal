@@ -134,7 +134,7 @@ class LanguageManager implements LanguageManagerInterface {
     if (!isset($this->languages)) {
       // No language module, so use the default language only.
       $default = $this->getDefaultLanguage();
-      $this->languages = array($default->id => $default);
+      $this->languages = array($default->getId() => $default);
       // Add the special languages, they will be filtered later if needed.
       $this->languages += $this->getDefaultLockedLanguages($default->getWeight());
     }

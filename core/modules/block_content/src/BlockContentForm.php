@@ -109,14 +109,14 @@ class BlockContentForm extends ContentEntityForm {
       // Set the correct default language.
       if ($block->isNew()) {
         $language_default = $this->languageManager->getCurrentLanguage($language_configuration['langcode']);
-        $block->langcode->value = $language_default->id;
+        $block->langcode->value = $language_default->getId();
       }
     }
 
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $block->getUntranslated()->language()->id,
+      '#default_value' => $block->getUntranslated()->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );

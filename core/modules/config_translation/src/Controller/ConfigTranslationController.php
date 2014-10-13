@@ -153,7 +153,7 @@ class ConfigTranslationController extends ControllerBase {
       '#header' => array($this->t('Language'), $this->t('Operations')),
     );
     foreach ($languages as $language) {
-      $langcode = $language->id;
+      $langcode = $language->getId();
 
       // This is needed because
       // ConfigMapperInterface::getAddRouteParameters(), for example,

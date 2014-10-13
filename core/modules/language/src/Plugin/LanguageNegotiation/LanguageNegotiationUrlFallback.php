@@ -62,11 +62,11 @@ class LanguageNegotiationUrlFallback extends LanguageNegotiationMethodBase {
       // information, a missing URL language information indicates that URL
       // language should be the default one, otherwise we fall back to an
       // already detected language.
-      if (($prefix && empty($config['prefixes'][$default->id])) || (!$prefix && empty($config['domains'][$default->id]))) {
-        $langcode = $default->id;
+      if (($prefix && empty($config['prefixes'][$default->getId()])) || (!$prefix && empty($config['domains'][$default->getId()]))) {
+        $langcode = $default->getId();
       }
       else {
-        $langcode = $this->languageManager->getCurrentLanguage()->id;
+        $langcode = $this->languageManager->getCurrentLanguage()->getId();
       }
     }
 

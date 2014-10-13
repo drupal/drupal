@@ -569,7 +569,7 @@ function system_page_build(&$page) {
       array(
         'path' => current_path(),
         'front' => drupal_is_front_page(),
-        'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
+        'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
         'query' => \Drupal::request()->query->all(),
       )
     );

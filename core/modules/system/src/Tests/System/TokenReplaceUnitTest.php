@@ -40,7 +40,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->id));
+      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->getId()));
       $this->assertTrue($output == $expected, format_string('Token recognized in string %string', array('%string' => $input)));
     }
 
@@ -61,12 +61,12 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
 
     // Replace with with the clear parameter, only the valid token should remain.
     $target = String::checkPlain(\Drupal::config('system.site')->get('name'));
-    $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->id, 'clear' => TRUE));
+    $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->getId(), 'clear' => TRUE));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->id));
+    $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->getId()));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
   }
 
@@ -106,7 +106,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->id));
+      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->getId()));
       $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -115,7 +115,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $tests['[site:slogan]'] = $config->get('slogan');
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->id, 'sanitize' => FALSE));
+      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->getId(), 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -141,18 +141,18 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     // Generate and test tokens.
     $tests = array();
     $date_formatter = \Drupal::service('date.formatter');
-    $tests['[date:short]'] = $date_formatter->format($date, 'short', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:medium]'] = $date_formatter->format($date, 'medium', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:long]'] = $date_formatter->format($date, 'long', '', NULL, $this->interfaceLanguage->id);
-    $tests['[date:custom:m/j/Y]'] = $date_formatter->format($date, 'custom', 'm/j/Y', NULL, $this->interfaceLanguage->id);
-    $tests['[date:since]'] = $date_formatter->formatInterval(REQUEST_TIME - $date, 2, $this->interfaceLanguage->id);
+    $tests['[date:short]'] = $date_formatter->format($date, 'short', '', NULL, $this->interfaceLanguage->getId());
+    $tests['[date:medium]'] = $date_formatter->format($date, 'medium', '', NULL, $this->interfaceLanguage->getId());
+    $tests['[date:long]'] = $date_formatter->format($date, 'long', '', NULL, $this->interfaceLanguage->getId());
+    $tests['[date:custom:m/j/Y]'] = $date_formatter->format($date, 'custom', 'm/j/Y', NULL, $this->interfaceLanguage->getId());
+    $tests['[date:since]'] = $date_formatter->formatInterval(REQUEST_TIME - $date, 2, $this->interfaceLanguage->getId());
     $tests['[date:raw]'] = Xss::filter($date);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('date' => $date), array('langcode' => $this->interfaceLanguage->id));
+      $output = $this->tokenService->replace($input, array('date' => $date), array('langcode' => $this->interfaceLanguage->getId()));
       $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
     }
   }

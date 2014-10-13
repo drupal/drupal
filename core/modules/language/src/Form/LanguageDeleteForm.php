@@ -89,7 +89,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
     $langcode = $this->entity->id();
 
     // Warn and redirect user when attempting to delete the default language.
-    if (language_default()->id == $langcode) {
+    if (language_default()->getId() == $langcode) {
       drupal_set_message($this->t('The default language cannot be deleted.'));
       $url = $this->urlGenerator->generateFromPath('admin/config/regional/language', array('absolute' => TRUE));
       return new RedirectResponse($url);

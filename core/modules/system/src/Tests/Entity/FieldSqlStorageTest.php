@@ -131,13 +131,13 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       for ($delta = 0; $delta <= $this->field_cardinality; $delta++) {
         $value = mt_rand(1, 127);
         $values[$revision_id][] = $value;
-        $query->values(array($bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->id, $value));
+        $query->values(array($bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->getId(), $value));
       }
       $query->execute();
     }
     $query = db_insert($this->table)->fields($columns);
     foreach ($values[$revision_id] as $delta => $value) {
-      $query->values(array($bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->id, $value));
+      $query->values(array($bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->getId(), $value));
     }
     $query->execute();
 
@@ -201,7 +201,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
         'deleted' => 0,
         'entity_id' => $entity->id(),
         'revision_id' => $entity->getRevisionId(),
-        'langcode' => $entity->language()->id,
+        'langcode' => $entity->language()->getId(),
         'delta' => $delta,
         $this->field_name . '_value' => $values[$delta]['value'],
       );
@@ -224,7 +224,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
         'deleted' => 0,
         'entity_id' => $entity->id(),
         'revision_id' => $entity->getRevisionId(),
-        'langcode' => $entity->language()->id,
+        'langcode' => $entity->language()->getId(),
         'delta' => $delta,
         $this->field_name . '_value' => $values[$delta]['value'],
       );
@@ -252,7 +252,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
           'deleted' => 0,
           'entity_id' => $entity->id(),
           'revision_id' => $revision_id,
-          'langcode' => $entity->language()->id,
+          'langcode' => $entity->language()->getId(),
           'delta' => $delta,
           $this->field_name . '_value' => $values[$delta]['value'],
         );

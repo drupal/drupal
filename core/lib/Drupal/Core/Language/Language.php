@@ -41,7 +41,7 @@ class Language implements LanguageInterface {
    *
    * @var string
    */
-  public $id = '';
+  protected $id = '';
 
   /**
    * The direction, left-to-right, or right-to-left.

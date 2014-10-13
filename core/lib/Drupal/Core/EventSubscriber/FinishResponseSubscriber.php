@@ -94,7 +94,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', FALSE);
 
     // Set the Content-language header.
-    $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->id);
+    $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
 
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.

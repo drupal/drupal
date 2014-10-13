@@ -286,11 +286,11 @@ function language_get_default_langcode($entity_type, $bundle) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   switch ($configuration['langcode']) {
     case LanguageInterface::LANGCODE_SITE_DEFAULT:
-      $default_value = \Drupal::languageManager()->getDefaultLanguage()->id;
+      $default_value = \Drupal::languageManager()->getDefaultLanguage()->getId();
       break;
 
     case 'current_interface':
-      $default_value = $language_interface->id;
+      $default_value = $language_interface->getId();
       break;
 
     case 'authors_default':
@@ -300,7 +300,7 @@ function language_get_default_langcode($entity_type, $bundle) {
         $default_value = $language_code;
       }
       else {
-        $default_value = $language_interface->id;
+        $default_value = $language_interface->getId();
       }
       break;
   }
@@ -365,7 +365,7 @@ function language_negotiation_url_prefixes_update() {
     if (empty($prefixes[$language->getId()])) {
       // For the default language, set the prefix to the empty string,
       // otherwise use the langcode.
-      $prefixes[$language->getId()] = $language->isDefault() ? '' : $language->id;
+      $prefixes[$language->getId()] = $language->isDefault() ? '' : $language->getId();
     }
     // Otherwise we keep the configured prefix.
   }
@@ -495,7 +495,7 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
   $form['locale']['site_default_language'] = array(
     '#type' => 'select',
     '#title' => t('Default language'),
-    '#default_value' => $default->id,
+    '#default_value' => $default->getId(),
     '#options' => $language_options,
     '#description' => t('It is not recommended to change the default language on a working site. <a href="@language-detection">Configure the Selected language</a> setting on the detection and selection page to change the fallback language for language selection.', array('@language-detection' => \Drupal::url('language.negotiation'))),
     '#weight' => -1,

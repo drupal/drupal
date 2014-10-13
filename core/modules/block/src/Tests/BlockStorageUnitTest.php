@@ -84,7 +84,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
 
     // Ensure that default values are filled in.
     $expected_properties = array(
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'status' => TRUE,
       'dependencies' => array('module' => array('block_test'), 'theme' => array('stark')),
       'id' => 'test_block',

@@ -91,7 +91,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:vocabulary:name]'] = String::checkPlain($this->vocabulary->name);
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('term' => $term1), array('langcode' => $language_interface->id));
+      $output = $token_service->replace($input, array('term' => $term1), array('langcode' => $language_interface->getId()));
       $this->assertEqual($output, $expected, format_string('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
@@ -111,7 +111,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('term' => $term2), array('langcode' => $language_interface->id));
+      $output = $token_service->replace($input, array('term' => $term2), array('langcode' => $language_interface->getId()));
       $this->assertEqual($output, $expected, format_string('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
@@ -122,7 +122,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:vocabulary:name]'] = $this->vocabulary->name;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('term' => $term2), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('term' => $term2), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
@@ -138,7 +138,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('vocabulary' => $this->vocabulary), array('langcode' => $language_interface->id));
+      $output = $token_service->replace($input, array('vocabulary' => $this->vocabulary), array('langcode' => $language_interface->getId()));
       $this->assertEqual($output, $expected, format_string('Sanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
     }
 
@@ -147,7 +147,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[vocabulary:description]'] = $this->vocabulary->description;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('vocabulary' => $this->vocabulary), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('vocabulary' => $this->vocabulary), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
     }
   }

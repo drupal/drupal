@@ -92,7 +92,7 @@ function field_test_entity_display_build_alter(&$output, $context) {
   }
 
   if (isset($output['test_field'])) {
-    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->id);
+    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->getId());
   }
 }
 

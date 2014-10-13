@@ -443,7 +443,7 @@ class BookManager implements BookManagerInterface {
     $nid = isset($link['nid']) ? $link['nid'] : 0;
     // Generate a cache ID (cid) specific for this $bid, $link, $language, and
     // depth.
-    $cid = 'book-links:' . $bid . ':all:' . $nid . ':' . $language_interface->id . ':' . (int) $max_depth;
+    $cid = 'book-links:' . $bid . ':all:' . $nid . ':' . $language_interface->getId() . ':' . (int) $max_depth;
 
     if (!isset($tree[$cid])) {
       // If the tree data was not in the static cache, build $tree_parameters.
@@ -596,7 +596,7 @@ class BookManager implements BookManagerInterface {
     if (isset($parameters['expanded'])) {
       sort($parameters['expanded']);
     }
-    $tree_cid = 'book-links:' . $bid . ':tree-data:' . $language_interface->id . ':' . hash('sha256', serialize($parameters));
+    $tree_cid = 'book-links:' . $bid . ':tree-data:' . $language_interface->getId() . ':' . hash('sha256', serialize($parameters));
 
     // If we do not have this tree in the static cache, check {cache_data}.
     if (!isset($trees[$tree_cid])) {

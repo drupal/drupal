@@ -61,7 +61,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    */
   public function __construct(LanguageManagerInterface $language_manager) {
     $this->languageManager = $language_manager;
-    $this->defaultLangcode = $language_manager->getDefaultLanguage()->id;
+    $this->defaultLangcode = $language_manager->getDefaultLanguage()->getId();
   }
 
   /**

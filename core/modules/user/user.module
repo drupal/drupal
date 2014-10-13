@@ -1322,7 +1322,7 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->id, $params);
+      drupal_mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];
