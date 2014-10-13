@@ -29,7 +29,6 @@ class ToolbarItem extends RenderElement {
       '#pre_render' => array(
         array($class, 'preRenderToolbarItem'),
       ),
-      '#theme' => 'toolbar_item',
       'tab' => array(
         '#type' => 'link',
         '#title' => NULL,
