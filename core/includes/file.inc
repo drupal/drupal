@@ -1032,13 +1032,13 @@ function file_delete_multiple(array $fids) {
  * @see file_unmanaged_delete_recursive()
  */
 function file_unmanaged_delete($path) {
+  if (is_file($path)) {
+    return drupal_unlink($path);
+  }
   $logger = \Drupal::logger('file');
   if (is_dir($path)) {
     $logger->error('%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path));
     return FALSE;
-  }
-  if (is_file($path)) {
-    return drupal_unlink($path);
   }
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.

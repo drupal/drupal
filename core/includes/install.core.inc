@@ -2037,8 +2037,9 @@ function install_check_requirements($install_state) {
         // common configuration on shared hosting, and there is nothing Drupal
         // can do to prevent it. In this situation, having $file also owned by
         // the webserver does not introduce any additional security risk, so we
-        // keep the file in place.
-        if (fileowner($default_file) === fileowner($file)) {
+        // keep the file in place. Additionally, this situation also occurs when
+        // the test runner is being run be different user than the webserver.
+        if (fileowner($default_file) === fileowner($file) || DRUPAL_TEST_IN_CHILD_SITE) {
           $readable = drupal_verify_install_file($file, FILE_READABLE);
           $writable = drupal_verify_install_file($file, FILE_WRITABLE);
           $exists = TRUE;
