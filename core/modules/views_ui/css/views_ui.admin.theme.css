@@ -1107,7 +1107,13 @@ div.messages {
   position: relative;
 }
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > * {
-  font-size: 11px;
+  font-size: 10px;
+}
+.js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
+  position: absolute;
+  right: -5px;
+  top: -1px;
+  z-index: 2;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
   border-radius: 1.1em 0 0 0; /* LTR */
