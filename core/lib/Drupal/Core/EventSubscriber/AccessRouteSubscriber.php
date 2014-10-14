@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\CheckProviderInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,19 +20,19 @@ class AccessRouteSubscriber implements EventSubscriberInterface {
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManagerInterface
+   * @var \Drupal\Core\Access\checkProviderInterface
    */
-  protected $accessManager;
+  protected $checkProvider;
 
   /**
    * Constructs a new AccessSubscriber.
    *
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
-   *   The access check manager that will be responsible for applying
-   *   AccessCheckers against routes.
+   * @param \Drupal\Core\Access\CheckProviderInterface $check_provider
+   *   The check provider that will be responsible for applying
+   *   access checkers against routes.
    */
-  public function __construct(AccessManagerInterface $access_manager) {
-    $this->accessManager = $access_manager;
+  public function __construct(CheckProviderInterface $check_provider) {
+    $this->checkProvider = $check_provider;
   }
 
   /**
@@ -42,7 +42,7 @@ class AccessRouteSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRoutingRouteAlterSetAccessCheck(RouteBuildEvent $event) {
-    $this->accessManager->setChecks($event->getRouteCollection());
+    $this->checkProvider->setChecks($event->getRouteCollection());
   }
 
   /**

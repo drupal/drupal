@@ -8,7 +8,6 @@
 namespace Drupal\Core\Access;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -75,29 +74,6 @@ interface AccessManagerInterface {
    *   access is either explicitly forbidden or "no opinion".
    */
   public function checkRequest(Request $request, AccountInterface $account = NULL, $return_as_object = FALSE);
-
-  /**
-   * For each route, saves a list of applicable access checks to the route.
-   *
-   * @param \Symfony\Component\Routing\RouteCollection $routes
-   *   A collection of routes to apply checks to.
-   */
-  public function setChecks(RouteCollection $routes);
-
-  /**
-   * Registers a new AccessCheck by service ID.
-   *
-   * @param string $service_id
-   *   The ID of the service in the Container that provides a check.
-   * @param string $service_method
-   *   The method to invoke on the service object for performing the check.
-   * @param array $applies_checks
-   *   (optional) An array of route requirement keys the checker service applies
-   *   to.
-   * @param bool $needs_incoming_request
-   *   (optional) True if access-check method only acts on an incoming request.
-   */
-  public function addCheckService($service_id, $service_method, array $applies_checks = array(), $needs_incoming_request = FALSE);
 
   /**
    * Checks a route against applicable access check services.

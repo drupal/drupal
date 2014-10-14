@@ -9,16 +9,11 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\ArgumentsResolverInterface;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -28,50 +23,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
-class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
-
-  use ContainerAwareTrait;
-
-  /**
-   * Array of registered access check service ids.
-   *
-   * @var array
-   */
-  protected $checkIds = array();
-
-  /**
-   * Array of access check objects keyed by service id.
-   *
-   * @var \Drupal\Core\Routing\Access\AccessInterface[]
-   */
-  protected $checks;
-
-  /**
-   * Array of access check method names keyed by service ID.
-   *
-   * @var array
-   */
-  protected $checkMethods = array();
-
-  /**
-   * Array of access checks which only will be run on the incoming request.
-   */
-  protected $checkNeedsRequest = array();
-
-  /**
-   * An array to map static requirement keys to service IDs.
-   *
-   * @var array
-   */
-  protected $staticRequirementMap;
-
-  /**
-   * An array to map dynamic requirement keys to service IDs.
-   *
-   * @var array
-   */
-  protected $dynamicRequirementMap;
-
+class AccessManager implements AccessManagerInterface {
   /**
    * The route provider.
    *
@@ -101,6 +53,13 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
   protected $currentUser;
 
   /**
+   * The check provider.
+   *
+   * @var \Drupal\Core\Access\CheckProviderInterface
+   */
+  protected $checkProvider;
+
+  /**
    * Constructs a AccessManager instance.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
@@ -111,70 +70,14 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    *   The access arguments resolver.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param CheckProviderInterface $check_provider
    */
-  public function __construct(RouteProviderInterface $route_provider, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory, AccountInterface $current_user) {
+  public function __construct(RouteProviderInterface $route_provider, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory, AccountInterface $current_user, CheckProviderInterface $check_provider) {
     $this->routeProvider = $route_provider;
     $this->paramConverterManager = $paramconverter_manager;
     $this->argumentsResolverFactory = $arguments_resolver_factory;
     $this->currentUser = $current_user;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addCheckService($service_id, $service_method, array $applies_checks = array(), $needs_incoming_request = FALSE) {
-    $this->checkIds[] = $service_id;
-    $this->checkMethods[$service_id] = $service_method;
-    if ($needs_incoming_request) {
-      $this->checkNeedsRequest[$service_id] = $service_id;
-    }
-    foreach ($applies_checks as $applies_check) {
-      $this->staticRequirementMap[$applies_check][] = $service_id;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setChecks(RouteCollection $routes) {
-    $this->loadDynamicRequirementMap();
-    foreach ($routes as $route) {
-      if ($checks = $this->applies($route)) {
-        $route->setOption('_access_checks', $checks);
-      }
-    }
-  }
-
-  /**
-   * Determine which registered access checks apply to a route.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to get list of access checks for.
-   *
-   * @return array
-   *   An array of service ids for the access checks that apply to passed
-   *   route.
-   */
-  protected function applies(Route $route) {
-    $checks = array();
-
-    // Iterate through map requirements from appliesTo() on access checkers.
-    // Only iterate through all checkIds if this is not used.
-    foreach ($route->getRequirements() as $key => $value) {
-      if (isset($this->staticRequirementMap[$key])) {
-        foreach ($this->staticRequirementMap[$key] as $service_id) {
-          $checks[] = $service_id;
-        }
-      }
-    }
-    // Finally, see if any dynamic access checkers apply.
-    foreach ($this->dynamicRequirementMap as $service_id) {
-      if ($this->checks[$service_id]->applies($route)) {
-        $checks[] = $service_id;
-      }
-    }
-
-    return $checks;
+    $this->checkProvider = $check_provider;
   }
 
   /**
@@ -226,7 +129,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
 
     // Filter out checks which require the incoming request.
     if (!isset($request)) {
-      $checks = array_diff($checks, $this->checkNeedsRequest);
+      $checks = array_diff($checks, $this->checkProvider->getChecksNeedRequest());
     }
 
     $result = AccessResult::neutral();
@@ -262,9 +165,6 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     }
     $result = AccessResult::allowed();
     foreach ($checks as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
       $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
     }
     return $result;
@@ -288,9 +188,6 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     $result = AccessResult::neutral();
 
     foreach ($checks as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
       $result = $result->orIf($this->performCheck($service_id, $arguments_resolver));
     }
 
@@ -312,7 +209,7 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
    *   The access result.
    */
   protected function performCheck($service_id, ArgumentsResolverInterface $arguments_resolver) {
-    $callable = array($this->checks[$service_id], $this->checkMethods[$service_id]);
+    $callable = $this->checkProvider->loadCheck($service_id);
     $arguments = $arguments_resolver->getArguments($callable);
     /** @var \Drupal\Core\Access\AccessResultInterface $service_access **/
     $service_access = call_user_func_array($callable, $arguments);
@@ -324,55 +221,5 @@ class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
     return $service_access;
   }
 
-  /**
-   * Lazy-loads access check services.
-   *
-   * @param string $service_id
-   *   The service id of the access check service to load.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown when the service hasn't been registered in addCheckService().
-   * @throws \Drupal\Core\Access\AccessException
-   *   Thrown when the service doesn't implement the required interface.
-   */
-  protected function loadCheck($service_id) {
-    if (!in_array($service_id, $this->checkIds)) {
-      throw new \InvalidArgumentException(sprintf('No check has been registered for %s', $service_id));
-    }
-
-    $check = $this->container->get($service_id);
-
-    if (!($check instanceof AccessInterface)) {
-      throw new AccessException('All access checks must implement AccessInterface.');
-    }
-    if (!is_callable(array($check, $this->checkMethods[$service_id]))) {
-      throw new AccessException(sprintf('Access check method %s in service %s must be callable.', $this->checkMethods[$service_id], $service_id));
-    }
-
-    $this->checks[$service_id] = $check;
-  }
-
-  /**
-   * Compiles a mapping of requirement keys to access checker service IDs.
-   */
-  protected function loadDynamicRequirementMap() {
-    if (isset($this->dynamicRequirementMap)) {
-      return;
-    }
-
-    // Set them here, so we can use the isset() check above.
-    $this->dynamicRequirementMap = array();
-
-    foreach ($this->checkIds as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
-
-      // Add the service ID to an array that will be iterated over.
-      if ($this->checks[$service_id] instanceof AccessCheckInterface) {
-        $this->dynamicRequirementMap[] = $service_id;
-      }
-    }
-  }
 
 }

@@ -696,14 +696,17 @@ services:
     class: Drupal\Core\Access\AccessArgumentsResolverFactory
   access_manager:
     class: Drupal\Core\Access\AccessManager
-    arguments: ['@router.route_provider', '@paramconverter_manager', '@access_arguments_resolver_factory', '@current_user']
+    arguments: ['@router.route_provider', '@paramconverter_manager', '@access_arguments_resolver_factory', '@current_user', '@access_manager.check_provider']
+  access_manager.check_provider:
+    class: Drupal\Core\Access\CheckProvider
     calls:
       - [setContainer, ['@service_container']]
+    public: false
   access_route_subscriber:
     class: Drupal\Core\EventSubscriber\AccessRouteSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@access_manager']
+    arguments: ['@access_manager.check_provider']
   access_check.default:
     class: Drupal\Core\Access\DefaultAccessCheck
     tags:
