@@ -25,10 +25,18 @@ class MigrateUserConfigsTest extends MigrateDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_user_mail');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6UserMail.php',
     );
+    $migration = entity_load('migration', 'd6_user_mail');
+    $this->prepare($migration, $dumps);
+    $executable = new MigrateExecutable($migration, $this);
+    $executable->import();
+
+    $dumps = array(
+      $this->getDumpDirectory() . '/Drupal6UserSettings.php',
+    );
+    $migration = entity_load('migration', 'd6_user_settings');
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
@@ -54,6 +62,19 @@ class MigrateUserConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('status_blocked.subject'), 'Account details for !username at !site (blocked)');
     $this->assertIdentical($config->get('status_blocked.body'), "!username,\n\nYour account on !site has been blocked.");
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'user.mail', $config->get());
+  }
+
+  /**
+   * Tests migration of user variables to user.settings.yml.
+   */
+  public function testUserSettings() {
+    $config = \Drupal::config('user.settings');
+    $this->assertIdentical($config->get('notify.status_blocked'), TRUE);
+    $this->assertIdentical($config->get('notify.status_activated'), FALSE);
+    $this->assertIdentical($config->get('signatures'), TRUE);
+    $this->assertIdentical($config->get('verify_mail'), FALSE);
+    $this->assertIdentical($config->get('register'), 'admin_only');
+    $this->assertIdentical($config->get('anonymous'), 'Guest');
   }
 
 }

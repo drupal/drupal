@@ -130,6 +130,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_user_picture_field',
     'd6_user_picture_file',
     'd6_user_role',
+    'd6_user_settings',
     'd6_user',
     'd6_view_modes',
     'd6_vocabulary_entity_display',
@@ -210,6 +211,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       $tests_path . '/Drupal6User.php',
       $tests_path . '/Drupal6UserProfileFields.php',
       $tests_path . '/Drupal6UserRole.php',
+      $tests_path . '/Drupal6UserSettings.php',
       $tests_path . '/Drupal6VocabularyField.php',
     );
 
