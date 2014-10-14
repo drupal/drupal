@@ -1166,7 +1166,7 @@ function drupal_installation_attempted() {
  * @param $flags
  *   (optional) Specifies the state of the languages that have to be returned.
  *   It can be: LanguageInterface::STATE_CONFIGURABLE,
- *   LanguageInterface::STATE_LOCKED, LanguageInterface::STATE_ALL.
+ *   LanguageInterface::STATE_LOCKED, or LanguageInterface::STATE_ALL.
  *
  * @return \Drupal\Core\Language\LanguageInterface[]
  *   An associative array of languages, keyed by the language code, ordered by
