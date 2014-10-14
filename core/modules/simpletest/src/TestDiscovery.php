@@ -207,7 +207,9 @@ class TestDiscovery {
     $classmap = array();
     $namespaces = $this->registerTestNamespaces();
     if (isset($extension)) {
-      $namespaces = array_intersect_key($namespaces, array_flip(preg_grep('/' . preg_quote("Drupal\\$extension\\", '/') . '/', array_keys($namespaces))));
+      // Include tests in the \Drupal\Tests\{$extension} namespace.
+      $pattern = "/Drupal\\\(Tests\\\)?$extension\\\/";
+      $namespaces = array_intersect_key($namespaces, array_flip(preg_grep($pattern, array_keys($namespaces))));
     }
     foreach ($namespaces as $namespace => $paths) {
       foreach ($paths as $path) {
