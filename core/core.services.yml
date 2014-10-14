@@ -861,6 +861,23 @@ services:
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
     parent: default_plugin_manager
+  stream_wrapper_manager:
+    class: Drupal\Core\StreamWrapper\StreamWrapperManager
+    arguments: ['@module_handler']
+    calls:
+      - [setContainer, ['@service_container']]
+  stream_wrapper.public:
+    class: Drupal\Core\StreamWrapper\PublicStream
+    tags:
+      - { name: stream_wrapper, scheme: public }
+  stream_wrapper.private:
+    class: Drupal\Core\StreamWrapper\PrivateStream
+    tags:
+      - { name: stream_wrapper, scheme: private }
+  stream_wrapper.temporary:
+    class: Drupal\Core\StreamWrapper\TemporaryStream
+    tags:
+      - { name: stream_wrapper, scheme: temporary }
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:

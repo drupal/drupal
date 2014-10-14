@@ -303,35 +303,13 @@ function system_theme_suggestions_field(array $variables) {
 }
 
 /**
- * Implements hook_stream_wrappers().
+ * Implements hook_stream_wrappers_alter().
  */
-function system_stream_wrappers() {
-  $wrappers = array(
-    'public' => array(
-      'name' => new TranslationWrapper('Public files'),
-      'class' => 'Drupal\Core\StreamWrapper\PublicStream',
-      'description' => new TranslationWrapper('Public local files served by the webserver.'),
-      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
-    ),
-    'temporary' => array(
-      'name' => new TranslationWrapper('Temporary files'),
-      'class' => 'Drupal\Core\StreamWrapper\TemporaryStream',
-      'description' => new TranslationWrapper('Temporary local files for upload and previews.'),
-      'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
-    ),
-  );
-
+function system_stream_wrappers_alter(&$wrappers) {
   // Only register the private file stream wrapper if a file path has been set.
-  if (\Drupal::config('system.file')->get('path.private')) {
-    $wrappers['private'] = array(
-      'name' => new TranslationWrapper('Private files'),
-      'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
-      'description' => new TranslationWrapper('Private local files served by Drupal.'),
-      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
-    );
+  if (!\Drupal::config('system.file')->get('path.private')) {
+    unset($wrappers['private']);
   }
-
-  return $wrappers;
 }
 
 /**

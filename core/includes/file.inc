@@ -11,39 +11,7 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-
-/**
- * Stream wrapper bit flags that are the basis for composite types.
- *
- * Note that 0x0002 is skipped, because it was the value of a constant that has
- * since been removed.
- */
-
-/**
- * Stream wrapper bit flag -- a filter that matches all wrappers.
- */
-const STREAM_WRAPPERS_ALL = 0x0000;
-
-/**
- * Stream wrapper bit flag -- refers to a local file system location.
- */
-const STREAM_WRAPPERS_LOCAL = 0x0001;
-
-/**
- * Stream wrapper bit flag -- wrapper is readable (almost always true).
- */
-const STREAM_WRAPPERS_READ = 0x0004;
-
-/**
- * Stream wrapper bit flag -- wrapper is writeable.
- */
-const STREAM_WRAPPERS_WRITE = 0x0008;
-
-/**
- * Stream wrapper bit flag -- exposed in the UI and potentially web accessible.
- */
-const STREAM_WRAPPERS_VISIBLE = 0x0010;
-
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 
 /**
  * Default mode for new directories. See drupal_chmod().
@@ -54,45 +22,6 @@ const FILE_CHMOD_DIRECTORY = 0775;
  * Default mode for new files. See drupal_chmod().
  */
 const FILE_CHMOD_FILE = 0664;
-
-/**
- * Composite stream wrapper bit flags that are usually used as the types.
- */
-
-/**
- * Stream wrapper type flag -- not visible in the UI or accessible via web,
- * but readable and writable. E.g. the temporary directory for uploads.
- */
-define('STREAM_WRAPPERS_HIDDEN', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE);
-
-/**
- * Stream wrapper type flag -- hidden, readable and writeable using local files.
- */
-define('STREAM_WRAPPERS_LOCAL_HIDDEN', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_HIDDEN);
-
-/**
- * Stream wrapper type flag -- visible, readable and writeable.
- */
-define('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE | STREAM_WRAPPERS_VISIBLE);
-
-/**
- * Stream wrapper type flag -- visible and read-only.
- */
-define('STREAM_WRAPPERS_READ_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_VISIBLE);
-
-/**
- * Stream wrapper type flag -- the default when 'type' is omitted from
- * hook_stream_wrappers(). This does not include STREAM_WRAPPERS_LOCAL,
- * because PHP grants a greater trust level to local files (for example, they
- * can be used in an "include" statement, regardless of the "allow_url_include"
- * setting), so stream wrappers need to explicitly opt-in to this.
- */
-define('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_WRITE_VISIBLE);
-
-/**
- * Stream wrapper type flag -- visible, readable and writeable using local files.
- */
-define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_NORMAL);
 
 /**
  * @defgroup file File interface
@@ -155,122 +84,46 @@ const FILE_STATUS_PERMANENT = 1;
 /**
  * Provides Drupal stream wrapper registry.
  *
- * A stream wrapper is an abstraction of a file system that allows Drupal to
- * use the same set of methods to access both local files and remote resources.
- *
- * Provide a facility for managing and querying user-defined stream wrappers
- * in PHP. PHP's internal stream_get_wrappers() doesn't return the class
- * registered to handle a stream, which we need to be able to find the handler
- * for class instantiation.
- *
- * If a module registers a scheme that is already registered with PHP, the
- * existing scheme will be unregistered and replaced with the specified class.
- *
- * A stream is referenced as "scheme://target".
- *
- * The optional $filter parameter can be used to retrieve only the stream
- * wrappers that are appropriate for particular usage. For example, this returns
- * only stream wrappers that use local file storage:
- * @code
- *   $local_stream_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
- * @endcode
- *
- * The $filter parameter can only filter to types containing a particular flag.
- * In some cases, you may want to filter to types that do not contain a
- * particular flag. For example, you may want to retrieve all stream wrappers
- * that are not writable, or all stream wrappers that are not local. PHP's
- * array_diff_key() function can be used to help with this. For example, this
- * returns only stream wrappers that do not use local file storage:
- * @code
- *   $remote_stream_wrappers = array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
- * @endcode
- *
- * @param $filter
+ * @param int $filter
  *   (Optional) Filters out all types except those with an on bit for each on
- *   bit in $filter. For example, if $filter is STREAM_WRAPPERS_WRITE_VISIBLE,
- *   which is equal to (STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE |
- *   STREAM_WRAPPERS_VISIBLE), then only stream wrappers with all three of these
- *   bits set are returned. Defaults to STREAM_WRAPPERS_ALL, which returns all
- *   registered stream wrappers.
+ *   bit in $filter. For example, if $filter is
+ *   StreamWrapperInterface::WRITE_VISIBLE, which is equal to
+ *   (StreamWrapperInterface::READ | StreamWrapperInterface::WRITE |
+ *   StreamWrapperInterface::VISIBLE), then only stream wrappers with all three
+ *   of these bits set are returned. Defaults to StreamWrapperInterface::ALL,
+ *   which returns all registered stream wrappers.
  *
- * @return
+ * @return array
  *   An array keyed by scheme, with values containing an array of information
  *   about the stream wrapper, as returned by hook_stream_wrappers(). If $filter
- *   is omitted or set to STREAM_WRAPPERS_ALL, the entire Drupal stream wrapper
- *   registry is returned. Otherwise only the stream wrappers whose 'type'
- *   bitmask has an on bit for each bit specified in $filter are returned.
+ *   is omitted or set to StreamWrapperInterface::ALL, the entire Drupal stream
+ *   wrapper registry is returned. Otherwise only the stream wrappers whose
+ *   'type' bitmask has an on bit for each bit specified in $filter are
+ *   returned.
  *
- * @see hook_stream_wrappers()
  * @see hook_stream_wrappers_alter()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('stream_wrapper_manager')->getWrappers().
  */
-function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
-  $wrappers_storage = &drupal_static(__FUNCTION__, array());
-
-  if (empty($wrappers_storage)) {
-    // Initialize $wrappers_storage, so that we are not calling this method
-    // repeatedly if no stream wrappers exist.
-    $wrappers_storage[STREAM_WRAPPERS_ALL] = array();
-    $wrappers = array();
-    if (\Drupal::hasService('module_handler')) {
-      $wrappers = \Drupal::moduleHandler()->invokeAll('stream_wrappers');
-      foreach ($wrappers as $scheme => $info) {
-        // Add defaults.
-        $wrappers[$scheme] += array('type' => STREAM_WRAPPERS_NORMAL);
-      }
-      \Drupal::moduleHandler()->alter('stream_wrappers', $wrappers);
-    }
-    $existing = stream_get_wrappers();
-    foreach ($wrappers as $scheme => $info) {
-      // We only register classes that implement our interface.
-      if (in_array('Drupal\Core\StreamWrapper\StreamWrapperInterface', class_implements($info['class']), TRUE)) {
-        // Record whether we are overriding an existing scheme.
-        if (in_array($scheme, $existing, TRUE)) {
-          $wrappers[$scheme]['override'] = TRUE;
-          stream_wrapper_unregister($scheme);
-        }
-        else {
-          $wrappers[$scheme]['override'] = FALSE;
-        }
-        if (($info['type'] & STREAM_WRAPPERS_LOCAL) == STREAM_WRAPPERS_LOCAL) {
-          stream_wrapper_register($scheme, $info['class']);
-        }
-        else {
-          stream_wrapper_register($scheme, $info['class'], STREAM_IS_URL);
-        }
-      }
-      // Pre-populate the static cache with the filters most typically used.
-      $wrappers_storage[STREAM_WRAPPERS_ALL][$scheme] = $wrappers[$scheme];
-      if (($info['type'] & STREAM_WRAPPERS_WRITE_VISIBLE) == STREAM_WRAPPERS_WRITE_VISIBLE) {
-        $wrappers_storage[STREAM_WRAPPERS_WRITE_VISIBLE][$scheme] = $wrappers[$scheme];
-      }
-    }
-  }
-
-  if (!isset($wrappers_storage[$filter])) {
-    $wrappers_storage[$filter] = array();
-    foreach ($wrappers_storage[STREAM_WRAPPERS_ALL] as $scheme => $info) {
-      // Bit-wise filter.
-      if (($info['type'] & $filter) == $filter) {
-        $wrappers_storage[$filter][$scheme] = $info;
-      }
-    }
-  }
-
-  return $wrappers_storage[$filter];
+function file_get_stream_wrappers($filter = StreamWrapperInterface::ALL) {
+  return \Drupal::service('stream_wrapper_manager')->getWrappers($filter);
 }
 
 /**
  * Returns the stream wrapper class name for a given scheme.
  *
- * @param $scheme
+ * @param string $scheme
  *   Stream scheme.
  *
- * @return
+ * @return string|bool
  *   Return string if a scheme has a registered handler, or FALSE.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('stream_wrapper_manager')->getClass().
  */
 function file_stream_wrapper_get_class($scheme) {
-  $wrappers = file_get_stream_wrappers();
-  return empty($wrappers[$scheme]) ? FALSE : $wrappers[$scheme]['class'];
+  return \Drupal::service('stream_wrapper_manager')->getClass($scheme);
 }
 
 /**
@@ -301,10 +154,10 @@ function file_uri_scheme($uri) {
  * and that it is callable. This is useful if you want to confirm a valid
  * scheme without creating a new instance of the registered handler.
  *
- * @param $scheme
+ * @param string $scheme
  *   A URI scheme, a stream is referenced as "scheme://target".
  *
- * @return
+ * @return bool
  *   Returns TRUE if the string is the name of a validated stream,
  *   or FALSE if the scheme does not have a registered handler.
  */
@@ -338,7 +191,7 @@ function file_uri_target($uri) {
 /**
  * Gets the default file stream implementation.
  *
- * @return
+ * @return string
  *   'public', 'private' or any other file scheme defined as the default.
  */
 function file_default_scheme() {
@@ -354,10 +207,10 @@ function file_default_scheme() {
  * - Remove trailing slashes from target
  * - Trim erroneous leading slashes from target. e.g. ":///" becomes "://".
  *
- * @param $uri
+ * @param string $uri
  *   String reference containing the URI to normalize.
  *
- * @return
+ * @return string
  *   The normalized URI.
  */
 function file_stream_wrapper_uri_normalize($uri) {
@@ -380,25 +233,20 @@ function file_stream_wrapper_uri_normalize($uri) {
  * The scheme determines the stream wrapper class that should be
  * used by consulting the stream wrapper registry.
  *
- * @param $uri
+ * @param string $uri
  *   A stream, referenced as "scheme://target".
  *
- * @return
+ * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
  *   Returns a new stream wrapper object appropriate for the given URI or FALSE
  *   if no registered handler could be found. For example, a URI of
  *   "private://example.txt" would return a new private stream wrapper object
  *   (Drupal\Core\StreamWrapper\PrivateStream).
+ *
+ * * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('stream_wrapper_manager')->getViaUri().
  */
 function file_stream_wrapper_get_instance_by_uri($uri) {
-  if ($scheme = file_uri_scheme($uri)) {
-    $class = file_stream_wrapper_get_class($scheme);
-    if (class_exists($class)) {
-      $instance = new $class();
-      $instance->setUri($uri);
-      return $instance;
-    }
-  }
-  return FALSE;
+  return \Drupal::service('stream_wrapper_manager')->getViaUri($uri);
 }
 
 /**
@@ -412,25 +260,20 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
  * Note: the instance URI will be initialized to "scheme://" so that you can
  * make the customary method calls as if you had retrieved an instance by URI.
  *
- * @param $scheme
+ * @param string $scheme
  *   If the stream was "public://target", "public" would be the scheme.
  *
- * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface
+ * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
  *   Returns a new stream wrapper object appropriate for the given $scheme.
  *   For example, for the public scheme a stream wrapper object
  *   (Drupal\Core\StreamWrapper\PublicStream).
  *   FALSE is returned if no registered handler could be found.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('stream_wrapper_manager')->getViaScheme().
  */
 function file_stream_wrapper_get_instance_by_scheme($scheme) {
-  $class = file_stream_wrapper_get_class($scheme);
-  if (class_exists($class)) {
-    $instance = new $class();
-    $instance->setUri($scheme . '://');
-    return $instance;
-  }
-  else {
-    return FALSE;
-  }
+  return \Drupal::service('stream_wrapper_manager')->getViaScheme($scheme);
 }
 
 /**

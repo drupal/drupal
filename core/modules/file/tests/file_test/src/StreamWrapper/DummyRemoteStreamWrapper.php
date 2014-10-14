@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\file_test\DummyRemoteStreamWrapper.
+ * Contains \Drupal\file_test\StreamWrapper\DummyRemoteStreamWrapper.
  */
 
-namespace Drupal\file_test;
+namespace Drupal\file_test\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 
@@ -17,6 +17,21 @@ use Drupal\Core\StreamWrapper\PublicStream;
  * Basically just the public scheme but not returning a local file for realpath.
  */
 class DummyRemoteStreamWrapper extends PublicStream {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Dummy files (remote)');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Dummy wrapper for simpletest (remote).');
+  }
+
   function realpath() {
     return FALSE;
   }

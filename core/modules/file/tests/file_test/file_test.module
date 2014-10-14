@@ -14,29 +14,6 @@ const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
 
 /**
- * Implements hook_stream_wrappers().
- */
-function file_test_stream_wrappers() {
-  return array(
-    'dummy' => array(
-      'name' => t('Dummy files'),
-      'class' => 'Drupal\file_test\DummyStreamWrapper',
-      'description' => t('Dummy wrapper for simpletest.'),
-    ),
-    'dummy-remote' => array(
-      'name' => t('Dummy files (remote)'),
-      'class' => 'Drupal\file_test\DummyRemoteStreamWrapper',
-      'description' => t('Dummy wrapper for simpletest (remote).'),
-    ),
-    'dummy-readonly' => array(
-      'name' => t('Dummy files (readonly)'),
-      'class' => 'Drupal\file_test\DummyReadOnlyStreamWrapper',
-      'description' => t('Dummy wrapper for simpletest (readonly).'),
-    ),
-  );
-}
-
-/**
  * Reset/initialize the history of calls to the file_* hooks.
  *
  * @see file_test_get_calls()

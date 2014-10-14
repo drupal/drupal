@@ -75,9 +75,7 @@ class TestRunnerKernel extends DrupalKernel {
 
     simpletest_classloader_register();
 
-    // Register System module stream wrappers and create the build/artifacts
-    // directory if necessary.
-    file_get_stream_wrappers();
+    // Create the build/artifacts directory if necessary.
     if (!is_dir('public://simpletest')) {
       mkdir('public://simpletest', 0777, TRUE);
     }

@@ -738,7 +738,7 @@ abstract class WebTestBase extends TestBase {
    *
    * Installs Drupal with the installation profile specified in
    * \Drupal\simpletest\WebTestBase::$profile into the prefixed database.
-
+   *
    * Afterwards, installs any additional modules specified in the static
    * \Drupal\simpletest\WebTestBase::$modules property of each class in the
    * class hierarchy.
@@ -909,13 +909,17 @@ abstract class WebTestBase extends TestBase {
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
     // the child site.
-    // Affects e.g. file_get_stream_wrappers().
     // @see \Drupal\Core\DrupalKernel::bootCode()
     // @todo Test-specific setUp() methods may set up further fixtures; find a
     //   way to execute this after setUp() is done, or to eliminate it entirely.
     $this->resetAll();
     $this->kernel->prepareLegacyRequest($request);
 
+    // Explicitly call register() again on the container registered in \Drupal.
+    // @todo This should already be called through
+    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
+    //   appears to be calling a different container.
+    $this->container->get('stream_wrapper_manager')->register();
     // Temporary fix so that when running from run-tests.sh we don't get an
     // empty current path which would indicate we're on the home page.
     $path = current_path();

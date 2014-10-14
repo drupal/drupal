@@ -865,8 +865,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // via Drush, as the 'translations' stream wrapper is provided by
         // Interface Translation module and is later used to import
         // translations.
-        drupal_static_reset('file_get_stream_wrappers');
-        file_get_stream_wrappers();
+        \Drupal::service('stream_wrapper_manager')->register();
 
         // Update the theme registry to include it.
         drupal_theme_rebuild();

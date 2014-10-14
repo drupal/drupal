@@ -35,7 +35,7 @@ class StreamWrapperTest extends FileTestBase {
    *
    * @var string
    */
-  protected $classname = 'Drupal\file_test\DummyStreamWrapper';
+  protected $classname = 'Drupal\file_test\StreamWrapper\DummyStreamWrapper';
 
   /**
    * Test the getClassName() function.

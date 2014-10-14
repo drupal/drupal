@@ -13,6 +13,8 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,16 +30,26 @@ class FileSystemForm extends ConfigFormBase {
   protected $dateFormatter;
 
   /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
+   */
+  protected $streamWrapperManager;
+
+  /**
    * Constructs a FileSystemForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $stream_wrapper_manager
+   *   The stream wrapper manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, DateFormatter $date_formatter) {
+  public function __construct(ConfigFactoryInterface $config_factory, DateFormatter $date_formatter, StreamWrapperManager $stream_wrapper_manager) {
     parent::__construct($config_factory);
     $this->dateFormatter = $date_formatter;
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -46,7 +58,8 @@ class FileSystemForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static (
       $container->get('config.factory'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('stream_wrapper_manager')
     );
   }
 
@@ -89,9 +102,7 @@ class FileSystemForm extends ConfigFormBase {
     );
     // Any visible, writeable wrapper can potentially be used for the files
     // directory, including a remote file system that integrates with a CDN.
-    foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
-      $options[$scheme] = String::checkPlain($info['description']);
-    }
+    $options = $this->streamWrapperManager->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
 
     if (!empty($options)) {
       $form['file_default_scheme'] = array(

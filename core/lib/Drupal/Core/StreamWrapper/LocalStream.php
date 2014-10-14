@@ -43,6 +43,13 @@ abstract class LocalStream implements StreamWrapperInterface {
   protected $uri;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getType() {
+    return StreamWrapperInterface::NORMAL;
+  }
+
+  /**
    * Gets the path that the wrapper is responsible for.
    *
    * @todo Review this method name in D8 per http://drupal.org/node/701358.

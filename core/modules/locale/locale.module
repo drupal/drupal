@@ -196,21 +196,6 @@ function locale_theme() {
 }
 
 /**
- * Implements hook_stream_wrappers().
- */
-function locale_stream_wrappers() {
-  $wrappers = array(
-    'translations' => array(
-      'name' => new TranslationWrapper('Translation files'),
-      'class' => 'Drupal\locale\TranslationsStream',
-      'description' => new TranslationWrapper('Translation files'),
-      'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
-    ),
-  );
-  return $wrappers;
-}
-
-/**
  * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
  */
 function locale_configurable_language_insert(ConfigurableLanguage $language) {

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 
 /**
  * Defines the GD2 toolkit for image manipulation within Drupal.
@@ -165,7 +166,7 @@ class GDToolkit extends ImageToolkitBase {
     // Work around lack of stream wrapper support in imagejpeg() and imagepng().
     if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
       // If destination is not local, save image to temporary local file.
-      $local_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
+      $local_wrappers = file_get_stream_wrappers(StreamWrapperInterface::LOCAL);
       if (!isset($local_wrappers[$scheme])) {
         $permanent_destination = $destination;
         $destination = drupal_tempnam('temporary://', 'gd_');

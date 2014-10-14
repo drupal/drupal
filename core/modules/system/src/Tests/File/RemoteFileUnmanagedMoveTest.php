@@ -33,7 +33,7 @@ class RemoteFileUnmanagedMoveTest extends UnmanagedMoveTest {
    *
    * @var string
    */
-  protected $classname = 'Drupal\file_test\DummyRemoteStreamWrapper';
+  protected $classname = 'Drupal\file_test\StreamWrapper\DummyRemoteStreamWrapper';
 
   protected function setUp() {
     parent::setUp();

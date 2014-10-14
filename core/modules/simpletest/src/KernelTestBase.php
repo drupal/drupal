@@ -16,6 +16,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Parameter;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -78,13 +79,11 @@ abstract class KernelTestBase extends TestBase {
   protected $keyValueFactory;
 
   /**
-   * A list of stream wrappers that have been registered for this test.
-   *
-   * @see \Drupal\simpletest\KernelTestBase::registerStreamWrapper()
+   * Array of registered stream wrappers.
    *
    * @var array
    */
-  private $streamWrappers = array();
+  protected $streamWrappers = array();
 
   /**
    * {@inheritdoc}
@@ -305,6 +304,12 @@ abstract class KernelTestBase extends TestBase {
       $container->getDefinition('password')->setArguments(array(1));
     }
 
+    // Register the stream wrapper manager.
+    $container
+      ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
+      ->addArgument(new Reference('module_handler'))
+      ->addMethodCall('setContainer', array(new Reference('service_container')));
+
     $request = Request::create('/');
     $container->get('request_stack')->push($request);
   }
@@ -495,53 +500,10 @@ abstract class KernelTestBase extends TestBase {
    *   The fully qualified class name to register.
    * @param int $type
    *   The Drupal Stream Wrapper API type. Defaults to
-   *   STREAM_WRAPPERS_LOCAL_NORMAL.
+   *   StreamWrapperInterface::NORMAL.
    */
-  protected function registerStreamWrapper($scheme, $class, $type = STREAM_WRAPPERS_LOCAL_NORMAL) {
-    if (isset($this->streamWrappers[$scheme])) {
-      $this->unregisterStreamWrapper($scheme, $this->streamWrappers[$scheme]);
-    }
-    $this->streamWrappers[$scheme] = $type;
-    if (($type & STREAM_WRAPPERS_LOCAL) == STREAM_WRAPPERS_LOCAL) {
-      stream_wrapper_register($scheme, $class);
-    }
-    else {
-      stream_wrapper_register($scheme, $class, STREAM_IS_URL);
-    }
-    // @todo Revamp Drupal's stream wrapper API for D8.
-    // @see https://drupal.org/node/2028109
-    $wrappers = &drupal_static('file_get_stream_wrappers', array());
-    $wrappers[STREAM_WRAPPERS_ALL][$scheme] = array(
-      'type' => $type,
-      'class' => $class,
-    );
-    if (($type & STREAM_WRAPPERS_WRITE_VISIBLE) == STREAM_WRAPPERS_WRITE_VISIBLE) {
-      $wrappers[STREAM_WRAPPERS_WRITE_VISIBLE][$scheme] = $wrappers[STREAM_WRAPPERS_ALL][$scheme];
-    }
-  }
-
-  /**
-   * Unregisters a stream wrapper previously registered by this test.
-   *
-   * KernelTestBase::tearDown() automatically cleans up all registered
-   * stream wrappers, so this usually does not have to be called manually.
-   *
-   * @param string $scheme
-   *   The scheme to unregister.
-   * @param int $type
-   *   The Drupal Stream Wrapper API type of the scheme to unregister.
-   */
-  protected function unregisterStreamWrapper($scheme, $type) {
-    stream_wrapper_unregister($scheme);
-    unset($this->streamWrappers[$scheme]);
-    // @todo Revamp Drupal's stream wrapper API for D8.
-    // @see https://drupal.org/node/2028109
-    $wrappers = &drupal_static('file_get_stream_wrappers', array());
-    foreach ($wrappers as $filter => $schemes) {
-      if (is_int($filter) && (($filter & $type) == $filter)) {
-        unset($wrappers[$filter][$scheme]);
-      }
-    }
+  protected function registerStreamWrapper($scheme, $class, $type = StreamWrapperInterface::NORMAL) {
+    $this->container->get('stream_wrapper_manager')->registerWrapper($scheme, $class, $type);
   }
 
   /**

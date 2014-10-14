@@ -1328,80 +1328,10 @@ function hook_modules_uninstalled($modules) {
 }
 
 /**
- * Registers PHP stream wrapper implementations associated with a module.
- *
- * Provide a facility for managing and querying user-defined stream wrappers
- * in PHP. PHP's internal stream_get_wrappers() doesn't return the class
- * registered to handle a stream, which we need to be able to find the handler
- * for class instantiation.
- *
- * If a module registers a scheme that is already registered with PHP, it will
- * be unregistered and replaced with the specified class.
- *
- * @return
- *   A nested array, keyed first by scheme name ("public" for "public://"),
- *   then keyed by the following values:
- *   - 'name' A short string to name the wrapper.
- *   - 'class' A string specifying the PHP class that implements the
- *     Drupal\Core\StreamWrapper\StreamWrapperInterface interface.
- *   - 'description' A string with a short description of what the wrapper does.
- *   - 'type' (Optional) A bitmask of flags indicating what type of streams this
- *     wrapper will access - local or remote, readable and/or writeable, etc.
- *     Many shortcut constants are defined in file.inc. Defaults to
- *     STREAM_WRAPPERS_NORMAL which includes all of these bit flags:
- *     - STREAM_WRAPPERS_READ
- *     - STREAM_WRAPPERS_WRITE
- *     - STREAM_WRAPPERS_VISIBLE
- *
- * @see file_get_stream_wrappers()
- * @see hook_stream_wrappers_alter()
- * @see system_stream_wrappers()
- */
-function hook_stream_wrappers() {
-  return array(
-    'public' => array(
-      'name' => t('Public files'),
-      'class' => 'Drupal\Core\StreamWrapper\PublicStream',
-      'description' => t('Public local files served by the webserver.'),
-      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
-    ),
-    'private' => array(
-      'name' => t('Private files'),
-      'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
-      'description' => t('Private local files served by Drupal.'),
-      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
-    ),
-    'temp' => array(
-      'name' => t('Temporary files'),
-      'class' => 'Drupal\Core\StreamWrapper\TemporaryStream',
-      'description' => t('Temporary local files for upload and previews.'),
-      'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
-    ),
-    'cdn' => array(
-      'name' => t('Content delivery network files'),
-      // @todo: Fix the name of this class when we decide on module PSR-0 usage.
-      'class' => 'MyModuleCDNStream',
-      'description' => t('Files served by a content delivery network.'),
-      // 'type' can be omitted to use the default of STREAM_WRAPPERS_NORMAL
-    ),
-    'youtube' => array(
-      'name' => t('YouTube video'),
-      // @todo: Fix the name of this class when we decide on module PSR-0 usage.
-      'class' => 'MyModuleYouTubeStream',
-      'description' => t('Video streamed from YouTube.'),
-      // A module implementing YouTube integration may decide to support using
-      // the YouTube API for uploading video, but here, we assume that this
-      // particular module only supports playing YouTube video.
-      'type' => STREAM_WRAPPERS_READ_VISIBLE,
-    ),
-  );
-}
-
-/**
  * Alters the list of PHP stream wrapper implementations.
  *
  * @see file_get_stream_wrappers()
- * @see hook_stream_wrappers()
+ * @see \Drupal\Core\StreamWrapper\StreamWrapperManager
  */
 function hook_stream_wrappers_alter(&$wrappers) {
   // Change the name of private files to reflect the performance.

@@ -26,7 +26,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
    *
    * @var string
    */
-  protected $classname = 'Drupal\file_test\DummyReadOnlyStreamWrapper';
+  protected $classname = 'Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper';
 
   /**
    * Test write functionality of the read-only stream wrapper.

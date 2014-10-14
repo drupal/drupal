@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\file_test\DummyReadOnlyStreamWrapper.
+ * Contains \Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper.
  */
 
-namespace Drupal\file_test;
+namespace Drupal\file_test\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
 
@@ -15,6 +15,21 @@ use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
  * Dummy stream wrapper implementation (dummy-readonly://).
  */
 class DummyReadOnlyStreamWrapper extends LocalReadOnlyStream {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Dummy files (readonly)');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Dummy wrapper for simpletest (readonly).');
+  }
+
   function getDirectoryPath() {
     return conf_path() . '/files';
   }

@@ -5,6 +5,7 @@
  * Administration functions for editor.module.
  */
 
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\editor\Entity\Editor;
 
@@ -51,10 +52,7 @@ function editor_image_upload_settings_form(Editor $editor) {
 
   // Any visible, writable wrapper can potentially be used for uploads,
   // including a remote file system that integrates with a CDN.
-  $stream_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
-  foreach ($stream_wrappers as $scheme => $info) {
-    $options[$scheme] = $info['description'];
-  }
+  $options = \Drupal::service('stream_wrapper_manager')->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
   if (!empty($options)) {
     $form['scheme'] = array(
       '#type' => 'radios',
@@ -68,8 +66,8 @@ function editor_image_upload_settings_form(Editor $editor) {
   // Set data- attributes with human-readable names for all possible stream
   // wrappers, so that drupal.ckeditor.drupalimage.admin's summary rendering
   // can use that.
-  foreach ($stream_wrappers as $scheme => $info) {
-    $form['scheme'][$scheme]['#attributes']['data-label'] = t('Storage: @name', array('@name' => $info['name']));
+  foreach (\Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE) as $scheme => $name) {
+    $form['scheme'][$scheme]['#attributes']['data-label'] = t('Storage: @name', array('@name' => $name));
   }
 
   $form['directory'] = array(

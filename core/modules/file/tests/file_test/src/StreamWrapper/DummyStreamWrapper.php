@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\file_test\DummyStreamWrapper.
+ * Contains \Drupal\file_test\StreamWrapper\DummyStreamWrapper.
  */
 
-namespace Drupal\file_test;
+namespace Drupal\file_test\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\LocalStream;
 
@@ -15,6 +15,21 @@ use Drupal\Core\StreamWrapper\LocalStream;
  * Dummy stream wrapper implementation (dummy://).
  */
 class DummyStreamWrapper extends LocalStream {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Dummy files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Dummy wrapper for simpletest.');
+  }
+
   function getDirectoryPath() {
     return conf_path() . '/files';
   }

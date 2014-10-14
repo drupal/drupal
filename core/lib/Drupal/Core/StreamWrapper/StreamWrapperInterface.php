@@ -30,6 +30,100 @@ namespace Drupal\Core\StreamWrapper;
 interface StreamWrapperInterface extends PhpStreamWrapperInterface {
 
   /**
+   * Stream wrapper bit flags that are the basis for composite types.
+   *
+   * Note that 0x0002 is skipped, because it was the value of a constant that
+   * has since been removed.
+   */
+
+  /**
+   * A filter that matches all wrappers.
+   */
+  const ALL = 0x0000;
+
+  /**
+   * Refers to a local file system location.
+   */
+  const LOCAL = 0x0001;
+
+  /**
+   * Wrapper is readable (almost always true).
+   */
+  const READ = 0x0004;
+
+  /**
+   * Wrapper is writeable.
+   */
+  const WRITE = 0x0008;
+
+  /**
+   * Exposed in the UI and potentially web accessible.
+   */
+  const VISIBLE = 0x0010;
+
+  /**
+   * Composite stream wrapper bit flags that are usually used as the types.
+   */
+
+  /**
+   * Not visible in the UI or accessible via web, but readable and writable.
+   * E.g. the temporary directory for uploads.
+   */
+  const HIDDEN = 0x000C;
+
+  /**
+   * Hidden, readable and writeable using local files.
+   */
+  const LOCAL_HIDDEN = 0x000D;
+
+  /**
+   * Visible, readable and writeable.
+   */
+  const WRITE_VISIBLE = 0x001C;
+
+  /**
+   * Visible and read-only.
+   */
+  const READ_VISIBLE = 0x0014;
+
+  /**
+   * This is the default 'type' falg. This does not include
+   * StreamWrapperInterface::LOCAL, because PHP grants a greater trust level to
+   * local files (for example, they can be used in an "include" statement,
+   * regardless of the "allow_url_include" setting), so stream wrappers need to
+   * explicitly opt-in to this.
+   */
+  const NORMAL = 0x001C;
+
+  /**
+   * Visible, readable and writeable using local files.
+   */
+  const LOCAL_NORMAL = 0x001D;
+
+  /**
+   * Returns the type of stream wrapper.
+   *
+   * @return int
+   */
+  public static function getType();
+
+  /**
+   * Returns the name of the stream wrapper for use in the UI.
+   *
+   * @return string
+   *   The stream wrapper name.
+   */
+  public function getName();
+
+  /**
+   * Returns the description of the stream wrapper for use in the UI.
+   *
+   * @return string
+   *   The stream wrapper description.
+   */
+  public function getDescription();
+
+  /**
    * Sets the absolute stream resource URI.
    *
    * This allows you to set the URI. Generally is only called by the factory

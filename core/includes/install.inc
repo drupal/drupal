@@ -652,16 +652,6 @@ function drupal_install_system($install_state) {
   $kernel->getContainer()->get('module_handler')->install(array('system'), FALSE);
   \Drupal::service('router.builder')->rebuild();
 
-  // DrupalKernel::prepareLegacyRequest() above calls into
-  // DrupalKernel::bootCode(), which primes file_get_stream_wrappers()'s static
-  // list of custom stream wrappers that are based on the currently enabled
-  // list of modules (none).
-  // @todo Custom stream wrappers of a new module have to be registered as soon
-  //   as the module is installed/enabled. Fix either ModuleHandler::install()
-  //   and/or DrupalKernel::updateModules().
-  // @see https://drupal.org/node/2028109
-  drupal_static_reset('file_get_stream_wrappers');
-
   // Ensure default language is saved.
   if (isset($install_state['parameters']['langcode'])) {
     \Drupal::config('system.site')

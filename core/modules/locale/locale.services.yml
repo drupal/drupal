@@ -16,3 +16,7 @@ services:
     tags:
       - { name: string_translator }
       - { name: needs_destruction }
+  stream_wrapper.translations:
+    class: Drupal\locale\StreamWrapper\TranslationsStream
+    tags:
+      - { name: stream_wrapper, scheme: translations }

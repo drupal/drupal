@@ -16,6 +16,27 @@ namespace Drupal\Core\StreamWrapper;
 class TemporaryStream extends LocalStream {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getType() {
+    return StreamWrapperInterface::LOCAL_HIDDEN;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Temporary files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Temporary local files for upload and previews.');
+  }
+
+  /**
    * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
    */
   public function getDirectoryPath() {

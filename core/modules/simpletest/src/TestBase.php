@@ -1063,10 +1063,7 @@ abstract class TestBase {
     // - WebTestBase re-initializes Drupal stream wrappers after installation.
     // The original stream wrappers are restored after the test run.
     // @see TestBase::restoreEnvironment()
-    $wrappers = file_get_stream_wrappers();
-    foreach ($wrappers as $scheme => $info) {
-      stream_wrapper_unregister($scheme);
-    }
+    $this->originalContainer->get('stream_wrapper_manager')->unregister();
 
     // Reset statics.
     drupal_static_reset();
@@ -1188,6 +1185,12 @@ abstract class TestBase {
     \Drupal::setContainer($this->originalContainer);
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
 
+    // Re-initialize original stream wrappers of the parent site.
+    // This must happen after static variables have been reset and the original
+    // container and $config_directories are restored, as simpletest_log_read()
+    // uses the public stream wrapper to locate the error.log.
+    $this->originalContainer->get('stream_wrapper_manager')->register();
+
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);
     }
@@ -1195,9 +1198,6 @@ abstract class TestBase {
       drupal_valid_test_ua(FALSE);
     }
     conf_path(TRUE, TRUE);
-
-    // Restore stream wrappers of the test runner.
-    file_get_stream_wrappers();
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

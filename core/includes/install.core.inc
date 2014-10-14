@@ -325,6 +325,12 @@ function install_begin_request(&$install_state) {
     ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
     ->addArgument(new Reference('config.factory'));
 
+  // Register the stream wrapper manager.
+  $container
+    ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
+    ->addArgument(new Reference('module_handler'))
+    ->addMethodCall('setContainer', array(new Reference('service_container')));
+
   \Drupal::setContainer($container);
 
   // Determine whether base system services are ready to operate.

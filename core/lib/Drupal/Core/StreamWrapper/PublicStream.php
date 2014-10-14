@@ -21,6 +21,27 @@ class PublicStream extends LocalStream {
   /**
    * {@inheritdoc}
    */
+  public static function getType() {
+    return StreamWrapperInterface::LOCAL_NORMAL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Public files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Public local files served by the webserver.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDirectoryPath() {
     return static::basePath();
   }

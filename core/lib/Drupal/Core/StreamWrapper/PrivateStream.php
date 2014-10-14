@@ -20,6 +20,27 @@ class PrivateStream extends LocalStream {
   use UrlGeneratorTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getType() {
+    return StreamWrapperInterface::LOCAL_NORMAL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return t('Private files');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return t('Private local files served by Drupal.');
+  }
+
+  /**
    * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
    */
   public function getDirectoryPath() {

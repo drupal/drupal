@@ -389,6 +389,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $seed = unpack("L", Crypt::randomBytes(4));
     mt_srand($seed[1]);
 
+    $this->container->get('stream_wrapper_manager')->register();
     $this->booted = TRUE;
 
     return $this;
@@ -401,6 +402,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (FALSE === $this->booted) {
       return;
     }
+    $this->container->get('stream_wrapper_manager')->unregister();
     $this->booted = FALSE;
     $this->container = NULL;
     $this->moduleList = NULL;
@@ -429,9 +431,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Put the request on the stack.
     $this->container->get('request_stack')->push($request);
-
-    // Make sure all stream wrappers are registered.
-    file_get_stream_wrappers();
 
     // Set the allowed protocols once we have the config available.
     $allowed_protocols = $this->container->get('config.factory')->get('system.filter')->get('protocols');
