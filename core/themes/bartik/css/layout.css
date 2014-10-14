@@ -27,7 +27,6 @@ body,
 .region-header {
   float: right; /* LTR */
   margin: .5em 5px .75em;
-  border: 1px solid #ccc;
 }
 [dir="rtl"] .region-header {
   float: left;
