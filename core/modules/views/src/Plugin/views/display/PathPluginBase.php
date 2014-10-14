@@ -15,6 +15,7 @@ use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Url;
 use Drupal\views\Views;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -458,6 +459,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     if (!empty($parsed_url['query'])) {
       $errors[] = $this->t('No query allowed.');
+    }
+
+    if (!parse_url('base://' . $path)) {
+      $errors[] = $this->t('Invalid path. Valid characters are alphanumerics as well as "-", ".", "_" and "~".');
     }
 
     $path_sections = explode('/', $path);
