@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Plugin\ImageToolkit;
 
+use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
@@ -137,16 +138,21 @@ class GDToolkit extends ImageToolkitBase {
         return TRUE;
       }
       else {
-        // Convert indexed images to true color, so that filters work
-        // correctly and don't result in unnecessary dither.
-        $new_image = $this->createTmp($this->getType(), imagesx($resource), imagesy($resource));
-        if ($ret = (bool) $new_image) {
-          imagecopy($new_image, $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+        // Convert indexed images to truecolor, copying the image to a new
+        // truecolor resource, so that filters work correctly and don't result
+        // in unnecessary dither.
+        $data = array(
+          'width' => imagesx($resource),
+          'height' => imagesy($resource),
+          'extension' => image_type_to_extension($this->getType(), FALSE),
+          'transparent_color' => $this->getTransparentColor(),
+        );
+        if ($this->apply('create_new', $data)) {
+          imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
           imagedestroy($resource);
-          $this->setResource($new_image);
         }
-        return $ret;
       }
+      return (bool) $this->getResource();
     }
     return FALSE;
   }
@@ -211,58 +217,35 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
-   * Creates a truecolor image preserving transparency from a provided image.
+   * Gets the color set for transparency in GIF images.
    *
-   * @param int $type
-   *   An image type represented by a PHP IMAGETYPE_* constant (e.g.
-   *   IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
-   * @param int $width
-   *   The new width of the new image, in pixels.
-   * @param int $height
-   *   The new height of the new image, in pixels.
-   *
-   * @return resource
-   *   A GD image handle.
+   * @return string|null
+   *   A color string like '#rrggbb', or NULL if not set or not relevant.
    */
-  public function createTmp($type, $width, $height) {
-    $res = imagecreatetruecolor($width, $height);
-
-    if ($type == IMAGETYPE_GIF) {
-      // Find out if a transparent color is set, will return -1 if no
-      // transparent color has been defined in the image.
-      $transparent = imagecolortransparent($this->getResource());
-      if ($transparent >= 0) {
-        // Find out the number of colors in the image palette. It will be 0 for
-        // truecolor images.
-        $palette_size = imagecolorstotal($this->getResource());
-        if ($palette_size == 0 || $transparent < $palette_size) {
-          // Set the transparent color in the new resource, either if it is a
-          // truecolor image or if the transparent color is part of the palette.
-          // Since the index of the transparency color is a property of the
-          // image rather than of the palette, it is possible that an image
-          // could be created with this index set outside the palette size (see
-          // http://stackoverflow.com/a/3898007).
-          $transparent_color = imagecolorsforindex($this->getResource(), $transparent);
-          $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
-
-          // Flood with our new transparent color.
-          imagefill($res, 0, 0, $transparent);
-          imagecolortransparent($res, $transparent);
-        }
+  public function getTransparentColor() {
+    if (!$this->getResource() || $this->getType() != IMAGETYPE_GIF) {
+      return NULL;
+    }
+    // Find out if a transparent color is set, will return -1 if no
+    // transparent color has been defined in the image.
+    $transparent = imagecolortransparent($this->getResource());
+    if ($transparent >= 0) {
+      // Find out the number of colors in the image palette. It will be 0 for
+      // truecolor images.
+      $palette_size = imagecolorstotal($this->getResource());
+      if ($palette_size == 0 || $transparent < $palette_size) {
+        // Return the transparent color, either if it is a truecolor image
+        // or if the transparent color is part of the palette.
+        // Since the index of the transparent color is a property of the
+        // image rather than of the palette, it is possible that an image
+        // could be created with this index set outside the palette size.
+        // (see http://stackoverflow.com/a/3898007).
+        $rgb = imagecolorsforindex($this->getResource(), $transparent);
+        unset($rgb['alpha']);
+        return Color::rgbToHex($rgb);
       }
     }
-    elseif ($type == IMAGETYPE_PNG) {
-      imagealphablending($res, FALSE);
-      $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
-      imagefill($res, 0, 0, $transparency);
-      imagealphablending($res, TRUE);
-      imagesavealpha($res, TRUE);
-    }
-    else {
-      imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
-    }
-
-    return $res;
+    return NULL;
   }
 
   /**

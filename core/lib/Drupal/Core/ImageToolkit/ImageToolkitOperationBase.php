@@ -59,10 +59,10 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
   /**
    * Returns the image toolkit instance for this operation.
    *
-   * Image toolkit implementers should provide a trait that overrides this
-   * method to correctly document the return type of this getter. This provides
-   * better DX (code checking and code completion) for image toolkit operation
-   * developers.
+   * Image toolkit implementers should provide a toolkit operation base class
+   * that overrides this method to correctly document the return type of this
+   * getter. This provides better DX (code checking and code completion) for
+   * image toolkit operation developers.
    *
    * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */

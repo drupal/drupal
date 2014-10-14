@@ -252,6 +252,10 @@ class ToolkitGdTest extends KernelTestBase {
       );
     }
 
+    // Prepare a directory for test file results.
+    $directory = $this->public_files_directory .'/imagetest';
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
@@ -305,8 +309,6 @@ class ToolkitGdTest extends KernelTestBase {
           $correct_dimensions_object = FALSE;
         }
 
-        $directory = $this->public_files_directory .'/imagetest';
-        file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         $file_path = $directory . '/' . $op . image_type_to_extension($image->getToolkit()->getType());
         $image->save($file_path);
 
@@ -358,6 +360,45 @@ class ToolkitGdTest extends KernelTestBase {
         $resource = $image_reloaded->getToolkit()->getResource();
       }
     }
+
+    // Test creation of image from scratch, and saving to storage.
+    foreach (array(IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG) as $type) {
+      $image = $this->imageFactory->get();
+      $image->createNew(50, 20, image_type_to_extension($type, FALSE), '#ffff00');
+      $file = 'from_null' . image_type_to_extension($type);
+      $file_path = $directory . '/' . $file ;
+      $this->assertEqual(50, $image->getWidth(), String::format('Image file %file has the correct width.', array('%file' => $file)));
+      $this->assertEqual(20, $image->getHeight(), String::format('Image file %file has the correct height.', array('%file' => $file)));
+      $this->assertEqual(image_type_to_mime_type($type), $image->getMimeType(), String::format('Image file %file has the correct MIME type.', array('%file' => $file)));
+      $this->assertTrue($image->save($file_path), String::format('Image %file created anew from a null image was saved.', array('%file' => $file)));
+
+      // Reload saved image.
+      $image_reloaded = $this->imageFactory->get($file_path);
+      if (!$image_reloaded->isValid()) {
+        $this->fail(String::format('Could not load image %file.', array('%file' => $file)));
+        continue;
+      }
+      $this->assertEqual(50, $image_reloaded->getWidth(), String::format('Image file %file has the correct width.', array('%file' => $file)));
+      $this->assertEqual(20, $image_reloaded->getHeight(), String::format('Image file %file has the correct height.', array('%file' => $file)));
+      $this->assertEqual(image_type_to_mime_type($type), $image_reloaded->getMimeType(), String::format('Image file %file has the correct MIME type.', array('%file' => $file)));
+      if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
+        $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), String::format('Image file %file has the correct transparent color channel set.', array('%file' => $file)));
+      }
+      else  {
+        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), String::format('Image file %file has no color channel set.', array('%file' => $file)));
+      }
+    }
+
+    // Test failures of CreateNew.
+    $image = $this->imageFactory->get();
+    $image->createNew(-50, 20);
+    $this->assertFalse($image->isValid(), 'CreateNew with negative width fails.');
+    $image->createNew(50, 20, 'foo');
+    $this->assertFalse($image->isValid(), 'CreateNew with invalid extension fails.');
+    $image->createNew(50, 20, 'gif', '#foo');
+    $this->assertFalse($image->isValid(), 'CreateNew with invalid color hex string fails.');
+    $image->createNew(50, 20, 'gif', '#ff0000');
+    $this->assertTrue($image->isValid(), 'CreateNew with valid arguments validates the Image.');
   }
 
   /**

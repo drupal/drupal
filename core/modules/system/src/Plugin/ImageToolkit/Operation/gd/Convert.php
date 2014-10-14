@@ -47,19 +47,29 @@ class Convert extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function execute(array $arguments) {
-    $type = $this->getToolkit()->extensionToImageType($arguments['extension']);
-
-    $res = $this->getToolkit()->createTmp($type, $this->getToolkit()->getWidth(), $this->getToolkit()->getHeight());
-    if (!imagecopyresampled($res, $this->getToolkit()->getResource(), 0, 0, 0, 0, $this->getToolkit()->getWidth(), $this->getToolkit()->getHeight(), $this->getToolkit()->getWidth(), $this->getToolkit()->getHeight())) {
-      return FALSE;
+    // Create a new resource of the required dimensions and format, and copy
+    // the original resource on it with resampling. Destroy the original
+    // resource upon success.
+    $width = $this->getToolkit()->getWidth();
+    $height = $this->getToolkit()->getHeight();
+    $original_resource = $this->getToolkit()->getResource();
+    $original_type = $this->getToolkit()->getType();
+    $data = array(
+      'width' => $width,
+      'height' => $height,
+      'extension' => $arguments['extension'],
+      'transparent_color' => $this->getToolkit()->getTransparentColor()
+    );
+    if ($this->getToolkit()->apply('create_new', $data)) {
+      if (imagecopyresampled($this->getToolkit()->getResource(), $original_resource, 0, 0, 0, 0, $width, $height, $width, $height)) {
+        imagedestroy($original_resource);
+        return TRUE;
+      }
+      // In case of error, reset resource and type to as it was.
+      $this->getToolkit()->setResource($original_resource);
+      $this->getToolkit()->setType($original_type);
     }
-    imagedestroy($this->getToolkit()->getResource());
-
-    // Update the image object.
-    $this->getToolkit()->setType($type);
-    $this->getToolkit()->setResource($res);
-
-    return TRUE;
+    return FALSE;
   }
 
 }
