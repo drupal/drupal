@@ -457,11 +457,11 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDescription(t('The user language code.'));
 
     $fields['preferred_langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Preferred admin language code'))
+      ->setLabel(t('Preferred language code'))
       ->setDescription(t("The user's preferred language code for receiving emails and viewing the site."));
 
     $fields['preferred_admin_langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Preferred language code'))
+      ->setLabel(t('Preferred admin language code'))
       ->setDescription(t("The user's preferred language code for viewing administration pages."))
       ->setDefaultValue('');
 

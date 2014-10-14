@@ -7,66 +7,41 @@
 
 namespace Drupal\user;
 
-use Drupal\views\EntityViewsDataInterface;
+use Drupal\views\EntityViewsData;
 
 /**
  * Provides the views data for the user entity type.
  */
-class UserViewsData implements EntityViewsDataInterface {
+class UserViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}
    */
   public function getViewsData() {
-    // Define the base group of this table. Fields that don't have a group defined
-    // will go into this field by default.
-    $data['users']['table']['group']  = t('User');
+    $data = parent::getViewsData();
 
-    $data['users']['table']['base'] = array(
-      'field' => 'uid',
-      'title' => t('User'),
-      'help' => t('Users who have created accounts on your site.'),
-      'access query tag' => 'user_access',
-    );
-    $data['users']['table']['entity type'] = 'user';
+    $data['users']['table']['base']['help'] = t('Users who have created accounts on your site.');
+    $data['users']['table']['base']['access query tag'] = 'user_access';
+
     $data['users']['table']['wizard_id'] = 'user';
 
-    $data['users_field_data']['table']['group'] = t('User');
-    $data['users_field_data']['table']['entity type'] = 'user';
-    $data['users_field_data']['table']['join']['users'] = array(
-      'type' => 'INNER',
-      'left_field' => 'uid',
-      'field' => 'uid',
+    $data['users']['uid']['field']['id'] = 'user';
+    $data['users']['uid']['argument']['id'] = 'user_uid';
+    $data['users']['uid']['argument'] += array(
+      'name table' => 'users_field_data',
+      'name field' => 'name',
+      'empty field name' => \Drupal::config('user.settings')->get('anonymous'),
     );
-
-    $data['users']['uid'] = array(
-      'title' => t('Uid'),
-      'help' => t('The user ID'),
-      'field' => array(
-        'id' => 'user',
-      ),
-      'argument' => array(
-        'id' => 'user_uid',
-        'name table' => 'users_field_data',
-        'name field' => 'name',
-        'empty field name' => \Drupal::config('user.settings')->get('anonymous'),
-      ),
-      'filter' => array(
-        'title' => t('Name'),
-        'id' => 'user_name',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'relationship' => array(
-        'title' => t('Content authored'),
-        'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
-        'id' => 'standard',
-        'base' => 'node_field_data',
-        'base field' => 'uid',
-        'field' => 'uid',
-        'label' => t('nodes'),
-      ),
+    $data['users']['uid']['filter']['id'] = 'user_name';
+    $data['users']['uid']['filter']['title'] = t('Name');
+    $data['users']['uid']['relationship'] = array(
+      'title' => t('Content authored'),
+      'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
+      'id' => 'standard',
+      'base' => 'node_field_data',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'label' => t('nodes'),
     );
 
     $data['users']['uid_raw'] = array(
@@ -104,59 +79,23 @@ class UserViewsData implements EntityViewsDataInterface {
       ),
     );
 
-    $data['users_field_data']['name'] = array(
-      'title' => t('Name'),
-      'help' => t('The user or author name.'),
-      'field' => array(
-        'id' => 'user_name',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-      'filter' => array(
-        'id' => 'string',
-        'title' => t('Name (raw)'),
-        'help' => t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.')
-      ),
-    );
+    $data['users_field_data']['name']['help'] = t('The user or author name.');
+    $data['users_field_data']['name']['field']['id'] = 'user_name';
+    $data['users_field_data']['name']['filter']['title'] = t('Name (raw)');
+    $data['users_field_data']['name']['filter']['help'] = t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.');
 
     // Note that this field implements field level access control.
-    $data['users_field_data']['mail'] = array(
-      'title' => t('Email'),
-      'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'),
-      'field' => array(
-        'id' => 'user_mail',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
-      ),
-      'argument' => array(
-        'id' => 'string',
-      ),
-    );
+    $data['users_field_data']['mail']['help'] = t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.');
+    $data['users_field_data']['mail']['field']['id'] = 'user_mail';
 
-    $data['users']['langcode'] = array(
-      'title' => t('Language'),
-      'help' => t('Language of the user'),
-      'field' => array(
-        'id' => 'user_language',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'language',
-      ),
-      'argument' => array(
-        'id' => 'language',
-      ),
-    );
+    $data['users']['langcode']['id'] = 'user_language';
+    $data['users']['langcode']['help'] = t('Original language of the user information');
+    $data['users_field_data']['langcode']['help'] = t('Language of the translation of user information');
+
+    $data['users_field_data']['preferred_langcode']['title'] = t('Preferred language');
+    $data['users_field_data']['preferred_langcode']['help'] = t('Preferred language of the user');
+    $data['users_field_data']['preferred_admin_langcode']['title'] = t('Preferred admin language');
+    $data['users_field_data']['preferred_admin_langcode']['help'] = t('Preferred administrative language of the user');
 
     $data['users']['view_user'] = array(
       'field' => array(
@@ -164,20 +103,6 @@ class UserViewsData implements EntityViewsDataInterface {
         'help' => t('Provide a simple link to the user.'),
         'id' => 'user_link',
         'click sortable' => FALSE,
-      ),
-    );
-
-    $data['users_field_data']['created'] = array(
-      'title' => t('Created date'),
-      'help' => t('The date the user was created.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
       ),
     );
 
@@ -235,66 +160,13 @@ class UserViewsData implements EntityViewsDataInterface {
       ),
     );
 
-    $data['users_field_data']['access'] = array(
-      'title' => t('Last access'),
-      'help' => t("The user's last access date."),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
+    $data['users_field_data']['status']['field']['output formats'] = array(
+      'active-blocked' => array(t('Active'), t('Blocked')),
     );
+    $data['users_field_data']['status']['filter']['label'] = t('Active');
+    $data['users_field_data']['status']['filter']['type'] = 'yes-no';
 
-    $data['users_field_data']['login'] = array(
-      'title' => t('Last login'),
-      'help' => t("The user's last login date."),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
-
-    $data['users_field_data']['status'] = array(
-      'title' => t('Status'),
-      'help' => t('Whether a user is active or blocked.'),
-      'field' => array(
-        'id' => 'boolean',
-        'output formats' => array(
-          'active-blocked' => array(t('Active'), t('Blocked')),
-        ),
-      ),
-      'filter' => array(
-        'id' => 'boolean',
-        'label' => t('Active'),
-        'type' => 'yes-no',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
-
-    $data['users_field_data']['changed'] = array(
-      'title' => t('Updated date'),
-      'help' => t('The date the user was last updated.'),
-      'field' => array(
-        'id' => 'date',
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
+    $data['users_field_data']['changed']['title'] = t('Updated date');
 
     $data['users_field_data']['changed_fulldate'] = array(
       'title' => t('Updated date'),
@@ -350,6 +222,9 @@ class UserViewsData implements EntityViewsDataInterface {
       ),
     );
 
+    unset($data['users_field_data']['signature']);
+    unset($data['users_field_data']['signature_format']);
+
     if (\Drupal::moduleHandler()->moduleExists('filter')) {
       $data['users_field_data']['signature'] = array(
         'title' => t('Signature'),
@@ -402,11 +277,8 @@ class UserViewsData implements EntityViewsDataInterface {
       ),
     );
 
-    // Define the base group of this table. Fields that don't have a group defined
-    // will go into this field by default.
     $data['users_roles']['table']['group']  = t('User');
 
-    // Explain how this table joins to others.
     $data['users_roles']['table']['join'] = array(
       'users' => array(
         'left_field' => 'uid',
