@@ -292,6 +292,7 @@ class SchemaTest extends KernelTestBase {
         array('not null' => FALSE, 'default' => substr('"thing"', 0, $length)),
         array('not null' => FALSE, 'default' => substr("\"'hing", 0, $length)),
         array('not null' => TRUE, 'initial' => 'd'),
+        array('not null' => FALSE, 'default' => NULL),
         array('not null' => TRUE, 'initial' => 'd', 'default' => '7'),
       );
 

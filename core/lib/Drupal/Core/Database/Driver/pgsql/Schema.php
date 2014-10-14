@@ -272,8 +272,8 @@ class Schema extends DatabaseSchema {
         $sql .= ' NULL';
       }
     }
-    if (isset($spec['default'])) {
-      $default = is_string($spec['default']) ? $this->connection->quote($spec['default']) : $spec['default'];
+    if (array_key_exists('default', $spec)) {
+      $default = $this->escapeDefaultValue($spec['default']);
       $sql .= " default $default";
     }
 
@@ -498,12 +498,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
     }
 
-    if (!isset($default)) {
-      $default = 'NULL';
-    }
-    else {
-      $default = is_string($default) ? $this->connection->quote($default) : $default;
-    }
+    $default = $this->escapeDefaultValue($default);
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
   }

@@ -722,4 +722,21 @@ abstract class Schema implements PlaceholderInterface {
   public function prepareComment($comment, $length = NULL) {
     return $this->connection->quote($comment);
   }
+
+  /**
+   * Return an escaped version of its parameter to be used as a default value
+   * on a column.
+   *
+   * @param mixed $value
+   *   The value to be escaped (int, float, null or string).
+   *
+   * @return string|int|float
+   *   The escaped value.
+   */
+  protected function escapeDefaultValue($value) {
+    if (is_null($value)) {
+      return 'NULL';
+    }
+    return is_string($value) ? $this->connection->quote($value) : $value;
+  }
 }

@@ -169,13 +169,7 @@ class Schema extends DatabaseSchema {
 
     // $spec['default'] can be NULL, so we explicitly check for the key here.
     if (array_key_exists('default', $spec)) {
-      if (is_string($spec['default'])) {
-        $spec['default'] = $this->connection->quote($spec['default']);
-      }
-      elseif (!isset($spec['default'])) {
-        $spec['default'] = 'NULL';
-      }
-      $sql .= ' DEFAULT ' . $spec['default'];
+      $sql .= ' DEFAULT ' . $this->escapeDefaultValue($spec['default']);
     }
 
     if (empty($spec['not null']) && !isset($spec['default'])) {
@@ -386,14 +380,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
     }
 
-    if (!isset($default)) {
-      $default = 'NULL';
-    }
-    else {
-      $default = is_string($default) ? "'$default'" : $default;
-    }
-
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` SET DEFAULT ' . $default);
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` SET DEFAULT ' . $this->escapeDefaultValue($default));
   }
 
   public function fieldSetNoDefault($table, $field) {
