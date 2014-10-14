@@ -1680,6 +1680,10 @@ div.password-suggestions {
 #forum .description {
   font-size: 1em;
 }
+#header .contextual .trigger,
+#footer-wrapper .contextual .trigger {
+  border: none;
+}
 
 /* ---------- Color Form ----------- */
 

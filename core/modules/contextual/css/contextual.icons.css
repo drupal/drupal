@@ -23,13 +23,17 @@
   background-repeat: no-repeat;
   background-size: 16px 16px;
   /* Override the .focusable height: auto */
-  height: 28px !important;
+  height: 26px !important;
   /* Override the .focusable height: auto */
-  width: 28px !important;
+  width: 26px !important;
   text-indent: -9999px;
 }
 
-.contextual .trigger:focus,
 .contextual .trigger:hover {
   background-image: url(../../../misc/icons/787878/pencil.svg);
+}
+
+.contextual .trigger:focus {
+  background-image: url(../../../misc/icons/5181c6/pencil.svg);
+  outline: none;
 }

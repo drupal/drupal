@@ -9,7 +9,7 @@
 .contextual {
   position: absolute;
   right: 0; /* LTR */
-  top: 2px;
+  top: 6px;
   z-index: 500;
 }
 [dir="rtl"] .contextual {
@@ -31,23 +31,23 @@
 .contextual .trigger {
   background-attachment: scroll;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 13px;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
   float: right; /* LTR */
   margin: 0;
   overflow: hidden;
   padding: 0 2px;
   position: relative;
-  right: 2px; /* LTR */
+  right: 6px; /* LTR */
   cursor: pointer;
 }
 [dir="rtl"] .contextual .trigger {
   float: left;
   right: auto;
-  left: 2px;
+  left: 6px;
 }
 .contextual.open .trigger {
+  border: 1px solid #ccc;
   border-bottom-color: transparent;
   border-radius: 13px 13px 0 0;
   box-shadow: none;
@@ -61,14 +61,14 @@
  */
 .contextual-region .contextual .contextual-links {
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 4px 0 4px 4px; /* LTR */
   clear: both;
   float: right; /* LTR */
   margin: 0;
   padding: 0.25em 0;
   position: relative;
-  right: 2px; /* LTR */
+  right: 6px; /* LTR */
   text-align: left; /* LTR */
   top: -1px;
   white-space: nowrap;
@@ -76,7 +76,7 @@
 [dir="rtl"] .contextual-region .contextual .contextual-links {
   border-radius: 0 4px 4px 4px;
   float: left;
-  left: 2px;
+  left: 6px;
   right: auto;
   text-align: right;
 }
