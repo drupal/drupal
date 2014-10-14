@@ -692,7 +692,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::loadRevision()
    */
   public function testLoadRevision() {
-    $this->assertSame(FALSE, $this->entityStorage->loadRevision(1));
+    $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
   }
 
   /**

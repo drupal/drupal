@@ -133,7 +133,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
    * {@inheritdoc}
    */
   public function loadRevision($revision_id) {
-    return FALSE;
+    return NULL;
   }
 
   /**

@@ -601,7 +601,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testLoadRevision() {
     $this->setUpKeyValueEntityStorage();
 
-    $this->assertSame(FALSE, $this->entityStorage->loadRevision(1));
+    $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
   }
 
   /**

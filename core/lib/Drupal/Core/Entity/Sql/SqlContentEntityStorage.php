@@ -679,7 +679,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityStorageInterface::loadRevision().
+   * {@inheritdoc}
    */
   public function loadRevision($revision_id) {
     // Build and execute the query.
@@ -690,7 +690,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Convert the raw records to entity objects.
       $entities = $this->mapFromStorageRecords($records);
       $this->postLoad($entities);
-      return reset($entities);
+      $entity = reset($entities);
+      if ($entity) {
+        return $entity;
+      }
     }
   }
 

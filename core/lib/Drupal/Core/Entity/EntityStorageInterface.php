@@ -82,8 +82,8 @@ interface EntityStorageInterface {
    * @param int $revision_id
    *   The revision id.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|false
-   *   The specified entity revision or FALSE if not found.
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The specified entity revision or NULL if not found.
    */
   public function loadRevision($revision_id);
 
