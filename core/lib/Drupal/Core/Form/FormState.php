@@ -50,8 +50,8 @@ class FormState implements FormStateInterface {
    *     for building the form. Each array entry may be the path to a file or
    *     another array containing values for the parameters 'type', 'module' and
    *     'name' as needed by module_load_include(). The files listed here are
-   *     automatically loaded by form_get_cache(). By default the current menu
-   *     router item's 'file' definition is added, if any. Use
+   *     automatically loaded by \Drupal::formBuilder()->getCache(). By default
+   *     the current menu router item's 'file' definition is added, if any. Use
    *     self::loadInclude() to add include files from a form constructor.
    *   - form_id: Identification of the primary form being constructed and
    *     processed.

@@ -224,9 +224,10 @@ class StorageTest extends WebTestBase {
     $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
 
-    // Assert that a watchdog message was logged by form_set_cache.
+    // Assert that a watchdog message was logged by
+    // \Drupal::formBuilder()->setCache().
     $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message', 0, 1, [':message' => 'Form build-id mismatch detected while attempting to store a form in the cache.']);
-    $this->assert($status, 'A watchdog message was logged by form_set_cache');
+    $this->assert($status, 'A watchdog message was logged by \Drupal::formBuilder()->setCache');
 
     // Ensure that the form state was not poisoned by the preceding call.
     $original = $this->drupalGetAJAX('form-test/form-storage-legacy/' . $build_id);

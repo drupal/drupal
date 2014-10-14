@@ -183,8 +183,9 @@ class FormCache implements FormCacheInterface {
 
     // Ensure that the form build_id embedded in the form structure is the same
     // as the one passed in as a parameter. This is an additional safety measure
-    // to prevent legacy code operating directly with form_get_cache and
-    // form_set_cache from accidentally overwriting immutable form state.
+    // to prevent legacy code operating directly with
+    // \Drupal::formBuilder()->getCache() and \Drupal::formBuilder()->setCache()
+    // from accidentally overwriting immutable form state.
     if (isset($form['#build_id']) && $form['#build_id'] != $form_build_id) {
       $this->logger->error('Form build-id mismatch detected while attempting to store a form in the cache.');
       return;

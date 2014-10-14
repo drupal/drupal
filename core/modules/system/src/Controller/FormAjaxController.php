@@ -116,7 +116,7 @@ class FormAjaxController implements ContainerInjectionInterface {
     $form_build_id = $request->request->get('form_build_id');
 
     // Get the form from the cache.
-    $form = form_get_cache($form_build_id, $form_state);
+    $form = \Drupal::formBuilder()->getCache($form_build_id, $form_state);
     if (!$form) {
       // If $form cannot be loaded from the cache, the form_build_id must be
       // invalid, which means that someone performed a POST request onto
@@ -128,9 +128,9 @@ class FormAjaxController implements ContainerInjectionInterface {
     }
 
     // When a page level cache is enabled, the form-build id might have been
-    // replaced from within form_get_cache. If this is the case, it is also
-    // necessary to update it in the browser by issuing an appropriate Ajax
-    // command.
+    // replaced from within \Drupal::formBuilder()->getCache(). If this is the
+    // case, it is also necessary to update it in the browser by issuing an
+    // appropriate Ajax command.
     $commands = [];
     if (isset($form['#build_id_old']) && $form['#build_id_old'] != $form['#build_id']) {
       // If the form build ID has changed, issue an Ajax command to update it.
