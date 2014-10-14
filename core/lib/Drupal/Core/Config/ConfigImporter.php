@@ -367,7 +367,7 @@ class ConfigImporter {
     }, $module_list);
 
     // Determine which modules to uninstall.
-    $uninstall = array_diff(array_keys($current_extensions['module']), array_keys($new_extensions['module']));
+    $uninstall = array_keys(array_diff_key($current_extensions['module'], $new_extensions['module']));
     // Sort the list of newly uninstalled extensions by their weights, so that
     // dependencies are uninstalled last. Extensions of the same weight are
     // sorted in reverse alphabetical order, to ensure the order is exactly
@@ -388,7 +388,7 @@ class ConfigImporter {
     $uninstall = array_intersect(array_keys($module_list), $uninstall);
 
     // Determine which modules to install.
-    $install = array_diff(array_keys($new_extensions['module']), array_keys($current_extensions['module']));
+    $install = array_keys(array_diff_key($new_extensions['module'], $current_extensions['module']));
     // Ensure that installed modules are sorted in exactly the reverse order
     // (with dependencies installed first, and modules of the same weight sorted
     // in alphabetical order).
@@ -396,8 +396,8 @@ class ConfigImporter {
     $install = array_intersect(array_keys($module_list), $install);
 
     // Work out what themes to install and to uninstall.
-    $theme_install = array_diff(array_keys($new_extensions['theme']), array_keys($current_extensions['theme']));
-    $theme_uninstall = array_diff(array_keys($current_extensions['theme']), array_keys($new_extensions['theme']));
+    $theme_install = array_keys(array_diff_key($new_extensions['theme'], $current_extensions['theme']));
+    $theme_uninstall = array_keys(array_diff_key($current_extensions['theme'], $new_extensions['theme']));
 
     $this->extensionChangelist = array(
       'module' => array(
