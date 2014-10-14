@@ -44,7 +44,7 @@ class ConfigImporter {
   /**
    * The name used to identify the lock.
    */
-  const LOCK_ID = 'config_importer';
+  const LOCK_NAME = 'config_importer';
 
   /**
    * The storage comparer used to discover configuration changes.
@@ -512,9 +512,9 @@ class ConfigImporter {
     // Ensure that the changes have been validated.
     $this->validate();
 
-    if (!$this->lock->acquire(static::LOCK_ID)) {
+    if (!$this->lock->acquire(static::LOCK_NAME)) {
       // Another process is synchronizing configuration.
-      throw new ConfigImporterException(sprintf('%s is already importing', static::LOCK_ID));
+      throw new ConfigImporterException(sprintf('%s is already importing', static::LOCK_NAME));
     }
 
     $sync_steps = array();
@@ -611,7 +611,7 @@ class ConfigImporter {
   protected function finish(array &$context) {
     $this->eventDispatcher->dispatch(ConfigEvents::IMPORT, new ConfigImporterEvent($this));
     // The import is now complete.
-    $this->lock->release(static::LOCK_ID);
+    $this->lock->release(static::LOCK_NAME);
     $this->reset();
     $context['message'] = t('Finalizing configuration synchronization.');
     $context['finished'] = 1;
@@ -996,7 +996,7 @@ class ConfigImporter {
    *   TRUE if an import is already running, FALSE if not.
    */
   public function alreadyImporting() {
-    return !$this->lock->lockMayBeAvailable(static::LOCK_ID);
+    return !$this->lock->lockMayBeAvailable(static::LOCK_NAME);
   }
 
   /**
@@ -1007,13 +1007,13 @@ class ConfigImporter {
    * keep the services used by the importer in sync.
    */
   protected function reInjectMe() {
-    $this->eventDispatcher = \Drupal::service('event_dispatcher');
-    $this->configManager = \Drupal::service('config.manager');
-    $this->lock = \Drupal::lock();
-    $this->typedConfigManager = \Drupal::service('config.typed');
-    $this->moduleHandler = \Drupal::moduleHandler();
-    $this->themeHandler = \Drupal::service('theme_handler');
-    $this->stringTranslation = \Drupal::service('string_translation');
+    $this->_serviceIds = array();
+    $vars = get_object_vars($this);
+    foreach ($vars as $key => $value) {
+      if (is_object($value) && isset($value->_serviceId)) {
+        $this->$key = \Drupal::service($value->_serviceId);
+      }
+    }
   }
 
 }

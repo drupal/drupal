@@ -59,4 +59,29 @@ class LockFunctionalTest extends WebTestBase {
     $this->assertText($lock_acquired_exit, 'Lock acquired by the other request before exit.', 'Lock');
     $this->assertTrue($lock->acquire('system_test_lock_exit'), 'Lock acquired by this request after the other request exits.', 'Lock');
   }
+
+  /**
+   * Tests that the persistent lock is persisted between requests.
+   */
+  public function testPersistentLock() {
+    $persistent_lock = $this->container->get('lock.persistent');
+    // Get a persistent lock.
+    $this->drupalGet('system-test/lock-persist/lock1');
+    $this->assertText('TRUE: Lock successfully acquired in SystemTestController::lockPersist()');
+    // Ensure that a shutdown function has not released the lock.
+    $this->assertFalse($persistent_lock->lockMayBeAvailable('lock1'));
+    $this->drupalGet('system-test/lock-persist/lock1');
+    $this->assertText('FALSE: Lock not acquired in SystemTestController::lockPersist()');
+
+    // Get another persistent lock.
+    $this->drupalGet('system-test/lock-persist/lock2');
+    $this->assertText('TRUE: Lock successfully acquired in SystemTestController::lockPersist()');
+    $this->assertFalse($persistent_lock->lockMayBeAvailable('lock2'));
+
+    // Release the first lock and try getting it again.
+    $persistent_lock->release('lock1');
+    $this->drupalGet('system-test/lock-persist/lock1');
+    $this->assertText('TRUE: Lock successfully acquired in SystemTestController::lockPersist()');
+  }
+
 }

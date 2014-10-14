@@ -134,7 +134,7 @@ class ConfigSync extends FormBase {
       $container->get('config.storage.staging'),
       $container->get('config.storage'),
       $container->get('config.storage.snapshot'),
-      $container->get('lock'),
+      $container->get('lock.persistent'),
       $container->get('event_dispatcher'),
       $container->get('config.manager'),
       $container->get('config.typed'),

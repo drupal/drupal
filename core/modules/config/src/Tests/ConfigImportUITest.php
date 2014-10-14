@@ -228,14 +228,14 @@ class ConfigImportUITest extends WebTestBase {
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
-    $this->container->get('lock')->acquire($config_importer::LOCK_ID);
+    $this->container->get('lock.persistent')->acquire($config_importer::LOCK_NAME);
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, array(), t('Import all'));
     $this->assertText(t('Another request may be synchronizing configuration already.'));
 
     // Release the lock, just to keep testing sane.
-    $this->container->get('lock')->release($config_importer::LOCK_ID);
+    $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
 
     // Verify site name has not changed.
     $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));

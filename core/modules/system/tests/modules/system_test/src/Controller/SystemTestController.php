@@ -10,11 +10,37 @@ namespace Drupal\system_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for system_test routes.
  */
 class SystemTestController extends ControllerBase {
+
+  /**
+   * The persistent lock service.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $persistentLock;
+
+  /**
+   * Constructs the SystemTestController.
+   *
+   * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
+   *   The persistent lock service.
+   */
+  public function __construct(LockBackendInterface $persistent_lock) {
+    $this->persistentLock = $persistent_lock;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('lock.persistent'));
+  }
 
   /**
    * Tests main content fallback.
@@ -54,6 +80,24 @@ class SystemTestController extends ControllerBase {
    */
   public function lockExit() {
     return system_test_lock_exit();
+  }
+
+  /**
+   * Creates a lock that will persist across requests.
+   *
+   * @param string $lock_name
+   *   The name of the persistent lock to acquire.
+   *
+   * @return string
+   *   The text to display.
+   */
+  public function lockPersist($lock_name) {
+    if ($this->persistentLock->acquire($lock_name)) {
+      return 'TRUE: Lock successfully acquired in SystemTestController::lockPersist()';
+    }
+    else {
+      return 'FALSE: Lock not acquired in SystemTestController::lockPersist()';
+    }
   }
 
   /**

@@ -53,6 +53,14 @@ system_test.lock_exit:
   requirements:
     _access: 'TRUE'
 
+system_test.lock_persist:
+  path: '/system-test/lock-persist/{lock_name}'
+  defaults:
+    _title: 'Persistent lock acquire'
+    _content: '\Drupal\system_test\Controller\SystemTestController::lockPersist'
+  requirements:
+    _access: 'TRUE'
+
 system_test.cache_tags_page:
   path: '/system-test/cache_tags_page'
   defaults:

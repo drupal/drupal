@@ -527,4 +527,3 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->assertEqual(count($logs), 0);
   }
 }
-
