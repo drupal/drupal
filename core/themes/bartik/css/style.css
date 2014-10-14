@@ -1256,31 +1256,6 @@ div.tabs {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin-bottom: 20px;
 }
-.tabs ul.primary {
-  border-collapse: collapse;
-  height: auto;
-  line-height: normal;
-  padding: 0 3px;
-  margin: 0;
-  overflow: hidden;
-  border: none;
-  background: transparent url(../images/tabs-border.png) repeat-x left bottom;
-  white-space: nowrap;
-}
-.tabs ul.primary li {
-  display: block;
-  float: left; /* LTR */
-  vertical-align: bottom;
-  margin: 0 5px 0 0; /* LTR */
-}
-[dir="rtl"] .tabs ul.primary li {
-  margin: 0 0 0 5px;
-  float: right;
-  zoom: 1;
-}
-.tabs ul.primary li.active a {
-  border-bottom: 1px solid #ffffff;
-}
 .tabs ul.primary li a {
   color: #000;
   background-color: #ededed;
@@ -1291,17 +1266,60 @@ div.tabs {
   line-height: 1.9;
   display: block;
   font-size: 0.929em;
-  float: left; /* not LTR */
   padding: 0 10px 3px;
   margin: 0;
   text-shadow: 0 1px 0 #fff;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
 }
 .tabs ul.primary li.active a {
   background-color: #ffffff;
   border: 1px solid #bbb;
-  border-bottom: 1px solid #fff;
+}
+@media screen and (max-width: 37.5em) { /* 600px */
+  .tabs ul.primary {
+    border-bottom: 1px solid #bbb;
+  }
+  .tabs ul.primary li {
+    display: block;
+    margin: 0;
+  }
+  .tabs ul.primary li a {
+    padding: 5px 10px;
+  }
+  .tabs ul.primary li.active a {
+    border-bottom: none;
+  }
+}
+@media screen and (min-width: 37.5em) { /* 600px */
+  .tabs ul.primary {
+    border-collapse: collapse;
+    height: auto;
+    line-height: normal;
+    padding: 0 3px;
+    margin: 0;
+    overflow: hidden;
+    border: none;
+    background: transparent url(../images/tabs-border.png) repeat-x left bottom;
+    white-space: nowrap;
+  }
+  .tabs ul.primary li {
+    display: block;
+    float: left; /* LTR */
+    vertical-align: bottom;
+    margin: 0 5px 0 0; /* LTR */
+  }
+  [dir="rtl"] .tabs ul.primary li {
+    margin: 0 0 0 5px;
+    float: right;
+    zoom: 1;
+  }
+  .tabs ul.primary li a {
+    float: left; /* not LTR */
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  .tabs ul.primary li.active a {
+    border-bottom: 1px solid #fff;
+  }
 }
 .tabs ul.secondary {
   border-bottom: none;
@@ -2037,6 +2055,14 @@ div.admin-panel .description {
   th.priority-low,
   td.priority-low {
     display: none;
+  }
+}
+
+/* ---------- Input fields ---------- */
+@media screen and (max-width: 60em) { /* 920px */
+  input,
+  textarea {
+    font-size: 1.142857143em;
   }
 }
 
