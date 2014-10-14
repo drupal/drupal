@@ -20,7 +20,7 @@ namespace Drupal\Core\TypedData;
  *
  * @ingroup typed_data
  */
-interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \Traversable {
+interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Countable {
 
   /**
    * Determines whether the list contains any non-empty items.

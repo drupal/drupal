@@ -252,7 +252,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    */
   public function testSetContext() {
     $name = $this->randomMachineName();
-    $parent = $this->getMock('\Drupal\Core\TypedData\TypedDataInterface');
+    $parent = $this->getMock('\Drupal\Core\TypedData\TraversableTypedDataInterface');
     // Our mocked entity->setContext() returns NULL, so assert that.
     $this->assertNull($this->entityAdapter->setContext($name, $parent));
     $this->assertEquals($name, $this->entityAdapter->getName());

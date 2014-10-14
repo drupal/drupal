@@ -6,17 +6,12 @@
  */
 
 namespace Drupal\Core\Config\Schema;
-
-use \ArrayAccess;
-use \ArrayIterator;
-use \Countable;
-use \IteratorAggregate;
-use \Traversable;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 
 /**
  * Defines a generic configuration element that contains multiple properties.
  */
-abstract class ArrayElement extends Element implements IteratorAggregate, ArrayAccess, Countable {
+abstract class ArrayElement extends Element implements \IteratorAggregate, TraversableTypedDataInterface, \ArrayAccess, \Countable {
 
   /**
    * Parsed elements.
@@ -26,8 +21,8 @@ abstract class ArrayElement extends Element implements IteratorAggregate, ArrayA
   /**
    * Gets an array of contained elements.
    *
-   * @return array
-   *   Array of \Drupal\Core\Config\Schema\ArrayElement objects.
+   * @return \Drupal\Core\TypedData\TypedDataInterface[]
+   *   An array of elements contained in this element.
    */
   protected function getElements() {
     if (!isset($this->elements)) {
@@ -49,8 +44,8 @@ abstract class ArrayElement extends Element implements IteratorAggregate, ArrayA
   /**
    * Builds an array of contained elements.
    *
-   * @return array
-   *   Array of \Drupal\Core\Config\Schema\ArrayElement objects.
+   * @return \Drupal\Core\TypedData\TypedDataInterface[]
+   *   An array of elements contained in this element.
    */
   protected abstract function parse();
 
@@ -111,7 +106,7 @@ abstract class ArrayElement extends Element implements IteratorAggregate, ArrayA
    * Implements IteratorAggregate::getIterator();
    */
   public function getIterator() {
-    return new ArrayIterator($this->getElements());
+    return new \ArrayIterator($this->getElements());
   }
 
 }

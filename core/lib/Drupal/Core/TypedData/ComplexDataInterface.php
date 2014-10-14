@@ -23,7 +23,7 @@ namespace Drupal\Core\TypedData;
  *
  * @ingroup typed_data
  */
-interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
+interface ComplexDataInterface extends TraversableTypedDataInterface  {
 
   /**
    * Gets a property object.

@@ -170,9 +170,12 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *   A nested schema element, containing the passed-in elements.
    */
   protected function getNestedElement(array $elements) {
-    // ConfigMapperManager::findTranslatable() checks for the abstract class
-    // \Drupal\Core\Config\Schema\ArrayElement, but mocking that directly does
-    // not work.
+    // ConfigMapperManager::findTranslatable() checks for
+    // \Drupal\Core\TypedData\TraversableTypedDataInterface, but mocking that
+    // directly does not work, because we need to implement \IteratorAggregate
+    // in order for getIterator() to be called. Therefore we need to mock
+    // \Drupal\Core\Config\Schema\ArrayElement, but that is abstract, so we
+    // need to mock one of the subclasses of it.
     $nested_element = $this->getMockBuilder('Drupal\Core\Config\Schema\Mapping')
       ->disableOriginalConstructor()
       ->getMock();

@@ -22,7 +22,7 @@ class Sequence extends ArrayElement implements ListInterface {
   protected $itemDefinition;
 
   /**
-   * Overrides ArrayElement::parse()
+   * {@inheritdoc}
    */
   protected function parse() {
     // Creates a new data definition object for each item from the generic type
