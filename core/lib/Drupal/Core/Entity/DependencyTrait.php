@@ -20,14 +20,13 @@ trait DependencyTrait {
   protected $dependencies = array();
 
   /**
-   * Creates a dependency.
+   * Adds a dependency.
    *
    * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   *   The type of dependency being added: 'module', 'theme', or 'entity'.
    * @param string $name
-   *   If $type equals 'module' or 'theme' then it should be the name of the
-   *   module or theme. In the case of entity it should be the full
-   *   configuration object name.
+   *   If $type is 'module' or 'theme', the name of the module or theme. If
+   *   $type is 'entity', the full configuration object name.
    *
    * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
    *
@@ -54,17 +53,17 @@ trait DependencyTrait {
    *
    * @param array $dependencies.
    *   An array of dependencies keyed by the type of dependency. One example:
-   * @code
-   * array(
-   *   'module' => array(
-   *     'node',
-   *     'field',
-   *     'image'
-   *   ),
-   * );
-   * @endcode
+   *   @code
+   *   array(
+   *     'module' => array(
+   *       'node',
+   *       'field',
+   *       'image',
+   *     ),
+   *   );
+   *   @endcode
    *
-   * @see ::addDependency
+   * @see \Drupal\Core\Entity\DependencyTrait::addDependency
    */
   protected function addDependencies(array $dependencies) {
     foreach ($dependencies as $dependency_type => $list) {

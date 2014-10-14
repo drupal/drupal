@@ -365,13 +365,18 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides \Drupal\Core\Entity\DependencyTrait:addDependency().
+   *
+   * Note that this function should only be called from implementations of
+   * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies(),
+   * as dependencies are recalculated during every entity save.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityDependency::hasDependency()
    */
   protected function addDependency($type, $name) {
     // A config entity is always dependent on its provider. There is no need to
     // explicitly declare the dependency. An explicit dependency on Core, which
     // provides some plugins, is also not needed.
-    // @see \Drupal\Core\Config\Entity\ConfigEntityDependency::hasDependency()
     if ($type == 'module' && ($name == $this->getEntityType()->getProvider() || $name == 'core')) {
       return $this;
     }

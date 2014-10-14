@@ -14,37 +14,69 @@ use Drupal\Component\Utility\SortArray;
  * Provides a class to discover configuration entity dependencies.
  *
  * Configuration entities can depend on modules, themes and other configuration
- * entities. The dependency system is used during configuration installation to
- * ensure that configuration entities are imported in the correct order. For
- * example, node types are created before their field storages and the field
- * storages are created before their fields.
+ * entities. The dependency system is used during configuration installation,
+ * uninstallation, and synchronization to ensure that configuration entities are
+ * handled in the correct order. For example, node types are created before
+ * their fields, and both are created before the view display configuration.
  *
- * Dependencies are stored to the configuration entity's configuration object so
- * that they can be checked without the module that provides the configuration
- * entity class being installed. This is important for configuration
- * synchronization which needs to be able to validate configuration in the
- * staging directory before the synchronization has occurred.
+ * If a configuration entity is provided as default configuration by an
+ * extension (module, theme, or profile), the extension has to depend on any
+ * modules or themes that the configuration depends on. For example, if a view
+ * configuration entity is provided by an installation profile and the view will
+ * not work without a certain module, the profile must declare a dependency on
+ * this module in its info.yml file. If you do not want your extension to always
+ * depend on a particular module that one of its default configuration entities
+ * depends on, you can use a sub-module: move the configuration entity to the
+ * sub-module instead of including it in the main extension, and declare the
+ * module dependency in the sub-module only.
  *
- * Configuration entities determine their dependencies by implementing
- * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies().
- * This method should be called from the configuration entity's implementation
- * of \Drupal\Core\Entity\EntityInterface::preSave(). Implementations should use
- * the helper method
+ * Classes for configuration entities with dependencies normally extend
+ * \Drupal\Core\Config\Entity\ConfigEntityBase or at least use
+ * \Drupal\Core\Plugin\PluginDependencyTrait to manage dependencies. The class
+ * must implement
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies(),
+ * which should calculate (and return) the dependencies. In this method, use
  * \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency() to add
- * dependencies. All the implementations in core call the parent method
- * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies() which
- * resets the dependencies and provides an implementation to determine the
- * plugin providers for configuration entities that implement
- * \Drupal\Core\Entity\EntityWithPluginBagsInterface.
+ * dependencies. Most implementations call
+ * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies() since it
+ * provides a generic implementation that will discover dependencies due to
+ * plugins and third party settings. To get a configuration entity's current
+ * dependencies without forcing a recalculation use
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies().
  *
- * The configuration manager service provides methods to find dependencies for
- * a specified module, theme or configuration entity.
+ * Classes for configurable plugins are a special case. They can either declare
+ * their configuration dependencies using the calculateDependencies() method
+ * described in the paragraph above, or if they have only static dependencies,
+ * these can be declared using the 'config_dependencies' annotation key.
+ *
+ * Once declared properly, dependencies are saved to the configuration entity's
+ * configuration object so that they can be checked without the module that
+ * provides the configuration entity class being installed. This is important
+ * for configuration synchronization, which needs to be able to validate
+ * configuration in the staging directory before the synchronization has
+ * occurred.
+ *
+ * When uninstalling a module or a theme, configuration entities that are
+ * dependent will also be removed. This default behavior can lead to undesirable
+ * side effects, such as a node view mode being entirely removed when the module
+ * defining a field or formatter it uses is uninstalled. To prevent this,
+ * configuration entity classes can implement
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval(),
+ * which allows the entity class to remove dependencies instead of being deleted
+ * themselves. Implementations should save the entity if dependencies have been
+ * successfully removed, in order to register the newly cleaned-out dependency
+ * list. So, in the above example, the node view mode configuration entity class
+ * should implement this method to remove references to formatters if the plugin
+ * that supplies them depends on a module that is being uninstalled.
  *
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+ * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval()
  * @see \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency()
- * @see \Drupal\Core\Config\ConfigInstaller::installDefaultConfig()
+ * @see \Drupal\Core\Config\ConfigInstallerInterface::installDefaultConfig()
+ * @see \Drupal\Core\Config\ConfigManagerInterface::uninstall()
  * @see \Drupal\Core\Config\Entity\ConfigEntityDependency
+ * @see \Drupal\Core\Plugin\PluginDependencyTrait
  */
 class ConfigDependencyManager {
 

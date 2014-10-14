@@ -19,7 +19,12 @@ trait PluginDependencyTrait {
   use DependencyTrait;
 
   /**
-   * Calculates the dependencies of a specific plugin instance.
+   * Calculates and adds dependencies of a specific plugin instance.
+   *
+   * Dependencies are added for the module that provides the plugin, as well
+   * as any dependencies declared by the instance's calculateDependencies()
+   * method, if it implements
+   * \Drupal\Component\Plugin\ConfigurablePluginInterface.
    *
    * @param \Drupal\Component\Plugin\PluginInspectionInterface $instance
    *   The plugin instance.
