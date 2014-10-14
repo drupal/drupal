@@ -85,18 +85,6 @@ function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
 }
 
 /**
- * Builds and processes all elements in the structured form array.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->doBuildForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::doBuildForm().
- */
-function form_builder($form_id, &$element, FormStateInterface $form_state) {
-  return \Drupal::formBuilder()->doBuildForm($form_id, $element, $form_state);
-}
-
-/**
  * Removes internal Form API elements and buttons from submitted form values.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
@@ -520,7 +508,8 @@ function template_preprocess_form_element(&$variables) {
   $element = &$variables['element'];
 
   // This function is invoked as theme wrapper, but the rendered form element
-  // may not necessarily have been processed by form_builder().
+  // may not necessarily have been processed by
+  // \Drupal::formBuilder()->doBuildForm().
   $element += array(
     '#title_display' => 'before',
   );

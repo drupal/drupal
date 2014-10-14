@@ -1493,9 +1493,9 @@ function template_preprocess_file_managed_file(&$variables) {
  * Upload controls are hidden when a file is already uploaded. Remove controls
  * are hidden when there is no file attached. Controls are hidden here instead
  * of in file_managed_file_process(), because #access for these buttons depends
- * on the managed_file element's #value. See the documentation of form_builder()
- * for more detailed information about the relationship between #process,
- * #value, and #access.
+ * on the managed_file element's #value. See the documentation of
+ * \Drupal::formBuilder()->doBuildForm() for more detailed information about the
+ * relationship between #process, #value, and #access.
  *
  * Because #access is set here, it affects display only and does not prevent
  * JavaScript or other untrusted code from submitting the form as though access

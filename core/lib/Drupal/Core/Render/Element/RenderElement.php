@@ -35,7 +35,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
     }
     // This function is invoked from form element theme functions, but the
     // rendered form element may not necessarily have been processed by
-    // form_builder().
+    // \Drupal::formBuilder()->doBuildForm().
     if (!empty($element['#required'])) {
       $element['#attributes']['class'][] = 'required';
       $element['#attributes']['required'] = 'required';

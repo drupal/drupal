@@ -1156,7 +1156,8 @@ class ViewEditForm extends ViewFormBase {
   }
 
   /**
-   * Recursively adds microweights to a render array, similar to what form_builder() does for forms.
+   * Recursively adds microweights to a render array, similar to what
+   * \Drupal::formBuilder()->doBuildForm() does for forms.
    *
    * @todo Submit a core patch to fix drupal_render() to do this, so that all
    *   render arrays automatically preserve array insertion order, as forms do.

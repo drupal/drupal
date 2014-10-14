@@ -1147,8 +1147,8 @@ class FormState implements FormStateInterface {
       ->unsetValue('op');
 
     // Remove button values.
-    // form_builder() collects all button elements in a form. We remove the button
-    // value separately for each button element.
+    // \Drupal::formBuilder()->doBuildForm() collects all button elements in a
+    // form. We remove the button value separately for each button element.
     foreach ($this->getButtons() as $button) {
       // Remove this button's value from the submitted form values by finding
       // the value corresponding to this button.

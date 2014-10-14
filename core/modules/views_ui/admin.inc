@@ -137,11 +137,11 @@ function views_ui_add_limited_validation($element, FormStateInterface $form_stat
   $element['#limit_validation_errors'] = array($ajax_triggering_element['#parents']);
 
   // If we are in the process of a form submission and this is the button that
-  // was clicked, the form API workflow in form_builder() will have already
-  // copied it to $form_state->getTriggeringElement() before our #process
-  // function is run. So we need to make the same modifications in $form_state
-  // as we did to the element itself, to ensure that #limit_validation_errors
-  // will actually be set in the correct place.
+  // was clicked, the form API workflow in \Drupal::formBuilder()->doBuildForm()
+  // will have already copied it to $form_state->getTriggeringElement() before
+  // our #process function is run. So we need to make the same modifications in
+  // $form_state as we did to the element itself, to ensure that
+  // #limit_validation_errors will actually be set in the correct place.
   $clicked_button = &$form_state->getTriggeringElement();
   if ($clicked_button && $clicked_button['#name'] == $element['#name'] && $clicked_button['#value'] == $element['#value']) {
     $clicked_button['#limit_validation_errors'] = $element['#limit_validation_errors'];

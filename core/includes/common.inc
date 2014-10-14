@@ -2541,7 +2541,8 @@ function drupal_prepare_page($page) {
  *     the defaults for this type of element, defined in hook_element_info(),
  *     are merged into the array. #defaults_loaded is set by functions that
  *     process render arrays and call element_info() before passing the array to
- *     drupal_render(), such as form_builder() in the Form API.
+ *     drupal_render(), such as \Drupal::formBuilder()->doBuildForm() in the
+ *     Form API.
  *   - If this element has an array of #pre_render functions defined, they are
  *     called sequentially to modify the element before rendering. After all the
  *     #pre_render functions have been called, #printed is checked a second time

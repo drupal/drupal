@@ -26,7 +26,8 @@ class RenderWebTest extends WebTestBase {
   public static $modules = array('common_test');
 
   /**
-   * Tests rendering form elements without passing through form_builder().
+   * Tests rendering form elements without passing through
+   * \Drupal::formBuilder()->doBuildForm().
    */
   function testDrupalRenderFormElements() {
     // Define a series of form elements.

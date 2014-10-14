@@ -76,12 +76,12 @@ class TextFormat extends RenderElement {
     // Ensure that children appear as subkeys of this element.
     $element['#tree'] = TRUE;
     $blacklist = array(
-      // Make form_builder() regenerate child properties.
+      // Make \Drupal::formBuilder()->doBuildForm() regenerate child properties.
       '#parents',
       '#id',
       '#name',
-      // Do not copy this #process function to prevent form_builder() from
-      // recursing infinitely.
+      // Do not copy this #process function to prevent
+      // \Drupal::formBuilder()->doBuildForm() from recursing infinitely.
       '#process',
       // Description is handled by theme_text_format_wrapper().
       '#description',
