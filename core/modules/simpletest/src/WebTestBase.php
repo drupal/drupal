@@ -970,6 +970,12 @@ abstract class WebTestBase extends TestBase {
         ),
       ),
     );
+
+    // If we only have one db driver available, we cannot set the driver.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    if (count(drupal_get_database_types()) == 1) {
+      unset($parameters['forms']['install_settings_form']['driver']);
+    }
     return $parameters;
   }
 
