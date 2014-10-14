@@ -27,21 +27,19 @@ class LoggerChannel implements LoggerChannelInterface {
   protected $channel;
 
   /**
-   * Map of PSR Log constants to Watchdog log constants.
-   *
-   * @todo Move watchdog constants here in https://www.drupal.org/node/2267545.
+   * Map of PSR3 log constants to RFC 5424 log constants.
    *
    * @var array
    */
   protected $levelTranslation = array(
-    LogLevel::EMERGENCY => WATCHDOG_EMERGENCY,
-    LogLevel::ALERT => WATCHDOG_ALERT,
-    LogLevel::CRITICAL => WATCHDOG_CRITICAL,
-    LogLevel::ERROR => WATCHDOG_ERROR,
-    LogLevel::WARNING => WATCHDOG_WARNING,
-    LogLevel::NOTICE => WATCHDOG_NOTICE,
-    LogLevel::INFO => WATCHDOG_INFO,
-    LogLevel::DEBUG => WATCHDOG_DEBUG,
+    LogLevel::EMERGENCY => RfcLogLevel::EMERGENCY,
+    LogLevel::ALERT => RfcLogLevel::ALERT,
+    LogLevel::CRITICAL => RfcLogLevel::CRITICAL,
+    LogLevel::ERROR => RfcLogLevel::ERROR,
+    LogLevel::WARNING => RfcLogLevel::WARNING,
+    LogLevel::NOTICE => RfcLogLevel::NOTICE,
+    LogLevel::INFO => RfcLogLevel::INFO,
+    LogLevel::DEBUG => RfcLogLevel::DEBUG,
   );
 
   /**
@@ -102,7 +100,7 @@ class LoggerChannel implements LoggerChannelInterface {
     }
 
     if (is_string($level)) {
-      // Convert to integer equivalent for consistency with RFC 3164.
+      // Convert to integer equivalent for consistency with RFC 5424.
       $level = $this->levelTranslation[$level];
     }
     // Call all available loggers.

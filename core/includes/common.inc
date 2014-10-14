@@ -3341,30 +3341,6 @@ function element_set_attributes(array &$element, array $map) {
 }
 
 /**
- * Returns a list of severity levels, as defined in RFC 3164.
- *
- * @return
- *   Array of the possible severity levels for log messages.
- *
- * @see http://www.ietf.org/rfc/rfc3164.txt
- * @ingroup logging_severity_levels
- *
- * @todo Move this in https://www.drupal.org/node/2267545 in \Drupal\Core\Log.
- */
-function watchdog_severity_levels() {
-  return array(
-    WATCHDOG_EMERGENCY   => t('Emergency'),
-    WATCHDOG_ALERT   => t('Alert'),
-    WATCHDOG_CRITICAL    => t('Critical'),
-    WATCHDOG_ERROR     => t('Error'),
-    WATCHDOG_WARNING => t('Warning'),
-    WATCHDOG_NOTICE  => t('Notice'),
-    WATCHDOG_INFO    => t('Info'),
-    WATCHDOG_DEBUG   => t('Debug'),
-  );
-}
-
-/**
  * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
  * At times, it is necessary to re-initialize the entire system to account for

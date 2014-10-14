@@ -9,6 +9,7 @@ namespace Drupal\dblog\Tests\Views;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
@@ -83,7 +84,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     foreach ($entries as $entry) {
       $entry += array(
         'type' => 'test-views',
-        'severity' => WATCHDOG_NOTICE,
+        'severity' => RfcLogLevel::NOTICE,
       );
       $logger_factory->get($entry['type'])->log($entry['severity'], $entry['message'], $entry['variables']);
     }

@@ -5,6 +5,8 @@
  * Administrative page callbacks for the Database Logging module.
  */
 
+use Drupal\Core\Logger\RfcLogLevel;
+
 /**
  * Creates a list of database log administration filters that can be applied.
  *
@@ -34,7 +36,7 @@ function dblog_filters() {
   $filters['severity'] = array(
     'title' => t('Severity'),
     'where' => 'w.severity = ?',
-    'options' => watchdog_severity_levels(),
+    'options' => RfcLogLevel::getLevels(),
   );
 
   return $filters;

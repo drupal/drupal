@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,21 +22,21 @@ use Symfony\Component\HttpFoundation\Response;
  */
 function drupal_error_levels() {
   $types = array(
-    E_ERROR => array('Error', WATCHDOG_ERROR),
-    E_WARNING => array('Warning', WATCHDOG_WARNING),
-    E_PARSE => array('Parse error', WATCHDOG_ERROR),
-    E_NOTICE => array('Notice', WATCHDOG_NOTICE),
-    E_CORE_ERROR => array('Core error', WATCHDOG_ERROR),
-    E_CORE_WARNING => array('Core warning', WATCHDOG_WARNING),
-    E_COMPILE_ERROR => array('Compile error', WATCHDOG_ERROR),
-    E_COMPILE_WARNING => array('Compile warning', WATCHDOG_WARNING),
-    E_USER_ERROR => array('User error', WATCHDOG_ERROR),
-    E_USER_WARNING => array('User warning', WATCHDOG_WARNING),
-    E_USER_NOTICE => array('User notice', WATCHDOG_NOTICE),
-    E_STRICT => array('Strict warning', WATCHDOG_DEBUG),
-    E_RECOVERABLE_ERROR => array('Recoverable fatal error', WATCHDOG_ERROR),
-    E_DEPRECATED => array('Deprecated function', WATCHDOG_DEBUG),
-    E_USER_DEPRECATED => array('User deprecated function', WATCHDOG_DEBUG),
+    E_ERROR => array('Error', RfcLogLevel::ERROR),
+    E_WARNING => array('Warning', RfcLogLevel::WARNING),
+    E_PARSE => array('Parse error', RfcLogLevel::ERROR),
+    E_NOTICE => array('Notice', RfcLogLevel::NOTICE),
+    E_CORE_ERROR => array('Core error', RfcLogLevel::ERROR),
+    E_CORE_WARNING => array('Core warning', RfcLogLevel::WARNING),
+    E_COMPILE_ERROR => array('Compile error', RfcLogLevel::ERROR),
+    E_COMPILE_WARNING => array('Compile warning', RfcLogLevel::WARNING),
+    E_USER_ERROR => array('User error', RfcLogLevel::ERROR),
+    E_USER_WARNING => array('User warning', RfcLogLevel::WARNING),
+    E_USER_NOTICE => array('User notice', RfcLogLevel::NOTICE),
+    E_STRICT => array('Strict warning', RfcLogLevel::DEBUG),
+    E_RECOVERABLE_ERROR => array('Recoverable fatal error', RfcLogLevel::ERROR),
+    E_DEPRECATED => array('Deprecated function', RfcLogLevel::DEBUG),
+    E_USER_DEPRECATED => array('User deprecated function', RfcLogLevel::DEBUG),
   );
 
   return $types;

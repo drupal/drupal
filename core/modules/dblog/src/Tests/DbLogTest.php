@@ -8,6 +8,7 @@
 namespace Drupal\dblog\Tests;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
 
@@ -126,9 +127,10 @@ class DbLogTest extends WebTestBase {
    * @param string $type
    *   (optional) The type of watchdog entry. Defaults to 'custom'.
    * @param int $severity
-   *   (optional) The severity of the watchdog entry. Defaults to WATCHDOG_NOTICE.
+   *   (optional) The severity of the watchdog entry. Defaults to
+   *   \Drupal\Core\Logger\RfcLogLevel::NOTICE.
    */
-  private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
+  private function generateLogEntries($count, $type = 'custom', $severity = RfcLogLevel::NOTICE) {
     global $base_root;
 
     // Prepare the fields to be logged
@@ -445,7 +447,7 @@ class DbLogTest extends WebTestBase {
       'channel'     => 'system',
       'message'     => 'Log entry added to test the doClearTest clear down.',
       'variables'   => array(),
-      'severity'    => WATCHDOG_NOTICE,
+      'severity'    => RfcLogLevel::NOTICE,
       'link'        => NULL,
       'user'        => $this->big_user,
       'uid'         => $this->big_user->id(),
@@ -483,7 +485,7 @@ class DbLogTest extends WebTestBase {
     $types = array();
     for ($i = 0; $i < 3; $i++) {
       $type_names[] = $type_name = $this->randomMachineName();
-      $severity = WATCHDOG_EMERGENCY;
+      $severity = RfcLogLevel::EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
           'count' => $j + 1,

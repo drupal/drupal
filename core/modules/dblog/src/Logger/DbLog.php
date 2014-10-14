@@ -9,14 +9,14 @@ namespace Drupal\dblog\Logger;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LogMessageParserInterface;
+use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
 
 /**
  * Logs events in the watchdog database table.
  */
 class DbLog implements LoggerInterface {
-  use LoggerTrait;
+  use RfcLoggerTrait;
 
   /**
    * The database connection object.

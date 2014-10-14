@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Module;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -183,7 +184,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = '') {
+  function assertLogMessage($type, $message, $variables = array(), $severity = RfcLogLevel::NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)

@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Module;
 
+use Drupal\Core\Logger\RfcLogLevel;
+
 /**
  * Install/uninstall core module and confirm table creation/deletion.
  *
@@ -93,7 +95,7 @@ class InstallUninstallTest extends ModuleTestBase {
         $this->assertModules(array($module_to_install), TRUE);
         $this->assertModuleTablesExist($module_to_install);
         $this->assertModuleConfig($module_to_install);
-        $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_install), WATCHDOG_INFO);
+        $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_install), RfcLogLevel::INFO);
       }
 
       // Uninstall the original module, and check appropriate
@@ -162,7 +164,7 @@ class InstallUninstallTest extends ModuleTestBase {
     // module was just uninstalled, since the {watchdog} table won't be there
     // anymore.)
     $this->assertText(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
-    $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => $module), WATCHDOG_INFO);
+    $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => $module), RfcLogLevel::INFO);
 
     // Check that the module's database tables no longer exist.
     $this->assertModuleTablesDoNotExist($module);

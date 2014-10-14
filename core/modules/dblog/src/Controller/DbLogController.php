@@ -15,6 +15,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -90,14 +91,14 @@ class DbLogController extends ControllerBase {
    */
   public static function getLogLevelClassMap() {
     return array(
-      WATCHDOG_DEBUG => 'dblog-debug',
-      WATCHDOG_INFO => 'dblog-info',
-      WATCHDOG_NOTICE => 'dblog-notice',
-      WATCHDOG_WARNING => 'dblog-warning',
-      WATCHDOG_ERROR => 'dblog-error',
-      WATCHDOG_CRITICAL => 'dblog-critical',
-      WATCHDOG_ALERT => 'dblog-alert',
-      WATCHDOG_EMERGENCY => 'dblog-emergency',
+      RfcLogLevel::DEBUG => 'dblog-debug',
+      RfcLogLevel::INFO => 'dblog-info',
+      RfcLogLevel::NOTICE => 'dblog-notice',
+      RfcLogLevel::WARNING => 'dblog-warning',
+      RfcLogLevel::ERROR => 'dblog-error',
+      RfcLogLevel::CRITICAL => 'dblog-critical',
+      RfcLogLevel::ALERT => 'dblog-alert',
+      RfcLogLevel::EMERGENCY => 'dblog-emergency',
     );
   }
 
@@ -232,7 +233,7 @@ class DbLogController extends ControllerBase {
   public function eventDetails($event_id) {
     $build = array();
     if ($dblog = $this->database->query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users_field_data} u ON w.uid = u.uid WHERE w.wid = :id AND u.default_langcode = 1', array(':id' => $event_id))->fetchObject()) {
-      $severity = watchdog_severity_levels();
+      $severity = RfcLogLevel::getLevels();
       $message = $this->formatMessage($dblog);
       $username = array(
         '#theme' => 'username',

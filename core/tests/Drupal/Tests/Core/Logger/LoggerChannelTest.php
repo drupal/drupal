@@ -13,18 +13,6 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-// @todo Remove in https://www.drupal.org/node/2267545.
-if (!defined('WATCHDOG_EMERGENCY')) {
-  define('WATCHDOG_EMERGENCY', 0);
-  define('WATCHDOG_ALERT', 1);
-  define('WATCHDOG_CRITICAL', 2);
-  define('WATCHDOG_ERROR', 3);
-  define('WATCHDOG_WARNING', 4);
-  define('WATCHDOG_NOTICE', 5);
-  define('WATCHDOG_INFO', 6);
-  define('WATCHDOG_DEBUG', 7);
-}
-
 /**
  * @coversDefaultClass \Drupal\Core\Logger\LoggerChannel
  * @group Logger

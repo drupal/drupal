@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\ClassLoader\ApcClassLoader;
@@ -58,69 +59,6 @@ const ERROR_REPORTING_DISPLAY_ALL = 'all';
  * Error reporting level: display all messages, plus backtrace information.
  */
 const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
-
-/**
- * @defgroup logging_severity_levels Logging severity levels
- * @{
- * Logging severity levels as defined in RFC 3164.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1. PHP supplies predefined LOG_* constants
- * for use in the syslog() function, but their values on Windows builds do not
- * correspond to RFC 3164. The associated PHP bug report was closed with the
- * comment, "And it's also not a bug, as Windows just have less log levels,"
- * and "So the behavior you're seeing is perfectly normal."
- *
- * @see http://www.faqs.org/rfcs/rfc3164.html
- * @see http://bugs.php.net/bug.php?id=18090
- * @see http://php.net/manual/function.syslog.php
- * @see http://php.net/manual/network.constants.php
- * @see watchdog_severity_levels()
- */
-
-/**
- * Log message severity -- Emergency: system is unusable.
- */
-const WATCHDOG_EMERGENCY = 0;
-
-/**
- * Log message severity -- Alert: action must be taken immediately.
- */
-const WATCHDOG_ALERT = 1;
-
-/**
- * Log message severity -- Critical conditions.
- */
-const WATCHDOG_CRITICAL = 2;
-
-/**
- * Log message severity -- Error conditions.
- */
-const WATCHDOG_ERROR = 3;
-
-/**
- * Log message severity -- Warning conditions.
- */
-const WATCHDOG_WARNING = 4;
-
-/**
- * Log message severity -- Normal but significant conditions.
- */
-const WATCHDOG_NOTICE = 5;
-
-/**
- * Log message severity -- Informational messages.
- */
-const WATCHDOG_INFO = 6;
-
-/**
- * Log message severity -- Debug-level messages.
- */
-const WATCHDOG_DEBUG = 7;
-
-/**
- * @} End of "defgroup logging_severity_levels".
- */
 
 /**
  * First bootstrap phase: initialize configuration.
@@ -783,7 +721,7 @@ function request_uri($omit_query_string = FALSE) {
  *
  * @see \Drupal\Core\Utility\Error::decodeException()
  */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
+function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = RfcLogLevel::ERROR, $link = NULL) {
 
   // Use a default value if $message is not set.
   if (empty($message)) {
