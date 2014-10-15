@@ -1820,14 +1820,18 @@ div.add-or-remove-shortcuts {
 }
 
 /* ---------- Admin-specific Theming ---------- */
-
-.page-admin #content img {
+.path-admin #content img {
   margin-right: 15px; /* LTR */
 }
-.page-admin #content .simpletest-image img {
+.path-admin #content .simpletest-image img {
   margin: 0;
 }
-.page-admin-structure-block-demo .block-region {
+.path-admin #admin-dblog img {
+  margin: 0 5px;
+}
+
+/* Block demo mode */
+.demo-block {
   background: #ffff66;
   border: 1px dotted #9f9e00;
   color: #000;
@@ -1837,14 +1841,11 @@ div.add-or-remove-shortcuts {
   text-align: center;
   text-shadow: none;
 }
-.page-admin-structure-block-demo #featured .block-region {
+#featured .demo-block {
   font-size: 0.55em;
 }
-.page-admin-structure-block-demo #header .block-region {
+#header .demo-block {
   width: 500px;
-}
-.page-admin #admin-dblog img {
-  margin: 0 5px;
 }
 
 /* Configuration. */

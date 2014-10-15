@@ -1676,27 +1676,29 @@ function template_preprocess_html(&$variables) {
   $variables['page'] = $page;
 
   // Compile a list of classes that are going to be applied to the body element.
-  // This allows advanced theming based on context (home page, node of certain type, etc.).
+  // This allows advanced theming based on context (home page, node of certain
+  // type, etc.).
   $body_classes = $variables['attributes']['class'];
-  $body_classes[] = 'html';
-  // Add a class that tells us whether we're on the front page or not.
-  $body_classes[] = $variables['is_front'] ? 'front' : 'not-front';
-  // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
-  $variables['attributes']['class'] = $body_classes;
 
-  $path_args = explode('/', current_path());
-  // Populate the body classes.
-  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
-    foreach ($suggestions as $suggestion) {
-      if ($suggestion != 'page-front') {
-        // Add current suggestion to page classes to make it possible to theme
-        // the page depending on the current page type (e.g. node, admin, user,
-        // etc.) as well as more specific data like node-12 or node-edit.
-        $variables['attributes']['class'][] = drupal_html_class($suggestion);
-      }
-    }
+  // Add a class that tells us whether the page is viewed by an authenticated
+  // user.
+  if ($variables['logged_in']) {
+    $body_classes[] = 'user-logged-in';
   }
+  // Add a class that tells us what path the page is located make it possible
+  // to theme the page depending on the current path (e.g. node, admin, user,
+  // etc.) as well as more specific data like path-frontpage.
+  $path = \Drupal::request()->getPathInfo();
+
+  if (drupal_is_front_page()) {
+    $body_classes[] = 'path-frontpage';
+  }
+  else {
+    $segment = explode('/', $path);
+    $body_classes[] = 'path-' . drupal_html_class($segment[1]);
+  }
+
+  $variables['attributes']['class'] = $body_classes;
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
@@ -1786,15 +1788,6 @@ function template_preprocess_page(&$variables) {
     }
   }
 
-  // Set up layout variable.
-  $variables['layout'] = 'none';
-  if (!empty($variables['page']['sidebar_first'])) {
-    $variables['layout'] = 'first';
-  }
-  if (!empty($variables['page']['sidebar_second'])) {
-    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
-  }
-
   $variables['base_path']         = base_path();
   $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
@@ -1873,16 +1866,16 @@ function template_preprocess_page(&$variables) {
  */
 function theme_get_suggestions($args, $base, $delimiter = '__') {
 
-  // Build a list of suggested theme hooks or body classes in order of
+  // Build a list of suggested theme hooks in order of
   // specificity. One suggestion is made for every element of the current path,
   // though numeric elements are not carried to subsequent suggestions. For
   // example, for $base='page', http://www.example.com/node/1/edit would result
-  // in the following suggestions and body classes:
+  // in the following suggestions:
   //
-  // page__node              page-node
-  // page__node__%           page-node-%
-  // page__node__1           page-node-1
-  // page__node__edit        page-node-edit
+  // page__node
+  // page__node__%
+  // page__node__1
+  // page__node__edit
 
   $suggestions = array();
   $prefix = $base;
@@ -1937,7 +1930,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $attributes = $page_object->getBodyAttributes();
   $classes = $attributes['class'];
   $classes[] = 'maintenance-page';
-  $classes[] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
     $classes[] = 'db-offline';
   }

@@ -82,7 +82,7 @@ function block_page_build(&$page) {
     // Append region description if we are rendering the regions demo page.
     $visible_regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
     foreach ($visible_regions as $region) {
-      $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
+      $description = '<div class="block-region demo-block">' . $all_regions[$region] . '</div>';
       $page[$region]['block_description'] = array(
         '#markup' => $description,
         '#weight' => 15,

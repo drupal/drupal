@@ -13,7 +13,7 @@
 
 /* Maintenance theming */
 .install-page,
-.in-maintenance {
+.maintenance-page {
   background: none;
 }
 .page-title {
@@ -131,13 +131,13 @@
   html {
     display: table;
   }
-  .in-maintenance,
-  .install-page {
+  .install-page,
+  .maintenance-page {
     display: table-cell;
     padding: 1em 0;
     vertical-align: middle;
   }
-  html, .install-page, .in-maintenance {
+  html, .install-page, .maintenance-page {
     margin: 0;
     width: 100%;
     height: 100%;

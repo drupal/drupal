@@ -208,3 +208,15 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
 }
+
+function seven_preprocess_html(&$variables) {
+  // If on a node add or edit page, add a node-layout class.
+  $path_args = explode('/', \Drupal::request()->getPathInfo());
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
+        $variables['attributes']['class'][] = drupal_html_class('node-form-layout');
+      }
+    }
+  }
+}

@@ -10,9 +10,7 @@
 @media
   screen and (min-width: 780px),
   (orientation: landscape) and (min-device-height: 780px) {
-
-  [class*="page-node-add-"] .messages,
-  .page-node-edit .messages {
+  .node-form-layout .messages {
     margin-top: 1em;
     margin-bottom: 1em;
   }
@@ -20,7 +18,6 @@
 @media
   screen and (max-width: 1020px),
   (orientation: landscape) and (max-device-height: 1020px) {
-
   .toolbar-vertical .block-list-secondary,
   .toolbar-vertical .layout-region-node-secondary {
     margin-bottom: 0;

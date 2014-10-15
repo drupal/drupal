@@ -3,7 +3,7 @@
  * Installation styling.
  *
  * Unfortunately we have to make our styling quite strong, to override the
- * .in-maintenance styling.
+ * .maintenance-page styling.
  */
 .install-background {
   background-color: #1275b2;
