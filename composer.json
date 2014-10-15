@@ -20,7 +20,6 @@
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
     "doctrine/annotations": "1.2.*",
     "guzzlehttp/guzzle": "4.1.*",
-    "kriswallsmith/assetic": "1.1.*@alpha",
     "symfony-cmf/routing": "1.2.*",
     "easyrdf/easyrdf": "0.8.*",
     "phpunit/phpunit": "4.1.*",
