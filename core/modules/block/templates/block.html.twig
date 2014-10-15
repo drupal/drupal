@@ -19,10 +19,11 @@
  *   - delta: An ID for the block, unique within each module.
  *   - region: The block region embedding the current block.
  * - content: The content of this block.
- * - attributes: HTML attributes for the containing element.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
  *   - id: A valid HTML ID and guaranteed unique.
- * - title_attributes: HTML attributes for the title element.
- * - content_attributes: HTML attributes for the content element.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
  * - title_prefix: Additional output populated by modules, intended to be
  *   displayed in front of the main title tag that appears in the template.
  * - title_suffix: Additional output populated by modules, intended to be

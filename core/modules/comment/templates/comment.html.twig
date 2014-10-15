@@ -26,8 +26,8 @@
  * - status: Comment status. Possible values are:
  *   unpublished, published, or preview.
  * - title: Comment title, linked to the comment.
- * - attributes.class: List of classes that can be used to style contextually
- *   through CSS. The default values can be one or more of the following:
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class may contain one or more of the following classes:
  *   - comment: The current template type; e.g., 'theming hook'.
  *   - by-anonymous: Comment by an unregistered user.
  *   - by-{entity-type}-author: Comment by the author of the parent entity,
@@ -40,6 +40,8 @@
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
  * - content_attributes: List of classes for the styling of the comment content.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
  *
  * These variables are provided to give context about the parent comment (if
  * any):
