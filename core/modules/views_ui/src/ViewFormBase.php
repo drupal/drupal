@@ -30,13 +30,20 @@ abstract class ViewFormBase extends EntityForm {
   public function init(FormStateInterface $form_state) {
     parent::init($form_state);
 
-    if ($display_id = \Drupal::request()->attributes->get('display_id')) {
-      $this->displayID = $display_id;
-    }
-
     // @todo Remove the need for this.
     $form_state->loadInclude('views_ui', 'inc', 'admin');
     $form_state->set('view', $this->entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, $display_id = NULL) {
+    if (isset($display_id) && $form_state->has('display_id') && ($display_id !== $form_state->get('display_id'))) {
+      throw new \InvalidArgumentException('Mismatch between $form_state->get(\'display_id\') and $display_id.');
+    }
+    $this->displayID = $form_state->has('display_id') ? $form_state->get('display_id') : $display_id;
+    return parent::buildForm($form, $form_state);
   }
 
   /**

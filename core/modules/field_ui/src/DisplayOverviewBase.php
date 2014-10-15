@@ -117,12 +117,10 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $mode = 'default') {
     parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
-    if (empty($this->mode)) {
-      $this->mode = 'default';
-    }
+    $this->mode = $mode;
 
     $field_definitions = $this->getFieldDefinitions();
     $extra_fields = $this->getExtraFields();

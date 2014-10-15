@@ -8,39 +8,11 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\TempStoreFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Views preview form.
  */
 class ViewPreviewForm extends ViewFormBase {
-
-  /**
-   * The views temp store.
-   *
-   * @var \Drupal\user\TempStore
-   */
-  protected $tempStore;
-
-  /**
-   * Constructs a new ViewPreviewForm object.
-   *
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
-   *   The factory for the temp store object.
-   */
-  public function __construct(TempStoreFactory $temp_store_factory) {
-    $this->tempStore = $temp_store_factory->get('views');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('user.tempstore')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -129,15 +101,6 @@ class ViewPreviewForm extends ViewFormBase {
    * Form submission handler for the Preview button.
    */
   public function submitPreview($form, FormStateInterface $form_state) {
-    // Rebuild the form with a pristine $view object.
-    $view = $this->entity;
-    // Attempt to load the view from temp store, otherwise create a new one.
-    if (!$new_view = $this->tempStore->get($view->id())) {
-      $new_view = new ViewUI($view);
-    }
-    $build_info = $form_state->getBuildInfo();
-    $build_info['args'][0] = $new_view;
-    $form_state->setBuildInfo($build_info);
     $form_state->set('show_preview', TRUE);
     $form_state->setRebuild();
   }

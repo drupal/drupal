@@ -47,7 +47,7 @@ class EntityTestController extends ControllerBase {
   /**
    * Displays the 'Add new entity_test' form.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   Name of the entity type for which a create form should be displayed.
    *
    * @return array
@@ -55,10 +55,10 @@ class EntityTestController extends ControllerBase {
    *
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
    */
-  public function testAdd($entity_type) {
-    $entity = entity_create($entity_type, array());
+  public function testAdd($entity_type_id) {
+    $entity = entity_create($entity_type_id, array());
     $form = $this->entityFormBuilder()->getForm($entity);
-    $form['#title'] = $this->t('Create an @type', array('@type' => $entity_type));
+    $form['#title'] = $this->t('Create an @type', array('@type' => $entity_type_id));
     return $form;
   }
 
@@ -67,14 +67,16 @@ class EntityTestController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object to get entity type from.
+   * @param string $entity_type_id
+   *   The entity type ID.
    *
    * @return array
    *   The processed form for the edited entity.
    *
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
    */
-  public function testEdit(Request $request) {
-    $entity = $request->attributes->get($request->attributes->get('_entity_type'));
+  public function testEdit(Request $request, $entity_type_id) {
+    $entity = $request->attributes->get($entity_type_id);
     $form = $this->entityFormBuilder()->getForm($entity);
     $form['#title'] = $entity->label();
     return $form;

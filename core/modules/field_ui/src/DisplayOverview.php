@@ -79,12 +79,8 @@ class DisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
-    if ($this->getRequest()->attributes->has('view_mode_name')) {
-      $this->mode = $this->getRequest()->attributes->get('view_mode_name');
-    }
-
-    return parent::buildForm($form, $form_state, $entity_type_id, $bundle);
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $view_mode_name = 'default') {
+    return parent::buildForm($form, $form_state, $entity_type_id, $bundle, $view_mode_name);
   }
 
   /**
