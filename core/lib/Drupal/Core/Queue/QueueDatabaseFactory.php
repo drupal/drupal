@@ -36,8 +36,6 @@ class QueueDatabaseFactory {
    *
    * @param string $name
    *   The name of the collection holding key and value pairs.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The connection to run against.
    *
    * @return \Drupal\Core\Queue\DatabaseQueue
    *   A key/value store implementation for the given $collection.
