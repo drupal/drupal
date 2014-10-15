@@ -23,7 +23,8 @@ use Drupal\Core\TypedData\OptionsProviderInterface;
  *   description = @Translation("This field stores a reference to a taxonomy term."),
  *   default_widget = "options_select",
  *   default_formatter = "taxonomy_term_reference_link",
- *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList"
+ *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
+ *   constraints = {"ValidReference" = {}}
  * )
  */
 class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsProviderInterface {

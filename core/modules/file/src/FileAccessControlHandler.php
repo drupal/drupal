@@ -23,17 +23,25 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
 
-    if ($operation == 'download') {
-      foreach ($this->getFileReferences($entity) as $field_name => $entity_map) {
-        foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
-          /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
-          foreach ($referencing_entities as $referencing_entity) {
-            $entity_and_field_access = $referencing_entity->access('view', $account, TRUE)->andIf($referencing_entity->$field_name->access('view', $account, TRUE));
-            if ($entity_and_field_access->isAllowed()) {
-              return $entity_and_field_access;
+    if ($operation == 'download' || $operation == 'view') {
+      $references = $this->getFileReferences($entity);
+      if ($references) {
+        foreach ($references as $field_name => $entity_map) {
+          foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
+            /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
+            foreach ($referencing_entities as $referencing_entity) {
+              $entity_and_field_access = $referencing_entity->access('view', $account, TRUE)->andIf($referencing_entity->$field_name->access('view', $account, TRUE));
+              if ($entity_and_field_access->isAllowed()) {
+                return $entity_and_field_access;
+              }
             }
           }
         }
+      }
+      elseif ($entity->getOwnerId() == $account->id()) {
+        // This case handles new nodes, or detached files. The user who uploaded
+        // the file can always access if it's not yet used.
+        return AccessResult::allowed();
       }
     }
 

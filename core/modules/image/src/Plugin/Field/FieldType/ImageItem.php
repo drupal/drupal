@@ -41,7 +41,8 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *       "translatable" = TRUE
  *     },
  *   },
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList"
+ *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
+ *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}}
  * )
  */
 class ImageItem extends FileItem {

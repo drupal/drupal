@@ -25,7 +25,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("This field stores the ID of a file as an integer value."),
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList"
+ *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
+ *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}}
  * )
  */
 class FileItem extends EntityReferenceItem {

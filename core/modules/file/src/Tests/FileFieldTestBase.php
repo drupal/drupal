@@ -114,6 +114,13 @@ abstract class FileFieldTestBase extends WebTestBase {
         'settings' => $widget_settings,
       ))
       ->save();
+    // Assign display settings.
+    entity_get_display($entity_type, $bundle, 'default')
+      ->setComponent($name, array(
+        'label' => 'hidden',
+        'type' => 'file_default',
+      ))
+      ->save();
   }
 
   /**
