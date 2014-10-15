@@ -1181,6 +1181,75 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
   /**
+   * Tests entity ID sanitization.
+   */
+  public function testCleanIds() {
+    $valid_ids = array(
+      -1,
+      0,
+      1,
+      '-1',
+      '0',
+      '1',
+      0123,
+      -0x1A,
+      0x1AFC,
+      -0b111,
+      0b101,
+      '0123',
+      '00123',
+      '000123',
+      '-0123',
+      '-00123',
+      '-000123',
+      -10.0,
+      -1.0,
+      0.0,
+      1.0,
+      10.0,
+      -10.00,
+      -1.00,
+      0.00,
+      1.00,
+      10.00,
+    );
+
+    $this->fieldDefinitions = $this->mockFieldDefinitions(array('id'));
+    $this->fieldDefinitions['id']->expects($this->any())
+    ->method('getType')
+    ->will($this->returnValue('integer'));
+
+    $this->setUpEntityStorage();
+
+    $this->entityType->expects($this->any())
+    ->method('getKey')
+    ->will($this->returnValueMap(array(
+      array('id', 'id'),
+    )));
+
+    $method = new \ReflectionMethod($this->entityStorage, 'cleanIds');
+    $method->setAccessible(TRUE);
+    $this->assertEquals($valid_ids, $method->invoke($this->entityStorage, $valid_ids));
+
+    $invalid_ids = array(
+      '--1',
+      '-0x1A',
+      '0x1AFC',
+      '-0b111',
+      '0b101',
+      'a',
+      FALSE,
+      TRUE,
+      NULL,
+      '32acb',
+      123.123,
+      123.678,
+    );
+    $this->assertEquals(array(), $method->invoke($this->entityStorage, $invalid_ids));
+
+  }
+
+  /**
    * Sets up the module handler with no implementations.
    */
   protected function setUpModuleHandlerNoImplementations() {

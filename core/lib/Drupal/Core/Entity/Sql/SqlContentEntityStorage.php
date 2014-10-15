@@ -427,6 +427,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected function getFromStorage(array $ids = NULL) {
     $entities = array();
 
+    if (!empty($ids)) {
+      // Sanitize IDs. Before feeding ID array into buildQuery, check whether
+      // it is empty as this would load all entities.
+      $ids = $this->cleanIds($ids);
+    }
+
     if ($ids === NULL || $ids) {
       // Build and execute the query.
       $query_result = $this->buildQuery($ids)->execute();
@@ -450,6 +456,30 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     return $entities;
+  }
+
+  /**
+   * Ensures integer entity IDs are valid.
+   *
+   * The identifier sanitization provided by this method has been introduced
+   * as Drupal used to rely on the database to facilitate this, which worked
+   * correctly with MySQL but led to errors with other DBMS such as PostgreSQL.
+   *
+   * @param array $ids
+   *   The entity IDs to verify.
+   * @return array
+   *   The sanitized list of entity IDs.
+   */
+  protected function cleanIds(array $ids) {
+    $definitions = $this->entityManager->getBaseFieldDefinitions($this->entityTypeId);
+    $id_definition = $definitions[$this->entityType->getKey('id')];
+    if ($id_definition->getType() == 'integer') {
+      $ids = array_filter($ids, function ($id) {
+        return is_numeric($id) && $id == (int) $id;
+      });
+      $ids = array_map('intval', $ids);
+    }
+    return $ids;
   }
 
   /**
