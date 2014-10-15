@@ -3384,6 +3384,34 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
 
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
   }
+
+  /**
+   * Test SQL injection via database query array arguments.
+   */
+  public function testArrayArgumentsSQLInjection() {
+    // Attempt SQL injection and verify that it does not work.
+    $condition = array(
+      "1 ;INSERT INTO {test} SET name = 'test12345678'; -- " => '',
+      '1' => '',
+    );
+    try {
+      db_query("SELECT * FROM {test} WHERE name = :name", array(':name' => $condition))->fetchObject();
+      $this->fail('SQL injection attempt via array arguments should result in a PDOException.');
+    }
+    catch (PDOException $e) {
+      $this->pass('SQL injection attempt via array arguments should result in a PDOException.');
+    }
+
+    // Test that the insert query that was used in the SQL injection attempt did
+    // not result in a row being inserted in the database.
+    $result = db_select('test')
+      ->condition('name', 'test12345678')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+  }
+
 }
 
 /**
