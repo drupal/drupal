@@ -544,7 +544,7 @@ class vfsStreamWrapper
      *
      * @param   string                    $path
      * @param   vfsStreamAbstractContent  $content
-     * @param   Closure                   $change
+     * @param   \Closure                  $change
      * @return  bool
      */
     private function doPermChange($path, vfsStreamAbstractContent $content, \Closure $change)
@@ -707,6 +707,7 @@ class vfsStreamWrapper
         $realPath = $this->resolvePath(vfsStream::path($path));
         $content  = $this->getContent($realPath);
         if (null === $content) {
+            trigger_error('unlink(' . $path . '): No such file or directory', E_USER_WARNING);
             return false;
         }
 

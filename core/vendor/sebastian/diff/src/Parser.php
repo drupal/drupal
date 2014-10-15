@@ -2,7 +2,7 @@
 /**
  * Diff
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
@@ -50,12 +50,16 @@ namespace SebastianBergmann\Diff;
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
 class Parser
 {
+    /**
+     * @param  string $string
+     * @return Diff[]
+     */
     public function parse($string)
     {
         $lines     = preg_split('(\r\n|\r|\n)', $string);
@@ -63,7 +67,7 @@ class Parser
         $diffs     = array();
         $diff      = null;
         $collected = array();
-        
+
         for ($i = 0; $i < $lineCount; ++$i) {
             if (preg_match('(^---\\s+(?P<file>\\S+))', $lines[$i], $fromMatch) &&
                 preg_match('(^\\+\\+\\+\\s+(?P<file>\\S+))', $lines[$i + 1], $toMatch)) {
@@ -88,6 +92,10 @@ class Parser
         return $diffs;
     }
 
+    /**
+     * @param Diff  $diff
+     * @param array $lines
+     */
     private function parseFileDiff(Diff $diff, array $lines)
     {
         $chunks = array();
@@ -110,14 +118,14 @@ class Parser
             $last      = null;
 
             while (count($lines) &&
-                  (preg_match('(^(?P<type>[+ -])(?P<line>.*))', $last = array_shift($lines), $match) ||
-                  (strpos($last, '\\ No newline at end of file' ) === 0))) {
+                  (preg_match('(^(?P<type>[+ -])?(?P<line>.*))', $last = array_shift($lines), $match) ||
+                  (strpos($last, '\\ No newline at end of file') === 0))) {
                 if (count($match)) {
                     $type = Line::UNCHANGED;
 
                     if ($match['type'] == '+') {
                         $type = Line::ADDED;
-                    } else if ($match['type'] == '-') {
+                    } elseif ($match['type'] == '-') {
                         $type = Line::REMOVED;
                     }
 
@@ -133,7 +141,7 @@ class Parser
                 array_unshift($lines, $last);
             }
         }
-        
+
         $diff->setChunks($chunks);
     }
 }

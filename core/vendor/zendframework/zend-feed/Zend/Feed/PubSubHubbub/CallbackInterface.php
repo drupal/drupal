@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -23,7 +23,7 @@ interface CallbackInterface
 
     /**
      * Send the response, including all headers.
-     * If you wish to handle this via Controller, use the getter methods
+     * If you wish to handle this via Zend\Mvc\Controller, use the getter methods
      * to retrieve any data needed to be set on your HTTP Response object, or
      * simply give this object the HTTP Response instance to work with for you!
      *

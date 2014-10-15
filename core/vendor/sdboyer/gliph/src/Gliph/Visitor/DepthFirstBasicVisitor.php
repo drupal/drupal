@@ -47,7 +47,7 @@ class DepthFirstBasicVisitor extends DepthFirstToposortVisitor {
 
         foreach ($this->active as $vertex) {
             // TODO this check makes this less efficient - find a better algo
-            if (!in_array($to, $this->paths[$vertex])) {
+            if (!in_array($to, $this->paths[$vertex], TRUE)) {
                 $path = $this->paths[$vertex];
                 $path[] = $to;
                 $this->paths[$vertex] = $path;
@@ -65,11 +65,14 @@ class DepthFirstBasicVisitor extends DepthFirstToposortVisitor {
      * Returns an array of all vertices reachable from the given vertex.
      *
      * @param object $vertex
-     *   A vertex present in the graph for
+     *   The vertex for which reachability data is desired.
      *
      * @return array|bool
      *   An array of reachable vertices, or FALSE if the vertex could not be
-     *   found in the reachability data.
+     *   found in the reachability data. Note that an empty array will be
+     *   returned for vertices that zero reachable vertices. This is a different
+     *   from FALSE, so the identity operator (===) should be used to verify
+     *   returns.
      *
      * @throws WrongVisitorStateException
      *   Thrown if reachability data is requested before the traversal algorithm
@@ -77,7 +80,7 @@ class DepthFirstBasicVisitor extends DepthFirstToposortVisitor {
      */
     public function getReachable($vertex) {
         if ($this->getState() !== self::COMPLETE) {
-            throw new WrongVisitorStateException('Reachability data cannot be retrieved until traversal is complete.');
+            throw new WrongVisitorStateException('Correct reachability data cannot be retrieved until traversal is complete.');
         }
 
         if (!isset($this->paths[$vertex])) {

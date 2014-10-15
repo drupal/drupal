@@ -2,7 +2,7 @@
 /**
  * Diff
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
@@ -48,19 +48,44 @@ namespace SebastianBergmann\Diff;
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
 class Chunk
 {
+    /**
+     * @var int
+     */
     private $start;
+
+    /**
+     * @var int
+     */
     private $startRange;
+
+    /**
+     * @var int
+     */
     private $end;
+    /**
+     * @var int
+     */
     private $endRange;
+
+    /**
+     * @var array
+     */
     private $lines;
 
-    public function __construct($start = null, $startRange = 1, $end = null, $endRange = 1, array $lines = array())
+    /**
+     * @param int   $start
+     * @param int   $startRange
+     * @param int   $end
+     * @param int   $endRange
+     * @param array $lines
+     */
+    public function __construct($start = 0, $startRange = 1, $end = 0, $endRange = 1, array $lines = array())
     {
         $this->start      = (int) $start;
         $this->startRange = (int) $startRange;
@@ -69,31 +94,49 @@ class Chunk
         $this->lines      = $lines;
     }
 
+    /**
+     * @return int
+     */
     public function getStart()
     {
         return $this->start;
     }
 
+    /**
+     * @return int
+     */
     public function getStartRange()
     {
         return $this->startRange;
     }
 
+    /**
+     * @return int
+     */
     public function getEnd()
     {
         return $this->end;
     }
 
+    /**
+     * @return int
+     */
     public function getEndRange()
     {
         return $this->endRange;
     }
 
+    /**
+     * @return array
+     */
     public function getLines()
     {
         return $this->lines;
     }
 
+    /**
+     * @param array $lines
+     */
     public function setLines(array $lines)
     {
         $this->lines = $lines;

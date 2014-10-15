@@ -2,29 +2,14 @@
 
 namespace Doctrine\Tests\Common\Cache;
 
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
 
 /**
  * @group DCOM-101
  */
-class FilesystemCacheTest extends CacheTest
+class FilesystemCacheTest extends BaseFileCacheTest
 {
-    /**
-     * @var \Doctrine\Common\Cache\FilesystemCache
-     */
-    private $driver;
-
-    protected function _getCacheDriver()
-    {
-        $dir = sys_get_temp_dir() . "/doctrine_cache_". uniqid();
-        $this->assertFalse(is_dir($dir));
-        
-        $this->driver = new FilesystemCache($dir);
-        $this->assertTrue(is_dir($dir));
-
-        return $this->driver;
-    }
-
     public function testLifetime()
     {
         $cache = $this->_getCacheDriver();
@@ -76,22 +61,15 @@ class FilesystemCacheTest extends CacheTest
         $cache = $this->_getCacheDriver();
         $stats = $cache->getStats();
 
-        $this->assertNull($stats);
+        $this->assertNull($stats[Cache::STATS_HITS]);
+        $this->assertNull($stats[Cache::STATS_MISSES]);
+        $this->assertNull($stats[Cache::STATS_UPTIME]);
+        $this->assertEquals(0, $stats[Cache::STATS_MEMORY_USAGE]);
+        $this->assertGreaterThan(0, $stats[Cache::STATS_MEMORY_AVAILABLE]);
     }
 
-    public function tearDown()
+    protected function _getCacheDriver()
     {
-        $dir        = $this->driver->getDirectory();
-        $ext        = $this->driver->getExtension();
-        $iterator   = new \RecursiveDirectoryIterator($dir);
-
-        foreach (new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST) as $file) {
-            if ($file->isFile()) {
-                @unlink($file->getRealPath());
-            } else {
-                @rmdir($file->getRealPath());
-            }
-        }
+        return new FilesystemCache($this->directory);
     }
-
 }

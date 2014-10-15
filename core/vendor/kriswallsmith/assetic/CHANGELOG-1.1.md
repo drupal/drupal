@@ -1,3 +1,11 @@
+1.1.2 (July 18, 2013)
+-------------------
+
+ * Fixed deep mtime on asset collections
+ * `CallablesFilter` now implements `DependencyExtractorInterface`
+ * Fixed detection of "partial" children in subfolders in `SassFilter`
+ * Restored `PathUtils` for BC
+
 1.1.1 (June 1, 2013)
 --------------------
 

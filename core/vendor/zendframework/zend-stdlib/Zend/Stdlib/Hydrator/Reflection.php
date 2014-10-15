@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -64,8 +64,7 @@ class Reflection extends AbstractHydrator
      * Get a reflection properties from in-memory cache and lazy-load if
      * class has not been loaded.
      *
-     * @static
-     * @param string|object $input
+     * @param  string|object $input
      * @throws Exception\InvalidArgumentException
      * @return array
      */
@@ -77,14 +76,17 @@ class Reflection extends AbstractHydrator
             throw new Exception\InvalidArgumentException('Input must be a string or an object.');
         }
 
-        if (!isset(static::$reflProperties[$input])) {
-            $reflClass      = new ReflectionClass($input);
-            $reflProperties = $reflClass->getProperties();
+        if (isset(static::$reflProperties[$input])) {
+            return static::$reflProperties[$input];
+        }
 
-            foreach ($reflProperties as $property) {
-                $property->setAccessible(true);
-                static::$reflProperties[$input][$property->getName()] = $property;
-            }
+        static::$reflProperties[$input] = array();
+        $reflClass                      = new ReflectionClass($input);
+        $reflProperties                 = $reflClass->getProperties();
+
+        foreach ($reflProperties as $property) {
+            $property->setAccessible(true);
+            static::$reflProperties[$input][$property->getName()] = $property;
         }
 
         return static::$reflProperties[$input];

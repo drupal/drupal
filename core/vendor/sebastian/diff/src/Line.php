@@ -2,7 +2,7 @@
 /**
  * Diff
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
@@ -48,7 +48,7 @@ namespace SebastianBergmann\Diff;
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
@@ -58,20 +58,37 @@ class Line
     const REMOVED = 2;
     const UNCHANGED = 3;
 
+    /**
+     * @var int
+     */
     private $type;
+
+    /**
+     * @var string
+     */
     private $content;
 
-    public function __construct($type = self::UNCHANGED, $content = null)
+    /**
+     * @param int    $type
+     * @param string $content
+     */
+    public function __construct($type = self::UNCHANGED, $content = '')
     {
         $this->type    = $type;
         $this->content = $content;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @return int
+     */
     public function getType()
     {
         return $this->type;

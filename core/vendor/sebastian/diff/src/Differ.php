@@ -2,7 +2,7 @@
 /**
  * Diff
  *
- * Copyright (c) 2001-2013, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,12 +37,16 @@
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
 
 namespace SebastianBergmann\Diff;
+
+use SebastianBergmann\Diff\LCS\LongestCommonSubsequence;
+use SebastianBergmann\Diff\LCS\TimeEfficientImplementation;
+use SebastianBergmann\Diff\LCS\MemoryEfficientImplementation;
 
 /**
  * Diff implementation.
@@ -50,7 +54,7 @@ namespace SebastianBergmann\Diff;
  * @package    Diff
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @author     Kore Nordmann <mail@kore-nordmann.de>
- * @copyright  2001-2013 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.github.com/sebastianbergmann/diff
  */
@@ -62,8 +66,6 @@ class Differ
     private $header;
 
     /**
-     * Constructor
-     *
      * @param string $header
      */
     public function __construct($header = "--- Original\n+++ New\n")
@@ -74,32 +76,31 @@ class Differ
     /**
      * Returns the diff between two arrays or strings as string.
      *
-     * @param  array|string $from
-     * @param  array|string $to
+     * @param  array|string             $from
+     * @param  array|string             $to
+     * @param  LongestCommonSubsequence $lcs
      * @return string
      */
-    public function diff($from, $to)
+    public function diff($from, $to, LongestCommonSubsequence $lcs = null)
     {
         $buffer = $this->header;
-        $diff   = $this->diffToArray($from,$to);
+        $diff   = $this->diffToArray($from, $to, $lcs);
 
-        $inOld = FALSE;
+        $inOld = false;
         $i     = 0;
         $old   = array();
 
         foreach ($diff as $line) {
             if ($line[1] ===  0 /* OLD */) {
-                if ($inOld === FALSE) {
+                if ($inOld === false) {
                     $inOld = $i;
                 }
-            }
-
-            else if ($inOld !== FALSE) {
+            } elseif ($inOld !== false) {
                 if (($i - $inOld) > 5) {
                     $old[$inOld] = $i - 1;
                 }
 
-                $inOld = FALSE;
+                $inOld = false;
             }
 
             ++$i;
@@ -112,29 +113,25 @@ class Differ
             $end = $tmp;
         }
 
-        $newChunk = TRUE;
+        $newChunk = true;
 
         for ($i = $start; $i < $end; $i++) {
             if (isset($old[$i])) {
                 $buffer  .= "\n";
-                $newChunk = TRUE;
+                $newChunk = true;
                 $i        = $old[$i];
             }
 
             if ($newChunk) {
                 $buffer  .= "@@ @@\n";
-                $newChunk = FALSE;
+                $newChunk = false;
             }
 
             if ($diff[$i][1] === 1 /* ADDED */) {
                 $buffer .= '+' . $diff[$i][0] . "\n";
-            }
-
-            else if ($diff[$i][1] === 2 /* REMOVED */) {
+            } elseif ($diff[$i][1] === 2 /* REMOVED */) {
                 $buffer .= '-' . $diff[$i][0] . "\n";
-            }
-
-            else {
+            } else {
                 $buffer .= ' ' . $diff[$i][0] . "\n";
             }
         }
@@ -153,11 +150,12 @@ class Differ
      * - 1: ADDED: $token was added to $from
      * - 0: OLD: $token is not changed in $to
      *
-     * @param  array|string $from
-     * @param  array|string $to
+     * @param  array|string             $from
+     * @param  array|string             $to
+     * @param  LongestCommonSubsequence $lcs
      * @return array
      */
-    public function diffToArray($from, $to)
+    public function diffToArray($from, $to, LongestCommonSubsequence $lcs = null)
     {
         preg_match_all('(\r\n|\r|\n)', $from, $fromMatches);
         preg_match_all('(\r\n|\r|\n)', $to, $toMatches);
@@ -196,11 +194,12 @@ class Differ
             }
         }
 
-        $common = $this->longestCommonSubsequence(
-          array_values($from), array_values($to)
-        );
+        if ($lcs === null) {
+            $lcs = $this->selectLcsImplementation($from, $to);
+        }
 
-        $diff = array();
+        $common = $lcs->calculate(array_values($from), array_values($to));
+        $diff   = array();
 
         if (isset($fromMatches[0]) && $toMatches[0] &&
             count($fromMatches[0]) === count($toMatches[0]) &&
@@ -232,11 +231,11 @@ class Differ
             array_shift($to);
         }
 
-        while (($token = array_shift($from)) !== NULL) {
+        while (($token = array_shift($from)) !== null) {
             $diff[] = array($token, 2 /* REMOVED */);
         }
 
-        while (($token = array_shift($to)) !== NULL) {
+        while (($token = array_shift($to)) !== null) {
             $diff[] = array($token, 1 /* ADDED */);
         }
 
@@ -248,56 +247,36 @@ class Differ
     }
 
     /**
-     * Calculates the longest common subsequence of two arrays.
+     * @param  array $from
+     * @param  array $to
+     * @return LongestCommonSubsequence
+     */
+    private function selectLcsImplementation(array $from, array $to)
+    {
+        // We do not want to use the time-efficient implementation if its memory
+        // footprint will probably exceed this value. Note that the footprint
+        // calculation is only an estimation for the matrix and the LCS method
+        // will typically allocate a bit more memory than this.
+        $memoryLimit = 100 * 1024 * 1024;
+
+        if ($this->calculateEstimatedFootprint($from, $to) > $memoryLimit) {
+            return new MemoryEfficientImplementation;
+        }
+
+        return new TimeEfficientImplementation;
+    }
+
+    /**
+     * Calculates the estimated memory footprint for the DP-based method.
      *
      * @param  array $from
      * @param  array $to
-     * @return array
+     * @return integer
      */
-    private function longestCommonSubsequence(array $from, array $to)
+    private function calculateEstimatedFootprint(array $from, array $to)
     {
-        $common     = array();
-        $matrix     = array();
-        $fromLength = count($from);
-        $toLength   = count($to);
+        $itemSize = PHP_INT_SIZE == 4 ? 76 : 144;
 
-        for ($i = 0; $i <= $fromLength; ++$i) {
-            $matrix[$i][0] = 0;
-        }
-
-        for ($j = 0; $j <= $toLength; ++$j) {
-            $matrix[0][$j] = 0;
-        }
-
-        for ($i = 1; $i <= $fromLength; ++$i) {
-            for ($j = 1; $j <= $toLength; ++$j) {
-                $matrix[$i][$j] = max(
-                  $matrix[$i-1][$j],
-                  $matrix[$i][$j-1],
-                  $from[$i-1] === $to[$j-1] ? $matrix[$i-1][$j-1] + 1 : 0
-                );
-            }
-        }
-
-        $i = $fromLength;
-        $j = $toLength;
-
-        while ($i > 0 && $j > 0) {
-            if ($from[$i-1] === $to[$j-1]) {
-                array_unshift($common, $from[$i-1]);
-                --$i;
-                --$j;
-            }
-
-            else if ($matrix[$i][$j-1] > $matrix[$i-1][$j]) {
-                --$j;
-            }
-
-            else {
-                --$i;
-            }
-        }
-
-        return $common;
+        return $itemSize * pow(min(count($from), count($to)), 2);
     }
 }

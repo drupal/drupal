@@ -38,7 +38,7 @@ abstract class VarUtils
             }
 
             if (!isset($values[$var])) {
-                throw new \InvalidArgumentException(sprintf('The path "%s" contains the variable "%s", but was not given any value for it.', $template, $var));
+                throw new \InvalidArgumentException(sprintf('The template "%s" contains the variable "%s", but was not given any value for it.', $template, $var));
             }
 
             $map['{'.$var.'}'] = $values[$var];

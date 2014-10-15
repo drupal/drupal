@@ -10,6 +10,7 @@
 namespace org\bovigo\vfs\visitor;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\vfsStreamBlock;
 /**
  * Test for org\bovigo\vfs\visitor\vfsStreamAbstractVisitor.
  *
@@ -62,6 +63,22 @@ class vfsStreamAbstractVisitorTestCase extends \PHPUnit_Framework_TestCase
                               ->with($this->equalTo($file));
         $this->assertSame($this->abstractVisitor,
                           $this->abstractVisitor->visit($file)
+        );
+    }
+
+    /**
+     * tests that a block device eventually calls out to visit file
+     *
+     * @test
+     */
+    public function visitWithBlockCallsVisitFile()
+    {
+        $block = new vfsStreamBlock('foo');
+        $this->abstractVisitor->expects($this->once())
+                              ->method('visitFile')
+                              ->with($this->equalTo($block));
+        $this->assertSame($this->abstractVisitor,
+                          $this->abstractVisitor->visit($block)
         );
     }
 

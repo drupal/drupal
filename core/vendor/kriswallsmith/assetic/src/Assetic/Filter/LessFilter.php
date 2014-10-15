@@ -161,8 +161,8 @@ EOF;
     }
 
     /**
-     * @todo support for @import-once
-     * @todo support for @import (less) "lib.css"
+     * @todo support for import-once
+     * @todo support for import (less) "lib.css"
      */
     public function getChildren(AssetFactory $factory, $content, $loadPath = null)
     {

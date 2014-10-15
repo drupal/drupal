@@ -8,18 +8,15 @@ use Gliph\Exception\RuntimeException;
 use Gliph\Traversal\DepthFirst;
 use Gliph\Visitor\DepthFirstToposortVisitor;
 
-class DirectedAdjacencyList extends AdjacencyList implements DirectedGraph {
+class DirectedAdjacencyList extends AdjacencyList implements MutableDirectedGraph {
 
     /**
      * {@inheritdoc}
      */
     public function addDirectedEdge($tail, $head) {
-        if (!$this->hasVertex($tail)) {
-            $this->addVertex(($tail));
-        }
-
-        if (!$this->hasVertex($head)) {
-            $this->addVertex($head);
+        $this->addVertex($tail)->addVertex($head);
+        if (!$this->vertices[$tail]->contains($head)) {
+            $this->size++;
         }
 
         $this->vertices[$tail]->attach($head);
@@ -53,10 +50,13 @@ class DirectedAdjacencyList extends AdjacencyList implements DirectedGraph {
      */
     public function eachEdge($callback) {
         $edges = array();
-        $this->fev(function ($from, $outgoing) use (&$edges) {
-            foreach ($outgoing as $to) {
+        $that = $this;
+        $this->fev(function ($from, $outgoing) use (&$edges, $that) {
+            $set = $that->_getTraversableSplos($outgoing);
+            foreach ($set as $to) {
                 $edges[] = array($from, $to);
             }
+            $that->_cleanupSplosTraversal($set);
         });
 
         foreach ($edges as $edge) {
@@ -96,6 +96,35 @@ class DirectedAdjacencyList extends AdjacencyList implements DirectedGraph {
     public function getCycles() {
         $scc = ConnectedComponent::tarjan_scc($this);
         return $scc->getConnectedComponents();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function inDegree($vertex) {
+        if (!$this->hasVertex($vertex)) {
+            throw new NonexistentVertexException('Vertex is not in the graph, in-degree information cannot be provided', E_WARNING);
+        }
+
+        $count = 0;
+        $this->fev(function ($from, $outgoing) use (&$count, $vertex) {
+            if ($outgoing->contains($vertex)) {
+                $count++;
+            }
+        });
+
+        return $count;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function outDegree($vertex) {
+        if (!$this->hasVertex($vertex)) {
+            throw new NonexistentVertexException('Vertex is not in the graph, out-degree information cannot be provided', E_WARNING);
+        }
+
+        return $this->vertices[$vertex]->count();
     }
 }
 

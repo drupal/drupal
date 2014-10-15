@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,26 +22,30 @@ namespace Doctrine\Common\Cache;
 /**
  * Base file cache driver.
  *
- * @since   2.3
- * @author  Fabio B. Silva <fabio.bat.silva@gmail.com>
+ * @since  2.3
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
 abstract class FileCache extends CacheProvider
 {
     /**
-     * @var string Cache directory.
+     * The cache directory.
+     *
+     * @var string
      */
     protected $directory;
 
     /**
-     * @var string Cache file extension.
+     * The cache file extension.
+     *
+     * @var string|null
      */
     protected $extension;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $directory Cache directory.
-     * @param string $directory Cache file extension.
+     * @param string      $directory The cache directory.
+     * @param string|null $extension The cache file extension.
      *
      * @throws \InvalidArgumentException
      */
@@ -68,7 +71,7 @@ abstract class FileCache extends CacheProvider
 
     /**
      * Gets the cache directory.
-     * 
+     *
      * @return string
      */
     public function getDirectory()
@@ -78,8 +81,8 @@ abstract class FileCache extends CacheProvider
 
     /**
      * Gets the cache file extension.
-     * 
-     * @return string
+     *
+     * @return string|null
      */
     public function getExtension()
     {
@@ -87,12 +90,16 @@ abstract class FileCache extends CacheProvider
     }
 
     /**
+     * @param string $id
+     *
      * @return string
      */
     protected function getFilename($id)
     {
-        $path = implode(str_split(md5($id), 12), DIRECTORY_SEPARATOR);
+        $hash = hash('sha256', $id);
+        $path = implode(str_split($hash, 16), DIRECTORY_SEPARATOR);
         $path = $this->directory . DIRECTORY_SEPARATOR . $path;
+        $id   = preg_replace('@[\\\/:"*?<>|]+@', '', $id);
 
         return $path . DIRECTORY_SEPARATOR . $id . $this->extension;
     }
@@ -110,12 +117,7 @@ abstract class FileCache extends CacheProvider
      */
     protected function doFlush()
     {
-        $pattern  = '/^.+\\' . $this->extension . '$/i';
-        $iterator = new \RecursiveDirectoryIterator($this->directory);
-        $iterator = new \RecursiveIteratorIterator($iterator);
-        $iterator = new \RegexIterator($iterator, $pattern);
-
-        foreach ($iterator as $name => $file) {
+        foreach ($this->getIterator() as $name => $file) {
             @unlink($name);
         }
 
@@ -127,6 +129,30 @@ abstract class FileCache extends CacheProvider
      */
     protected function doGetStats()
     {
-        return null;
+        $usage = 0;
+        foreach ($this->getIterator() as $file) {
+            $usage += $file->getSize();
+        }
+
+        $free = disk_free_space($this->directory);
+
+        return array(
+            Cache::STATS_HITS               => null,
+            Cache::STATS_MISSES             => null,
+            Cache::STATS_UPTIME             => null,
+            Cache::STATS_MEMORY_USAGE       => $usage,
+            Cache::STATS_MEMORY_AVAILABLE   => $free,
+        );
+    }
+
+    /**
+     * @return \Iterator
+     */
+    private function getIterator()
+    {
+        $pattern = '/^.+\\' . $this->extension . '$/i';
+        $iterator = new \RecursiveDirectoryIterator($this->directory);
+        $iterator = new \RecursiveIteratorIterator($iterator);
+        return new \RegexIterator($iterator, $pattern);
     }
 }

@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -37,10 +37,10 @@ class HydratorListener extends AbstractListenerAggregate
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(HydrateEvent::EVENT_HYDRATE, array($this, 'onHydrate'));
-        $this->listeners[] = $events->attach(ExtractEvent::EVENT_EXTRACT, array($this, 'onExtract'));
+        $this->listeners[] = $events->attach(HydrateEvent::EVENT_HYDRATE, array($this, 'onHydrate'), $priority);
+        $this->listeners[] = $events->attach(ExtractEvent::EVENT_EXTRACT, array($this, 'onExtract'), $priority);
     }
 
     /**

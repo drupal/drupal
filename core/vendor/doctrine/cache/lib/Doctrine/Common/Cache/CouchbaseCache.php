@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,16 +24,14 @@ use \Couchbase;
 /**
  * Couchbase cache provider.
  *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
- * @since   2.4
- * @author  Michael Nitschinger <michael@nitschinger.at>
+ * @link   www.doctrine-project.org
+ * @since  2.4
+ * @author Michael Nitschinger <michael@nitschinger.at>
  */
 class CouchbaseCache extends CacheProvider
 {
-
     /**
-     * @var Couchbase
+     * @var Couchbase|null
      */
     private $couchbase;
 
@@ -42,6 +39,8 @@ class CouchbaseCache extends CacheProvider
      * Sets the Couchbase instance to use.
      *
      * @param Couchbase $couchbase
+     *
+     * @return void
      */
     public function setCouchbase(Couchbase $couchbase)
     {
@@ -51,7 +50,7 @@ class CouchbaseCache extends CacheProvider
     /**
      * Gets the Couchbase instance used by the cache.
      *
-     * @return Couchbase
+     * @return Couchbase|null
      */
     public function getCouchbase()
     {
@@ -115,9 +114,8 @@ class CouchbaseCache extends CacheProvider
             Cache::STATS_HITS   => $stats['get_hits'],
             Cache::STATS_MISSES => $stats['get_misses'],
             Cache::STATS_UPTIME => $stats['uptime'],
-            Cache::STATS_MEMORY_USAGE       => $stats['bytes'],
-            Cache::STATS_MEMORY_AVAILIABLE  => $stats['limit_maxbytes'],
+            Cache::STATS_MEMORY_USAGE     => $stats['bytes'],
+            Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes'],
         );
     }
-
 }

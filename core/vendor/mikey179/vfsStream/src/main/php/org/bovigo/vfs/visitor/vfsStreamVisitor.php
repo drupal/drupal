@@ -11,6 +11,8 @@ namespace org\bovigo\vfs\visitor;
 use org\bovigo\vfs\vfsStreamContent;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\vfsStreamBlock;
+
 /**
  * Interface for a visitor to work on a vfsStream content structure.
  *
@@ -42,5 +44,13 @@ interface vfsStreamVisitor
      * @return  vfsStreamVisitor
      */
     public function visitDirectory(vfsStreamDirectory $dir);
+
+    /**
+     * visit a block device and process it
+     *
+     * @param   vfsStreamBlock  $block
+     * @return  vfsStreamVisitor
+     */
+    public function visitBlockDevice(vfsStreamBlock $block);
 }
 ?>

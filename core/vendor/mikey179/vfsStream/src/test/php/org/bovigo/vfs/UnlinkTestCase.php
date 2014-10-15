@@ -40,5 +40,19 @@ class UnlinkTestCase extends \PHPUnit_Framework_TestCase
         $root->getChild('test_directory')->getChild('test.file')->chmod(0777);
         $this->assertFalse(@unlink(vfsStream::url('root/test_directory/test.file')));
     }
+
+    /**
+     * @test
+     * @since  1.4.0
+     * @group  issue_68
+     */
+    public function unlinkNonExistingFileTriggersError()
+    {
+        vfsStream::setup();
+        try {
+            $this->assertFalse(unlink('vfs://root/foo.txt'));
+        } catch (\PHPUnit_Framework_Error $fe) {
+            $this->assertEquals('unlink(vfs://root/foo.txt): No such file or directory', $fe->getMessage());
+        }
+    }
 }
-?>

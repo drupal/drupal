@@ -95,8 +95,8 @@ class vfsStreamWrapperTestCase extends vfsStreamWrapperBaseTestCase
         $this->assertTrue(unlink($this->baz2URL));
         $this->assertFalse(file_exists($this->baz2URL)); // make sure statcache was cleared
         $this->assertEquals(array($this->bar), $this->foo->getChildren());
-        $this->assertFalse(unlink($this->fooURL . '/another'));
-        $this->assertFalse(unlink(vfsStream::url('another')));
+        $this->assertFalse(@unlink($this->fooURL . '/another'));
+        $this->assertFalse(@unlink(vfsStream::url('another')));
         $this->assertEquals(array($this->bar), $this->foo->getChildren());
     }
 
@@ -107,7 +107,7 @@ class vfsStreamWrapperTestCase extends vfsStreamWrapperBaseTestCase
     public function unlinkReturnsFalseWhenFileDoesNotExist()
     {
         vfsStream::setup()->addChild(vfsStream::newFile('foo.blubb'));
-        $this->assertFalse(unlink(vfsStream::url('foo.blubb2')));
+        $this->assertFalse(@unlink(vfsStream::url('foo.blubb2')));
     }
 
     /**
@@ -117,7 +117,7 @@ class vfsStreamWrapperTestCase extends vfsStreamWrapperBaseTestCase
     public function unlinkReturnsFalseWhenFileDoesNotExistAndFileWithSameNameExistsInRoot()
     {
         vfsStream::setup()->addChild(vfsStream::newFile('foo.blubb'));
-        $this->assertFalse(unlink(vfsStream::url('foo.blubb')));
+        $this->assertFalse(@unlink(vfsStream::url('foo.blubb')));
     }
 
     /**
@@ -768,4 +768,3 @@ class vfsStreamWrapperTestCase extends vfsStreamWrapperBaseTestCase
         $this->assertEquals($baz3URL, $this->baz1->url());
     }
 }
-?>

@@ -8,23 +8,6 @@ namespace Gliph\Graph;
 interface DirectedGraph extends Graph {
 
     /**
-     * Adds a directed edge to this graph.
-     *
-     * Directed edges are also often referred to as 'arcs'.
-     *
-     * @param object $tail
-     *   An object vertex from which the edge originates. The vertex will be
-     *   added to the graph if it is not already present.
-     * @param object $head
-     *   An object vertex to which the edge points. The vertex will be added to
-     *   the graph if it is not already present.
-     *
-     * @return DirectedGraph
-     *   The current graph instance.
-     */
-    public function addDirectedEdge($tail, $head);
-
-    /**
      * Returns the transpose of this graph.
      *
      * A transpose is identical to the current graph, except that its edges

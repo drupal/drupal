@@ -224,7 +224,13 @@ class vfsStream
             if (is_array($data) === true) {
                 self::addStructure($data, self::newDirectory($name)->at($baseDir));
             } elseif (is_string($data) === true) {
-                self::newFile($name)->withContent($data)->at($baseDir);
+                $matches = null;
+                preg_match('/^\[(.*)\]$/', $name, $matches);
+                if ($matches !== array()) {
+                    self::newBlock($matches[1])->withContent($data)->at($baseDir);
+                } else {
+                    self::newFile($name)->withContent($data)->at($baseDir);
+                }
             }
         }
 
@@ -326,6 +332,18 @@ class vfsStream
         $directory = new vfsStreamDirectory($ownName, $permissions);
         self::newDirectory($subDirs, $permissions)->at($directory);
         return $directory;
+    }
+
+    /**
+     * returns a new block with the given name
+     *
+     * @param   string  $name           name of the block device
+     * @param   int     $permissions    permissions of block to create
+     * @return vfsStreamBlock
+     */
+    public static function newBlock($name, $permissions = null)
+    {
+        return new vfsStreamBlock($name, $permissions);
     }
 
     /**

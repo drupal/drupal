@@ -98,7 +98,9 @@ class PHP_CodeCoverage_Filter
         'SebastianBergmann\Environment\Runtime' => 1,
         'SebastianBergmann\Exporter\Exporter' => 1,
         'SebastianBergmann\Version' => 1,
-        'Composer\Autoload\ClassLoader' => 1
+        'Composer\Autoload\ClassLoader' => 1,
+        'Instantiator\Instantiator' => 1,
+        'LazyMap\AbstractLazyMap' => 1
     );
 
     /**
@@ -259,7 +261,7 @@ class PHP_CodeCoverage_Filter
             return false;
         }
 
-        return true;
+        return file_exists($filename);
     }
 
     /**

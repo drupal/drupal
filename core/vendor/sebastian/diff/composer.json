@@ -17,6 +17,9 @@
     "require": {
         "php": ">=5.3.3"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.2"
+    },
     "autoload": {
         "classmap": [
             "src/"
@@ -24,7 +27,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "1.2-dev"
         }
     }
 }

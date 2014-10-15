@@ -11,6 +11,8 @@ namespace org\bovigo\vfs\visitor;
 use org\bovigo\vfs\vfsStreamContent;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\vfsStreamBlock;
+
 /**
  * Visitor which traverses a content structure recursively to print it to an output stream.
  *
@@ -58,7 +60,20 @@ class vfsStreamPrintVisitor extends vfsStreamAbstractVisitor
      */
     public function visitFile(vfsStreamFile $file)
     {
-        $this->printContent($file);
+        $this->printContent($file->getName());
+        return $this;
+    }
+
+    /**
+     * visit a block device and process it
+     *
+     * @param   vfsStreamBlock  $block
+     * @return  vfsStreamPrintVisitor
+     */
+    public function visitBlockDevice(vfsStreamBlock $block)
+    {
+        $name = '[' . $block->getName() . ']';
+        $this->printContent($name);
         return $this;
     }
 
@@ -70,7 +85,7 @@ class vfsStreamPrintVisitor extends vfsStreamAbstractVisitor
      */
     public function visitDirectory(vfsStreamDirectory $dir)
     {
-        $this->printContent($dir);
+        $this->printContent($dir->getName());
         $this->depth++;
         foreach ($dir as $child) {
             $this->visit($child);
@@ -83,11 +98,11 @@ class vfsStreamPrintVisitor extends vfsStreamAbstractVisitor
     /**
      * helper method to print the content
      *
-     * @param  vfsStreamContent  $content
+     * @param  string   $name
      */
-    protected function printContent(vfsStreamContent $content)
+    protected function printContent($name)
     {
-        fwrite($this->out, str_repeat('  ', $this->depth) . '- ' . $content->getName() . "\n");
+        fwrite($this->out, str_repeat('  ', $this->depth) . '- ' . $name . "\n");
     }
 }
 ?>

@@ -11,54 +11,6 @@ use Gliph\Exception\NonexistentVertexException;
 interface Graph {
 
     /**
-     * Adds a vertex to the graph.
-     *
-     * Gliph requires that its graph vertices be objects; beyond that, it does
-     * not care about vertex type.
-     *
-     * @param object $vertex
-     *   An object to use as a vertex in the graph.
-     *
-     * @return Graph
-     *   The current graph instance.
-     *
-     * @throws InvalidVertexTypeException
-     *   Thrown if an invalid type of data is provided as a vertex.
-     */
-    public function addVertex($vertex);
-
-    /**
-     * Remove a vertex from the graph.
-     *
-     * This will also remove any edges that include the vertex.
-     *
-     * @param object $vertex
-     *   A vertex object to remove from the graph.
-     *
-     * @return Graph
-     *   The current graph instance.
-     *
-     * @throws NonexistentVertexException
-     *   Thrown if the provided vertex is not present in the graph.
-     */
-    public function removeVertex($vertex);
-
-    /**
-     * Removes an edge from the graph.
-     *
-     * @param $a
-     *   The first vertex in the edge pair to remove. In a directed graph, this
-     *   is the tail vertex.
-     * @param $b
-     *   The second vertex in the edge pair to remove. In a directed graph, this
-     *   is the head vertex.
-     *
-     * @return Graph
-     *   The current graph instance.
-     */
-    public function removeEdge($a, $b);
-
-    /**
      * Calls the callback with each vertex adjacent to the provided vertex.
      *
      * The meaning of "adjacency" depends on the type of graph. In a directed
@@ -121,4 +73,52 @@ interface Graph {
      *   TRUE if the vertex is present, FALSE otherwise.
      */
     public function hasVertex($vertex);
+
+    /**
+     * Returns the in-degree (number of incoming edges) for the provided vertex.
+     *
+     * In undirected graphs, in-degree and out-degree are the same.
+     *
+     * @param object $vertex
+     *   The vertex for which to retrieve in-degree information.
+     *
+     * @return int
+     *
+     * @throws NonexistentVertexException
+     *   Thrown if the vertex provided in the first parameter is not present in
+     *   the graph.
+     *
+     */
+    public function inDegree($vertex);
+
+    /**
+     * Returns the out-degree (count of outgoing edges) for the provided vertex.
+     *
+     * In undirected graphs, in-degree and out-degree are the same.
+     *
+     * @param object $vertex
+     *   The vertex for which to retrieve out-degree information.
+     *
+     * @return int
+     *
+     * @throws NonexistentVertexException
+     *   Thrown if the vertex provided in the first parameter is not present in
+     *   the graph.
+     *
+     */
+    public function outDegree($vertex);
+
+    /**
+     * Returns the number of edges in the graph.
+     *
+     * @return int
+     */
+    public function size();
+
+    /**
+     * Returns the number of vertices in the graph.
+     *
+     * @return int
+     */
+    public function order();
 }

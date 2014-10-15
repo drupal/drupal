@@ -7,7 +7,7 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     $vendorDir . '/guzzlehttp/streams/src/functions.php',
-    $vendorDir . '/kriswallsmith/assetic/src/functions.php',
     $vendorDir . '/guzzlehttp/guzzle/src/functions.php',
+    $vendorDir . '/kriswallsmith/assetic/src/functions.php',
     $baseDir . '/core/lib/Drupal.php',
 );

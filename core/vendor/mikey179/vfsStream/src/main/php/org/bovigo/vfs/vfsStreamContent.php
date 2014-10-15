@@ -33,6 +33,13 @@ interface vfsStreamContent
     #const TYPE_LINK = 0120000;
 
     /**
+     * stream content type: block
+     *
+     * @see getType()
+     */
+    const TYPE_BLOCK = 0060000;
+
+    /**
      * returns the file name of the content
      *
      * @return  string

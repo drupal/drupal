@@ -127,7 +127,6 @@ abstract class Twig_Template implements Twig_TemplateInterface
     {
         $name = (string) $name;
 
-        $template = null;
         if (isset($blocks[$name])) {
             $template = $blocks[$name][0];
             $block = $blocks[$name][1];
@@ -135,6 +134,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (isset($this->blocks[$name])) {
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
+        } else {
+            $template = null;
+            $block = null;
         }
 
         if (null !== $template) {
@@ -371,15 +373,19 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     return null;
                 }
 
-                if (is_object($object)) {
-                    throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $arrayItem, get_class($object)), -1, $this->getTemplateName());
+                if ($object instanceof ArrayAccess) {
+                    $message = sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist', $arrayItem, get_class($object));
+                } elseif (is_object($object)) {
+                    $message = sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface', $item, get_class($object));
                 } elseif (is_array($object)) {
-                    throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object))), -1, $this->getTemplateName());
+                    $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
                 } elseif (Twig_Template::ARRAY_CALL === $type) {
-                    throw new Twig_Error_Runtime(sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+                    $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
                 } else {
-                    throw new Twig_Error_Runtime(sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+                    $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
                 }
+
+                throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
             }
         }
 

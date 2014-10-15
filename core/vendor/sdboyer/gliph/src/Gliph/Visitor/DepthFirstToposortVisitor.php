@@ -13,15 +13,29 @@ use Gliph\Exception\WrongVisitorStateException;
 /**
  * Visitor that produces a topologically sorted list on a depth first traversal.
  */
-class DepthFirstToposortVisitor extends StatefulDepthFirstVisitor implements DepthFirstVisitorInterface {
+class DepthFirstToposortVisitor extends SimpleStatefulDepthFirstVisitor implements DepthFirstVisitorInterface {
 
     /**
      * @var array
      */
     protected $tsl = array();
 
+    /**
+     * @codeCoverageIgnore
+     */
+    public function onInitializeVertex($vertex, $source, \SplQueue $queue) {}
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function onStartVertex($vertex, \Closure $visit) {}
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function onExamineEdge($from, $to, \Closure $visit) {}
+
     public function onBackEdge($vertex, \Closure $visit) {
-        parent::onBackEdge($vertex, $visit);
         throw new RuntimeException(sprintf('Cycle detected in provided graph; toposort is not possible.'));
     }
 
@@ -31,7 +45,6 @@ class DepthFirstToposortVisitor extends StatefulDepthFirstVisitor implements Dep
     }
 
     public function onFinishVertex($vertex, \Closure $visit) {
-        parent::onFinishVertex($vertex, $visit);
         $this->tsl[] = $vertex;
     }
 
