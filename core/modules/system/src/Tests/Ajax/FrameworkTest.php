@@ -138,7 +138,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Get the base page.
     $this->drupalGet('ajax_forms_test_lazy_load_form');
-    $original_settings = $this->drupalGetSettings();
+    $original_settings = $this->getDrupalSettings();
     $original_css = $original_settings['ajaxPageState']['css'];
     $original_js = $original_settings['ajaxPageState']['js'];
 
@@ -150,7 +150,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Submit the AJAX request without triggering files getting added.
     $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
-    $new_settings = $this->drupalGetSettings();
+    $new_settings = $this->getDrupalSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
     $new_js = $new_settings['ajaxPageState']['js'];
 
@@ -175,7 +175,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Submit the AJAX request and trigger adding files.
     $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
-    $new_settings = $this->drupalGetSettings();
+    $new_settings = $this->getDrupalSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
     $new_js = $new_settings['ajaxPageState']['js'];
 

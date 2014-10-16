@@ -79,7 +79,7 @@ class CommentCSSTest extends CommentTestBase {
       }
       // Request the node with the comment.
       $this->drupalGet('node/' . $node->id());
-      $settings = $this->drupalGetSettings();
+      $settings = $this->getDrupalSettings();
 
       // Verify the data-history-node-id attribute, which is necessary for the
       // by-viewer class and the "new" indicator, see below.

@@ -491,7 +491,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    *   The hash value from the admin menu subtrees route path.
    */
   private function getSubtreesHash() {
-    $settings = $this->drupalGetSettings();
+    $settings = $this->getDrupalSettings();
     // The toolbar module defines a route '/toolbar/subtrees/{hash}' that
     // returns JSON for the rendered subtrees. This hash is provided to the
     // client in drupalSettings.

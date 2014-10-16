@@ -118,7 +118,7 @@ class HistoryTest extends WebTestBase {
     // View the node.
     $this->drupalGet('node/' . $nid);
     // JavaScript present to record the node read.
-    $settings = $this->drupalGetSettings();
+    $settings = $this->getDrupalSettings();
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/history/js/history.js']), 'drupal.history library is present.');
     $this->assertRaw('Drupal.history.markAsRead(' . $nid . ')', 'History module JavaScript API call to mark node as read present on page.');
 

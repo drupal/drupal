@@ -73,7 +73,7 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->drupalGet('node/1');
 
     // Library and in-place editors.
-    $settings = $this->drupalGetSettings();
+    $settings = $this->getDrupalSettings();
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/quickedit.js']), 'Quick Edit library not loaded.');
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
 
@@ -125,7 +125,7 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->drupalGet('node/1');
 
     // Library and in-place editors.
-    $settings = $this->drupalGetSettings();
+    $settings = $this->getDrupalSettings();
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/quickedit.js']), 'Quick Edit library loaded.');
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
 

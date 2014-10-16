@@ -141,7 +141,7 @@ class CKEditorLoadingTest extends WebTestBase {
   }
 
   protected function getThingsToCheck() {
-    $settings = $this->drupalGetSettings();
+    $settings = $this->getDrupalSettings();
     return array(
       // JavaScript settings.
       $settings,
