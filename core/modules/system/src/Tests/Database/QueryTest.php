@@ -30,7 +30,7 @@ class QueryTest extends DatabaseTestBase {
   public function testArrayArgumentsSQLInjection() {
     // Attempt SQL injection and verify that it does not work.
     $condition = array(
-      "1 ;INSERT INTO {test} SET name = 'test12345678'; -- " => '',
+      "1 ;INSERT INTO {test} (name) VALUES ('test12345678'); -- " => '',
       '1' => '',
     );
     try {
