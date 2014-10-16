@@ -537,7 +537,7 @@ services:
     arguments: ['@state']
   router.builder:
     class: Drupal\Core\Routing\RouteBuilder
-    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@router.builder_indicator']
+    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@access_manager.check_provider', '@router.builder_indicator']
   router.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\RouterRebuildSubscriber
     arguments: ['@router.builder']
@@ -702,11 +702,6 @@ services:
     calls:
       - [setContainer, ['@service_container']]
     public: false
-  access_route_subscriber:
-    class: Drupal\Core\EventSubscriber\AccessRouteSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@access_manager.check_provider']
   access_check.default:
     class: Drupal\Core\Access\DefaultAccessCheck
     tags:

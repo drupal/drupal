@@ -2,21 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\RouteBuilder.
+ * Contains \Drupal\Core\Routing\RouteBuilder.
  */
 
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
+use Drupal\Core\Access\CheckProviderInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Managing class for rebuilding the router table.
@@ -87,6 +86,13 @@ class RouteBuilder implements RouteBuilderInterface {
   protected $building = FALSE;
 
   /**
+   * The check provider.
+   *
+   * @var \Drupal\Core\Access\CheckProviderInterface
+   */
+  protected $checkProvider;
+
+  /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
@@ -99,16 +105,19 @@ class RouteBuilder implements RouteBuilderInterface {
    *   The module handler.
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
+   * @param \Drupal\Core\Access\CheckProviderInterface $check_provider
+   *   The check provider.
    * @param \Drupal\Core\Routing\RouteBuilderIndicatorInterface $route_build_indicator
    *   The route build indicator.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, RouteBuilderIndicatorInterface $route_build_indicator = NULL) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, CheckProviderInterface $check_provider, RouteBuilderIndicatorInterface $route_build_indicator = NULL) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
     $this->moduleHandler = $module_handler;
     $this->controllerResolver = $controller_resolver;
     $this->routeBuilderIndicator = $route_build_indicator;
+    $this->checkProvider = $check_provider;
   }
 
   /**
@@ -178,6 +187,8 @@ class RouteBuilder implements RouteBuilderInterface {
     // people from adding new routes here, but we define two separate steps to
     // make it clear.
     $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection));
+
+    $this->checkProvider->setChecks($collection);
 
     $this->dumper->addRoutes($collection);
     $this->dumper->dump();

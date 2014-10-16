@@ -78,6 +78,11 @@ class RouteBuilderTest extends UnitTestCase {
    */
   protected $routeBuilderIndicator;
 
+  /**
+   * @var \Drupal\Core\Access\CheckProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $checkProvider;
+
   protected function setUp() {
     $this->dumper = $this->getMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
@@ -88,8 +93,9 @@ class RouteBuilderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->routeBuilderIndicator = $this->getMock('\Drupal\Core\Routing\RouteBuilderIndicatorInterface');
+    $this->checkProvider = $this->getMock('\Drupal\Core\Access\CheckProviderInterface');
 
-    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->routeBuilderIndicator);
+    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider, $this->routeBuilderIndicator);
     $this->routeBuilder->setYamlDiscovery($this->yamlDiscovery);
   }
 
@@ -168,6 +174,11 @@ class RouteBuilderTest extends UnitTestCase {
       ->method('dispatch')
       ->with(RoutingEvents::ALTER, $route_build_event);
 
+    // Ensure that access checks are set.
+    $this->checkProvider->expects($this->once())
+      ->method('setChecks')
+      ->with($route_collection);
+
     // Ensure that the routes are set to the dumper and dumped.
     $this->dumper->expects($this->at(0))
       ->method('addRoutes')
@@ -232,6 +243,11 @@ class RouteBuilderTest extends UnitTestCase {
     $this->dispatcher->expects($this->at(1))
       ->method('dispatch')
       ->with(RoutingEvents::ALTER, $route_build_event);
+
+    // Ensure that access checks are set.
+    $this->checkProvider->expects($this->once())
+      ->method('setChecks')
+      ->with($route_collection_filled);
 
     // Ensure that the routes are set to the dumper and dumped.
     $this->dumper->expects($this->at(0))
