@@ -316,7 +316,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
             '!label <span class="visually-hidden">(!source_language)</span>',
             array(
               '!label' => $this->t($definition['label']),
-              '!source_language' => $this->sourceLanguage->name,
+              '!source_language' => $this->sourceLanguage->getName(),
             )
           ),
           '#type' => 'item',

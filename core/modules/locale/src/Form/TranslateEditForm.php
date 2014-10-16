@@ -34,7 +34,7 @@ class TranslateEditForm extends TranslateFormBase {
     $this->languageManager->reset();
     $languages = language_list();
 
-    $langname = isset($langcode) ? $languages[$langcode]->name : "- None -";
+    $langname = isset($langcode) ? $languages[$langcode]->getName() : "- None -";
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
 

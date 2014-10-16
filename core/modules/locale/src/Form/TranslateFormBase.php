@@ -165,7 +165,7 @@ abstract class TranslateFormBase extends FormBase {
     $language_options = array();
     foreach ($languages as $langcode => $language) {
       if ($langcode != 'en' || locale_translate_english()) {
-        $language_options[$langcode] = $language->name;
+        $language_options[$langcode] = $language->getName();
       }
     }
 

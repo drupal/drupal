@@ -149,7 +149,7 @@ function language_process_language_select($element) {
   if (!isset($element['#options'])) {
     $element['#options'] = array();
     foreach (\Drupal::languageManager()->getLanguages($element['#languages']) as $langcode => $language) {
-      $element['#options'][$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->name)) : $language->name;
+      $element['#options'][$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
     }
   }
   // Add "Built-in English" language to the select when the default value is
@@ -490,7 +490,7 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
   $languages = \Drupal::languageManager()->getLanguages();
   $default = \Drupal::languageManager()->getDefaultLanguage();
   foreach ($languages as $key => $language) {
-    $language_options[$key] = $language->name;
+    $language_options[$key] = $language->getName();
   }
   $form['locale']['site_default_language'] = array(
     '#type' => 'select',

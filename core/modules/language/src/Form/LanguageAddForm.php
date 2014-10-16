@@ -118,7 +118,7 @@ class LanguageAddForm extends LanguageFormBase {
       $this->validateCommon($form['custom_language'], $form_state);
 
       if ($language = language_load($langcode)) {
-        $form_state->setErrorByName('langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
+        $form_state->setErrorByName('langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->getName(), '%langcode' => $langcode)));
       }
     }
     else {
@@ -136,7 +136,7 @@ class LanguageAddForm extends LanguageFormBase {
     }
     else {
       if ($language = language_load($langcode)) {
-        $form_state->setErrorByName('predefined_langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
+        $form_state->setErrorByName('predefined_langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->getName(), '%langcode' => $langcode)));
       }
     }
   }

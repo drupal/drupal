@@ -82,7 +82,7 @@ class TranslationStatusForm extends FormBase {
 
       // Build data options for the select table.
       foreach ($updates as $langcode => $update) {
-        $title = String::checkPlain($languages[$langcode]->name);
+        $title = String::checkPlain($languages[$langcode]->getName());
         $locale_translation_update_info = array('#theme' => 'locale_translation_update_info');
         foreach (array('updates', 'not_found') as $update_status) {
           if (isset($update[$update_status])) {

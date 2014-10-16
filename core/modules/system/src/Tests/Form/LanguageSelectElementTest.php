@@ -55,8 +55,10 @@ class LanguageSelectElementTest extends WebTestBase {
     foreach ($ids as $id => $flags) {
       $this->assertField($id, format_string('The @id field was found on the page.', array('@id' => $id)));
       $options = array();
-      foreach ($this->container->get('language_manager')->getLanguages($flags) as $langcode => $language) {
-        $options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->name)) : $language->name;
+      /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
+      $language_manager = $this->container->get('language_manager');
+      foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
+        $options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
       }
       $this->_testLanguageSelectElementOptions($id, $options);
     }

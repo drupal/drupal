@@ -73,7 +73,7 @@ class NegotiationUrlForm extends ConfigFormBase {
     $prefixes = language_negotiation_url_prefixes();
     $domains = language_negotiation_url_domains();
     foreach ($languages as $langcode => $language) {
-      $t_args = array('%language' => $language->name, '%langcode' => $language->getId());
+      $t_args = array('%language' => $language->getName(), '%langcode' => $language->getId());
       $form['prefix'][$langcode] = array(
         '#type' => 'textfield',
         '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
@@ -83,7 +83,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       );
       $form['domain'][$langcode] = array(
         '#type' => 'textfield',
-        '#title' => $this->t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->getId())),
+        '#title' => $this->t('%language (%langcode) domain', array('%language' => $language->getName(), '%langcode' => $language->getId())),
         '#maxlength' => 128,
         '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
       );
@@ -120,7 +120,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/prefix.
-        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', array('%language' => $language->name, '%value' => $value)));
+        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', array('%language' => $language->getName(), '%value' => $value)));
       }
     }
 
@@ -133,13 +133,13 @@ class NegotiationUrlForm extends ConfigFormBase {
         if ($form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
-          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may not be left blank for %language.', array('%language' => $language->name)));
+          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may not be left blank for %language.', array('%language' => $language->getName())));
         }
       }
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/domain.
-        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', array('%language' => $language->name, '%value' => $value)));
+        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', array('%language' => $language->getName(), '%value' => $value)));
       }
     }
 

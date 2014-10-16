@@ -164,7 +164,7 @@ class ConfigTranslationController extends ControllerBase {
       // Prepare the language name and the operations depending on whether this
       // is the original language or not.
       if ($langcode == $original_langcode) {
-        $language_name = '<strong>' . $this->t('@language (original)', array('@language' => $language->name)) . '</strong>';
+        $language_name = '<strong>' . $this->t('@language (original)', array('@language' => $language->getName())) . '</strong>';
 
         // Check access for the path/route for editing, so we can decide to
         // include a link to edit or not.
@@ -180,7 +180,7 @@ class ConfigTranslationController extends ControllerBase {
         }
       }
       else {
-        $language_name = $language->name;
+        $language_name = $language->getName();
 
         $operations = array();
         // If no translation exists for this language, link to add one.

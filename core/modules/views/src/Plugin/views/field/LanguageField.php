@@ -44,7 +44,7 @@ class LanguageField extends FieldPluginBase {
     // ready, see http://drupal.org/node/1616594.
     $value = $this->getValue($values);
     $language = language_load($value);
-    return $language ? $language->name : '';
+    return $language ? $language->getName() : '';
   }
 
 }

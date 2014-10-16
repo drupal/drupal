@@ -24,7 +24,7 @@ class Textfield implements ElementInterface {
     return array(
       '#type' => 'textfield',
       '#default_value' => $value,
-      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
+      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->getName() . ')</span>',
       '#attributes' => array('lang' => $language->getId()),
     );
   }

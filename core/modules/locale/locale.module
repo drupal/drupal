@@ -1262,7 +1262,7 @@ function _locale_rebuild_js($langcode = NULL) {
   $logger = \Drupal::logger('locale');
   switch ($status) {
     case 'updated':
-      $logger->notice('Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
+      $logger->notice('Updated JavaScript translation file for the language %language.', array('%language' => $language->getName()));
       return TRUE;
 
     case 'rebuilt':
@@ -1271,15 +1271,15 @@ function _locale_rebuild_js($langcode = NULL) {
       // been created again.
 
     case 'created':
-      $logger->notice('Created JavaScript translation file for the language %language.', array('%language' => $language->name));
+      $logger->notice('Created JavaScript translation file for the language %language.', array('%language' => $language->getName()));
       return TRUE;
 
     case 'deleted':
-      $logger->notice('Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
+      $logger->notice('Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->getName()));
       return TRUE;
 
     case 'error':
-      $logger->error('An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name));
+      $logger->error('An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->getName()));
       return FALSE;
 
     default:

@@ -446,7 +446,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $language_list = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
     foreach ($language_list as $langcode => $language) {
       // Make locked languages appear special in the list.
-      $language_options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->name)) : $language->name;
+      $language_options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
     }
     if (count($language_options) > 1) {
       $form['advanced']['lang-fieldset'] = array(

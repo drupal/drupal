@@ -422,7 +422,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       if ($id == LanguageInterface::LANGCODE_SITE_DEFAULT) {
         $id = PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT;
       }
-      $list[$id] = $this->t($language->name);
+      $list[$id] = $this->t($language->getName());
     }
 
     // Add in negotiated languages, if requested.

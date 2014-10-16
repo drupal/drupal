@@ -77,7 +77,7 @@ class Language extends TypedData {
    */
   public function getString() {
     $language = $this->getValue();
-    return $language ? $language->name : '';
+    return $language ? $language->getName() : '';
   }
 
   /**

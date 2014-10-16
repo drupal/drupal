@@ -57,7 +57,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the @language translation of %label?', array('@language' => $this->language->name, '%label' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the @language translation of %label?', array('@language' => $this->language->getName(), '%label' => $this->entity->label()));
   }
 
   /**

@@ -109,7 +109,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
       if ($form_langcode != $entity_langcode) {
-        $t_args = array('%language' => $languages[$form_langcode]->name, '%title' => $entity->label());
+        $t_args = array('%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label());
         $title = empty($source_langcode) ? $title . ' [' . t('%language translation', $t_args) . ']' : t('Create %language translation of %title', $t_args);
       }
       $form['#title'] = $title;
@@ -120,7 +120,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     if ($has_translations && $new_translation) {
       $form['source_langcode'] = array(
         '#type' => 'details',
-        '#title' => t('Source language: @language', array('@language' => $languages[$source_langcode]->name)),
+        '#title' => t('Source language: @language', array('@language' => $languages[$source_langcode]->getName())),
         '#tree' => TRUE,
         '#weight' => -100,
         '#multilingual' => TRUE,
@@ -139,7 +139,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       );
       foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
         if (isset($translations[$language->getId()])) {
-          $form['source_langcode']['source']['#options'][$language->getId()] = $language->name;
+          $form['source_langcode']['source']['#options'][$language->getId()] = $language->getName();
         }
       }
     }
@@ -152,7 +152,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       $form['langcode']['#options'] = array();
       foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
         if (empty($translations[$language->getId()]) || $language->getId() == $entity_langcode) {
-          $form['langcode']['#options'][$language->getId()] = $language->name;
+          $form['langcode']['#options'][$language->getId()] = $language->getName();
         }
       }
     }
@@ -450,7 +450,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       'target' => $form_object->getFormLangcode($form_state),
     ));
     $languages = language_list();
-    drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->name)));
+    drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->getName())));
   }
 
   /**

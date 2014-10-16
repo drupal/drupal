@@ -80,7 +80,7 @@ class ImportForm extends FormBase {
     $existing_languages = array();
     foreach ($languages as $langcode => $language) {
       if ($langcode != 'en' || locale_translate_english()) {
-        $existing_languages[$langcode] = $language->name;
+        $existing_languages[$langcode] = $language->getName();
       }
     }
 

@@ -677,7 +677,7 @@ function content_translation_language_configuration_element_validate($element, F
   $values = $form_state->getValue($key);
   if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
     foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-      $locked_languages[] = $language->name;
+      $locked_languages[] = $language->getName();
     }
     // @todo Set the correct form element name as soon as the element parents
     //   are correctly set. We should be using NestedArray::getValue() but for

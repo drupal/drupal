@@ -29,7 +29,7 @@ class ConfigTranslationEditForm extends ConfigTranslationFormBase {
     $form = parent::buildForm($form, $form_state, $request, $plugin_id, $langcode);
     $form['#title'] = $this->t('Edit @language translation for %label', array(
       '%label' => $this->mapper->getTitle(),
-      '@language' => $this->language->name,
+      '@language' => $this->language->getName(),
     ));
     return $form;
   }
@@ -39,7 +39,7 @@ class ConfigTranslationEditForm extends ConfigTranslationFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    drupal_set_message($this->t('Successfully updated @language translation.', array('@language' => $this->language->name)));
+    drupal_set_message($this->t('Successfully updated @language translation.', array('@language' => $this->language->getName())));
   }
 
 }

@@ -72,7 +72,7 @@ class Language extends ConditionPluginBase {
       // If the current item of the $language_list array is one of the selected
       // languages, add it to the $results array.
       if (!empty($selected[$item->getId()])) {
-        $result[$item->getId()] = $item->name;
+        $result[$item->getId()] = $item->getName();
       }
       return $result;
     }, array());

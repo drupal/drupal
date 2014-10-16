@@ -75,7 +75,7 @@ class ContentTranslationController extends ControllerBase {
       $show_source_column = !empty($additional_source_langcodes);
 
       foreach ($languages as $language) {
-        $language_name = $language->name;
+        $language_name = $language->getName();
         $langcode = $language->getId();
 
         $add_url = new Url(
@@ -161,7 +161,7 @@ class ContentTranslationController extends ControllerBase {
             $source_name = $this->t('n/a');
           }
           else {
-            $source_name = isset($languages[$source]) ? $languages[$source]->name : $this->t('n/a');
+            $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
             if ($handler->getTranslationAccess($entity, 'delete')->isAllowed()) {
               $links['delete'] = array(
                 'title' => $this->t('Delete'),

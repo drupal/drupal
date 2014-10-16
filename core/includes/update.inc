@@ -744,9 +744,9 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
 
   // Add the site's default language if flagged as allowed value.
   if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
-    $default = isset($default) ? $default : \Drupal::languageManager()->getDefaultLanguage();
+    $default = \Drupal::languageManager()->getDefaultLanguage();
     // Rename the default language.
-    $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
+    $default->setName(t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
     $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
   }
 

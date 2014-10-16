@@ -29,7 +29,7 @@ class Textarea implements ElementInterface {
     return array(
       '#type' => 'textarea',
       '#default_value' => $value,
-      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
+      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->getName() . ')</span>',
       '#rows' => $rows,
       '#attributes' => array('lang' => $language->getId()),
     );

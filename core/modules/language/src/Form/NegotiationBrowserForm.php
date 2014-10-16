@@ -64,7 +64,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
 
     $existing_languages = array();
     foreach ($languages as $langcode => $language) {
-      $existing_languages[$langcode] = $language->name;
+      $existing_languages[$langcode] = $language->getName();
     }
 
     // If we have no languages available, present the list of predefined languages

@@ -45,7 +45,7 @@ class Language extends Node {
     // ready, see http://drupal.org/node/1616594.
     $value = $this->getValue($values);
     $language = language_load($value);
-    $value = $language ? $language->name : '';
+    $value = $language ? $language->getName() : '';
     return $this->renderLink($value, $values);
   }
 

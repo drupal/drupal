@@ -19,12 +19,15 @@ class LanguageUnitTest extends UnitTestCase {
 
   /**
    * @covers ::getName()
+   * @covers ::setName()
    */
   public function testGetName() {
     $name = $this->randomMachineName();
     $language_code = $this->randomMachineName(2);
     $language = new Language(array('id' => $language_code, 'name' => $name));
     $this->assertSame($name, $language->getName());
+    $new_name = $this->randomMachineName();
+    $this->assertSame($new_name, $language->setName($new_name)->getName());
   }
 
   /**

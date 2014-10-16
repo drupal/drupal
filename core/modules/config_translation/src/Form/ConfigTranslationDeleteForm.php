@@ -89,7 +89,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the @language translation of %label?', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->name));
+    return $this->t('Are you sure you want to delete the @language translation of %label?', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->getName()));
   }
 
   /**
@@ -145,7 +145,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
       $cache_backend->deleteAll();
     }
 
-    drupal_set_message($this->t('@language translation of %label was deleted', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->name)));
+    drupal_set_message($this->t('@language translation of %label was deleted', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->getName())));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

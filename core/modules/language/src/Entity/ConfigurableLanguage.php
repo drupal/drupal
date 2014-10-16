@@ -203,6 +203,15 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    */
+  public function setName($name) {
+    $this->label = $name;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getId() {
     return $this->id();
   }

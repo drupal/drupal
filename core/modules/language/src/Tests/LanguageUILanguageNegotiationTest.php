@@ -380,7 +380,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // language.
     $args = array(':id' => 'block-test-language-block', ':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
     $fields = $this->xpath('//div[@id=:id]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
-    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, 'The browser language is the URL active language');
+    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
 
     // Check that URLs are rewritten using the given browser language.
     $fields = $this->xpath('//strong[@class="site-name"]/a[@rel="home" and @href=:url]', $args);

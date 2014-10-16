@@ -114,7 +114,7 @@ abstract class PathFormBase extends FormBase {
       $languages = \Drupal::languageManager()->getLanguages();
       $language_options = array();
       foreach ($languages as $langcode => $language) {
-        $language_options[$langcode] = $language->name;
+        $language_options[$langcode] = $language->getName();
       }
 
       $form['langcode'] = array(

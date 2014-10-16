@@ -249,10 +249,10 @@ function locale_requirements($phase) {
         foreach ($status as $project) {
           foreach ($project as $langcode => $project_info) {
             if (empty($project_info->type)) {
-              $untranslated[$langcode] = $languages[$langcode]->name;
+              $untranslated[$langcode] = $languages[$langcode]->getName();
             }
             elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
-              $available_updates[$langcode] = $languages[$langcode]->name;
+              $available_updates[$langcode] = $languages[$langcode]->getName();
             }
           }
         }

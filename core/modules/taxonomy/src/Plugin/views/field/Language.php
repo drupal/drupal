@@ -22,7 +22,7 @@ class Language extends Taxonomy {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     $language = \Drupal::languageManager()->getLanguage($value);
-    $value = $language ? $language->name : '';
+    $value = $language ? $language->getName() : '';
 
     return $this->renderLink($this->sanitizeValue($value), $values);
   }
