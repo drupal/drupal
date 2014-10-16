@@ -36,12 +36,12 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  *
  * Adds the quickedit library to the page for any user who has the 'access
  * in-place editing' permission.
  */
-function quickedit_page_build(&$page) {
+function quickedit_page_attachments(array &$page) {
   if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
     return;
   }

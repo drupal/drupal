@@ -64,9 +64,9 @@ class LinkGenerator implements LinkGeneratorInterface {
    * For authenticated users, the "active" class will be calculated on the
    * client (through JavaScript), only data- attributes are added to links to
    * prevent breaking the render cache. The JavaScript is added in
-   * system_page_build().
+   * system_page_attachments().
    *
-   * @see system_page_build()
+   * @see system_page_attachments()
    */
   public function generate($text, Url $url) {
     // Performance: avoid Url::toString() needing to retrieve the URL generator

@@ -9,9 +9,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_top().
  */
-function language_test_page_build() {
+function language_test_page_top() {
   if (\Drupal::moduleHandler()->moduleExists('language')) {
     language_test_store_language_negotiation();
     drupal_set_message(t('Language negotiation method: @name', array('@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod())));

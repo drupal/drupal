@@ -62,11 +62,11 @@ function block_theme() {
 }
 
 /**
- * Implements hook_page_build().
- *
  * Renders blocks into their regions.
+ *
+ * @todo Clean this up as part of https://www.drupal.org/node/2352155.
  */
-function block_page_build(&$page) {
+function _block_page_build(&$page) {
   $theme = \Drupal::theme()->getActiveTheme()->getName();
 
   // Fetch a list of regions for the current theme.

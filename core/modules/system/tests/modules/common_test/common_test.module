@@ -253,3 +253,41 @@ function common_test_post_render_cache_placeholder(array $element, array $contex
 
   return $element;
 }
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
+ */
+function common_test_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'core/jquery';
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
+ */
+function common_test_page_attachments_alter(array &$page) {
+  $page['#attached']['library'][] = 'core/jquery';
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments_alter.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments_alter.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}

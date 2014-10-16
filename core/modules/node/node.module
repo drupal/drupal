@@ -885,9 +885,9 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_top().
  */
-function node_page_build(&$page) {
+function node_page_top(array &$page) {
   // Add 'Back to content editing' link on preview page.
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() == 'entity.node.preview') {

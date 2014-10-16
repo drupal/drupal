@@ -722,9 +722,9 @@ function content_translation_preprocess_language_content_settings_table(&$variab
 }
 
 /**
- * Implements hook_page_alter().
+ * Implements hook_page_attachments().
  */
-function content_translation_page_alter(&$page) {
+function content_translation_page_attachments(&$page) {
   $route_match = \Drupal::routeMatch();
 
   // If the current route has no parameters, return.

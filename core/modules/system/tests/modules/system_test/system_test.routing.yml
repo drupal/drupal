@@ -29,14 +29,6 @@ system_test.main_content_fallback:
   requirements:
     _access: 'TRUE'
 
-system_test.main_content_duplication:
-  path: '/system-test/main-content-duplication'
-  defaults:
-    _title: 'Test main content duplication'
-    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
-  requirements:
-    _access: 'TRUE'
-
 system_test.lock_acquire:
   path: '/system-test/lock-acquire'
   defaults:

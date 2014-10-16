@@ -47,12 +47,12 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_top().
  *
- * Add admin toolbar to the page_top region automatically.
+ * Add admin toolbar to the top of the page automatically.
  */
-function toolbar_page_build(&$page) {
-  $page['page_top']['toolbar'] = array(
+function toolbar_page_top(array &$page_top) {
+  $page_top['toolbar'] = array(
     '#type' => 'toolbar',
     '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
   );

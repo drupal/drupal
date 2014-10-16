@@ -44,15 +44,14 @@ function contextual_toolbar() {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  *
  * Adds the drupal.contextual-links library to the page for any user who has the
  * 'access contextual links' permission.
  *
  * @see contextual_preprocess()
  */
-function contextual_page_build(&$page) {
-
+function contextual_page_attachments(array &$page) {
   if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
@@ -89,7 +88,7 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_preprocess().
  *
  * @see contextual_pre_render_placeholder()
- * @see contextual_page_build()
+ * @see contextual_page_attachments()
  * @see \Drupal\contextual\ContextualController::render()
  */
 function contextual_preprocess(&$variables, $hook, $info) {
@@ -111,9 +110,9 @@ function contextual_preprocess(&$variables, $hook, $info) {
 
     // Renders a contextual links placeholder unconditionally, thus not breaking
     // the render cache. Although the empty placeholder is rendered for all
-    // users, contextual_page_build() only adds the drupal.contextual-links
-    // library for users with the 'access contextual links' permission, thus
-    // preventing unnecessary HTTP requests for users without that permission.
+    // users, contextual_page_attachments() only adds the asset library for
+    // users with the 'access contextual links' permission, thus preventing
+    // unnecessary HTTP requests for users without that permission.
     $variables['title_suffix']['contextual_links'] = array(
       '#type' => 'contextual_links_placeholder',
       '#id' => _contextual_links_to_id($element['#contextual_links']),

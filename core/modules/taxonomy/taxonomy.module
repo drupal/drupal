@@ -103,9 +103,9 @@ function taxonomy_term_uri($term) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments_alter().
  */
-function taxonomy_page_build(&$page) {
+function taxonomy_page_attachments_alter(array &$page) {
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
     foreach ($term->uriRelationships() as $rel) {

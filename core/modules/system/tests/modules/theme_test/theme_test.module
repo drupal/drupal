@@ -69,10 +69,10 @@ function theme_test_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_page_alter().
+ * Implements hook_page_bottom().
  */
-function theme_test_page_alter(&$page) {
-  $page['page_bottom']['theme_test_page_bottom'] = array('#markup' => 'theme test page bottom markup');
+function theme_test_page_bottom(array &$page_bottom) {
+  $page_bottom['theme_test_page_bottom'] = array('#markup' => 'theme test page bottom markup');
 }
 
 /**

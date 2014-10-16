@@ -518,12 +518,12 @@ function system_filetransfer_info() {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  *
  * @see template_preprocess_maintenance_page()
  * @see \Drupal\system\Controller\SystemController::setLinkActiveClass()
  */
-function system_page_build(&$page) {
+function system_page_attachments(array &$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
   $page['#attached']['library'][] = 'core/normalize';
   $page['#attached']['library'][] = 'system/base';
@@ -551,6 +551,28 @@ function system_page_build(&$page) {
         'query' => \Drupal::request()->query->all(),
       )
     );
+  }
+
+  // Invoke hook_page_build() for modules and hook_page_alter() for both modules
+  // and themes, for backwards compatibility.
+  $attachments = [];
+  foreach (\Drupal::moduleHandler()->getImplementations('page_build') as $module) {
+    $function = $module . '_page_build';
+    $function($attachments);
+  }
+  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
+    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_build().');
+  }
+  \Drupal::moduleHandler()->alter('page', $attachments);
+  \Drupal::theme()->alter('page', $attachments);
+  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
+    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_alter().');
+  }
+  if (isset($attachments['#attached'])) {
+    $page['#attached'] = $attachments['#attached'];
+  }
+  if (isset($attachments['#post_render_cache'])) {
+    $page['#post_render_cache'] = $attachments['#post_render_cache'];
   }
 }
 
@@ -1224,21 +1246,6 @@ function system_entity_type_build(array &$entity_types) {
     ->setListBuilderClass('Drupal\system\DateFormatListBuilder')
     ->setLinkTemplate('edit-form', 'entity.date_format.edit_form')
     ->setLinkTemplate('delete-form', 'entity.date_format.delete_form');
-}
-
-/**
- * Implements hook_page_alter().
- */
-function system_page_alter(&$page) {
-  // Find all non-empty page regions, and add a theme wrapper function that
-  // allows them to be consistently themed.
-  $regions = system_region_list(\Drupal::theme()->getActiveTheme()->getName());
-  foreach (array_keys($regions) as $region) {
-    if (!empty($page[$region])) {
-      $page[$region]['#theme_wrappers'][] = 'region';
-      $page[$region]['#region'] = $region;
-    }
-  }
 }
 
 /**

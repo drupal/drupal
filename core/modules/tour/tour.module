@@ -63,9 +63,9 @@ function tour_toolbar() {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_bottom().
  */
-function tour_page_build(&$page) {
+function tour_page_bottom(array &$page_bottom) {
   if (!\Drupal::currentUser()->hasPermission('access tour')) {
     return;
   }
@@ -85,7 +85,7 @@ function tour_page_build(&$page) {
       }
     }
     if (!empty($tours)) {
-      $page['help']['tour'] = entity_view_multiple($tours, 'full');
+      $page_bottom['tour'] = entity_view_multiple($tours, 'full');
     }
   }
 }

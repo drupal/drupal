@@ -61,18 +61,12 @@ class MainContentFallbackTest extends WebTestBase {
     // Fallback should not trigger when another module is handling content.
     $this->drupalGet('system-test/main-content-handling');
     $this->assertRaw('id="system-test-content"', 'Content handled by another module');
-    $this->assertText(t('Content to test main content fallback'), 'Main content still displayed.');
+    $this->assertNoText(t('Content to test main content fallback'), 'Main content not displayed.');
 
     // Fallback should trigger when another module
     // indicates that it is not handling the content.
     $this->drupalGet('system-test/main-content-fallback');
     $this->assertText(t('Content to test main content fallback'), 'Main content fallback properly triggers.');
-
-    // Fallback should not trigger when another module is handling content.
-    // Note that this test ensures that no duplicate
-    // content gets created by the fallback.
-    $this->drupalGet('system-test/main-content-duplication');
-    $this->assertNoText(t('Content to test main content fallback'), 'Main content not duplicated.');
 
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->web_user);

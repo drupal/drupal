@@ -1,0 +1,6 @@
+name: 'Backwards Compatibility Test'
+type: module
+description: 'Support module for backwards compatibility tests.'
+package: Testing
+version: VERSION
+core: 8.x

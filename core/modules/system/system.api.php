@@ -288,26 +288,18 @@ function hook_ajax_render_alter(array &$data) {
 }
 
 /**
- * Add elements to a page before it is rendered.
+ * Add attachments (typically assets) to a page before it is rendered.
  *
- * Use this hook when you want to add elements at the page level. For your
- * additions to be printed, they have to be placed below a top level array key
- * of the $page array that has the name of a region of the active theme.
+ * Kept around for backwards compatibility, but now allows only attachments to
+ * be added, adding renderable arrays is no longer allowed.
  *
- * By default, valid region keys are 'page_top', 'header', 'sidebar_first',
- * 'content', 'sidebar_second' and 'page_bottom'. To get a list of all regions
- * of the active theme, use system_region_list($theme). Note that $theme is a
- * global variable.
- *
- * If you want to alter the elements added by other modules or if your module
- * depends on the elements of other modules, use hook_page_alter() instead which
- * runs after this hook.
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0. Successor:
+ *   hook_page_attachments(). Is now effectively an alias of that hook.
  *
  * @param $page
- *   Nested array of renderable elements that make up the page.
+ *   The page to which to add attachments.
  *
- * @see hook_page_alter()
- * @see DefaultHtmlFragmentRenderer::render()
+ * @see hook_page_attachments()
  */
 function hook_page_build(&$page) {
   $path = drupal_get_path('module', 'foo');
@@ -321,14 +313,74 @@ function hook_page_build(&$page) {
   if (drupal_is_front_page()) {
     $page['#attached']['css'][] = $path . '/foo.front.css';
   }
+}
 
-  // Append a standard disclaimer to the content region on a node detail page.
-  if (\Drupal::request()->attributes->get('node')) {
-    $page['content']['disclaimer'] = array(
-      '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
-      '#weight' => 25,
-    );
+/**
+ * Add attachments (typically assets) to a page before it is rendered.
+ *
+ * Use this hook when you want to conditionally add attachments to a page.
+ *
+ * If you want to alter the attachments added by other modules or if your module
+ * depends on the elements of other modules, use hook_page_attachments_alter()
+ * instead, which runs after this hook.
+ *
+ * @param array &$page
+ *   An empty renderable array representing the page.
+ *
+ * @see hook_page_attachments_alter()
+ */
+function hook_page_attachments(array &$page) {
+  // Unconditionally attach an asset to the page.
+  $page['#attached']['library'][] = 'core/domready';
+
+  // Conditionally attach an asset to the page.
+  if (!\Drupal::currentUser()->hasPermission('may pet kittens')) {
+    $page['#attached']['library'][] = 'core/jquery';
   }
+}
+
+/**
+ * Alter attachments (typically assets) to a page before it is rendered.
+ *
+ * Use this hook when you want to remove or alter attachments on the page, or
+ * add attachments to the page that depend on aonther module's attachments (this
+ * hook runs after hook_page_attachments().
+ *
+ * If you want to alter the attachments added by other modules or if your module
+ * depends on the elements of other modules, use hook_page_attachments_alter()
+ * instead, which runs after this hook.
+ *
+ * @param array &$page
+ *   An empty renderable array representing the page.
+ *
+ * @see hook_page_attachments_alter()
+ */
+function hook_page_attachments_alter(array &$page) {
+  // Conditionally remove an asset.
+  if (in_array('core/jquery', $page['#attached']['library'])) {
+    $index = array_search('core/jquery', $page['#attached']['library']);
+    unset($page['#attached']['library'][$index]);
+  }
+}
+
+/**
+ * Add a renderable array to the top of the page.
+ *
+ * @param array $page_top
+ *   A renderable array representing the top of the page.
+ */
+function hook_page_top(array &$page_top) {
+  $page_top['mymodule'] = ['#markup' => 'This is the top.'];
+}
+
+/**
+ * Add a renderable array to the bottom of the page.
+ *
+ * @param array $page_top
+ *   A renderable array representing the bottom of the page.
+ */
+function hook_page_bottom(array &$page) {
+  $page_bottom['mymodule'] = ['#markup' => 'This is the bottom.'];
 }
 
 /**
@@ -546,60 +598,27 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
 /**
  * Perform alterations before a page is rendered.
  *
- * Use this hook when you want to remove or alter elements at the page
- * level, or add elements at the page level that depend on an other module's
- * elements (this hook runs after hook_page_build().
+ * Kept around for backwards compatibility, but now allows only attachments to
+ * be added, altering the renderable array for the page is no longer allowed.
  *
- * If you are making changes to entities such as forms, menus, or user
- * profiles, use those objects' native alter hooks instead (hook_form_alter(),
- * for example).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0. Successor:
+ *   hook_page_attachments_alter(). Is now effectively an alias of that hook.
  *
- * The $page array contains top level elements for each block region:
- * @code
- *   $page['page_top']
- *   $page['header']
- *   $page['sidebar_first']
- *   $page['content']
- *   $page['sidebar_second']
- *   $page['page_bottom']
- * @endcode
- *
- * The 'content' element contains the main content of the current page, and its
- * structure will vary depending on what module is responsible for building the
- * page. Some legacy modules may not return structured content at all: their
- * pre-rendered markup will be located in $page['content']['main']['#markup'].
- *
- * Pages built by Drupal's core Node module use a standard structure:
- *
- * @code
- *   // Node body.
- *   $page['content']['system_main']['nodes'][$nid]['body']
- *   // Array of links attached to the node (add comments, read more).
- *   $page['content']['system_main']['nodes'][$nid]['links']
- *   // The node entity itself.
- *   $page['content']['system_main']['nodes'][$nid]['#node']
- *   // The results pager.
- *   $page['content']['system_main']['pager']
- * @endcode
- *
- * Blocks may be referenced by their module/delta pair within a region:
- * @code
- *   // The login block in the first sidebar region.
- *   $page['sidebar_first']['user_login']['#block'];
- * @endcode
+ * Use this hook when you want to remove or alter attachments at the page
+ * level, or add attachments at the page level that depend on an other module's
+ * attachments (this hook runs after hook_page_build().
  *
  * @param $page
- *   Nested array of renderable elements that make up the page.
+ *   An empty renderable array representing the page.
  *
  * @see hook_page_build()
- * @see DefaultHtmlFragmentRenderer::render()
  */
 function hook_page_alter(&$page) {
-  // Add help text to the user login block.
-  $page['sidebar_first']['user_login']['help'] = array(
-    '#weight' => -10,
-    '#markup' => t('To post comments or add content, you first have to log in.'),
-  );
+  // Conditionally remove an asset.
+  if (in_array('core/jquery', $page['#attached']['library'])) {
+    $index = array_search('core/jquery', $page['#attached']['library']);
+    unset($page['#attached']['library'][$index]);
+  }
 }
 
 /**

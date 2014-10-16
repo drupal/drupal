@@ -925,7 +925,7 @@ function template_preprocess_status_messages(&$variables) {
  *     For authenticated users, the "active" class will be calculated on the
  *     client (through JavaScript), only data- attributes are added to list
  *     items and contained links, to prevent breaking the render cache. The
- *     JavaScript is added in system_page_build().
+ *     JavaScript is added in system_page_attachments().
  *   - heading: (optional) A heading to precede the links. May be an
  *     associative array or a string. If it's an array, it can have the
  *     following elements:
@@ -953,7 +953,7 @@ function template_preprocess_status_messages(&$variables) {
  *
  * @see \Drupal\Core\Utility\LinkGenerator
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
- * @see system_page_build()
+ * @see system_page_attachments()
  */
 function template_preprocess_links(&$variables) {
   $links = $variables['links'];
@@ -1920,7 +1920,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  *   An associative array containing:
  *   - content - An array of page content.
  *
- * @see system_page_build()
+ * @see system_page_attachments()
  */
 function template_preprocess_maintenance_page(&$variables) {
   // @todo Rename the templates to page--maintenance + page--install.
@@ -1935,7 +1935,7 @@ function template_preprocess_maintenance_page(&$variables) {
   }
   $attributes['class'] = $classes;
 
-  // @see system_page_build()
+  // @see system_page_attachments()
   $variables['#attached']['library'][] = 'core/normalize';
   $variables['#attached']['library'][] = 'system/maintenance';
 }

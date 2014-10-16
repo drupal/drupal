@@ -281,15 +281,26 @@ function views_theme_suggestions_comment_alter(array &$suggestions, array $varia
 }
 
 /**
- * Implements hook_page_alter().
+ * Implements hook_element_info_alter().
+ *
+ * @see views_page_display_pre_render()
+ * @see views_preprocess_page()
  */
-function views_page_alter(&$page) {
+function views_element_info_alter(&$types) {
+  $types['page']['#pre_render'][] = 'views_page_display_pre_render';
+}
+
+/**
+ * #pre_render callback to set contextual links for views using a Page display.
+ */
+function views_page_display_pre_render(array $element) {
   // If the main content of this page contains a view, attach its contextual
   // links to the overall page array. This allows them to be rendered directly
   // next to the page title.
   if ($view = views_get_page_view()) {
-    views_add_contextual_links($page, 'page', $view, $view->current_display);
+    views_add_contextual_links($element, 'page', $view, $view->current_display);
   }
+  return $element;
 }
 
 /**
@@ -302,7 +313,8 @@ function views_preprocess_page(&$variables) {
   }
 
   // If the page contains a view as its main content, contextual links may have
-  // been attached to the page as a whole; for example, by views_page_alter().
+  // been attached to the page as a whole; for example, by
+  // views_page_display_pre_render().
   // This allows them to be associated with the page and rendered by default
   // next to the page title (which we want). However, it also causes the
   // Contextual Links module to treat the wrapper for the entire page (i.e.,

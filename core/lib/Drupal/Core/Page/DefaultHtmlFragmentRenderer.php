@@ -72,8 +72,12 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
       // Persist cache tags associated with this page. Also associate the
       // "rendered" cache tag. This allows us to invalidate the entire render
       // cache, regardless of the cache bin.
-      $cache_tags = $page_array['#cache']['tags'];
-      $cache_tags[] = 'rendered';
+      $cache_tags = Cache::mergeTags(
+        isset($page_array['page_top']) ? $page_array['page_top']['#cache']['tags'] : [],
+        $page_array['#cache']['tags'],
+        isset($page_array['page_bottom']) ? $page_array['page_bottom']['#cache']['tags'] : [],
+        ['rendered']
+      );
       // Only keep unique cache tags. We need to prevent duplicates here already
       // rather than only in the cache layer, because they are also used by
       // reverse proxies (like Varnish), not only by Drupal's page cache.

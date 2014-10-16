@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Helper module for backwards compatibility (BC) tests.
+ */
+
+/**
+ * Implements hook_page_build().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
+ */
+function bc_test_page_build(&$page) {
+  $page['#attached']['library'][] = 'core/jquery';
+
+  if (\Drupal::state()->get('bc_test.hook_page_build.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('bc_test.hook_page_build.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}
+
+/**
+ * Implements hook_page_alter().
+ *
+ * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
+ */
+function bc_test_page_alter(&$page) {
+  $page['#attached']['library'][] = 'core/jquery';
+
+  if (\Drupal::state()->get('bc_test.hook_page_alter.descendant_attached', FALSE)) {
+    $page['content']['#attached']['library'][] = 'core/jquery';
+  }
+
+  if (\Drupal::state()->get('bc_test.hook_page_alter.render_array', FALSE)) {
+    $page['something'] = [
+      '#markup' => 'test',
+    ];
+  }
+}

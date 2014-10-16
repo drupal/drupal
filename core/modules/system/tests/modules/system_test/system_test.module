@@ -96,22 +96,21 @@ function system_test_lock_exit() {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  */
-function system_test_page_build(&$page) {
+function system_test_page_attachments(array &$page) {
   $menu_item['path'] = current_path();
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
-  if ($menu_item['path'] == 'system-test/main-content-handling') {
-    $page['footer'] = drupal_set_page_content();
-    $page['footer']['main']['#markup'] = '<div id="system-test-content">' . $page['footer']['main']['#markup'] . '</div>';
-  }
-  elseif ($menu_item['path'] == 'system-test/main-content-fallback') {
+  if ($menu_item['path'] == 'system-test/main-content-fallback') {
+    // Get the main content, to e.g. dynamically attach an asset.
     drupal_set_page_content();
+    // Indicate we don't want to override the main content.
     $main_content_display = FALSE;
   }
-  elseif ($menu_item['path'] == 'system-test/main-content-duplication') {
-    drupal_set_page_content();
+  elseif ($menu_item['path'] == 'system-test/main-content-handling') {
+    // Set the main content.
+    drupal_set_page_content('<div id="system-test-content">Overridden!</div>');
   }
   // Used by FrontPageTestCase to get the results of drupal_is_front_page().
   $frontpage = \Drupal::state()->get('system_test.front_page_output') ?: 0;
