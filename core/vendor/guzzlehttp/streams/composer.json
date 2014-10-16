@@ -1,6 +1,6 @@
 {
     "name": "guzzlehttp/streams",
-    "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
+    "description": "Provides a simple abstraction over streams of data",
     "homepage": "http://guzzlephp.org/",
     "keywords": ["stream", "guzzle"],
     "license": "MIT",
@@ -18,12 +18,11 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-4": { "GuzzleHttp\\Stream\\": "src/" },
-        "files": ["src/functions.php"]
+        "psr-4": { "GuzzleHttp\\Stream\\": "src/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.5-dev"
+            "dev-master": "3.0-dev"
         }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Post;
 
 use GuzzleHttp\Post\MultipartBody;
@@ -23,7 +22,7 @@ class MultipartBodyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('abcdef', $b->getBoundary());
         $c = (string) $b;
         $this->assertContains("--abcdef\r\nContent-Disposition: form-data; name=\"foo\"\r\n\r\nbar\r\n", $c);
-        $this->assertContains("--abcdef\r\nContent-Disposition: form-data; filename=\"foo.txt\"; name=\"foo\"\r\n"
+        $this->assertContains("--abcdef\r\nContent-Disposition: form-data; name=\"foo\"; filename=\"foo.txt\"\r\n"
             . "Content-Type: text/plain\r\n\r\nabc\r\n--abcdef--", $c);
     }
 
@@ -85,14 +84,6 @@ class MultipartBodyTest extends \PHPUnit_Framework_TestCase
         $b = new MultipartBody([], [$p]);
         $this->assertFalse($b->isSeekable());
         $this->assertFalse($b->seek(10));
-    }
-
-    public function testGetContentsCanCap()
-    {
-        $b = $this->getTestBody();
-        $c = (string) $b;
-        $b->seek(0);
-        $this->assertSame(substr($c, 0, 10), $b->getContents(10));
     }
 
     public function testReadsFromBuffer()

@@ -19,7 +19,7 @@
     "twig/twig": "1.15.*",
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
     "doctrine/annotations": "1.2.*",
-    "guzzlehttp/guzzle": "4.1.*",
+    "guzzlehttp/guzzle": "~5.0",
     "symfony-cmf/routing": "1.2.*",
     "easyrdf/easyrdf": "0.8.*",
     "phpunit/phpunit": "4.1.*",

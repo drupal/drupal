@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Subscriber;
 
+use GuzzleHttp\Event\CompleteEvent;
 use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Event\CompleteEvent;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -27,8 +26,11 @@ class HttpError implements SubscriberInterface
     {
         $code = (string) $event->getResponse()->getStatusCode();
         // Throw an exception for an unsuccessful response
-        if ($code[0] === '4' || $code[0] === '5') {
-            throw RequestException::create($event->getRequest(), $event->getResponse());
+        if ($code[0] >= 4) {
+            throw RequestException::create(
+                $event->getRequest(),
+                $event->getResponse()
+            );
         }
     }
 }

@@ -30,17 +30,17 @@ case of a socket or pipe).
 Creating Streams
 ================
 
-The best way to create a stream is using the
-``GuzzleHttp\Stream\create()`` function. This function accepts strings,
+The best way to create a stream is using the static factory method,
+``GuzzleHttp\Stream\Stream::factory()``. This factory accepts strings,
 resources returned from ``fopen()``, an object that implements
 ``__toString()``, and an object that implements
 ``GuzzleHttp\Stream\StreamInterface``.
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
 
-    $stream = Stream\create('string data');
+    $stream = Stream::factory('string data');
     echo $stream;
     // string data
     echo $stream->read(3);
@@ -52,28 +52,20 @@ resources returned from ``fopen()``, an object that implements
     var_export($stream->tell());
     // 11
 
-.. note::
+Metadata
+========
 
-    You can use this ``create()`` function or use the static ``factory()``
-    method of the ``GuzzleHttp\Stream\Stream`` class via
-    ``GuzzleHttp\Stream\Stream::factory()``. This static factory method has the
-    same method signature as the ``create()`` function. Actually, the static
-    factory method is just a convenience method for the ``create()`` function.
-
-Metadata Streams
-================
-
-Guzzle streams that implement ``GuzzleHttp\Stream\MetadataStreamInterface``
-expose stream metadata through the ``getMetadata()`` method. This method
-provides the data you would retrieve when calling PHP's
-`stream_get_meta_data() function <http://php.net/manual/en/function.stream-get-meta-data.php>`_.
+Guzzle streams expose stream metadata through the ``getMetadata()`` method.
+This method provides the data you would retrieve when calling PHP's
+`stream_get_meta_data() function <http://php.net/manual/en/function.stream-get-meta-data.php>`_,
+and can optionally expose other custom data.
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
 
     $resource = fopen('/path/to/file', 'r');
-    $stream = Stream\create($resource);
+    $stream = Stream::factory($resource);
     echo $stream->getMetadata('uri');
     // /path/to/file
     var_export($stream->isReadable());
@@ -82,12 +74,6 @@ provides the data you would retrieve when calling PHP's
     // false
     var_export($stream->isSeekable());
     // true
-
-.. note::
-
-    Streams created using ``GuzzleHttp\Stream\create()`` and
-    ``GuzzleHttp\Stream\Stream::factory()`` all implement
-    ``GuzzleHttp\Stream\MetadataStreamInterface``.
 
 Stream Decorators
 =================
@@ -108,10 +94,10 @@ then on disk.
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
     use GuzzleHttp\Stream\CachingStream;
 
-    $original = Stream\create(fopen('http://www.google.com', 'r'));
+    $original = Stream::factory(fopen('http://www.google.com', 'r'));
     $stream = new CachingStream($original);
 
     $stream->read(1024);
@@ -131,10 +117,10 @@ chunks (e.g. Amazon S3's multipart upload API).
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
     use GuzzleHttp\Stream\LimitStream;
 
-    $original = Stream\create(fopen('/tmp/test.txt', 'r+'));
+    $original = Stream::factory(fopen('/tmp/test.txt', 'r+'));
     echo $original->getSize();
     // >>> 1048576
 
@@ -152,10 +138,10 @@ NoSeekStream wraps a stream and does not allow seeking.
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
     use GuzzleHttp\Stream\LimitStream;
 
-    $original = Stream\create('foo');
+    $original = Stream::factory('foo');
     $noSeek = new NoSeekStream($original);
 
     echo $noSeek->read(3);
@@ -183,7 +169,7 @@ byte is read from a stream. This could be implemented by overriding the
 
     use GuzzleHttp\Stream\StreamDecoratorTrait;
 
-    class EofCallbackStream implements StreamInterface, MetadataStreamInterface
+    class EofCallbackStream implements StreamInterface
     {
         use StreamDecoratorTrait;
 
@@ -212,9 +198,9 @@ This decorator could be added to any existing stream and used like so:
 
 .. code-block:: php
 
-    use GuzzleHttp\Stream;
+    use GuzzleHttp\Stream\Stream;
 
-    $original = Stream\create('foo');
+    $original = Stream::factory('foo');
     $eofStream = new EofCallbackStream($original, function () {
         echo 'EOF!';
     });

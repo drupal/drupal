@@ -1,21 +1,33 @@
 <?php
-
 namespace GuzzleHttp\Stream;
+use GuzzleHttp\Stream\Exception\CannotAttachException;
 
 /**
  * Stream decorator trait
+ * @property StreamInterface stream
  */
 trait StreamDecoratorTrait
 {
-    /** @var StreamInterface Decorated stream */
-    private $stream;
-
     /**
      * @param StreamInterface $stream Stream to decorate
      */
     public function __construct(StreamInterface $stream)
     {
         $this->stream = $stream;
+    }
+
+    /**
+     * Magic method used to create a new stream if streams are not added in
+     * the constructor of a decorator (e.g., LazyOpenStream).
+     */
+    public function __get($name)
+    {
+        if ($name == 'stream') {
+            $this->stream = $this->createStream();
+            return $this->stream;
+        }
+
+        throw new \UnexpectedValueException("$name not found on class");
     }
 
     public function __toString()
@@ -31,9 +43,9 @@ trait StreamDecoratorTrait
         }
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return copy_to_string($this, $maxLength);
+        return Utils::copyToString($this);
     }
 
     /**
@@ -59,14 +71,17 @@ trait StreamDecoratorTrait
 
     public function getMetadata($key = null)
     {
-        return $this->stream instanceof MetadataStreamInterface
-            ? $this->stream->getMetadata($key)
-            : null;
+        return $this->stream->getMetadata($key);
     }
 
     public function detach()
     {
         return $this->stream->detach();
+    }
+
+    public function attach($stream)
+    {
+        throw new CannotAttachException();
     }
 
     public function getSize()
@@ -112,5 +127,17 @@ trait StreamDecoratorTrait
     public function write($string)
     {
         return $this->stream->write($string);
+    }
+
+    /**
+     * Implement in subclasses to dynamically create streams when requested.
+     *
+     * @return StreamInterface
+     * @throws \BadMethodCallException
+     */
+    protected function createStream()
+    {
+        throw new \BadMethodCallException('createStream() not implemented in '
+            . get_class($this));
     }
 }

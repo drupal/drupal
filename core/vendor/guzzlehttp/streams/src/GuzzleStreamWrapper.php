@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Stream;
 
 /**
@@ -26,9 +25,7 @@ class GuzzleStreamWrapper
      */
     public static function getResource(StreamInterface $stream)
     {
-        if (!in_array('guzzle', stream_get_wrappers())) {
-            stream_wrapper_register('guzzle', __CLASS__);
-        }
+        self::register();
 
         if ($stream->isReadable()) {
             $mode = $stream->isWritable() ? 'r+' : 'r';
@@ -42,6 +39,16 @@ class GuzzleStreamWrapper
         return fopen('guzzle://stream', $mode, null, stream_context_create([
             'guzzle' => ['stream' => $stream]
         ]));
+    }
+
+    /**
+     * Registers the stream wrapper if needed
+     */
+    public static function register()
+    {
+        if (!in_array('guzzle', stream_get_wrappers())) {
+            stream_wrapper_register('guzzle', __CLASS__);
+        }
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)

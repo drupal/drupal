@@ -1,11 +1,12 @@
 <?php
-
 namespace GuzzleHttp\Stream;
+
+use GuzzleHttp\Stream\Exception\SeekException;
 
 /**
  * Decorator used to return only a subset of a stream
  */
-class LimitStream implements StreamInterface, MetadataStreamInterface
+class LimitStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 
@@ -34,15 +35,22 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
 
     public function eof()
     {
+        // Always return true if the underlying stream is EOF
+        if ($this->stream->eof()) {
+            return true;
+        }
+
+        // No limit and the underlying stream is not at EOF
         if ($this->limit == -1) {
-            return $this->stream->eof();
+            return false;
         }
 
         $tell = $this->stream->tell();
+        if ($tell === false) {
+            return false;
+        }
 
-        return $tell === false ||
-            ($tell >= $this->offset + $this->limit) ||
-            $this->stream->eof();
+        return $tell >= $this->offset + $this->limit;
     }
 
     /**
@@ -66,16 +74,16 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if ($whence != SEEK_SET) {
+        if ($whence !== SEEK_SET || $offset < 0) {
             return false;
         }
 
-        if ($offset < $this->offset) {
-            $offset = $this->offset;
-        }
+        $offset += $this->offset;
 
-        if ($this->limit !== -1 && $offset > ($this->offset + $this->limit)) {
-            $offset = $this->offset + $this->limit;
+        if ($this->limit !== -1) {
+            if ($offset > $this->offset + $this->limit) {
+                $offset = $this->offset + $this->limit;
+            }
         }
 
         return $this->stream->seek($offset);
@@ -96,22 +104,24 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
      * @param int $offset Offset to seek to and begin byte limiting from
      *
      * @return self
-     * @throws \RuntimeException
+     * @throws SeekException
      */
     public function setOffset($offset)
     {
-        $this->offset = $offset;
         $current = $this->stream->tell();
+
         if ($current !== $offset) {
             // If the stream cannot seek to the offset position, then read to it
             if (!$this->stream->seek($offset)) {
                 if ($current > $offset) {
-                    throw new \RuntimeException("Cannot seek to stream offset {$offset}");
+                    throw new SeekException($this, $offset);
                 } else {
                     $this->stream->read($offset - $current);
                 }
             }
         }
+
+        $this->offset = $offset;
 
         return $this;
     }

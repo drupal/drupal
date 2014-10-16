@@ -1,6 +1,7 @@
 <?php
-
 namespace GuzzleHttp\Stream;
+
+use GuzzleHttp\Stream\Exception\CannotAttachException;
 
 /**
  * Reads from multiple streams, one after the other.
@@ -15,6 +16,7 @@ class AppendStream implements StreamInterface
     private $seekable = true;
     private $current = 0;
     private $pos = 0;
+    private $detached = false;
 
     /**
      * @param StreamInterface[] $streams Streams to decorate. Each stream must
@@ -58,9 +60,9 @@ class AppendStream implements StreamInterface
         $this->streams[] = $stream;
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return copy_to_string($this, $maxLength);
+        return Utils::copyToString($this);
     }
 
     /**
@@ -87,6 +89,12 @@ class AppendStream implements StreamInterface
     public function detach()
     {
         $this->close();
+        $this->detached = true;
+    }
+
+    public function attach($stream)
+    {
+        throw new CannotAttachException();
     }
 
     public function tell()
@@ -203,5 +211,10 @@ class AppendStream implements StreamInterface
     public function write($string)
     {
         return false;
+    }
+
+    public function getMetadata($key = null)
+    {
+        return $key ? null : [];
     }
 }

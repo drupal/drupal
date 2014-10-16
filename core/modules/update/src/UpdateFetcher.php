@@ -8,6 +8,7 @@
 namespace Drupal\update;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 
@@ -15,6 +16,8 @@ use GuzzleHttp\Exception\RequestException;
  * Fetches project information from remote locations.
  */
 class UpdateFetcher implements UpdateFetcherInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * URL to check for updates, if a given project doesn't define its own.
@@ -63,9 +66,9 @@ class UpdateFetcher implements UpdateFetcherInterface {
     $url = $this->buildFetchUrl($project, $site_key);
     $data = '';
     try {
-      $data = $this->httpClient
+      $data = (string) $this->httpClient
         ->get($url, array('headers' => array('Accept' => 'text/xml')))
-        ->getBody(TRUE);
+        ->getBody();
     }
     catch (RequestException $exception) {
       watchdog_exception('update', $exception);

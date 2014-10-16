@@ -1,11 +1,10 @@
 <?php
-
 namespace GuzzleHttp\Stream;
 
 /**
  * Stream decorator that prevents a stream from being seeked
  */
-class NoSeekStream implements StreamInterface, MetadataStreamInterface
+class NoSeekStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 
@@ -17,5 +16,10 @@ class NoSeekStream implements StreamInterface, MetadataStreamInterface
     public function isSeekable()
     {
         return false;
+    }
+
+    public function attach($stream)
+    {
+        $this->stream->attach($stream);
     }
 }

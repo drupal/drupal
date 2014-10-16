@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Event;
 
 use GuzzleHttp\Event\Emitter;
@@ -42,7 +41,9 @@ class EmitterTest extends \PHPUnit_Framework_TestCase
     {
         $this->emitter->on('pre.foo', array($this->listener, 'preFoo'));
         $this->emitter->on('post.foo', array($this->listener, 'postFoo'));
-        $this->assertCount(1, $this->emitter->listeners(self::preFoo));
+        $this->assertTrue($this->emitter->hasListeners(self::preFoo));
+        $this->assertTrue($this->emitter->hasListeners(self::preFoo));
+        $this->assertCount(1, $this->emitter->listeners(self::postFoo));
         $this->assertCount(1, $this->emitter->listeners(self::postFoo));
         $this->assertCount(2, $this->emitter->listeners());
     }
@@ -256,12 +257,12 @@ class EmitterTest extends \PHPUnit_Framework_TestCase
     public function testCanAddFirstAndLastListeners()
     {
         $b = '';
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'a'; }, 'first'); // 1
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'b'; }, 'last');  // 0
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'c'; }, 'first'); // 2
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'd'; }, 'first'); // 3
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'e'; }, 'first'); // 4
-        $this->emitter->on('foo', function() use (&$b) { $b .= 'f'; });          // 0
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'a'; }, 'first'); // 1
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'b'; }, 'last');  // 0
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'c'; }, 'first'); // 2
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'd'; }, 'first'); // 3
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'e'; }, 'first'); // 4
+        $this->emitter->on('foo', function () use (&$b) { $b .= 'f'; });          // 0
         $this->emitter->emit('foo', $this->getEvent());
         $this->assertEquals('edcabf', $b);
     }

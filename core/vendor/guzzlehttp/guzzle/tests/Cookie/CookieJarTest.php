@@ -4,8 +4,8 @@ namespace GuzzleHttp\Tests\CookieJar;
 
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use GuzzleHttp\Message\Response;
 use GuzzleHttp\Message\Request;
+use GuzzleHttp\Message\Response;
 
 /**
  * @covers GuzzleHttp\Cookie\CookieJar
@@ -228,10 +228,10 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
     public function getMatchingCookiesDataProvider()
     {
         return array(
-            array('https://example.com', 'foo=bar;baz=foobar'),
+            array('https://example.com', 'foo=bar; baz=foobar'),
             array('http://example.com', ''),
-            array('https://example.com:8912', 'foo=bar;baz=foobar'),
-            array('https://foo.example.com', 'foo=bar;baz=foobar'),
+            array('https://example.com:8912', 'foo=bar; baz=foobar'),
+            array('https://foo.example.com', 'foo=bar; baz=foobar'),
             array('http://foo.example.com/test/acme/', 'googoo=gaga')
         );
     }

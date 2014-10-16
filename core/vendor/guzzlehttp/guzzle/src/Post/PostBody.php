@@ -2,7 +2,9 @@
 namespace GuzzleHttp\Post;
 
 use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Stream;
+use GuzzleHttp\Stream\Exception\CannotAttachException;
+use GuzzleHttp\Stream\StreamInterface;
+use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Query;
 
 /**
@@ -11,7 +13,7 @@ use GuzzleHttp\Query;
  */
 class PostBody implements PostBodyInterface
 {
-    /** @var Stream\StreamInterface */
+    /** @var StreamInterface */
     private $body;
 
     /** @var callable */
@@ -22,6 +24,7 @@ class PostBody implements PostBodyInterface
     /** @var PostFileInterface[] */
     private $files = [];
     private $forceMultipart = false;
+    private $detached = false;
 
     /**
      * Applies request headers to a request based on the POST state
@@ -47,8 +50,6 @@ class PostBody implements PostBodyInterface
     public function forceMultipartUpload($force)
     {
         $this->forceMultipart = $force;
-
-        return $this;
     }
 
     public function setAggregator(callable $aggregator)
@@ -60,16 +61,12 @@ class PostBody implements PostBodyInterface
     {
         $this->fields[$name] = $value;
         $this->mutate();
-
-        return $this;
     }
 
     public function replaceFields(array $fields)
     {
         $this->fields = $fields;
         $this->mutate();
-
-        return $this;
     }
 
     public function getField($name)
@@ -81,8 +78,6 @@ class PostBody implements PostBodyInterface
     {
         unset($this->fields[$name]);
         $this->mutate();
-
-        return $this;
     }
 
     public function getFields($asString = false)
@@ -91,9 +86,11 @@ class PostBody implements PostBodyInterface
             return $this->fields;
         }
 
-        return (string) (new Query($this->fields))
-            ->setEncodingType(Query::RFC1738)
-            ->setAggregator($this->getAggregator());
+        $query = new Query($this->fields);
+        $query->setEncodingType(Query::RFC1738);
+        $query->setAggregator($this->getAggregator());
+
+        return (string) $query;
     }
 
     public function hasField($name)
@@ -121,16 +118,12 @@ class PostBody implements PostBodyInterface
     {
         $this->files[] = $file;
         $this->mutate();
-
-        return $this;
     }
 
     public function clearFiles()
     {
         $this->files = [];
         $this->mutate();
-
-        return $this;
     }
 
     /**
@@ -155,15 +148,23 @@ class PostBody implements PostBodyInterface
 
     public function close()
     {
-        return $this->body ? $this->body->close() : true;
+        $this->detach();
     }
 
     public function detach()
     {
-        $this->body = null;
+        $this->detached = true;
         $this->fields = $this->files = [];
 
-        return $this;
+        if ($this->body) {
+            $this->body->close();
+            $this->body = null;
+        }
+    }
+
+    public function attach($stream)
+    {
+        throw new CannotAttachException();
     }
 
     public function eof()
@@ -211,6 +212,11 @@ class PostBody implements PostBodyInterface
         return false;
     }
 
+    public function getMetadata($key = null)
+    {
+        return $key ? null : [];
+    }
+
     /**
      * Return a stream object that is built from the POST fields and files.
      *
@@ -226,7 +232,7 @@ class PostBody implements PostBodyInterface
         } elseif ($this->fields) {
             return $this->body = $this->createUrlEncoded();
         } else {
-            return $this->body = Stream\create();
+            return $this->body = Stream::factory();
         }
     }
 
@@ -261,11 +267,11 @@ class PostBody implements PostBodyInterface
     /**
      * Creates an application/x-www-form-urlencoded stream body
      *
-     * @return Stream\StreamInterface
+     * @return StreamInterface
      */
     private function createUrlEncoded()
     {
-        return Stream\create($this->getFields(true));
+        return Stream::factory($this->getFields(true));
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Tests\Stream;
 
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Stream\CachingStream;
+use GuzzleHttp\Stream\Utils;
 
 /**
  * @covers GuzzleHttp\Stream\CachingStream
@@ -89,32 +89,31 @@ class CachingStreamTest extends \PHPUnit_Framework_TestCase
         $decorated = Stream::factory(
             implode("\n", array_map(function ($n) {
                 return str_pad($n, 4, '0', STR_PAD_LEFT);
-            }, range(0, 25))),
-            true
+            }, range(0, 25)))
         );
 
         $body = new CachingStream($decorated);
 
-        $this->assertEquals("0000\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0001\n", \GuzzleHttp\Stream\read_line($body));
+        $this->assertEquals("0000\n", Utils::readline($body));
+        $this->assertEquals("0001\n", Utils::readline($body));
         // Write over part of the body yet to be read, so skip some bytes
         $this->assertEquals(5, $body->write("TEST\n"));
         $this->assertEquals(5, $this->readAttribute($body, 'skipReadBytes'));
         // Read, which skips bytes, then reads
-        $this->assertEquals("0003\n", \GuzzleHttp\Stream\read_line($body));
+        $this->assertEquals("0003\n", Utils::readline($body));
         $this->assertEquals(0, $this->readAttribute($body, 'skipReadBytes'));
-        $this->assertEquals("0004\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0005\n", \GuzzleHttp\Stream\read_line($body));
+        $this->assertEquals("0004\n", Utils::readline($body));
+        $this->assertEquals("0005\n", Utils::readline($body));
 
         // Overwrite part of the cached body (so don't skip any bytes)
         $body->seek(5);
         $this->assertEquals(5, $body->write("ABCD\n"));
         $this->assertEquals(0, $this->readAttribute($body, 'skipReadBytes'));
-        $this->assertEquals("TEST\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0003\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0004\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0005\n", \GuzzleHttp\Stream\read_line($body));
-        $this->assertEquals("0006\n", \GuzzleHttp\Stream\read_line($body));
+        $this->assertEquals("TEST\n", Utils::readline($body));
+        $this->assertEquals("0003\n", Utils::readline($body));
+        $this->assertEquals("0004\n", Utils::readline($body));
+        $this->assertEquals("0005\n", Utils::readline($body));
+        $this->assertEquals("0006\n", Utils::readline($body));
         $this->assertEquals(5, $body->write("1234\n"));
         $this->assertEquals(5, $this->readAttribute($body, 'skipReadBytes'));
 

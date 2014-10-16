@@ -1,9 +1,10 @@
 <?php
-
 namespace GuzzleHttp\Tests\Http;
 
+use GuzzleHttp\Stream\FnStream;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Stream\LimitStream;
+use GuzzleHttp\Stream\NoSeekStream;
 
 /**
  * @covers GuzzleHttp\Stream\LimitStream
@@ -55,11 +56,18 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowsBoundedSeek()
     {
-        $this->body->seek(100);
+        $this->assertEquals(true, $this->body->seek(100));
+        $this->assertEquals(10, $this->body->tell());
         $this->assertEquals(13, $this->decorated->tell());
-        $this->body->seek(0);
+        $this->assertEquals(true, $this->body->seek(0));
         $this->assertEquals(0, $this->body->tell());
         $this->assertEquals(3, $this->decorated->tell());
+        $this->assertEquals(false, $this->body->seek(-10));
+        $this->assertEquals(0, $this->body->tell());
+        $this->assertEquals(3, $this->decorated->tell());
+        $this->assertEquals(true, $this->body->seek(5));
+        $this->assertEquals(5, $this->body->tell());
+        $this->assertEquals(8, $this->decorated->tell());
         $this->assertEquals(false, $this->body->seek(1000, SEEK_END));
     }
 
@@ -73,6 +81,19 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
         $newData = $this->body->read(100);
         $this->assertEquals(10, strlen($newData));
         $this->assertNotSame($data, $newData);
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\SeekException
+     * @expectedExceptionMessage Could not seek the stream to position 2
+     */
+    public function testThrowsWhenCurrentGreaterThanOffsetSeek()
+    {
+        $a = Stream::factory('foo_bar');
+        $b = new NoSeekStream($a);
+        $c = new LimitStream($b);
+        $a->getContents();
+        $c->setOffset(2);
     }
 
     public function testClaimsConsumedWhenReadLimitIsReached()
@@ -91,5 +112,22 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
     {
         $body = new LimitStream(Stream::factory('foobazbar'), 3, 3);
         $this->assertEquals('baz', $body->getContents());
+    }
+
+    public function testReturnsNullIfSizeCannotBeDetermined()
+    {
+        $a = new FnStream([
+            'getSize' => function () { return null; },
+            'tell'    => function () { return 0; },
+        ]);
+        $b = new LimitStream($a);
+        $this->assertNull($b->getSize());
+    }
+
+    public function testLengthLessOffsetWhenNoLimitSize()
+    {
+        $a = Stream::factory('foo_bar');
+        $b = new LimitStream($a, -1, 4);
+        $this->assertEquals(3, $b->getSize());
     }
 }

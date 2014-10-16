@@ -1,9 +1,8 @@
 <?php
-
 namespace GuzzleHttp\Tests\Post;
 
-use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Message\Request;
+use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Query;
 
@@ -75,20 +74,20 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipartWithNestedFields()
     {
-      $b = new PostBody();
-      $b->setField('foo', ['bar' => 'baz']);
-      $b->forceMultipartUpload(true);
-      $this->assertEquals(['foo' => ['bar' => 'baz']], $b->getFields());
-      $m = new Request('POST', '/');
-      $b->applyRequestHeaders($m);
-      $this->assertContains(
-          'multipart/form-data',
-          $m->getHeader('Content-Type')
-      );
-      $this->assertTrue($m->hasHeader('Content-Length'));
-      $contents = $b->getContents();
-      $this->assertContains('name="foo[bar]"', $contents);
-      $this->assertNotContains('name="foo"', $contents);
+        $b = new PostBody();
+        $b->setField('foo', ['bar' => 'baz']);
+        $b->forceMultipartUpload(true);
+        $this->assertEquals(['foo' => ['bar' => 'baz']], $b->getFields());
+        $m = new Request('POST', '/');
+        $b->applyRequestHeaders($m);
+        $this->assertContains(
+            'multipart/form-data',
+            $m->getHeader('Content-Type')
+        );
+        $this->assertTrue($m->hasHeader('Content-Length'));
+        $contents = $b->getContents();
+        $this->assertContains('name="foo[bar]"', $contents);
+        $this->assertNotContains('name="foo"', $contents);
     }
 
     public function testCountProvidesFieldsAndFiles()
@@ -151,8 +150,23 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
         $b = new PostBody();
         $b->setField('foo', 'bar');
         $b->detach();
-        $this->assertTrue($b->close());
+        $b->close();
         $this->assertEquals('', $b->read(10));
+    }
+
+    public function testDetachesWhenBodyIsPresent()
+    {
+        $b = new PostBody();
+        $b->setField('foo', 'bar');
+        $b->getContents();
+        $b->detach();
+    }
+
+    public function testFlushAndMetadataPlaceholders()
+    {
+        $b = new PostBody();
+        $this->assertEquals([], $b->getMetadata());
+        $this->assertNull($b->getMetadata('foo'));
     }
 
     public function testCreatesMultipartUploadWithMultiFields()
@@ -177,26 +191,26 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipartWithBase64Fields()
     {
-      $b = new PostBody();
-      $b->setField('foo64', '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=');
-      $b->forceMultipartUpload(true);
-      $this->assertEquals(
-          ['foo64' => '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc='],
-          $b->getFields()
-      );
-      $m = new Request('POST', '/');
-      $b->applyRequestHeaders($m);
-      $this->assertContains(
-          'multipart/form-data',
-          $m->getHeader('Content-Type')
-      );
-      $this->assertTrue($m->hasHeader('Content-Length'));
-      $contents = $b->getContents();
-      $this->assertContains('name="foo64"', $contents);
-      $this->assertContains(
-          '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=',
-          $contents
-      );
+        $b = new PostBody();
+        $b->setField('foo64', '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=');
+        $b->forceMultipartUpload(true);
+        $this->assertEquals(
+            ['foo64' => '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc='],
+            $b->getFields()
+        );
+        $m = new Request('POST', '/');
+        $b->applyRequestHeaders($m);
+        $this->assertContains(
+            'multipart/form-data',
+            $m->getHeader('Content-Type')
+        );
+        $this->assertTrue($m->hasHeader('Content-Length'));
+        $contents = $b->getContents();
+        $this->assertContains('name="foo64"', $contents);
+        $this->assertContains(
+            '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=',
+            $contents
+        );
     }
 
     public function testMultipartWithAmpersandInValue()
@@ -215,5 +229,14 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
         $contents = $b->getContents();
         $this->assertContains('name="a"', $contents);
         $this->assertContains('b&c=d', $contents);
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttach()
+    {
+        $b = new PostBody();
+        $b->attach('foo');
     }
 }

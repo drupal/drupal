@@ -30,6 +30,7 @@ class LazyOpenStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $l->getMetadata());
         $this->assertFileExists($this->fname);
         $this->assertEquals('foo', file_get_contents($this->fname));
+        $this->assertEquals('foo', (string) $l);
     }
 
     public function testProxiesToFile()
@@ -56,6 +57,8 @@ class LazyOpenStreamTest extends \PHPUnit_Framework_TestCase
         $l = new LazyOpenStream($this->fname, 'r');
         $r = $l->detach();
         $this->assertInternalType('resource', $r);
+        fseek($r, 0);
+        $this->assertEquals('foo', stream_get_contents($r));
         fclose($r);
     }
 }

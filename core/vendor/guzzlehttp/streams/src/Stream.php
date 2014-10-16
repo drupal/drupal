@@ -1,11 +1,10 @@
 <?php
-
 namespace GuzzleHttp\Stream;
 
 /**
  * PHP stream implementation
  */
-class Stream implements MetadataStreamInterface
+class Stream implements StreamInterface
 {
     private $stream;
     private $size;
@@ -13,6 +12,7 @@ class Stream implements MetadataStreamInterface
     private $readable;
     private $writable;
     private $uri;
+    private $customMetadata;
 
     /** @var array Hash of readable and writable stream types */
     private static $readWriteHash = [
@@ -31,39 +31,89 @@ class Stream implements MetadataStreamInterface
     ];
 
     /**
-     * Create a new stream based on the input type
+     * Create a new stream based on the input type.
+     *
+     * This factory accepts the same associative array of options as described
+     * in the constructor.
      *
      * @param resource|string|StreamInterface $resource Entity body data
-     * @param int                             $size     Size of the data contained in the resource
+     * @param array                           $options  Additional options
      *
-     * @return StreamInterface
+     * @return Stream
      * @throws \InvalidArgumentException if the $resource arg is not valid.
      */
-    public static function factory($resource = '', $size = null)
+    public static function factory($resource = '', array $options = [])
     {
-        return create($resource, $size);
+        $type = gettype($resource);
+
+        if ($type == 'string') {
+            $stream = fopen('php://temp', 'r+');
+            if ($resource !== '') {
+                fwrite($stream, $resource);
+                fseek($stream, 0);
+            }
+            return new self($stream, $options);
+        }
+
+        if ($type == 'resource') {
+            return new self($resource, $options);
+        }
+
+        if ($resource instanceof StreamInterface) {
+            return $resource;
+        }
+
+        if ($type == 'object' && method_exists($resource, '__toString')) {
+            return self::factory((string) $resource, $options);
+        }
+
+        if (is_callable($resource)) {
+            return new PumpStream($resource, $options);
+        }
+
+        if ($resource instanceof \Iterator) {
+            return new PumpStream(function () use ($resource) {
+                if (!$resource->valid()) {
+                    return false;
+                }
+                $result = $resource->current();
+                $resource->next();
+                return $result;
+            }, $options);
+        }
+
+        throw new \InvalidArgumentException('Invalid resource type: ' . $type);
     }
 
     /**
-     * @param resource $stream Stream resource to wrap
-     * @param int      $size   Size of the stream in bytes. Only pass if the
-     *                         size cannot be obtained from the stream.
+     * This constructor accepts an associative array of options.
+     *
+     * - size: (int) If a read stream would otherwise have an indeterminate
+     *   size, but the size is known due to foreknownledge, then you can
+     *   provide that size, in bytes.
+     * - metadata: (array) Any additional metadata to return when the metadata
+     *   of the stream is accessed.
+     *
+     * @param resource $stream  Stream resource to wrap.
+     * @param array    $options Associative array of options.
      *
      * @throws \InvalidArgumentException if the stream is not a stream resource
      */
-    public function __construct($stream, $size = null)
+    public function __construct($stream, $options = [])
     {
         if (!is_resource($stream)) {
             throw new \InvalidArgumentException('Stream must be a resource');
         }
 
-        $this->size = $size;
-        $this->stream = $stream;
-        $meta = stream_get_meta_data($this->stream);
-        $this->seekable = $meta['seekable'];
-        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
-        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
-        $this->uri = isset($meta['uri']) ? $meta['uri'] : null;
+        if (isset($options['size'])) {
+            $this->size = $options['size'];
+        }
+
+        $this->customMetadata = isset($options['metadata'])
+            ? $options['metadata']
+            : [];
+
+        $this->attach($stream);
     }
 
     /**
@@ -85,11 +135,9 @@ class Stream implements MetadataStreamInterface
         return (string) stream_get_contents($this->stream);
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return $this->stream
-            ? stream_get_contents($this->stream, $maxLength)
-            : '';
+        return $this->stream ? stream_get_contents($this->stream) : '';
     }
 
     public function close()
@@ -108,6 +156,16 @@ class Stream implements MetadataStreamInterface
         $this->readable = $this->writable = $this->seekable = false;
 
         return $result;
+    }
+
+    public function attach($stream)
+    {
+        $this->stream = $stream;
+        $meta = stream_get_meta_data($this->stream);
+        $this->seekable = $meta['seekable'];
+        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
+        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
+        $this->uri = $this->getMetadata('uri');
     }
 
     public function getSize()
@@ -151,7 +209,7 @@ class Stream implements MetadataStreamInterface
 
     public function eof()
     {
-        return $this->stream && feof($this->stream);
+        return !$this->stream || feof($this->stream);
     }
 
     public function tell()
@@ -175,7 +233,7 @@ class Stream implements MetadataStreamInterface
 
     public function read($length)
     {
-        return $this->readable ? fread($this->stream, $length) : '';
+        return $this->readable ? fread($this->stream, $length) : false;
     }
 
     public function write($string)
@@ -186,24 +244,18 @@ class Stream implements MetadataStreamInterface
         return $this->writable ? fwrite($this->stream, $string) : false;
     }
 
-    /**
-     * Get stream metadata as an associative array or retrieve a specific key.
-     *
-     * The keys returned are identical to the keys returned from PHP's
-     * stream_get_meta_data() function.
-     *
-     * @param string $key Specific metadata to retrieve.
-     *
-     * @return array|mixed|null Returns an associative array if no key is
-     *                          no key is provided. Returns a specific key
-     *                          value if a key is provided and the value is
-     *                          found, or null if the key is not found.
-     * @see http://php.net/manual/en/function.stream-get-meta-data.php
-     */
     public function getMetadata($key = null)
     {
-        $meta = $this->stream ? stream_get_meta_data($this->stream) : [];
+        if (!$this->stream) {
+            return $key ? null : [];
+        } elseif (!$key) {
+            return $this->customMetadata + stream_get_meta_data($this->stream);
+        } elseif (isset($this->customMetadata[$key])) {
+            return $this->customMetadata[$key];
+        }
 
-        return !$key ? $meta : (isset($meta[$key]) ? $meta[$key] : null);
+        $meta = stream_get_meta_data($this->stream);
+
+        return isset($meta[$key]) ? $meta[$key] : null;
     }
 }

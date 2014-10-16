@@ -1,7 +1,7 @@
 <?php
-
 namespace GuzzleHttp\Tests\Post;
 
+use GuzzleHttp\Post\MultipartBody;
 use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Stream\Stream;
 
@@ -18,7 +18,7 @@ class PostFileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $p->getName());
         $this->assertEquals('/path/to/test.php', $p->getFilename());
         $this->assertEquals(
-            'form-data; filename="test.php"; name="foo"',
+            'form-data; name="foo"; filename="test.php"',
             $p->getHeaders()['Content-Disposition']
         );
     }
@@ -37,14 +37,7 @@ class PostFileTest extends \PHPUnit_Framework_TestCase
 
     public function testCreatesFromMultipartFormData()
     {
-        $mp = $this->getMockBuilder('GuzzleHttp\Post\MultipartBody')
-            ->setMethods(['getBoundary'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mp->expects($this->once())
-            ->method('getBoundary')
-            ->will($this->returnValue('baz'));
-
+        $mp = new MultipartBody([], [], 'baz');
         $p = new PostFile('foo', $mp);
         $this->assertEquals(
             'form-data; name="foo"',

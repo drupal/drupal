@@ -65,9 +65,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
         $this->coll->merge($params);
         $this->assertEquals($this->coll->toArray(), $params);
-
-        // Pass the same object to itself
-        $this->assertEquals($this->coll->merge($this->coll), $this->coll);
+        $this->coll->merge(new Collection(['test4' => 'hi']));
+        $this->assertEquals(
+            $this->coll->toArray(),
+            $params + ['test4' => 'hi']
+        );
     }
 
     public function testCanClearAllDataOrSpecificKeys()
@@ -175,7 +177,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             'same_number' => 'ten'
         ));
 
-        $filtered = $this->coll->filter(function($key, $value) {
+        $filtered = $this->coll->filter(function ($key, $value) {
             return $value == 'ten';
         });
 
@@ -195,7 +197,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             'number_3' => 3
         ));
 
-        $mapped = $this->coll->map(function($key, $value) {
+        $mapped = $this->coll->map(function ($key, $value) {
             return $value * $value;
         });
 
@@ -228,13 +230,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testCanReplaceAllData()
     {
-        $this->assertSame($this->coll, $this->coll->replace(array(
-            'a' => '123'
-        )));
-
-        $this->assertEquals(array(
-            'a' => '123'
-        ), $this->coll->toArray());
+        $this->coll->replace(array('a' => '123'));
+        $this->assertEquals(array('a' => '123'), $this->coll->toArray());
     }
 
     public function testPreparesFromConfig()

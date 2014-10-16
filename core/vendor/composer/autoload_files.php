@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    $vendorDir . '/guzzlehttp/streams/src/functions.php',
-    $vendorDir . '/guzzlehttp/guzzle/src/functions.php',
+    $vendorDir . '/react/promise/src/functions.php',
     $baseDir . '/core/lib/Drupal.php',
 );

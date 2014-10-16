@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Stream;
 
 use GuzzleHttp\Stream\Stream;
@@ -29,5 +28,14 @@ class NoSeekStreamTest extends \PHPUnit_Framework_TestCase
         $wrapped = new NoSeekStream($s);
         $wrapped->close();
         $this->assertFalse($wrapped->write('foo'));
+    }
+
+    public function testCanAttach()
+    {
+        $s1 = Stream::factory('foo');
+        $s2 = Stream::factory('bar');
+        $wrapped = new NoSeekStream($s1);
+        $wrapped->attach($s2->detach());
+        $this->assertEquals('bar', (string) $wrapped);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Stream;
 
 use GuzzleHttp\Stream\Stream;
@@ -59,9 +58,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->seek(0);
         $this->assertEquals('data', $stream->getContents());
         $this->assertEquals('', $stream->getContents());
-        $stream->seek(0);
-        $this->assertEquals('da', $stream->getContents(2));
-        $stream->close();
     }
 
     public function testChecksEof()
@@ -130,24 +126,34 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->close();
     }
 
-    public function testCanDetachStream()
+    public function testCanDetachAndAttachStream()
     {
         $r = fopen('php://temp', 'w+');
         $stream = new Stream($r);
+        $stream->write('foo');
         $this->assertTrue($stream->isReadable());
         $this->assertSame($r, $stream->detach());
         $this->assertNull($stream->detach());
+
         $this->assertFalse($stream->isReadable());
-        $this->assertSame('', $stream->read(10));
+        $this->assertFalse($stream->read(10));
         $this->assertFalse($stream->isWritable());
-        $this->assertFalse($stream->write('foo'));
+        $this->assertFalse($stream->write('bar'));
         $this->assertFalse($stream->isSeekable());
         $this->assertFalse($stream->seek(10));
         $this->assertFalse($stream->tell());
-        $this->assertFalse($stream->eof());
+        $this->assertTrue($stream->eof());
         $this->assertNull($stream->getSize());
         $this->assertSame('', (string) $stream);
         $this->assertSame('', $stream->getContents());
+
+        $stream->attach($r);
+        $stream->seek(0);
+        $this->assertEquals('foo', $stream->getContents());
+        $this->assertTrue($stream->isReadable());
+        $this->assertTrue($stream->isWritable());
+        $this->assertTrue($stream->isSeekable());
+
         $stream->close();
     }
 
@@ -170,5 +176,77 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GuzzleHttp\Stream\Stream', $stream);
         $this->assertEquals('foo', $stream->getContents());
         $stream->close();
+    }
+
+    public function testFactoryCreatesFromEmptyString()
+    {
+        $s = Stream::factory();
+        $this->assertInstanceOf('GuzzleHttp\Stream\Stream', $s);
+    }
+
+    public function testFactoryCreatesFromResource()
+    {
+        $r = fopen(__FILE__, 'r');
+        $s = Stream::factory($r);
+        $this->assertInstanceOf('GuzzleHttp\Stream\Stream', $s);
+        $this->assertSame(file_get_contents(__FILE__), (string) $s);
+    }
+
+    public function testFactoryCreatesFromObjectWithToString()
+    {
+        $r = new HasToString();
+        $s = Stream::factory($r);
+        $this->assertInstanceOf('GuzzleHttp\Stream\Stream', $s);
+        $this->assertEquals('foo', (string) $s);
+    }
+
+    public function testCreatePassesThrough()
+    {
+        $s = Stream::factory('foo');
+        $this->assertSame($s, Stream::factory($s));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowsExceptionForUnknown()
+    {
+        Stream::factory(new \stdClass());
+    }
+
+    public function testReturnsCustomMetadata()
+    {
+        $s = Stream::factory('foo', ['metadata' => ['hwm' => 3]]);
+        $this->assertEquals(3, $s->getMetadata('hwm'));
+        $this->assertArrayHasKey('hwm', $s->getMetadata());
+    }
+
+    public function testCanSetSize()
+    {
+        $s = Stream::factory('', ['size' => 10]);
+        $this->assertEquals(10, $s->getSize());
+    }
+
+    public function testCanCreateIteratorBasedStream()
+    {
+        $a = new \ArrayIterator(['foo', 'bar', '123']);
+        $p = Stream::factory($a);
+        $this->assertInstanceOf('GuzzleHttp\Stream\PumpStream', $p);
+        $this->assertEquals('foo', $p->read(3));
+        $this->assertFalse($p->eof());
+        $this->assertEquals('b', $p->read(1));
+        $this->assertEquals('a', $p->read(1));
+        $this->assertEquals('r12', $p->read(3));
+        $this->assertFalse($p->eof());
+        $this->assertEquals('3', $p->getContents());
+        $this->assertTrue($p->eof());
+        $this->assertEquals(9, $p->tell());
+    }
+}
+
+class HasToString
+{
+    public function __toString() {
+        return 'foo';
     }
 }
