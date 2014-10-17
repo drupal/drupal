@@ -9,7 +9,7 @@ namespace Drupal\editor\Tests;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\KernelTestBase;
-use Drupal\filter\FilterBag;
+use Drupal\filter\FilterPluginCollection;
 
 /**
  * Tests Editor module's file reference filter.
@@ -40,7 +40,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     $this->installSchema('file', array('file_usage'));
 
     $manager = $this->container->get('plugin.manager.filter');
-    $bag = new FilterBag($manager, array());
+    $bag = new FilterPluginCollection($manager, array());
     $this->filters = $bag->getAll();
   }
 

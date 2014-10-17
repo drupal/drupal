@@ -7,7 +7,7 @@
 
 namespace Drupal\block\Event;
 
-use Drupal\Core\Condition\ConditionPluginBag;
+use Drupal\Core\Condition\ConditionPluginCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -18,14 +18,14 @@ use Symfony\Component\EventDispatcher\Event;
 class BlockConditionContextEvent extends Event {
 
   /**
-   * @var \Drupal\Core\Condition\ConditionPluginBag
+   * @var \Drupal\Core\Condition\ConditionPluginCollection
    */
   protected $conditions;
 
   /**
-   * @param \Drupal\Core\Condition\ConditionPluginBag $conditions
+   * @param \Drupal\Core\Condition\ConditionPluginCollection $conditions
    */
-  public function __construct(ConditionPluginBag $conditions) {
+  public function __construct(ConditionPluginCollection $conditions) {
     $this->conditions = $conditions;
   }
 

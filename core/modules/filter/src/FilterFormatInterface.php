@@ -20,8 +20,8 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * @param string $instance_id
    *   (optional) The ID of a filter plugin instance to return.
    *
-   * @return \Drupal\filter\FilterBag|\Drupal\filter\Plugin\FilterInterface
-   *   Either the filter bag or a specific filter plugin instance.
+   * @return \Drupal\filter\FilterPluginCollection|\Drupal\filter\Plugin\FilterInterface
+   *   Either the filter collection or a specific filter plugin instance.
    */
   public function filters($instance_id = NULL);
 
@@ -30,7 +30,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    *
    * Sets or replaces the configuration of a filter plugin in $this->filters,
    * and if instantiated already, also ensures that the actual filter plugin on
-   * the FilterBag contains the identical configuration.
+   * the FilterPluginCollection contains the identical configuration.
    *
    * @param string $instance_id
    *   The ID of a filter plugin to set the configuration for.

@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\filter\FilterBag.
+ * Contains \Drupal\filter\FilterPluginCollection.
  */
 
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
 /**
  * A collection of filters.
  */
-class FilterBag extends DefaultPluginBag {
+class FilterPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * All possible filter plugin IDs.

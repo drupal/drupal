@@ -1054,7 +1054,7 @@
  * - Plugin mapping: Allows a plugin class to map a configuration string to an
  *   instance, and have the plugin automatically instantiated without writing
  *   additional code.
- * - Plugin bags: Provide a way to lazily instantiate a set of plugin
+ * - Plugin collections: Provide a way to lazily instantiate a set of plugin
  *   instances from a single plugin definition.
  *
  * There are several things a module developer may need to do with plugins:
@@ -1094,8 +1094,8 @@
  *   instantiate plugins. See @ref sub_manager below.
  * - Use the plugin manager to instantiate plugins. Call methods on your plugin
  *   interface to perform the tasks of your plugin type.
- * - (optional) If appropriate, define a plugin bag. See @ref sub_bag below
- *   for more information.
+ * - (optional) If appropriate, define a plugin collection. See @ref
+ *    sub_collection below for more information.
  *
  * @subsection sub_discovery Plugin discovery
  * Plugin discovery is the process your plugin manager uses to discover the
@@ -1155,22 +1155,22 @@
  *   configuration schema and possibly a configuration entity type. See the
  *   @link config_api Configuration API topic @endlink for more information.
  *
- * @subsection sub_bag Defining a plugin bag
+ * @subsection sub_collection Defining a plugin collection
  * Some configurable plugin types allow administrators to create zero or more
  * instances of each plugin, each with its own configuration. For example,
  * a single block plugin can be configured several times, to display in
  * different regions of a theme, with different visibility settings, a
  * different title, or other plugin-specific settings. To make this possible,
- * a plugin type can make use of what's known as a plugin bag.
+ * a plugin type can make use of what's known as a plugin collection.
  *
- * A plugin bag is a class that extends \Drupal\Component\Plugin\PluginBag or
- * one of its subclasses; there are several examples in Drupal Core. If your
- * plugin type uses a plugin bag, it will usually also have a configuration
- * entity, and the entity class should implement
- * \Drupal\Core\Entity\EntityWithPluginBagsInterface. Again,
- * there are several examples in Drupal Core; see also the
- * @link config_api Configuration API topic @endlink for more information about
- * configuration entities.
+ * A plugin collection is a class that extends
+ * \Drupal\Component\Plugin\LazyPluginCollection or one of its subclasses; there
+ * are several examples in Drupal Core. If your plugin type uses a plugin
+ * collection, it will usually also have a configuration entity, and the entity
+ * class should implement
+ * \Drupal\Core\Entity\EntityWithPluginCollectionInterface. Again, there are
+ * several examples in Drupal Core; see also the @link config_api Configuration
+ * API topic @endlink for more information about configuration entities.
  *
  * @section sec_create Creating a plugin of an existing type
  * Assuming the plugin type uses annotation-based discovery, in order to create

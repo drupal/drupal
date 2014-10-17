@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\tour\TipsBag.
+ * Contains \Drupal\tour\TipsPluginCollection.
  */
 
 namespace Drupal\tour;
 
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
 /**
  * A collection of tips.
  */
-class TipsBag extends DefaultPluginBag {
+class TipsPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * {@inheritdoc}

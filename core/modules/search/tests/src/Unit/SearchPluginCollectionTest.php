@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\search\Unit\SearchPluginBagTest.
+ * Contains \Drupal\Tests\search\Unit\SearchPluginCollectionTest.
  */
 
 namespace Drupal\Tests\search\Unit;
 
-use Drupal\search\Plugin\SearchPluginBag;
+use Drupal\search\Plugin\SearchPluginCollection;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\search\Plugin\SearchPluginBag
+ * @coversDefaultClass \Drupal\search\Plugin\SearchPluginCollection
  * @group search
  */
-class SearchPluginBagTest extends UnitTestCase {
+class SearchPluginCollectionTest extends UnitTestCase {
 
   /**
    * The mocked plugin manager.
@@ -24,11 +24,11 @@ class SearchPluginBagTest extends UnitTestCase {
   protected $pluginManager;
 
   /**
-   * The tested plugin bag.
+   * The tested plugin collection.
    *
-   * @var \Drupal\search\Plugin\SearchPluginBag
+   * @var \Drupal\search\Plugin\SearchPluginCollection
    */
-  protected $searchPluginBag;
+  protected $searchPluginCollection;
 
   /**
    * Stores all setup plugin instances.
@@ -42,7 +42,7 @@ class SearchPluginBagTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
-    $this->searchPluginBag = new SearchPluginBag($this->pluginManager, 'banana', array('id' => 'banana', 'color' => 'yellow'), 'fruit_stand');
+    $this->searchPluginCollection = new SearchPluginCollection($this->pluginManager, 'banana', array('id' => 'banana', 'color' => 'yellow'), 'fruit_stand');
   }
 
   /**
@@ -53,7 +53,7 @@ class SearchPluginBagTest extends UnitTestCase {
     $this->pluginManager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($plugin));
-    $this->assertSame($plugin, $this->searchPluginBag->get('banana'));
+    $this->assertSame($plugin, $this->searchPluginCollection->get('banana'));
   }
 
   /**
@@ -70,7 +70,7 @@ class SearchPluginBagTest extends UnitTestCase {
       ->method('createInstance')
       ->will($this->returnValue($plugin));
 
-    $this->assertSame($plugin, $this->searchPluginBag->get('banana'));
+    $this->assertSame($plugin, $this->searchPluginCollection->get('banana'));
   }
 
 }

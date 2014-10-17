@@ -44,8 +44,6 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * The weight of this filter compared to others in a filter collection.
    *
-   * @see FilterBase::$filterBag
-   *
    * @var int
    */
   public $weight = 0;
@@ -60,9 +58,9 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * A collection of all filters this filter participates in.
    *
-   * @var \Drupal\filter\FilterBag
+   * @var \Drupal\filter\FilterPluginCollection
    */
-  protected $bag;
+  protected $collection;
 
   /**
    * {@inheritdoc}

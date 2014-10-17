@@ -2,24 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\DefaultPluginBag.
+ * Contains \Drupal\Core\Plugin\DefaultLazyPluginCollection.
  */
 
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\LazyPluginCollection;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
- * Provides a default plugin bag for a plugin type.
+ * Provides a default plugin collection for a plugin type.
  *
- * A plugin bag is used to contain plugins that will be lazily instantiated. The
- * configurations of each potential plugin are passed in, and the configuration
- * key containing the plugin ID is specified by self::$pluginKey.
+ * A plugin collection is used to contain plugins that will be lazily
+ * instantiated. The configurations of each potential plugin are passed in, and
+ * the configuration key containing the plugin ID is specified by
+ * self::$pluginKey.
  */
-class DefaultPluginBag extends PluginBag {
+class DefaultLazyPluginCollection extends LazyPluginCollection {
 
   /**
    * The manager used to instantiate the plugins.
@@ -29,11 +30,11 @@ class DefaultPluginBag extends PluginBag {
   protected $manager;
 
   /**
-   * The initial configuration for each plugin in the bag.
+   * The initial configuration for each plugin in the collection.
    *
    * @var array
    *   An associative array containing the initial configuration for each plugin
-   *   in the bag, keyed by plugin instance ID.
+   *   in the collection, keyed by plugin instance ID.
    */
   protected $configurations = array();
 
@@ -52,13 +53,13 @@ class DefaultPluginBag extends PluginBag {
   protected $originalOrder = array();
 
   /**
-   * Constructs a new DefaultPluginBag object.
+   * Constructs a new DefaultLazyPluginCollection object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The manager to be used for instantiating plugins.
    * @param array $configurations
    *   (optional) An associative array containing the initial configuration for
-   *   each plugin in the bag, keyed by plugin instance ID.
+   *   each plugin in the collection, keyed by plugin instance ID.
    */
   public function __construct(PluginManagerInterface $manager, array $configurations = array()) {
     $this->manager = $manager;
@@ -84,7 +85,7 @@ class DefaultPluginBag extends PluginBag {
   }
 
   /**
-   * Sorts all plugin instances in this bag.
+   * Sorts all plugin instances in this collection.
    *
    * @return $this
    */

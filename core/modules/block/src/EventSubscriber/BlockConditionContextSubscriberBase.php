@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 abstract class BlockConditionContextSubscriberBase implements EventSubscriberInterface {
 
   /**
-   * @var \Drupal\Core\Condition\ConditionPluginBag
+   * @var \Drupal\Core\Condition\ConditionPluginCollection
    */
   protected $conditions;
 

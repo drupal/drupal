@@ -157,8 +157,8 @@ interface ImageStyleInterface extends ConfigEntityInterface, ThirdPartySettingsI
   /**
    * Returns the image effects for this style.
    *
-   * @return \Drupal\image\ImageEffectBag|\Drupal\image\ImageEffectInterface[]
-   *   The image effect plugin bag.
+   * @return \Drupal\image\ImageEffectPluginCollection|\Drupal\image\ImageEffectInterface[]
+   *   The image effect plugin collection.
    */
   public function getEffects();
 

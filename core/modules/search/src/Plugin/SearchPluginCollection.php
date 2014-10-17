@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\search\Plugin\SearchPluginBag.
+ * Contains \Drupal\search\Plugin\SearchPluginCollection.
  */
 
 namespace Drupal\search\Plugin;
 
-use Drupal\Core\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Provides a container for lazily loading search plugins.
  */
-class SearchPluginBag extends DefaultSinglePluginBag {
+class SearchPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
-   * The unique ID for the search page using this plugin bag.
+   * The unique ID for the search page using this plugin collection.
    *
    * @var string
    */
   protected $searchPageId;
 
   /**
-   * Constructs a new SearchPluginBag.
+   * Constructs a new SearchPluginCollection.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The manager to be used for instantiating plugins.

@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Plugin\PluginBagTestBase.
+ * Contains \Drupal\Tests\Core\Plugin\LazyPluginCollectionTestBase.
  */
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Provides a base class for plugin bag tests.
+ * Provides a base class for plugin collection tests.
  */
-abstract class PluginBagTestBase extends UnitTestCase {
+abstract class LazyPluginCollectionTestBase extends UnitTestCase {
 
   /**
    * The mocked plugin manager.
@@ -23,11 +23,11 @@ abstract class PluginBagTestBase extends UnitTestCase {
   protected $pluginManager;
 
   /**
-   * The tested plugin bag.
+   * The tested plugin collection.
    *
-   * @var \Drupal\Core\Plugin\DefaultPluginBag|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $defaultPluginBag;
+  protected $defaultPluginCollection;
 
   /**
    * Stores all setup plugin instances.
@@ -56,14 +56,14 @@ abstract class PluginBagTestBase extends UnitTestCase {
   }
 
   /**
-   * Sets up the default plugin bag.
+   * Sets up the default plugin collection.
    *
    * @param \PHPUnit_Framework_MockObject_Matcher_InvokedRecorder|null $create_count
    *   (optional) The number of times that createInstance() is expected to be
    *   called. For example, $this->any(), $this->once(), $this->exactly(6).
    *   Defaults to $this->never().
    */
-  protected function setupPluginBag(\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $create_count = NULL) {
+  protected function setupPluginCollection(\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $create_count = NULL) {
     $this->pluginInstances = array();
     $map = array();
     foreach ($this->getPluginDefinitions() as $plugin_id => $definition) {
@@ -77,7 +77,7 @@ abstract class PluginBagTestBase extends UnitTestCase {
       ->method('createInstance')
       ->will($this->returnCallback(array($this, 'returnPluginMap')));
 
-    $this->defaultPluginBag = new DefaultPluginBag($this->pluginManager, $this->config);
+    $this->defaultPluginCollection = new DefaultLazyPluginCollection($this->pluginManager, $this->config);
   }
 
   /**

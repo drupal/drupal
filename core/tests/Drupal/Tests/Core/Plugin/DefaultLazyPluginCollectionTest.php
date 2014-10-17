@@ -2,43 +2,43 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Plugin\DefaultPluginBagTest.
+ * Contains \Drupal\Tests\Core\Plugin\DefaultLazyPluginCollectionTest.
  */
 
 namespace Drupal\Tests\Core\Plugin;
 
 /**
- * @coversDefaultClass \Drupal\Core\Plugin\DefaultPluginBag
+ * @coversDefaultClass \Drupal\Core\Plugin\DefaultLazyPluginCollection
  * @group Plugin
  */
-class DefaultPluginBagTest extends PluginBagTestBase {
+class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
 
   /**
    * Tests the has method.
    *
-   * @see \Drupal\Core\Plugin\DefaultPluginBag::has()
+   * @see \Drupal\Core\Plugin\DefaultLazyPluginCollection::has()
    */
   public function testHas() {
-    $this->setupPluginBag();
+    $this->setupPluginCollection();
     $definitions = $this->getPluginDefinitions();
 
-    $this->assertFalse($this->defaultPluginBag->has($this->randomMachineName()), 'Nonexistent plugin found.');
+    $this->assertFalse($this->defaultPluginCollection->has($this->randomMachineName()), 'Nonexistent plugin found.');
 
     foreach (array_keys($definitions) as $plugin_id) {
-      $this->assertTrue($this->defaultPluginBag->has($plugin_id));
+      $this->assertTrue($this->defaultPluginCollection->has($plugin_id));
     }
   }
 
   /**
    * Tests the get method.
    *
-   * @see \Drupal\Core\Plugin\DefaultPluginBag::get()
+   * @see \Drupal\Core\Plugin\DefaultLazyPluginCollection::get()
    */
   public function testGet() {
-    $this->setupPluginBag($this->once());
+    $this->setupPluginCollection($this->once());
     $apple = $this->pluginInstances['apple'];
 
-    $this->assertSame($apple, $this->defaultPluginBag->get('apple'));
+    $this->assertSame($apple, $this->defaultPluginCollection->get('apple'));
   }
 
   /**
@@ -48,8 +48,8 @@ class DefaultPluginBagTest extends PluginBagTestBase {
    * @expectedExceptionMessage Plugin ID 'pear' was not found.
    */
   public function testGetNotExistingPlugin() {
-    $this->setupPluginBag();
-    $this->defaultPluginBag->get('pear');
+    $this->setupPluginCollection();
+    $this->defaultPluginCollection->get('pear');
   }
 
   /**
@@ -80,34 +80,34 @@ class DefaultPluginBagTest extends PluginBagTestBase {
    * @dataProvider providerTestSortHelper
    */
   public function testSortHelper($plugin_id_1, $plugin_id_2, $expected) {
-    $this->setupPluginBag($this->any());
+    $this->setupPluginCollection($this->any());
     if ($expected != 0) {
       $expected = $expected > 0 ? 1 : -1;
     }
-    $this->assertEquals($expected, $this->defaultPluginBag->sortHelper($plugin_id_1, $plugin_id_2));
+    $this->assertEquals($expected, $this->defaultPluginCollection->sortHelper($plugin_id_1, $plugin_id_2));
   }
 
   /**
    * Tests the configuration getter method.
    *
-   * @see \Drupal\Core\Plugin\DefaultPluginBag::getConfiguration()
+   * @see \Drupal\Core\Plugin\DefaultLazyPluginCollection::getConfiguration()
    */
   public function testGetConfiguration() {
-    $this->setupPluginBag($this->exactly(3));
+    $this->setupPluginCollection($this->exactly(3));
     // The expected order matches $this->config.
     $expected = array('banana', 'cherry', 'apple');
 
-    $config = $this->defaultPluginBag->getConfiguration();
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, array_keys($config), 'The order of the configuration is unchanged.');
 
-    $ids = $this->defaultPluginBag->getInstanceIds();
+    $ids = $this->defaultPluginCollection->getInstanceIds();
     $this->assertSame($expected, array_keys($ids), 'The order of the instances is unchanged.');
 
-    $this->defaultPluginBag->sort();
-    $config = $this->defaultPluginBag->getConfiguration();
+    $this->defaultPluginCollection->sort();
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, array_keys($config), 'After sorting, the order of the configuration is unchanged.');
 
-    $ids = $this->defaultPluginBag->getInstanceIds();
+    $ids = $this->defaultPluginCollection->getInstanceIds();
     sort($expected);
     $this->assertSame($expected, array_keys($ids), 'After sorting, the order of the instances is also sorted.');
   }
@@ -116,56 +116,56 @@ class DefaultPluginBagTest extends PluginBagTestBase {
    * Tests the addInstanceId() method.
    */
   public function testAddInstanceId() {
-    $this->setupPluginBag($this->exactly(4));
+    $this->setupPluginCollection($this->exactly(4));
     $expected = array(
       'banana' => 'banana',
       'cherry' => 'cherry',
       'apple' => 'apple',
     );
-    $this->defaultPluginBag->addInstanceId('apple');
-    $result = $this->defaultPluginBag->getInstanceIds();
+    $this->defaultPluginCollection->addInstanceId('apple');
+    $result = $this->defaultPluginCollection->getInstanceIds();
     $this->assertSame($expected, $result);
-    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginBag->getConfiguration()));
+    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginCollection->getConfiguration()));
 
     $expected = array(
       'cherry' => 'cherry',
       'apple' => 'apple',
       'banana' => 'banana',
     );
-    $this->defaultPluginBag->removeInstanceId('banana');
-    $this->defaultPluginBag->addInstanceId('banana', $this->config['banana']);
+    $this->defaultPluginCollection->removeInstanceId('banana');
+    $this->defaultPluginCollection->addInstanceId('banana', $this->config['banana']);
 
-    $result = $this->defaultPluginBag->getInstanceIds();
+    $result = $this->defaultPluginCollection->getInstanceIds();
     $this->assertSame($expected, $result);
-    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginBag->getConfiguration()));
+    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginCollection->getConfiguration()));
   }
 
   /**
    * Tests the removeInstanceId() method.
    *
-   * @see \Drupal\Core\Plugin\DefaultPluginBag::removeInstanceId()
+   * @see \Drupal\Core\Plugin\DefaultLazyPluginCollection::removeInstanceId()
    */
   public function testRemoveInstanceId() {
-    $this->setupPluginBag($this->exactly(2));
-    $this->defaultPluginBag->removeInstanceId('cherry');
-    $config = $this->defaultPluginBag->getConfiguration();
+    $this->setupPluginCollection($this->exactly(2));
+    $this->defaultPluginCollection->removeInstanceId('cherry');
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertArrayNotHasKey('cherry', $config, 'After removing an instance, the configuration is updated.');
   }
 
   /**
    * Tests the setInstanceConfiguration() method.
    *
-   * @see \Drupal\Core\Plugin\DefaultPluginBag::setInstanceConfiguration()
+   * @see \Drupal\Core\Plugin\DefaultLazyPluginCollection::setInstanceConfiguration()
    */
   public function testSetInstanceConfiguration() {
-    $this->setupPluginBag($this->exactly(3));
+    $this->setupPluginCollection($this->exactly(3));
     $expected = array(
       'id' => 'cherry',
       'key' => 'value',
       'custom' => 'bananas',
     );
-    $this->defaultPluginBag->setInstanceConfiguration('cherry', $expected);
-    $config = $this->defaultPluginBag->getConfiguration();
+    $this->defaultPluginCollection->setInstanceConfiguration('cherry', $expected);
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, $config['cherry']);
   }
 
@@ -173,29 +173,29 @@ class DefaultPluginBagTest extends PluginBagTestBase {
    * Tests the count() method.
    */
   public function testCount() {
-    $this->setupPluginBag();
-    $this->assertSame(3, $this->defaultPluginBag->count());
+    $this->setupPluginCollection();
+    $this->assertSame(3, $this->defaultPluginCollection->count());
   }
 
   /**
    * Tests the clear() method.
    */
   public function testClear() {
-    $this->setupPluginBag($this->exactly(6));
-    $this->defaultPluginBag->getConfiguration();
-    $this->defaultPluginBag->getConfiguration();
-    $this->defaultPluginBag->clear();
-    $this->defaultPluginBag->getConfiguration();
+    $this->setupPluginCollection($this->exactly(6));
+    $this->defaultPluginCollection->getConfiguration();
+    $this->defaultPluginCollection->getConfiguration();
+    $this->defaultPluginCollection->clear();
+    $this->defaultPluginCollection->getConfiguration();
   }
 
   /**
    * Tests the set() method.
    */
   public function testSet() {
-    $this->setupPluginBag($this->exactly(4));
+    $this->setupPluginCollection($this->exactly(4));
     $instance = $this->pluginManager->createInstance('cherry', $this->config['cherry']);
-    $this->defaultPluginBag->set('cherry2', $instance);
-    $this->defaultPluginBag->setInstanceConfiguration('cherry2', $this->config['cherry']);
+    $this->defaultPluginCollection->set('cherry2', $instance);
+    $this->defaultPluginCollection->setInstanceConfiguration('cherry2', $this->config['cherry']);
 
     $expected = array(
       'banana',
@@ -203,7 +203,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
       'apple',
       'cherry2',
     );
-    $config = $this->defaultPluginBag->getConfiguration();
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, array_keys($config));
   }
 

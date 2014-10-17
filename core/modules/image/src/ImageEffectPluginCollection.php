@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\image\ImageEffectBag.
+ * Contains \Drupal\image\ImageEffectPluginCollection.
  */
 
 namespace Drupal\image;
 
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
 /**
  * A collection of image effects.
  */
-class ImageEffectBag extends DefaultPluginBag {
+class ImageEffectPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * {@inheritdoc}

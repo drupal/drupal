@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Plugin\PluginBag.
+ * Contains \Drupal\Component\Plugin\LazyPluginCollection.
  */
 
 namespace Drupal\Component\Plugin;
@@ -12,7 +12,7 @@ namespace Drupal\Component\Plugin;
  *
  * @ingroup plugin_api
  */
-abstract class PluginBag implements \Iterator, \Countable {
+abstract class LazyPluginCollection implements \Iterator, \Countable {
 
   /**
    * Stores all instantiated plugins.
@@ -37,7 +37,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   abstract protected function initializePlugin($instance_id);
 
   /**
-   * Returns the current configuration of all plugins in this bag.
+   * Returns the current configuration of all plugins in this collection.
    *
    * @return array
    *   An array of up-to-date plugin configuration.
@@ -45,7 +45,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   abstract public function getConfiguration();
 
   /**
-   * Sets the configuration for all plugins in this bag.
+   * Sets the configuration for all plugins in this collection.
    *
    * @param array $configuration
    *   An array of up-to-date plugin configuration.

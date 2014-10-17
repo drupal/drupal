@@ -8,10 +8,10 @@
 namespace Drupal\filter\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\filter\FilterBag;
+use Drupal\filter\FilterPluginCollection;
 use Drupal\filter\Plugin\FilterInterface;
 
 /**
@@ -43,7 +43,7 @@ use Drupal\filter\Plugin\FilterInterface;
  *   }
  * )
  */
-class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, EntityWithPluginBagsInterface {
+class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, EntityWithPluginCollectionInterface {
 
   /**
    * Unique machine name of the format.
@@ -114,9 +114,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   /**
    * Holds the collection of filters that are attached to this format.
    *
-   * @var \Drupal\filter\FilterBag
+   * @var \Drupal\filter\FilterPluginCollection
    */
-  protected $filterBag;
+  protected $filterCollection;
 
   /**
    * {@inheritdoc}
@@ -129,20 +129,20 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function filters($instance_id = NULL) {
-    if (!isset($this->filterBag)) {
-      $this->filterBag = new FilterBag(\Drupal::service('plugin.manager.filter'), $this->filters);
-      $this->filterBag->sort();
+    if (!isset($this->filterCollection)) {
+      $this->filterCollection = new FilterPluginCollection(\Drupal::service('plugin.manager.filter'), $this->filters);
+      $this->filterCollection->sort();
     }
     if (isset($instance_id)) {
-      return $this->filterBag->get($instance_id);
+      return $this->filterCollection->get($instance_id);
     }
-    return $this->filterBag;
+    return $this->filterCollection;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginBags() {
+  public function getPluginCollections() {
     return array('filters' => $this->filters());
   }
 
@@ -151,8 +151,8 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    */
   public function setFilterConfig($instance_id, array $configuration) {
     $this->filters[$instance_id] = $configuration;
-    if (isset($this->filterBag)) {
-      $this->filterBag->setInstanceConfiguration($instance_id, $configuration);
+    if (isset($this->filterCollection)) {
+      $this->filterCollection->setInstanceConfiguration($instance_id, $configuration);
     }
     return $this;
   }

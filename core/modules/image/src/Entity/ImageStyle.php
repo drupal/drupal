@@ -11,10 +11,10 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Site\Settings;
-use Drupal\image\ImageEffectBag;
+use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
@@ -50,7 +50,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   }
  * )
  */
-class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagsInterface {
+class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginCollectionInterface {
 
   use ThirdPartySettingsTrait;
 
@@ -85,9 +85,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   /**
    * Holds the collection of image effects that are used by this image style.
    *
-   * @var \Drupal\image\ImageEffectBag
+   * @var \Drupal\image\ImageEffectPluginCollection
    */
-  protected $effectsBag;
+  protected $effectsCollection;
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().
@@ -346,17 +346,17 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function getEffects() {
-    if (!$this->effectsBag) {
-      $this->effectsBag = new ImageEffectBag($this->getImageEffectPluginManager(), $this->effects);
-      $this->effectsBag->sort();
+    if (!$this->effectsCollection) {
+      $this->effectsCollection = new ImageEffectPluginCollection($this->getImageEffectPluginManager(), $this->effects);
+      $this->effectsCollection->sort();
     }
-    return $this->effectsBag;
+    return $this->effectsCollection;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginBags() {
+  public function getPluginCollections() {
     return array('effects' => $this->getEffects());
   }
 

@@ -49,7 +49,8 @@ class DisplayFeedTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     // Verify that the page lists the $view_name view.
     // Regression test: ViewListBuilder::getDisplayPaths() did not properly
-    // check whether a DisplayBag was returned in iterating over all displays.
+    // check whether a DisplayPluginCollection was returned in iterating over
+    // all displays.
     $this->assertText($view_name);
 
     // Check the attach TO interface.

@@ -13,7 +13,7 @@ use Drupal\block\Event\BlockEvents;
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
-use Drupal\Core\Condition\ConditionPluginBag;
+use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
@@ -38,11 +38,11 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   use ConditionAccessResolverTrait;
 
   /**
-   * The condition plugin bag.
+   * The condition plugin collection.
    *
-   * @var \Drupal\Core\Condition\ConditionPluginBag
+   * @var \Drupal\Core\Condition\ConditionPluginCollection
    */
-  protected $conditionBag;
+  protected $conditionCollection;
 
   /**
    * The condition plugin manager.
@@ -507,10 +507,10 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function getVisibilityConditions() {
-    if (!isset($this->conditionBag)) {
-      $this->conditionBag = new ConditionPluginBag($this->conditionPluginManager(), $this->configuration['visibility']);
+    if (!isset($this->conditionCollection)) {
+      $this->conditionCollection = new ConditionPluginCollection($this->conditionPluginManager(), $this->configuration['visibility']);
     }
-    return $this->conditionBag;
+    return $this->conditionCollection;
   }
 
   /**

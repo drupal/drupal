@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Plugin\ConfigurablePluginBagTest.
+ * Contains \Drupal\Tests\Core\Plugin\ConfigurablePluginCollectionTest.
  */
 
 namespace Drupal\Tests\Core\Plugin;
@@ -13,7 +13,7 @@ use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
  * @coversDefaultClass \Drupal\Component\Plugin\ConfigurablePluginInterface
  * @group Plugin
  */
-class ConfigurablePluginBagTest extends PluginBagTestBase {
+class ConfigurablePluginCollectionTest extends LazyPluginCollectionTestBase {
 
   /**
    * Stores all setup plugin instances.
@@ -33,8 +33,8 @@ class ConfigurablePluginBagTest extends PluginBagTestBase {
    * Tests the getConfiguration() method with configurable plugins.
    */
   public function testConfigurableGetConfiguration() {
-    $this->setupPluginBag($this->exactly(3));
-    $config = $this->defaultPluginBag->getConfiguration();
+    $this->setupPluginCollection($this->exactly(3));
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($this->config, $config);
   }
 
@@ -42,13 +42,13 @@ class ConfigurablePluginBagTest extends PluginBagTestBase {
    * Tests the setConfiguration() method with configurable plugins.
    */
   public function testConfigurableSetConfiguration() {
-    $this->setupPluginBag($this->exactly(3));
-    $this->defaultPluginBag->getConfiguration();
-    $this->defaultPluginBag->setInstanceConfiguration('apple', array('value' => 'pineapple'));
+    $this->setupPluginCollection($this->exactly(3));
+    $this->defaultPluginCollection->getConfiguration();
+    $this->defaultPluginCollection->setInstanceConfiguration('apple', array('value' => 'pineapple'));
 
     $expected = $this->config;
     $expected['apple'] = array('value' => 'pineapple');
-    $config = $this->defaultPluginBag->getConfiguration();
+    $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, $config);
     $plugin = $this->pluginInstances['apple'];
     $this->assertSame($expected['apple'], $plugin->getConfiguration());

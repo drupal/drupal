@@ -174,16 +174,16 @@ class RouteSubscriberTest extends UnitTestCase {
     $display_1 = $this->getMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
     $display_2 = $this->getMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
 
-    $display_bag = $this->getMockBuilder('Drupal\views\DisplayBag')
+    $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
       ->disableOriginalConstructor()
       ->getMock();
-    $display_bag->expects($this->any())
+    $display_collection->expects($this->any())
       ->method('get')
       ->will($this->returnValueMap(array(
         array('page_1', $display_1),
         array('page_2', $display_2),
       )));
-    $executable->displayHandlers = $display_bag;
+    $executable->displayHandlers = $display_collection;
 
     $this->routeSubscriber->applicableViews = array();
     $this->routeSubscriber->applicableViews[] = array($executable, 'page_1');

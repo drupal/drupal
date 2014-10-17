@@ -10,7 +10,7 @@ namespace Drupal\filter\Tests;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\filter\FilterBag;
+use Drupal\filter\FilterPluginCollection;
 
 /**
  * Tests Filter module filters individually.
@@ -36,7 +36,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
     $this->installConfig(array('system'));
 
     $manager = $this->container->get('plugin.manager.filter');
-    $bag = new FilterBag($manager, array());
+    $bag = new FilterPluginCollection($manager, array());
     $this->filters = $bag->getAll();
   }
 

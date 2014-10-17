@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockPluginBag.
+ * Contains \Drupal\block\BlockPluginCollection.
  */
 
 namespace Drupal\block;
@@ -10,22 +10,22 @@ namespace Drupal\block;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
  * Provides a collection of block plugins.
  */
-class BlockPluginBag extends DefaultSinglePluginBag {
+class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
-   * The block ID this plugin bag belongs to.
+   * The block ID this plugin collection belongs to.
    *
    * @var string
    */
   protected $blockId;
 
   /**
-   * Constructs a new BlockPluginBag.
+   * Constructs a new BlockPluginCollection.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The manager to be used for instantiating plugins.

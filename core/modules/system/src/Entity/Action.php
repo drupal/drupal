@@ -9,9 +9,9 @@ namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\system\ActionConfigEntityInterface;
-use Drupal\Core\Action\ActionBag;
+use Drupal\Core\Action\ActionPluginCollection;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
@@ -27,7 +27,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *   }
  * )
  */
-class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginBagsInterface {
+class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginCollectionInterface {
 
   /**
    * The name (plugin ID) of the action.
@@ -65,37 +65,37 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
   protected $plugin;
 
   /**
-   * The plugin bag that stores action plugins.
+   * The plugin collection that stores action plugins.
    *
-   * @var \Drupal\Core\Action\ActionBag
+   * @var \Drupal\Core\Action\ActionPluginCollection
    */
-  protected $pluginBag;
+  protected $pluginCollection;
 
   /**
-   * Encapsulates the creation of the action's PluginBag.
+   * Encapsulates the creation of the action's LazyPluginCollection.
    *
-   * @return \Drupal\Component\Plugin\PluginBag
-   *   The action's plugin bag.
+   * @return \Drupal\Component\Plugin\LazyPluginCollection
+   *   The action's plugin collection.
    */
-  protected function getPluginBag() {
-    if (!$this->pluginBag) {
-      $this->pluginBag = new ActionBag(\Drupal::service('plugin.manager.action'), $this->plugin, $this->configuration);
+  protected function getPluginCollection() {
+    if (!$this->pluginCollection) {
+      $this->pluginCollection = new ActionPluginCollection(\Drupal::service('plugin.manager.action'), $this->plugin, $this->configuration);
     }
-    return $this->pluginBag;
+    return $this->pluginCollection;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginBags() {
-    return array('configuration' => $this->getPluginBag());
+  public function getPluginCollections() {
+    return array('configuration' => $this->getPluginCollection());
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPlugin() {
-    return $this->getPluginBag()->get($this->plugin);
+    return $this->getPluginCollection()->get($this->plugin);
   }
 
   /**
@@ -103,7 +103,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    */
   public function setPlugin($plugin_id) {
     $this->plugin = $plugin_id;
-    $this->getPluginBag()->addInstanceId($plugin_id);
+    $this->getPluginCollection()->addInstanceId($plugin_id);
   }
 
   /**

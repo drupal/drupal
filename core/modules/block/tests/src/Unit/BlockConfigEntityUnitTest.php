@@ -75,30 +75,30 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     $values = array('theme' => 'stark');
-    // Mock the entity under test so that we can mock getPluginBags().
+    // Mock the entity under test so that we can mock getPluginCollections().
     $entity = $this->getMockBuilder('\Drupal\block\Entity\Block')
       ->setConstructorArgs(array($values, $this->entityTypeId))
-      ->setMethods(array('getPluginBags'))
+      ->setMethods(array('getPluginCollections'))
       ->getMock();
     // Create a configurable plugin that would add a dependency.
     $instance_id = $this->randomMachineName();
     $instance = new TestConfigurablePlugin(array(), $instance_id, array('provider' => 'test'));
 
-    // Create a plugin bag to contain the instance.
-    $plugin_bag = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultPluginBag')
+    // Create a plugin collection to contain the instance.
+    $plugin_collection = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultLazyPluginCollection')
       ->disableOriginalConstructor()
       ->setMethods(array('get'))
       ->getMock();
-    $plugin_bag->expects($this->atLeastOnce())
+    $plugin_collection->expects($this->atLeastOnce())
       ->method('get')
       ->with($instance_id)
       ->will($this->returnValue($instance));
-    $plugin_bag->addInstanceId($instance_id);
+    $plugin_collection->addInstanceId($instance_id);
 
-    // Return the mocked plugin bag.
+    // Return the mocked plugin collection.
     $entity->expects($this->once())
-      ->method('getPluginBags')
-      ->will($this->returnValue(array($plugin_bag)));
+      ->method('getPluginCollections')
+      ->will($this->returnValue(array($plugin_collection)));
 
     $dependencies = $entity->calculateDependencies();
     $this->assertContains('test', $dependencies['module']);

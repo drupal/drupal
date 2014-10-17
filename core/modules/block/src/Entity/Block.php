@@ -9,10 +9,10 @@ namespace Drupal\block\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\block\BlockPluginBag;
+use Drupal\block\BlockPluginCollection;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -40,7 +40,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   }
  * )
  */
-class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginBagsInterface {
+class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginCollectionInterface {
 
   /**
    * The ID of the block.
@@ -78,37 +78,37 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   protected $plugin;
 
   /**
-   * The plugin bag that holds the block plugin for this entity.
+   * The plugin collection that holds the block plugin for this entity.
    *
-   * @var \Drupal\block\BlockPluginBag
+   * @var \Drupal\block\BlockPluginCollection
    */
-  protected $pluginBag;
+  protected $pluginCollection;
 
   /**
    * {@inheritdoc}
    */
   public function getPlugin() {
-    return $this->getPluginBag()->get($this->plugin);
+    return $this->getPluginCollection()->get($this->plugin);
   }
 
   /**
-   * Encapsulates the creation of the block's PluginBag.
+   * Encapsulates the creation of the block's LazyPluginCollection.
    *
-   * @return \Drupal\Component\Plugin\PluginBag
-   *   The block's plugin bag.
+   * @return \Drupal\Component\Plugin\LazyPluginCollection
+   *   The block's plugin collection.
    */
-  protected function getPluginBag() {
-    if (!$this->pluginBag) {
-      $this->pluginBag = new BlockPluginBag(\Drupal::service('plugin.manager.block'), $this->plugin, $this->get('settings'), $this->id());
+  protected function getPluginCollection() {
+    if (!$this->pluginCollection) {
+      $this->pluginCollection = new BlockPluginCollection(\Drupal::service('plugin.manager.block'), $this->plugin, $this->get('settings'), $this->id());
     }
-    return $this->pluginBag;
+    return $this->pluginCollection;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginBags() {
-    return array('settings' => $this->getPluginBag());
+  public function getPluginCollections() {
+    return array('settings' => $this->getPluginCollection());
   }
 
   /**

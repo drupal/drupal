@@ -202,7 +202,7 @@ class ViewExecutable {
    * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
    * objects.
    *
-   * @var \Drupal\views\DisplayBag
+   * @var \Drupal\views\DisplayPluginCollection
    */
   public $displayHandlers;
 
@@ -619,7 +619,7 @@ class ViewExecutable {
     }
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayBag($this, Views::pluginManager('display'));
+    $this->displayHandlers = new DisplayPluginCollection($this, Views::pluginManager('display'));
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers->get('default');

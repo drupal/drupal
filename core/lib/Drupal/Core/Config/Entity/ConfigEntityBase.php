@@ -14,7 +14,7 @@ use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 
@@ -43,8 +43,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * The name of the property that is used to store plugin configuration.
    *
-   * This is needed when the entity utilizes a PluginBag, to dictate where the
-   * plugin configuration should be stored.
+   * This is needed when the entity utilizes a LazyPluginCollection, to dictate
+   * where the plugin configuration should be stored.
    *
    * @var string
    */
@@ -138,11 +138,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    if ($this instanceof EntityWithPluginBagsInterface) {
-      $plugin_bags = $this->getPluginBags();
-      if (isset($plugin_bags[$property_name])) {
+    if ($this instanceof EntityWithPluginCollectionInterface) {
+      $plugin_collections = $this->getPluginCollections();
+      if (isset($plugin_collections[$property_name])) {
         // If external code updates the settings, pass it along to the plugin.
-        $plugin_bags[$property_name]->setConfiguration($value);
+        $plugin_collections[$property_name]->setConfiguration($value);
       }
     }
 
@@ -276,11 +276,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if ($this instanceof EntityWithPluginBagsInterface) {
+    if ($this instanceof EntityWithPluginCollectionInterface) {
       // Any changes to the plugin configuration must be saved to the entity's
       // copy as well.
-      foreach ($this->getPluginBags() as $plugin_config_key => $plugin_bag) {
-        $this->set($plugin_config_key, $plugin_bag->getConfiguration());
+      foreach ($this->getPluginCollections() as $plugin_config_key => $plugin_collection) {
+        $this->set($plugin_config_key, $plugin_collection->getConfiguration());
       }
     }
 
@@ -317,11 +317,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     // Dependencies should be recalculated on every save. This ensures stale
     // dependencies are never saved.
     $this->dependencies = array();
-    if ($this instanceof EntityWithPluginBagsInterface) {
+    if ($this instanceof EntityWithPluginCollectionInterface) {
       // Configuration entities need to depend on the providers of any plugins
       // that they store the configuration for.
-      foreach ($this->getPluginBags() as $plugin_bag) {
-        foreach ($plugin_bag as $instance) {
+      foreach ($this->getPluginCollections() as $plugin_collection) {
+        foreach ($plugin_collection as $instance) {
           $this->calculatePluginDependencies($instance);
         }
       }

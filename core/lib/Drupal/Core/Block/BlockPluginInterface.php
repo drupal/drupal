@@ -146,8 +146,8 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
   /**
    * Gets conditions for this block.
    *
-   * @return \Drupal\Core\Condition\ConditionInterface[]|\Drupal\Core\Condition\ConditionPluginBag
-   *   An array or bag of configured condition plugins.
+   * @return \Drupal\Core\Condition\ConditionInterface[]|\Drupal\Core\Condition\ConditionPluginCollection
+   *   An array or collection of configured condition plugins.
    */
   public function getVisibilityConditions();
 

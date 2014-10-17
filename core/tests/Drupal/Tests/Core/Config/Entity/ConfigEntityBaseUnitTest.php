@@ -207,44 +207,44 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    *
-   * @dataProvider providerCalculateDependenciesWithPluginBags
+   * @dataProvider providerCalculateDependenciesWithPluginCollections
    */
-  public function testCalculateDependenciesWithPluginBags($definition, $expected_dependencies) {
+  public function testCalculateDependenciesWithPluginCollections($definition, $expected_dependencies) {
     $values = array();
-    $this->entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginBags')
+    $this->entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
       ->setConstructorArgs(array($values, $this->entityTypeId))
-      ->setMethods(array('getPluginBags'))
+      ->setMethods(array('getPluginCollections'))
       ->getMock();
 
     // Create a configurable plugin that would add a dependency.
     $instance_id = $this->randomMachineName();
     $instance = new TestConfigurablePlugin(array(), $instance_id, $definition);
 
-    // Create a plugin bag to contain the instance.
-    $pluginBag = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultPluginBag')
+    // Create a plugin collection to contain the instance.
+    $pluginCollection = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultLazyPluginCollection')
       ->disableOriginalConstructor()
       ->setMethods(array('get'))
       ->getMock();
-    $pluginBag->expects($this->atLeastOnce())
+    $pluginCollection->expects($this->atLeastOnce())
       ->method('get')
       ->with($instance_id)
       ->will($this->returnValue($instance));
-    $pluginBag->addInstanceId($instance_id);
+    $pluginCollection->addInstanceId($instance_id);
 
-    // Return the mocked plugin bag.
+    // Return the mocked plugin collection.
     $this->entity->expects($this->once())
-      ->method('getPluginBags')
-      ->will($this->returnValue(array($pluginBag)));
+      ->method('getPluginCollections')
+      ->will($this->returnValue(array($pluginCollection)));
 
     $this->assertEquals($expected_dependencies, $this->entity->calculateDependencies());
   }
 
   /**
-   * Data provider for testCalculateDependenciesWithPluginBags.
+   * Data provider for testCalculateDependenciesWithPluginCollections.
    *
    * @return array
    */
-  public function providerCalculateDependenciesWithPluginBags() {
+  public function providerCalculateDependenciesWithPluginCollections() {
     // Start with 'a' so that order of the dependency array is fixed.
     $instance_dependency_1 = 'a' . $this->randomMachineName(10);
     $instance_dependency_2 = 'a' . $this->randomMachineName(11);

@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Condition\ConditionPluginBag.
+ * Contains \Drupal\Core\Condition\ConditionPluginCollection.
  */
 
 namespace Drupal\Core\Condition;
 
 use Drupal\Component\Plugin\Context\ContextInterface;
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
 /**
  * Provides a collection of condition plugins.
  */
-class ConditionPluginBag extends DefaultPluginBag {
+class ConditionPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * An array of collected contexts for conditions.

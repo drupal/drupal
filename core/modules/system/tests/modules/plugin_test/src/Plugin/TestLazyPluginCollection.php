@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\plugin_test\Plugin\TestPluginBag.
+ * Contains \Drupal\plugin_test\Plugin\TestLazyPluginCollection.
  */
 
 namespace Drupal\plugin_test\Plugin;
 
-use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\LazyPluginCollection;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
- * Defines a plugin bag which uses fruit plugins.
+ * Defines a plugin collection which uses fruit plugins.
  */
-class TestPluginBag extends PluginBag {
+class TestLazyPluginCollection extends LazyPluginCollection {
 
   /**
-   * Stores the plugin manager used by this bag.
+   * Stores the plugin manager used by this collection.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $manager;
 
   /**
-   * Constructs a TestPluginBag object.
+   * Constructs a TestLazyPluginCollection object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The plugin manager that handles test plugins.
@@ -36,7 +36,7 @@ class TestPluginBag extends PluginBag {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\PluginBag::initializePlugin().
+   * Implements \Drupal\Component\Plugin\LazyPluginCollection::initializePlugin().
    */
   protected function initializePlugin($instance_id) {
     $this->pluginInstances[$instance_id] = $this->manager->createInstance($instance_id, array());

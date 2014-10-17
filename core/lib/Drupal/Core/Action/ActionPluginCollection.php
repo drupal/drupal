@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Action\ActionBag.
+ * Contains \Drupal\Core\Action\ActionPluginCollection.
  */
 
 namespace Drupal\Core\Action;
 
-use Drupal\Core\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
  * Provides a container for lazily loading Action plugins.
  */
-class ActionBag extends DefaultSinglePluginBag {
+class ActionPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
    * {@inheritdoc}

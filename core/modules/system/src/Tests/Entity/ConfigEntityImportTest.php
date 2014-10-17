@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Entity\EntityWithPluginBagsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -92,7 +92,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     /** @var $entity \Drupal\filter\Entity\FilterFormat */
     $entity = entity_load('filter_format', 'plain_text');
-    $plugin_bag = $entity->getPluginBags()['filters'];
+    $plugin_collection = $entity->getPluginCollections()['filters'];
 
     $filters = $entity->get('filters');
     $this->assertIdentical(72, $filters['filter_url']['settings']['filter_url_length']);
@@ -101,13 +101,13 @@ class ConfigEntityImportTest extends WebTestBase {
     $entity->set('filters', $filters);
     $entity->save();
     $this->assertIdentical($filters, $entity->get('filters'));
-    $this->assertIdentical($filters, $plugin_bag->getConfiguration());
+    $this->assertIdentical($filters, $plugin_collection->getConfiguration());
 
     $filters['filter_url']['settings']['filter_url_length'] = -100;
-    $entity->getPluginBags()['filters']->setConfiguration($filters);
+    $entity->getPluginCollections()['filters']->setConfiguration($filters);
     $entity->save();
     $this->assertIdentical($filters, $entity->get('filters'));
-    $this->assertIdentical($filters, $plugin_bag->getConfiguration());
+    $this->assertIdentical($filters, $plugin_collection->getConfiguration());
 
     // Read the existing data, and prepare an altered version in staging.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
@@ -124,7 +124,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     /** @var $entity \Drupal\image\Entity\ImageStyle */
     $entity = entity_load('image_style', 'thumbnail');
-    $plugin_bag = $entity->getPluginBags()['effects'];
+    $plugin_collection = $entity->getPluginCollections()['effects'];
 
     $effects = $entity->get('effects');
     $effect_id = key($effects);
@@ -135,14 +135,14 @@ class ConfigEntityImportTest extends WebTestBase {
     $entity->save();
     // Ensure the entity and plugin have the correct configuration.
     $this->assertIdentical($effects, $entity->get('effects'));
-    $this->assertIdentical($effects, $plugin_bag->getConfiguration());
+    $this->assertIdentical($effects, $plugin_collection->getConfiguration());
 
     $effects[$effect_id]['data']['height'] = -50;
-    $entity->getPluginBags()['effects']->setConfiguration($effects);
+    $entity->getPluginCollections()['effects']->setConfiguration($effects);
     $entity->save();
     // Ensure the entity and plugin have the correct configuration.
     $this->assertIdentical($effects, $entity->get('effects'));
-    $this->assertIdentical($effects, $plugin_bag->getConfiguration());
+    $this->assertIdentical($effects, $plugin_collection->getConfiguration());
 
     // Read the existing data, and prepare an altered version in staging.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
@@ -175,7 +175,7 @@ class ConfigEntityImportTest extends WebTestBase {
   /**
    * Tests that a single set of plugin config stays in sync.
    *
-   * @param \Drupal\Core\Entity\EntityWithPluginBagsInterface $entity
+   * @param \Drupal\Core\Entity\EntityWithPluginCollectionInterface $entity
    *   The entity.
    * @param string $config_key
    *   Where the plugin config is stored.
@@ -184,8 +184,8 @@ class ConfigEntityImportTest extends WebTestBase {
    * @param mixed $expected
    *   The expected default value of the plugin config setting.
    */
-  protected function checkSinglePluginConfigSync(EntityWithPluginBagsInterface $entity, $config_key, $setting_key, $expected) {
-    $plugin_bag = $entity->getPluginBags()[$config_key];
+  protected function checkSinglePluginConfigSync(EntityWithPluginCollectionInterface $entity, $config_key, $setting_key, $expected) {
+    $plugin_collection = $entity->getPluginCollections()[$config_key];
     $settings = $entity->get($config_key);
 
     // Ensure the default config exists.
@@ -196,14 +196,14 @@ class ConfigEntityImportTest extends WebTestBase {
     $entity->set($config_key, $settings);
     $entity->save();
     $this->assertIdentical($settings, $entity->get($config_key));
-    $this->assertIdentical($settings, $plugin_bag->getConfiguration());
+    $this->assertIdentical($settings, $plugin_collection->getConfiguration());
 
     // Change the plugin config by setting it on the plugin.
     $settings[$setting_key] = $this->randomString();
-    $plugin_bag->setConfiguration($settings);
+    $plugin_collection->setConfiguration($settings);
     $entity->save();
     $this->assertIdentical($settings, $entity->get($config_key));
-    $this->assertIdentical($settings, $plugin_bag->getConfiguration());
+    $this->assertIdentical($settings, $plugin_collection->getConfiguration());
   }
 
   /**

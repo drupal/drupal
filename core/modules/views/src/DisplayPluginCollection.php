@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\views\DisplayBag.
+ * Contains \Drupal\views\DisplayPluginCollection.
  */
 
 namespace Drupal\views;
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 
 /**
  * A class which wraps the displays of a view so you can lazy-initialize them.
  */
-class DisplayBag extends DefaultPluginBag {
+class DisplayPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * Stores a reference to the view which has this displays attached.
@@ -29,7 +29,7 @@ class DisplayBag extends DefaultPluginBag {
   protected $pluginKey = 'display_plugin';
 
   /**
-   * Constructs a DisplayBag object.
+   * Constructs a DisplayPluginCollection object.
    *
    * @param \Drupal\views\ViewExecutable
    *   The view which has this displays attached.
@@ -44,7 +44,7 @@ class DisplayBag extends DefaultPluginBag {
   }
 
   /**
-   * Destructs a DisplayBag object.
+   * Destructs a DisplayPluginCollection object.
    */
   public function __destruct() {
     $this->clear();
@@ -60,7 +60,7 @@ class DisplayBag extends DefaultPluginBag {
   }
 
   /**
-   * Overrides \Drupal\Component\Plugin\PluginBag::clear().
+   * Overrides \Drupal\Component\Plugin\LazyPluginCollection::clear().
    */
   public function clear() {
     foreach (array_filter($this->pluginInstances) as $display) {
@@ -102,7 +102,7 @@ class DisplayBag extends DefaultPluginBag {
   }
 
   /**
-   * Overrides \Drupal\Component\Plugin\PluginBag::remove().
+   * Overrides \Drupal\Component\Plugin\LazyPluginCollection::remove().
    */
   public function remove($instance_id) {
     $this->get($instance_id)->remove();

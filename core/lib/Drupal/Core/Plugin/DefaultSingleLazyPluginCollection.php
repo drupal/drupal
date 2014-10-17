@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\DefaultSinglePluginBag.
+ * Contains \Drupal\Core\Plugin\DefaultSingleLazyPluginCollection.
  */
 
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\LazyPluginCollection;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
- * Provides a default plugin bag for a plugin type.
+ * Provides a default plugin collection for a plugin type.
  *
- * A plugin bag usually stores multiple plugins, and is used to lazily
+ * A plugin collection usually stores multiple plugins, and is used to lazily
  * instantiate them. When only one plugin is needed, it is still best practice
- * to encapsulate all of the instantiation logic in a plugin bag. This class can
- * be used directly, or subclassed to add further exception handling in
- * self::initializePlugin().
+ * to encapsulate all of the instantiation logic in a plugin collection. This
+ * class can be used directly, or subclassed to add further exception handling
+ * in self::initializePlugin().
  */
-class DefaultSinglePluginBag extends PluginBag {
+class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
 
   /**
    * The manager used to instantiate the plugins.
@@ -37,14 +37,14 @@ class DefaultSinglePluginBag extends PluginBag {
   protected $configuration;
 
   /**
-   * The instance ID used for this plugin bag.
+   * The instance ID used for this plugin collection.
    *
    * @var string
    */
   protected $instanceId;
 
   /**
-   * Constructs a new DefaultSinglePluginBag object.
+   * Constructs a new DefaultSingleLazyPluginCollection object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The manager to be used for instantiating plugins.
@@ -56,7 +56,7 @@ class DefaultSinglePluginBag extends PluginBag {
   public function __construct(PluginManagerInterface $manager, $instance_id, array $configuration) {
     $this->manager = $manager;
     $this->instanceId = $instance_id;
-    // This is still needed by the parent PluginBag class.
+    // This is still needed by the parent LazyPluginCollection class.
     $this->instanceIDs = array($instance_id => $instance_id);
     $this->configuration = $configuration;
   }
