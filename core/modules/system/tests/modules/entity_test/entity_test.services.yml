@@ -1,0 +1,6 @@
+services:
+  entity_test.definition.subscriber:
+    class: Drupal\entity_test\EntityTestDefinitionSubscriber
+    arguments: ['@state']
+    tags:
+      - { name: event_subscriber }

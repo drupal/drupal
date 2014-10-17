@@ -287,13 +287,13 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%container.modules%', '@cache.bootstrap']
+    arguments: ['%container.modules%', '@kernel', '@cache.bootstrap']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder_indicator']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@entity.definitions.installed']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@entity.definitions.installed', '@event_dispatcher']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }

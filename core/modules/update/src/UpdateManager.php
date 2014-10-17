@@ -7,6 +7,7 @@
 namespace Drupal\update;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -17,6 +18,7 @@ use Drupal\Core\Utility\ProjectInfo;
  * Default implementation of UpdateManagerInterface.
  */
 class UpdateManager implements UpdateManagerInterface {
+  use DependencySerializationTrait;
   use StringTranslationTrait;
 
   /**

@@ -10,25 +10,28 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\String;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionEvent;
+use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manages entity type plugin definitions.
@@ -123,6 +126,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $installedDefinitions;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Static cache of bundle information.
    *
    * @var array
@@ -183,8 +193,10 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The typed data manager.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $installed_definitions
    *   The keyvalue collection for tracking installed definitions.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueStoreInterface $installed_definitions) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueStoreInterface $installed_definitions, EventDispatcherInterface $event_dispatcher) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface', 'Drupal\Core\Entity\Annotation\EntityType');
 
     $this->setCacheBackend($cache, 'entity_type', array('entity_types'));
@@ -195,6 +207,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->classResolver = $class_resolver;
     $this->typedDataManager = $typed_data_manager;
     $this->installedDefinitions = $installed_definitions;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -986,6 +999,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $storage->onEntityTypeCreate($entity_type);
     }
 
+    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
+
     $this->setLastInstalledDefinition($entity_type);
     if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->getFieldStorageDefinitions($entity_type_id));
@@ -1005,6 +1020,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $storage->onEntityTypeUpdate($entity_type, $original);
     }
 
+    $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
+
     $this->setLastInstalledDefinition($entity_type);
   }
 
@@ -1021,6 +1038,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $storage->onEntityTypeDelete($entity_type);
     }
 
+    $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, new EntityTypeEvent($entity_type));
+
     $this->deleteLastInstalledDefinition($entity_type_id);
   }
 
@@ -1036,6 +1055,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     if ($storage instanceof FieldStorageDefinitionListenerInterface) {
       $storage->onFieldStorageDefinitionCreate($storage_definition);
     }
+
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::CREATE, new FieldStorageDefinitionEvent($storage_definition));
 
     $this->setLastInstalledFieldStorageDefinition($storage_definition);
     $this->clearCachedFieldDefinitions();
@@ -1054,6 +1075,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $storage->onFieldStorageDefinitionUpdate($storage_definition, $original);
     }
 
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::UPDATE, new FieldStorageDefinitionEvent($storage_definition, $original));
+
     $this->setLastInstalledFieldStorageDefinition($storage_definition);
     $this->clearCachedFieldDefinitions();
   }
@@ -1070,6 +1093,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     if ($storage instanceof FieldStorageDefinitionListenerInterface) {
       $storage->onFieldStorageDefinitionDelete($storage_definition);
     }
+
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::DELETE, new FieldStorageDefinitionEvent($storage_definition));
 
     $this->deleteLastInstalledFieldStorageDefinition($storage_definition);
     $this->clearCachedFieldDefinitions();

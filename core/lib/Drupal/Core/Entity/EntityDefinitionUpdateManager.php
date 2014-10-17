@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
+use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 

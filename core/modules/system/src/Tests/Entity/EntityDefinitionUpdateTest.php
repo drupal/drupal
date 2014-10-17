@@ -8,8 +8,10 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\entity_test\FieldStorageDefinition;
 
 /**
@@ -440,6 +442,39 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     catch (EntityStorageException $e) {
       $this->pass('EntityStorageException thrown when trying to apply an update that requires data migration.');
     }
+  }
+
+  /**
+   * Tests entity type and field storage definition events.
+   */
+  public function testDefinitionEvents() {
+    /** @var \Drupal\entity_test\EntityTestDefinitionSubscriber $event_subscriber */
+    $event_subscriber = $this->container->get('entity_test.definition.subscriber');
+    $event_subscriber->enableEventTracking();
+
+    // Test field storage definition events.
+    $storage_definition = current($this->entityManager->getFieldStorageDefinitions('entity_test_rev'));
+    $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::DELETE), 'Entity type delete was not dispatched yet.');
+    $this->entityManager->onFieldStorageDefinitionDelete($storage_definition);
+    $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::DELETE), 'Entity type delete event successfully dispatched.');
+    $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::CREATE), 'Entity type create was not dispatched yet.');
+    $this->entityManager->onFieldStorageDefinitionCreate($storage_definition);
+    $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::CREATE), 'Entity type create event successfully dispatched.');
+    $this->assertFalse($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::UPDATE), 'Entity type update was not dispatched yet.');
+    $this->entityManager->onFieldStorageDefinitionUpdate($storage_definition, $storage_definition);
+    $this->assertTrue($event_subscriber->hasEventFired(FieldStorageDefinitionEvents::UPDATE), 'Entity type update event successfully dispatched.');
+
+    // Test entity type events.
+    $entity_type = $this->entityManager->getDefinition('entity_test_rev');
+    $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::CREATE), 'Entity type create was not dispatched yet.');
+    $this->entityManager->onEntityTypeCreate($entity_type);
+    $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::CREATE), 'Entity type create event successfully dispatched.');
+    $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::UPDATE), 'Entity type update was not dispatched yet.');
+    $this->entityManager->onEntityTypeUpdate($entity_type, $entity_type);
+    $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::UPDATE), 'Entity type update event successfully dispatched.');
+    $this->assertFalse($event_subscriber->hasEventFired(EntityTypeEvents::DELETE), 'Entity type delete was not dispatched yet.');
+    $this->entityManager->onEntityTypeDelete($entity_type);
+    $this->assertTrue($event_subscriber->hasEventFired(EntityTypeEvents::DELETE), 'Entity type delete event successfully dispatched.');
   }
 
   /**

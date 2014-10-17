@@ -18,12 +18,18 @@ use Drupal\Tests\UnitTestCase;
 class ModuleHandlerTest extends UnitTestCase {
 
   /**
+   * The mocked drupal kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
+   */
+  protected $kernel;
+
+  /**
    * The mocked cache backend.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $cacheBackend;
-
 
   /**
    * The tested module handler.
@@ -38,6 +44,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp() {
+    $this->kernel = $this->getMock('Drupal\Core\DrupalKernelInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->moduleHandler = new ModuleHandler(array(
       'module_handler_test' => array(
@@ -45,7 +52,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
         'filename' => 'module_handler_test.module',
       )
-    ), $this->cacheBackend);
+    ), $this->kernel, $this->cacheBackend);
   }
 
   /**
@@ -96,7 +103,7 @@ class ModuleHandlerTest extends UnitTestCase {
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           )
-        ), $this->cacheBackend
+        ), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('load'))
       ->getMock();
@@ -164,7 +171,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testSetModuleList() {
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->cacheBackend
+        array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -192,7 +199,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->cacheBackend
+        array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -214,7 +221,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->cacheBackend
+        array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -250,7 +257,7 @@ class ModuleHandlerTest extends UnitTestCase {
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           )
-        ), $this->cacheBackend
+        ), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('loadInclude'))
       ->getMock();
@@ -331,7 +338,7 @@ class ModuleHandlerTest extends UnitTestCase {
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           )
-        ), $this->cacheBackend
+        ), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('buildImplementationInfo', 'loadInclude'))
       ->getMock();
@@ -366,7 +373,7 @@ class ModuleHandlerTest extends UnitTestCase {
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           )
-        ), $this->cacheBackend
+        ), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('buildImplementationInfo'))
       ->getMock();

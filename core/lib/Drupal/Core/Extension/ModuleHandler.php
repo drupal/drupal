@@ -12,7 +12,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DrupalKernelInterface;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -65,6 +65,13 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $hookInfo;
 
   /**
+   * The drupal kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
+   */
+  protected $kernel;
+
+  /**
    * Cache backend for storing module hook implementation information.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
@@ -92,17 +99,20 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
+   * @param \Drupal\Core\DrupalKernelInterface $kernel
+   *   The drupal kernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend for storing module hook implementation information.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct(array $module_list = array(), CacheBackendInterface $cache_backend) {
+  public function __construct(array $module_list = array(), DrupalKernelInterface $kernel, CacheBackendInterface $cache_backend) {
     $this->moduleList = array();
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($module['type'], $module['pathname'], $module['filename']);
     }
+    $this->kernel = $kernel;
     $this->cacheBackend = $cache_backend;
   }
 
@@ -792,14 +802,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         drupal_static_reset('system_rebuild_module_data');
 
         // Update the kernel to include it.
-        // This reboots the kernel to register the module's bundle and its
-        // services in the service container. The $module_filenames argument is
-        // taken over as %container.modules% parameter, which is passed to a
-        // fresh ModuleHandler instance upon first retrieval.
-        // @todo install_begin_request() creates a container without a kernel.
-        if ($kernel = \Drupal::service('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
-          $kernel->updateModules($module_filenames, $module_filenames);
-        }
+        $this->updateKernel($module_filenames);
 
         // Refresh the schema to include it.
         drupal_get_schema(NULL, TRUE);
@@ -822,10 +825,10 @@ class ModuleHandler implements ModuleHandlerInterface {
           $version = max(max($versions), $version);
         }
 
-        // Notify the entity manager that this module's entity types are new,
-        // so that it can notify all interested handlers. For example, a
-        // SQL-based storage handler can use this as an opportunity to create
-        // the necessary database tables.
+        // Notify interested components that this module's entity types are new.
+        // For example, a SQL-based storage handler can use this as an
+        // opportunity to create the necessary database tables.
+        // @todo Clean this up in https://www.drupal.org/node/2350111.
         $entity_manager = \Drupal::entityManager();
         foreach ($entity_manager->getDefinitions() as $entity_type) {
           if ($entity_type->getProvider() == $module) {
@@ -950,6 +953,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
       // Clean up all entity bundles (including fields) of every entity type
       // provided by the module that is being uninstalled.
+      // @todo Clean this up in https://www.drupal.org/node/2350111.
       foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($entity_type->getProvider() == $module) {
           foreach (array_keys($entity_manager->getBundleInfo($entity_type_id)) as $bundle) {
@@ -968,10 +972,10 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Remove all configuration belonging to the module.
       \Drupal::service('config.manager')->uninstall('module', $module);
 
-      // Notify the entity manager that this module's entity types are being
-      // deleted, so that it can notify all interested handlers. For example,
-      // a SQL-based storage handler can use this as an opportunity to drop
-      // the corresponding database tables.
+      // Notify interested components that this module's entity types are being
+      // deleted. For example, a SQL-based storage handler can use this as an
+      // opportunity to drop the corresponding database tables.
+      // @todo Clean this up in https://www.drupal.org/node/2350111.
       foreach ($entity_manager->getDefinitions() as $entity_type) {
         if ($entity_type->getProvider() == $module) {
           $entity_manager->onEntityTypeDelete($entity_type);
@@ -1004,7 +1008,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 
       // Update the kernel to exclude the uninstalled modules.
-      \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
+      $this->updateKernel($module_filenames);
 
       // Update the theme registry to remove the newly uninstalled module.
       drupal_theme_rebuild();
@@ -1084,4 +1088,23 @@ class ModuleHandler implements ModuleHandlerInterface {
     $module_data = system_rebuild_module_data();
     return $module_data[$module]->info['name'];
   }
+
+  /**
+   * Updates the kernel module list.
+   *
+   * @param string $module_filenames
+   *   The list of installed modules.
+   */
+  protected function updateKernel($module_filenames) {
+    // This reboots the kernel to register the module's bundle and its services
+    // in the service container. The $module_filenames argument is taken over as
+    // %container.modules% parameter, which is passed to a fresh ModuleHandler
+    // instance upon first retrieval.
+    $this->kernel->updateModules($module_filenames, $module_filenames);
+    // After rebuilding the container we need to update the injected
+    // dependencies.
+    $container = $this->kernel->getContainer();
+    $this->cacheBackend = $container->get('cache.bootstrap');
+  }
+
 }
