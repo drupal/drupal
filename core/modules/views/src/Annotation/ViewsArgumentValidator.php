@@ -10,7 +10,7 @@ namespace Drupal\views\Annotation;
 use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 
 /**
- * Defines a Plugin annotation object for views argument default plugins.
+ * Defines a Plugin annotation object for views argument validator plugins.
  *
  * @see \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase
  *
