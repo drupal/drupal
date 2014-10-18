@@ -9,8 +9,6 @@ namespace Drupal\Core\Entity;
 
 /**
  * Defines an interface for reacting to entity type creation, deletion, and updates.
- *
- * @todo Convert to Symfony events: https://www.drupal.org/node/2332935
  */
 interface EntityTypeListenerInterface {
 

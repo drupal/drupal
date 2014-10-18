@@ -9,8 +9,6 @@ namespace Drupal\Core\Field;
 
 /**
  * Defines an interface for reacting to field storage definition creation, deletion, and updates.
- *
- * @todo Convert to Symfony events: https://www.drupal.org/node/2332935
  */
 interface FieldStorageDefinitionListenerInterface {
 
