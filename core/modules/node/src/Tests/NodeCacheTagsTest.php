@@ -26,19 +26,6 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    // Give anonymous users permission to view nodes, so that we can verify the
-    // cache tags of cached versions of node pages.
-    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
-    $user_role->grantPermission('acess content');
-    $user_role->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function createEntity() {
     // Create a "Camelids" node type.
     entity_create('node_type', array(
