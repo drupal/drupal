@@ -37,6 +37,10 @@ class Drupal6SystemPerformance extends Drupal6DumpBase {
       'name' => 'cache',
       'value' => 'i:1;',
     ))
+    ->values(array(
+      'name' => 'page_compression',
+      'value' => 's:1:"1";',
+    ))
     ->execute();
   }
 
