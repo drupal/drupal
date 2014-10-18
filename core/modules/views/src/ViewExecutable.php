@@ -150,14 +150,14 @@ class ViewExecutable {
   /**
    * Used to store views that were previously running if we recurse.
    *
-   * @var array
+   * @var \Drupal\views\ViewExecutable[]
    */
   public $old_view = array();
 
   /**
    * To avoid recursion in views embedded into areas.
    *
-   * @var array
+   * @var \Drupal\views\ViewExecutable[]
    */
   public $parent_views = array();
 
@@ -253,67 +253,49 @@ class ViewExecutable {
   /**
    * Stores the field handlers which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\field\FieldPluginBase
-   * objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\field\FieldPluginBase[]
    */
   public $field;
 
   /**
    * Stores the argument handlers which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\argument\ArgumentPluginBase
-   * objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase[]
    */
   public $argument;
 
   /**
    * Stores the sort handlers which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\sort\SortPluginBase objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\sort\SortPluginBase[]
    */
   public $sort;
 
   /**
    * Stores the filter handlers which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\filter\FilterPluginBase
-   * objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\filter\FilterPluginBase[]
    */
   public $filter;
 
   /**
    * Stores the relationship handlers which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\relationship\RelationshipPluginBase
-   * objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\relationship\RelationshipPluginBase[]
    */
   public $relationship;
 
   /**
    * Stores the area handlers for the header which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\area\AreaPluginBase[]
    */
   public $header;
 
   /**
    * Stores the area handlers for the footer which are initialized on this view.
    *
-   * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
-   *
-   * @var array
+   * @var \Drupal\views\Plugin\views\area\AreaPluginBase[]
    */
   public $footer;
 
@@ -322,7 +304,7 @@ class ViewExecutable {
    *
    * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
    *
-   * @var array
+   * @var \Drupal\views\Plugin\views\area\AreaPluginBase[]
    */
   public $empty;
 

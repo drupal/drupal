@@ -56,12 +56,17 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   var $view = NULL;
 
-  var $handlers = array();
+  /**
+   * An array of instantiated handlers used in this display.
+   *
+   * @var \Drupal\views\Plugin\views\ViewsHandlerInterface[]
+   */
+   public $handlers = [];
 
   /**
    * An array of instantiated plugins used in this display.
    *
-   * @var array
+   * @var \Drupal\views\Plugin\views\ViewsPluginInterface[]
    */
   protected $plugins = array();
 
