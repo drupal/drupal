@@ -2622,6 +2622,52 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Confirm that an extended query has a "tag" added to it.
+   */
+  function testExtenderHasTag() {
+    $query = db_select('test')
+      ->extend('SelectQueryExtender');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+
+    $this->assertTrue($query->hasTag('test'), 'hasTag() returned true.');
+    $this->assertFalse($query->hasTag('other'), 'hasTag() returned false.');
+  }
+
+  /**
+   * Test extended query tagging "has all of these tags" functionality.
+   */
+  function testExtenderHasAllTags() {
+    $query = db_select('test')
+      ->extend('SelectQueryExtender');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+    $query->addTag('other');
+
+    $this->assertTrue($query->hasAllTags('test', 'other'), 'hasAllTags() returned true.');
+    $this->assertFalse($query->hasAllTags('test', 'stuff'), 'hasAllTags() returned false.');
+  }
+
+  /**
+   * Test extended query tagging "has at least one of these tags" functionality.
+   */
+  function testExtenderHasAnyTag() {
+    $query = db_select('test')
+      ->extend('SelectQueryExtender');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+
+    $this->assertTrue($query->hasAnyTag('test', 'other'), 'hasAnyTag() returned true.');
+    $this->assertFalse($query->hasAnyTag('other', 'stuff'), 'hasAnyTag() returned false.');
+  }
+
+  /**
    * Test that we can attach meta data to a query object.
    *
    * This is how we pass additional context to alter hooks.
@@ -3091,6 +3137,15 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
 
     $this->assertEqual($this->countTableRows($table_name_system), $this->countTableRows("system"), 'A temporary table was created successfully in this request.');
     $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("users"), 'A second temporary table was created successfully in this request.');
+
+    // Check that leading whitespace and comments do not cause problems
+    // in the modified query.
+    $sql = "
+      -- Let's select some rows into a temporary table
+      SELECT name FROM {test}
+    ";
+    $table_name_test = db_query_temporary($sql, array());
+    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');
   }
 }
 
@@ -3329,6 +3384,34 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
 
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
   }
+
+  /**
+   * Test SQL injection via database query array arguments.
+   */
+  public function testArrayArgumentsSQLInjection() {
+    // Attempt SQL injection and verify that it does not work.
+    $condition = array(
+      "1 ;INSERT INTO {test} SET name = 'test12345678'; -- " => '',
+      '1' => '',
+    );
+    try {
+      db_query("SELECT * FROM {test} WHERE name = :name", array(':name' => $condition))->fetchObject();
+      $this->fail('SQL injection attempt via array arguments should result in a PDOException.');
+    }
+    catch (PDOException $e) {
+      $this->pass('SQL injection attempt via array arguments should result in a PDOException.');
+    }
+
+    // Test that the insert query that was used in the SQL injection attempt did
+    // not result in a row being inserted in the database.
+    $result = db_select('test')
+      ->condition('name', 'test12345678')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+  }
+
 }
 
 /**

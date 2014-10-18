@@ -1156,6 +1156,182 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
       $this->assertText('State persisted.');
     }
   }
+
+  /**
+   * Verify that the form build-id remains the same when validation errors
+   * occur on a mutable form.
+   */
+  function testMutableForm() {
+    // Request the form with 'cache' query parameter to enable form caching.
+    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id did not change.
+    $this->assertFieldByName('form_build_id', $buildId, 'Build id remains the same when form validation fails');
+  }
+
+  /**
+   * Verifies that form build-id is regenerated when loading an immutable form
+   * from the cache.
+   */
+  function testImmutableForm() {
+    // Request the form with 'cache' query parameter to enable form caching.
+    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1, 'immutable' => 1)));
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id did change.
+    $this->assertNoFieldByName('form_build_id', $buildId, 'Build id changes when form validation fails');
+
+    // Retrieve the new build-id.
+    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
+    $buildId = (string) $buildIdFields[0]['value'];
+
+    // Trigger validation error by again submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Continue submit');
+
+    // Verify that the build-id does not change the second time.
+    $this->assertFieldByName('form_build_id', $buildId, 'Build id remains the same when form validation fails subsequently');
+  }
+
+  /**
+   * Verify that existing contrib code cannot overwrite immutable form state.
+   */
+  public function testImmutableFormLegacyProtection() {
+    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1, 'immutable' => 1)));
+    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($build_id_fields), 1, 'One form build id field on the page');
+    $build_id = (string) $build_id_fields[0]['value'];
+
+    // Try to poison the form cache.
+    $original = $this->drupalGetAJAX('form_test/form-storage-legacy/' . $build_id);
+    $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
+    $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
+
+    // Assert that a watchdog message was logged by form_set_cache.
+    $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message', 0, 1, array(':message' => 'Form build-id mismatch detected while attempting to store a form in the cache.'));
+    $this->assert($status, 'A watchdog message was logged by form_set_cache');
+
+    // Ensure that the form state was not poisoned by the preceeding call.
+    $original = $this->drupalGetAJAX('form_test/form-storage-legacy/' . $build_id);
+    $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
+    $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
+    $this->assert(empty($original['form']['#poisoned']), 'Original form structure was preserved');
+    $this->assert(empty($original['form_state']['poisoned']), 'Original form state was preserved');
+  }
+}
+
+/**
+ * Test the form storage when page caching for anonymous users is turned on.
+ */
+class FormsFormStoragePageCacheTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name'  => 'Forms using form storage on cached pages',
+      'description'  => 'Tests a form using form storage and makes sure validation and caching works when page caching for anonymous users is turned on.',
+      'group' => 'Form API',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('form_test');
+
+    variable_set('cache', TRUE);
+  }
+
+  /**
+   * Return the build id of the current form.
+   */
+  protected function getFormBuildId() {
+    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
+    $this->assertEqual(count($build_id_fields), 1, 'One form build id field on the page');
+    return (string) $build_id_fields[0]['value'];
+  }
+
+  /**
+   * Build-id is regenerated when validating cached form.
+   */
+  public function testValidateFormStorageOnCachedPage() {
+    $this->drupalGet('form_test/form-storage-page-cache');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertText('No old build id', 'No old build id on the page');
+    $build_id_initial = $this->getFormBuildId();
+
+    // Trigger validation error by submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText($build_id_initial, 'Old build id on the page');
+    $build_id_first_validation = $this->getFormBuildId();
+    $this->assertNotEqual($build_id_initial, $build_id_first_validation, 'Build id changes when form validation fails');
+
+    // Trigger validation error by again submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('No old build id', 'No old build id on the page');
+    $build_id_second_validation = $this->getFormBuildId();
+    $this->assertEqual($build_id_first_validation, $build_id_second_validation, 'Build id remains the same when form validation fails subsequently');
+
+    // Repeat the test sequence but this time with a page loaded from the cache.
+    $this->drupalGet('form_test/form-storage-page-cache');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertText('No old build id', 'No old build id on the page');
+    $build_id_from_cache_initial = $this->getFormBuildId();
+    $this->assertEqual($build_id_initial, $build_id_from_cache_initial, 'Build id is the same as on the first request');
+
+    // Trigger validation error by submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText($build_id_initial, 'Old build id is initial build id');
+    $build_id_from_cache_first_validation = $this->getFormBuildId();
+    $this->assertNotEqual($build_id_initial, $build_id_from_cache_first_validation, 'Build id changes when form validation fails');
+    $this->assertNotEqual($build_id_first_validation, $build_id_from_cache_first_validation, 'Build id from first user is not reused');
+
+    // Trigger validation error by again submitting an empty title.
+    $edit = array('title' => '');
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('No old build id', 'No old build id on the page');
+    $build_id_from_cache_second_validation = $this->getFormBuildId();
+    $this->assertEqual($build_id_from_cache_first_validation, $build_id_from_cache_second_validation, 'Build id remains the same when form validation fails subsequently');
+  }
+
+  /**
+   * Build-id is regenerated when rebuilding cached form.
+   */
+  public function testRebuildFormStorageOnCachedPage() {
+    $this->drupalGet('form_test/form-storage-page-cache');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertText('No old build id', 'No old build id on the page');
+    $build_id_initial = $this->getFormBuildId();
+
+    // Trigger rebuild, should regenerate build id.
+    $edit = array('title' => 'something');
+    $this->drupalPost(NULL, $edit, 'Rebuild');
+    $this->assertText($build_id_initial, 'Initial build id as old build id on the page');
+    $build_id_first_rebuild = $this->getFormBuildId();
+    $this->assertNotEqual($build_id_initial, $build_id_first_rebuild, 'Build id changes on first rebuild.');
+
+    // Trigger subsequent rebuild, should regenerate the build id again.
+    $edit = array('title' => 'something');
+    $this->drupalPost(NULL, $edit, 'Rebuild');
+    $this->assertText($build_id_first_rebuild, 'First build id as old build id on the page');
+    $build_id_second_rebuild = $this->getFormBuildId();
+    $this->assertNotEqual($build_id_first_rebuild, $build_id_second_rebuild, 'Build id changes on second rebuild.');
+  }
 }
 
 /**

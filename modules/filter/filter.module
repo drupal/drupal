@@ -739,8 +739,8 @@ function filter_list_format($format_id) {
  * @param $text
  *   The text to be filtered.
  * @param $format_id
- *   (optional) The format ID of the text to be filtered. If no format is
- *   assigned, the fallback format will be used. Defaults to NULL.
+ *   (optional) The machine name of the filter format to be used to filter the
+ *   text. Defaults to the fallback format. See filter_fallback_format().
  * @param $langcode
  *   (optional) The language code of the text to be filtered, e.g. 'en' for
  *   English. This allows filters to be language aware so language specific

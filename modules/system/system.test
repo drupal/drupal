@@ -867,6 +867,44 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test execution of the cron queue.
+ */
+class CronQueueTestCase extends DrupalWebTestCase {
+  /**
+   * Implement getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Cron queue functionality',
+      'description' => 'Tests the cron queue runner.',
+      'group' => 'System'
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('common_test', 'common_test_cron_helper'));
+  }
+
+  /**
+   * Tests that exceptions thrown by workers are handled properly.
+   */
+  function testExceptions() {
+    $queue = DrupalQueue::get('cron_queue_test_exception');
+
+    // Enqueue an item for processing.
+    $queue->createItem(array($this->randomName() => $this->randomName()));
+
+    // Run cron; the worker for this queue should throw an exception and handle
+    // it.
+    $this->cronRun();
+
+    // The item should be left in the queue.
+    $this->assertEqual($queue->numberOfItems(), 1, 'Failing item still in the queue after throwing an exception.');
+  }
+
+}
+
 class AdminMetaTagTestCase extends DrupalWebTestCase {
   /**
    * Implement getInfo().

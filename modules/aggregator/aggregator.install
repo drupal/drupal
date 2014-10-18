@@ -260,6 +260,7 @@ function aggregator_schema() {
     'primary key' => array('iid'),
     'indexes' => array(
       'fid' => array('fid'),
+      'timestamp' => array('timestamp'),
     ),
     'foreign keys' => array(
       'aggregator_feed' => array(
@@ -323,6 +324,15 @@ function aggregator_update_7003() {
   db_change_field('aggregator_item', 'link', 'link', array('type' => 'text', 'not null' => TRUE, 'description' => 'Link to the feed item.'));
   db_change_field('aggregator_item', 'guid', 'guid', array('type' => 'text', 'not null' => TRUE, 'description' => 'Unique identifier for the feed item.'));
   db_add_index('aggregator_feed', 'url', array(array('url', 255)));
+}
+
+/**
+ * Add index on timestamp.
+ */
+function aggregator_update_7004() {
+  if (!db_index_exists('aggregator_item', 'timestamp')) {
+    db_add_index('aggregator_item', 'timestamp', array('timestamp'));
+  }
 }
 
 /**

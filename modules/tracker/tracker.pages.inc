@@ -120,7 +120,6 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   );
   $page['pager'] = array(
     '#theme' => 'pager',
-    '#quantity' => 25,
     '#weight' => 10,
   );
   $page['#sorted'] = TRUE;

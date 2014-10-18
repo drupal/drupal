@@ -2304,7 +2304,7 @@ function template_preprocess_comment(&$variables) {
   $variables['signature'] = $comment->signature;
 
   $uri = entity_uri('comment', $comment);
-  $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
+  $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
 
   $variables['title']     = l($comment->subject, $uri['path'], $uri['options']);
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);

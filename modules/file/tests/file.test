@@ -221,6 +221,128 @@ class FileFieldTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests adding a file to a non-node entity.
+ */
+class FileTaxonomyTermTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Taxonomy term file test',
+      'description' => 'Tests adding a file to a non-node entity.',
+      'group' => 'File',
+    );
+  }
+
+  public function setUp() {
+    $modules[] = 'file';
+    $modules[] = 'taxonomy';
+    parent::setUp($modules);
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer taxonomy'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Creates a file field and attaches it to the "Tags" taxonomy vocabulary.
+   *
+   * @param $name
+   *   The field name of the file field to create.
+   * @param $uri_scheme
+   *   The URI scheme to use for the file field (for example, "private" to
+   *   create a field that stores private files or "public" to create a field
+   *   that stores public files).
+   */
+  protected function createAttachFileField($name, $uri_scheme) {
+    $field = array(
+      'field_name' => $name,
+      'type' => 'file',
+      'settings' => array(
+        'uri_scheme' => $uri_scheme,
+      ),
+      'cardinality' => 1,
+    );
+    field_create_field($field);
+    // Attach an instance of it.
+    $instance = array(
+      'field_name' => $name,
+      'label' => 'File',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => 'tags',
+      'required' => FALSE,
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'file_generic',
+        'settings' => array(),
+      ),
+    );
+    field_create_instance($instance);
+  }
+
+  /**
+   * Tests that a public file can be attached to a taxonomy term.
+   *
+   * This is a regression test for https://www.drupal.org/node/2305017.
+   */
+  public function testTermFilePublic() {
+    $this->_testTermFile('public');
+  }
+
+  /**
+   * Tests that a private file can be attached to a taxonomy term.
+   *
+   * This is a regression test for https://www.drupal.org/node/2305017.
+   */
+  public function testTermFilePrivate() {
+    $this->_testTermFile('private');
+  }
+
+  /**
+   * Runs tests for attaching a file field to a taxonomy term.
+   *
+   * @param $uri_scheme
+   *   The URI scheme to use for the file field, either "public" or "private".
+   */
+  protected function _testTermFile($uri_scheme) {
+    $field_name = strtolower($this->randomName());
+    $this->createAttachFileField($field_name, $uri_scheme);
+    // Get a file to upload.
+    $file = current($this->drupalGetTestFiles('text'));
+    // Add a filesize property to files as would be read by file_load().
+    $file->filesize = filesize($file->uri);
+    $langcode = LANGUAGE_NONE;
+    $edit = array(
+      "name" => $this->randomName(),
+    );
+    // Attach a file to the term.
+    $edit['files[' . $field_name . '_' . $langcode . '_0]'] = drupal_realpath($file->uri);
+    $this->drupalPost("admin/structure/taxonomy/tags/add", $edit, t('Save'));
+    // Find the term ID we just created.
+    $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} ORDER BY tid DESC', 0, 1)->fetchField();
+    $terms = entity_load('taxonomy_term', array($tid));
+    $term = $terms[$tid];
+    $fid = $term->{$field_name}[LANGUAGE_NONE][0]['fid'];
+    // Check that the uploaded file is present on the edit form.
+    $this->drupalGet("taxonomy/term/$tid/edit");
+    $file_input_name = $field_name . '[' . LANGUAGE_NONE . '][0][fid]';
+    $this->assertFieldByXpath('//input[@type="hidden" and @name="' . $file_input_name . '"]', $fid, 'File is attached on edit form.');
+    // Edit the term and change name without changing the file.
+    $edit = array(
+      "name" => $this->randomName(),
+    );
+    $this->drupalPost("taxonomy/term/$tid/edit", $edit, t('Save'));
+    // Check that the uploaded file is still present on the edit form.
+    $this->drupalGet("taxonomy/term/$tid/edit");
+    $file_input_name = $field_name . '[' . LANGUAGE_NONE . '][0][fid]';
+    $this->assertFieldByXpath('//input[@type="hidden" and @name="' . $file_input_name . '"]', $fid, 'File is attached on edit form.');
+    // Load term while resetting the cache.
+    $terms = entity_load('taxonomy_term', array($tid), array(), TRUE);
+    $term = $terms[$tid];
+    $this->assertTrue(!empty($term->{$field_name}[LANGUAGE_NONE]), 'Term has attached files.');
+    $this->assertEqual($term->{$field_name}[LANGUAGE_NONE][0]['fid'], $fid, 'Same File ID is attached to the term.');
+  }
+}
+
+/**
  * Tests the 'managed_file' element type.
  *
  * @todo Create a FileTestCase base class and move FileFieldTestCase methods
@@ -1167,5 +1289,18 @@ class FilePrivateTestCase extends FileFieldTestCase {
     // Ensure the file cannot be downloaded.
     $this->drupalGet(file_create_url($node_file->uri));
     $this->assertResponse(403, 'Confirmed that access is denied for the file without view field access permission.');
+
+    // Attempt to reuse the existing file when creating a new node, and confirm
+    // that access is still denied.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit[$field_name . '[' . LANGUAGE_NONE . '][0][fid]'] = $node_file->fid;
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $new_node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertTrue(!empty($new_node), 'Node was created.');
+    $this->assertUrl('node/' . $new_node->nid);
+    $this->assertNoRaw($node_file->filename, 'File without view field access permission does not appear after attempting to attach it to a new node.');
+    $this->drupalGet(file_create_url($node_file->uri));
+    $this->assertResponse(403, 'Confirmed that access is denied for the file without view field access permission after attempting to attach it to a new node.');
   }
 }

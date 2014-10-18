@@ -211,6 +211,11 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
    * Make sure that XML-RPC can transfer large messages.
    */
   function testSizedMessages() {
+    // These tests can produce up to 128 x 160 words in the XML-RPC message
+    // (see xmlrpc_test_message_sized_in_kb()) with 4 tags used to represent
+    // each. Set a large enough tag limit to allow this to be tested.
+    variable_set('xmlrpc_message_maximum_tag_count', 100000);
+
     $xml_url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
     $sizes = array(8, 80, 160);
     foreach ($sizes as $size) {

@@ -20,18 +20,21 @@ initial database files. Next you must log in and set the access database rights:
 Again, you will be asked for the 'username' database password. At the MySQL
 prompt, enter the following command:
 
-  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER
-  ON databasename.*
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER,
+  CREATE TEMPORARY TABLES ON databasename.*
   TO 'username'@'localhost' IDENTIFIED BY 'password';
 
-where
+where:
 
  'databasename' is the name of your database
- 'username@localhost' is the username of your MySQL account
+ 'username' is the username of your MySQL account
+ 'localhost' is the web server host where Drupal is installed
  'password' is the password required for that username
 
-Note: Unless your database user has all of the privileges listed above, you will
-not be able to run Drupal.
+Note: Unless the database user/host combination for your Drupal installation
+has all of the privileges listed above (except possibly CREATE TEMPORARY TABLES,
+which is currently only used by Drupal core automated tests and some
+contributed modules), you will not be able to install or run Drupal.
 
 If successful, MySQL will reply with:
 

@@ -136,10 +136,29 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
         case 'body':
         case 'summary':
           if ($items = field_get_items('node', $node, 'body', $language_code)) {
-            $column = ($name == 'body') ? 'value' : 'summary';
             $instance = field_info_instance('node', 'body', $node->type);
             $field_langcode = field_language('node', $node, 'body', $language_code);
-            $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], $column) : $items[0][$column];
+            // If the summary was requested and is not empty, use it.
+            if ($name == 'summary' && !empty($items[0]['summary'])) {
+              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'summary') : $items[0]['summary'];
+            }
+            // Attempt to provide a suitable version of the 'body' field.
+            else {
+              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
+              // A summary was requested.
+              if ($name == 'summary') {
+                if (isset($instance['display']['teaser']['settings']['trim_length'])) {
+                  $trim_length = $instance['display']['teaser']['settings']['trim_length'];
+                }
+                else {
+                  // Use default value.
+                  $trim_length = NULL;
+                }
+                // Generate an optionally trimmed summary of the body field.
+                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $trim_length);
+              }
+            }
+            $replacements[$original] = $output;
           }
           break;
 

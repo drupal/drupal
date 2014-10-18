@@ -46,7 +46,7 @@ interface DrupalEntityControllerInterface {
 class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
 
   /**
-   * Static cache of entities.
+   * Static cache of entities, keyed by entity ID.
    *
    * @var array
    */
@@ -360,9 +360,23 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     // This ensures the same behavior whether loading from memory or database.
     if ($conditions) {
       foreach ($entities as $entity) {
-        $entity_values = (array) $entity;
-        if (array_diff_assoc($conditions, $entity_values)) {
-          unset($entities[$entity->{$this->idKey}]);
+        // Iterate over all conditions and compare them to the entity
+        // properties. We cannot use array_diff_assoc() here since the
+        // conditions can be nested arrays, too.
+        foreach ($conditions as $property_name => $condition) {
+          if (is_array($condition)) {
+            // Multiple condition values for one property are treated as OR
+            // operation: only if the value is not at all in the condition array
+            // we remove the entity.
+            if (!in_array($entity->{$property_name}, $condition)) {
+              unset($entities[$entity->{$this->idKey}]);
+              continue 2;
+            }
+          }
+          elseif ($condition != $entity->{$property_name}) {
+            unset($entities[$entity->{$this->idKey}]);
+            continue 2;
+          }
         }
       }
     }

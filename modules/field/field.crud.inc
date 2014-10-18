@@ -540,9 +540,9 @@ function field_create_instance($instance) {
  *   // Fetch an instance info array.
  *   $instance_info = field_info_instance($entity_type, $field_name, $bundle_name);
  *   // Change a single property in the instance definition.
- *   $instance_info['definition']['required'] = TRUE;
+ *   $instance_info['required'] = TRUE;
  *   // Write the changed definition back.
- *   field_update_instance($instance_info['definition']);
+ *   field_update_instance($instance_info);
  *   @endcode
  *
  * @throws FieldException

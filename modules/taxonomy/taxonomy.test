@@ -690,15 +690,20 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
       $term_objects[$key] = reset($term_objects[$key]);
     }
 
+    // Test editing the node.
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    foreach ($terms as $term) {
+      $this->assertText($term, 'The term was retained after edit and still appears on the node page.');
+    }
+
     // Delete term 1.
     $this->drupalPost('taxonomy/term/' . $term_objects['term1']->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
     $term_names = array($term_objects['term2']->name, $term_objects['term3']->name);
 
-    // Get the node.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    // Get the node and verify that the terms that should be there still are.
     $this->drupalGet('node/' . $node->nid);
-
     foreach ($term_names as $term_name) {
       $this->assertText($term_name, format_string('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term_objects['term1']->name)));
     }

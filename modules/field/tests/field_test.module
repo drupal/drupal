@@ -267,3 +267,14 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // exception if the EFQ does not properly prefix the base table.
   $query->join('test_entity','te2','%alias.ftid = test_entity.ftid');
 }
+
+/**
+ * Implements hook_query_TAG_alter() for tag 'store_global_test_query'.
+ */
+function field_test_query_store_global_test_query_alter($query) {
+  // Save the query in a global variable so that it can be examined by tests.
+  // This can be used by any test which needs to check a query, but see
+  // FieldSqlStorageTestCase::testFieldSqlStorageMultipleConditionsSameColumn()
+  // for an example.
+  $GLOBALS['test_query'] = $query;
+}

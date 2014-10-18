@@ -246,7 +246,7 @@ function file_ajax_upload() {
     return array('#type' => 'ajax', '#commands' => $commands);
   }
 
-  list($form, $form_state) = ajax_get_form();
+  list($form, $form_state, $form_id, $form_build_id, $commands) = ajax_get_form();
 
   if (!$form) {
     // Invalid form_build_id.
@@ -284,7 +284,6 @@ function file_ajax_upload() {
   $js = drupal_add_js();
   $settings = call_user_func_array('array_merge_recursive', $js['settings']['data']);
 
-  $commands = array();
   $commands[] = ajax_command_replace(NULL, $output, $settings);
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -479,6 +478,7 @@ function file_managed_file_process($element, &$form_state, $form) {
  */
 function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) {
   $fid = 0;
+  $force_default = FALSE;
 
   // Find the current value of this field from the form state.
   $form_state_fid = $form_state['values'];
@@ -511,15 +511,25 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
           $callback($element, $input, $form_state);
         }
       }
-      // Load file if the FID has changed to confirm it exists.
-      if (isset($input['fid']) && $file = file_load($input['fid'])) {
-        $fid = $file->fid;
+      // If a FID was submitted, load the file (and check access if it's not a
+      // public file) to confirm it exists and that the current user has access
+      // to it.
+      if (isset($input['fid']) && ($file = file_load($input['fid']))) {
+        if (file_uri_scheme($file->uri) == 'public' || file_download_access($file->uri)) {
+          $fid = $file->fid;
+        }
+        // If the current user doesn't have access, don't let the file be
+        // changed.
+        else {
+          $force_default = TRUE;
+        }
       }
     }
   }
 
-  // If there is no input, set the default value.
-  else {
+  // If there is no input or if the default value was requested above, use the
+  // default value.
+  if ($input === FALSE || $force_default) {
     if ($element['#extended']) {
       $default_fid = isset($element['#default_value']['fid']) ? $element['#default_value']['fid'] : 0;
       $return = isset($element['#default_value']) ? $element['#default_value'] : array('fid' => 0);

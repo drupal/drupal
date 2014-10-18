@@ -1022,8 +1022,8 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $result = drupal_http_request($auth);
 
     $this->drupalSetContent($result->data);
-    $this->assertRaw($username, '$_SERVER["PHP_AUTH_USER"] is passed correctly.');
-    $this->assertRaw($password, '$_SERVER["PHP_AUTH_PW"] is passed correctly.');
+    $this->assertRaw($username, 'Username is passed correctly.');
+    $this->assertRaw($password, 'Password is passed correctly.');
   }
 
   function testDrupalHTTPRequestRedirect() {
@@ -2784,4 +2784,29 @@ class ArrayDiffUnitTest extends DrupalUnitTestCase {
 
     $this->assertIdentical(drupal_array_diff_assoc_recursive($this->array1, $this->array2), $expected);
   }
+}
+
+/**
+ * Tests the functionality of drupal_get_query_array().
+ */
+class DrupalGetQueryArrayTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Query parsing using drupal_get_query_array()',
+      'description' => 'Tests that drupal_get_query_array() correctly parses query parameters.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Tests that drupal_get_query_array() correctly explodes query parameters.
+   */
+  public function testDrupalGetQueryArray() {
+    $url = "http://my.site.com/somepath?foo=/content/folder[@name='foo']/folder[@name='bar']";
+    $parsed = parse_url($url);
+    $result = drupal_get_query_array($parsed['query']);
+    $this->assertEqual($result['foo'], "/content/folder[@name='foo']/folder[@name='bar']", 'drupal_get_query_array() should only explode parameters on the first equals sign.');
+  }
+
 }

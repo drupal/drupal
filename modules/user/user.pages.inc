@@ -183,8 +183,11 @@ function user_logout() {
 /**
  * Process variables for user-profile.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $account
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the user information and any
+ *     fields attached to the user. Properties used:
+ *     - #account: The user account of the profile being viewed.
  *
  * @see user-profile.tpl.php
  */

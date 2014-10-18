@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function cron_queue_test_cron_queue_info() {
+  $queues['cron_queue_test_exception'] = array(
+    'worker callback' => 'cron_queue_test_exception',
+  );
+  return $queues;
+}
+
+function cron_queue_test_exception($item) {
+  throw new Exception('That is not supposed to happen.');
+}

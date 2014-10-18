@@ -308,10 +308,11 @@ function ajax_render($commands = array()) {
  * pulls the form info from $_POST.
  *
  * @return
- *   An array containing the $form and $form_state. Use the list() function
- *   to break these apart:
+ *   An array containing the $form, $form_state, $form_id, $form_build_id and an
+ *   initial list of Ajax $commands. Use the list() function to break these
+ *   apart:
  *   @code
- *     list($form, $form_state, $form_id, $form_build_id) = ajax_get_form();
+ *     list($form, $form_state, $form_id, $form_build_id, $commands) = ajax_get_form();
  *   @endcode
  */
 function ajax_get_form() {
@@ -331,6 +332,17 @@ function ajax_get_form() {
     drupal_exit();
   }
 
+  // When a page level cache is enabled, the form-build id might have been
+  // replaced from within form_get_cache. If this is the case, it is also
+  // necessary to update it in the browser by issuing an appropriate Ajax
+  // command.
+  $commands = array();
+  if (isset($form['#build_id_old']) && $form['#build_id_old'] != $form['#build_id']) {
+    // If the form build ID has changed, issue an Ajax command to update it.
+    $commands[] = ajax_command_update_build_id($form);
+    $form_build_id = $form['#build_id'];
+  }
+
   // Since some of the submit handlers are run, redirects need to be disabled.
   $form_state['no_redirect'] = TRUE;
 
@@ -345,7 +357,7 @@ function ajax_get_form() {
   $form_state['input'] = $_POST;
   $form_id = $form['#form_id'];
 
-  return array($form, $form_state, $form_id, $form_build_id);
+  return array($form, $form_state, $form_id, $form_build_id, $commands);
 }
 
 /**
@@ -366,7 +378,7 @@ function ajax_get_form() {
  * @see system_menu()
  */
 function ajax_form_callback() {
-  list($form, $form_state) = ajax_get_form();
+  list($form, $form_state, $form_id, $form_build_id, $commands) = ajax_get_form();
   drupal_process_form($form['#form_id'], $form, $form_state);
 
   // We need to return the part of the form (or some other content) that needs
@@ -379,7 +391,19 @@ function ajax_form_callback() {
     $callback = $form_state['triggering_element']['#ajax']['callback'];
   }
   if (!empty($callback) && function_exists($callback)) {
-    return $callback($form, $form_state);
+    $result = $callback($form, $form_state);
+
+    if (!(is_array($result) && isset($result['#type']) && $result['#type'] == 'ajax')) {
+      // Turn the response into a #type=ajax array if it isn't one already.
+      $result = array(
+        '#type' => 'ajax',
+        '#commands' => ajax_prepare_response($result),
+      );
+    }
+
+    $result['#commands'] = array_merge($commands, $result['#commands']);
+
+    return $result;
   }
 }
 
@@ -1208,5 +1232,28 @@ function ajax_command_restripe($selector) {
   return array(
     'command' => 'restripe',
     'selector' => $selector,
+  );
+}
+
+/**
+ * Creates a Drupal Ajax 'update_build_id' command.
+ *
+ * This command updates the value of a hidden form_build_id input element on a
+ * form. It requires the form passed in to have keys for both the old build ID
+ * in #build_id_old and the new build ID in #build_id.
+ *
+ * The primary use case for this Ajax command is to serve a new build ID to a
+ * form served from the cache to an anonymous user, preventing one anonymous
+ * user from accessing the form state of another anonymous users on Ajax enabled
+ * forms.
+ *
+ * @param $form
+ *   The form array representing the form whose build ID should be updated.
+ */
+function ajax_command_update_build_id($form) {
+  return array(
+    'command' => 'updateBuildId',
+    'old' => $form['#build_id_old'],
+    'new' => $form['#build_id'],
   );
 }

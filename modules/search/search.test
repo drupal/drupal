@@ -11,6 +11,9 @@ define('SEARCH_TYPE', '_test_');
 define('SEARCH_TYPE_2', '_test2_');
 define('SEARCH_TYPE_JPN', '_test3_');
 
+/**
+ * Indexes content and queries it.
+ */
 class SearchMatchTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -307,6 +310,9 @@ class SearchPageText extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Indexes content and tests the advanced search form.
+ */
 class SearchAdvancedSearchForm extends DrupalWebTestCase {
   protected $node;
 
@@ -370,6 +376,9 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Indexes content and tests ranking factors.
+ */
 class SearchRankingTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -580,6 +589,9 @@ class SearchRankingTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the rendering of the search block.
+ */
 class SearchBlockTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -727,7 +739,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Comment Search tests',
-      'description' => 'Verify text formats and filters used elsewhere.',
+      'description' => 'Test integration searching comments.',
       'group' => 'Search',
     );
   }

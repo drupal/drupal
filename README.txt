@@ -71,12 +71,12 @@ profiles/your_site_profile/themes respectively to restrict their usage to only
 sites that were installed with that specific profile.
 
 More about installation profiles and distributions:
-* Read about the difference between installation profiles and distributions:
-  http://drupal.org/node/1089736
-* Download contributed installation profiles and distributions:
-  http://drupal.org/project/distributions
-* Develop your own installation profile or distribution:
-  http://drupal.org/developing/distributions
+ * Read about the difference between installation profiles and distributions:
+   http://drupal.org/node/1089736
+ * Download contributed installation profiles and distributions:
+   http://drupal.org/project/distributions
+ * Develop your own installation profile or distribution:
+   http://drupal.org/developing/distributions
 
 APPEARANCE
 ----------
