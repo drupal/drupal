@@ -30,6 +30,10 @@ class Drupal6SystemFile extends Drupal6DumpBase {
       'name' => 'file_directory_temp',
       'value' => 's:10:"files/temp";',
     ))
+    ->values(array(
+      'name' => 'allow_insecure_uploads',
+      'value' => 'i:1;',
+    ))
     ->execute();
   }
 
