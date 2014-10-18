@@ -50,6 +50,7 @@ class MigrateUpdateConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('fetch.url'), 'http://updates.drupal.org/release-history');
     $this->assertIdentical($config->get('notification.threshold'), 'all');
     $this->assertIdentical($config->get('notification.emails'), array());
+    $this->assertIdentical($config->get('check.interval_days'), 7);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'update.settings', $config->get());
   }
 

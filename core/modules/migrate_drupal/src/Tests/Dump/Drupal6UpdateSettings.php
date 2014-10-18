@@ -37,6 +37,11 @@ class Drupal6UpdateSettings extends Drupal6DumpBase {
       'name' => 'update_notify_emails',
       'value' => 'a:0:{}',
     ))
+    ->values(array(
+      'name' => 'update_check_frequency',
+      'value' => 's:1:"7";',
+    ))
+
     ->execute();
   }
 }
