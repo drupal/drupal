@@ -13,9 +13,9 @@ namespace Drupal\Core\Menu;
  * Menu tree parameters are used to determine the set of definitions to be
  * loaded from \Drupal\Core\Menu\MenuTreeStorageInterface. Hence they determine
  * the shape and content of the tree:
- * - which parent IDs should be used to restrict the tree, i.e. only links with
+ * - Which parent IDs should be used to restrict the tree. Only links with
  *   a parent in the list will be included.
- * - which menu links are omitted, i.e. minimum and maximum depth.
+ * - Which menu links are omitted, depending on the minimum and maximum depth.
  *
  * @todo Add getter methods and make all properties protected and define an
  *   interface instead of using the concrete class to type hint.
@@ -66,7 +66,7 @@ class MenuTreeParameters {
    *
    * This is an array of menu link plugin IDs, representing the trail from the
    * currently active menu link to the ("real") root of that menu link's menu.
-   * This does not affect the way the tree is built, it only is used to set the
+   * This does not affect the way the tree is built. It is only used to set the
    * value of the inActiveTrail property for each tree element.
    *
    * @var string[]
@@ -83,7 +83,7 @@ class MenuTreeParameters {
   public $conditions = array();
 
   /**
-   * Sets a root; loads a menu tree with this menu link plugin ID as root.
+   * Sets a root for menu tree loading.
    *
    * @param string $root
    *   A menu link plugin ID, or empty string '' to use the root of the whole
@@ -99,7 +99,7 @@ class MenuTreeParameters {
   }
 
   /**
-   * Sets a minimum depth; loads a menu tree from the given level.
+   * Sets a minimum depth for menu tree loading.
    *
    * @param int $min_depth
    *   The (root-relative) minimum depth to apply.
@@ -112,7 +112,7 @@ class MenuTreeParameters {
   }
 
   /**
-   * Sets a minimum depth; loads a menu tree up to the given level.
+   * Sets a maximum depth for menu tree loading.
    *
    * @param int $max_depth
    *   The (root-relative) maximum depth to apply.
@@ -127,10 +127,11 @@ class MenuTreeParameters {
   }
 
   /**
-   * Adds parent menu links IDs to restrict the tree (only show children).
+   * Adds parent menu links IDs to restrict the tree.
    *
    * @param string[] $parents
-   *   An array containing the parent IDs to limit the tree.
+   *   An array containing parent IDs. If supplied, the tree is limited to
+   *   links that have these parents.
    *
    * @return $this
    */

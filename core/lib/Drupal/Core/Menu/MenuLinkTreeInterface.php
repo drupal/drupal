@@ -10,29 +10,23 @@ namespace Drupal\Core\Menu;
 /**
  * Defines an interface for loading, transforming and rendering menu link trees.
  *
- * The main goal of this service is to, given a menu name, load (::load()) the
- * corresponding tree of menu links and turning this list of menu links into a
- * tree (by looking at their tree metadata). Because menu links themselves are
- * responsible for translation, this will already be translated for the current
- * language.
- * Which links are loaded can be specified in the menu link tree parameters that
- * passed to ::load(). You can build your own set of parameter, but you can also
- * start from a typical default (::getCurrentRouteMenuTreeParameters()).
- *
- * @see \Drupal\Core\Menu\MenuLinkTreeParameters
- *
- * If desired, one can transform (::transform()) that tree of menu links, for
- * example performing access checking (to only show those links that can be
- * accessed by the end user) or adding custom classes to links (to show icons
- * next to the links). Very complex tasks can be performed as well (such as
- * extracting a subtree from the menu link tree depending on the active trail).
- * These transformations are performed by "menu link tree manipulators", and
- * they can be used to perform any kind of transformation imaginable.
- *
- * @see \Drupal\menu_link\DefaultMenuTreeManipulators
- *
- * Finally, if desired, that tree of menu links can be built into a renderable
- * array (::build()) for rendering as HTML.
+ * The main purposes of this interface are:
+ * - Load a list of menu links, given a menu name, using
+ *   MenuLinkTreeInterface::load(). Loaded menu links are returned as a
+ *   tree by looking at the links' tree meta-data.
+ * - Which links are loaded can be specified in the menu link tree parameters
+ *   that are passed to the load() method. You can build your own set of
+ *   parameters, or you can start from typical defaults by calling the
+ *   MenuLinkTreeInterface::getCurrentRouteMenuTreeParameters() method. See
+ *   \Drupal\Core\Menu\MenuTreeParameters for more on menu tree parameters.
+ * - Transform a menu link tree, by calling MenuLinkTreeInterface::transform().
+ *   Examples include access checking, adding custom classes, extracting a
+ *   subtree depending on the active trail, etc. Note that translation is not
+ *   a tree transformation, because menu links themselves are responsible
+ *   for translation. Transformations are performed by "menu link tree
+ *   manipulators", which are functions or methods; see
+ *   \Drupal\menu_link\DefaultMenuTreeManipulators for examples.
+ * - Create a render array using MenuLinkTreeInterface::build().
  */
 interface MenuLinkTreeInterface {
 
@@ -40,14 +34,12 @@ interface MenuLinkTreeInterface {
    * Gets the link tree parameters for rendering a specific menu.
    *
    * Builds menu link tree parameters that:
-   * - expand all links in the active trail based on route being viewed
-   * - also expands the descendants of the links in the active trail whose
-   *   'expanded' flag is enabled
+   * - Expand all links in the active trail based on route being viewed.
+   * - Expand the descendents of the links in the active trail whose
+   *   'expanded' flag is enabled.
    *
    * This only sets the (relatively complex) parameters to achieve the two above
    * goals, but you can still further customize these parameters.
-   *
-   * @see \Drupal\Core\Menu\MenuLinkTreeParameters
    *
    * @param string $menu_name
    *   The menu name, needed for retrieving the active trail and links with the
@@ -55,6 +47,8 @@ interface MenuLinkTreeInterface {
    *
    * @return \Drupal\Core\Menu\MenuTreeParameters
    *   The parameters to determine which menu links to be loaded into a tree.
+   *
+   * @see \Drupal\Core\Menu\MenuTreeParameters
    */
   public function getCurrentRouteMenuTreeParameters($menu_name);
 
@@ -79,7 +73,7 @@ interface MenuLinkTreeInterface {
    * @param array $manipulators
    *   The menu link tree manipulators to apply. Each is an array with keys:
    *   - callable: a callable or a string that can be resolved to a callable
-   *               by \Drupal\Core\Controller\ControllerResolverInterface::getControllerFromDefinition()
+   *     by \Drupal\Core\Controller\ControllerResolverInterface::getControllerFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
    *
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
@@ -88,15 +82,16 @@ interface MenuLinkTreeInterface {
   public function transform(array $tree, array $manipulators);
 
   /**
-   * Builds a renderable array of a menu tree.
+   * Builds a renderable array from a menu tree.
    *
    * The menu item's LI element is given one of the following classes:
    * - expanded: The menu item is showing its submenu.
-   * - collapsed: The menu item has a submenu which is not shown.
+   * - collapsed: The menu item has a submenu that is not shown.
    * - leaf: The menu item has no submenu.
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
-   *   A data structure representing the tree as returned from ::load().
+   *   A data structure representing the tree, as returned from
+   *   MenuLinkTreeInterface::load().
    *
    * @return array
    *   A renderable array.
