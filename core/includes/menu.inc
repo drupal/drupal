@@ -122,6 +122,11 @@ use Drupal\Core\Template\Attribute;
  * As a note, if your module registers multiple simple routes, it is usual
  * (and usually easiest) to put all of their methods on one controller class.
  *
+ * If the route has placeholders (see @ref sec_placeholders above) the
+ * placeholders will be passed to the method (using reflection) by name.
+ * For example, the placeholder '{myvar}' in a route will become the $myvar
+ * parameter to the method.
+ *
  * Most controllers will need to display some information stored in the Drupal
  * database, which will involve using one or more Drupal services (see the
  * @link container Services and container topic @endlink). In order to properly
