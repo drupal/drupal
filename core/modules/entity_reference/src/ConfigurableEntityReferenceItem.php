@@ -100,28 +100,6 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $settings = $field_definition->getSettings();
-    $target_type = $settings['target_type'];
-
-    // Call the parent to define the target_id and entity properties.
-    $properties = parent::propertyDefinitions($field_definition);
-
-    // Only add the revision ID property if the target entity type supports
-    // revisions.
-    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-    if ($target_type_info->hasKey('revision') && $target_type_info->getRevisionTable()) {
-      $properties['revision_id'] = DataDefinition::create('integer')
-        ->setLabel(t('Revision ID'))
-        ->setSetting('unsigned', TRUE);
-    }
-
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConstraints() {
     $constraints = parent::getConstraints();
 
@@ -134,27 +112,6 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
     }
 
     return $constraints;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    $schema = parent::schema($field_definition);
-
-    $target_type = $field_definition->getSetting('target_type');
-    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $field_definition instanceof FieldStorageConfigInterface) {
-      $schema['columns']['revision_id'] = array(
-        'description' => 'The revision ID of the target entity.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      );
-    }
-
-    return $schema;
   }
 
   /**
