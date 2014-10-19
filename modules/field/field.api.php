@@ -1328,10 +1328,27 @@ function hook_field_attach_load($entity_type, $entities, $age, $options) {
  * @param $entity
  *   The entity with fields to validate.
  * @param array $errors
- *   An associative array of errors keyed by field_name, language, delta.
+ *   The array of errors (keyed by field name, language code, and delta) that
+ *   have already been reported for the entity. The function should add its
+ *   errors to this array. Each error is an associative array with the following
+ *   keys and values:
+ *   - error: An error code (should be a string prefixed with the module name).
+ *   - message: The human readable message to be displayed.
  */
 function hook_field_attach_validate($entity_type, $entity, &$errors) {
-  // @todo Needs function body.
+  // Make sure any images in article nodes have an alt text.
+  if ($entity_type == 'node' && $entity->type == 'article' && !empty($entity->field_image)) {
+    foreach ($entity->field_image as $langcode => $items) {
+      foreach ($items as $delta => $item) {
+        if (!empty($item['fid']) && empty($item['alt'])) {
+          $errors['field_image'][$langcode][$delta][] = array(
+            'error' => 'field_example_invalid',
+            'message' => t('All images in articles need to have an alternative text set.'),
+          );
+        }
+      }
+    }
+  }
 }
 
 /**
