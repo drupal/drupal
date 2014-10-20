@@ -596,18 +596,19 @@ table tr.error {
 .field-label-inline .field-label,
 .field-label-inline .field-items {
   float:left; /*LTR*/
-  padding-right: 0.5em;
+  margin-right: 0.5em; /*LTR*/
 }
 [dir="rtl"] .field-label-inline .field-label,
 [dir="rtl"] .field-label-inline .field-items {
   float: right;
-  padding-left: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0;
+}
+.field-label-inline .field-label::after {
+  content: ':';
 }
 
 /* Form display */
-form .field-edit-link {
-  margin: 0 0.3em;
-}
 form .field-multiple-table {
   margin: 0;
 }

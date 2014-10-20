@@ -171,7 +171,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 </div>
 ';
     $expected_rendered_body_field = '<div class="field field-entity-test--body field-name-body field-type-text field-label-above">
-      <div class="field-label">Body:&nbsp;</div>
+      <div class="field-label">Body</div>
     <div class="field-items">
           <div class="field-item"><p>Hello, world!</p></div>
       </div>

@@ -19,7 +19,7 @@
 #}
 <div{{ attributes.addClass('clearfix') }}>
   {% if not label_hidden %}
-    <h3{{ title_attributes }}>{{ label }}: </h3>
+    <h3{{ title_attributes }}>{{ label }}</h3>
   {% endif %}
   <ul{{ content_attributes.addClass('links', 'field-items') }}>
     {% for item in items %}
