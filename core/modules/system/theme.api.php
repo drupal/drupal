@@ -200,8 +200,8 @@
  * requests and the CSS files used to style that markup. In order to ensure that
  * a theme can completely customize the markup, module developers should avoid
  * directly writing HTML markup for pages, blocks, and other user-visible output
- * in their modules, and instead return structured "render arrays" (see @ref
- * arrays below). Doing this also increases usability, by ensuring that the
+ * in their modules, and instead return structured "render arrays" (see
+ * @ref arrays below). Doing this also increases usability, by ensuring that the
  * markup used for similar functionality on different areas of the site is the
  * same, which gives users fewer user interface patterns to learn.
  *
@@ -258,6 +258,9 @@
  *   normally preferable to use #theme or #type instead, so that the theme can
  *   customize the markup.
  *
+ * JavaScript and CSS attributes are specified in the render array using the
+ * #attached property (see @ref sec_attached).
+ *
  * @section elements Render elements
  * Render elements are defined by Drupal core and modules. The primary way to
  * define a render element is to create a render element plugin. There are
@@ -280,6 +283,24 @@
  * hook_element_info(), although defining a plugin is preferred.
  * properties. Look through implementations of hook_element_info() to discover
  * elements defined this way.
+ *
+ * @section sec_attached Attaching libraries in render arrays
+ *
+ * The #attached property allows loading of CSS, JavaScript, libraries or custom
+ * types. Specify an array of type => value pairs, where the type (most often
+ * 'css', 'js', or 'library') determines the loading technique and the value
+ * provides the options specified to the loader function. Example:
+ * @code
+ * $form['#attached']['css'] = array(
+ *   drupal_get_path('module', 'ajax_example') . '/ajax_example.css',
+ * );
+ *
+ * $form['#attached']['js'] = array(
+ *  drupal_get_path('module', 'ajax_example') . '/ajax_example.js',
+ * );
+ * @endcode
+ *
+ * See drupal_process_attached() for additional information.
  *
  * @see themeable
  *
