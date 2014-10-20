@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 /**
- * Provides an interface for an object utilizing a plugin collection.
+ * Provides an interface for an object using a plugin collection.
  *
  * @see \Drupal\Component\Plugin\LazyPluginCollection
  *

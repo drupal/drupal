@@ -79,7 +79,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that logs to separate targets utilize the same connection properly.
+   * Tests that logs to separate targets use the same connection properly.
    *
    * This test is identical to the one above, except that it doesn't create
    * a fake target so the query should fall back to running on the default

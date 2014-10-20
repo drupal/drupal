@@ -82,7 +82,7 @@ class UserViewsData extends EntityViewsData {
     $data['users_field_data']['name']['help'] = t('The user or author name.');
     $data['users_field_data']['name']['field']['id'] = 'user_name';
     $data['users_field_data']['name']['filter']['title'] = t('Name (raw)');
-    $data['users_field_data']['name']['filter']['help'] = t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.');
+    $data['users_field_data']['name']['filter']['help'] = t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not use autocomplete.');
 
     // Note that this field implements field level access control.
     $data['users_field_data']['mail']['help'] = t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.');

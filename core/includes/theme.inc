@@ -1768,7 +1768,7 @@ function template_preprocess_html(&$variables) {
  *
  * Default template: page.html.twig.
  *
- * Most themes utilize their own copy of page.html.twig. The default is located
+ * Most themes use their own copy of page.html.twig. The default is located
  * inside "modules/system/page.html.twig". Look in there for the full list of
  * variables.
  *

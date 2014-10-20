@@ -966,7 +966,7 @@ class ViewEditForm extends ViewFormBase {
         $uses_fields = $style_plugin && $style_plugin->usesFields();
         if (!$uses_fields) {
           $build['fields'][] = array(
-            '#markup' => $this->t('The selected style or row format does not utilize fields.'),
+            '#markup' => $this->t('The selected style or row format does not use fields.'),
             '#theme_wrappers' => array('views_ui_container'),
             '#attributes' => array('class' => array('views-display-setting')),
           );
@@ -978,7 +978,7 @@ class ViewEditForm extends ViewFormBase {
       case 'empty':
         if (!$executable->display_handler->usesAreas()) {
           $build[$type][] = array(
-            '#markup' => $this->t('The selected display type does not utilize @type plugins', array('@type' => $type)),
+            '#markup' => $this->t('The selected display type does not use @type plugins', array('@type' => $type)),
             '#theme_wrappers' => array('views_ui_container'),
             '#attributes' => array('class' => array('views-display-setting')),
           );

@@ -64,7 +64,7 @@ class StyleUITest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/view/$view_name/edit", array(), 'Add Page');
     $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", array('row[type]' => 'fields'), t('Apply'));
     // If fields are being used this text will not be shown.
-    $this->assertNoText(t('The selected style or row format does not utilize fields.'));
+    $this->assertNoText(t('The selected style or row format does not use fields.'));
   }
 
 }

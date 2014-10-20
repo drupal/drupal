@@ -26,8 +26,8 @@ class SettingsCommand implements CommandInterface {
   /**
    * An array of key/value pairs of JavaScript settings.
    *
-   * This will be utilized for all commands after this if they do not include
-   * their own settings array.
+   * This will be used for all commands after this if they do not include their
+   * own settings array.
    *
    * @var array
    */

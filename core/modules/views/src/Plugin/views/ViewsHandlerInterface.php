@@ -103,7 +103,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    *
    * This gives all the handlers some time to modify values. This is primarily
    * used so that handlers that pull up secondary data can put it in the
-   * $values so that the raw data can be utilized externally.
+   * $values so that the raw data can be used externally.
    */
   public function postExecute(&$values);
 

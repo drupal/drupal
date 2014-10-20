@@ -124,7 +124,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 MAJOR VERSION MIGRATION
 -----------------------
 Upgrading from a prior major version of Drupal to Drupal 8.x is not possible.
-The process now requires a migration to a Drupal 8.x site, utilizing the Migrate
+The process now requires a migration to a Drupal 8.x site, using the Migrate
 module in Drupal core.
 
 Note that migration support in Drupal 8 is currently only partially implemented.

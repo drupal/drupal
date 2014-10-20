@@ -570,9 +570,9 @@ function node_theme_suggestions_node(array $variables) {
  *
  * Default template: node.html.twig.
  *
- * Most themes utilize their own copy of node.html.twig. The default is located
- * inside "/core/modules/node/templates/node.html.twig". Look in there for the full
- * list of variables.
+ * Most themes use their own copy of node.html.twig. The default is located
+ * inside "/core/modules/node/templates/node.html.twig". Look in there for the
+ * full list of variables.
  *
  * @param array $variables
  *   An associative array containing:

@@ -95,7 +95,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
 
     $this->pluginInstances[$display_id]->initDisplay($this->view, $display);
     // If this is not the default display handler, let it know which is since
-    // it may well utilize some data from the default.
+    // it may well use some data from the default.
     if ($display_id != 'default') {
       $this->pluginInstances[$display_id]->default_display = $this->pluginInstances['default'];
     }

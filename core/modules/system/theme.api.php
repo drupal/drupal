@@ -19,7 +19,7 @@
  * information about render arrays and rendering.
  *
  * @section sec_twig_theme Twig Templating Engine
- * Drupal 8 utilizes the templating engine Twig. Twig offers developers a fast,
+ * Drupal 8 uses the templating engine Twig. Twig offers developers a fast,
  * secure, and flexible method for building templates for Drupal 8 sites. Twig
  * also offers substantial usability improvements over PHPTemplate, and does
  * not require front-end developers to know PHP to build and manipulate Drupal

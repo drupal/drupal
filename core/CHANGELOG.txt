@@ -132,7 +132,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 Drupal 7.0, 2011-01-05
 ----------------------
 - Database:
-    * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
+    * Fully rewritten database layer using PHP 5's PDO abstraction layer.
     * Drupal now requires MySQL >= 5.0.15 or PostgreSQL >= 8.3.
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
     * Support for primary/replica replication, transactions, multi-insert

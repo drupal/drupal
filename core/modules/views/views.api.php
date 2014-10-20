@@ -720,7 +720,7 @@ function hook_views_post_execute(ViewExecutable $view) {
  *
  * At this point the query has been executed, and the preRender() phase has
  * already happened for handlers, so all data should be available. This hook
- * can be utilized by themes.
+ * can be used by themes.
  *
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
@@ -743,7 +743,7 @@ function hook_views_pre_render(ViewExecutable $view) {
  * This can be valuable to be able to cache a view and still have some level of
  * dynamic output. In an ideal world, the actual output will include HTML
  * comment-based tokens, and then the post process can replace those tokens.
- * This hook can be utilized by themes.
+ * This hook can be used by themes.
  *
  * Example usage. If it is known that the view is a node view and that the
  * primary field will be a nid, you can do something like this:

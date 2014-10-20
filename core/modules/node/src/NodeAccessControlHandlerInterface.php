@@ -35,8 +35,8 @@ interface NodeAccessControlHandlerInterface {
    * Writes a list of grants to the database, deleting any previously saved ones.
    *
    * If a realm is provided, it will only delete grants from that realm, but it
-   * will always delete a grant from the 'all' realm. Modules that utilize
-   * node access can use this function when doing mass updates due to widespread
+   * will always delete a grant from the 'all' realm. Modules that use node
+   * access can use this function when doing mass updates due to widespread
    * permission changes.
    *
    * Note: Don't call this function directly from a contributed module. Call
