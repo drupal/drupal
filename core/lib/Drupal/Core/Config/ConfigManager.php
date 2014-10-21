@@ -14,7 +14,7 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -81,14 +81,14 @@ class ConfigManager implements ConfigManagerInterface {
    *   The configuration factory.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
    *   The typed config manager.
-   * @param \Drupal\Core\StringTranslation\TranslationManager $string_translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    * @param \Drupal\Core\Config\StorageInterface $active_storage
    *   The active configuration storage.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationManager $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher) {
     $this->entityManager = $entity_manager;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config_manager;
