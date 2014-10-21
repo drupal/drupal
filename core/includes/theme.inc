@@ -1229,29 +1229,12 @@ function template_preprocess_table(&$variables) {
     }
   }
 
-  // Add the 'empty' row message if available.
-  if (empty($variables['rows']) && isset($variables['empty'])) {
-    $header_count = 0;
-    foreach ($variables['header'] as $header_cell) {
-      if (is_array($header_cell) && isset($header_cell['colspan'])) {
-        $header_count += $header_cell['colspan'];
-      }
-      else {
-        $header_count++;
-      }
-    }
-    $variables['rows'][] = array(array(
-      'data' => $variables['empty'],
-      'colspan' => $header_count,
-      'class' => array('empty', 'message'),
-    ));
-  }
-
   // Build an associative array of responsive classes keyed by column.
   $responsive_classes = array();
 
   // Format the table header:
   $ts = array();
+  $header_columns = 0;
   if (!empty($variables['header'])) {
     $ts = tablesort_init($variables['header']);
 
@@ -1263,11 +1246,18 @@ function template_preprocess_table(&$variables) {
       $responsive_index++;
 
       if (!is_array($cell)) {
+        $header_columns++;
         $cell_content = $cell;
         $cell_attributes = new Attribute();
         $is_header = TRUE;
       }
       else {
+        if (isset($cell['colspan'])) {
+          $header_columns += $cell['colspan'];
+        }
+        else {
+          $header_columns++;
+        }
         $cell_content = '';
         if (isset($cell['data'])) {
           $cell_content = $cell['data'];
@@ -1305,35 +1295,26 @@ function template_preprocess_table(&$variables) {
       $variables['header'][$col_key]['content'] = $cell_content;
     }
   }
+  $variables['header_columns'] = $header_columns;
 
   // Rows and footer have the same structure.
   $sections = array('rows' , 'footer');
   foreach ($sections as $section) {
     if (!empty($variables[$section])) {
-      $flip = array('even' => 'odd', 'odd' => 'even');
-      $class = 'even';
       foreach ($variables[$section] as $row_key => $row) {
         $cells = $row;
         $row_attributes = array();
-        $no_striping = $section === 'footer';
 
         // Check if we're dealing with a simple or complex row
         if (isset($row['data'])) {
           $cells = $row['data'];
-          $no_striping = isset($row['no_striping']) ? $row['no_striping'] : $no_striping;
+          $variables['no_striping'] = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
 
           // Set the attributes array and exclude 'data' and 'no_striping'.
           $row_attributes = $row;
           unset($row_attributes['data']);
           unset($row_attributes['no_striping']);
         }
-
-        // Add odd/even class.
-        if (!$no_striping) {
-          $class = $flip[$class];
-          $row_attributes['class'][] = $class;
-        }
-
 
         // Build row.
         $variables[$section][$row_key] = array();
@@ -1368,9 +1349,9 @@ function template_preprocess_table(&$variables) {
                 $cell_content = drupal_render($cell_content);
               }
             }
-            // Add active class if needed for sortable tables.
+            // Active table sort information.
             if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
-              $cell_attributes['class'][] = 'active';
+              $variables[$section][$row_key]['cells'][$col_key]['active_table_sort'] = TRUE;
             }
             // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
             // class from header to cell as needed.

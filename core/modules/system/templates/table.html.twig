@@ -28,9 +28,13 @@
  *     - attributes: Any HTML attributes, such as "colspan", to apply to the
  *       table cell.
  *     - content: The string to display in the table cell.
+ *     - active_table_sort: A boolean indicating whether the cell is the active
+         table sort.
  * - footer: Table footer rows, in the same format as the rows variable.
  * - empty: The message to display in an extra row if table does not have
  *   any rows.
+ * - no_striping: A boolean indicating that the row should receive no striping.
+ * - header_columns: The number of columns in the header.
  *
  * @see template_preprocess_table()
  *
@@ -58,7 +62,12 @@
     <thead>
       <tr>
         {% for cell in header %}
-          <{{ cell.tag }}{{ cell.attributes }}>
+          {%
+            set cell_classes = [
+              cell.active_table_sort ? 'active',
+            ]
+          %}
+          <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
             {{- cell.content -}}
           </{{ cell.tag }}>
         {% endfor %}
@@ -69,7 +78,12 @@
   {% if rows %}
     <tbody>
       {% for row in rows %}
-        <tr{{ row.attributes }}>
+        {%
+          set row_classes = [
+            not no_striping ? cycle(['odd', 'even'], loop.index0),
+          ]
+        %}
+        <tr{{ row.attributes.addClass(row_classes) }}>
           {% for cell in row.cells %}
             <{{ cell.tag }}{{ cell.attributes }}>
               {{- cell.content -}}
@@ -77,6 +91,12 @@
           {% endfor %}
         </tr>
       {% endfor %}
+    </tbody>
+  {% elseif empty %}
+    <tbody>
+      <tr class="odd">
+        <td colspan="{{ header_columns }}" class="empty message">{{ empty }}</td>
+      </tr>
     </tbody>
   {% endif %}
   {% if footer %}
