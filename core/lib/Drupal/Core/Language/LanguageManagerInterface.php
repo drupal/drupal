@@ -136,7 +136,7 @@ interface LanguageManagerInterface {
    *   (optional) An integer value that is used as the start value for the
    *   weights of the locked languages.
    *
-   * @return array
+   * @return \Drupal\Core\Language\LanguageInterface[]
    *   An array of language objects.
    */
   public function getDefaultLockedLanguages($weight = 0);

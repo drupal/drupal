@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +75,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    * @param string $message2
    *   The message to display confirming prefixed URL is not working.
    */
-  private function checkUrl($language, $message1, $message2) {
+  private function checkUrl(LanguageInterface $language, $message1, $message2) {
     $options = array('language' => $language, 'script' => '');
     $base_path = trim(base_path(), '/');
     $rewritten_path = trim(str_replace($base_path, '', \Drupal::url('<front>', array(), $options)), '/');

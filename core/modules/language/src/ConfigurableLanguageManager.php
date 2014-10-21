@@ -77,7 +77,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * An array of language objects keyed by language type.
    *
-   * @var array
+   * @var \Drupal\Core\Language\LanguageInterface[]
    */
   protected $negotiatedLanguages;
 

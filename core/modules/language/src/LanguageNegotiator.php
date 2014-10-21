@@ -71,7 +71,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * An array of language objects keyed by method id.
    *
-   * @var array
+   * @var \Drupal\Core\Language\LanguageInterface[]
    */
   protected $negotiatedLanguages = array();
 
