@@ -15,6 +15,7 @@
  *     not be passed through \Drupal\Component\Utility\String::checkPlain().
  *   - attributes: (optional) HTML attributes for the anchor, or for the <span>
  *     tag if no 'href' is supplied.
+ *   - link_key: The link CSS class.
  * - heading: (optional) A heading to precede the links.
  *   - text: The heading text.
  *   - level: The heading level (e.g. 'h2', 'h3').
@@ -44,8 +45,8 @@
     {%- endif -%}
   {%- endif -%}
   <ul{{ attributes }}>
-    {%- for item in links -%}
-      <li{{ item.attributes }}>
+    {%- for key, item in links -%}
+      <li{{ item.attributes.addClass(key|clean_class) }}>
         {%- if item.link -%}
           {{ item.link }}
         {%- elseif item.text_attributes -%}

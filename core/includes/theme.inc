@@ -984,10 +984,7 @@ function template_preprocess_links(&$variables) {
         'url' => NULL,
       );
 
-      $li_attributes = array('class' => array());
-      // Use the array key as class name.
-      $li_attributes['class'][] = drupal_html_class($key);
-
+      $li_attributes = array();
       $keys = ['title', 'url'];
       $link_element = array(
         '#type' => 'link',
@@ -1043,7 +1040,7 @@ function template_preprocess_links(&$variables) {
       $item['attributes'] = new Attribute($li_attributes);
 
       // Add the item to the list of links.
-      $variables['links'][] = $item;
+      $variables['links'][$key] = $item;
     }
   }
 }
