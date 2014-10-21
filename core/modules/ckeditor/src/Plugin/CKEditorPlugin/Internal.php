@@ -336,7 +336,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       // Cache the "format_tags" configuration. This cache item is infinitely
       // valid; it only changes whenever the text format is changed, hence it's
       // tagged with the text format's cache tag.
-      $this->cache->set($cid, $format_tags, Cache::PERMANENT, $format->getCacheTag());
+      $this->cache->set($cid, $format_tags, Cache::PERMANENT, $format->getCacheTags());
     }
 
     return $format_tags;

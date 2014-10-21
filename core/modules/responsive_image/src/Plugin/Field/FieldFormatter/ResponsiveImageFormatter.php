@@ -198,7 +198,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     }
     $cache_tags = [];
     if ($responsive_image_mapping) {
-      $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_mapping->getCacheTag());
+      $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_mapping->getCacheTags());
       foreach ($responsive_image_mapping->getMappings() as $mapping) {
         // First mapping found is used as fallback.
         if (empty($fallback_image_style)) {
@@ -209,7 +209,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     }
     $image_styles = entity_load_multiple('image_style', $image_styles_to_load);
     foreach ($image_styles as $image_style) {
-      $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTag());
+      $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTags());
     }
 
     foreach ($items as $delta => $item) {

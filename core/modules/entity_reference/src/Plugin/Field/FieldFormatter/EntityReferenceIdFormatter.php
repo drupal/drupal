@@ -38,7 +38,7 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
           // that the referenced entity is deleted, the cache for referring
           // entities must be cleared.
           '#cache' => array(
-            'tags' => $entity->getCacheTag(),
+            'tags' => $entity->getCacheTags(),
           ),
         );
       }

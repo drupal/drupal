@@ -195,7 +195,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   public function getCacheTags() {
     $cache_tags = parent::getCacheTags();
     $feed = $this->feedStorage->load($this->configuration['feed']);
-    return Cache::mergeTags($cache_tags, $feed->getCacheTag());
+    return Cache::mergeTags($cache_tags, $feed->getCacheTags());
   }
 
 }

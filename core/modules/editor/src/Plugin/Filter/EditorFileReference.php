@@ -82,7 +82,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
 
           $file = $this->entityManager->loadEntityByUuid('file', $uuid);
           if ($file) {
-            $result->addCacheTags($file->getCacheTag());
+            $result->addCacheTags($file->getCacheTags());
           }
         }
       }

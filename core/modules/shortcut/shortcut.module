@@ -260,7 +260,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
       'title' => $shortcut->label(),
       'url' => Url::fromRoute($shortcut->getRouteName(), $shortcut->getRouteParameters()),
     );
-    $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTag());
+    $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTags());
   }
 
   if (!empty($links)) {

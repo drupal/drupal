@@ -129,7 +129,7 @@ class SearchController extends ControllerBase {
         ),
       ),
       '#cache' => array(
-        'tags' => $entity->getCacheTag(),
+        'tags' => $entity->getCacheTags(),
       ),
     );
 

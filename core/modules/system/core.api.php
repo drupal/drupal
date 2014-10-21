@@ -483,7 +483,7 @@
  * This also is the case when you define your own entity types: you'll get the
  * exact same cache tag invalidation as any of the built-in entity types, with
  * the ability to override any of the default behavior if needed.
- * See \Drupal\Core\Entity\EntityInterface::getCacheTag(),
+ * See \Drupal\Core\Entity\EntityInterface::getCacheTags(),
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
  * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
  * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().

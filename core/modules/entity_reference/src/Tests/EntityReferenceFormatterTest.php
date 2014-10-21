@@ -143,7 +143,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $build = $items->view(array('type' => $formatter));
 
     $this->assertEqual($build[0]['#markup'], $this->referencedEntity->id(), format_string('The markup returned by the @formatter formatter is correct.', array('@formatter' => $formatter)));
-    $this->assertEqual($build[0]['#cache']['tags'], $this->referencedEntity->getCacheTag(), format_string('The @formatter formatter has the expected cache tags.', array('@formatter' => $formatter)));
+    $this->assertEqual($build[0]['#cache']['tags'], $this->referencedEntity->getCacheTags(), format_string('The @formatter formatter has the expected cache tags.', array('@formatter' => $formatter)));
 
   }
 
@@ -180,9 +180,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     drupal_render($build[0]);
     $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() .  $expected_rendered_name_field . $expected_rendered_body_field, format_string('The markup returned by the @formatter formatter is correct.', array('@formatter' => $formatter)));
     $expected_cache_tags = Cache::mergeTags(
-      \Drupal::entityManager()->getViewBuilder($this->entityType)->getCacheTag(),
-      $this->referencedEntity->getCacheTag(),
-      FilterFormat::load('full_html')->getCacheTag()
+      \Drupal::entityManager()->getViewBuilder($this->entityType)->getCacheTags(),
+      $this->referencedEntity->getCacheTags(),
+      FilterFormat::load('full_html')->getCacheTags()
     );
     $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags.', array('@formatter' => $formatter)));
   }

@@ -119,7 +119,7 @@ class ImageFormatter extends ImageFormatterBase {
     $cache_tags = array();
     if (!empty($image_style_setting)) {
       $image_style = entity_load('image_style', $image_style_setting);
-      $cache_tags = $image_style->getCacheTag();
+      $cache_tags = $image_style->getCacheTags();
     }
 
     foreach ($items as $delta => $item) {

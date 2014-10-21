@@ -49,7 +49,7 @@ use Drupal\Core\Cache\Cache;
  *   ));
  *
  *   // Associate cache tags to be invalidated by.
- *   $result->setCacheTags($node->getCacheTag());
+ *   $result->setCacheTags($node->getCacheTags());
  *
  *   return $result;
  * }

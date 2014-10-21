@@ -39,7 +39,7 @@ class AuthorFormatter extends FormatterBase {
           '#account' => $referenced_user,
           '#link_options' => array('attributes' => array('rel' => 'author')),
           '#cache' => array(
-            'tags' => $referenced_user->getCacheTag(),
+            'tags' => $referenced_user->getCacheTags(),
           ),
         );
       }

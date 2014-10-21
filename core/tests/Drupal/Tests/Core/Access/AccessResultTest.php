@@ -439,7 +439,7 @@ class AccessResultTest extends UnitTestCase {
     // ::cacheUntilEntityChanges() convenience method.
     $node = $this->getMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
-      ->method('getCacheTag')
+      ->method('getCacheTags')
       ->will($this->returnValue(array('node:20011988')));
     $tags = array('node:20011988');
     $a = AccessResult::neutral()->addCacheTags($tags);

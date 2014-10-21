@@ -150,7 +150,7 @@ class EntityTestController extends ControllerBase {
     $labels = [];
     foreach ($entities as $entity) {
       $labels[] = $entity->label();
-      $cache_tags = Cache::mergeTags($cache_tags, $entity->getCacheTag());
+      $cache_tags = Cache::mergeTags($cache_tags, $entity->getCacheTags());
     }
     // Always associate the list cache tag, otherwise the cached empty result
     // wouldn't be invalidated. This would continue to show nothing matches the

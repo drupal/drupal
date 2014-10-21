@@ -71,8 +71,8 @@ class BlockViewBuilder extends EntityViewBuilder {
       // Set cache tags; these always need to be set, whether the block is
       // cacheable or not, so that the page cache is correctly informed.
       $build[$entity_id]['#cache']['tags'] = Cache::mergeTags(
-        $this->getCacheTag(), // Block view builder cache tag.
-        $entity->getCacheTag(), // Block entity cache tag.
+        $this->getCacheTags(), // Block view builder cache tag.
+        $entity->getCacheTags(), // Block entity cache tag.
         $plugin->getCacheTags() // Block plugin cache tags.
       );
 

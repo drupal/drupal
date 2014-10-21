@@ -356,7 +356,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
    * @return $this
    */
   public function cacheUntilEntityChanges(EntityInterface $entity) {
-    $this->addCacheTags($entity->getCacheTag());
+    $this->addCacheTags($entity->getCacheTags());
     return $this;
   }
 

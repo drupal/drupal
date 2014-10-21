@@ -166,7 +166,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     // so we must invalidate the associated block's cache tag (which includes
     // the theme cache tag).
     if (!$update) {
-      Cache::invalidateTags($this->getCacheTag());
+      Cache::invalidateTags($this->getCacheTags());
     }
   }
 
@@ -179,8 +179,8 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    * appear there currently. Hence a block configuration entity must also return
    * the associated theme's cache tag.
    */
-  public function getCacheTag() {
-    return Cache::mergeTags(parent::getCacheTag(), ['theme:' . $this->theme]);
+  public function getCacheTags() {
+    return Cache::mergeTags(parent::getCacheTags(), ['theme:' . $this->theme]);
   }
 
   /**

@@ -287,21 +287,21 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $view_cache_tag = array();
     if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
       $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)
-        ->getCacheTag();
+        ->getCacheTags();
     }
 
     // Generate the cache tags for the (non) referencing entities.
     $referencing_entity_cache_tags = Cache::mergeTags(
-      $this->referencing_entity->getCacheTag(),
-      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTag(),
+      $this->referencing_entity->getCacheTags(),
+      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags(),
       // Includes the main entity's cache tags, since this entity references it.
-      $this->entity->getCacheTag(),
+      $this->entity->getCacheTags(),
       $this->getAdditionalCacheTagsForEntity($this->entity),
       $view_cache_tag
     );
     $non_referencing_entity_cache_tags = Cache::mergeTags(
-      $this->non_referencing_entity->getCacheTag(),
-      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTag()
+      $this->non_referencing_entity->getCacheTags(),
+      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags()
     );
 
     // Generate the cache tags for all two possible entity listing paths.
@@ -314,7 +314,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     );
     $nonempty_entity_listing_cache_tags = Cache::mergeTags(
       $this->entity->getEntityType()->getListCacheTags(),
-      $this->entity->getCacheTag(),
+      $this->entity->getCacheTags(),
       $this->getAdditionalCacheTagsForEntityListing($this->entity),
       $theme_cache_tags,
       $render_cache_tags
@@ -444,7 +444,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $this->verifyPageCache($non_referencing_entity_path, 'HIT');
       // Special case: entity types may choose to use their bundle entity type
       // cache tags, to avoid having excessively granular invalidation.
-      $is_special_case = $bundle_entity->getCacheTag() == $this->entity->getCacheTag() && $bundle_entity->getEntityType()->getListCacheTags() == $this->entity->getEntityType()->getListCacheTags();
+      $is_special_case = $bundle_entity->getCacheTags() == $this->entity->getCacheTags() && $bundle_entity->getEntityType()->getListCacheTags() == $this->entity->getEntityType()->getListCacheTags();
       if ($is_special_case) {
         $this->verifyPageCache($empty_entity_listing_path, 'MISS');
         $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
@@ -504,7 +504,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // a cache miss for every route except the ones for the non-referencing
     // entity and the empty entity listing.
     $this->pass("Test invalidation of referenced entity's cache tag.", 'Debug');
-    Cache::invalidateTags($this->entity->getCacheTag());
+    Cache::invalidateTags($this->entity->getCacheTags());
     $this->verifyPageCache($referencing_entity_path, 'MISS');
     $this->verifyPageCache($listing_path, 'MISS');
     $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
@@ -561,8 +561,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Verify cache hits.
     $referencing_entity_cache_tags = Cache::mergeTags(
-      $this->referencing_entity->getCacheTag(),
-      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTag()
+      $this->referencing_entity->getCacheTags(),
+      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags()
     );
     $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $referencing_entity_cache_tags);
     $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);

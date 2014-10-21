@@ -157,6 +157,6 @@ interface EntityViewBuilderInterface {
    * @return array
    *   An array of cache tags.
    */
-  public function getCacheTag();
+  public function getCacheTags();
 
 }

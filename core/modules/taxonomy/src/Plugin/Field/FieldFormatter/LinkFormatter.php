@@ -55,7 +55,7 @@ class LinkFormatter extends TaxonomyFormatterBase {
           unset($item->_attributes);
         }
 
-        $elements[$delta]['#cache']['tags'] = $item->entity->getCacheTag();
+        $elements[$delta]['#cache']['tags'] = $item->entity->getCacheTags();
       }
     }
 

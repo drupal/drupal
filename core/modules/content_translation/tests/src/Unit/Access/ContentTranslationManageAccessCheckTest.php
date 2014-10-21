@@ -70,7 +70,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->with()
       ->will($this->returnValue(array()));
     $entity->expects($this->once())
-      ->method('getCacheTag')
+      ->method('getCacheTags')
       ->will($this->returnValue(array('node:1337')));
 
     // Set the route requirements.

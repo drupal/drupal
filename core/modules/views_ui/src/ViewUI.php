@@ -1123,8 +1123,8 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheTag() {
-    $this->storage->getCacheTag();
+  public function getCacheTags() {
+    $this->storage->getCacheTags();
   }
 
   /**

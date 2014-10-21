@@ -65,7 +65,7 @@ class TourViewBuilder extends EntityViewBuilder {
             ),
           ),
           '#cache' => [
-            'tags' => $entity->getCacheTag(),
+            'tags' => $entity->getCacheTags(),
           ],
         );
       }

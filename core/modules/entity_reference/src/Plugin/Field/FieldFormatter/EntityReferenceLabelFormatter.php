@@ -85,7 +85,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       else {
         $elements[$delta] = array('#markup' => String::checkPlain($label));
       }
-      $elements[$delta]['#cache']['tags'] = $entity->getCacheTag();
+      $elements[$delta]['#cache']['tags'] = $entity->getCacheTags();
     }
 
     return $elements;

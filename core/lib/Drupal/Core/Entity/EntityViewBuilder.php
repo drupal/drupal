@@ -159,7 +159,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       '#langcode' => $langcode,
       // Collect cache defaults for this entity.
       '#cache' => array(
-        'tags' => Cache::mergeTags($this->getCacheTag(), $entity->getCacheTag()),
+        'tags' => Cache::mergeTags($this->getCacheTags(), $entity->getCacheTags()),
       ),
     );
 
@@ -341,7 +341,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public function getCacheTag() {
+  public function getCacheTags() {
     return array($this->entityTypeId . '_view');
   }
 
@@ -362,12 +362,12 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     if (isset($entities)) {
       $tags = [];
       foreach ($entities as $entity) {
-        $tags = Cache::mergeTags($tags, $entity->getCacheTag(), $entity->getEntityType()->getListCacheTags());
+        $tags = Cache::mergeTags($tags, $entity->getCacheTags(), $entity->getEntityType()->getListCacheTags());
       }
       Cache::invalidateTags($tags);
     }
     else {
-      Cache::invalidateTags($this->getCacheTag());
+      Cache::invalidateTags($this->getCacheTags());
     }
   }
 

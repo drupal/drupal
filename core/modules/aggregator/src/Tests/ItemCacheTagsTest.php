@@ -72,7 +72,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
    */
   public function testEntityCreation() {
     // Create a cache entry that is tagged with a feed cache tag.
-    \Drupal::cache('render')->set('foo', 'bar', \Drupal\Core\Cache\CacheBackendInterface::CACHE_PERMANENT, $this->entity->getCacheTag());
+    \Drupal::cache('render')->set('foo', 'bar', \Drupal\Core\Cache\CacheBackendInterface::CACHE_PERMANENT, $this->entity->getCacheTags());
 
     // Verify a cache hit.
     $this->verifyRenderCache('foo', array('aggregator_feed:1'));
