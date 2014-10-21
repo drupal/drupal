@@ -3,10 +3,11 @@ administer permissions:
   restrict access: true
 administer account settings:
   title: 'Administer account settings'
-  description: 'Configure site-wide settings and behavior for user accounts and registration.'
+  description: 'Configure site-wide settings and behavior for user accounts and registration. This includes account cancellation methods, the content of user e-mails and fields attached to users.'
   restrict access: true
 administer users:
   title: 'Administer users'
+  description: 'Manage all user accounts. This includes editing all user information, changes of e-mail addresses and passwords, issuing e-mails to users and blocking and deleting user accounts.'
   restrict access: true
 access user profiles:
   title: 'View user information'
