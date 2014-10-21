@@ -250,7 +250,17 @@ class SystemController extends ControllerBase {
         }
         if (!empty($theme->status)) {
           if (!$theme->is_default) {
-            if ($theme->getName() != $admin_theme) {
+            $theme_uninstallable = TRUE;
+            if ($theme->getName() == $admin_theme) {
+              $theme_uninstallable = FALSE;
+            }
+            // Check it isn't the base of theme of an installed theme.
+            foreach ($theme->required_by as $themename => $dependency) {
+              if (!empty($themes[$themename]->status)) {
+                $theme_uninstallable = FALSE;
+              }
+            }
+            if ($theme_uninstallable) {
               $theme->operations[] = array(
                 'title' => $this->t('Uninstall'),
                 'url' => Url::fromRoute('system.theme_uninstall'),

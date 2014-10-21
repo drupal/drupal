@@ -267,4 +267,64 @@ class ThemeTest extends WebTestBase {
     $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'not_real_test_basetheme')));
     $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => 'not_real_engine')));
   }
+
+  /**
+   * Test uninstalling of themes works.
+   */
+  function testUninstallingThemes() {
+    // Install Bartik and set it as the default theme.
+    \Drupal::service('theme_handler')->install(array('bartik'));
+    // Set up seven as the admin theme.
+    \Drupal::service('theme_handler')->install(array('seven'));
+    $edit = array(
+      'admin_theme' => 'seven',
+      'use_admin_theme' => TRUE,
+    );
+    $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
+    $this->drupalGet('admin/appearance');
+    $this->clickLink(t('Set as default'));
+
+    // Check that seven cannot be uninstalled as it is the admin theme.
+    $this->assertNoRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does not appear on the theme settings page.');
+    // Check that bartik cannot be uninstalled as it is the default theme.
+    $this->assertNoRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does not appear on the theme settings page.');
+    // Check that the classy theme cannot be uninstalled as it is a base theme
+    // of seven and bartik.
+    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+
+    // Install Stark and set it as the default theme.
+    \Drupal::service('theme_handler')->install(array('stark'));
+
+    $edit = array(
+      'admin_theme' => 'stark',
+      'use_admin_theme' => TRUE,
+    );
+    $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
+
+    // Check that seven can be uninstalled now.
+    $this->assertRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does appear on the theme settings page.');
+    // Check that the classy theme still cannot be uninstalled as it is a
+    // base theme of bartik.
+    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+
+    // Change the default theme to stark, stark is third in the list.
+    $this->clickLink(t('Set as default'), 2);
+
+    // Check that bartik can be uninstalled now.
+    $this->assertRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does appear on the theme settings page.');
+
+    // Check that the classy theme still can't be uninstalled as neither of it's
+    // base themes have been.
+    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+
+    // Uninstall each of the three themes starting with Bartik.
+    $this->clickLink(t('Uninstall'));
+    $this->assertRaw('The <em class="placeholder">Bartik</em> theme has been uninstalled');
+    // Seven is the second in the list.
+    $this->clickLink(t('Uninstall'));
+    $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
+    // Now uninstall classy.
+    $this->clickLink(t('Uninstall'));
+    $this->assertRaw('The <em class="placeholder">Classy</em> theme has been uninstalled');
+  }
 }
