@@ -207,7 +207,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
   public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
     $definition = $this->treeStorage->load($plugin_id);
     if (empty($definition) && $exception_on_invalid) {
-      throw new PluginNotFoundException(String::format('@plugin_id could not be found', array('@plugin_id' => $plugin_id)));
+      throw new PluginNotFoundException($plugin_id);
     }
     return $definition;
   }
