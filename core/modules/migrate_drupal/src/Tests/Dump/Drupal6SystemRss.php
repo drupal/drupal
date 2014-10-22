@@ -25,6 +25,10 @@ class Drupal6SystemRss extends Drupal6DumpBase {
       'name' => 'feed_default_items',
       'value' => 'i:10;',
     ))
+    ->values(array(
+      'name' => 'feed_item_length',
+      'value' => 's:5:"title";',
+    ))
     ->execute();
   }
 }

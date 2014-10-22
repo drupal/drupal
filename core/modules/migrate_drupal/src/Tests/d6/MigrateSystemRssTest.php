@@ -38,6 +38,7 @@ class MigrateSystemRssTest extends MigrateDrupalTestBase {
   public function testSystemRss() {
     $config = \Drupal::config('system.rss');
     $this->assertIdentical($config->get('items.limit'), 10);
+    $this->assertIdentical($config->get('items.view_mode'), 'title');
   }
 
 }
