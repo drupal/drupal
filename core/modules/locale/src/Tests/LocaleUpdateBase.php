@@ -83,7 +83,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
   /**
    * Adds a language.
    *
-   * @param $langcode
+   * @param string $langcode
    *   The language code of the language to add.
    */
   protected function addLanguage($langcode) {
@@ -101,13 +101,13 @@ abstract class LocaleUpdateBase extends WebTestBase {
    * @param string $filename
    *   Name of the file to create.
    * @param int $timestamp
-   *   Timestamp to set the file to. Defaults to current time.
+   *   (optional) Timestamp to set the file to. Defaults to current time.
    * @param array $translations
-   *   Array of source/target value translation strings. Only singular strings
-   *   are supported, no plurals. No double quotes are allowed in source and
-   *   translations strings.
+   *   (optional) Array of source/target value translation strings. Only
+   *   singular strings are supported, no plurals. No double quotes are allowed
+   *   in source and translations strings.
    */
-  protected function makePoFile($path, $filename, $timestamp = NULL, $translations = array()) {
+  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = array()) {
     $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
     $path = 'public://' . $path;
     $text = '';

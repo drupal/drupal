@@ -44,10 +44,13 @@ function locale_translation_manual_status() {
  *   An associative array containing:
  *   - form: The form that contains the language information.
  *
+ * @return string
+ *   The themed output.
+ *
  * @see locale_translate_edit_form()
  * @ingroup themeable
  */
-function theme_locale_translate_edit_form_strings($variables) {
+function theme_locale_translate_edit_form_strings(array $variables) {
   $output = '';
   $form = $variables['form'];
   $header = array(
@@ -96,7 +99,7 @@ function theme_locale_translate_edit_form_strings($variables) {
  *
  * @see \Drupal\locale\Form\TranslationStatusForm
  */
-function template_preprocess_locale_translation_update_info(&$variables) {
+function template_preprocess_locale_translation_update_info(array &$variables) {
   $details = array();
 
   // Build output for available updates.
@@ -148,13 +151,13 @@ function template_preprocess_locale_translation_update_info(&$variables) {
  *
  * Default template: locale-translation-last-check.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - last: The timestamp when the site last checked for available updates.
  *
  * @see \Drupal\locale\Form\TranslationStatusForm
  */
-function template_preprocess_locale_translation_last_check(&$variables) {
+function template_preprocess_locale_translation_last_check(array &$variables) {
   $last = $variables['last'];
   $variables['last_checked'] = ($last != NULL);
   $variables['time'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $last);

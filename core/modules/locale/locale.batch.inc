@@ -25,7 +25,7 @@ require_once __DIR__ . '/locale.translation.inc';
  * @param string $langcode
  *   Language code of the language for which to check the translation.
  * @param array $options
- *   Optional, an array with options that can have the following elements:
+ *   An array with options that can have the following elements:
  *   - 'finish_feedback': Whether or not to give feedback to the user when the
  *     batch is finished. Optional, defaults to TRUE.
  *   - 'use_remote': Whether or not to check the remote translation file.
@@ -33,7 +33,7 @@ require_once __DIR__ . '/locale.translation.inc';
  * @param array $context
  *   The batch context.
  */
-function locale_translation_batch_status_check($project, $langcode, $options = array(), &$context) {
+function locale_translation_batch_status_check($project, $langcode, array $options, array &$context) {
   $failure = $checked = FALSE;
   $options += array(
     'finish_feedback' => TRUE,

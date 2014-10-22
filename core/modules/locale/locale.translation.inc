@@ -52,7 +52,7 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  *
  * @see locale_translation_build_projects()
  */
-function locale_translation_get_projects($project_names = array()) {
+function locale_translation_get_projects(array $project_names = array()) {
   $projects = &drupal_static(__FUNCTION__, array());
 
   if (empty($projects)) {
@@ -99,7 +99,7 @@ function locale_translation_clear_cache_projects() {
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
+function locale_translation_load_sources(array $projects = NULL, array $langcodes = NULL) {
   $sources = array();
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -129,7 +129,7 @@ function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_build_sources($projects = array(), $langcodes = array()) {
+function locale_translation_build_sources(array $projects = array(), array $langcodes = array()) {
   $sources = array();
   $projects = locale_translation_get_projects($projects);
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -191,7 +191,8 @@ function locale_translation_source_check_file($source) {
  * @param string $langcode
  *   Language code.
  * @param string $filename
- *   File name of translation file. May contain placeholders.
+ *   (optional) File name of translation file. May contain placeholders.
+ *   Defaults to the default translation filename from the settings.
  *
  * @return object
  *   Source object:

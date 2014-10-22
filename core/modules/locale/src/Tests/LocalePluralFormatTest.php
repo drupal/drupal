@@ -267,9 +267,9 @@ class LocalePluralFormatTest extends WebTestBase {
   /**
    * Imports a standalone .po file in a given language.
    *
-   * @param $contents
+   * @param string $contents
    *   Contents of the .po file to import.
-   * @param $options
+   * @param array $options
    *   Additional options to pass to the translation import form.
    */
   public function importPoFile($contents, array $options = array()) {

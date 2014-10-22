@@ -338,10 +338,10 @@ class LocaleImportFunctionalTest extends WebTestBase {
   /**
    * Helper function: import a standalone .po file in a given language.
    *
-   * @param $contents
+   * @param string $contents
    *   Contents of the .po file to import.
-   * @param $options
-   *   Additional options to pass to the translation import form.
+   * @param array $options
+   *   (optional) Additional options to pass to the translation import form.
    */
   public function importPoFile($contents, array $options = array()) {
     $name = tempnam('temporary://', "po_") . '.po';
