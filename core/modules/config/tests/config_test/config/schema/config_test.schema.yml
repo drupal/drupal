@@ -15,9 +15,6 @@ config_test_dynamic:
     style:
       type: string
       label: 'style'
-    test_dependencies:
-      type: config_dependencies
-      label: 'Configuration dependencies'
     protected_property:
       type: string
       label: 'Protected property'

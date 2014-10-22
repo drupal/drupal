@@ -47,8 +47,10 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     $entity1 = $storage->create(
       array(
         'id' => 'entity1',
-        'test_dependencies' => array(
-          'module' => array('node', 'config_test')
+        'dependencies' => array(
+          'enforced' => array(
+            'module' => array('node')
+          )
         )
       )
     );
@@ -63,15 +65,14 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     // Ensure that the provider of the config entity is not actually written to
     // the dependencies array.
     $raw_config = \Drupal::config('config_test.dynamic.entity1');
-    $this->assertTrue(array_search('config_test', $raw_config->get('dependencies.module')) === FALSE, 'Module that the provides the configuration entity is not written to the dependencies array as this is implicit.');
     $this->assertTrue(array_search('node', $raw_config->get('dependencies.module')) !== FALSE, 'Node module is written to the dependencies array as this has to be explicit.');
 
     // Create additional entities to test dependencies on config entities.
-    $entity2 = $storage->create(array('id' => 'entity2', 'test_dependencies' => array('entity' => array($entity1->getConfigDependencyName()))));
+    $entity2 = $storage->create(array('id' => 'entity2', 'dependencies' => array('enforced' => array('entity' => array($entity1->getConfigDependencyName())))));
     $entity2->save();
-    $entity3 = $storage->create(array('id' => 'entity3', 'test_dependencies' => array('entity' => array($entity2->getConfigDependencyName()))));
+    $entity3 = $storage->create(array('id' => 'entity3', 'dependencies' => array('enforced' => array('entity' => array($entity2->getConfigDependencyName())))));
     $entity3->save();
-    $entity4 = $storage->create(array('id' => 'entity4', 'test_dependencies' => array('entity' => array($entity3->getConfigDependencyName()))));
+    $entity4 = $storage->create(array('id' => 'entity4', 'dependencies' => array('enforced' => array('entity' => array($entity3->getConfigDependencyName())))));
     $entity4->save();
 
     // Test getting $entity1's dependencies as configuration dependency objects.
@@ -100,10 +101,8 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     // Test getting node module's dependencies as configuration dependency
     // objects after making $entity3 also dependent on node module but $entity1
     // no longer depend on node module.
-    $entity1->test_dependencies = array();
-    $entity1->save();
-    $entity3->test_dependencies['module'] = array('node');
-    $entity3->save();
+    $entity1->setEnforcedDependencies([])->save();
+    $entity3->setEnforcedDependencies(['module' => ['node'], 'entity' => [$entity2->getConfigDependencyName()]])->save();
     $dependents = $config_manager->findConfigEntityDependents('module', array('node'));
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Node module.');
     $this->assertFalse(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 does not have a dependency on the Node module.');
@@ -113,15 +112,15 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     // Create a configuration entity of a different type with the same ID as one
     // of the entities already created.
     $alt_storage = $this->container->get('entity.manager')->getStorage('config_query_test');
-    $alt_storage->create(array('id' => 'entity1', 'test_dependencies' => array('entity' => array($entity1->getConfigDependencyName()))))->save();
-    $alt_storage->create(array('id' => 'entity2', 'test_dependencies' => array('module' => array('views'))))->save();
+    $alt_storage->create(array('id' => 'entity1', 'dependencies' => array('enforced' => array('entity' => array($entity1->getConfigDependencyName())))))->save();
+    $alt_storage->create(array('id' => 'entity2', 'dependencies' => array('enforced' => array('module' => array('views')))))->save();
 
     $dependents = $config_manager->findConfigEntityDependentsAsEntities('entity', array($entity1->getConfigDependencyName()));
     $dependent_ids = $this->getDependentIds($dependents);
     $this->assertFalse(in_array('config_test:entity1', $dependent_ids), 'config_test.dynamic.entity1 does not have a dependency on itself.');
     $this->assertTrue(in_array('config_test:entity2', $dependent_ids), 'config_test.dynamic.entity2 has a dependency on config_test.dynamic.entity1.');
     $this->assertTrue(in_array('config_test:entity3', $dependent_ids), 'config_test.dynamic.entity3 has a dependency on config_test.dynamic.entity1.');
-    $this->assertTrue(in_array('config_test:entity3', $dependent_ids), 'config_test.dynamic.entity4 has a dependency on config_test.dynamic.entity1.');
+    $this->assertTrue(in_array('config_test:entity4', $dependent_ids), 'config_test.dynamic.entity4 has a dependency on config_test.dynamic.entity1.');
     $this->assertTrue(in_array('config_query_test:entity1', $dependent_ids), 'config_query_test.dynamic.entity1 has a dependency on config_test.dynamic.entity1.');
     $this->assertFalse(in_array('config_query_test:entity2', $dependent_ids), 'config_query_test.dynamic.entity2 does not have a dependency on config_test.dynamic.entity1.');
 
@@ -157,8 +156,10 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     $entity1 = $storage->create(
       array(
         'id' => 'entity1',
-        'test_dependencies' => array(
-          'module' => array('node', 'config_test')
+        'dependencies' => array(
+          'enforced' => array(
+            'module' => array('node', 'config_test')
+          ),
         ),
       )
     );
@@ -166,8 +167,10 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     $entity2 = $storage->create(
       array(
         'id' => 'entity2',
-        'test_dependencies' => array(
-          'entity' => array($entity1->getConfigDependencyName()),
+        'dependencies' => array(
+          'enforced' => array(
+            'entity' => array($entity1->getConfigDependencyName()),
+          ),
         ),
       )
     );
@@ -181,8 +184,10 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     $entity1 = $storage->create(
       array(
         'id' => 'entity1',
-        'test_dependencies' => array(
-          'module' => array('node', 'config_test')
+        'dependencies' => array(
+          'enforced' => array(
+            'module' => array('node', 'config_test')
+          ),
         ),
       )
     );
@@ -190,8 +195,10 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
     $entity2 = $storage->create(
       array(
         'id' => 'entity2',
-        'test_dependencies' => array(
-          'entity' => array($entity1->getConfigDependencyName()),
+        'dependencies' => array(
+          'enforced' => array(
+            'entity' => array($entity1->getConfigDependencyName()),
+          ),
         ),
       )
     );

@@ -172,7 +172,6 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       'label' => 'New',
       'weight' => 0,
       'style' => '',
-      'test_dependencies' => array(),
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);

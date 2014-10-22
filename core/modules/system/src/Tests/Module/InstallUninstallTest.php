@@ -16,7 +16,7 @@ use Drupal\Core\Logger\RfcLogLevel;
  */
 class InstallUninstallTest extends ModuleTestBase {
 
-  public static $modules = array('system_test', 'dblog');
+  public static $modules = array('system_test', 'dblog', 'taxonomy');
 
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.
@@ -153,6 +153,15 @@ class InstallUninstallTest extends ModuleTestBase {
    */
   protected function assertSuccessfullUninstall($module, $package = 'Core') {
     $edit = array();
+    if ($module == 'forum') {
+      // Forum cannot be uninstalled until all of the content entities related
+      // to it have been deleted.
+      $vid = \Drupal::config('forum.settings')->get('vocabulary');
+      $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
+      foreach ($terms as $term) {
+        $term->delete();
+      }
+    }
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));

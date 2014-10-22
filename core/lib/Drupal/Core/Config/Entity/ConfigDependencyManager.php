@@ -19,42 +19,71 @@ use Drupal\Component\Utility\SortArray;
  * handled in the correct order. For example, node types are created before
  * their fields, and both are created before the view display configuration.
  *
- * If a configuration entity is provided as default configuration by an
- * extension (module, theme, or profile), the extension has to depend on any
- * modules or themes that the configuration depends on. For example, if a view
- * configuration entity is provided by an installation profile and the view will
- * not work without a certain module, the profile must declare a dependency on
- * this module in its info.yml file. If you do not want your extension to always
- * depend on a particular module that one of its default configuration entities
- * depends on, you can use a sub-module: move the configuration entity to the
- * sub-module instead of including it in the main extension, and declare the
- * module dependency in the sub-module only.
+ * The configuration dependency value is structured like this:
+ * <code>
+ * array(
+ *   'entity => array(
+ *     // An array of configuration entity object names. Recalculated on save.
+ *   ),
+ *   'module' => array(
+ *     // An array of module names. Recalculated on save.
+ *   ),
+ *   'theme' => array(
+ *     // An array of theme names. Recalculated on save.
+ *   ),
+ *   'enforced' => array(
+ *     // An array of configuration dependencies that the config entity is
+ *     // ensured to have regardless of the details of the configuration. These
+ *     // dependencies are not recalculated on save.
+ *     'entity' => array(),
+ *     'module' => array(),
+ *     'theme' => array(),
+ *   ),
+ * );
+ * </code>
  *
- * Classes for configuration entities with dependencies normally extend
- * \Drupal\Core\Config\Entity\ConfigEntityBase or at least use
- * \Drupal\Core\Plugin\PluginDependencyTrait to manage dependencies. The class
- * must implement
- * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies(),
- * which should calculate (and return) the dependencies. In this method, use
+ * Configuration entity dependencies are recalculated on save based on the
+ * current values of the configuration. For example, a filter format will depend
+ * on the modules that provide the filter plugins it configures. The filter
+ * format can be reconfigured to use a different filter plugin provided by
+ * another module. If this occurs, the dependencies will be recalculated on save
+ * and the old module will be removed from the list of dependencies and replaced
+ * with the new one.
+ *
+ * Configuration entity classes usually extend
+ * \Drupal\Core\Config\Entity\ConfigEntityBase. The base class provides a
+ * generic implementation of the calculateDependencies() method that can
+ * discover dependencies due to enforced dependencies, plugins, and third party
+ * settings. If the configuration entity has dependencies that cannot be
+ * discovered by the base class's implementation, then it needs to implement
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies() to
+ * calculate (and return) the dependencies. In this method, use
  * \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency() to add
- * dependencies. Most implementations call
- * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies() since it
- * provides a generic implementation that will discover dependencies due to
- * plugins and third party settings. To get a configuration entity's current
- * dependencies without forcing a recalculation use
- * \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies().
+ * dependencies. Implementations should call the base class implementation to
+ * inherit the generic functionality.
  *
  * Classes for configurable plugins are a special case. They can either declare
  * their configuration dependencies using the calculateDependencies() method
  * described in the paragraph above, or if they have only static dependencies,
  * these can be declared using the 'config_dependencies' annotation key.
  *
+ * If an extension author wants a configuration entity to depend on something
+ * that is not calculable then they can add these dependencies to the enforced
+ * dependencies key. For example, the Forum module provides the forum node type
+ * and in order for it to be deleted when the forum module is uninstalled it has
+ * an enforced dependency on the module. The dependency on the Forum module can
+ * not be calculated since there is nothing inherent in the state of the node
+ * type configuration entity that depends on functionality provided by the Forum
+ * module.
+ *
  * Once declared properly, dependencies are saved to the configuration entity's
  * configuration object so that they can be checked without the module that
  * provides the configuration entity class being installed. This is important
  * for configuration synchronization, which needs to be able to validate
  * configuration in the staging directory before the synchronization has
- * occurred.
+ * occurred. Also, if you have a configuration entity object and you want to
+ * get the current dependencies without recalculation, you can use
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies().
  *
  * When uninstalling a module or a theme, configuration entities that are
  * dependent will also be removed. This default behavior can lead to undesirable
@@ -65,9 +94,20 @@ use Drupal\Component\Utility\SortArray;
  * which allows the entity class to remove dependencies instead of being deleted
  * themselves. Implementations should save the entity if dependencies have been
  * successfully removed, in order to register the newly cleaned-out dependency
- * list. So, in the above example, the node view mode configuration entity class
+ * list. So, for example, the node view mode configuration entity class
  * should implement this method to remove references to formatters if the plugin
  * that supplies them depends on a module that is being uninstalled.
+ *
+ * If a configuration entity is provided as default configuration by an
+ * extension (module, theme, or profile), the extension has to depend on any
+ * modules or themes that the configuration depends on. For example, if a view
+ * configuration entity is provided by an installation profile and the view will
+ * not work without a certain module, the profile must declare a dependency on
+ * this module in its info.yml file. If you do not want your extension to always
+ * depend on a particular module that one of its default configuration entities
+ * depends on, you can use a sub-module: move the configuration entity to the
+ * sub-module instead of including it in the main extension, and declare the
+ * module dependency in the sub-module only.
  *
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()

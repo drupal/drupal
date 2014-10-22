@@ -1,9 +1,13 @@
-type: forum
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - forum
 name: 'Forum topic'
+type: forum
 description: 'A <em>forum topic</em> starts a new discussion thread within a forum.'
 help: ''
 new_revision: false
-display_submitted: true
 preview_mode: 1
-status: true
-langcode: en
+display_submitted: true

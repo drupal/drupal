@@ -76,8 +76,16 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Purge the data.
     field_purge_batch(1000);
 
+    // Delete any forum terms so it can be uninstalled.
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
+    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
+    foreach ($terms as $term) {
+      $term->delete();
+    }
+
     system_list_reset();
     $all_modules = system_rebuild_module_data();
+
     $modules_to_uninstall = array_filter($all_modules, function ($module) {
       // Filter required and not enabled modules.
       if (!empty($module->info['required']) || $module->status == FALSE) {

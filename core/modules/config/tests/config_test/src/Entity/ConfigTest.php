@@ -72,13 +72,6 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   public $style;
 
   /**
-   * Test dependencies.
-   *
-   * @var array;
-   */
-  public $test_dependencies = array();
-
-  /**
    * A protected property of the configuration entity.
    *
    * @var string
@@ -127,33 +120,36 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    parent::calculateDependencies();
-    foreach ($this->test_dependencies as $type => $deps) {
-      foreach ($deps as $dep) {
-        $this->addDependency($type, $dep);
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
     $fix_deps = \Drupal::state()->get('config_test.fix_dependencies', array());
     foreach ($dependencies['entity'] as $entity) {
       if (in_array($entity->getConfigDependencyName(), $fix_deps)) {
-        $key = array_search($entity->getConfigDependencyName(), $this->test_dependencies['entity']);
+        $key = array_search($entity->getConfigDependencyName(), $this->dependencies['enforced']['entity']);
         if ($key !== FALSE) {
           $changed = TRUE;
-          unset($this->test_dependencies['entity'][$key]);
+          unset($this->dependencies['enforced']['entity'][$key]);
         }
       }
     }
     if ($changed) {
       $this->save();
     }
+  }
+
+  /**
+   * Sets the enforced dependencies.
+   *
+   * @param array $dependencies
+   *   A config dependency array.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   */
+  public function setEnforcedDependencies(array $dependencies) {
+    $this->dependencies['enforced'] = $dependencies;
+    return $this;
   }
 
 }

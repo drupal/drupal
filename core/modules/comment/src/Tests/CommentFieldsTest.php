@@ -63,6 +63,36 @@ class CommentFieldsTest extends CommentTestBase {
   }
 
   /**
+   * Tests that you can remove a comment field.
+   */
+  public function testCommentFieldDelete() {
+    $this->drupalCreateContentType(array('type' => 'test_node_type'));
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
+    // We want to test the handling of removing the primary comment field, so we
+    // ensure there is at least one other comment field attached to a node type
+    // so that comment_entity_load() runs for nodes.
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'comment2');
+
+    // Create a sample node.
+    $node = $this->drupalCreateNode(array(
+      'title' => 'Baloney',
+      'type' => 'test_node_type',
+    ));
+
+    $this->drupalLogin($this->web_user);
+
+    $this->drupalGet('node/' . $node->nid->value);
+    $elements = $this->cssSelect('.field-type-comment');
+    $this->assertEqual(2, count($elements), 'There are two comment fields on the node.');
+
+    // Delete the first comment field.
+    FieldStorageConfig::loadByName('node', 'comment')->delete();
+    $this->drupalGet('node/' . $node->nid->value);
+    $elements = $this->cssSelect('.field-type-comment');
+    $this->assertEqual(1, count($elements), 'There is one comment field on the node.');
+  }
+
+  /**
    * Tests that comment module works when installed after a content module.
    */
   function testCommentInstallAfterContentModule() {

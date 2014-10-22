@@ -36,6 +36,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
     'system',
     'taxonomy',
     'user',
+    'text',
   );
 
   /**
@@ -61,6 +62,8 @@ class BlockConfigSchemaTest extends KernelTestBase {
     $this->typedConfig = \Drupal::service('config.typed');
     $this->blockManager = \Drupal::service('plugin.manager.block');
     $this->installEntitySchema('block_content');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('node');
   }
 
   /**

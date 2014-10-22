@@ -58,7 +58,6 @@ class ConfigImportUITest extends WebTestBase {
       'label' => 'New',
       'weight' => 0,
       'style' => '',
-      'test_dependencies' => array(),
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);
@@ -367,7 +366,6 @@ class ConfigImportUITest extends WebTestBase {
       'label' => 'Primary',
       'weight' => 0,
       'style' => NULL,
-      'test_dependencies' => array(),
       'protected_property' => null,
     );
     $staging->write($name_primary, $values_primary);
@@ -383,7 +381,6 @@ class ConfigImportUITest extends WebTestBase {
       'label' => 'Secondary Sync',
       'weight' => 0,
       'style' => NULL,
-      'test_dependencies' => array(),
       'protected_property' => null,
     );
     $staging->write($name_secondary, $values_secondary);

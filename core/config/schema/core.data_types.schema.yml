@@ -208,9 +208,8 @@ route:
           label: 'Param'
 
 # Config dependencies.
-config_dependencies:
+config_dependencies_base:
   type: mapping
-  label: 'Configuration dependencies'
   mapping:
     entity:
       type: sequence
@@ -227,6 +226,14 @@ config_dependencies:
       label: 'Theme dependencies'
       sequence:
         - type: string
+
+config_dependencies:
+  type: config_dependencies_base
+  label: 'Configuration dependencies'
+  mapping:
+    enforced:
+      type: config_dependencies_base
+      label: 'Enforced configuration dependencies'
 
 config_entity:
   type: mapping

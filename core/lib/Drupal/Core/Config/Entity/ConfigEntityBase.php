@@ -316,7 +316,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function calculateDependencies() {
     // Dependencies should be recalculated on every save. This ensures stale
     // dependencies are never saved.
-    $this->dependencies = array();
+    if (isset($this->dependencies['enforced'])) {
+      $dependencies = $this->dependencies['enforced'];
+      $this->dependencies = $dependencies;
+      $this->dependencies['enforced'] = $dependencies;
+    }
+    else {
+      $this->dependencies = array();
+    }
     if ($this instanceof EntityWithPluginCollectionInterface) {
       // Configuration entities need to depend on the providers of any plugins
       // that they store the configuration for.

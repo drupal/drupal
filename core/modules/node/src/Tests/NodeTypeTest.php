@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Ensures that node type functions work correctly.
@@ -183,20 +184,29 @@ class NodeTypeTest extends NodeTestBase {
       'The content type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
-    // Test that forum node type could not be deleted while forum active.
-    $this->container->get('module_handler')->install(array('forum'));
+
+    // Test that a locked node type could not be deleted.
+    $this->container->get('module_handler')->install(array('node_test_config'));
+    // Lock the default node type.
+    $locked = \Drupal::state()->get('node.type.locked');
+    $locked['default'] = 'default';
+    \Drupal::state()->set('node.type.locked', $locked);
     // Call to flush all caches after installing the forum module in the same
     // way installing a module through the UI does.
     $this->resetAll();
-    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->drupalGet('admin/structure/types/manage/default');
     $this->assertNoLink(t('Delete'));
-    $this->drupalGet('admin/structure/types/manage/forum/delete');
+    $this->drupalGet('admin/structure/types/manage/default/delete');
     $this->assertResponse(403);
-    $this->container->get('module_handler')->uninstall(array('forum'));
-    $this->drupalGet('admin/structure/types/manage/forum');
-    $this->assertLink(t('Delete'));
-    $this->drupalGet('admin/structure/types/manage/forum/delete');
+    $this->container->get('module_handler')->uninstall(array('node_test_config'));
+    $this->container = \Drupal::getContainer();
+    unset($locked['default']);
+    \Drupal::state()->set('node.type.locked', $locked);
+    $this->drupalGet('admin/structure/types/manage/default');
+    $this->clickLink(t('Delete'));
     $this->assertResponse(200);
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');
   }
 
   /**

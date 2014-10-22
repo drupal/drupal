@@ -9,7 +9,12 @@ namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\String;
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\Session\UserSession;
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -29,7 +34,8 @@ class ForumUninstallTest extends WebTestBase {
   /**
    * Tests if forum module uninstallation properly deletes the field.
    */
-  function testForumUninstallWithField() {
+  public function testForumUninstallWithField() {
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'administer nodes', 'administer modules', 'delete any forum content', 'administer content types']));
     // Ensure that the field exists before uninstallation.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field_storage, 'The taxonomy_forums field storage exists.');
@@ -65,27 +71,69 @@ class ForumUninstallTest extends WebTestBase {
     ));
     $comment->save();
 
-    // Uninstall the forum module which should trigger field deletion.
-    $this->container->get('module_handler')->uninstall(array('forum'));
+    // Attempt to uninstall forum.
+    $this->drupalGet('admin/modules/uninstall');
+    // Assert forum is required.
+    $this->assertNoFieldByName('uninstall[forum]');
+    $this->drupalGet('admin/modules');
+    $this->assertText('To uninstall Forum first delete all Forum content');
 
-    // We want to test the handling of removing the forum comment field, so we
-    // ensure there is at least one other comment field attached to a node type
-    // so that comment_entity_load() runs for nodes.
-    \Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'another_comment_field', CommentItemInterface::OPEN, 'another_comment_field');
+    // Delete the node.
+    $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
 
-    $this->drupalGet('node/' . $node->nid->value);
-    $this->assertResponse(200);
+    // Attempt to uninstall forum.
+    $this->drupalGet('admin/modules/uninstall');
+    // Assert forum is still required.
+    $this->assertNoFieldByName('uninstall[forum]');
+    $this->drupalGet('admin/modules');
+    $this->assertText('To uninstall Forum first delete all Forums terms');
+
+    // Delete any forum terms.
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
+    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
+    foreach ($terms as $term) {
+      $term->delete();
+    }
+
+    // Ensure that the forum node type can not be deleted.
+    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->assertNoLink(t('Delete'));
+
+    // Now attempt to uninstall forum.
+    $this->drupalGet('admin/modules/uninstall');
+    // Assert forum is no longer required.
+    $this->assertFieldByName('uninstall[forum]');
+    $this->drupalGet('admin/modules');
+    $this->assertNoText('To uninstall Forum first delete all Forum content');
+    $this->drupalPostForm('admin/modules/uninstall', array(
+      'uninstall[forum]' => 1,
+    ), t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
 
     // Check that the field is now deleted.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNull($field_storage, 'The taxonomy_forums field storage has been deleted.');
-  }
 
+    // Check that a node type with a machine name of forum can be created after
+    // uninstalling the forum module and the node type is not locked.
+    $edit = array(
+      'name' => 'Forum',
+      'title_label' => 'title for forum',
+      'type' => 'forum',
+    );
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
+    $this->assertTrue((bool) NodeType::load('forum'), 'Node type with machine forum created.');
+    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->clickLink(t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertResponse(200);
+    $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
+  }
 
   /**
    * Tests uninstallation if the field storage has been deleted beforehand.
    */
-  function testForumUninstallWithoutFieldStorage() {
+  public function testForumUninstallWithoutFieldStorage() {
     // Manually delete the taxonomy_forums field before module uninstallation.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field_storage, 'The taxonomy_forums field storage exists.');
