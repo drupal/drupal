@@ -372,8 +372,8 @@ function install_begin_request(&$install_state) {
   $container->get('request_stack')->push($request);
 
   // Register the file translation service.
-  if (isset($GLOBALS['config']['locale.settings']['translation.path'])) {
-    $directory = $GLOBALS['config']['locale.settings']['translation.path'];
+  if (isset($GLOBALS['config']['locale.settings']['translation']['path'])) {
+    $directory = $GLOBALS['config']['locale.settings']['translation']['path'];
   }
   else {
     $directory = $site_path . '/files/translations';
