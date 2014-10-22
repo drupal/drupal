@@ -406,7 +406,10 @@ class ImageItem extends FileItem {
       '#description' => t('Image to be shown if no image is uploaded.'),
       '#default_value' => empty($settings['default_image']['fid']) ? array() : array($settings['default_image']['fid']),
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
-      '#element_validate' => array('file_managed_file_validate', array(get_class($this), 'validateDefaultImageForm')),
+      '#element_validate' => array(
+        '\Drupal\file\Element\ManagedFile::validateManagedFile',
+        array(get_class($this), 'validateDefaultImageForm'),
+      ),
       '#upload_validators' => $this->getUploadValidators(),
     );
     $element['default_image']['alt'] = array(

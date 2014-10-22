@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\file\Element\ManagedFile;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -289,7 +290,7 @@ class FileWidget extends WidgetBase {
     }
 
     // We depend on the managed file element to handle uploads.
-    $return = file_managed_file_value($element, $input, $form_state);
+    $return = ManagedFile::valueCallback($element, $input, $form_state);
 
     // Ensure that all the required properties are returned even if empty.
     $return += array(

@@ -49,34 +49,6 @@ function file_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_element_info().
- *
- * The managed file element may be used anywhere in Drupal.
- */
-function file_element_info() {
-  $types['managed_file'] = array(
-    '#input' => TRUE,
-    '#process' => array('file_managed_file_process'),
-    '#value_callback' => 'file_managed_file_value',
-    '#element_validate' => array('file_managed_file_validate'),
-    '#pre_render' => array('file_managed_file_pre_render'),
-    '#theme' => 'file_managed_file',
-    '#theme_wrappers' => array('form_element'),
-    '#progress_indicator' => 'throbber',
-    '#progress_message' => NULL,
-    '#upload_validators' => array(),
-    '#upload_location' => NULL,
-    '#size' => 22,
-    '#multiple' => FALSE,
-    '#extended' => FALSE,
-    '#attached' => array(
-      'library' => array('file/drupal.file'),
-    ),
-  );
-  return $types;
-}
-
-/**
  * Loads file entities from the database.
  *
  * @param array $fids
@@ -1092,273 +1064,9 @@ function file_token_info() {
 }
 
 /**
- * Render API callback: Expands the managed_file element type.
- *
- * Expands the file type to include Upload and Remove buttons, as well as
- * support for a default value.
- *
- * This function is assigned as a #process callback in file_element_info().
- */
-function file_managed_file_process($element, FormStateInterface $form_state, $form) {
-  // Append the '-upload' to the #id so the field label's 'for' attribute
-  // corresponds with the file element.
-  $element['#id'] .= '-upload';
-
-  // This is used sometimes so let's implode it just once.
-  $parents_prefix = implode('_', $element['#parents']);
-
-  $fids = isset($element['#value']['fids']) ? $element['#value']['fids'] : array();
-
-  // Set some default element properties.
-  $element['#progress_indicator'] = empty($element['#progress_indicator']) ? 'none' : $element['#progress_indicator'];
-  $element['#files'] = !empty($fids) ? file_load_multiple($fids) : FALSE;
-  $element['#tree'] = TRUE;
-
-  $ajax_settings = array(
-    'path' => 'file/ajax',
-    'options' => array(
-      'query' => array(
-        'element_parents' => implode('/', $element['#array_parents']),
-        'form_build_id' => $form['form_build_id']['#value'],
-      ),
-    ),
-    'wrapper' => $element['#id'] . '-ajax-wrapper',
-    'effect' => 'fade',
-    'progress' => array(
-      'type' => $element['#progress_indicator'],
-      'message' => $element['#progress_message'],
-    ),
-  );
-
-  // Set up the buttons first since we need to check if they were clicked.
-  $element['upload_button'] = array(
-    '#name' => $parents_prefix . '_upload_button',
-    '#type' => 'submit',
-    '#value' => t('Upload'),
-    '#attributes' => array('class' => array('js-hide')),
-    '#validate' => array(),
-    '#submit' => array('file_managed_file_submit'),
-    '#limit_validation_errors' => array($element['#parents']),
-    '#ajax' => $ajax_settings,
-    '#weight' => -5,
-  );
-
-  // Force the progress indicator for the remove button to be either 'none' or
-  // 'throbber', even if the upload button is using something else.
-  $ajax_settings['progress']['type'] = ($element['#progress_indicator'] == 'none') ? 'none' : 'throbber';
-  $ajax_settings['progress']['message'] = NULL;
-  $ajax_settings['effect'] = 'none';
-  $element['remove_button'] = array(
-    '#name' => $parents_prefix . '_remove_button',
-    '#type' => 'submit',
-    '#value' => $element['#multiple'] ? t('Remove selected') : t('Remove'),
-    '#validate' => array(),
-    '#submit' => array('file_managed_file_submit'),
-    '#limit_validation_errors' => array($element['#parents']),
-    '#ajax' => $ajax_settings,
-    '#weight' => 1,
-  );
-
-  $element['fids'] = array(
-    '#type' => 'hidden',
-    '#value' => $fids,
-  );
-
-  // Add progress bar support to the upload if possible.
-  if ($element['#progress_indicator'] == 'bar' && $implementation = file_progress_implementation()) {
-    $upload_progress_key = mt_rand();
-
-    if ($implementation == 'uploadprogress') {
-      $element['UPLOAD_IDENTIFIER'] = array(
-        '#type' => 'hidden',
-        '#value' => $upload_progress_key,
-        '#attributes' => array('class' => array('file-progress')),
-        // Uploadprogress extension requires this field to be at the top of the
-        // form.
-        '#weight' => -20,
-      );
-    }
-    elseif ($implementation == 'apc') {
-      $element['APC_UPLOAD_PROGRESS'] = array(
-        '#type' => 'hidden',
-        '#value' => $upload_progress_key,
-        '#attributes' => array('class' => array('file-progress')),
-        // Uploadprogress extension requires this field to be at the top of the
-        // form.
-        '#weight' => -20,
-      );
-    }
-
-    // Add the upload progress callback.
-    $element['upload_button']['#ajax']['progress']['path'] = 'file/progress/' . $upload_progress_key;
-  }
-
-  // The file upload field itself.
-  $element['upload'] = array(
-    '#name' => 'files[' . $parents_prefix . ']',
-    '#type' => 'file',
-    '#title' => t('Choose a file'),
-    '#title_display' => 'invisible',
-    '#size' => $element['#size'],
-    '#multiple' => $element['#multiple'],
-    '#theme_wrappers' => array(),
-    '#weight' => -10,
-  );
-
-  if (!empty($fids) && $element['#files']) {
-    foreach ($element['#files'] as $delta => $file) {
-      $file_link = array(
-        '#theme' => 'file_link',
-        '#file' => $file,
-      );
-      if ($element['#multiple']) {
-        $element['file_' . $delta]['selected'] = array(
-          '#type' => 'checkbox',
-          '#title' => drupal_render($file_link),
-        );
-      }
-      else {
-        $element['file_' . $delta]['filename'] = $file_link += array('#weight' => -10);
-      }
-    }
-  }
-
-  // Add the extension list to the page as JavaScript settings.
-  if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
-    $extension_list = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
-    $element['upload']['#attached']['js'] = array(
-      array(
-        'type' => 'setting',
-        'data' => array('file' => array('elements' => array('#' . $element['#id'] => $extension_list)))
-      )
-    );
-  }
-
-  // Prefix and suffix used for Ajax replacement.
-  $element['#prefix'] = '<div id="' . $element['#id'] . '-ajax-wrapper">';
-  $element['#suffix'] = '</div>';
-
-  return $element;
-}
-
-/**
- * Render API callback: Determines the value for a managed_file type element.
- *
- * This function is assigned as a #value_callback in file_element_info().
- */
-function file_managed_file_value(&$element, $input, FormStateInterface $form_state) {
-  // Find the current value of this field.
-  $fids = !empty($input['fids']) ? explode(' ', $input['fids']) : array();
-  foreach ($fids as $key => $fid) {
-    $fids[$key] = (int) $fid;
-  }
-
-  // Process any input and save new uploads.
-  if ($input !== FALSE) {
-    $input['fids'] = $fids;
-    $return = $input;
-
-    // Uploads take priority over all other values.
-    if ($files = file_managed_file_save_upload($element, $form_state)) {
-      if ($element['#multiple']) {
-        $fids = array_merge($fids, array_keys($files));
-      }
-      else {
-        $fids = array_keys($files);
-      }
-    }
-    else {
-      // Check for #filefield_value_callback values.
-      // Because FAPI does not allow multiple #value_callback values like it
-      // does for #element_validate and #process, this fills the missing
-      // functionality to allow File fields to be extended through FAPI.
-      if (isset($element['#file_value_callbacks'])) {
-        foreach ($element['#file_value_callbacks'] as $callback) {
-          $callback($element, $input, $form_state);
-        }
-      }
-
-      // Load files if the FIDs have changed to confirm they exist.
-      if (!empty($input['fids'])) {
-        $fids = array();
-        foreach ($input['fids'] as $fid) {
-          if ($file = file_load($fid)) {
-            $fids[] = $file->id();
-          }
-        }
-      }
-    }
-  }
-
-  // If there is no input, set the default value.
-  else {
-    if ($element['#extended']) {
-      $default_fids = isset($element['#default_value']['fids']) ? $element['#default_value']['fids'] : array();
-      $return = isset($element['#default_value']) ? $element['#default_value'] : array('fids' => array());
-    }
-    else {
-      $default_fids = isset($element['#default_value']) ? $element['#default_value'] : array();
-      $return = array('fids' => array());
-    }
-
-    // Confirm that the file exists when used as a default value.
-    if (!empty($default_fids)) {
-      $fids = array();
-      foreach ($default_fids as $fid) {
-        if ($file = file_load($fid)) {
-          $fids[] = $file->id();
-        }
-      }
-    }
-  }
-
-  $return['fids'] = $fids;
-  return $return;
-}
-
-/**
- * Render API callback: Validates the managed_file element.
- *
- * This function is assigned as a #element_validate callback in
- * file_element_info().
- */
-function file_managed_file_validate(&$element, FormStateInterface $form_state) {
-  // If referencing an existing file, only allow if there are existing
-  // references. This prevents unmanaged files from being deleted if this
-  // item were to be deleted.
-  $clicked_button = end($form_state->getTriggeringElement()['#parents']);
-  if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
-    $fids = $element['fids']['#value'];
-    foreach ($fids as $fid) {
-      if ($file = file_load($fid)) {
-        if ($file->isPermanent()) {
-          $references = \Drupal::service('file.usage')->listUsage($file);
-          if (empty($references)) {
-            $form_state->setError($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
-          }
-        }
-      }
-      else {
-        $form_state->setError($element, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
-      }
-    }
-  }
-
-  // Check required property based on the FID.
-  if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, array('upload_button', 'remove_button'))) {
-    $form_state->setError($element['upload'], t('!name field is required.', array('!name' => $element['#title'])));
-  }
-
-  // Consolidate the array value of this field to array of FIDs.
-  if (!$element['#extended']) {
-    form_set_value($element, $element['fids']['#value'], $form_state);
-  }
-}
-
-/**
  * Form submission handler for upload / remove buttons of managed_file elements.
  *
- * @see file_managed_file_process()
+ * @see \Drupal\file\Element\ManagedFile::processManagedFile()
  */
 function file_managed_file_submit($form, FormStateInterface $form_state) {
   // Determine whether it was the upload or the remove button that was clicked,
@@ -1368,9 +1076,10 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
   $element = NestedArray::getValue($form, $parents);
 
   // No action is needed here for the upload button, because all file uploads on
-  // the form are processed by file_managed_file_value() regardless of which
-  // button was clicked. Action is needed here for the remove button, because we
-  // only remove a file in response to its remove button being clicked.
+  // the form are processed by \Drupal\file\Element\ManagedFile::valueCallback()
+  // regardless of which button was clicked. Action is needed here for the
+  // remove button, because we only remove a file in response to its remove
+  // button being clicked.
   if ($button_key == 'remove_button') {
     $fids = array_keys($element['#files']);
     // Get files that will be removed.
@@ -1404,8 +1113,9 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
     // $form_state->getValues() must be updated in case additional submit
     // handlers run, and for form building functions that run during the
     // rebuild, such as when the managed_file element is part of a field widget.
-    // FormState::$input must be updated so that file_managed_file_value()
-    // has correct information during the rebuild.
+    // FormState::$input must be updated so that
+    // \Drupal\file\Element\ManagedFile::valueCallback() has correct information
+    // during the rebuild.
     form_set_value($element['fids'], implode(' ', $fids), $form_state);
     NestedArray::setValue($form_state->getUserInput(), $element['fids']['#parents'], implode(' ', $fids));
   }
@@ -1485,41 +1195,6 @@ function template_preprocess_file_managed_file(&$variables) {
     $variables['attributes']['class'] = (array) $element['#attributes']['class'];
   }
   $variables['attributes']['class'][] = 'form-managed-file';
-}
-
-/**
- * Render API callback: Hides display of the upload or remove controls.
- *
- * Upload controls are hidden when a file is already uploaded. Remove controls
- * are hidden when there is no file attached. Controls are hidden here instead
- * of in file_managed_file_process(), because #access for these buttons depends
- * on the managed_file element's #value. See the documentation of
- * \Drupal::formBuilder()->doBuildForm() for more detailed information about the
- * relationship between #process, #value, and #access.
- *
- * Because #access is set here, it affects display only and does not prevent
- * JavaScript or other untrusted code from submitting the form as though access
- * were enabled. The form processing functions for these elements should not
- * assume that the buttons can't be "clicked" just because they are not
- * displayed.
- *
- * This function is assigned as a #pre_render callback in file_element_info().
- *
- * @see file_managed_file_process()
- */
-function file_managed_file_pre_render($element) {
-  // If we already have a file, we don't want to show the upload controls.
-  if (!empty($element['#value']['fids'])) {
-    if (!$element['#multiple']) {
-      $element['upload']['#access'] = FALSE;
-      $element['upload_button']['#access'] = FALSE;
-    }
-  }
-  // If we don't already have a file, there is nothing to remove.
-  else {
-    $element['remove_button']['#access'] = FALSE;
-  }
-  return $element;
 }
 
 /**
