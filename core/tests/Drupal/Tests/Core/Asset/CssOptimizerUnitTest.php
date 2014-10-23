@@ -200,7 +200,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
     $cases = array(
       array(
         'asset' => array(
-          'type' => 'inline', 
+          'type' => 'inline',
           'data' => '@charset "UTF-8";html{font-family:"sans-serif";}',
           'preprocess' => FALSE,
         ),

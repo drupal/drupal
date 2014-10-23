@@ -10,7 +10,7 @@ namespace Drupal\simpletest\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * This test will check SimpleTest's treatment of hook_install during setUp. 
+ * This test will check SimpleTest's treatment of hook_install during setUp.
  * Image module is used for test.
  *
  * @group simpletest
