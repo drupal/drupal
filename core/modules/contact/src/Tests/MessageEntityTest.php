@@ -22,7 +22,13 @@ class MessageEntityTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'contact', 'field', 'user');
+  public static $modules = array(
+    'system',
+    'contact',
+    'field',
+    'user',
+    'contact_test',
+  );
 
   protected function setUp() {
     parent::setUp();

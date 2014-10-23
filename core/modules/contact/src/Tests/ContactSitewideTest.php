@@ -23,7 +23,7 @@ class ContactSitewideTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('text', 'contact', 'field_ui');
+  public static $modules = array('text', 'contact', 'field_ui', 'contact_test');
 
   /**
    * Tests configuration options and the site-wide contact form.

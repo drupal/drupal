@@ -8,6 +8,7 @@
 namespace Drupal\standard\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\contact\Entity\ContactForm;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -112,6 +113,10 @@ class StandardTest extends WebTestBase {
     \Drupal::moduleHandler()->uninstall(array('editor', 'ckeditor'));
     $this->rebuildContainer();
     \Drupal::moduleHandler()->install(array('editor'));
+    /** @var \Drupal\contact\ContactFormInterface $contact_form */
+    $contact_form = ContactForm::load('feedback');
+    $recipients = $contact_form->getRecipients();
+    $this->assertEqual(['simpletest@example.com'], $recipients);
   }
 
 }

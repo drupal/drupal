@@ -27,6 +27,7 @@ class ContactStorageTest extends ContactSitewideTest {
     'contact',
     'field_ui',
     'contact_storage_test',
+    'contact_test',
   );
 
   public static function getInfo() {

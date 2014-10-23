@@ -1,0 +1,8 @@
+name: 'Contact test module'
+type: module
+description: 'Contains test contact form.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - contact

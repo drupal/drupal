@@ -27,7 +27,7 @@ class ConfigTranslationUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'contact', 'config_translation', 'config_translation_test', 'views', 'views_ui', 'contextual');
+  public static $modules = array('node', 'contact', 'contact_test', 'config_translation', 'config_translation_test', 'views', 'views_ui', 'contextual');
 
   /**
    * Languages to enable.

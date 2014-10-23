@@ -22,7 +22,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'contact');
+  public static $modules = array('locale', 'contact', 'contact_test');
 
   /**
    * {@inheritdoc}
