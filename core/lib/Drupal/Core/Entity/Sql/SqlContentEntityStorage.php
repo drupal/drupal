@@ -1715,7 +1715,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       $is_deleted = $this->storageDefinitionIsDeleted($storage_definition);
-      $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
+      if ($this->entityType->isRevisionable()) {
+        $table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
+      }
+      else {
+        $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
+      }
       $query = $this->database->select($table_name, 't');
       $or = $query->orConditionGroup();
       foreach ($storage_definition->getColumns() as $column_name => $data) {
