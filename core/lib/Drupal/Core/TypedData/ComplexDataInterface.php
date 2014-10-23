@@ -100,13 +100,4 @@ interface ComplexDataInterface extends TraversableTypedDataInterface  {
    */
   public function isEmpty();
 
-  /**
-   * React to changes to a child property.
-   *
-   * Note that this is invoked after any changes have been applied.
-   *
-   * @param $property_name
-   *   The name of the property which is changed.
-   */
-  public function onChange($property_name);
 }

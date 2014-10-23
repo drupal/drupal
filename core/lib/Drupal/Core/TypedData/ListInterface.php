@@ -39,16 +39,6 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
   public function getItemDefinition();
 
   /**
-   * React to changes to a child item.
-   *
-   * Note that this is invoked after any changes have been applied.
-   *
-   * @param $delta
-   *   The delta of the item which is changed.
-   */
-  public function onChange($delta);
-
-  /**
    * Returns the item at the specified position in this list.
    *
    * @param int $index
