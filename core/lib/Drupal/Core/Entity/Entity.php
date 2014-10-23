@@ -561,4 +561,11 @@ abstract class Entity implements EntityInterface {
     return $this->traitSleep();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyName() {
+    return $this->getEntityTypeId() . ':' . $this->bundle() . ':' . $this->uuid();
+  }
+
 }

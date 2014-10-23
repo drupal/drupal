@@ -27,6 +27,6 @@ status: true
 langcode: en
 field_type: image
 dependencies:
-  entity:
+  config:
     - field.storage.node.field_image
     - node.type.article

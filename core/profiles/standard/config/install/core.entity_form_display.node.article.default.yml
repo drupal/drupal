@@ -38,7 +38,7 @@ content:
 hidden: {  }
 status: true
 dependencies:
-  entity:
+  config:
     - field.field.node.article.body
     - field.field.node.article.comment
     - field.field.node.article.field_image

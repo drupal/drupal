@@ -170,7 +170,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   public function calculateDependencies() {
     parent::calculateDependencies();
     // Mark the field_storage_config as a a dependency.
-    $this->addDependency('entity', $this->getFieldStorageDefinition()->getConfigDependencyName());
+    $this->addDependency('config', $this->getFieldStorageDefinition()->getConfigDependencyName());
     return $this->dependencies;
   }
 

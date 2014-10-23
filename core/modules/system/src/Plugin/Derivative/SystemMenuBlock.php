@@ -52,7 +52,7 @@ class SystemMenuBlock extends DeriverBase implements ContainerDeriverInterface {
     foreach ($this->menuStorage->loadMultiple() as $menu => $entity) {
       $this->derivatives[$menu] = $base_plugin_definition;
       $this->derivatives[$menu]['admin_label'] = $entity->label();
-      $this->derivatives[$menu]['config_dependencies']['entity'] = array($entity->getConfigDependencyName());
+      $this->derivatives[$menu]['config_dependencies']['config'] = array($entity->getConfigDependencyName());
     }
     return $this->derivatives;
   }

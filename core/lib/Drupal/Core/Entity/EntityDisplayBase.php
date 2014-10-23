@@ -162,7 +162,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
       $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
-      $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
+      $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }
     else {
       // Depend on the provider of the entity type.
@@ -173,7 +173,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     foreach ($fields as $field_name => $component) {
       $field = FieldConfig::loadByName($this->targetEntityType, $this->bundle, $field_name);
       if ($field) {
-        $this->addDependency('entity', $field->getConfigDependencyName());
+        $this->addDependency('config', $field->getConfigDependencyName());
       }
       // Create a dependency on the module that provides the formatter or
       // widget.
@@ -190,7 +190,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Depend on configured modes.
     if ($this->mode != 'default') {
       $mode_entity = \Drupal::entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
-      $this->addDependency('entity', $mode_entity->getConfigDependencyName());
+      $this->addDependency('config', $mode_entity->getConfigDependencyName());
     }
     return $this->dependencies;
   }
@@ -387,7 +387,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
-    foreach ($dependencies['entity'] as $entity) {
+    foreach ($dependencies['config'] as $entity) {
       if ($entity instanceof FieldConfigInterface) {
         // Remove components for fields that are being deleted.
         $this->removeComponent($entity->getName());

@@ -17,5 +17,5 @@ content:
     settings: { }
     third_party_settings: {  }
 dependencies:
-  entity:
+  config:
     - taxonomy.vocabulary.forums

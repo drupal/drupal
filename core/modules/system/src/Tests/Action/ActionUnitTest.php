@@ -91,7 +91,7 @@ class ActionUnitTest extends DrupalUnitTestBase {
     $action->save();
 
     $expected = array(
-      'entity' => array(
+      'config' => array(
         'user.role.' . DRUPAL_ANONYMOUS_RID,
       ),
       'module' => array(

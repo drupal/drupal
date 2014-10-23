@@ -13,5 +13,5 @@ content:
 hidden: {  }
 status: true
 dependencies:
-  entity:
+  config:
     - taxonomy.vocabulary.forums

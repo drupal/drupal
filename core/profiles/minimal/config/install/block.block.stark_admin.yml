@@ -16,7 +16,7 @@ settings:
   level: 1
   depth: 0
 dependencies:
-  entity:
+  config:
     - system.menu.admin
   module:
     - system

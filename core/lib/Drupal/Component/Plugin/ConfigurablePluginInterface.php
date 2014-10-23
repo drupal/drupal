@@ -47,18 +47,19 @@ interface ConfigurablePluginInterface {
    * dependencies listing the specified roles.
    *
    * @return array
-   *   An array of dependencies grouped by type (module, theme, entity). For
-   *   example:
+   *   An array of dependencies grouped by type (config, content, module,
+   *   theme). For example:
    *   @code
    *   array(
-   *     'entity' => array('user.role.anonymous', 'user.role.authenticated'),
+   *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
+   *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
    *     'module' => array('node', 'user'),
    *     'theme' => array('seven'),
    *   );
    *   @endcode
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
-   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
    */
   public function calculateDependencies();
 

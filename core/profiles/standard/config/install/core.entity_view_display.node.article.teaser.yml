@@ -26,7 +26,7 @@ content:
     third_party_settings: {  }
     label: above
 dependencies:
-  entity:
+  config:
     - core.entity_view_mode.node.teaser
     - field.field.node.article.body
     - field.field.node.article.field_image

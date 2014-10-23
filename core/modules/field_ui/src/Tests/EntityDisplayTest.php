@@ -89,7 +89,7 @@ class EntityDisplayTest extends KernelTestBase {
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
     $dependencies = $new_display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
+    $this->assertEqual(array('config' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
     $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
     $this->assertEqual($new_display->bundle, $display->bundle);
     $this->assertEqual($new_display->mode, 'other_view_mode');
@@ -200,7 +200,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Check that the display has dependencies on the field and the module that
     // provides the formatter.
     $dependencies = $display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('field.field.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
+    $this->assertEqual(array('config' => array('field.field.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
   }
 
   /**
@@ -292,7 +292,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertEqual('node.article_rename.default', $new_form_display->id);
 
     $expected_view_dependencies = array(
-      'entity' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
+      'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
       'module' => array('entity_test', 'text', 'user')
     );
     // Check that the display has dependencies on the bundle, fields and the
@@ -304,7 +304,7 @@ class EntityDisplayTest extends KernelTestBase {
     // the modules that provide the formatters.
     $dependencies = $new_form_display->calculateDependencies();
     $expected_form_dependencies = array(
-      'entity' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
+      'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
       'module' => array('text')
     );
     $this->assertEqual($expected_form_dependencies, $dependencies);

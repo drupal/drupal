@@ -86,7 +86,8 @@ interface ConfigManagerInterface {
    * Finds config entities that are dependent on extensions or entities.
    *
    * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
    * @param array $names
    *   The specific names to check. If $type equals 'module' or 'theme' then it
    *   should be a list of module names or theme names. In the case of entity it
@@ -101,7 +102,8 @@ interface ConfigManagerInterface {
    * Finds config entities that are dependent on extensions or entities.
    *
    * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
    * @param array $names
    *   The specific names to check. If $type equals 'module' or 'theme' then it
    *   should be a list of module names or theme names. In the case of entity it

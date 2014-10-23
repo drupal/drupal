@@ -12,7 +12,7 @@ fieldMappings:
     properties:
       - 'schema:description'
 dependencies:
-  entity:
+  config:
     - taxonomy.vocabulary.forums
   module:
     - taxonomy

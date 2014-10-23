@@ -404,4 +404,18 @@ interface EntityInterface extends AccessibleInterface {
    */
   public function getCacheTags();
 
+  /**
+   * Gets the configuration dependency name.
+   *
+   * Configuration entities can depend on content and configuration entities.
+   * They store an array of content and config dependency names in their
+   * "dependencies" key.
+   *
+   * @return string
+   *   The configuration dependency name.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   */
+  public function getConfigDependencyName();
+
 }

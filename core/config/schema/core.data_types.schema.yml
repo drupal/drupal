@@ -211,9 +211,14 @@ route:
 config_dependencies_base:
   type: mapping
   mapping:
-    entity:
+    config:
       type: sequence
-      label: 'Entity dependencies'
+      label: 'Configuration entity dependencies'
+      sequence:
+        - type: string
+    content:
+      type: sequence
+      label: 'Content entity dependencies'
       sequence:
         - type: string
     module:

@@ -86,7 +86,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
   public function calculateDependencies() {
     if (!empty($this->configuration['rid'])) {
       $prefix = $this->entityType->getConfigPrefix() . '.';
-      $this->addDependency('entity', $prefix . $this->configuration['rid']);
+      $this->addDependency('config', $prefix . $this->configuration['rid']);
     }
     return $this->dependencies;
   }

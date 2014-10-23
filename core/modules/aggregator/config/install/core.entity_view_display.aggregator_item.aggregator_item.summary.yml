@@ -13,7 +13,7 @@ hidden:
   description: true
 status: true
 dependencies:
-  entity:
+  config:
     - core.entity_view_mode.aggregator_item.summary
   module:
     - aggregator

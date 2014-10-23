@@ -103,7 +103,7 @@ class ViewsBlock implements ContainerDeriverInterface {
             'category' => $display->getOption('block_category'),
             'admin_label' => $desc,
             'config_dependencies' => array(
-              'entity' => array(
+              'config' => array(
                 $view->getConfigDependencyName(),
               )
             )

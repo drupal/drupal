@@ -14,6 +14,6 @@ default_value_callback: ''
 settings: {  }
 field_type: boolean
 dependencies:
-  entity:
+  config:
     - field.storage.taxonomy_term.forum_container
     - taxonomy.vocabulary.forums

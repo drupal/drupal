@@ -2,7 +2,7 @@
 langcode: en
 status: true
 dependencies:
-  entity:
+  config:
     - node.type.page
 id: node.page.promote
 field_name: promote

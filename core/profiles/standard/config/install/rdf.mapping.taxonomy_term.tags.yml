@@ -11,7 +11,7 @@ fieldMappings:
     properties:
       - 'schema:description'
 dependencies:
-  entity:
+  config:
     - taxonomy.vocabulary.tags
   module:
     - taxonomy

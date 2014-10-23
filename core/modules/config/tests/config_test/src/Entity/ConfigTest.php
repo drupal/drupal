@@ -123,12 +123,12 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
     $fix_deps = \Drupal::state()->get('config_test.fix_dependencies', array());
-    foreach ($dependencies['entity'] as $entity) {
+    foreach ($dependencies['config'] as $entity) {
       if (in_array($entity->getConfigDependencyName(), $fix_deps)) {
-        $key = array_search($entity->getConfigDependencyName(), $this->dependencies['enforced']['entity']);
+        $key = array_search($entity->getConfigDependencyName(), $this->dependencies['enforced']['config']);
         if ($key !== FALSE) {
           $changed = TRUE;
-          unset($this->dependencies['enforced']['entity'][$key]);
+          unset($this->dependencies['enforced']['config'][$key]);
         }
       }
     }

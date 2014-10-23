@@ -41,7 +41,7 @@ fieldMappings:
     properties:
       - 'schema:about'
 dependencies:
-  entity:
+  config:
     - node.type.article
   module:
     - node

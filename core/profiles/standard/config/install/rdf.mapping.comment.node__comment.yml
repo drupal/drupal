@@ -27,5 +27,5 @@ fieldMappings:
 dependencies:
   module:
     - comment
-  entity:
+  config:
     - comment.type.comment

@@ -50,7 +50,8 @@ class ConfigEntityDependency {
    * Gets the configuration entity's dependencies of the supplied type.
    *
    * @param string $type
-   *   The type of dependency to return. Either 'module', 'theme', 'entity'.
+   *   The type of dependency to return. Either 'module', 'theme', 'config' or
+   *   'content'.
    *
    * @return array
    *   The list of dependencies of the supplied type.
@@ -70,7 +71,8 @@ class ConfigEntityDependency {
    * Determines if the entity is dependent on extensions or entities.
    *
    * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
    * @param string $name
    *   The specific name to check. If $type equals 'module' or 'theme' then it
    *   should be a module name or theme name. In the case of entity it should be
@@ -89,7 +91,7 @@ class ConfigEntityDependency {
   /**
    * Gets the configuration entity's configuration dependency name.
    *
-   * @see Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
    *
    * @return string
    *   The configuration dependency name for the entity.

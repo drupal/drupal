@@ -94,7 +94,7 @@ class ViewsExposedFilterBlock implements ContainerDeriverInterface {
             $this->derivatives[$delta] = array(
               'admin_label' => $desc,
               'config_dependencies' => array(
-                'entity' => array(
+                'config' => array(
                   $view->getConfigDependencyName(),
                 )
               )

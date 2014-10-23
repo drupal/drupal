@@ -22,8 +22,12 @@ use Drupal\Component\Utility\SortArray;
  * The configuration dependency value is structured like this:
  * <code>
  * array(
- *   'entity => array(
+ *   'config => array(
  *     // An array of configuration entity object names. Recalculated on save.
+ *   ),
+ *   'content => array(
+ *     // An array of content entity configuration dependency names. The default
+ *     // format is "ENTITY_TYPE_ID:BUNDLE:UUID". Recalculated on save.
  *   ),
  *   'module' => array(
  *     // An array of module names. Recalculated on save.
@@ -35,7 +39,8 @@ use Drupal\Component\Utility\SortArray;
  *     // An array of configuration dependencies that the config entity is
  *     // ensured to have regardless of the details of the configuration. These
  *     // dependencies are not recalculated on save.
- *     'entity' => array(),
+ *     'config' => array(),
+ *     'content' => array(),
  *     'module' => array(),
  *     'theme' => array(),
  *   ),
@@ -110,12 +115,12 @@ use Drupal\Component\Utility\SortArray;
  * module dependency in the sub-module only.
  *
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
- * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval()
  * @see \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency()
  * @see \Drupal\Core\Config\ConfigInstallerInterface::installDefaultConfig()
  * @see \Drupal\Core\Config\ConfigManagerInterface::uninstall()
  * @see \Drupal\Core\Config\Entity\ConfigEntityDependency
+ * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
  * @see \Drupal\Core\Plugin\PluginDependencyTrait
  */
 class ConfigDependencyManager {
@@ -138,7 +143,8 @@ class ConfigDependencyManager {
    * Gets dependencies.
    *
    * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
    * @param string $name
    *   The specific name to check. If $type equals 'module' or 'theme' then it
    *   should be a module name or theme name. In the case of entity it should be
@@ -151,17 +157,17 @@ class ConfigDependencyManager {
     $dependent_entities = array();
 
     $entities_to_check = array();
-    if ($type == 'entity') {
+    if ($type == 'config') {
       $entities_to_check[] = $name;
     }
     else {
-      if ($type == 'module' || $type ==  'theme') {
+      if ($type == 'module' || $type == 'theme' || $type == 'content') {
         $dependent_entities = array_filter($this->data, function (ConfigEntityDependency $entity) use ($type, $name) {
           return $entity->hasDependency($type, $name);
         });
       }
-      // If checking module or theme dependencies then discover which entities
-      // are dependent on the entities that have a direct dependency.
+      // If checking content, module, or theme dependencies, discover which
+      // entities are dependent on the entities that have a direct dependency.
       foreach ($dependent_entities as $entity) {
         $entities_to_check[] =  $entity->getConfigDependencyName();
       }
@@ -243,7 +249,7 @@ class ConfigDependencyManager {
       foreach ($this->data as $entity) {
         $graph_key = $entity->getConfigDependencyName();
         $graph[$graph_key]['edges'] = array();
-        $dependencies = $entity->getDependencies('entity');
+        $dependencies = $entity->getDependencies('config');
         if (!empty($dependencies)) {
           foreach ($dependencies as $dependency) {
             $graph[$graph_key]['edges'][$dependency] = TRUE;

@@ -67,7 +67,7 @@ class StorageComparerTest extends UnitTestCase {
         'id' => 'node.article.body',
         'uuid' => $uuid->generate(),
         'dependencies' => array(
-          'entity' => array(
+          'config' => array(
             'field.storage.node.body'
           ),
         ),

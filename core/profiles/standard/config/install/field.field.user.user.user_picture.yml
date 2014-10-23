@@ -27,5 +27,5 @@ settings:
   title_field_required: false
 field_type: image
 dependencies:
-  entity:
+  config:
     - field.storage.user.user_picture

@@ -132,8 +132,8 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'field_type' => 'test_field',
     ), $this->entityTypeId);
     $dependencies = $field->calculateDependencies();
-    $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['entity']);
-    $this->assertContains('test.test_entity_type.id', $dependencies['entity']);
+    $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['config']);
+    $this->assertContains('test.test_entity_type.id', $dependencies['config']);
   }
 
   /**

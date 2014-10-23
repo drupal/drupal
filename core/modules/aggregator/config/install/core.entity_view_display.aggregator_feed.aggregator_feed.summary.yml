@@ -16,7 +16,7 @@ hidden:
   feed_icon: true
 status: true
 dependencies:
-  entity:
+  config:
     - core.entity_view_mode.aggregator_feed.summary
   module:
     - aggregator

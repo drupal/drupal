@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies:
-  entity:
+  config:
     - core.entity_view_mode.node.teaser
     - field.field.node.options_install_test.body
     - node.type.options_install_test

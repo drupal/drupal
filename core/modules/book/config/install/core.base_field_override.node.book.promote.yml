@@ -2,7 +2,7 @@
 langcode: en
 status: true
 dependencies:
-  entity:
+  config:
     - node.type.book
 id: node.book.promote
 field_name: promote

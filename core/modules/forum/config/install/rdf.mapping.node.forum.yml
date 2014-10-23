@@ -32,7 +32,7 @@ fieldMappings:
       arguments:
         interaction_type: 'UserComments'
 dependencies:
-  entity:
+  config:
     - node.type.forum
   module:
     - node

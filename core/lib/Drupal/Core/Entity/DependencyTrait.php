@@ -28,7 +28,7 @@ trait DependencyTrait {
    *   If $type is 'module' or 'theme', the name of the module or theme. If
    *   $type is 'entity', the full configuration object name.
    *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
    *
    * @return $this
    */

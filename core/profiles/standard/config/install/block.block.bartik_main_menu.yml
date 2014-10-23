@@ -17,7 +17,7 @@ settings:
   level: 1
   depth: 1
 dependencies:
-  entity:
+  config:
     - system.menu.main
   module:
     - system

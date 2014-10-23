@@ -944,7 +944,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
    */
   public function getDependencies() {
     // Add the module providing the configured field storage as a dependency.
-    return array('entity' => array($this->getFieldStorageConfig()->getConfigDependencyName()));
+    return array('config' => array($this->getFieldStorageConfig()->getConfigDependencyName()));
   }
 
   /**

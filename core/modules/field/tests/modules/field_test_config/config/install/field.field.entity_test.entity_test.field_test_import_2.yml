@@ -11,5 +11,5 @@ default_value_callback: ''
 settings: { }
 field_type: text
 dependencies:
-  entity:
+  config:
     - field.storage.entity_test.field_test_import_2

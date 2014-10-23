@@ -162,7 +162,7 @@ class SystemMenuBlockTest extends KernelTestBase {
 
     $dependencies = $block->calculateDependencies();
     $expected = array(
-      'entity' => array(
+      'config' => array(
         'system.menu.' . $this->menu->id()
       ),
       'module' => array(

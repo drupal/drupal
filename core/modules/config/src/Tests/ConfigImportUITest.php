@@ -375,7 +375,7 @@ class ConfigImportUITest extends WebTestBase {
       'status' => TRUE,
       // Add a dependency on primary, to ensure that is synced first.
       'dependencies' => array(
-        'entity' => array($name_primary),
+        'config' => array($name_primary),
       ),
       'id' => 'secondary',
       'label' => 'Secondary Sync',

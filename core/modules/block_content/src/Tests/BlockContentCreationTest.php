@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\block_content\Entity\BlockContent;
 
@@ -208,6 +209,27 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
     $this->assertNoText('This will also remove');
+  }
+
+  /**
+   * Test that placed content blocks create a dependency in the block placement.
+   */
+  public function testConfigDependencies() {
+    $block = $this->createBlockContent();
+    // Place the block.
+    $block_placement_id = Unicode::strtolower($block->label());
+    $instance = array(
+      'id' => $block_placement_id,
+      'settings[label]' => $block->label(),
+      'region' => 'sidebar_first',
+    );
+    $block = entity_load('block_content', 1);
+    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
+    $this->drupalPostForm($url, $instance, t('Save block'));
+
+    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', array($block->getConfigDependencyName()));
+    $block_placement = reset($dependencies);
+    $this->assertEqual($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }
 
 }

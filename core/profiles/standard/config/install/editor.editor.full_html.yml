@@ -54,7 +54,7 @@ image_upload:
 status: true
 langcode: en
 dependencies:
-  entity:
+  config:
     - filter.format.full_html
   module:
     - ckeditor

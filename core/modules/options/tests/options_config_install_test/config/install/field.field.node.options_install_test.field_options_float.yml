@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies:
-  entity:
+  config:
     - field.storage.node.field_options_float
     - node.type.options_install_test
 id: node.options_install_test.field_options_float

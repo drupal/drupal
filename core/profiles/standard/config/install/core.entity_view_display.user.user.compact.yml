@@ -15,7 +15,7 @@ hidden:
   member_for: true
 status: true
 dependencies:
-  entity:
+  config:
     - core.entity_view_mode.user.compact
   module:
     - image

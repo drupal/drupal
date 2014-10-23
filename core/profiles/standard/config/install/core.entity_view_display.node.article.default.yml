@@ -25,7 +25,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 dependencies:
-  entity:
+  config:
     - field.field.node.article.body
     - field.field.node.article.field_image
     - field.field.node.article.field_tags

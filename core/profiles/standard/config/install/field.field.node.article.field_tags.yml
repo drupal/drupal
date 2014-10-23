@@ -12,6 +12,6 @@ settings: {  }
 status: true
 langcode: en
 dependencies:
-  entity:
+  config:
     - field.storage.node.field_tags
     - node.type.article

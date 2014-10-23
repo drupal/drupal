@@ -17,7 +17,7 @@ settings:
   level: 1
   depth: 0
 dependencies:
-  entity:
+  config:
     - system.menu.footer
   module:
     - system

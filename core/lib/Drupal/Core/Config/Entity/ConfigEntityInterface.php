@@ -152,16 +152,6 @@ interface ConfigEntityInterface extends EntityInterface {
   public function calculateDependencies();
 
   /**
-   * Gets the configuration dependency name.
-   *
-   * @return string
-   *   The configuration dependency name.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
-   */
-  public function getConfigDependencyName();
-
-  /**
    * Informs the entity that entities it depends on will be deleted.
    *
    * This method allows configuration entities to remove dependencies instead

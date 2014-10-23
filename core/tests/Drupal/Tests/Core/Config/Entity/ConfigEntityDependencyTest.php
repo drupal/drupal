@@ -22,7 +22,7 @@ class ConfigEntityDependencyTest extends UnitTestCase {
 
     $this->assertEquals('config_test.dynamic.entity_id', $dep->getConfigDependencyName());
     $this->assertEquals(array(), $dep->getDependencies('theme'));
-    $this->assertEquals(array(), $dep->getDependencies('entity'));
+    $this->assertEquals(array(), $dep->getDependencies('config'));
     $this->assertEquals(array('config_test'), $dep->getDependencies('module'));
     $this->assertTrue($dep->hasDependency('module', 'config_test'));
     $this->assertFalse($dep->hasDependency('module', 'views'));
@@ -36,7 +36,7 @@ class ConfigEntityDependencyTest extends UnitTestCase {
           'node',
           'views'
         ),
-        'entity' => array(
+        'config' => array(
           'config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84',
         ),
       ),
@@ -44,14 +44,14 @@ class ConfigEntityDependencyTest extends UnitTestCase {
     $dep = new ConfigEntityDependency('config_test.dynamic.entity_id', $values);
 
     $this->assertEquals(array(), $dep->getDependencies('theme'));
-    $this->assertEquals(array('config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'), $dep->getDependencies('entity'));
+    $this->assertEquals(array('config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'), $dep->getDependencies('config'));
     $this->assertEquals(array('node', 'views', 'config_test'), $dep->getDependencies('module'));
     $this->assertTrue($dep->hasDependency('module', 'config_test'));
     $this->assertTrue($dep->hasDependency('module', 'views'));
     $this->assertTrue($dep->hasDependency('module', 'node'));
     $this->assertFalse($dep->hasDependency('module', 'block'));
-    $this->assertTrue($dep->hasDependency('entity', 'config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'));
-    $this->assertFalse($dep->hasDependency('entity', 'config_test.dynamic.another_id:7dfa5cb7-2248-4d52-8c00-cd8e02d1e78e'));
+    $this->assertTrue($dep->hasDependency('config', 'config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'));
+    $this->assertFalse($dep->hasDependency('config', 'config_test.dynamic.another_id:7dfa5cb7-2248-4d52-8c00-cd8e02d1e78e'));
   }
 
 }

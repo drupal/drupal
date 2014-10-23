@@ -192,14 +192,14 @@ class ConfigManager implements ConfigManagerInterface {
       // Work out if any of the entity's dependencies are going to be affected
       // by the uninstall.
       $affected_dependencies = array(
-        'entity' => array(),
+        'config' => array(),
         'module' => array(),
         'theme' => array(),
       );
-      if (isset($entity_dependencies['entity'])) {
+      if (isset($entity_dependencies['config'])) {
         foreach ($extension_dependent_entities as $extension_dependent_entity) {
-          if (in_array($extension_dependent_entity->getConfigDependencyName(), $entity_dependencies['entity'])) {
-            $affected_dependencies['entity'][] = $extension_dependent_entity;
+          if (in_array($extension_dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
+            $affected_dependencies['config'][] = $extension_dependent_entity;
           }
         }
       }
