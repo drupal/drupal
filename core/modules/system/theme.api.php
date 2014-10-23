@@ -158,7 +158,7 @@
  * suggestions as input, and can change this array (adding suggestions and
  * removing them).
  *
- * @section Assets
+ * @section assets Assets
  *
  * We can distinguish between three types of assets:
  * 1. unconditional page-level assets (loaded on all pages where the theme is in
@@ -187,7 +187,7 @@
  * @see callbacks
  * @see theme_render
  *
- * @} End of "defgroup themeable".
+ * @}
  */
 
 /**
