@@ -2261,8 +2261,6 @@ function drupal_clear_js_cache() {
  *   The fully populated response.
  * @param \Symfony\Component\HttpFoundation\Request $request
  *   The request for this page.
- *
- * @see drupal_page_header()
  */
 function drupal_page_set_cache(Response $response, Request $request) {
   // Check if the current page may be compressed.
