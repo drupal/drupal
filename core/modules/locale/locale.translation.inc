@@ -83,7 +83,7 @@ function locale_translation_get_projects(array $project_names = array()) {
  * Clears the projects cache.
  */
 function locale_translation_clear_cache_projects() {
-  drupal_static('locale_translation_get_projects', array());
+  drupal_static_reset('locale_translation_get_projects');
 }
 
 /**
