@@ -20,7 +20,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Component\Utility\Crypt;
 
 /**
@@ -198,7 +198,7 @@ function locale_theme() {
 /**
  * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
  */
-function locale_configurable_language_insert(ConfigurableLanguage $language) {
+function locale_configurable_language_insert(ConfigurableLanguageInterface $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface: clear render cache.
   \Drupal::cache('render')->deleteAll();
@@ -209,7 +209,7 @@ function locale_configurable_language_insert(ConfigurableLanguage $language) {
 /**
  * Implements hook_ENTITY_TYPE_update() for 'configurable_language'.
  */
-function locale_configurable_language_update(ConfigurableLanguage $language) {
+function locale_configurable_language_update(ConfigurableLanguageInterface $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface: clear render cache.
   \Drupal::cache('render')->deleteAll();
@@ -220,7 +220,7 @@ function locale_configurable_language_update(ConfigurableLanguage $language) {
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
  */
-function locale_configurable_language_delete(ConfigurableLanguage $language) {
+function locale_configurable_language_delete(ConfigurableLanguageInterface $language) {
   // Remove translations.
   \Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->id()));
 
