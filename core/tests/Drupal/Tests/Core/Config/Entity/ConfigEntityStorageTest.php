@@ -235,8 +235,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object->expects($this->atLeastOnce())
       ->method('isNew')
       ->will($this->returnValue(TRUE));
-    $config_object->expects($this->exactly(3))
-      ->method('set');
+    $config_object->expects($this->exactly(1))
+      ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
 
@@ -294,8 +294,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object->expects($this->atLeastOnce())
       ->method('isNew')
       ->will($this->returnValue(FALSE));
-    $config_object->expects($this->exactly(3))
-      ->method('set');
+    $config_object->expects($this->exactly(1))
+      ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
 
@@ -354,8 +354,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object->expects($this->atLeastOnce())
       ->method('isNew')
       ->will($this->returnValue(FALSE));
-    $config_object->expects($this->exactly(3))
-      ->method('set');
+    $config_object->expects($this->exactly(1))
+      ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
 
