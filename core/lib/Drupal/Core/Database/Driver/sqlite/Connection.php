@@ -336,7 +336,7 @@ class Connection extends DatabaseConnection {
     }
     // A previous rollback to an earlier savepoint may mean that the savepoint
     // in question has already been rolled back.
-    if (!in_array($savepoint_name, $this->transactionLayers)) {
+    if (!isset($this->transactionLayers[$savepoint_name])) {
       return;
     }
 
