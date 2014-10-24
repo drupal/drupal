@@ -586,21 +586,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # $config['user.settings']['anonymous'] = 'Visitor';
 
 /**
- * CSS/JS aggregated file gzip compression:
- *
- * By default, when CSS or JS aggregation and clean URLs are enabled Drupal will
- * store a gzip compressed (.gz) copy of the aggregated files. If this file is
- * available then rewrite rules in the default .htaccess file will serve these
- * files to browsers that accept gzip encoded content. This allows pages to load
- * faster for these users and has minimal impact on server load. If you are
- * using a webserver other than Apache httpd, or a caching reverse proxy that is
- * configured to cache and compress these files itself you may want to uncomment
- * one or both of the below lines, which will prevent gzip files being stored.
- */
-# $config['system.performance']['css']['gzip'] = FALSE;
-# $config['system.performance']['js']['gzip'] = FALSE;
-
-/**
  * Fast 404 pages:
  *
  * Drupal can generate fully themed 404 pages. However, some of these responses

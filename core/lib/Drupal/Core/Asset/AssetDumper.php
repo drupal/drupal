@@ -41,7 +41,7 @@ class AssetDumper implements AssetDumperInterface {
     // file) in generating the file anyway. Sites on servers where rewrite rules
     // aren't working can set css.gzip to FALSE in order to skip
     // generating a file that won't be used.
-    if (\Drupal::config('system.performance')->get($file_extension . '.gzip') && extension_loaded('zlib')) {
+    if (extension_loaded('zlib') && \Drupal::config('system.performance')->get($file_extension . '.gzip')) {
       if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
         return FALSE;
       }
