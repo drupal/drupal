@@ -1371,9 +1371,12 @@ div.tabs {
   background: #f0f0f0;
   background: rgba(30, 50, 10, 0.08);
 }
-div.messages,
+div.messages {
+  margin: 8px 15px 8px 23px; /* LTR */
+}
 [dir="rtl"] div.messages {
-  margin: 8px 15px;
+  margin-right: 23px;
+  margin-left: 15px;
 }
 
 /* -------------- Breadcrumbs   -------------- */
