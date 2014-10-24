@@ -587,9 +587,9 @@ function template_preprocess_node(&$variables) {
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
-  $variables['date'] = drupal_render($variables['elements']['created'], TRUE);
+  $variables['date'] = drupal_render($variables['elements']['created']);
   unset($variables['elements']['created']);
-  $variables['author_name'] = drupal_render($variables['elements']['uid'], TRUE);
+  $variables['author_name'] = drupal_render($variables['elements']['uid']);
   unset($variables['elements']['uid']);
 
   $variables['url'] = $node->url('canonical', array(

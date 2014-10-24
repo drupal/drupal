@@ -96,7 +96,7 @@ class DialogController {
       );
     }
 
-    $content = drupal_render($page_content);
+    $content = drupal_render_root($page_content);
     drupal_process_attached($page_content);
     $title = isset($page_content['#title']) ? $page_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
     $response = new AjaxResponse();

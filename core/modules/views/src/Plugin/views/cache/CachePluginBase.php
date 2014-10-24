@@ -143,7 +143,7 @@ abstract class CachePluginBase extends PluginBase {
         break;
       case 'output':
         $this->gatherHeaders($this->view->display_handler->output);
-        $this->storage['output'] = drupal_render($this->view->display_handler->output, TRUE);
+        $this->storage['output'] = drupal_render($this->view->display_handler->output);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }

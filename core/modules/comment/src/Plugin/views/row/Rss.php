@@ -130,7 +130,7 @@ class Rss extends RowPluginBase {
 
     if ($view_mode != 'title') {
       // We render comment contents.
-      $item_text .= drupal_render($build);
+      $item_text .= drupal_render_root($build);
     }
 
     $item = new \stdClass();
@@ -146,7 +146,7 @@ class Rss extends RowPluginBase {
       '#options' => $this->options,
       '#row' => $item,
     );
-    return drupal_render($build);
+    return drupal_render_root($build);
   }
 
 }

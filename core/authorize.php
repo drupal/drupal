@@ -104,7 +104,7 @@ if (authorize_access_allowed()) {
       '#theme' => 'authorize_report',
       '#messages' => $results['messages'],
     );
-    $output = drupal_render($authorize_report);
+    $output = drupal_render_root($authorize_report);
 
     $links = array();
     if (is_array($results['tasks'])) {
@@ -122,7 +122,7 @@ if (authorize_access_allowed()) {
       '#items' => $links,
       '#title' => t('Next steps'),
     );
-    $output .= drupal_render($item_list);
+    $output .= drupal_render_root($item_list);
   }
   // If a batch is running, let it run.
   elseif ($request->query->has('batch')) {
@@ -135,7 +135,7 @@ if (authorize_access_allowed()) {
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
       $elements = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
-      $output = drupal_render($elements);
+      $output = drupal_render_root($elements);
     }
   }
   // We defer the display of messages until all operations are done.

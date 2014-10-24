@@ -58,14 +58,14 @@ class AjaxResponseRenderer {
       }
     }
 
-    $html = $this->drupalRender($content);
+    $html = $this->drupalRenderRoot($content);
 
     // The selector for the insert command is NULL as the new content will
     // replace the element making the Ajax call. The default 'replaceWith'
     // behavior can be changed with #ajax['method'].
     $response->addCommand(new InsertCommand(NULL, $html));
     $status_messages = array('#theme' => 'status_messages');
-    $output = $this->drupalRender($status_messages);
+    $output = $this->drupalRenderRoot($status_messages);
     if (!empty($output)) {
       $response->addCommand(new PrependCommand(NULL, $output));
     }
@@ -73,12 +73,12 @@ class AjaxResponseRenderer {
   }
 
   /**
-   * Wraps drupal_render().
+   * Wraps drupal_render_root().
    *
    * @todo: Remove as part of https://drupal.org/node/2182149
    */
-  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
-    $output = drupal_render($elements, $is_recursive_call);
+  protected function drupalRenderRoot(&$elements) {
+    $output = drupal_render_root($elements);
     drupal_process_attached($elements);
     return $output;
   }

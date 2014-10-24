@@ -180,7 +180,7 @@ class RssFields extends RowPluginBase {
       '#row' => $item,
       '#field_alias' => isset($this->field_alias) ? $this->field_alias : '',
     );
-    return drupal_render($build);
+    return drupal_render_root($build);
   }
 
   /**

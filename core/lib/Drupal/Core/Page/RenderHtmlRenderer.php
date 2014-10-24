@@ -39,7 +39,7 @@ class RenderHtmlRenderer implements RenderHtmlRendererInterface {
    * {@inheritdoc}
    */
   public function render(array $render_array) {
-    $content = $this->drupalRender($render_array);
+    $content = $this->drupalRenderRoot($render_array);
     if (!empty($render_array)) {
       drupal_process_attached($render_array);
     }
@@ -78,11 +78,11 @@ class RenderHtmlRenderer implements RenderHtmlRendererInterface {
   }
 
   /**
-   * Wraps drupal_render().
+   * Wraps drupal_render_root().
    *
-   * @todo: Convert drupal_render into a proper injectable service.
+   * @todo: Convert drupal_render_root into a proper injectable service.
    */
-  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
-    return drupal_render($elements, $is_recursive_call);
+  protected function drupalRenderRoot(&$elements) {
+    return drupal_render_root($elements);
   }
 }

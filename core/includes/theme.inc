@@ -378,7 +378,7 @@ function _theme($hook, $variables = array()) {
     // that we're preprocessing variables for.
     if (isset($variables['#attached'])) {
       $preprocess_attached = ['#attached' => $variables['#attached']];
-      drupal_render($preprocess_attached, TRUE);
+      drupal_render($preprocess_attached);
     }
   }
 

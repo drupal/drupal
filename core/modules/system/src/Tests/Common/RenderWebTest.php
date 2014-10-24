@@ -149,7 +149,7 @@ class RenderWebTest extends WebTestBase {
    */
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
     $original_element = $element;
-    $this->drupalSetContent(drupal_render($element));
+    $this->drupalSetContent(drupal_render_root($element));
     $this->verbose('<hr />' . $this->drupalGetContent());
 
     // @see \Drupal\simpletest\WebTestBase::xpath()

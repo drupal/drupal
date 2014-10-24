@@ -234,7 +234,7 @@ class FilterAPITest extends EntityUnitTestBase {
       '#text' => '<p>Hello, world!</p>',
       '#format' => 'element_test',
     );
-    drupal_render($build);
+    drupal_render_root($build);
 
     // Verify the assets, cache tags and #post_render_cache callbacks.
     $expected_assets = array(

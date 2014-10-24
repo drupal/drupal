@@ -501,7 +501,7 @@ class RenderTest extends DrupalUnitTestBase {
     // #cache disabled.
     $element = $test_element;
     $element['#markup'] = '<p>#cache disabled</p>';
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
     $expected_js = [
@@ -518,7 +518,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['#cache'] = array('cid' => 'post_render_cache_test_GET');
     $element['#markup'] = '<p>#cache enabled, GET</p>';
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
@@ -542,7 +542,7 @@ class RenderTest extends DrupalUnitTestBase {
     // GET request: #cache enabled, cache hit.
     $element['#cache'] = array('cid' => 'post_render_cache_test_GET');
     $element['#markup'] = '<p>#cache enabled, GET</p>';
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
@@ -560,7 +560,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['#cache'] = array('cid' => 'post_render_cache_test_POST');
     $element['#markup'] = '<p>#cache enabled, POST</p>';
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
@@ -624,7 +624,7 @@ class RenderTest extends DrupalUnitTestBase {
       '#markup' => 'Subchild',
     );
     $element = $test_element;
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
@@ -672,7 +672,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // GET request: #cache enabled, cache hit.
     $element = $test_element;
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
@@ -681,7 +681,7 @@ class RenderTest extends DrupalUnitTestBase {
     // Use the exact same element, but now unset #cache.
     unset($test_element['#cache']);
     $element = $test_element;
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
     $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
@@ -697,7 +697,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
     $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
@@ -768,7 +768,7 @@ class RenderTest extends DrupalUnitTestBase {
     // GET request: #cache enabled, cache hit, parent element.
     $element = $test_element;
     $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
@@ -777,7 +777,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
     $element = $element['child'];
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $expected_js = [
@@ -815,7 +815,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // #cache disabled.
     $element = $test_element;
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $expected_js = [
       ['type' => 'setting', 'data' => ['common_test' => $context]],
@@ -829,7 +829,7 @@ class RenderTest extends DrupalUnitTestBase {
     // GET request: #cache enabled, cache miss.
     $element = $test_element;
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
@@ -866,7 +866,7 @@ class RenderTest extends DrupalUnitTestBase {
     // GET request: #cache enabled, cache hit.
     $element = $test_element;
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
@@ -903,7 +903,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // #cache disabled.
     $element = $test_element;
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $expected_js = [
       ['type' => 'setting', 'data' => ['common_test' => $context]],
@@ -919,7 +919,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
     $element['foo']['#cache'] = array('cid' => 'render_cache_placeholder_test_child_GET');
     // Render, which will use the common-test-render-element.html.twig template.
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output); //, 'Placeholder was replaced in output');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
@@ -1014,7 +1014,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
     // Render, which will use the common-test-render-element.html.twig template.
-    $output = drupal_render($element);
+    $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
@@ -1110,7 +1110,7 @@ class RenderTest extends DrupalUnitTestBase {
       \Drupal::cache('render')->set('cached_nested', array('#markup' => 'Cached nested!', '#attached' => array(), '#cache' => array('tags' => array()), '#post_render_cache' => array()));
       \Drupal::cache('render')->delete('uncached_nested');
 
-      $output = drupal_render($test_element);
+      $output = drupal_render_root($test_element);
       // Assert top-level.
       $this->assertEqual('Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
       $this->assertEqual(array('child:cache_tag'), $test_element['#cache']['tags'], 'Expected cache tags found.');

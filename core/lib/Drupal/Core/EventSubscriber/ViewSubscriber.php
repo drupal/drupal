@@ -116,7 +116,7 @@ class ViewSubscriber implements EventSubscriberInterface {
         $page_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
       }
 
-      $event->setResponse(new Response(drupal_render($page_result)));
+      $event->setResponse(new Response(drupal_render_root($page_result)));
     }
   }
 

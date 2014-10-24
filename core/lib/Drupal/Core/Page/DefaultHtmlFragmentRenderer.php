@@ -55,9 +55,9 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     // Build the HtmlPage object.
     $page = new HtmlPage('', array(), $fragment->getTitle());
     $page = $this->preparePage($page, $page_array);
-    $page->setBodyTop(drupal_render($page_array['page_top']));
-    $page->setBodyBottom(drupal_render($page_array['page_bottom']));
-    $page->setContent(drupal_render($page_array));
+    $page->setBodyTop(drupal_render_root($page_array['page_top']));
+    $page->setBodyBottom(drupal_render_root($page_array['page_bottom']));
+    $page->setContent(drupal_render_root($page_array));
     $page->setStatusCode($status_code);
 
     drupal_process_attached($page_array);

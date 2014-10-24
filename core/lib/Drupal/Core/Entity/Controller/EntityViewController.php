@@ -79,7 +79,7 @@ class EntityViewController implements ContainerInjectionInterface {
         $build = $this->entityManager->getTranslationFromContext($_entity)
           ->get($label_field)
           ->view($view_mode);
-        $page['#title'] = drupal_render($build, TRUE);
+        $page['#title'] = drupal_render($build);
       }
     }
 

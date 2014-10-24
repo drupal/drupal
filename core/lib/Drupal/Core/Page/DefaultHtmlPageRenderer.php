@@ -108,9 +108,9 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
     //   available in hook_page_alter(), so that HTML attributes can be altered.
     $page = \Drupal::service('html_fragment_renderer')->preparePage($page, $page_array);
 
-    $page->setBodyTop(drupal_render($page_array['page_top']));
-    $page->setBodyBottom(drupal_render($page_array['page_bottom']));
-    $page->setContent(drupal_render($page_array));
+    $page->setBodyTop(drupal_render_root($page_array['page_top']));
+    $page->setBodyBottom(drupal_render_root($page_array['page_bottom']));
+    $page->setContent(drupal_render_root($page_array));
     drupal_process_attached($page_array);
     if (isset($page_array['page_top'])) {
       drupal_process_attached($page_array['page_top']);

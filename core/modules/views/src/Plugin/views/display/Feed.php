@@ -81,7 +81,7 @@ class Feed extends PathPluginBase {
 
     $response = $this->view->getResponse();
 
-    $response->setContent(drupal_render($output));
+    $response->setContent(drupal_render_root($output));
 
     return $response;
   }
@@ -95,7 +95,7 @@ class Feed extends PathPluginBase {
     if (!empty($this->view->live_preview)) {
       $output = array(
         '#prefix' => '<pre>',
-        '#markup' => String::checkPlain(drupal_render($output)),
+        '#markup' => String::checkPlain(drupal_render_root($output)),
         '#suffix' => '</pre>',
       );
     }

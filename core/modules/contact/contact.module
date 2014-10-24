@@ -115,7 +115,7 @@ function contact_mail($key, &$message, $params) {
       $message['subject'] .= t('[!form] !subject', $variables, $options);
       $message['body'][] = t("!sender-name (!sender-url) sent a message using the contact form at !form-url.", $variables, $options);
       $build = entity_view($contact_message, 'mail', $language->getId());
-      $message['body'][] = drupal_render($build);
+      $message['body'][] = drupal_render_root($build);
       break;
 
     case 'page_autoreply':
@@ -134,7 +134,7 @@ function contact_mail($key, &$message, $params) {
       $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form at !site-name.", $variables, $options);
       $message['body'][] = t("If you don't want to receive such emails, you can change your settings at !recipient-edit-url.", $variables, $options);
       $build = entity_view($contact_message, 'mail', $language->getId());
-      $message['body'][] = drupal_render($build);
+      $message['body'][] = drupal_render_root($build);
       break;
   }
 }

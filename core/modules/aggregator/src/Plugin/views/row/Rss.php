@@ -103,7 +103,7 @@ class Rss extends RowPluginBase {
       '#options' => $this->options,
       '#row' => $item,
     );
-    return drupal_render($build);
+    return drupal_render_root($build);
   }
 
 }

@@ -2504,6 +2504,29 @@ function drupal_prepare_page($page) {
 }
 
 /**
+ * Renders final HTML given a structured array tree.
+ *
+ * Calls drupal_render() in such a way that #post_render_cache callbacks are
+ * applied.
+ *
+ * Should therefore only be used in occasions where the final rendering is
+ * happening, just before sending a Response:
+ * - system internals that are responsible for rendering the final HTML
+ * - render arrays for non-HTML responses, such as feeds
+ *
+ * @param array $elements
+ *   The structured array describing the data to be rendered.
+ *
+ * @return string
+ *   The rendered HTML.
+ *
+ * @see drupal_render()
+ */
+function drupal_render_root(&$elements) {
+  return drupal_render($elements, TRUE);
+}
+
+/**
  * Renders HTML given a structured array tree.
  *
  * Renderable arrays have two kinds of key/value pairs: properties and children.
@@ -2679,18 +2702,29 @@ function drupal_prepare_page($page) {
  *
  * @param array $elements
  *   The structured array describing the data to be rendered.
- * @param bool $is_recursive_call
- *   Whether this is a recursive call or not, for internal use.
+ * @param bool $is_root_call
+ *   (Internal use only.) Whether this is a recursive call or not. See
+ *   drupal_render_root().
  *
  * @return string
  *   The rendered HTML.
+ *
+ * @throws \LogicException
+ *   If a root call to drupal_render() does not result in an empty stack, this
+ *   indicates an erroneous drupal_render() root call (a root call within a root
+ *   call, which makes no sense). Therefore, a logic exception is thrown.
+ * @throws \Exception
+ *   If a #pre_render callback throws an exception, it is caught to reset the
+ *   stack used for bubbling rendering metadata, and then the exception is re-
+ *   thrown.
  *
  * @see element_info()
  * @see _theme()
  * @see drupal_process_states()
  * @see drupal_process_attached()
+ * @see drupal_render_root()
  */
-function drupal_render(&$elements, $is_recursive_call = FALSE) {
+function drupal_render(&$elements, $is_root_call = FALSE) {
   static $stack;
 
   $update_stack = function(&$element) use (&$stack) {
@@ -2705,9 +2739,9 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
 
   $bubble_stack = function() use (&$stack) {
     // If there's only one frame on the stack, then this is the root call, and
-    // we can't bubble up further.
+    // we can't bubble up further. Reset the stack for the next root call.
     if ($stack->count() === 1) {
-      $stack->pop();
+      $stack = NULL;
       return;
     }
 
@@ -2749,10 +2783,10 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $cached_element = drupal_render_cache_get($elements);
     if ($cached_element !== FALSE) {
       $elements = $cached_element;
-      // Only when we're not in a recursive drupal_render() call,
+      // Only when we're not in a root (non-recursive) drupal_render() call,
       // #post_render_cache callbacks must be executed, to prevent breaking the
       // render cache in case of nested elements with #cache set.
-      if (!$is_recursive_call) {
+      if ($is_root_call) {
         _drupal_render_process_post_render_cache($elements);
       }
       $elements['#markup'] = SafeMarkup::set($elements['#markup']);
@@ -2779,7 +2813,23 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
       if (is_string($callable) && strpos($callable, '::') === FALSE) {
         $callable = $controller_resolver->getControllerFromDefinition($callable);
       }
-      $elements = call_user_func($callable, $elements);
+      // Since #pre_render callbacks may be used for generating a render array's
+      // content, and we might be rendering the main content for the page, it is
+      // possible that a #pre_render callback throws an exception that will
+      // cause a different page to be rendered (e.g. throwing
+      // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will
+      // cause the 404 page to be rendered). That page might also use
+      // drupal_render(), but if exceptions aren't caught here, the stack will
+      // be left in an inconsistent state.
+      // Hence, catch all exceptions and reset the stack and re-throw them.
+      try {
+        $elements = call_user_func($callable, $elements);
+      }
+      catch (\Exception $e) {
+        // Reset stack and re-throw exception.
+        $stack = NULL;
+        throw $e;
+      }
     }
   }
 
@@ -2838,7 +2888,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // process as drupal_render_children() but is inlined for speed.
   if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
     foreach ($children as $key) {
-      $elements['#children'] .= drupal_render($elements[$key], TRUE);
+      $elements['#children'] .= drupal_render($elements[$key]);
     }
     $elements['#children'] = SafeMarkup::set($elements['#children']);
   }
@@ -2912,7 +2962,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     drupal_render_cache_set($elements['#markup'], $elements);
   }
 
-  // Only when we're not in a recursive drupal_render() call,
+  // Only when we're in a root (non-recursive) drupal_render() call,
   // #post_render_cache callbacks must be executed, to prevent breaking the
   // render cache in case of nested elements with #cache set.
   //
@@ -2921,7 +2971,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // - they run when #cache is enabled and there is a cache miss.
   // Only the case of a cache hit when #cache is enabled, is not handled here,
   // that is handled earlier in drupal_render().
-  if (!$is_recursive_call) {
+  if ($is_root_call) {
     // We've already called $update_stack() earlier, which updated both the
     // element and current stack frame. However,
     // _drupal_render_process_post_render_cache() can both change the element
@@ -2934,6 +2984,9 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
     $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
     $elements['#post_render_cache'] = NestedArray::mergeDeep($elements['#post_render_cache'], $post_render_additions->postRenderCache);
+    if ($stack->count() !== 1) {
+      throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
+    }
   }
 
   // Rendering is finished, all necessary info collected!
@@ -2998,7 +3051,7 @@ function render(&$element) {
       return $element['#markup'];
     }
     show($element);
-    return drupal_render($element, TRUE);
+    return drupal_render($element);
   }
   else {
     // Safe-guard for inappropriate use of render() on flat variables: return

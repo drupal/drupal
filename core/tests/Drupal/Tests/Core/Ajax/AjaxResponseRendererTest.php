@@ -101,7 +101,7 @@ class TestAjaxResponseRenderer extends AjaxResponseRenderer {
   /**
    * {@inheritdoc}
    */
-  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
+  protected function drupalRenderRoot(&$elements) {
     if (isset($elements['#markup'])) {
       return $elements['#markup'];
     }

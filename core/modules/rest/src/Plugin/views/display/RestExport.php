@@ -271,7 +271,7 @@ class RestExport extends PathPluginBase {
     parent::execute();
 
     $output = $this->view->render();
-    return new Response(drupal_render($output), 200, array('Content-type' => $this->getMimeType()));
+    return new Response(drupal_render_root($output), 200, array('Content-type' => $this->getMimeType()));
   }
 
   /**
