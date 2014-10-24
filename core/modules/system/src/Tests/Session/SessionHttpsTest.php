@@ -46,17 +46,17 @@ class SessionHttpsTest extends WebTestBase {
 
     // Test HTTPS session handling by altering the form action to submit the
     // login form through https.php, which creates a mock HTTPS request.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
     $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
     $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Test a second concurrent session.
     $this->curlClose();
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
     $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Check secure cookie on secure page.
@@ -89,9 +89,9 @@ class SessionHttpsTest extends WebTestBase {
     // login form through http.php, which creates a mock HTTP request on HTTPS
     // test environments.
     $this->curlClose();
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpUrl('user');
+    $form[0]['action'] = $this->httpUrl('user/login');
     $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->drupalGet($this->httpUrl('admin/config'));
@@ -150,13 +150,13 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalGet('user/password');
     $form = $this->xpath('//form[@id="user-pass"]');
     $this->assertNotEqual(substr($form[0]['action'], 0, 6), 'https:', 'Password request form action is not secure');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
 
     // Check that user login form action is secure.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
     $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
 
     $edit = array(
       'name' => $user->getUsername(),
@@ -213,9 +213,9 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalGet($this->httpsUrl('session-test/set/1'));
 
     // Mock a login to the secure site using the secure session cookie.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
     $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Test that the user is also authenticated on the insecure site.
@@ -248,9 +248,9 @@ class SessionHttpsTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('access administration pages'));
 
     // Login using the HTTPS user-login form.
-    $this->drupalGet('user');
+    $this->drupalGet('user/login');
     $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user');
+    $form[0]['action'] = $this->httpsUrl('user/login');
     $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
     $this->drupalPostForm(NULL, $edit, t('Log in'));
 
@@ -318,7 +318,7 @@ class SessionHttpsTest extends WebTestBase {
    * Builds a URL for submitting a mock HTTPS request to HTTP test environments.
    *
    * @param $url
-   *   A Drupal path such as 'user'.
+   *   A Drupal path such as 'user/login'.
    *
    * @return
    *   An absolute URL.
@@ -333,7 +333,7 @@ class SessionHttpsTest extends WebTestBase {
    * Builds a URL for submitting a mock HTTP request to HTTPS test environments.
    *
    * @param $url
-   *   A Drupal path such as 'user'.
+   *   A Drupal path such as 'user/login'.
    *
    * @return
    *   An absolute URL.

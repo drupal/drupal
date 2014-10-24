@@ -673,7 +673,7 @@ abstract class WebTestBase extends TestBase {
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw
     );
-    $this->drupalPostForm('user', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, t('Log in'));
 
     // @see WebTestBase::drupalUserIsLoggedIn()
     if (isset($this->session_id)) {
@@ -710,7 +710,7 @@ abstract class WebTestBase extends TestBase {
     // Make a request to the logout page, and redirect to the user page, the
     // idea being if you were properly logged out you should be seeing a login
     // screen.
-    $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
+    $this->drupalGet('user/logout', array('query' => array('destination' => 'user/login')));
     $this->assertResponse(200, 'User was logged out.');
     $pass = $this->assertField('name', 'Username field found.', 'Logout');
     $pass = $pass && $this->assertField('pass', 'Password field found.', 'Logout');

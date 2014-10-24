@@ -149,8 +149,9 @@ class AdminTest extends WebTestBase {
    * Test compact mode.
    */
   function testCompactMode() {
-    // The front page defaults to 'user', which redirects to 'user/{user}'. We
-    // cannot use '<front>', since this does not match the redirected url.
+    // The front page defaults to 'user/login', which redirects to 'user/{user}'
+    // for authenticated users. We cannot use '<front>', since this does not
+    // match the redirected url.
     $frontpage_url = 'user/' . $this->admin_user->id();
 
     $this->drupalGet('admin/compact/on');

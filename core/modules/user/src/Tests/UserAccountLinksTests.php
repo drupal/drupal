@@ -72,9 +72,7 @@ class UserAccountLinksTests extends WebTestBase {
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),
     );
     $tree = $menu_tree->transform($tree, $manipulators);
-    $this->assertEqual(count($tree), 1, 'The secondary links menu contains only one menu link.');
-    $element = reset($tree);
-    $this->assertFalse($element->link->isEnabled(), 'The menu link is disabled.');
+    $this->assertEqual(count($tree), 0, 'The secondary links menu contains no menu link.');
   }
 
   /**

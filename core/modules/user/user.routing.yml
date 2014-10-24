@@ -129,9 +129,9 @@ user.page:
   path: '/user'
   defaults:
     _content: '\Drupal\user\Controller\UserController::userPage'
-    _title: 'Log in'
+    _title: 'My account'
   requirements:
-    _access: 'TRUE'
+    _user_is_logged_in: 'TRUE'
 
 entity.user.canonical:
   path: '/user/{user}'

@@ -108,7 +108,7 @@ class PathProcessorTest extends UnitTestCase {
       // Passing in anything else should return the same string.
       array('fr/foo', NULL, 'fr/foo'),
       array('fr', NULL, 'fr'),
-      array('user', NULL, 'user'),
+      array('user/login', NULL, 'user/login'),
     );
 
     $alias_manager->expects($this->any())
@@ -120,7 +120,7 @@ class PathProcessorTest extends UnitTestCase {
     $config_factory_stub = $this->getConfigFactoryStub(
       array(
         'system.site' => array(
-          'page.front' => 'user'
+          'page.front' => 'user/login'
         ),
         'language.negotiation' => array(
           'url' => array(
@@ -198,7 +198,7 @@ class PathProcessorTest extends UnitTestCase {
     $test_path = 'fr';
     $request = Request::create($test_path);
     $processed = $processor_manager->processInbound($test_path, $request);
-    $this->assertEquals('user', $processed, 'Processing in the correct order resolves the system path from the empty path.');
+    $this->assertEquals('user/login', $processed, 'Processing in the correct order resolves the system path from the empty path.');
 
     // Test resolving an existing alias using the correct processor order.
     $test_path = 'fr/foo';

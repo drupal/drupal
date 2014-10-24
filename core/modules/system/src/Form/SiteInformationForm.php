@@ -107,7 +107,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#title' => t('Front page'),
       '#open' => TRUE,
     );
-    $front_page = $site_config->get('page.front') != 'user' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
+    $front_page = $site_config->get('page.front') != 'user/login' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
     $form['front_page']['site_frontpage'] = array(
       '#type' => 'textfield',
       '#title' => t('Default front page'),
@@ -147,8 +147,8 @@ class SiteInformationForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check for empty front page path.
     if ($form_state->isValueEmpty('site_frontpage')) {
-      // Set to default "user".
-      form_set_value($form['front_page']['site_frontpage'], 'user', $form_state);
+      // Set to default "user/login".
+      form_set_value($form['front_page']['site_frontpage'], 'user/login', $form_state);
     }
     else {
       // Get the normal path of the front page.

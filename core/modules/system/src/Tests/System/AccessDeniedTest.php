@@ -70,9 +70,9 @@ class AccessDeniedTest extends WebTestBase {
     $this->assertResponse(403);
     $this->assertText(t('Username'), 'Blocks are shown on the default 403 page');
 
-    // Log back in, set the custom 403 page to /user and remove the block
+    // Log back in, set the custom 403 page to /user/login and remove the block
     $this->drupalLogin($this->admin_user);
-    \Drupal::config('system.site')->set('page.403', 'user')->save();
+    \Drupal::config('system.site')->set('page.403', 'user/login')->save();
     $edit = array(
       'region' => -1,
     );

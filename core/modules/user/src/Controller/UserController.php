@@ -126,25 +126,17 @@ class UserController extends ControllerBase {
   }
 
   /**
-   * Returns the user page.
+   * Redirects users to their profile page.
    *
-   * Displays user profile if user is logged in, or login form for anonymous
-   * users.
+   * This controller assumes that it is only invoked for authenticated users.
+   * This is enforced for the 'user.page' route with the '_user_is_logged_in'
+   * requirement.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
-   *   Returns either a redirect to the user page or the render
-   *   array of the login form.
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Returns a redirect to the profile of the currently logged in user.
    */
   public function userPage() {
-    $user = $this->currentUser();
-    if ($user->id()) {
-      $response = $this->redirect('entity.user.canonical', array('user' => $user->id()));
-    }
-    else {
-      $form_builder = $this->formBuilder();
-      $response = $form_builder->getForm('Drupal\user\Form\UserLoginForm');
-    }
-    return $response;
+    return $this->redirect('entity.user.canonical', array('user' => $this->currentUser()->id()));
   }
 
   /**

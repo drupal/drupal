@@ -43,6 +43,11 @@ services:
     arguments: ['@maintenance_mode', '@current_user']
     tags:
       - { name: event_subscriber }
+  user_access_denied_subscriber:
+    class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
+    arguments: ['@current_user', '@url_generator']
+    tags:
+      - { name: event_subscriber }
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
     arguments: ['@current_user', '@config.factory', '@entity.manager', '@router.admin_context']

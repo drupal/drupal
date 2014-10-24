@@ -68,21 +68,15 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         $event->setResponse(new RedirectResponse($this->url('<front>', [], ['absolute' => TRUE])));
         return;
       }
-
-      if ($this->account->isAnonymous() && $path == 'user') {
-        // Forward anonymous user to login page.
-        $event->setResponse(new RedirectResponse($this->url('user.login', [], ['absolute' => TRUE])));
-        return;
-      }
     }
     if ($this->account->isAuthenticated()) {
       if ($path == 'user/login') {
-        // If user is logged in, redirect to 'user' instead of giving 403.
-        $event->setResponse(new RedirectResponse($this->url('user.page', [], ['absolute' => TRUE])));
+        // If the user is already logged in, redirect to their profile page.
+        $event->setResponse($this->redirect('entity.user.canonical', ['user' => $this->account->id()]));
         return;
       }
       if ($path == 'user/register') {
-        // Authenticated user should be redirected to user edit page.
+        // If the user is already registered, redirect to their edit page.
         $event->setResponse(new RedirectResponse($this->url('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE])));
         return;
       }

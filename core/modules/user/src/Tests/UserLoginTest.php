@@ -21,7 +21,7 @@ class UserLoginTest extends WebTestBase {
    */
   function testLoginDestination() {
     $user = $this->drupalCreateUser(array());
-    $this->drupalGet('user', array('query' => array('destination' => 'foo')));
+    $this->drupalGet('user/login', array('query' => array('destination' => 'foo')));
     $edit = array('name' => $user->getUserName(), 'pass' => $user->pass_raw);
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertUrl('foo', [],  'Redirected to the correct URL');
@@ -151,7 +151,7 @@ class UserLoginTest extends WebTestBase {
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw,
     );
-    $this->drupalPostForm('user', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {

@@ -64,7 +64,7 @@ class SimpleTestBrowserTest extends WebTestBase {
       'name' => $user->getUsername(),
       'pass' => $user->pass_raw
     );
-    $this->drupalPostForm('user', $edit, t('Log in'), array(
+    $this->drupalPostForm('user/login', $edit, t('Log in'), array(
       'query' => array('destination' => 'user/logout'),
     ));
     $headers = $this->drupalGetHeaders(TRUE);
@@ -86,9 +86,13 @@ class SimpleTestBrowserTest extends WebTestBase {
    */
   public function testUserAgentValidation() {
     global $base_url;
+
+    // Logout the user which was logged in during test-setup.
+    $this->drupalLogout();
+
     $system_path = $base_url . '/' . drupal_get_path('module', 'system');
-    $HTTP_path = $system_path .'/tests/http.php?q=node';
-    $https_path = $system_path .'/tests/https.php?q=node';
+    $HTTP_path = $system_path .'/tests/http.php/user/login';
+    $https_path = $system_path .'/tests/https.php/user/login';
     // Generate a valid simpletest User-Agent to pass validation.
     $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), 'Database prefix contains simpletest prefix.');
     $test_ua = drupal_generate_test_ua($matches[0]);

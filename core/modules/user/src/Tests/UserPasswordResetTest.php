@@ -149,7 +149,7 @@ class UserPasswordResetTest extends WebTestBase {
       'name' => $this->randomMachineName(),
       'pass' => $this->randomMachineName(),
     );
-    $this->drupalPostForm('user', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
       array('@password' => \Drupal::url('user.pass', [], array('query' => array('name' => $edit['name']))))));
     unset($edit['pass']);

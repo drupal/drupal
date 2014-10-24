@@ -38,9 +38,6 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   public function processInbound($path, Request $request) {
     if (empty($path)) {
       $path = $this->config->get('system.site')->get('page.front');
-      if (empty($path)) {
-        $path = 'user';
-      }
     }
     return $path;
   }
