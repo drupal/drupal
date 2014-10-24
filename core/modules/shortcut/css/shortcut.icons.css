@@ -22,6 +22,9 @@
   width: 20px;
   height: 20px;
 }
+[dir="rtl"] .add-or-remove-shortcuts .icon {
+  background-image: url(../images/favstar-rtl.svg);
+}
 .add-shortcut a:hover .icon,
 .add-shortcut a:focus .icon {
   background-position: -20px top;
@@ -31,5 +34,5 @@
 }
 .remove-shortcut a:focus .icon,
 .remove-shortcut a:hover .icon {
-  background-position: -60px top; /* LTR */
+  background-position: -60px top;
 }

@@ -10,8 +10,11 @@
   display: block;
 }
 .toolbar .toolbar-tray-vertical .edit-shortcuts {
-  text-align: right;
+  text-align: right; /* LTR */
   padding: 1em;
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .edit-shortcuts {
+  text-align: left;
 }
 .toolbar .toolbar-tray-horizontal .edit-shortcuts {
   float: right; /* LTR */
@@ -25,7 +28,11 @@
  */
 .add-or-remove-shortcuts {
   display: inline-block;
-  margin-left: 0.3em;
+  margin-left: 0.3em; /* LTR */
+}
+[dir="rtl"] .add-or-remove-shortcuts {
+  margin-left: 0;
+  margin-right: 0.3em;
 }
 .add-or-remove-shortcuts .text {
   background: #000000;
@@ -34,7 +41,7 @@
   padding: 0 5px;
   color: #ffffff;
   display: inline-block;
-  margin-left: 0.3em;
+  margin-left: 0.3em; /* LTR */
   opacity: 0;
   -ms-transform: translateY(-12px);
   -webkit-transform: translateY(-12px);
@@ -44,6 +51,10 @@
   -ms-backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+[dir="rtl"] .add-or-remove-shortcuts .text {
+  margin-left: 0;
+  margin-right: 0.3em;
 }
 .add-or-remove-shortcuts a:hover .text,
 .add-or-remove-shortcuts a:focus .text {
