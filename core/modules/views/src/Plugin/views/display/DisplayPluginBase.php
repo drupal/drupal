@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -1124,7 +1125,7 @@ abstract class DisplayPluginBase extends PluginBase {
       );
     }
 
-    $display_comment = String::checkPlain(drupal_substr($this->getOption('display_comment'), 0, 10));
+    $display_comment = String::checkPlain(Unicode::substr($this->getOption('display_comment'), 0, 10));
     $options['display_comment'] = array(
       'category' => 'other',
       'title' => $this->t('Administrative comment'),

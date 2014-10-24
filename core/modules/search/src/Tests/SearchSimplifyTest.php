@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\search\Tests;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests that the search_simply() function works as intended.
@@ -39,7 +40,7 @@ class SearchSimplifyTest extends SearchTestBase {
         // of truncation in search_simplify().
         $start = 0;
         while ($start < drupal_strlen($string)) {
-          $newstr = drupal_substr($string, $start, 30);
+          $newstr = Unicode::substr($string, $start, 30);
           // Special case: leading zeros are removed from numeric strings,
           // and there's one string in this file that is numbers starting with
           // zero, so prepend a 1 on that string.

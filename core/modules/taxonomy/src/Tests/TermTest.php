@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\taxonomy\Entity\Term;
@@ -535,7 +536,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertFalse($terms, 'No term loaded with an invalid name.');
 
     // Try to load the term using a substring of the name.
-    $terms = taxonomy_term_load_multiple_by_name(drupal_substr($term->getName(), 2), 'No term loaded with a substring of the name.');
+    $terms = taxonomy_term_load_multiple_by_name(Unicode::substr($term->getName(), 2), 'No term loaded with a substring of the name.');
     $this->assertFalse($terms);
 
     // Create a new term in a different vocabulary with the same name.

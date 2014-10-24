@@ -800,11 +800,11 @@ function _filter_html_image_secure_process($text) {
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.
     $src = $image->getAttribute('src');
-    if (drupal_substr($src, 0, $base_path_length) === $base_path) {
+    if (Unicode::substr($src, 0, $base_path_length) === $base_path) {
       // Remove the $base_path to get the path relative to the Drupal root.
       // Ensure the path refers to an actual image by prefixing the image source
       // with the Drupal root and running getimagesize() on it.
-      $local_image_path = $local_dir . drupal_substr($src, $base_path_length);
+      $local_image_path = $local_dir . Unicode::substr($src, $base_path_length);
       $local_image_path = rawurldecode($local_image_path);
       if (@getimagesize($local_image_path)) {
         // The image has the right path. Erroneous images are dealt with below.

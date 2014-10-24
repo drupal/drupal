@@ -59,7 +59,7 @@ use Drupal\Core\Session\AnonymousUserSession;
  *
  * Correct:
  * @code
- *   $my_substring = drupal_substr($original_string, 0, 5);
+ *   $my_substring = Unicode::substr($original_string, 0, 5);
  * @endcode
  *
  * @}

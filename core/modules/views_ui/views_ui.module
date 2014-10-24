@@ -5,6 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
@@ -327,7 +328,7 @@ function views_ui_views_analyze(ViewExecutable $view) {
  */
 function views_ui_truncate($string, $length) {
   if (drupal_strlen($string) > $length) {
-    $string = drupal_substr($string, 0, $length);
+    $string = Unicode::substr($string, 0, $length);
     $string .= '...';
   }
 

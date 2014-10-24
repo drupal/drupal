@@ -7,6 +7,7 @@
 
 namespace Drupal\dblog\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\dblog\Controller\DbLogController;
@@ -305,7 +306,7 @@ class DbLogTest extends WebTestBase {
       foreach ($links->attributes() as $attr => $value) {
         if ($attr == 'href') {
           // Extract link to details page.
-          $link = drupal_substr($value, strpos($value, 'admin/reports/dblog/event/'));
+          $link = Unicode::substr($value, strpos($value, 'admin/reports/dblog/event/'));
           $this->drupalGet($link);
           // Check for full message text on the details page.
           $this->assertRaw($message, 'DBLog event details was found: [delete user]');

@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Component\Utility\Crypt;
 
@@ -233,7 +234,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $endToken = '}';
     $start = strpos($javascript, $startToken) + strlen($startToken);
     $end = strrpos($javascript, $endToken);
-    $json  = drupal_substr($javascript, $start, $end - $start + 1);
+    $json  = Unicode::substr($javascript, $start, $end - $start + 1);
     $parsed_settings = Json::decode($json);
 
     // Test whether the two real world cases are handled correctly.

@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -1281,7 +1282,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
         if (strpos($more_link_path, $base_path) === 0) {
-          $more_link_path = drupal_substr($more_link_path, drupal_strlen($base_path));
+          $more_link_path = Unicode::substr($more_link_path, drupal_strlen($base_path));
         }
 
         $more_link = _l($more_link_text, $more_link_path, array('attributes' => array('class' => array('views-more-link'))));
@@ -1689,7 +1690,7 @@ abstract class FieldPluginBase extends HandlerBase {
    */
   public static function trimText($alter, $value) {
     if (drupal_strlen($value) > $alter['max_length']) {
-      $value = drupal_substr($value, 0, $alter['max_length']);
+      $value = Unicode::substr($value, 0, $alter['max_length']);
       if (!empty($alter['word_boundary'])) {
         $regex = "(.*)\b.+";
         if (function_exists('mb_ereg')) {

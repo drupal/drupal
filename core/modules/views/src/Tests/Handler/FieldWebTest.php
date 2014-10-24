@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Views;
 
@@ -480,7 +481,7 @@ class FieldWebTest extends HandlerTestBase {
     // Tests for simple trimming by string length.
     $row->views_test_data_name = $this->randomMachineName(8);
     $name_field->options['alter']['max_length'] = 5;
-    $trimmed_name = drupal_substr($row->views_test_data_name, 0, 5);
+    $trimmed_name = Unicode::substr($row->views_test_data_name, 0, 5);
 
     $output = $name_field->advancedRender($row);
     $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (!trimmed) appears in the rendered output (!output).', array('!trimmed' => $trimmed_name, '!output' => $output)));

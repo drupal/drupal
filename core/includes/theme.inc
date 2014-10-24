@@ -11,6 +11,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
@@ -764,7 +765,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
       $config->set('favicon.mimetype', $value);
     }
     else if (substr($key, 0, 7) == 'toggle_') {
-      $config->set('features.' . drupal_substr($key, 7), $value);
+      $config->set('features.' . Unicode::substr($key, 7), $value);
     }
     else if (!in_array($key, array('theme', 'logo_upload'))) {
       $config->set($key, $value);
