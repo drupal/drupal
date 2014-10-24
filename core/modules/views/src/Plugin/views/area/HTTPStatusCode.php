@@ -64,8 +64,8 @@ class HTTPStatusCode extends AreaPluginBase {
    */
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      $build['#attached']['http_header'][] = ['Status', $this->options['status_code']];
-      return $build;
+      $this->view->getResponse()->setStatusCode($this->options['status_code']);
+      $this->view->getRequest()->attributes->set('_http_statuscode', $this->options['status_code']);
     }
   }
 

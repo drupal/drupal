@@ -98,18 +98,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.
-    // @todo Remove this once drupal_process_attached() no longer calls
-    //    _drupal_add_http_header(), which has its own static. Instead,
-    //    _drupal_process_attached() should use
-    //    \Symfony\Component\HttpFoundation\Response->headers->set(), which is
-    //    already documented on the (deprecated) _drupal_process_attached() to
-    //    become the final, intended mechanism.
+    // @todo remove this once we have removed all _drupal_add_http_header()
+    //   calls.
     $headers = drupal_get_http_header();
     foreach ($headers as $name => $value) {
-      // Symfony special-cases the 'Status' header.
-      if ($name === 'status') {
-        $response->setStatusCode($value);
-      }
       $response->headers->set($name, $value, FALSE);
     }
 
