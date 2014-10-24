@@ -109,15 +109,6 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
 
     $this->setDefaultMetaTags($page);
 
-    // @todo: collect feed links from #attached rather than a static once
-    // http://drupal.org/node/2256365 is completed.
-    foreach (drupal_get_feeds() as $feed) {
-      // Force the URL to be absolute, for consistency with other <link> tags
-      // output by Drupal.
-      $link = new FeedLinkElement($feed['title'], _url($feed['url'], array('absolute' => TRUE)));
-      $page->addLinkElement($link);
-    }
-
     // Add libraries and CSS used by this theme.
     $active_theme = \Drupal::theme()->getActiveTheme();
     foreach ($active_theme->getLibraries() as $library) {

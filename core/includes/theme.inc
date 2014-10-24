@@ -17,7 +17,6 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
-use Drupal\Core\Page\FeedLinkElement;
 use Drupal\Core\Page\LinkElement;
 use Drupal\Core\Page\MetaElement;
 use Drupal\Core\Template\Attribute;
@@ -1776,24 +1775,10 @@ function template_preprocess_page(&$variables) {
   if (!defined('MAINTENANCE_MODE')) {
     $variables['action_links']   = menu_get_local_actions();
     $variables['tabs']           = menu_local_tabs();
-
-    // Convert drupal_get_feeds to feed links on the page object.
-    /** @var \Drupal\Core\Page\HtmlPage $page */
-    $page = $variables['page']['#page'];
-    // Render the feed icons.
-    $variables['feed_icons'] = array();
-    foreach ($page->getFeedLinkElements() as $link) {
-      $variables['feed_icons'][] = array(
-        '#theme' => 'feed_icon',
-        '#url' => $link->getAttributes()['href'],
-        '#title' => $link->getAttributes()['title'],
-      );
-    }
   }
   else {
     $variables['action_links']   = array();
     $variables['tabs']           = array();
-    $variables['feed_icons']     = '';
   }
 
   if ($node = \Drupal::routeMatch()->getParameter('node')) {

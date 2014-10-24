@@ -33,7 +33,6 @@ class Rss extends StylePluginBase {
   protected $usesRowPlugin = TRUE;
 
   public function attachTo(array &$build, $display_id, $path, $title) {
-    $display = $this->view->displayHandlers->get($display_id);
     $url_options = array();
     $input = $this->view->getExposedInput();
     if ($input) {
@@ -42,29 +41,21 @@ class Rss extends StylePluginBase {
     $url_options['absolute'] = TRUE;
 
     $url = _url($this->view->getUrl(NULL, $path), $url_options);
-    if ($display->hasPath()) {
-      if (empty($this->preview)) {
-        // Add a call for _drupal_add_feed to the view attached data.
-        $build['#attached']['feed'][] = array($url, $title);
-      }
-    }
-    else {
-      // Add the RSS icon to the view.
-      $feed_icon = array(
-        '#theme' => 'feed_icon',
-        '#url' => $url,
-        '#title' => $title,
-      );
-      $this->view->feed_icon = $feed_icon;
 
-      // Attach a link to the RSS feed, which is an alternate representation.
-      $build['#attached']['html_head_link'][][] = array(
-        'rel' => 'alternate',
-        'type' => 'application/rss+xml',
-        'title' => $title,
-        'href' => $url,
-      );
-    }
+    // Add the RSS icon to the view.
+    $this->view->feed_icon = [
+      '#theme' => 'feed_icon',
+      '#url' => $url,
+      '#title' => $title,
+    ];
+
+    // Attach a link to the RSS feed, which is an alternate representation.
+    $build['#attached']['html_head_link'][][] = array(
+      'rel' => 'alternate',
+      'type' => 'application/rss+xml',
+      'title' => $title,
+      'href' => $url,
+    );
   }
 
   protected function defineOptions() {

@@ -12,13 +12,14 @@ use Drupal\Core\Page\HtmlPage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Make sure that _drupal_add_feed() works correctly with various constructs.
+ * Make sure that attaching feeds works correctly with various constructs.
  *
  * @group Common
  */
 class AddFeedTest extends WebTestBase {
+
   /**
-   * Tests _drupal_add_feed() with paths, URLs, and titles.
+   * Tests attaching feeds with paths, URLs, and titles.
    */
   function testBasicFeedAddNoTitle() {
     $path = $this->randomMachineName(12);

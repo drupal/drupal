@@ -46,7 +46,6 @@
  *   view and edit tabs when displaying a node).
  * - action_links: Actions local to the page, such as "Add menu" on the menu
  *   administration interface.
- * - feed_icons: All feed icons for the current page.
  * - node: Fully loaded node, if there is an automatically-loaded node
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
@@ -155,7 +154,6 @@
           </ul>
         {% endif %}
       {{ page.content }}
-      {{ feed_icons }}
     </section></main> <!-- /.section, /#content -->
 
     {% if page.sidebar_first %}

@@ -234,39 +234,6 @@ function drupal_get_html_head($render = TRUE) {
 }
 
 /**
- * Adds a feed URL for the current page.
- *
- * This function can be called as long the HTML header hasn't been sent.
- *
- * @param $url
- *   An internal system path or a fully qualified external URL of the feed.
- * @param $title
- *   The title of the feed.
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function _drupal_add_feed($url = NULL, $title = '') {
-  $stored_feed_links = &drupal_static(__FUNCTION__, array());
-
-  if (isset($url)) {
-    $stored_feed_links[$url] = array('url' => $url, 'title' => $title);
-  }
-  return $stored_feed_links;
-}
-
-/**
- * Gets the feed URLs for the current page.
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function drupal_get_feeds() {
-  $feeds = _drupal_add_feed();
-  return $feeds;
-}
-
-/**
  * Prepares a 'destination' URL query parameter for use with url().
  *
  * Used to direct the user back to the referring page after completing a form.
@@ -1870,7 +1837,13 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
           call_user_func_array('_drupal_add_html_head', $args);
           break;
         case 'feed':
-          call_user_func_array('_drupal_add_feed', $args);
+          $args = [[
+            'href' => $args[0],
+            'rel' => 'alternate',
+            'title' => $args[1],
+            'type' => 'application/rss+xml',
+          ]];
+          call_user_func_array('_drupal_add_html_head_link', $args);
           break;
         case 'html_head_link':
           call_user_func_array('_drupal_add_html_head_link', $args);
