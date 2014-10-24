@@ -46,8 +46,8 @@ display:
     position: 0
   page_1:
     display_options:
+      path: test-area-title
       defaults:
-        empty: '0'
         header: '0'
       header:
         title:

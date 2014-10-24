@@ -54,7 +54,7 @@ class AreaTitleTest extends ViewUnitTestBase {
     $this->executeView($view);
     $view->result = array();
     $view->render();
-    $this->assertEqual($view->getTitle(), 'test_title_header', 'The title area on the header should override the title if the result is empty.');
+    $this->assertEqual($view->getTitle(), 'test_title_empty', 'The title area should override the title if the result is empty.');
     $view->destroy();
   }
 
