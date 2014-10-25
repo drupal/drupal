@@ -9,15 +9,15 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
-use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\filter\FilterPluginCollection;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests Filter module filters individually.
  *
  * @group filter
  */
-class FilterUnitTest extends DrupalUnitTestBase {
+class FilterUnitTest extends KernelTestBase {
 
   /**
    * Modules to enable.

@@ -7,14 +7,14 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests filter settings.
  *
  * @group filter
  */
-class FilterSettingsTest extends DrupalUnitTestBase {
+class FilterSettingsTest extends KernelTestBase {
 
   /**
    * Modules to enable.

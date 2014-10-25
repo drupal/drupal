@@ -7,14 +7,14 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests creation, loading, updating, deleting of text formats and filters.
  *
  * @group filter
  */
-class FilterCrudTest extends DrupalUnitTestBase {
+class FilterCrudTest extends KernelTestBase {
 
   /**
    * Modules to enable.
