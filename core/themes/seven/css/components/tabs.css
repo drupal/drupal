@@ -38,13 +38,17 @@
   overflow: hidden;
   box-sizing: border-box;
   margin: -1px 0 0;
-  padding: 9px 2em 7px 1em;
+  padding: 9px 2em 7px 1em; /* LTR */
   width: 100%;  /* 1 */
   border: 1px solid #bfbfbf;
   background-color: rgba(242, 242, 240, 0.7);
   color: #0074bd;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+[dir="rtl"] .tabs__tab {
+  padding-left: 2em;
+  padding-right: 1em;
 }
 .tabs__tab:hover,
 .tabs__tab:focus {
@@ -54,8 +58,17 @@
 li.tabs__tab {
   padding: 0;
 }
+/* This is required to win over specifity of [dir="rtl"] .tabs__tab */
+[dir="rtl"] li.tabs__tab {
+  padding-left: 0;
+  padding-right: 0;
+}
 li.tabs__tab a {
-  padding: 9px 2em 7px 1em;
+  padding: 9px 2em 7px 1em; /* LTR */
+}
+[dir="rtl"] li.tabs__tab a {
+  padding-left: 2em;
+  padding-right: 1em;
 }
 .tabs a:hover,
 .tabs a:focus {
@@ -71,9 +84,13 @@ li.tabs__tab a {
 .tabs.primary .tabs__tab.active {
   z-index: 15;
   border-color: #a6a6a6;
-  border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0; /* LTR */
   background-color: #ffffff;
   color: #004f80;
+}
+[dir="rtl"] .tabs.primary .tabs__tab.active {
+  border-top-left-radius: 0;
+  border-top-right-radius: 4px;
 }
 .tabs.primary a {
   background: none;
@@ -110,14 +127,14 @@ li.tabs__tab a {
   display: block;
   position: absolute;
   z-index: 10;
-  right: 0;
+  right: 0; /* LTR */
   top: 2px;
-  left: auto;
+  left: auto; /* LTR */
   width: 25%;
   padding-right: 4px;
   padding-left: 4px;
-  border-left: 0;
-  border-radius: 0 4px 0 0;
+  border-left: 0; /* LTR */
+  border-radius: 0 4px 0 0; /* LTR */
   font-family: Arial, sans-serif;
   font-size: 1.25em;
   letter-spacing: 0.1em;
@@ -130,7 +147,6 @@ li.tabs__tab a {
   border-radius: 4px 0 0 0;
   right: auto;
   left: 0;
-  top: 11px;
 }
 .is-collapse-enabled .tabs {
   padding-top: 38px;
@@ -144,7 +160,7 @@ li.tabs__tab a {
 .is-collapse-enabled .tabs__tab.active {
   position: absolute;
   top: 2px;
-  left: 0;
+  left: 0; /* LTR */
   width: 75%;
   border-bottom: 0;
 }
@@ -169,7 +185,7 @@ li.tabs__tab a {
   overflow: visible;
 }
 .is-horizontal .tabs__tab {
-  float: left;
+  float: left; /* LTR */
   height: auto;
   width: auto;
   margin: 0 0 -1px;
@@ -178,18 +194,24 @@ li.tabs__tab a {
 }
 [dir="rtl"] .is-horizontal .tabs__tab {
   float: right;
+  /* This is required to win over specifity of [dir="rtl"] .tabs > li */
+  margin-left: 0;
 }
 .is-horizontal .tabs__tab + .tabs__tab {
-  margin-left: -1px;
+  margin-left: -1px; /* LTR */
+}
+[dir="rtl"] .is-horizontal .tabs__tab + .tabs__tab {
+  margin-left: 0;
+  margin-right: -1px;
 }
 .is-horizontal .tabs.primary .tabs__tab:first-child {
-  border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0; /* LTR */
 }
 [dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:first-child {
   border-radius: 0 4px 0 0;
 }
 .is-horizontal .tabs.primary .tabs__tab:last-child {
-  border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0; /* LTR */
 }
 [dir="rtl"] .is-horizontal .tabs.primary .tabs__tab:last-child {
   border-radius: 4px 0 0 0;
@@ -205,9 +227,6 @@ li.tabs__tab a {
   top: 0;
   border-bottom: 0;
   margin: 0 -4px;
-}
-[dir="rtl"] .is-horizontal .tabs__tab.active {
-  margin: 0 -6px;
 }
 .is-horizontal .tabs.primary a {
   background-image: none;
@@ -225,25 +244,42 @@ li.tabs__tab a {
 }
 .tabs.secondary .tabs__tab {
   display: block;
-  padding: 5px 15px 5px 16px;
-  margin-left: -1px;
+  padding: 5px 15px 5px 16px; /* LTR */
+  margin-left: -1px; /* LTR */
   color: #0074bd;
   -webkit-transition: border-color 0.2s, background-color 0.2s;
   transition: border-color 0.2s, background-color 0.2s;
+}
+[dir="rtl"] .tabs.secondary .tabs__tab {
+  padding-left: 15px;
+  padding-right: 16px;
+  margin-left: 0;
+  margin-right: -1px;
 }
 .tabs.secondary .tabs__tab + .tabs__tab {
   border-top: 1px solid #d9d8d4;
 }
 .tabs.secondary .tabs__tab.active {
   color: #004f80;
-  border-left: 2px solid #004f80;
-  padding-left: 15px;
+  border-left: 2px solid #004f80; /* LTR */
+  padding-left: 15px; /* LTR */
+}
+[dir="rtl"] .tabs.secondary .tabs__tab.active {
+  border-left: 1px solid #bfbfbf;
+  border-right: 2px solid #004f80;
+  padding-right: 15px;
 }
 .tabs.secondary .tabs__tab:hover,
 .tabs.secondary .tabs__tab:focus {
   color: #008ee6;
-  border-left: 2px solid #008ee6;
-  padding-left: 15px;
+  border-left: 2px solid #008ee6; /* LTR */
+  padding-left: 15px; /* LTR */
+}
+[dir="rtl"] .tabs.secondary .tabs__tab:hover,
+[dir="rtl"] .tabs.secondary .tabs__tab:focus {
+  border-left: 1px solid #bfbfbf;
+  border-right: 2px solid #008ee6;
+  padding-right: 15px;
 }
 .tabs.secondary a {
   background-color: transparent;
@@ -260,17 +296,28 @@ li.tabs__tab a {
 /* Styles for the horizontal state */
 .is-horizontal .tabs.secondary .tabs__tab {
   background: none;
-  float: left;
+  float: left; /* LTR */
   position: relative;
   top: 0;
   z-index: 15;
   margin-left: 1em;
   margin-right: 1em;
   border-bottom: 2px solid transparent;
-  border-left: 1px solid transparent;
-  border-right-color: transparent;
+  border-left: 1px solid transparent; /* LTR */
+  border-right-color: transparent; /* LTR */
   border-top: 0;
   padding: 0;
+}
+/**
+ * 1. This is required to win over specifity of
+ *      [dir="rtl"] .tabs.secondary .tabs__tab:hover,
+ *      [dir="rtl"] .tabs.secondary .tabs__tab:focus
+ */
+[dir="rtl"] .is-horizontal .tabs.secondary .tabs__tab {
+  float: right;
+  border-right: 1px solid transparent;
+  border-left-color: transparent;
+  padding-right: 0; /* 1 */
 }
 .is-horizontal .tabs.secondary .tabs__tab.active {
   border-bottom-color: #004f80;
