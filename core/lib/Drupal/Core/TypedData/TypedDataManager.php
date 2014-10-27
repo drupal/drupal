@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -255,7 +256,7 @@ class TypedDataManager extends DefaultPluginManager {
     }
     $key = $definition->getDataType();
     if ($settings = $definition->getSettings()) {
-      $key .= ':' . implode(',', $settings);
+      $key .= ':' . Crypt::hashBase64(serialize($settings));
     }
     $key .= ':' . $object->getPropertyPath() . '.';
     // If we are creating list items, we always use 0 in the key as all list
