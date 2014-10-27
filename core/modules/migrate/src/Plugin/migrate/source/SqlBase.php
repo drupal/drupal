@@ -155,10 +155,11 @@ abstract class SqlBase extends SourcePluginBase {
           $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
         }
-        $n = count($this->migration->get('destinationIds'));
-        for ($count = 1; $count <= $n; $count++) {
-          $map_key = 'destid' . $count++;
-          $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+        if ($n = count($this->migration->get('destinationIds'))) {
+          for ($count = 1; $count <= $n; $count++) {
+            $map_key = 'destid' . $count++;
+            $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+          }
         }
         $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
       }
