@@ -7,44 +7,43 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Page\HtmlFragment;
-use Drupal\Core\Page\HtmlFragmentRendererInterface;
-use Drupal\Core\Page\HtmlPageRendererInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Error;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Handle most HTTP errors for HTML.
+ * Exception subscriber for handling core default HTML error pages.
  */
 class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
-  use StringTranslationTrait;
 
   /**
-   * The HTML fragment renderer.
+   * The HTTP kernel.
    *
-   * @var \Drupal\Core\Page\HtmlFragmentRendererInterface
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $fragmentRenderer;
+  protected $httpKernel;
 
   /**
-   * The HTML page renderer.
+   * The logger instance.
    *
-   * @var \Drupal\Core\Page\HtmlPageRendererInterface
+   * @var \Psr\Log\LoggerInterface
    */
-  protected $htmlPageRenderer;
+  protected $logger;
 
   /**
    * Constructs a new DefaultExceptionHtmlSubscriber.
    *
-   * @param \Drupal\Core\Page\HtmlFragmentRendererInterface $fragment_renderer
-   *   The fragment renderer.
-   * @param \Drupal\Core\Page\HtmlPageRendererInterface $page_renderer
-   *   The page renderer.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   *   The HTTP kernel.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    */
-  public function __construct(HtmlFragmentRendererInterface $fragment_renderer, HtmlPageRendererInterface $page_renderer) {
-    $this->fragmentRenderer = $fragment_renderer;
-    $this->htmlPageRenderer = $page_renderer;
+  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger) {
+    $this->httpKernel = $http_kernel;
+    $this->logger = $logger;
   }
 
   /**
@@ -70,9 +69,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
-    $response = $this->createResponse($this->t('Access denied'), $this->t('You are not authorized to access this page.'), Response::HTTP_FORBIDDEN);
-    $response->headers->set('Content-type', 'text/html');
-    $event->setResponse($response);
+    $this->makeSubrequest($event, 'system/403', Response::HTTP_FORBIDDEN);
   }
 
   /**
@@ -82,40 +79,50 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on404(GetResponseForExceptionEvent $event) {
-    $path = $event->getRequest()->getPathInfo();
-    $response = $this->createResponse($this->t('Page not found'), $this->t('The requested page "@path" could not be found.', ['@path' => $path]), Response::HTTP_NOT_FOUND);
-    $response->headers->set('Content-type', 'text/html');
-    $event->setResponse($response);
+    $this->makeSubrequest($event, 'system/404', Response::HTTP_NOT_FOUND);
   }
 
   /**
-   * Handles a 405 error for HTML.
+   * Makes a subrequest to retrieve the default error page.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
+   *   The event to process
+   * @param string $path
+   *   The path to which to make a subrequest for this error message.
+   * @param int $status_code
+   *   The status code for the error being handled.
    */
-  public function on405(GetResponseForExceptionEvent $event) {
-    $response = new Response('Method Not Allowed', Response::HTTP_METHOD_NOT_ALLOWED);
-    $response->headers->set('Content-type', 'text/html');
-    $event->setResponse($response);
-  }
+  protected function makeSubrequest(GetResponseForExceptionEvent $event, $path, $status_code) {
+    $request = $event->getRequest();
 
-  /**
-   * @param $title
-   *   The page title of the response.
-   * @param $body
-   *   The body of the error page.
-   * @param $response_code
-   *   The HTTP response code of the response.
-   * @return Response
-   *   An error Response object ready to return to the browser.
-   */
-  protected function createResponse($title, $body, $response_code) {
-    $fragment = new HtmlFragment($body);
-    $fragment->setTitle($title);
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2293523.
+    $system_path = $request->attributes->get('_system_path');
 
-    $page = $this->fragmentRenderer->render($fragment, $response_code);
-    return new Response($this->htmlPageRenderer->render($page), $page->getStatusCode());
+    if ($path && $path != $system_path) {
+      if ($request->getMethod() === 'POST') {
+        $sub_request = Request::create($request->getBaseUrl() . '/' . $path, 'POST', ['destination' => $system_path, '_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
+      }
+      else {
+        $sub_request = Request::create($request->getBaseUrl() . '/' . $path, 'GET', $request->query->all() + ['destination' => $system_path, '_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
+      }
+
+      try {
+        // Persist the 'exception' attribute to the subrequest.
+        $sub_request->attributes->set('exception', $request->attributes->get('exception'));
+
+        $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
+        $response->setStatusCode($status_code);
+        $event->setResponse($response);
+      }
+      catch (\Exception $e) {
+        // If an error happened in the subrequest we can't do much else. Instead,
+        // just log it. The DefaultExceptionSubscriber will catch the original
+        // exception and handle it normally.
+        $error = Error::decodeException($e);
+        $this->logger->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+      }
+    }
   }
 
 }

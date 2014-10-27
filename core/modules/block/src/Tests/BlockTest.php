@@ -47,9 +47,6 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('user');
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
 
-    $this->drupalGet('USER/' . $this->adminUser->id());
-    $this->assertNoText($title, 'Block was not displayed according to block visibility rules regardless of path case.');
-
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');

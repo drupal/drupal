@@ -77,14 +77,14 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     $kernel = \Drupal::getContainer()->get('http_kernel');
-    $response = $kernel->handle($request);
+    $response = $kernel->handle($request)->prepare($request);
 
     $this->assertEqual($response->getStatusCode(), Response::HTTP_FORBIDDEN);
-    $this->assertEqual($response->headers->get('Content-type'), 'text/html');
+    $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
   }
 
   /**
-   * Tests the exception handling for HTML and 403 status code.
+   * Tests the exception handling for HTML and 404 status code.
    */
   public function testHtml404() {
     $request = Request::create('/not-found');
@@ -93,27 +93,10 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     $kernel = \Drupal::getContainer()->get('http_kernel');
-    $response = $kernel->handle($request);
+    $response = $kernel->handle($request)->prepare($request);
 
     $this->assertEqual($response->getStatusCode(), Response::HTTP_NOT_FOUND);
-    $this->assertEqual($response->headers->get('Content-type'), 'text/html');
-  }
-
-  /**
-   * Tests the exception handling for HTML and 405 status code.
-   */
-  public function testHtml405() {
-    $request = Request::create('/admin', 'NOT_EXISTING');
-    $request->headers->set('Accept', 'text/html');
-    $request->setFormat('html', ['text/html']);
-
-    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
-    $kernel = \Drupal::getContainer()->get('http_kernel');
-    $response = $kernel->handle($request);
-
-    $this->assertEqual($response->getStatusCode(), Response::HTTP_METHOD_NOT_ALLOWED);
-    $this->assertEqual($response->headers->get('Content-type'), 'text/html');
-    $this->assertEqual($response->getContent(), 'Method Not Allowed');
+    $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
   }
 
 }

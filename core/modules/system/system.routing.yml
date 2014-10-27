@@ -7,6 +7,22 @@ system.ajax:
   requirements:
     _access: 'TRUE'
 
+system.403:
+  path: '/system/403'
+  defaults:
+    _content: '\Drupal\system\Controller\Http4xxController:on403'
+    _title: 'Access denied'
+  requirements:
+    _access: 'TRUE'
+
+system.404:
+  path: '/system/404'
+  defaults:
+    _content: '\Drupal\system\Controller\Http4xxController:on404'
+    _title: 'Page not found'
+  requirements:
+    _access: 'TRUE'
+
 system.admin:
   path: '/admin'
   defaults:

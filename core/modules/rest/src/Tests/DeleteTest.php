@@ -55,7 +55,7 @@ class DeleteTest extends RESTTestBase {
       // Try to delete an entity that does not exist.
       $response = $this->httpRequest($entity_type . '/9999', 'DELETE');
       $this->assertResponse(404);
-      $this->assertText('The requested page "/' . $entity_type . '/9999" could not be found.');
+      $this->assertText('The requested page could not be found.');
 
       // Try to delete an entity without proper permissions.
       $this->drupalLogout();

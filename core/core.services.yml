@@ -774,7 +774,7 @@ services:
     class: Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@html_fragment_renderer', '@html_page_renderer']
+    arguments: ['@http_kernel', '@logger.channel.php']
   exception.default:
     class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
     tags:
