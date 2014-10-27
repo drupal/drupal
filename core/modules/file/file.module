@@ -532,7 +532,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(FileInterface $file) {
-  $type = mime_header_encode($file->getMimeType());
+  $type = Unicode::mimeHeaderEncode($file->getMimeType());
 
   return array(
     'Content-Type' => $type,

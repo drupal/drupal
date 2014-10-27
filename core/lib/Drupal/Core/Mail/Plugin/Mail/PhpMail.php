@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Mail\Plugin\Mail;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Site\Settings;
 
@@ -65,11 +66,11 @@ class PhpMail implements MailInterface {
     }
     $mimeheaders = array();
     foreach ($message['headers'] as $name => $value) {
-      $mimeheaders[] = $name . ': ' . mime_header_encode($value);
+      $mimeheaders[] = $name . ': ' . Unicode::mimeHeaderEncode($value);
     }
     $line_endings = Settings::get('mail_line_endings', PHP_EOL);
     // Prepare mail commands.
-    $mail_subject = mime_header_encode($message['subject']);
+    $mail_subject = Unicode::mimeHeaderEncode($message['subject']);
     // Note: email uses CRLF for line-endings. PHP's API requires LF
     // on Unix and CRLF on Windows. Drupal automatically guesses the
     // line-ending format appropriate for your system. If you need to
