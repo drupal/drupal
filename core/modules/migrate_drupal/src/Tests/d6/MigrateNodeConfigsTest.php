@@ -47,7 +47,8 @@ class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
    */
   public function testNodeSettings() {
     $config = \Drupal::config('node.settings');
-    $this->assertIdentical($config->get('use_admin_theme'), false);
+    $this->assertIdentical($config->get('use_admin_theme'), FALSE);
+    $this->assertIdentical($config->get('items_per_page'), 3);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'node.settings', $config->get());
   }
 

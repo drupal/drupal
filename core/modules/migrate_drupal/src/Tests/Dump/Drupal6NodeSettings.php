@@ -25,6 +25,10 @@ class Drupal6NodeSettings extends Drupal6DumpBase {
       'name' => 'node_admin_theme',
       'value' => 'i:0;',
     ))
+    ->values(array(
+      'name' => 'default_nodes_main',
+      'value' => 's:1:"3";',
+    ))
     ->execute();
   }
 }
