@@ -26,19 +26,19 @@ class TestControllers {
   }
 
   public function test2() {
-    return "test2";
+    return ['#markup' => "test2"];
   }
 
   public function test3($value) {
-    return $value;
+    return ['#markup' => $value];
   }
 
   public function test4($value) {
-    return $value;
+    return ['#markup' => $value];
   }
 
   public function test5() {
-    return "test5";
+    return ['#markup' => "test5"];
   }
 
   public function test6() {

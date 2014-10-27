@@ -56,7 +56,7 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return \Drupal::theme()->render('theme_test_template_test', array());
+    return ['#markup' => \Drupal::theme()->render('theme_test_template_test', array())];
   }
 
   /**
@@ -82,7 +82,7 @@ class ThemeTestController extends ControllerBase {
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return \Drupal::theme()->render(array('theme_test__suggestion', 'theme_test'), array());
+    return ['#markup' => \Drupal::theme()->render(array('theme_test__suggestion', 'theme_test'), array())];
   }
 
   /**
@@ -92,7 +92,7 @@ class ThemeTestController extends ControllerBase {
    *   Content in theme_test_output GLOBAL.
    */
   public function testRequestListener() {
-    return $GLOBALS['theme_test_output'];
+    return ['#markup' =>  $GLOBALS['theme_test_output']];
   }
 
   /**

@@ -53,7 +53,7 @@ class ErrorTestController extends ControllerBase {
     $awesomely_big = 1/0;
     // This will generate a user error.
     trigger_error("Drupal is awesome", E_USER_WARNING);
-    return "";
+    return [];
   }
 
   /**

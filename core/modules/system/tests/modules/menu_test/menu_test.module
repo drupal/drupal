@@ -91,7 +91,7 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name) {
  * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::menuTestCallback()
  */
 function menu_test_callback() {
-  return 'This is menu_test_callback().';
+  return ['#markup' => 'This is menu_test_callback().'];
 }
 
 /**
@@ -117,7 +117,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
   if ($inherited) {
     $output .= ' Theme negotiation inheritance is being tested.';
   }
-  return $output;
+  return ['#markup' => $output];
 }
 
 /**

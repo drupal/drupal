@@ -24,8 +24,8 @@ class SessionTestController extends ControllerBase {
    */
   public function get() {
     return empty($_SESSION['session_test_value'])
-      ? ""
-      : $this->t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']));
+      ? []
+      : ['#markup' => $this->t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']))];
   }
 
   /**
@@ -41,7 +41,7 @@ class SessionTestController extends ControllerBase {
 
     \Drupal::service('session_manager')->save();
 
-    return 'session_id:' . session_id() . "\n";
+    return ['#markup' => 'session_id:' . session_id() . "\n"];
   }
 
   /**
@@ -54,7 +54,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message with session ID.
    */
   public function getIdFromCookie(Request $request) {
-    return 'session_id:' . $request->cookies->get(session_name()) . "\n";
+    return ['#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n"];
   }
 
   /**
@@ -69,7 +69,7 @@ class SessionTestController extends ControllerBase {
   public function set($test_value) {
     $_SESSION['session_test_value'] = $test_value;
 
-    return $this->t('The current value of the stored session variable has been set to %val', array('%val' => $test_value));
+    return ['#markup' => $this->t('The current value of the stored session variable has been set to %val', array('%val' => $test_value))];
   }
 
   /**
@@ -85,7 +85,7 @@ class SessionTestController extends ControllerBase {
   public function noSet($test_value) {
     \Drupal::service('session_manager')->disable();
     $this->set($test_value);
-    return $this->t('session saving was disabled, and then %val was set', array('%val' => $test_value));
+    return ['#markup' => $this->t('session saving was disabled, and then %val was set', array('%val' => $test_value))];
   }
 
   /**
@@ -111,6 +111,7 @@ class SessionTestController extends ControllerBase {
   public function setMessageButDontSave() {
     \Drupal::service('session_manager')->disable();
     $this->setMessage();
+    return ['#markup' => ''];
   }
 
   /**
@@ -124,6 +125,7 @@ class SessionTestController extends ControllerBase {
     if (!drupal_session_will_start()) {
       $this->set($this->t('Session was not started'));
     }
+    return ['#markup' => ''];
   }
 
   /**
@@ -133,6 +135,6 @@ class SessionTestController extends ControllerBase {
    *   A notification message.
    */
   public function isLoggedIn() {
-    return $this->t('User is logged in.');
+    return ['#markup' => $this->t('User is logged in.')];
   }
 }

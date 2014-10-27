@@ -18,7 +18,7 @@ class TwigThemeTestController {
    * Menu callback for testing PHP variables in a Twig template.
    */
   public function phpVariablesRender() {
-    return \Drupal::theme()->render('twig_theme_test_php_variables', array());
+    return ['#markup' => \Drupal::theme()->render('twig_theme_test_php_variables', array())];
   }
 
   /**

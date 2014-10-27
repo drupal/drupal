@@ -49,13 +49,16 @@ class HtmlControllerBase {
   /**
    * Converts a render array into an HtmlFragment object.
    *
-   * @param array|string $page_content
+   * @param array|\Drupal\Core\Page\HtmlFragmentInterface|\Symfony\Component\HttpFoundation\Response $page_content
    *   The page content area to display.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    *
    * @return \Drupal\Core\Page\HtmlPage
    *   A page object.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown if the controller returns a string.
    */
   protected function createHtmlFragment($page_content, Request $request) {
     // Allow controllers to return a HtmlFragment or a Response object directly.
@@ -63,8 +66,8 @@ class HtmlControllerBase {
       return $page_content;
     }
 
-    if (!is_array($page_content)) {
-      $page_content = ['#markup' => $page_content];
+    if (is_string($page_content)) {
+      throw new \InvalidArgumentException('_content controllers are not allowed to return strings. You can return a render array, a html fragment or a response object.');
     }
 
     $fragment = $this->renderHtmlRenderer->render($page_content);

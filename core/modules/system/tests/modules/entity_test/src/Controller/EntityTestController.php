@@ -88,7 +88,7 @@ class EntityTestController extends ControllerBase {
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
    */
   public function testAdmin() {
-    return '';
+    return [];
   }
 
   /**

@@ -30,7 +30,7 @@ class ModuleTestController {
    * @todo Remove module_test_class_loading().
    */
   public function testClassLoading() {
-    return module_test_class_loading();
+    return ['#markup' => module_test_class_loading()];
   }
 
 }

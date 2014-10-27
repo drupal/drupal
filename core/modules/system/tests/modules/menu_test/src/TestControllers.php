@@ -19,28 +19,28 @@ class TestControllers {
    * Returns page to be used as a login path.
    */
   public function testLogin() {
-    return 'This is TestControllers::testLogin.';
+    return ['#markup' => 'This is TestControllers::testLogin.'];
   }
 
   /**
    * Prints out test data.
    */
   public function test1() {
-    return 'test1';
+    return ['#markup' => 'test1'];
   }
 
   /**
    * Prints out test data.
    */
   public function test2() {
-    return 'test2';
+    return ['#markup' => 'test2'];
   }
 
   /**
    * Prints out test data.
    */
   public function testDerived() {
-    return 'testDerived';
+    return ['#markup' => 'testDerived'];
   }
 
   /**
@@ -54,10 +54,10 @@ class TestControllers {
    */
   public function testDefaults($placeholder = NULL) {
     if ($placeholder) {
-      return String::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder));
+      return ['#markup' => String::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder))];
     }
     else {
-      return String::format('Sometimes there is no placeholder.');
+      return ['#markup' => String::format('Sometimes there is no placeholder.')];
     }
   }
 

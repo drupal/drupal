@@ -19,14 +19,14 @@ class TestControllers {
   public function testUserNodeFoo(EntityInterface $user, NodeInterface $node, Request $request) {
     $foo = $request->attributes->get('foo');
     $foo = is_object($foo) ? $foo->label() : $foo;
-    return "user: {$user->label()}, node: {$node->label()}, foo: $foo";
+    return ['#markup' => "user: {$user->label()}, node: {$node->label()}, foo: $foo"];
   }
 
   public function testNodeSetParent(NodeInterface $node, NodeInterface $parent) {
-    return "Setting '{$parent->label()}' as parent of '{$node->label()}'.";
+    return ['#markup' => "Setting '{$parent->label()}' as parent of '{$node->label()}'."];
   }
 
   public function testEntityLanguage(NodeInterface $node) {
-    return $node->label();
+    return ['#markup' => $node->label()];
   }
 }

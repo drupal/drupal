@@ -72,10 +72,10 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
 function system_test_lock_acquire() {
   if (\Drupal::lock()->acquire('system_test_lock_acquire')) {
     \Drupal::lock()->release('system_test_lock_acquire');
-    return 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
+    return ['#markup' => 'TRUE: Lock successfully acquired in system_test_lock_acquire()'];
   }
   else {
-    return 'FALSE: Lock not acquired in system_test_lock_acquire()';
+    return ['#markup' => 'FALSE: Lock not acquired in system_test_lock_acquire()'];
   }
 }
 
@@ -91,7 +91,7 @@ function system_test_lock_exit() {
     exit();
   }
   else {
-    return 'FALSE: Lock not acquired in system_test_lock_exit()';
+    return ['#markup' => 'FALSE: Lock not acquired in system_test_lock_exit()'];
   }
 }
 

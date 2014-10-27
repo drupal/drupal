@@ -43,7 +43,7 @@ class TestContent extends ControllerBase {
    * Provides example content for testing route enhancers.
    */
   public function test1() {
-    return 'abcde';
+    return ['#markup' => 'abcde'];
   }
 
   /**
@@ -54,13 +54,13 @@ class TestContent extends ControllerBase {
    */
   public function test11() {
     $account = $this->currentUser();
-    return $account->getUsername();
+    return ['#markup' => $account->getUsername()];
   }
 
   public function testAccount(UserInterface $user) {
     $current_user_name = $this->currentUser()->getUsername();
     $this->currentUser()->setAccount($user);
-    return $current_user_name . ':' . $user->getUsername();
+    return ['#markup' => $current_user_name . ':' . $user->getUsername()];
   }
 
   /**
