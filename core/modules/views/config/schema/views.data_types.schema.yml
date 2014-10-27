@@ -27,6 +27,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     exposed_form:
       type: mapping
       label: 'Exposed form'
@@ -40,6 +43,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     access:
       type: mapping
       label: 'Access'
@@ -52,6 +58,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     cache:
       type: views.cache.[type]
     empty:
@@ -99,6 +108,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     row:
       type: mapping
       label: 'Row'
@@ -111,6 +123,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     query:
       type: mapping
       label: 'Query'
@@ -123,6 +138,9 @@ views_display:
         provider:
           type: string
           label: 'Provider'
+        dependencies:
+          type: config_dependencies
+          label: 'Dependencies'
     defaults:
       type: mapping
       label: 'Defaults'
@@ -883,3 +901,6 @@ views_cache:
     provider:
       type: string
       label: 'Provider'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
