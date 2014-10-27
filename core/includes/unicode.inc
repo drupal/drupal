@@ -96,7 +96,7 @@ function drupal_xml_parser_create(&$data) {
   // Unsupported encodings are converted here into UTF-8.
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
-    $out = drupal_convert_to_utf8($data, $encoding);
+    $out = Unicode::convertToUtf8($data, $encoding);
     if ($out !== FALSE) {
       $encoding = 'utf-8';
       $data = preg_replace('/^(<\?xml[^>]+encoding)="(.+?)"/', '\\1="utf-8"', $out);
