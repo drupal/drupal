@@ -59,15 +59,15 @@
  */
 #}
 {{ title_prefix }}
-<h3{{ title_attributes }}>
+<h3 class="title"{{ title_attributes }}>
   <a href="{{ url }}">{{ title }}</a>
 </h3>
 {{ title_suffix }}
-<div>
+<div class="search-snippet-info">
   {% if snippet %}
-    <p{{ content_attributes }}>{{ snippet }}</p>
+    <p class="search-snippet"{{ content_attributes }}>{{ snippet }}</p>
   {% endif %}
   {% if info %}
-    <p>{{ info }}</p>
+    <p class="search-info">{{ info }}</p>
   {% endif %}
 </div>
