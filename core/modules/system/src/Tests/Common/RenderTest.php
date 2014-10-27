@@ -808,10 +808,10 @@ class RenderTest extends DrupalUnitTestBase {
         ),
       ),
       '#markup' => $placeholder,
-      '#prefix' => '<foo>',
-      '#suffix' => '</foo>'
+      '#prefix' => '<pre>',
+      '#suffix' => '</pre>',
     );
-    $expected_output = '<foo><bar>' . $context['bar'] . '</bar></foo>';
+    $expected_output = '<pre><bar>' . $context['bar'] . '</bar></pre>';
 
     // #cache disabled.
     $element = $test_element;
@@ -852,7 +852,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></foo>',
+      '#markup' => '<pre><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></pre>',
       '#attached' => array(),
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
@@ -895,11 +895,11 @@ class RenderTest extends DrupalUnitTestBase {
           ],
         ],
         '#markup' => $placeholder,
-        '#prefix' => '<foo>',
-        '#suffix' => '</foo>'
+        '#prefix' => '<pre>',
+        '#suffix' => '</pre>'
       ],
     ];
-    $expected_output = '<foo><bar>' . $context['bar'] . '</bar></foo>' . "\n";
+    $expected_output = '<pre><bar>' . $context['bar'] . '</bar></pre>' . "\n";
 
     // #cache disabled.
     $element = $test_element;
@@ -943,7 +943,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the child element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></foo>',
+      '#markup' => '<pre><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></pre>',
       '#attached' => array(),
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
@@ -969,7 +969,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the parent element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></foo>' . "\n",
+      '#markup' => '<pre><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></pre>' . "\n",
       '#attached' => array(),
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
@@ -999,7 +999,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the child element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></foo>',
+      '#markup' => '<pre><drupal-render-cache-placeholder callback="common_test_post_render_cache_placeholder" token="'. $expected_token . '"></drupal-render-cache-placeholder></pre>',
       '#attached' => array(),
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(

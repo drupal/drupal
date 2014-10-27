@@ -105,6 +105,7 @@ abstract class FieldUiTestBase extends WebTestBase {
 
     // First step : 'Re-use existing field' on the 'Manage fields' page.
     $this->drupalPostForm("$bundle_path/fields", $initial_edit, t('Save'));
+    $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
     // Second step : 'Field settings' form.
     $this->drupalPostForm(NULL, $field_edit, t('Save settings'));

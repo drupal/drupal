@@ -259,7 +259,7 @@ function theme_system_modules_details($variables) {
       '#type' => 'details',
       '#title' => SafeMarkup::set('<span class="text"> ' . drupal_render($module['description']) . '</span>'),
       '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
-      '#description' => SafeMarkup::set($description),
+      '#description' => $description,
     );
     $col4 = drupal_render($details);
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);

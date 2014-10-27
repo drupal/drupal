@@ -2869,6 +2869,19 @@ function drupal_render(&$elements, $is_root_call = FALSE) {
 
   // Assume that if #theme is set it represents an implemented hook.
   $theme_is_implemented = isset($elements['#theme']);
+  // Check the elements for insecure HTML and pass through sanitization.
+  if (isset($elements)) {
+    $markup_keys = array(
+      '#description',
+      '#field_prefix',
+      '#field_suffix',
+    );
+    foreach ($markup_keys as $key) {
+      if (!empty($elements[$key]) && is_scalar($elements[$key])) {
+        $elements[$key] = SafeMarkup::checkAdminXss($elements[$key]);
+      }
+    }
+  }
 
   // Call the element's #theme function if it is set. Then any children of the
   // element have to be rendered there. If the internal #render_children
@@ -2950,8 +2963,9 @@ function drupal_render(&$elements, $is_root_call = FALSE) {
   // with how render cached output gets stored. This ensures that
   // #post_render_cache callbacks get the same data to work with, no matter if
   // #cache is disabled, #cache is enabled, there is a cache hit or miss.
-  $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
-  $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
+  $prefix = isset($elements['#prefix']) ? SafeMarkup::checkAdminXss($elements['#prefix']) : '';
+  $suffix = isset($elements['#suffix']) ? SafeMarkup::checkAdminXss($elements['#suffix']) : '';
+
   $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
   // We've rendered this element (and its subtree!), now update the stack.

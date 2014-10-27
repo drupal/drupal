@@ -52,7 +52,7 @@ class SafeMarkup {
    * or element that set it. Therefore, only valid HTML should be
    * marked as safe (never partial markup). For example, you should never do:
    * @code
-   *   SafeMarkup::set("<");
+   *   SafeMarkup::set('<');
    * @endcode
    * or:
    * @code
@@ -85,7 +85,7 @@ class SafeMarkup {
    * @param string $string
    *   The content to be checked.
    * @param string $strategy
-   *   The escaping strategy. See SafeMarkup::set(). Defaults to 'html'.
+   *   The escaping strategy. See self::set(). Defaults to 'html'.
    *
    * @return bool
    *   TRUE if the string has been marked secure, FALSE otherwise.
@@ -103,7 +103,7 @@ class SafeMarkup {
    * added to any safe strings already marked for the current request.
    *
    * @param array $safe_strings
-   *   A list of safe strings as previously retrieved by SafeMarkup::getAll().
+   *   A list of safe strings as previously retrieved by self::getAll().
    *
    * @throws \UnexpectedValueException
    */
@@ -125,15 +125,31 @@ class SafeMarkup {
   /**
    * Encodes special characters in a plain-text string for display as HTML.
    *
-   * @param $string
+   * @param string $string
    *   A string.
    *
    * @return string
    *   The escaped string. If $string was already set as safe with
-   *   SafeString::set, it won't be escaped again.
+   *   self::set(), it won't be escaped again.
    */
   public static function escape($string) {
     return static::isSafe($string) ? $string : String::checkPlain($string);
+  }
+
+  /**
+   * Applies a very permissive XSS/HTML filter for admin-only use.
+   *
+   * @param string $string
+   *   A string.
+   *
+   * @return string
+   *   The escaped string. If $string was already set as safe with
+   *   self::set(), it won't be escaped again.
+   *
+   * @see \Drupal\Component\Utility\Xss::filterAdmin()
+   */
+  public static function checkAdminXss($string) {
+    return static::isSafe($string) ? $string : Xss::filterAdmin($string);
   }
 
   /**

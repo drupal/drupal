@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -93,8 +92,8 @@ function editor_image_upload_settings_form(Editor $editor) {
   $form['max_dimensions'] = array(
     '#type' => 'item',
     '#title' => t('Maximum dimensions'),
-    '#field_prefix' => SafeMarkup::set('<div class="container-inline clearfix">'),
-    '#field_suffix' => SafeMarkup::set('</div>'),
+    '#field_prefix' => '<div class="container-inline clearfix">',
+    '#field_suffix' => '</div>',
     '#description' => t('Images larger than these dimensions will be scaled down.'),
     '#states' => $show_if_image_uploads_enabled,
   );
