@@ -16,9 +16,9 @@
  * @ingroup themeable
  */
 #}
-<div>
+<div{{ attributes.addClass('aggregator-item') }}>
   {{ title_prefix }}
-  <h3>
+  <h3 class="feed-item-title">
     <a href="{{ url }}">{{ title }}</a>
   </h3>
   {{ title_suffix }}
