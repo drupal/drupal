@@ -7,6 +7,8 @@
 
 namespace Drupal\block\Plugin\DisplayVariant;
 
+use Drupal\Core\Block\MainContentBlockPluginInterface;
+use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -18,12 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a display variant that represents the full page.
  *
- * @DisplayVariant(
+ * @PageDisplayVariant(
  *   id = "full_page",
  *   admin_label = @Translation("Full page")
  * )
  */
-class FullPageVariant extends VariantBase implements ContainerFactoryPluginInterface {
+class FullPageVariant extends VariantBase implements PageVariantInterface, ContainerFactoryPluginInterface {
 
   /**
    * The block storage.
@@ -59,6 +61,13 @@ class FullPageVariant extends VariantBase implements ContainerFactoryPluginInter
    * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
    */
   protected $themeNegotiator;
+
+  /**
+   * The render array representing the main page content.
+   *
+   * @var array
+   */
+  protected $mainContent;
 
   /**
    * Constructs a new FullPageVariant.
@@ -102,6 +111,14 @@ class FullPageVariant extends VariantBase implements ContainerFactoryPluginInter
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setMainContent(array $main_content) {
+    $this->mainContent = $main_content;
+    return $this;
+  }
+
+  /**
    * Gets the current theme for this page.
    *
    * @return string
@@ -115,12 +132,20 @@ class FullPageVariant extends VariantBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function build() {
+    // Track whether a block that shows the main content is displayed or not.
+    $main_content_block_displayed = FALSE;
+
     $build = array();
     // Load all region content assigned via blocks.
     foreach ($this->getRegionAssignments() as $region => $blocks) {
       /** @var $blocks \Drupal\block\BlockInterface[] */
       foreach ($blocks as $key => $block) {
         if ($block->access('view')) {
+          $block_plugin = $block->getPlugin();
+          if ($block_plugin instanceof MainContentBlockPluginInterface) {
+            $block_plugin->setMainContent($this->mainContent);
+            $main_content_block_displayed = TRUE;
+          }
           $build[$region][$key] = $this->blockViewBuilder->view($block);
         }
       }
@@ -129,6 +154,14 @@ class FullPageVariant extends VariantBase implements ContainerFactoryPluginInter
         $build[$region]['#sorted'] = TRUE;
       }
     }
+
+    // If no block that shows the main content is displayed, still show the main
+    // content. Otherwise the end user will see all displayed blocks, but not
+    // the main content they came for.
+    if (!$main_content_block_displayed) {
+      $build['content']['system_main'] = $this->mainContent;
+    }
+
     return $build;
   }
 

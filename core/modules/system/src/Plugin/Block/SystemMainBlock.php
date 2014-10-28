@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -18,15 +19,27 @@ use Drupal\Core\Form\FormStateInterface;
  *   admin_label = @Translation("Main page content")
  * )
  */
-class SystemMainBlock extends BlockBase {
+class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterface {
+
+  /**
+   * The render array representing the main page content.
+   *
+   * @var array
+   */
+  protected $mainContent;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMainContent(array $main_content) {
+    $this->mainContent = $main_content;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-    return array(
-      drupal_set_page_content()
-    );
+    return $this->mainContent;
   }
 
   /**

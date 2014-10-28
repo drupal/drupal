@@ -65,13 +65,78 @@ class FullPageVariantTest extends UnitTestCase {
       ->getMock();
   }
 
+  public function providerBuild() {
+    $blocks_config = array(
+      'block1' => array(
+        TRUE, 'top', 0, FALSE,
+      ),
+      // Test a block without access.
+      'block2' => array(
+        FALSE, 'bottom', 0, FALSE,
+      ),
+      // Test two blocks in the same region with specific weight.
+      'block3' => array(
+        TRUE, 'bottom', 5, FALSE,
+      ),
+      'block4' => array(
+        TRUE, 'bottom', -5, FALSE,
+      ),
+      // Test a block implementing MainContentBlockPluginInterface.
+      'block5' => array(
+        TRUE, 'center', 0, TRUE,
+      ),
+    );
+
+    $test_cases = [];
+    $test_cases[] = [$blocks_config, 4,
+      [
+        'top' => [
+          'block1' => [],
+          '#sorted' => TRUE,
+        ],
+        // The main content was rendered via a block.
+        'center' => [
+          'block5' => [],
+          '#sorted' => TRUE,
+        ],
+        'bottom' => [
+          'block4' => [],
+          'block3' => [],
+          '#sorted' => TRUE,
+        ],
+      ],
+    ];
+    unset($blocks_config['block5']);
+    $test_cases[] = [$blocks_config, 3,
+      [
+        'top' => [
+          'block1' => [],
+          '#sorted' => TRUE,
+        ],
+        'bottom' => [
+          'block4' => [],
+          'block3' => [],
+          '#sorted' => TRUE,
+        ],
+        // The main content was rendered via the fallback in case there is no
+        // block rendering the main content.
+        'content' => [
+          'system_main' => ['#markup' => 'Hello kittens!'],
+        ],
+      ],
+    ];
+    return $test_cases;
+  }
+
   /**
    * Tests the building of a full page variant.
    *
    * @covers ::build
    * @covers ::getRegionAssignments
+   *
+   * @dataProvider providerBuild
    */
-  public function testBuild() {
+  public function testBuild(array $blocks_config, $visible_block_count, array $expected_render_array) {
     $theme = $this->randomMachineName();
     $display_variant = $this->setUpDisplayVariant();
     $this->themeNegotiator->expects($this->any())
@@ -82,26 +147,14 @@ class FullPageVariantTest extends UnitTestCase {
       ->method('getRegionNames')
       ->will($this->returnValue(array(
         'top' => 'Top',
+        'center' => 'Center',
         'bottom' => 'Bottom',
       )));
+    $display_variant->setMainContent(['#markup' => 'Hello kittens!']);
 
-    $blocks_config = array(
-      'block1' => array(
-        TRUE, 'top', 0,
-      ),
-      // Test a block without access.
-      'block2' => array(
-        FALSE, 'bottom', 0,
-      ),
-      // Test two blocks in the same region with specific weight.
-      'block3' => array(
-        TRUE, 'bottom', 5,
-      ),
-      'block4' => array(
-        TRUE, 'bottom', -5,
-      ),
-    );
     $blocks = array();
+    $block_plugin = $this->getMock('Drupal\Core\Block\BlockPluginInterface');
+    $main_content_block_plugin = $this->getMock('Drupal\Core\Block\MainContentBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
       $block->expects($this->once())
@@ -114,10 +167,13 @@ class FullPageVariantTest extends UnitTestCase {
           array('weight', $block_config[2]),
           array('status', TRUE),
         )));
+      $block->expects($this->any())
+        ->method('getPlugin')
+        ->willReturn($block_config[3] ? $main_content_block_plugin : $block_plugin);
       $blocks[$block_id] = $block;
     }
 
-    $this->blockViewBuilder->expects($this->exactly(3))
+    $this->blockViewBuilder->expects($this->exactly($visible_block_count))
       ->method('view')
       ->will($this->returnValue(array()));
     $this->blockStorage->expects($this->once())
@@ -125,18 +181,7 @@ class FullPageVariantTest extends UnitTestCase {
       ->with(array('theme' => $theme))
       ->will($this->returnValue($blocks));
 
-    $expected = array(
-      'top' => array(
-        'block1' => array(),
-        '#sorted' => TRUE,
-      ),
-      'bottom' => array(
-        'block4' => array(),
-        'block3' => array(),
-        '#sorted' => TRUE,
-      ),
-    );
-    $this->assertSame($expected, $display_variant->build());
+    $this->assertSame($expected_render_array, $display_variant->build());
   }
 
 }
