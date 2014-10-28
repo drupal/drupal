@@ -15,7 +15,7 @@ A template contains **variables** or **expressions**, which get replaced with
 values when the template is evaluated, and **tags**, which control the logic
 of the template.
 
-Below is a minimal template that illustrates a few basics. We will cover the
+Below is a minimal template that illustrates a few basics. We will cover further
 details later on:
 
 .. code-block:: html+jinja
@@ -58,14 +58,15 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
 * *Emacs* via `web-mode.el`_
+* *Atom* via the `PHP-twig for atom`_
 
 Variables
 ---------
 
-The application passes variables to the templates you can mess around in the
-template. Variables may have attributes or elements on them you can access
-too. How a variable looks like heavily depends on the application providing
-those.
+The application passes variables to the templates for manipulation in the
+template. Variables may have attributes or elements you can access,
+too. The visual representation of a variable depends heavily on the application providing
+it.
 
 You can use a dot (``.``) to access attributes of a variable (methods or
 properties of a PHP object, or items of a PHP array), or the so-called
@@ -88,16 +89,16 @@ access the variable attribute:
 .. note::
 
     It's important to know that the curly braces are *not* part of the
-    variable but the print statement. If you access variables inside tags
-    don't put the braces around.
+    variable but the print statement. When accessing variables inside tags,
+    don't put the braces around them.
 
-If a variable or attribute does not exist, you will get back a ``null`` value
-when the ``strict_variables`` option is set to ``false``, otherwise Twig will
-throw an error (see :ref:`environment options<environment_options>`).
+If a variable or attribute does not exist, you will receive a ``null`` value
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables`` 
+is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
 
-    For convenience sake ``foo.bar`` does the following things on the PHP
+    For convenience's sake ``foo.bar`` does the following things on the PHP
     layer:
 
     * check if ``foo`` is an array and ``bar`` a valid element;
@@ -115,7 +116,7 @@ throw an error (see :ref:`environment options<environment_options>`).
 
 .. note::
 
-    If you want to get a dynamic attribute on a variable, use the
+    If you want to access a dynamic attribute of a variable, use the
     :doc:`attribute<functions/attribute>` function instead.
 
 Global Variables
@@ -161,7 +162,7 @@ example will join a list by commas:
 
     {{ list|join(', ') }}
 
-To apply a filter on a section of code, wrap it with the
+To apply a filter on a section of code, wrap it in the
 :doc:`filter<tags/filter>` tag:
 
 .. code-block:: jinja
@@ -170,7 +171,7 @@ To apply a filter on a section of code, wrap it with the
         This text becomes uppercase
     {% endfilter %}
 
-Go to the :doc:`filters<filters/index>` page to learn more about the built-in
+Go to the :doc:`filters<filters/index>` page to learn more about built-in
 filters.
 
 Functions
@@ -222,7 +223,7 @@ to change the default value:
     {# the first argument is the date format, which defaults to the global date format if null is passed #}
     {{ "now"|date(null, "Europe/Paris") }}
 
-    {# or skip the format value by using a named argument for the timezone #}
+    {# or skip the format value by using a named argument for the time zone #}
     {{ "now"|date(timezone="Europe/Paris") }}
 
 You can also use both positional and named arguments in one call, in which
@@ -327,7 +328,7 @@ allows you to build a base "skeleton" template that contains all the common
 elements of your site and defines **blocks** that child templates can
 override.
 
-Sounds complicated but is very basic. It's easier to understand it by
+Sounds complicated but it is very basic. It's easier to understand it by
 starting with an example.
 
 Let's define a base template, ``base.html``, which defines a simple HTML
@@ -692,7 +693,7 @@ string:
 
     .. code-block:: jinja
 
-        {% if phone matches '{^[\d\.]+$}' %}
+        {% if phone matches '/^[\\d\\.]+$/' %}
         {% endif %}
 
 Containment Operator
@@ -871,3 +872,4 @@ Extension<creating_extensions>` chapter.
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
 .. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
+.. _`PHP-twig for atom`:          https://github.com/reesef/php-twig

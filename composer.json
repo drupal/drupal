@@ -16,7 +16,7 @@
     "symfony/serializer": "2.5.*",
     "symfony/validator": "2.5.*",
     "symfony/yaml": "dev-master#499f7d7aa96747ad97940089bd7a1fb24ad8182a",
-    "twig/twig": "1.15.*",
+    "twig/twig": "1.16.*",
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
     "doctrine/annotations": "1.2.*",
     "guzzlehttp/guzzle": "~5.0",

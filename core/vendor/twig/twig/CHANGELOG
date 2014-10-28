@@ -1,4 +1,32 @@
-* 1.15.1 (2013-02-13)
+* 1.16.2 (2014-10-17)
+
+ * fixed timezone on dates as strings
+ * fixed 2-words test names when a custom node class is not used
+ * fixed macros when using an argument named like a PHP super global (like GET or POST)
+ * fixed date_modify when working with DateTimeImmutable
+ * optimized for loops
+ * fixed multi-byte characters handling in the split filter
+ * fixed a regression in the in operator
+ * fixed a regression in the slice filter
+
+* 1.16.1 (2014-10-10)
+
+ * improved error reporting in a sandboxed template
+ * fixed missing error file/line information under certain circumstances
+ * fixed wrong error line number in some error messages
+ * fixed the in operator to use strict comparisons
+ * sped up the slice filter
+ * fixed for mb function overload mb_substr acting different
+ * fixed the attribute() function when passing a variable for the arguments
+
+* 1.16.0 (2014-07-05)
+
+ * changed url_encode to always encode according to RFC 3986
+ * fixed inheritance in a 'use'-hierarchy
+ * removed the __toString policy check when the sandbox is disabled
+ * fixed recursively calling blocks in templates with inheritance
+
+* 1.15.1 (2014-02-13)
 
  * fixed the conversion of the special '0000-00-00 00:00' date
  * added an error message when trying to import an undefined block from a trait
