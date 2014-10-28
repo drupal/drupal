@@ -16,7 +16,7 @@ path.admin_overview:
     _permission: 'administer url aliases'
 
 path.admin_overview_filter:
-  path: '/admin/config/search/path/list/{keys}'
+  path: '/admin/config/search/path/filter'
   defaults:
     _title: 'URL aliases'
     _content: '\Drupal\path\Controller\PathController::adminOverview'

@@ -60,8 +60,8 @@ class PathFilterForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('path.admin_overview_filter', array(
-      'keys' => trim($form_state->getValue('filter')),
+    $form_state->setRedirect('path.admin_overview_filter', array(), array(
+      'query' => array('search' => trim($form_state->getValue('filter'))),
     ));
   }
 

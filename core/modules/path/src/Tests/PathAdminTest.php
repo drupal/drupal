@@ -36,6 +36,7 @@ class PathAdminTest extends PathTestBase {
     // Create test nodes.
     $node1 = $this->drupalCreateNode();
     $node2 = $this->drupalCreateNode();
+    $node3 = $this->drupalCreateNode();
 
     // Create aliases.
     $alias1 = $this->randomMachineName(8);
@@ -52,6 +53,13 @@ class PathAdminTest extends PathTestBase {
     );
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
+    $alias3 = $this->randomMachineName(4) . '/' . $this->randomMachineName(4);
+    $edit = array(
+      'source' => 'node/' . $node3->id(),
+      'alias' => $alias3,
+    );
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+
     // Filter by the first alias.
     $edit = array(
       'filter' => $alias1,
@@ -59,6 +67,7 @@ class PathAdminTest extends PathTestBase {
     $this->drupalPostForm(NULL, $edit, t('Filter'));
     $this->assertLinkByHref($alias1);
     $this->assertNoLinkByHref($alias2);
+    $this->assertNoLinkByHref($alias3);
 
     // Filter by the second alias.
     $edit = array(
@@ -67,6 +76,16 @@ class PathAdminTest extends PathTestBase {
     $this->drupalPostForm(NULL, $edit, t('Filter'));
     $this->assertNoLinkByHref($alias1);
     $this->assertLinkByHref($alias2);
+    $this->assertNoLinkByHref($alias3);
+
+    // Filter by the third alias which has a slash.
+    $edit = array(
+      'filter' => $alias3,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Filter'));
+    $this->assertNoLinkByHref($alias1);
+    $this->assertNoLinkByHref($alias2);
+    $this->assertLinkByHref($alias3);
 
     // Filter by a random string with a different length.
     $edit = array(

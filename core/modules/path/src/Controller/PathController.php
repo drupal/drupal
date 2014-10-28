@@ -12,6 +12,7 @@ use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for path routes.
@@ -55,7 +56,17 @@ class PathController extends ControllerBase {
     );
   }
 
-  public function adminOverview($keys) {
+  /**
+   * Displays the path administration overview page.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return array
+   *   A render array as expected by drupal_render().
+   */
+  public function adminOverview(Request $request) {
+    $keys = $request->query->get('search');
     // Add the filter form above the overview table.
     $build['path_admin_filter_form'] = $this->formBuilder()->getForm('Drupal\path\Form\PathFilterForm', $keys);
     // Enable language column if language.module is enabled or if we have any
