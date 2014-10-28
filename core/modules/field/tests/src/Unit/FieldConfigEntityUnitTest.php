@@ -54,6 +54,13 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   protected $fieldStorage;
 
   /**
+   * The typed configuration manager used for testing.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $typedConfigManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
