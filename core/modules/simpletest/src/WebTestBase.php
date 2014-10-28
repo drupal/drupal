@@ -80,7 +80,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * The current user logged in using the internal browser.
    *
-   * @var bool
+   * @var \Drupal\Core\Session\AccountInterface|bool
    */
   protected $loggedInUser = FALSE;
 
