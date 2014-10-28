@@ -10,6 +10,7 @@ namespace Drupal\language\Tests;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSession;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
@@ -317,9 +318,37 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       'message' => 'USER ADMIN > DEFAULT: defined prefereed user admin language setting, the UI language is based on user setting',
     );
     $this->runTest($test);
+
+    // Go by session preference.
+    $language_negotiation_session_param = $this->randomMachineName();
+    $edit = array('language_negotiation_session_param' => $language_negotiation_session_param);
+    $this->drupalPostForm('admin/config/regional/language/detection/session', $edit, t('Save configuration'));
+    $tests = array(
+      array(
+        'language_negotiation' => array(LanguageNegotiationSession::METHOD_ID),
+        'path' => "admin/config",
+        'expect' => $default_string,
+        'expected_method_id' => LanguageNegotiatorInterface::METHOD_ID,
+        'http_header' => $http_header_browser_fallback,
+        'message' => 'SESSION > DEFAULT: no language given, the UI language is default',
+      ),
+      array(
+        'language_negotiation' => array(LanguageNegotiationSession::METHOD_ID),
+        'path' => 'admin/config',
+        'path_options' => ['query' => [$language_negotiation_session_param => $langcode]],
+        'expect' => $language_string,
+        'expected_method_id' => LanguageNegotiationSession::METHOD_ID,
+        'http_header' => $http_header_browser_fallback,
+        'message' => 'SESSION > DEFAULT: language given, UI language is determined by session language preference',
+      ),
+    );
+    foreach ($tests as $test) {
+      $this->runTest($test);
+    }
   }
 
   protected function runTest($test) {
+    $test += array('path_options' => []);
     if (!empty($test['language_negotiation'])) {
       $method_weights = array_flip($test['language_negotiation']);
       $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, $method_weights);
@@ -333,7 +362,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       \Drupal::state()->set('language_test.domain', $test['language_test_domain']);
     }
     $this->container->get('language_manager')->reset();
-    $this->drupalGet($test['path'], array(), $test['http_header']);
+    $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
     $this->assertText(t('Language negotiation method: @name', array('@name' => $test['expected_method_id'])));
   }
