@@ -41,7 +41,7 @@ class MigrateMenuTest extends MigrateDrupalTestBase {
     $navigation_menu = Menu::load('navigation');
     $this->assertEqual($navigation_menu->id(), 'navigation');
     $this->assertEqual($navigation_menu->label(), 'Navigation');
-    $this->assertEqual($navigation_menu->description , 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.');
+    $this->assertEqual($navigation_menu->getDescription() , 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.');
 
     // Test that we can re-import using the ConfigEntityBase destination.
     Database::getConnection('default', 'migrate')

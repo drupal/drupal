@@ -15,6 +15,14 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface MenuInterface extends ConfigEntityInterface {
 
   /**
+   * Returns the description of the menu.
+   *
+   * @return string
+   *   Description of the menu.
+   */
+  public function getDescription();
+
+  /**
    * Determines if this menu is locked.
    *
    * @return bool

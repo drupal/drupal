@@ -60,7 +60,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify that after modifying the menu, there is a cache miss.
     $this->pass('Test modification of menu.', 'Debug');
-    $menu->label = 'Awesome llama';
+    $menu->set('label', 'Awesome llama');
     $menu->save();
     $this->verifyPageCache($path, 'MISS');
 
