@@ -1,0 +1,351 @@
+# Schema for the migrate_drupal source plugins.
+
+migrate.source.variable:
+  type: migrate_source_sql
+  label: 'Variable'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        - type: string
+          label: 'Variable'
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+        id:
+          type: string
+          label: 'ID'
+        label:
+          type: label
+          label: 'Label'
+        description:
+          type: text
+          label: 'Description'
+        path:
+          type: string
+          label: 'Path'
+        plugin:
+          type: string
+          label: 'Plugin'
+
+migrate.source.d6_comment:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+
+migrate.source.d6_comment_variable_per_comment_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment variable'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_comment_entity_form_display_subject:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment subject entity form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_box:
+  type: migrate_source_sql
+  label: 'Drupal 6 box'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+
+migrate.source.d6_taxonomy_vocabulary:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_instance_per_form_display:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_taxonomy_vocabulary_per_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_taxonomy_vocabulary_per_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field:
+  type: migrate_source_sql
+  label: 'Drupal 6 field'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.variable_multirow:
+  type: migrate_source_sql
+  label: 'Drupal variable multirow'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        - type: string
+          label: 'Variable'
+
+migrate.source.d6_comment_variable:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment variable'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_contact_settings:
+  type: migrate_source_sql
+  label: 'Drupal 6 contact settings'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        - type: string
+          label: 'Variable'
+
+migrate.source.d6_view_mode:
+  type: migrate_source_sql
+  label: 'Drupal 6 view mode'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        targetEntityType:
+          type: string
+          label: 'Target entity type'
+        status:
+          type: boolean
+          label: 'Status'
+
+migrate.source.d6_profile_field:
+  type: migrate_source_sql
+  label: 'Drupal 6 profile field'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_formatter_settings:
+  type: migrate_source_sql
+  label: 'Drupal 6 field formatter settings'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_node_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 node type'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_node:
+  type: migrate_source_sql
+  label: 'Drupal 6 node'
+  mapping:
+    node_type:
+      # The node type can be specified both as a string ID of a node type or an
+      # array of node type IDs, so there is no way to consistently parse this.
+      type: ignore
+      label: 'Node type'
+
+migrate.source.d6_node_revision:
+  type: migrate_source_sql
+  label: 'Drupal 6 node'
+  mapping:
+    node_type:
+      # The node type can be specified both as a string ID of a node type or an
+      # array of node type IDs, so there is no way to consistently parse this.
+      type: ignore
+      label: 'Node type'
+
+migrate.source.d6_upload_instance:
+  type: migrate_source_sql
+  label: 'Drupal 6 upload form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_instance:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_field_instance_per_view_mode:
+  type: migrate_source_sql
+  label: 'Drupal 6 field formatter'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_user:
+  type: migrate_source_sql
+  label: 'Drupal 6 user'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        key:
+          type: string
+          label: 'User data key'
+        module:
+          type: string
+          label: 'Module name'
+
+migrate.source.d6_user_picture_file:
+  type: migrate_source_sql
+  label: 'Drupal 6 user picure display'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constant'
+      mapping:
+        is_public:
+          type: boolean
+          label: 'Public'
+
+migrate.source.d6_user_picture_instance:
+  type: migrate_source_sql
+  label: 'Drupal 6 user picure display'
+  mapping:
+    provider:
+      type: string
+      label: 'Provider'
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate_entity_constant:
+  type: mapping
+  mapping:
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'ID'
+    view_mode:
+      type: string
+      label: 'View mode'
+    form_mode:
+      type: string
+      label: 'Form mode'
+    field_name:
+      type: string
+      label: 'Field name'
+    empty:
+      type: sequence
+      label: 'Empty'
+      sequence:
+        - type: string
+          label: 'Empty'
+    name:
+      type: string
+      label: 'Name'
+    preview:
+      type: integer
+      label: 'Preview'
+    create_body:
+      type: boolean
+      label: 'create body'
+    required:
+      type: boolean
+      label: 'Required'
+    type:
+      type: string
+      label: 'Type'
+    cardinality:
+      type: integer
+      label: 'Cardinality'
+    parent:
+      type: integer
+      label: 'Parent'
+    langcode:
+      type: string
+      label: 'Type'
+    third_party_settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: ignore
+          label: 'Settings'
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: ignore
+          label: 'Settings'
+    options:
+      type: mapping
+      label: 'Options'
+      mapping:
+        label:
+          type: string
+          label: 'label'
+        type:
+          type: string
+          label: 'Type'
+        weight:
+          type: integer
+          label: 'Weight'
+        settings:
+          type: sequence
+          label: 'Settings'
+          sequence:
+            - type: string
+              label: 'Settings'
