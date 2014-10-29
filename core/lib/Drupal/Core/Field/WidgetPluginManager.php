@@ -51,8 +51,6 @@ class WidgetPluginManager extends DefaultPluginManager {
 
     $this->setCacheBackend($cache_backend, 'field_widget_types_plugins');
     $this->alterInfo('field_widget_info');
-
-    $this->factory = new WidgetFactory($this);
     $this->fieldTypeManager = $field_type_manager;
   }
 
