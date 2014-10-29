@@ -14,3 +14,9 @@ drupal.menu_ui.admin:
   dependencies:
     - core/jquery
     - core/drupal
+
+drupal.menu_ui.adminforms:
+  version: VERSION
+  css:
+    theme:
+      css/menu_ui.admin.css: {}
