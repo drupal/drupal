@@ -655,12 +655,10 @@ services:
     arguments: ['@controller_resolver', '@title_resolver', '@render_html_renderer']
   controller.ajax:
     class: Drupal\Core\Controller\AjaxController
-    arguments: ['@controller_resolver', '@ajax_response_renderer']
+    arguments: ['@controller_resolver', '@element_info']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@controller_resolver', '@title_resolver']
-  ajax_response_renderer:
-    class: Drupal\Core\Ajax\AjaxResponseRenderer
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
@@ -672,7 +670,7 @@ services:
     class: Drupal\Core\EventSubscriber\ViewSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@content_negotiation', '@title_resolver', '@ajax_response_renderer']
+    arguments: ['@content_negotiation', '@title_resolver']
   html_view_subscriber:
     class: Drupal\Core\EventSubscriber\HtmlViewSubscriber
     tags:
