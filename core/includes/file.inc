@@ -323,7 +323,19 @@ function file_create_url($uri) {
     else {
       // If this is not a properly formatted stream, then it is a shipped file.
       // Therefore, return the urlencoded URI with the base URL prepended.
-      return $GLOBALS['base_url'] . '/' . UrlHelper::encodePath($uri);
+      $options = UrlHelper::parse($uri);
+      $path = $GLOBALS['base_url'] . '/' . UrlHelper::encodePath($options['path']);
+      // Append the query.
+      if ($options['query']) {
+        $path .= '?' . UrlHelper::buildQuery($options['query']);
+      }
+
+      // Append fragment.
+      if ($options['fragment']) {
+        $path .= '#' . $options['fragment'];
+      }
+
+      return $path;
     }
   }
   elseif ($scheme == 'http' || $scheme == 'https' || $scheme == 'data') {
