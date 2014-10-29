@@ -36,7 +36,7 @@ class UpdateContribTest extends UpdateTestBase {
   function testNoReleasesAvailable() {
     $system_info = array(
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
@@ -45,7 +45,7 @@ class UpdateContribTest extends UpdateTestBase {
       ),
     );
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
-    $this->refreshUpdateStatus(array('drupal' => '0', 'aaa_update_test' => 'no-releases'));
+    $this->refreshUpdateStatus(array('drupal' => '0.0', 'aaa_update_test' => 'no-releases'));
     $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
@@ -67,7 +67,7 @@ class UpdateContribTest extends UpdateTestBase {
   function testUpdateContribBasic() {
     $system_info = array(
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
@@ -78,7 +78,7 @@ class UpdateContribTest extends UpdateTestBase {
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
       array(
-        'drupal' => '0',
+        'drupal' => '0.0',
         'aaa_update_test' => '1_0',
       )
     );
@@ -103,10 +103,10 @@ class UpdateContribTest extends UpdateTestBase {
    * inside system_rebuild_module_data() for example).
    */
   function testUpdateContribOrder() {
-    // We want core to be version 7.0.
+    // We want core to be version 8.0.0.
     $system_info = array(
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       // All the rest should be visible as contrib modules at version 8.x-1.0.
 
@@ -135,7 +135,7 @@ class UpdateContribTest extends UpdateTestBase {
       ),
     );
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
-    $this->refreshUpdateStatus(array('drupal' => '0', '#all' => '1_0'));
+    $this->refreshUpdateStatus(array('drupal' => '0.0', '#all' => '1_0'));
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
     $this->assertText(t('Up to date'));
@@ -172,9 +172,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Define the initial state for core and the subtheme.
     $system_info = array(
-      // We want core to be version 7.0.
+      // We want core to be version 8.0.0.
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       // Show the update_test_basetheme
       'update_test_basetheme' => array(
@@ -191,7 +191,7 @@ class UpdateContribTest extends UpdateTestBase {
     );
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
-      'drupal' => '0',
+      'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
       'update_test_basetheme' => '1_1-sec',
     );
@@ -219,9 +219,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Define the initial state for core and the test contrib themes.
     $system_info = array(
-      // We want core to be version 7.0.
+      // We want core to be version 8.0.0.
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       // The update_test_basetheme should be visible and up to date.
       'update_test_basetheme' => array(
@@ -243,7 +243,7 @@ class UpdateContribTest extends UpdateTestBase {
     $update_settings->set('fetch.max_attempts', 99999)->save();
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
-      'drupal' => '0',
+      'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
       'update_test_basetheme' => '1_1-sec',
     );
@@ -305,7 +305,7 @@ class UpdateContribTest extends UpdateTestBase {
   function testUpdateBrokenFetchURL() {
     $system_info = array(
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
@@ -326,7 +326,7 @@ class UpdateContribTest extends UpdateTestBase {
     \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
 
     $xml_mapping = array(
-      'drupal' => '0',
+      'drupal' => '0.0',
       'aaa_update_test' => '1_0',
       'bbb_update_test' => 'does-not-exist',
       'ccc_update_test' => '1_0',
@@ -370,7 +370,7 @@ class UpdateContribTest extends UpdateTestBase {
 
     $system_info = array(
       '#all' => array(
-        'version' => '7.0',
+        'version' => '8.0.0',
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
@@ -387,7 +387,7 @@ class UpdateContribTest extends UpdateTestBase {
     $update_test_config->set('update_status', $update_status)->save();
     $this->refreshUpdateStatus(
       array(
-        'drupal' => '0',
+        'drupal' => '0.0',
         'aaa_update_test' => '1_0',
       )
     );

@@ -28,47 +28,135 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalLogin($admin_user);
   }
 
+  /**
+   * Sets the version to x.x.x when no project-specific mapping is defined.
+   *
+   * @param string $version
+   *   The version.
+   */
+  protected function setSystemInfo($version) {
+    $setting = array(
+      '#all' => array(
+        'version' => $version,
+      ),
+    );
+    \Drupal::config('update_test.settings')->set('system_info', $setting)->save();
+  }
 
   /**
    * Tests the Update Manager module when no updates are available.
    */
   function testNoUpdatesAvailable() {
-    $this->setSystemInfo7_0();
-    $this->refreshUpdateStatus(array('drupal' => '0'));
-    $this->standardTests();
-    $this->assertText(t('Up to date'));
-    $this->assertNoText(t('Update available'));
-    $this->assertNoText(t('Security update required!'));
+    foreach (array(0, 1) as $minor_version) {
+      foreach (array(0, 1) as $patch_version) {
+        foreach (array('-alpha1', '-beta1', '') as $extra_version) {
+          $this->setSystemInfo("8.$minor_version.$patch_version" . $extra_version);
+          $this->refreshUpdateStatus(array('drupal' => "$minor_version.$patch_version" . $extra_version));
+          $this->standardTests();
+          $this->assertText(t('Up to date'));
+          $this->assertNoText(t('Update available'));
+          $this->assertNoText(t('Security update required!'));
+        }
+      }
+    }
   }
 
   /**
    * Tests the Update Manager module when one normal update is available.
    */
   function testNormalUpdateAvailable() {
-    $this->setSystemInfo7_0();
-    $this->refreshUpdateStatus(array('drupal' => '1'));
-    $this->standardTests();
-    $this->assertNoText(t('Up to date'));
-    $this->assertText(t('Update available'));
-    $this->assertNoText(t('Security update required!'));
-    $this->assertRaw(_l('7.1', 'http://example.com/drupal-7-1-release'), 'Link to release appears.');
-    $this->assertRaw(_l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), 'Link to download appears.');
-    $this->assertRaw(_l(t('Release notes'), 'http://example.com/drupal-7-1-release'), 'Link to release notes appears.');
+    $this->setSystemInfo('8.0.0');
+    foreach (array(0, 1) as $minor_version) {
+      foreach (array('-alpha1', '-beta1', '') as $extra_version) {
+        $this->refreshUpdateStatus(array('drupal' => "$minor_version.1" . $extra_version));
+        $this->standardTests();
+        $this->drupalGet('admin/reports/updates/check');
+        $this->assertNoText(t('Security update required!'));
+        $this->assertRaw(_l("8.$minor_version.1" . $extra_version, "http://example.com/drupal-8-$minor_version-1$extra_version-release"), 'Link to release appears.');
+        $this->assertRaw(_l(t('Download'), "http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz"), 'Link to download appears.');
+        $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-8-$minor_version-1$extra_version-release"), 'Link to release notes appears.');
+
+        switch ($minor_version) {
+          case 0:
+            // Both stable and unstable releases are available.
+            // A stable release is the latest.
+            if ($extra_version == '') {
+              $this->assertNoText(t('Up to date'));
+              $this->assertText(t('Update available'));
+              $this->assertText(t('Recommended version:'));
+              $this->assertNoText(t('Latest version:'));
+            }
+            // Only unstable releases are available.
+            // An unstable release is the latest.
+            else {
+              $this->assertText(t('Up to date'));
+              $this->assertNoText(t('Update available'));
+              $this->assertNoText(t('Recommended version:'));
+              $this->assertText(t('Latest version:'));
+            }
+            break;
+          case 1:
+            // Both stable and unstable releases are available.
+            // A stable release is the latest.
+            if ($extra_version == '') {
+              $this->assertNoText(t('Up to date'));
+              $this->assertText(t('Update available'));
+              $this->assertText(t('Recommended version:'));
+              $this->assertNoText(t('Latest version:'));
+            }
+            // Both stable and unstable releases are available.
+            // An unstable release is the latest.
+            else {
+              $this->assertNoText(t('Up to date'));
+              $this->assertText(t('Update available'));
+              $this->assertText(t('Recommended version:'));
+              $this->assertText(t('Latest version:'));
+            }
+            break;
+        }
+      }
+    }
+  }
+
+  /**
+   * Tests the Update Manager module when a major update is available.
+   */
+  function testMajorUpdateAvailable() {
+    foreach (array(0, 1) as $minor_version) {
+      foreach (array(0, 1) as $patch_version) {
+        foreach (array('-alpha1', '-beta1', '') as $extra_version) {
+          $this->setSystemInfo("8.$minor_version.$patch_version" . $extra_version);
+          $this->refreshUpdateStatus(array('drupal' => '9'));
+          $this->standardTests();
+          $this->drupalGet('admin/reports/updates/check');
+          $this->assertNoText(t('Security update required!'));
+          $this->assertRaw(_l('9.0.0', "http://example.com/drupal-9-0-0-release"), 'Link to release appears.');
+          $this->assertRaw(_l(t('Download'), "http://example.com/drupal-9-0-0.tar.gz"), 'Link to download appears.');
+          $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-9-0-0-release"), 'Link to release notes appears.');
+          $this->assertNoText(t('Up to date'));
+          $this->assertText(t('Not supported!'));
+          $this->assertText(t('Recommended version:'));
+          $this->assertNoText(t('Latest version:'));
+        }
+      }
+    }
   }
 
   /**
    * Tests the Update Manager module when a security update is available.
    */
   function testSecurityUpdateAvailable() {
-    $this->setSystemInfo7_0();
-    $this->refreshUpdateStatus(array('drupal' => '2-sec'));
-    $this->standardTests();
-    $this->assertNoText(t('Up to date'));
-    $this->assertNoText(t('Update available'));
-    $this->assertText(t('Security update required!'));
-    $this->assertRaw(_l('7.2', 'http://example.com/drupal-7-2-release'), 'Link to release appears.');
-    $this->assertRaw(_l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), 'Link to download appears.');
-    $this->assertRaw(_l(t('Release notes'), 'http://example.com/drupal-7-2-release'), 'Link to release notes appears.');
+    foreach (array(0, 1) as $minor_version) {
+      $this->setSystemInfo("8.$minor_version.0");
+      $this->refreshUpdateStatus(array('drupal' => "$minor_version.2-sec"));
+      $this->standardTests();
+      $this->assertNoText(t('Up to date'));
+      $this->assertNoText(t('Update available'));
+      $this->assertText(t('Security update required!'));
+      $this->assertRaw(_l("8.$minor_version.2", "http://example.com/drupal-8-$minor_version-2-release"), 'Link to release appears.');
+      $this->assertRaw(_l(t('Download'), "http://example.com/drupal-8-$minor_version-2.tar.gz"), 'Link to download appears.');
+      $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-8-$minor_version-2-release"), 'Link to release notes appears.');
+    }
   }
 
   /**
@@ -78,7 +166,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $system_info = array(
       '#all' => array(
         // We need to think we're running a -dev snapshot to see dates.
-        'version' => '7.0-dev',
+        'version' => '8.0.0-dev',
         'datestamp' => time(),
       ),
       'block' => array(
@@ -98,9 +186,13 @@ class UpdateCoreTest extends UpdateTestBase {
    * Checks that running cron updates the list of available updates.
    */
   function testModulePageRunCron() {
-    $this->setSystemInfo7_0();
-    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
-    \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
+    $this->setSystemInfo('8.0.0');
+    \Drupal::config('update.settings')
+      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->save();
+    \Drupal::config('update_test.settings')
+      ->set('xml_map', array('drupal' => '0.0'))
+      ->save();
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
@@ -111,10 +203,14 @@ class UpdateCoreTest extends UpdateTestBase {
    * Checks the messages at admin/modules when the site is up to date.
    */
   function testModulePageUpToDate() {
-    $this->setSystemInfo7_0();
+    $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
-    \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
+    \Drupal::config('update.settings')
+      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->save();
+    \Drupal::config('update_test.settings')
+      ->set('xml_map', array('drupal' => '0.0'))
+      ->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -128,10 +224,14 @@ class UpdateCoreTest extends UpdateTestBase {
    * Checks the messages at admin/modules when an update is missing.
    */
   function testModulePageRegularUpdate() {
-    $this->setSystemInfo7_0();
+    $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
-    \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
+    \Drupal::config('update.settings')
+      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->save();
+    \Drupal::config('update_test.settings')
+      ->set('xml_map', array('drupal' => '0.1'))
+      ->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -145,10 +245,14 @@ class UpdateCoreTest extends UpdateTestBase {
    * Checks the messages at admin/modules when a security update is missing.
    */
   function testModulePageSecurityUpdate() {
-    $this->setSystemInfo7_0();
+    $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
-    \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '2-sec'))->save();
+    \Drupal::config('update.settings')
+      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->save();
+    \Drupal::config('update_test.settings')
+      ->set('xml_map', array('drupal' => '0.2-sec'))
+      ->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -217,25 +321,17 @@ class UpdateCoreTest extends UpdateTestBase {
    * Checks language module in core package at admin/reports/updates.
    */
   function testLanguageModuleUpdate() {
-    $this->setSystemInfo7_0();
+    $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')->set('fetch.url', _url('update-test', array('absolute' => TRUE)))->save();
-    \Drupal::config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
+    \Drupal::config('update.settings')
+      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->save();
+    \Drupal::config('update_test.settings')
+      ->set('xml_map', array('drupal' => '0.1'))
+      ->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->assertText(t('Language'));
-  }
-
-  /**
-   * Sets the version to 7.0 when no project-specific mapping is defined.
-   */
-  protected function setSystemInfo7_0() {
-    $setting = array(
-      '#all' => array(
-        'version' => '7.0',
-      ),
-    );
-    \Drupal::config('update_test.settings')->set('system_info', $setting)->save();
   }
 
   /**

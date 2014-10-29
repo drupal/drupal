@@ -4,9 +4,9 @@
 <short_name>drupal</short_name>
 <dc:creator>Drupal</dc:creator>
 <api_version>8.x</api_version>
-<recommended_major>7</recommended_major>
-<supported_majors>7</supported_majors>
-<default_major>7</default_major>
+<recommended_major>8</recommended_major>
+<supported_majors>8</supported_majors>
+<default_major>8</default_major>
 <project_status>published</project_status>
 <link>http://example.com/project/drupal</link>
   <terms>
@@ -14,14 +14,15 @@
   </terms>
 <releases>
  <release>
-  <name>Drupal 7.0</name>
-  <version>7.0</version>
-  <tag>DRUPAL-7-0</tag>
-  <version_major>7</version_major>
+  <name>Drupal 8.0.0</name>
+  <version>8.0.0</version>
+  <tag>DRUPAL-8-0-0</tag>
+  <version_major>8</version_major>
+  <version_minor>0</version_minor>
   <version_patch>0</version_patch>
   <status>published</status>
-  <release_link>http://example.com/drupal-7-0-release</release_link>
-  <download_link>http://example.com/drupal-7-0.tar.gz</download_link>
+  <release_link>http://example.com/drupal-8-0-0-release</release_link>
+  <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
   <date>1250424521</date>
   <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
   <filesize>1073741824</filesize>
@@ -31,14 +32,15 @@
   </terms>
  </release>
  <release>
-  <name>Drupal 8.x-dev</name>
-  <version>8.x-dev</version>
-  <tag>DRUPAL-7</tag>
-  <version_major>7</version_major>
+  <name>Drupal 8.0.x-dev</name>
+  <version>8.0.x-dev</version>
+  <tag>DRUPAL-8-0</tag>
+  <version_major>8</version_major>
+  <version_minor>0</version_minor>
   <version_extra>dev</version_extra>
   <status>published</status>
-  <release_link>http://example.com/drupal-7-x-dev-release</release_link>
-  <download_link>http://example.com/drupal-8.x-dev.tar.gz</download_link>
+  <release_link>http://example.com/drupal-8-0-x-dev-release</release_link>
+  <download_link>http://example.com/drupal-8.0.x-dev.tar.gz</download_link>
   <date>1250424581</date>
   <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
   <filesize>2147483648</filesize>
