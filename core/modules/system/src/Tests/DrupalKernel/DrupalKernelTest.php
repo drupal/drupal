@@ -71,7 +71,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests DIC compilation.
    */
-  function testCompileDIC() {
+  public function testCompileDIC() {
     // @todo: write a memory based storage backend for testing.
     $modules_enabled = array(
       'system' => 'system',
