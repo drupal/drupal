@@ -7,6 +7,8 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\user\Entity\User;
+use Drupal\file\Entity\File;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -151,7 +153,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       $migration_format = entity_load('migration', 'd6_filter_format');
       $signature_format = $migration_format->getIdMap()->lookupDestinationId(array($source->signature_format));
 
-      $user = user_load($source->uid);
+      $user = User::load($source->uid);
       $this->assertEqual($user->id(), $source->uid);
       $this->assertEqual($user->label(), $source->name);
       $this->assertEqual($user->getEmail(), $source->mail);
@@ -174,7 +176,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       // We have one empty picture in the data so don't try load that.
       if (!empty($source->picture)) {
         // Test the user picture.
-        $file = file_load($user->user_picture->target_id);
+        $file = File::load($user->user_picture->target_id);
         $this->assertEqual($file->getFilename(), basename($source->picture));
       }
 

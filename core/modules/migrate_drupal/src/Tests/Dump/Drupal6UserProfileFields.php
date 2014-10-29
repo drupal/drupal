@@ -186,7 +186,7 @@ class Drupal6UserProfileFields extends Drupal6DumpBase {
           'register' => '0',
           'visibility' => '4',
           'autocomplete' => '0',
-          'options' => "Pill spammers\r\nFitness spammers",
+          'options' => "Pill spammers\r\nFitness spammers\r\nBack\slash\r\nForward/slash\r\nDot.in.the.middle",
         ),
         array(
           'fid' => '12',

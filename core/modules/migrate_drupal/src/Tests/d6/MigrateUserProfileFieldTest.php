@@ -57,8 +57,10 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
     $settings = $field_storage->getSettings();
     $this->assertEqual($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
-      'Spammers' => 'Spammers',
       'Fitness spammers' => 'Fitness spammers',
+      'Back\slash' => 'Back\slash',
+      'Forward/slash' => 'Forward/slash',
+      'Dot.in.the.middle' => 'Dot.in.the.middle',
       'Faithful servant' => 'Faithful servant',
       'Anonymous donor' => 'Anonymous donor',
     ));

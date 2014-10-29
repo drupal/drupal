@@ -258,7 +258,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       __NAMESPACE__ . '\MigrateNodeRevisionTest',
       __NAMESPACE__ . '\MigrateNodeTest',
       __NAMESPACE__ . '\MigrateNodeTypeTest',
-      __NAMESPACE__ . '\MigrateProfileValuesTest',
+      __NAMESPACE__ . '\MigrateUserProfileValuesTest',
       __NAMESPACE__ . '\MigrateSearchConfigsTest',
       __NAMESPACE__ . '\MigrateSearchPageTest',
       __NAMESPACE__ . '\MigrateSimpletestConfigsTest',
