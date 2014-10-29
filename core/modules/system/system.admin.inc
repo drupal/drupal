@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Render\Element;
@@ -227,7 +228,8 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
     // Add the module label and expand/collapse functionalty.
-    $col2 = '<label id="module-' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
+    $id = Html::getUniqueId('module-' . $key);
+    $col2 = '<label id="' . $id . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => SafeMarkup::set($col2));
 
     // Add the description, along with any modules it requires.
