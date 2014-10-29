@@ -25,13 +25,19 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes}}>
+{%
+  set classes = [
+    'taxonomy-term',
+    'vocabulary-' ~ term.bundle|clean_class,
+  ]
+%}
+<div id="taxonomy-term-{{ term.id }}"{{ attributes.addClass(classes)|without('id') }}>
   {{ title_prefix }}
   {% if not page %}
     <h2><a href="{{ url }}">{{ name }}</a></h2>
   {% endif %}
   {{ title_suffix }}
-  <div>
+  <div class="content">
     {{ content }}
   </div>
 </div>
