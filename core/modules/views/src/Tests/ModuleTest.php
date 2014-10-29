@@ -23,7 +23,7 @@ class ModuleTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_status', 'test_view');
+  public static $testViews = array('test_view_status', 'test_view', 'test_argument');
 
   /**
    * Modules to enable.
@@ -266,6 +266,18 @@ class ModuleTest extends ViewUnitTestBase {
       $this->assertEqual($plugin_details['provider'], $plugin_def['provider'], 'The expected plugin provider was found.');
       $this->assertTrue(in_array('test_view', $plugin_details['views']), 'The test_view View was found in the list of views using this plugin.');
     }
+  }
+
+  /**
+   * Tests views.module: views_embed_view().
+   */
+  public function testViewsEmbedView() {
+    \Drupal::moduleHandler()->install(array('user'));
+    $result = views_embed_view('test_argument');
+    $this->assertEqual(count($result['#view']->result), 5);
+
+    $result = views_embed_view('test_argument', 'default', 1);
+    $this->assertEqual(count($result['#view']->result), 1);
   }
 
   /**

@@ -439,7 +439,7 @@ class ViewExecutable {
    * but possibly from elsewhere.
    */
   public function setArguments($args) {
-    $this->args = $args;
+    $this->args = array_values($args);
   }
 
   /**
