@@ -133,7 +133,7 @@ class CacheTest extends UnitTestCase {
    * @expectedExceptionMessage Cache tags must be strings, array given.
    */
   public function testInvalidateTags() {
-    Cache::deleteTags(['node' => [2, 3, 5, 8, 13]]);
+    Cache::invalidateTags(['node' => [2, 3, 5, 8, 13]]);
   }
 
 }
