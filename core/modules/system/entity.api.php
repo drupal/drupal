@@ -1948,3 +1948,7 @@ function hook_entity_extra_field_info_alter(&$info) {
     }
   }
 }
+
+/**
+ * @} End of "addtogroup hooks".
+ */
