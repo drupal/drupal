@@ -6,7 +6,7 @@ migrate.source.*:
 
 migrate.source.empty:
   type: migrate_source_sql
-  label: 'Drupal 6 field formatter'
+  label: 'Empty source'
   mapping:
     provider:
       type: string
