@@ -298,10 +298,7 @@ function shortcut_preprocess_page(&$variables) {
   // pages).
   if (shortcut_set_edit_access()->isAllowed() && !\Drupal::request()->attributes->has('exception')) {
     $link = current_path();
-    if (!($url = \Drupal::pathValidator()->getUrlIfValid($link))) {
-      // Bail out early if we couldn't find a matching route.
-      return;
-    }
+    $route_match = \Drupal::routeMatch();
 
     $query = array(
       'link' => $link,
@@ -314,7 +311,7 @@ function shortcut_preprocess_page(&$variables) {
     // Check if $link is already a shortcut and set $link_mode accordingly.
     $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
     foreach ($shortcuts as $shortcut) {
-      if ($shortcut->getRouteName() == $url->getRouteName() && $shortcut->getRouteParameters() == $url->getRouteParameters()) {
+      if ($shortcut->getRouteName() == $route_match->getRouteName() && $shortcut->getRouteParameters() == $route_match->getParameters()->all()) {
         $shortcut_id = $shortcut->id();
         break;
       }
