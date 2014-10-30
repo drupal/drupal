@@ -115,20 +115,6 @@ class SessionTestController extends ControllerBase {
   }
 
   /**
-   * Stores a value in $_SESSION['session_test_value'] without
-   * having started the session in advance.
-   *
-   * @return string
-   *   A notification message.
-   */
-  public function setNotStarted() {
-    if (!drupal_session_will_start()) {
-      $this->set($this->t('Session was not started'));
-    }
-    return ['#markup' => ''];
-  }
-
-  /**
    * Only available if current user is logged in.
    *
    * @return string

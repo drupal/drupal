@@ -60,14 +60,6 @@ session_test.set_message_but_dont_save:
   requirements:
     _access: 'TRUE'
 
-session_test.set_not_started:
-  path: '/session-test/set-not-started'
-  defaults:
-    _title: 'Set message when session is not started'
-    _content: '\Drupal\session_test\Controller\SessionTestController::setNotStarted'
-  requirements:
-    _access: 'TRUE'
-
 session_test.is_logged_in:
   path: '/session-test/is-logged-in'
   defaults:
