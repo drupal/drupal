@@ -41,9 +41,10 @@ class FormTestController extends ControllerBase {
    * Emulate legacy AHAH-style ajax callback.
    *
    * Drupal 6 AHAH callbacks used to operate directly on forms retrieved using
-   * form_get_cache and stored using form_set_cache after manipulation. This
-   * callback helps testing whether \Drupal::formBuilder()->setCache() prevents
-   * resaving of immutable forms.
+   * \Drupal::formBuilder()->getCache() and stored using
+   * \Drupal::formBuilder()->setCache() after manipulation. This callback helps
+   * testing whether \Drupal::formBuilder()->setCache() prevents resaving of
+   * immutable forms.
    */
   public function storageLegacyHandler($form_build_id) {
     $form_state = new FormState();

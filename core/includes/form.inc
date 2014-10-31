@@ -18,30 +18,6 @@ use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Fetches a form from the cache.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->getCache().
- *
- * @see \Drupal\Core\Form\FormCacheInterface::getCache().
- */
-function form_get_cache($form_build_id, FormStateInterface $form_state) {
-  return \Drupal::formBuilder()->getCache($form_build_id, $form_state);
-}
-
-/**
- * Stores a form in the cache.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->setCache().
- *
- * @see \Drupal\Core\Form\FormCacheInterface::setCache().
- */
-function form_set_cache($form_build_id, $form, FormStateInterface $form_state) {
-  \Drupal::formBuilder()->setCache($form_build_id, $form, $form_state);
-}
-
-/**
  * Retrieves, populates, and processes a form.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
