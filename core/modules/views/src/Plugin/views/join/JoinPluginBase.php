@@ -244,13 +244,15 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
           if (is_array($info['value'])) {
             // With an array of values, we need multiple placeholders and the
             // 'IN' operator is implicit.
+            $local_arguments = array();
             foreach ($info['value'] as $value) {
               $placeholder_i = ':views_join_condition_' . $select_query->nextPlaceholder();
-              $arguments[$placeholder_i] = $value;
+              $local_arguments[$placeholder_i] = $value;
             }
 
             $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
-            $placeholder = '( ' . implode(', ', array_keys($arguments)) . ' )';
+            $placeholder = '( ' . implode(', ', array_keys($local_arguments)) . ' )';
+            $arguments += $local_arguments;
           }
           else {
             // With a single value, the '=' operator is implicit.

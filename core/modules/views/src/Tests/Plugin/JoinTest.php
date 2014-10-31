@@ -141,7 +141,7 @@ class JoinTest extends RelationshipJoinTestBase {
         'field' => 'name',
         'value' => $random_name_2,
         'operator' => '<>'
-      )
+      ),
     );
     $join = $this->manager->createInstance('standard', $configuration);
     $table = array('alias' => 'users3');
@@ -152,6 +152,29 @@ class JoinTest extends RelationshipJoinTestBase {
     $this->assertTrue(strpos($join_info['condition'], "users3.name = :views_join_condition_0") !== FALSE, 'Make sure the first extra join condition appears in the query and uses the first placeholder.');
     $this->assertTrue(strpos($join_info['condition'], "users3.name <> :views_join_condition_1") !== FALSE, 'Make sure the second extra join condition appears in the query and uses the second placeholder.');
     $this->assertEqual(array_values($join_info['arguments']), array($random_name_1, $random_name_2), 'Make sure the arguments are in the right order');
+
+    // Test that 'IN' conditions are properly built.
+    $random_name_1 = $this->randomMachineName();
+    $random_name_2 = $this->randomMachineName();
+    $random_name_3 = $this->randomMachineName();
+    $random_name_4 = $this->randomMachineName();
+    $configuration['extra'] = array(
+      array(
+        'field' => 'name',
+        'value' => $random_name_1
+      ),
+      array(
+        'field' => 'name',
+        'value' => array($random_name_2, $random_name_3, $random_name_4),
+      ),
+    );
+    $join = $this->manager->createInstance('standard', $configuration);
+    $table = array('alias' => 'users4');
+    $join->buildJoin($query, $table, $view->query);
+
+    $tables = $query->getTables();
+    $join_info = $tables['users4'];
+    $this->assertTrue(strpos($join_info['condition'], "users4.name IN ( :views_join_condition_3, :views_join_condition_4, :views_join_condition_5 )") !== FALSE, 'The IN condition for the join is properly formed.');
   }
 
 }
