@@ -84,21 +84,6 @@ function hook_queue_info_alter(&$queues) {
 }
 
 /**
- * Alter the Ajax command data that is sent to the client.
- *
- * @param \Drupal\Core\Ajax\CommandInterface[] $data
- *   An array of all the rendered commands that will be sent to the client.
- *
- * @see \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
- */
-function hook_ajax_render_alter(array &$data) {
-  // Inject any new status messages into the content area.
-  $status_messages = array('#theme' => 'status_messages');
-  $command = new \Drupal\Core\Ajax\PrependCommand('#block-system-main .content', drupal_render($status_messages));
-  $data[] = $command->render();
-}
-
-/**
  * Alters all the menu links discovered by the menu link plugin manager.
  *
  * @param array $links
@@ -308,141 +293,6 @@ function hook_contextual_links_alter(array &$links, $group, array $route_paramet
  */
 function hook_contextual_links_plugins_alter(array &$contextual_links) {
   $contextual_links['menu_edit']['title'] = 'Edit the menu';
-}
-
-/**
- * Perform alterations before a form is rendered.
- *
- * One popular use of this hook is to add form elements to the node form. When
- * altering a node form, the node entity can be retrieved by invoking
- * $form_state->getFormObject()->getEntity().
- *
- * In addition to hook_form_alter(), which is called for all forms, there are
- * two more specific form hooks available. The first,
- * hook_form_BASE_FORM_ID_alter(), allows targeting of a form/forms via a base
- * form (if one exists). The second, hook_form_FORM_ID_alter(), can be used to
- * target a specific form directly.
- *
- * The call order is as follows: all existing form alter functions are called
- * for module A, then all for module B, etc., followed by all for any base
- * theme(s), and finally for the theme itself. The module order is determined
- * by system weight, then by module name.
- *
- * Within each module, form alter hooks are called in the following order:
- * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
- * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
- * called first followed by the more specific.
- *
- * @param $form
- *   Nested array of form elements that comprise the form.
- * @param $form_state
- *   The current state of the form. The arguments that
- *   \Drupal::formBuilder()->getForm() was originally called with are available
- *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
- *   String representing the name of the form itself. Typically this is the
- *   name of the function that generated the form.
- *
- * @see hook_form_BASE_FORM_ID_alter()
- * @see hook_form_FORM_ID_alter()
- * @see forms_api_reference.html
- */
-function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
-    $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
-    $form['workflow']['upload_' . $form['type']['#value']] = array(
-      '#type' => 'radios',
-      '#title' => t('Attachments'),
-      '#default_value' => in_array($form['type']['#value'], $upload_enabled_types) ? 1 : 0,
-      '#options' => array(t('Disabled'), t('Enabled')),
-    );
-    // Add a custom submit handler to save the array of types back to the config file.
-    $form['actions']['submit']['#submit'][] = 'mymodule_upload_enabled_types_submit';
-  }
-}
-
-/**
- * Provide a form-specific alteration instead of the global hook_form_alter().
- *
- * Modules can implement hook_form_FORM_ID_alter() to modify a specific form,
- * rather than implementing hook_form_alter() and checking the form ID, or
- * using long switch statements to alter multiple forms.
- *
- * Form alter hooks are called in the following order: hook_form_alter(),
- * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
- * hook_form_alter() for more details.
- *
- * @param $form
- *   Nested array of form elements that comprise the form.
- * @param $form_state
- *   The current state of the form. The arguments that
- *   \Drupal::formBuilder()->getForm() was originally called with are available
- *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
- *   String representing the name of the form itself. Typically this is the
- *   name of the function that generated the form.
- *
- * @see hook_form_alter()
- * @see hook_form_BASE_FORM_ID_alter()
- * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
- * @see forms_api_reference.html
- */
-function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  // Modification for the form with the given form ID goes here. For example, if
-  // FORM_ID is "user_register_form" this code would run only on the user
-  // registration form.
-
-  // Add a checkbox to registration form about agreeing to terms of use.
-  $form['terms_of_use'] = array(
-    '#type' => 'checkbox',
-    '#title' => t("I agree with the website's terms and conditions."),
-    '#required' => TRUE,
-  );
-}
-
-/**
- * Provide a form-specific alteration for shared ('base') forms.
- *
- * By default, when \Drupal::formBuilder()->getForm() is called, Drupal looks
- * for a function with the same name as the form ID, and uses that function to
- * build the form. In contrast, base forms allow multiple form IDs to be mapped
- * to a single base (also called 'factory') form function.
- *
- * Modules can implement hook_form_BASE_FORM_ID_alter() to modify a specific
- * base form, rather than implementing hook_form_alter() and checking for
- * conditions that would identify the shared form constructor.
- *
- * To identify the base form ID for a particular form (or to determine whether
- * one exists) check the $form_state. The base form ID is stored under
- * $form_state->getBuildInfo()['base_form_id'].
- *
- * Form alter hooks are called in the following order: hook_form_alter(),
- * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
- * hook_form_alter() for more details.
- *
- * @param $form
- *   Nested array of form elements that comprise the form.
- * @param $form_state
- *   The current state of the form.
- * @param $form_id
- *   String representing the name of the form itself. Typically this is the
- *   name of the function that generated the form.
- *
- * @see hook_form_alter()
- * @see hook_form_FORM_ID_alter()
- * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
- */
-function hook_form_BASE_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  // Modification for the form with the given BASE_FORM_ID goes here. For
-  // example, if BASE_FORM_ID is "node_form", this code would run on every
-  // node form, regardless of node type.
-
-  // Add a checkbox to the node form about agreeing to terms of use.
-  $form['terms_of_use'] = array(
-    '#type' => 'checkbox',
-    '#title' => t("I agree with the website's terms and conditions."),
-    '#required' => TRUE,
-  );
 }
 
 /**
@@ -1269,24 +1119,6 @@ function hook_token_info_alter(&$data) {
     'description' => t("The date the article was posted."),
     'type' => 'date',
   );
-}
-
-/**
- * Alter batch information before a batch is processed.
- *
- * Called by batch_process() to allow modules to alter a batch before it is
- * processed.
- *
- * @param $batch
- *   The associative array of batch information. See batch_set() for details on
- *   what this could contain.
- *
- * @see batch_set()
- * @see batch_process()
- *
- * @ingroup batch
- */
-function hook_batch_alter(&$batch) {
 }
 
 /**
