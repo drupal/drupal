@@ -414,14 +414,19 @@ core.date_format.*:
       type: string
       label: 'Default language'
 
-# Schema for the String field type.
+# Schema for the configuration of the String field type.
+
+field.string.storage_settings:
+  type: mapping
+  label: 'String settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
 
 field.string.field_settings:
   type: sequence
   label: 'String settings'
-  sequence:
-    - type: string
-      label: 'Setting'
 
 field.string.value:
   type: sequence
@@ -434,7 +439,127 @@ field.string.value:
           type: string
           label: 'Value'
 
-# Schema for the configuration files of the Boolean field type.
+# Schema for the configuration of the  String (long) field type.
+
+field.string_long.storage_settings:
+  type: field.string.storage_settings
+  label: 'String (long) settings'
+
+field.string_long.field_settings:
+  type: field.string.field_settings
+  label: 'String (long) settings'
+
+field.string_long.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: text
+          label: 'Value'
+
+# Schema for the configuration of the URI field type.
+
+field.uri.storage_settings:
+  type: mapping
+  label: 'URI settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+
+field.uri.field_settings:
+  type: sequence
+  label: 'URI settings'
+
+field.uri.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: string
+          label: 'Value'
+
+# Schema for the configuration of the Created field type.
+
+field.created.storage_settings:
+  type: sequence
+  label: 'Created timestamp settings'
+
+field.created.field_settings:
+  type: sequence
+  label: 'Created timestamp settings'
+
+field.created.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'
+
+# Schema for the configuration of the Changed field type.
+
+field.changed.storage_settings:
+  type: sequence
+  label: 'Changed timestamp settings'
+
+field.changed.field_settings:
+  type: sequence
+  label: 'Changed timestamp settings'
+
+field.changed.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'
+
+# Schema for the configuration of the Entity reference field type.
+
+field.entity_reference.storage_settings:
+  type: mapping
+  label: 'Entity reference settings'
+  mapping:
+    target_type:
+      type: string
+      label: 'Type of item to reference'
+
+field.entity_reference.field_settings:
+  type: mapping
+  label: 'Entity reference settings'
+  mapping:
+    handler:
+      type: string
+      label: 'Reference method'
+    handler_settings:
+      type: entity_reference.[%parent.handler].handler_settings
+      label: 'Reference method settings'
+
+field.entity_reference.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        target_id:
+          type: integer
+          label: 'Value'
+
+# Schema for the configuration of the Boolean field type.
 
 field.boolean.storage_settings:
   type: mapping
@@ -449,8 +574,7 @@ field.boolean.storage_settings:
 
 field.boolean.field_settings:
   label: 'Boolean settings'
-  type: mapping
-  mapping: {  }
+  type: sequence
 
 field.boolean.value:
   type: sequence
@@ -463,7 +587,7 @@ field.boolean.value:
           type: integer
           label: 'Value'
 
-# Schema for the configuration files of the Email field type.
+# Schema for the configuration of the Email field type.
 
 field.email.storage_settings:
   type: sequence
@@ -489,7 +613,7 @@ field.email.value:
           type: email
           label: 'Value'
 
-# Schema for configuration files of a numeric field types.
+# Schema for the configuration of the Integer field type.
 
 field.integer.storage_settings:
   type: sequence
@@ -525,6 +649,8 @@ field.integer.value:
         value:
           type: integer
           label: 'Value'
+
+# Schema for the configuration of the Decimal field type.
 
 field.decimal.storage_settings:
   type: mapping
@@ -564,6 +690,8 @@ field.decimal.value:
          value:
            type: float
            label: 'Value'
+
+# Schema for the configuration of the Float field type.
 
 field.float.storage_settings:
   type: sequence

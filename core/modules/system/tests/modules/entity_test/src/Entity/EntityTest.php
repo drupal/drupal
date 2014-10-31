@@ -107,7 +107,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
       ->setSetting('handler', 'default')
       // Default EntityTest entities to have the root user as the owner, to
       // simplify testing.
-      ->setDefaultValue(array(0 => 1))
+      ->setDefaultValue(array(0 => array('target_id' => 1)))
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',

@@ -438,11 +438,22 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *     the first item.
    *   - a numerically indexed array of items, each item being a property/value
    *     array.
+   *   - a non-numerically indexed array, in which case the array is assumed to
+   *     be a property/value array and used as the first item
    *   - NULL or array() for no default value.
    *
    * @return $this
    */
   public function setDefaultValue($value) {
+    // Unless the value is NULL or an empty array, we may need to transform it.
+    if (!(is_null($value) || (is_array($value) && empty($value)))) {
+      if (!is_array($value)) {
+        $value = array(array($this->getMainPropertyName() => $value));
+      }
+      elseif (!is_numeric(array_keys($value)[0])) {
+        $value = array(0 => $value);
+      }
+    }
     $this->definition['default_value'] = $value;
     return $this;
   }
