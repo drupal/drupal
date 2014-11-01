@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity\Entity;
 
+use Drupal\Core\Entity\EntityDisplayPluginCollection;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
@@ -241,6 +242,25 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Run the values from self::toArray() through __construct().
     $values = array_intersect_key($this->toArray(), get_object_vars($this));
     $this->__construct($values, $this->entityTypeId);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginCollections() {
+    $configurations = array();
+    foreach ($this->getComponents() as $field_name => $configuration) {
+      if (!empty($configuration['type']) && ($field_definition = $this->getFieldDefinition($field_name))) {
+        $configurations[$configuration['type']] = $configuration + array(
+          'field_definition' => $field_definition,
+          'form_mode' => $this->mode,
+        );
+      }
+    }
+
+    return array(
+      'widgets' => new EntityDisplayPluginCollection($this->pluginManager, $configurations)
+    );
   }
 
 }

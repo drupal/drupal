@@ -52,7 +52,7 @@ class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testAllFormatters() {
     // Tests the plain formatter.
-    $this->assertFormatterRdfa(array('type' => 'text_plain'), 'http://schema.org/telephone', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(array('type' => 'string'), 'http://schema.org/telephone', array('value' => $this->testValue));
     // Tests the telephone link formatter.
     $this->assertFormatterRdfa(array('type' => 'telephone_link'), 'http://schema.org/telephone', array('value' => 'tel:' . $this->testValue, 'type' => 'uri'));
 

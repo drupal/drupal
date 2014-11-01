@@ -9,11 +9,12 @@ namespace Drupal\Core\Entity\Display;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 
 /**
  * Provides a common interface for entity displays.
  */
-interface EntityDisplayInterface extends ThirdPartySettingsInterface, ConfigEntityInterface {
+interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPluginCollectionInterface, ThirdPartySettingsInterface {
 
   /**
    * Creates a duplicate of the entity display object on a different view mode.

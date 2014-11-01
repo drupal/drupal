@@ -172,8 +172,12 @@ class ConfigDependencyManager {
         $entities_to_check[] =  $entity->getConfigDependencyName();
       }
     }
-
-    return array_merge($dependent_entities, $this->createGraphConfigEntityDependencies($entities_to_check));
+    $dependencies = array_merge($this->createGraphConfigEntityDependencies($entities_to_check), $dependent_entities);
+    // Sort dependencies in the reverse order of the graph. So the least
+    // dependent is at the top. For example, this ensures that fields are
+    // always after field storages. This is because field storages need to be
+    // created before a field.
+    return array_reverse(array_intersect_key($this->graph, $dependencies));
   }
 
   /**

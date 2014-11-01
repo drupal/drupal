@@ -6,5 +6,6 @@ version: VERSION
 core: 8.x
 configure: aggregator.admin_settings
 dependencies:
+  - entity_reference
   - file
   - options

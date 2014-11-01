@@ -90,7 +90,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => -5,
       ));
 

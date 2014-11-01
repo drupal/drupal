@@ -59,7 +59,7 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupalTe
   public function testCommentEntityFormDisplay() {
     $component = entity_get_form_display('comment', 'comment', 'default')
       ->getComponent('subject');
-    $this->assertEqual($component['type'], 'string');
+    $this->assertEqual($component['type'], 'string_textfield');
     $this->assertEqual($component['weight'], 10);
     $component = entity_get_form_display('comment', 'comment_no_subject', 'default')
       ->getComponent('subject');

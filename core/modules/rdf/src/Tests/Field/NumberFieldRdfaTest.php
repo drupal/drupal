@@ -21,7 +21,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
     $testValue = 3;
     $this->createTestField();
     $this->createTestEntity($testValue);
-    $this->assertFormatterRdfa(array('type' => $this->fieldType), 'http://schema.org/baseSalary', array('value' => $testValue));
+    $this->assertFormatterRdfa(array('type' => 'number_integer'), 'http://schema.org/baseSalary', array('value' => $testValue));
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field-item") and @content]');
@@ -34,7 +34,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
   public function testIntegerFormatterWithSettings() {
     $this->fieldType = 'integer';
     $formatter = array(
-      'type' => $this->fieldType,
+      'type' => 'number_integer',
       'settings' => array(
         'thousand_separator' => '.',
         'prefix_suffix' => TRUE,
@@ -62,7 +62,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
     $testValue = 3.33;
     $this->createTestField();
     $this->createTestEntity($testValue);
-    $this->assertFormatterRdfa(array('type' => $this->fieldType), 'http://schema.org/baseSalary', array('value' => $testValue));
+    $this->assertFormatterRdfa(array('type' => 'number_unformatted'), 'http://schema.org/baseSalary', array('value' => $testValue));
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field-item") and @content]');
@@ -75,7 +75,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
   public function testFloatFormatterWithSettings() {
     $this->fieldType = 'float';
     $formatter = array(
-      'type' => $this->fieldType,
+      'type' => 'number_decimal',
       'settings' => array(
         'thousand_separator' => '.',
         'decimal_separator' => ',',
@@ -102,7 +102,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
   public function testFloatFormatterWithScale() {
     $this->fieldType = 'float';
     $formatter = array(
-      'type' => $this->fieldType,
+      'type' => 'number_decimal',
       'settings' => array(
         'scale' => 5,
       ),
@@ -123,7 +123,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
   public function testFloatFormatterWithScaleExercised() {
     $this->fieldType = 'float';
     $formatter = array(
-      'type' => $this->fieldType,
+      'type' => 'number_decimal',
       'settings' => array(
         'scale' => 5,
       ),
@@ -146,7 +146,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
     $testValue = 3.33;
     $this->createTestField();
     $this->createTestEntity($testValue);
-    $this->assertFormatterRdfa(array('type' => $this->fieldType), 'http://schema.org/baseSalary', array('value' => $testValue));
+    $this->assertFormatterRdfa(array('type' => 'number_decimal'), 'http://schema.org/baseSalary', array('value' => $testValue));
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field-item") and @content]');
@@ -159,7 +159,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
   public function testDecimalFormatterWithSettings() {
     $this->fieldType = 'decimal';
     $formatter = array(
-      'type' => $this->fieldType,
+      'type' => 'number_decimal',
       'settings' => array(
         'thousand_separator' => 't',
         'decimal_separator' => '#',

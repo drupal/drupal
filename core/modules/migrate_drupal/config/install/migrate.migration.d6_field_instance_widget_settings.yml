@@ -44,7 +44,7 @@ process:
         filefield_widget: file_generic
         imagefield_widget: image_image
         phone_textfield: telephone_default
-        optionwidgets_onoff: checkbox
+        optionwidgets_onoff: boolean_checkbox
         optionwidgets_buttons: options_buttons
         optionwidgets_select: options_select
   'options/settings':

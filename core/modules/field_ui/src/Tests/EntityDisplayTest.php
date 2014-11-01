@@ -17,7 +17,7 @@ use Drupal\simpletest\KernelTestBase;
  */
 class EntityDisplayTest extends KernelTestBase {
 
-  public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system');
+  public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system', 'entity_reference');
 
   protected function setUp() {
     parent::setUp();
@@ -305,7 +305,7 @@ class EntityDisplayTest extends KernelTestBase {
     $dependencies = $new_form_display->calculateDependencies();
     $expected_form_dependencies = array(
       'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
-      'module' => array('text')
+      'module' => array('entity_reference', 'text')
     );
     $this->assertEqual($expected_form_dependencies, $dependencies);
 

@@ -20,6 +20,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('system', array('router'));
+    $this->container->get('router.builder')->rebuild();
     $this->installEntitySchema('entity_test_rev');
     $this->createFieldWithStorage();
   }

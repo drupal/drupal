@@ -175,17 +175,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       if ($field) {
         $this->addDependency('config', $field->getConfigDependencyName());
       }
-      // Create a dependency on the module that provides the formatter or
-      // widget.
-      if (isset($component['type']) && $definition = $this->pluginManager->getDefinition($component['type'], FALSE)) {
-        $this->addDependency('module', $definition['provider']);
-      }
-      // Create dependencies on any modules providing third party settings.
-      if (isset($component['third_party_settings'])) {
-        foreach($component['third_party_settings'] as $module => $settings) {
-          $this->addDependency('module', $module);
-        }
-      }
     }
     // Depend on configured modes.
     if ($this->mode != 'default') {

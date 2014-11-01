@@ -289,4 +289,11 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     return $settings;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
+    return array();
+  }
+
 }

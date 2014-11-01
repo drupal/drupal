@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -228,10 +229,25 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
+    // Add dependencies from the field type plugin. We can not use
+    // self::calculatePluginDependencies() because instantiation of a field item
+    // plugin requires a parent entity.
+    /** @var $field_type_manager \Drupal\Core\Field\FieldTypePluginManagerInterface */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $definition = $field_type_manager->getDefinition($this->getType());
+    $this->addDependency('module', $definition['provider']);
+    // Plugins can declare additional dependencies in their definition.
+    if (isset($definition['config_dependencies'])) {
+      $this->addDependencies($definition['config_dependencies']);
+    }
+    // Let the field type plugin specify its own dependencies.
+    // @see \Drupal\Core\Field\FieldItemInterface::calculateDependencies()
+    $this->addDependencies($definition['class']::calculateDependencies($this));
+
+    // If the target entity type uses entities to manage its bundles then
+    // depend on the bundle entity.
     $bundle_entity_type_id = $this->entityManager()->getDefinition($this->entity_type)->getBundleEntityType();
     if ($bundle_entity_type_id != 'bundle') {
-      // If the target entity type uses entities to manage its bundles then
-      // depend on the bundle entity.
       $bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }

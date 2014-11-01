@@ -34,7 +34,7 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'node', 'field', 'text', 'entity', 'config_test');
+  public static $modules = array('system', 'user', 'node', 'field', 'text', 'entity', 'config_test', 'entity_reference');
 
   /**
    * {@inheritdoc}

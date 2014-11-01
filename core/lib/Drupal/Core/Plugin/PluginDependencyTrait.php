@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Entity\DependencyTrait;
 
@@ -24,7 +24,7 @@ trait PluginDependencyTrait {
    * Dependencies are added for the module that provides the plugin, as well
    * as any dependencies declared by the instance's calculateDependencies()
    * method, if it implements
-   * \Drupal\Component\Plugin\ConfigurablePluginInterface.
+   * \Drupal\Component\Plugin\DependentPluginInterface.
    *
    * @param \Drupal\Component\Plugin\PluginInspectionInterface $instance
    *   The plugin instance.
@@ -36,8 +36,8 @@ trait PluginDependencyTrait {
     if (isset($definition['config_dependencies'])) {
       $this->addDependencies($definition['config_dependencies']);
     }
-    // If a plugin is configurable, calculate its dependencies.
-    if ($instance instanceof ConfigurablePluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
+    // If a plugin is dependent, calculate its dependencies.
+    if ($instance instanceof DependentPluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
       $this->addDependencies($plugin_dependencies);
     }
   }

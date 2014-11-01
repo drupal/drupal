@@ -372,4 +372,32 @@ interface FieldItemInterface extends ComplexDataInterface {
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state);
 
+  /**
+   * Calculates dependencies for field items.
+   *
+   * Dependencies are saved in the field configuration entity and are used to
+   * determine configuration synchronization order. For example, if the field
+   * type's default value is a content entity, this method should return an
+   * array of dependencies listing the content entities.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   *
+   * @return array
+   *   An array of dependencies grouped by type (config, content, module,
+   *   theme). For example:
+   *   @code
+   *   array(
+   *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
+   *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
+   *     'module' => array('node', 'user'),
+   *     'theme' => array('seven'),
+   *   );
+   *   @endcode
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   */
+  public static function calculateDependencies(FieldDefinitionInterface $field_definition);
+
 }

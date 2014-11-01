@@ -9,7 +9,7 @@ source:
     field_name: subject
     form_mode: default
     options:
-      type: string
+      type: string_textfield
       weight: 10
 process:
   entity_type: 'constants/entity_type'

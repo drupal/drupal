@@ -30,7 +30,9 @@ class FieldInstanceDefaults extends ProcessPluginBase {
       case 'text_textfield':
       case 'number':
       case 'phone_textfield':
-        $default['value'] = $widget_settings['default_value'][0]['value'];
+        if (!empty($widget_settings['default_value'][0]['value'])) {
+          $default['value'] = $widget_settings['default_value'][0]['value'];
+        }
         break;
 
       case 'imagefield_widget':
@@ -39,19 +41,28 @@ class FieldInstanceDefaults extends ProcessPluginBase {
         break;
 
       case 'date_select':
-        $default['value'] = $widget_settings['default_value'];
+        if (!empty($widget_settings['default_value'])) {
+          $default['value'] = $widget_settings['default_value'];
+        }
         break;
 
       case 'email_textfield':
-        $default['value'] = $widget_settings['default_value'][0]['email'];
+        if (!empty($widget_settings['default_value'][0]['email'])) {
+          $default['value'] = $widget_settings['default_value'][0]['email'];
+        }
         break;
 
       case 'link':
-        $default['title'] = $widget_settings['default_value'][0]['title'];
-        $default['url'] = $widget_settings['default_value'][0]['url'];
+        if (!empty($widget_settings['default_value'][0]['url'])) {
+          $default['title'] = $widget_settings['default_value'][0]['title'];
+          $default['url'] = $widget_settings['default_value'][0]['url'];
+        }
         break;
     }
-    return array($default);
+    if (!empty($default)) {
+      $default = array($default);
+    }
+    return $default;
   }
 
 }

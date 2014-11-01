@@ -73,7 +73,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
       // Instance settings.
       array(),
       // Widget type & settings.
-      'string',
+      'string_textfield',
       array('size' => 42),
       // 'default' formatter type & settings.
       'string',

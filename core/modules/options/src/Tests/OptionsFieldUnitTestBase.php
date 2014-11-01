@@ -56,6 +56,7 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('system', array('router'));
+    $this->container->get('router.builder')->rebuild();
 
     $this->fieldStorageDefinition = array(
       'field_name' => $this->fieldName,

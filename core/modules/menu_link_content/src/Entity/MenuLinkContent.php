@@ -359,7 +359,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'weight' => 0,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'integer',
+        'type' => 'number',
         'weight' => 20,
       ));
 

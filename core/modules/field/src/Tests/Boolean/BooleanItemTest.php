@@ -39,7 +39,7 @@ class BooleanItemTest extends FieldUnitTestBase {
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent('field_boolean', array(
-        'type' => 'boolean',
+        'type' => 'boolean_checkbox',
       ))
       ->save();
   }

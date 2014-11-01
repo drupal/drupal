@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\field\Unit;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\field\Entity\FieldConfig;
@@ -61,6 +62,13 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   protected $typedConfigManager;
 
   /**
+   * The mock field type plugin manager;
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fieldTypePluginManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -73,10 +81,13 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
     $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
 
+    $this->fieldTypePluginManager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('config.typed', $this->typedConfigManager);
+    $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
     \Drupal::setContainer($container);
 
     // Create a mock FieldStorageConfig object.
@@ -87,7 +98,9 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldStorage->expects($this->any())
       ->method('getName')
       ->will($this->returnValue('field_test'));
-
+    $this->fieldStorage->expects($this->any())
+      ->method('getSettings')
+      ->willReturn(array());
     // Place the field in the mocked entity manager's field registry.
     $this->entityManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
@@ -123,10 +136,27 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->method('getBundleEntityType')
       ->will($this->returnValue('bundle_entity_type'));
 
-    $this->entityManager->expects($this->any())
+    $this->entityManager->expects($this->at(0))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(1))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(2))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(3))
       ->method('getDefinition')
       ->with('test_entity_type')
-      ->will($this->returnValue($target_entity_type));
+      ->willReturn($target_entity_type);
+
+    $this->fieldTypePluginManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field')
+      ->willReturn(['provider' => 'test_module', 'config_dependencies' =>['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
 
     $this->fieldStorage->expects($this->once())
       ->method('getConfigDependencyName')
@@ -141,6 +171,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $dependencies = $field->calculateDependencies();
     $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['config']);
     $this->assertContains('test.test_entity_type.id', $dependencies['config']);
+    $this->assertEquals(['test_module', 'test_module2', 'test_module3'], $dependencies['module']);
   }
 
   /**
@@ -206,6 +237,19 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     ), $this->entityTypeId);
 
     $this->assertEquals('test_field', $field->getType());
+  }
+
+}
+
+/**
+ * A test class.
+ *
+ * @see \Drupal\Tests\field\Unit\FieldConfigEntityUnitTest::testCalculateDependencies()
+ */
+class DependencyFieldItem {
+
+  public static function calculateDependencies(FieldDefinitionInterface $definition) {
+    return ['module' => ['test_module3']];
   }
 
 }
