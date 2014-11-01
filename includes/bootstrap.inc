@@ -2176,7 +2176,7 @@ function drupal_anonymous_user() {
  *   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  * @endcode
  *
- * @param $phase
+ * @param int $phase
  *   A constant telling which phase to bootstrap to. When you bootstrap to a
  *   particular phase, all earlier phases are run automatically. Possible
  *   values:
@@ -2189,11 +2189,11 @@ function drupal_anonymous_user() {
  *   - DRUPAL_BOOTSTRAP_LANGUAGE: Finds out the language of the page.
  *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
  *     data.
- * @param $new_phase
+ * @param boolean $new_phase
  *   A boolean, set to FALSE if calling drupal_bootstrap from inside a
  *   function called from drupal_bootstrap (recursion).
  *
- * @return
+ * @return int
  *   The most recently completed phase.
  */
 function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
@@ -2215,12 +2215,13 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   // bootstrap state.
   static $stored_phase = -1;
 
-  // When not recursing, store the phase name so it's not forgotten while
-  // recursing.
-  if ($new_phase) {
-    $final_phase = $phase;
-  }
   if (isset($phase)) {
+    // When not recursing, store the phase name so it's not forgotten while
+    // recursing but take care of not going backwards.
+    if ($new_phase && $phase >= $stored_phase) {
+      $final_phase = $phase;
+    }
+
     // Call a phase if it has not been called before and is below the requested
     // phase.
     while ($phases && $phase > $stored_phase && $final_phase > $stored_phase) {
@@ -2508,7 +2509,7 @@ function _drupal_bootstrap_page_header() {
  * @see drupal_bootstrap()
  */
 function drupal_get_bootstrap_phase() {
-  return drupal_bootstrap();
+  return drupal_bootstrap(NULL, FALSE);
 }
 
 /**
