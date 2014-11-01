@@ -263,12 +263,20 @@ function _tracker_add($nid, $uid, $changed) {
     ))
     ->execute();
 
-  // Create or update the user-level data.
+  // Create or update the user-level data, first for the user posting.
   db_merge('tracker_user')
     ->key(array(
       'nid' => $nid,
       'uid' => $uid,
     ))
+    ->fields(array(
+      'changed' => $changed,
+      'published' => $node->status,
+    ))
+    ->execute();
+  // Update the times for all the other users tracking the post.
+  db_update('tracker_user')
+    ->condition('nid', $nid)
     ->fields(array(
       'changed' => $changed,
       'published' => $node->status,
