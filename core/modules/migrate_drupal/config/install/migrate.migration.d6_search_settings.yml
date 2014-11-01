@@ -4,6 +4,8 @@ migration_groups:
   - Drupal 6
 source:
   plugin: variable
+  constants:
+    status: true
   variables:
     - minimum_word_size
     - overlap_cjk
@@ -14,6 +16,7 @@ process:
   'index/minimum_word_size': minimum_word_size
   'index/overlap_cjk': overlap_cjk
   'index/cron_limit': search_cron_limit
+  logging: 'constants/status'
 destination:
   plugin: config
   config_name: search.settings

@@ -32,6 +32,9 @@ migrate.source.variable:
         plugin:
           type: string
           label: 'Plugin'
+        status:
+          type: boolean
+          label: 'Status'
 
 migrate.source.d6_comment:
   type: migrate_source_sql
