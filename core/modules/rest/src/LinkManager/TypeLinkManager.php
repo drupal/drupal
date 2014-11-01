@@ -63,7 +63,7 @@ class TypeLinkManager implements TypeLinkManagerInterface {
    *   An array of typed data ids (entity_type and bundle) keyed by
    *   corresponding type URI.
    */
-  public function getTypes() {
+  protected function getTypes() {
     $cid = 'rest:links:types';
     $cache = $this->cache->get($cid);
     if (!$cache) {

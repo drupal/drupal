@@ -62,4 +62,5 @@ class LinkManager implements LinkManagerInterface {
   public function getRelationInternalIds($relation_uri) {
     return $this->relationLinkManager->getRelationInternalIds($relation_uri);
   }
+
 }

@@ -12,7 +12,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 
-class RelationLinkManager implements RelationLinkManagerInterface{
+class RelationLinkManager implements RelationLinkManagerInterface {
 
   /**
    * @var \Drupal\Core\Cache\CacheBackendInterface;
@@ -40,7 +40,7 @@ class RelationLinkManager implements RelationLinkManagerInterface{
   }
 
   /**
-   * Implements \Drupal\rest\LinkManager\RelationLinkManagerInterface::getRelationUri().
+   * {@inheritdoc}
    */
   public function getRelationUri($entity_type, $bundle, $field_name) {
     // @todo Make the base path configurable.
@@ -48,7 +48,7 @@ class RelationLinkManager implements RelationLinkManagerInterface{
   }
 
   /**
-   * Implements \Drupal\rest\LinkManager\RelationLinkManagerInterface::getRelationInternalIds().
+   * {@inheritdoc}
    */
   public function getRelationInternalIds($relation_uri) {
     $relations = $this->getRelations();
@@ -71,7 +71,7 @@ class RelationLinkManager implements RelationLinkManagerInterface{
    *   An array of typed data ids (entity_type, bundle, and field name) keyed
    *   by corresponding relation URI.
    */
-  public function getRelations() {
+  protected function getRelations() {
     $cid = 'rest:links:relations';
     $cache = $this->cache->get($cid);
     if (!$cache) {
