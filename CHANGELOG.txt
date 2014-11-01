@@ -1,9 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
-- Changed the RDF module to consistently output RDF metadata for nodes near
-  where the node is rendered in the HTML (minor markup and data structure
-  change).
+- Changed the RDF module to consistently output RDF metadata for nodes and
+  comments near where the node is rendered in the HTML (minor markup and data
+  structure change).
 - Added an HTML class to RDFa metatags throughout Drupal to prevent them from
   accidentally affecting the site appearance (minor markup change).
 - Fixed a bug in the Unicode requirements check which prevented installing

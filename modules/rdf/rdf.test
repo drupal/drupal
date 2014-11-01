@@ -461,15 +461,13 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
 
     // Tests number of comments in teaser view.
     $this->drupalGet('node');
-    $comment_count_teaser = $this->xpath('//div[contains(@typeof, "sioc:Item")]//li[contains(@class, "comment-comments")]/a[contains(@property, "sioc:num_replies") and contains(@content, "2") and @datatype="xsd:integer"]');
+    $node_url = url('node/' . $this->node1->nid);
+    $comment_count_teaser = $this->xpath('//div[@about=:node-url]/span[@property="sioc:num_replies" and @content="2" and @datatype="xsd:integer"]', array(':node-url' => $node_url));
     $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on teaser view.');
-    $comment_count_link = $this->xpath('//div[@about=:url]//a[contains(@property, "sioc:num_replies") and @rel=""]', array(':url' => url("node/{$this->node1->nid}")));
-    $this->assertTrue(!empty($comment_count_link), 'Empty rel attribute found in comment count link.');
 
     // Tests number of comments in full node view.
     $this->drupalGet('node/' . $this->node1->nid);
-    $node_url = url('node/' . $this->node1->nid);
-    $comment_count_teaser = $this->xpath('/html/head/meta[@about=:node-url and @property="sioc:num_replies" and @content="2" and @datatype="xsd:integer"]', array(':node-url' => $node_url));
+    $comment_count_teaser = $this->xpath('//div[@about=:node-url]/span[@property="sioc:num_replies" and @content="2" and @datatype="xsd:integer"]', array(':node-url' => $node_url));
     $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on full node view.');
   }
 
