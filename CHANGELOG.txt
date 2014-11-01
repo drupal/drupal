@@ -1,6 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Security improvement: Made the database API's orderBy() method sanitize the
+  sort direction ("ASC" or "DESC") for queries built with db_select(), so that
+  calling code does not have to.
 - Changed the RDF module to consistently output RDF metadata for nodes and
   comments near where the node is rendered in the HTML (minor markup and data
   structure change).

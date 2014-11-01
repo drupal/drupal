@@ -46,10 +46,9 @@ class TableSort extends SelectQueryExtender {
       // Based on code from db_escape_table(), but this can also contain a dot.
       $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
 
-      // Sort order can only be ASC or DESC.
-      $sort = drupal_strtoupper($ts['sort']);
-      $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
-      $this->orderBy($field, $sort);
+      // orderBy() will ensure that only ASC/DESC values are accepted, so we
+      // don't need to sanitize that here.
+      $this->orderBy($field, $ts['sort']);
     }
     return $this;
   }
