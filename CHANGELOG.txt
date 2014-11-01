@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in the Unicode requirements check which prevented installing
+  Drupal on PHP 5.6.
 - Fixed a bug which caused drupal_get_bootstrap_phase() to abort the bootstrap
   when called early in the page request.
 - Renamed the "Search result" view mode to "Search result highlighting input"
