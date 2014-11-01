@@ -336,9 +336,13 @@ function translation_node_insert($node) {
             'tnid' => $tnid,
             'translate' => 0,
           ))
-          ->condition('nid', $node->translation_source->nid)
+          ->condition('nid', $tnid)
           ->execute();
+
+        // Flush the (untranslated) source node from the load cache.
+        entity_get_controller('node')->resetCache(array($tnid));
       }
+
       db_update('node')
         ->fields(array(
           'tnid' => $tnid,
@@ -368,13 +372,23 @@ function translation_node_update($node) {
         ))
         ->condition('nid', $node->nid)
         ->execute();
+
       if (!empty($node->translation['retranslate'])) {
         // This is the source node, asking to mark all translations outdated.
-        db_update('node')
-          ->fields(array('translate' => 1))
+        $translations = db_select('node', 'n')
+          ->fields('n', array('nid'))
           ->condition('nid', $node->nid, '<>')
           ->condition('tnid', $node->tnid)
+          ->execute()
+          ->fetchCol();
+
+        db_update('node')
+          ->fields(array('translate' => 1))
+          ->condition('nid', $translations, 'IN')
           ->execute();
+
+        // Flush the modified translation nodes from the load cache.
+        entity_get_controller('node')->resetCache($translations);
       }
     }
   }
@@ -420,11 +434,16 @@ function translation_remove_from_set($node) {
         'tnid' => 0,
         'translate' => 0,
       ));
-    if (db_query('SELECT COUNT(*) FROM {node} WHERE tnid = :tnid', array(':tnid' => $node->tnid))->fetchField() == 1) {
+
+    // Determine which nodes to apply the update to.
+    $set_nids = db_query('SELECT nid FROM {node} WHERE tnid = :tnid', array(':tnid' => $node->tnid))->fetchCol();
+    if (count($set_nids) == 1) {
       // There is only one node left in the set: remove the set altogether.
       $query
         ->condition('tnid', $node->tnid)
         ->execute();
+
+      $flush_set = TRUE;
     }
     else {
       $query
@@ -439,8 +458,14 @@ function translation_remove_from_set($node) {
           ->fields(array('tnid' => $new_tnid))
           ->condition('tnid', $node->tnid)
           ->execute();
+
+        $flush_set = TRUE;
       }
     }
+
+    // Flush the modified nodes from the load cache.
+    $nids = !empty($flush_set) ? $set_nids : array($node->nid);
+    entity_get_controller('node')->resetCache($nids);
   }
 }
 
