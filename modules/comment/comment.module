@@ -993,12 +993,7 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   $comment->content = array();
 
   // Allow modules to change the view mode.
-  $context = array(
-    'entity_type' => 'comment',
-    'entity' => $comment,
-    'langcode' => $langcode,
-  );
-  drupal_alter('entity_view_mode', $view_mode, $context);
+  $view_mode = key(entity_view_mode_prepare('comment', array($comment->cid => $comment), $view_mode, $langcode));
 
   // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode, $langcode);
@@ -1108,17 +1103,26 @@ function comment_links($comment, $node) {
  *   An array in the format expected by drupal_render().
  */
 function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('comment', $comments, $view_mode, $langcode);
-  entity_prepare_view('comment', $comments, $langcode);
+  $build = array();
+  $entities_by_view_mode = entity_view_mode_prepare('comment', $comments, $view_mode, $langcode);
+  foreach ($entities_by_view_mode as $entity_view_mode => $entities) {
+    field_attach_prepare_view('comment', $entities, $entity_view_mode, $langcode);
+    entity_prepare_view('comment', $entities, $langcode);
 
-  $build = array(
-    '#sorted' => TRUE,
-  );
+    foreach ($entities as $entity) {
+      $build[$entity->cid] = comment_view($entity, $node, $entity_view_mode, $langcode);
+    }
+  }
+
   foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_view($comment, $node, $view_mode, $langcode);
     $build[$comment->cid]['#weight'] = $weight;
     $weight++;
   }
+  // Sort here, to preserve the input order of the entities that were passed to
+  // this function.
+  uasort($build, 'element_sort');
+  $build['#sorted'] = TRUE;
+
   return $build;
 }
 

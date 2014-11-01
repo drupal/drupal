@@ -776,15 +776,26 @@ function taxonomy_term_show($term) {
  *   An array in the format expected by drupal_render().
  */
 function taxonomy_term_view_multiple($terms, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('taxonomy_term', $terms, $view_mode, $langcode);
-  entity_prepare_view('taxonomy_term', $terms, $langcode);
   $build = array();
+  $entities_by_view_mode = entity_view_mode_prepare('taxonomy_term', $terms, $view_mode, $langcode);
+  foreach ($entities_by_view_mode as $entity_view_mode => $entities) {
+    field_attach_prepare_view('taxonomy_term', $entities, $entity_view_mode, $langcode);
+    entity_prepare_view('taxonomy_term', $entities, $langcode);
+
+    foreach ($entities as $entity) {
+      $build['taxonomy_terms'][$entity->tid] = taxonomy_term_view($entity, $entity_view_mode, $langcode);
+    }
+  }
+
   foreach ($terms as $term) {
-    $build['taxonomy_terms'][$term->tid] = taxonomy_term_view($term, $view_mode, $langcode);
     $build['taxonomy_terms'][$term->tid]['#weight'] = $weight;
     $weight++;
   }
+  // Sort here, to preserve the input order of the entities that were passed to
+  // this function.
+  uasort($build['taxonomy_terms'], 'element_sort');
   $build['taxonomy_terms']['#sorted'] = TRUE;
+
   return $build;
 }
 
@@ -817,12 +828,7 @@ function taxonomy_term_build_content($term, $view_mode = 'full', $langcode = NUL
   $term->content = array();
 
   // Allow modules to change the view mode.
-  $context = array(
-    'entity_type' => 'taxonomy_term',
-    'entity' => $term,
-    'langcode' => $langcode,
-  );
-  drupal_alter('entity_view_mode', $view_mode, $context);
+  $view_mode = key(entity_view_mode_prepare('taxonomy_term', array($term->tid => $term), $view_mode, $langcode));
 
   // Add the term description if the term has one and it is visible.
   $type = 'taxonomy_term';

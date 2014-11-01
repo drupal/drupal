@@ -1,6 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Added an entity_view_mode_prepare() API function to allow entity-defining
+  modules to properly invoke hook_entity_view_mode_alter(), and used it
+  throughout Drupal core to fix bugs with the invocation of that hook.
 - Security improvement: Made the database API's orderBy() method sanitize the
   sort direction ("ASC" or "DESC") for queries built with db_select(), so that
   calling code does not have to.

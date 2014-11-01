@@ -1397,12 +1397,7 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
   $node->content = array();
 
   // Allow modules to change the view mode.
-  $context = array(
-    'entity_type' => 'node',
-    'entity' => $node,
-    'langcode' => $langcode,
-  );
-  drupal_alter('entity_view_mode', $view_mode, $context);
+  $view_mode = key(entity_view_mode_prepare('node', array($node->nid => $node), $view_mode, $langcode));
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
@@ -2664,15 +2659,26 @@ function node_feed($nids = FALSE, $channel = array()) {
  *   An array in the format expected by drupal_render().
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('node', $nodes, $view_mode, $langcode);
-  entity_prepare_view('node', $nodes, $langcode);
   $build = array();
+  $entities_by_view_mode = entity_view_mode_prepare('node', $nodes, $view_mode, $langcode);
+  foreach ($entities_by_view_mode as $entity_view_mode => $entities) {
+    field_attach_prepare_view('node', $entities, $entity_view_mode, $langcode);
+    entity_prepare_view('node', $entities, $langcode);
+
+    foreach ($entities as $entity) {
+      $build['nodes'][$entity->nid] = node_view($entity, $entity_view_mode, $langcode);
+    }
+  }
+
   foreach ($nodes as $node) {
-    $build['nodes'][$node->nid] = node_view($node, $view_mode, $langcode);
     $build['nodes'][$node->nid]['#weight'] = $weight;
     $weight++;
   }
+  // Sort here, to preserve the input order of the entities that were passed to
+  // this function.
+  uasort($build['nodes'], 'element_sort');
   $build['nodes']['#sorted'] = TRUE;
+
   return $build;
 }
 
