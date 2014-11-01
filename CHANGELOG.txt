@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Added an HTML class to RDFa metatags throughout Drupal to prevent them from
+  accidentally affecting the site appearance (minor markup change).
 - Fixed a bug in the Unicode requirements check which prevented installing
   Drupal on PHP 5.6.
 - Fixed a bug which caused drupal_get_bootstrap_phase() to abort the bootstrap
