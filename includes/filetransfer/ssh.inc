@@ -72,7 +72,8 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
         return TRUE;
       }
       return FALSE;
-    } else {
+    }
+    else {
       throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
     }
   }
@@ -85,7 +86,8 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
         return TRUE;
       }
       return FALSE;
-    } else {
+    }
+    else {
       throw new FileTransferException('Cannot check @path.', NULL, array('@path' => $path));
     }
   }
