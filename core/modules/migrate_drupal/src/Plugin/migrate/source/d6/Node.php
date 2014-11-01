@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -23,6 +24,13 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
    * The join options between the node and the node_revisions table.
    */
   const JOIN = 'n.vid = nr.vid';
+
+  /**
+   * The default filter format.
+   *
+   * @var string
+   */
+  protected $filterDefaultFormat;
 
   /**
    * {@inheritdoc}
@@ -66,6 +74,14 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
   /**
    * {@inheritdoc}
    */
+  protected function runQuery() {
+    $this->filterDefaultFormat = $this->variableGet('filter_default_format', '1');
+    return parent::runQuery();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function fields() {
     $fields = array(
       'nid' => $this->t('Node ID'),
@@ -86,6 +102,18 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
       'timestamp' => $this->t('The timestamp the latest revision of this node was created.'),
     );
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareRow(Row $row) {
+    // format = 0 can happen when the body field is hidden. Set the format to 1
+    // to avoid migration map issues (since the body field isn't used anyway).
+    if ($row->getSourceProperty('format') === '0') {
+      $row->setSourceProperty('format', $this->filterDefaultFormat);
+    }
+    return parent::prepareRow($row);
   }
 
   /**

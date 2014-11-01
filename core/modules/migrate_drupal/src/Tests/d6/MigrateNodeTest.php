@@ -87,8 +87,8 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertEqual($node->body->format, 'full_html');
 
     $node = Node::load(3);
-    // Test that format = 0 from source maps to NULL.
-    $this->assertIdentical($node->body->format, NULL);
+    // Test that format = 0 from source maps to filtered_html.
+    $this->assertIdentical($node->body->format, 'filtered_html');
   }
 
 }
