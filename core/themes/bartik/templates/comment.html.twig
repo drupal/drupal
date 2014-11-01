@@ -64,7 +64,16 @@
  * @see template_preprocess_comment()
  */
 #}
-<article class="{{ attributes.class }} clearfix" role="article"{{ attributes|without('class', 'role') }}>
+{%
+  set classes = [
+    'comment',
+    status != 'published' ? status,
+    not author_id ? 'by-anonymous',
+    author_id and author_id == commented_entity.getOwnerId() ? 'by-' ~ commented_entity.getEntityTypeId() ~ '-author',
+    'clearfix',
+  ]
+%}
+<article role="article"{{ attributes.addClass(classes)|without('role') }}>
 
   <header class="comment-header">
     <div class="attribution">
@@ -110,7 +119,7 @@
       {{ title_suffix }}
     {% endif %}
 
-    <div{{ content_attributes }}>
+    <div{{ content_attributes.addClass('content') }}>
       {{ content|without('links') }}
     </div> <!-- /.content -->
 

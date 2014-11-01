@@ -698,6 +698,7 @@ function template_preprocess_comment(&$variables) {
     '#account' => $account,
   );
   $variables['author'] = drupal_render($username);
+  $variables['author_id'] = $comment->getOwnerId();
   $variables['new_indicator_timestamp'] = $comment->getChangedTime();
   $variables['created'] = format_date($comment->getCreatedTime());
   // Avoid calling format_date() twice on the same timestamp.
@@ -790,28 +791,8 @@ function template_preprocess_comment(&$variables) {
     $variables['status'] = $comment->isPublished() ? 'published' : 'unpublished';
   }
 
-  // Gather comment classes.
-  $variables['attributes']['class'][] = 'comment';
-  // 'published' class is not needed, it is either 'preview' or 'unpublished'.
-  if ($variables['status'] != 'published') {
-    $variables['attributes']['class'][] = $variables['status'];
-  }
-  if (!$comment->getOwnerId()) {
-    $variables['attributes']['class'][] = 'by-anonymous';
-  }
-  else {
-    // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-    if ($commented_entity instanceof EntityOwnerInterface && $comment->getOwnerId() == $commented_entity->getOwnerId()) {
-      $variables['attributes']['class'][] = 'by-' . $commented_entity->getEntityTypeId() . '-author';
-    }
-  }
-  // Add clearfix class.
-  $variables['attributes']['class'][] = 'clearfix';
-
   // Add comment author user ID. Necessary for the comment-by-viewer library.
   $variables['attributes']['data-comment-user-id'] = $comment->getOwnerId();
-
-  $variables['content_attributes']['class'][] = 'content';
 }
 
 /**
