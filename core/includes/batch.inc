@@ -270,8 +270,8 @@ function _batch_process() {
     // through the remaining sets, marking them 'successfully processed'
     // along the way, until we find a set that contains operations.
     // _batch_next_set() executes form submit handlers stored in 'control'
-    // sets (see form_execute_handlers()), which can in turn add new sets to
-    // the batch.
+    // sets (see \Drupal::service('form_submitter')), which can in turn add new
+    // sets to the batch.
     $set_changed = FALSE;
     $old_set = $current_set;
     while (empty($current_set['count']) && ($current_set['success'] = TRUE) && _batch_next_set()) {

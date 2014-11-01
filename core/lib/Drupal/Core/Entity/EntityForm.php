@@ -226,7 +226,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // @todo Remove this.
     // Execute legacy global validation handlers.
     $form_state->setValidateHandlers([]);
-    form_execute_handlers('validate', $form, $form_state);
+    \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
   }
 
   /**
