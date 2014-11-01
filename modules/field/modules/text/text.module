@@ -245,7 +245,7 @@ function text_field_formatter_settings_summary($field, $instance, $view_mode) {
   $summary = '';
 
   if (strpos($display['type'], '_trimmed') !== FALSE) {
-    $summary = t('Trim length') . ': ' . $settings['trim_length'];
+    $summary = t('Trim length') . ': ' . check_plain($settings['trim_length']);
   }
 
   return $summary;
