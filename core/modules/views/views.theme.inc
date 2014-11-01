@@ -1027,87 +1027,31 @@ function template_preprocess_views_mini_pager(&$variables) {
   $element = $variables['element'];
   $parameters = $variables['parameters'];
 
-  // Fill in default link labels.
-  $tags += array(
-    1 => t('‹‹'),
-    3 => t('››'),
-  );
-
   // Current is the page we are currently paged to.
-  $pager_current = $pager_page_array[$element] + 1;
+  $variables['items']['current'] = $pager_page_array[$element] + 1;
 
-  $li_previous = array();
   if ($pager_total[$element] > 1 && $pager_page_array[$element] > 0) {
-    $li_previous = array(
-      '#type' => 'link',
-      '#title' => $tags[1],
-      '#url' => Url::fromRoute('<current>'),
-      '#options' => array(
-        'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
-        'attributes' => array(
-          'title' => t('Go to previous page'),
-          'rel' => 'prev',
-        ),
-        // Below is ignored by default, supplied to support hook_link_alter
-        // implementations.
-        'pager_context' => array(
-          'link_type' => 'previous',
-          'element' => $element,
-          'interval' => -1,
-        ),
-      ),
+    $options = array(
+      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     );
+    $variables['items']['previous']['href'] = \Drupal::url('<current>', [], $options);
+    if (isset($tags[1])) {
+      $variables['items']['previous']['text'] = $tags[1];
+    }
+    $variables['items']['previous']['attributes'] = new Attribute();
   }
 
   $li_next = array();
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
-    $li_next = array(
-      '#type' => 'link',
-      '#title' => $tags[3],
-      '#url' => Url::fromRoute('<current>'),
-      '#options' => array(
-        'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
-        'attributes' => array(
-          'title' => t('Go to next page'),
-          'rel' => 'next',
-        ),
-        // Below is ignored by default, supplied to support hook_link_alter
-        // implementations.
-        'pager_context' => array(
-          'link_type' => 'next',
-          'element' => $element,
-          'interval' => 1,
-        ),
-      ),
+    $options = array(
+      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     );
+    $variables['items']['next']['href'] = \Drupal::url('<current>', [], $options);
+    if (isset($tags[3])) {
+      $variables['items']['next']['text'] = $tags[3];
+    }
+    $variables['items']['next']['attributes'] = new Attribute();
   }
-
-  // Don't show the pager if there is neither a next page nor a previous page
-  // link, which means that we are on the first page and there is no next page
-  // available/wanted.
-  if (empty($li_next) && empty($li_previous)) {
-    return;
-  }
-
-  $items = array();
-  $items[] = array(
-    '#wrapper_attributes' => array('class' => array('pager-previous')),
-  ) + $li_previous;
-
-  $items[] = array(
-    '#wrapper_attributes' => array('class' => array('pager-current')),
-    '#markup' => t('Page @current', array('@current' => $pager_current)),
-  );
-
-  $items[] = array(
-    '#wrapper_attributes' => array('class' => array('pager-next')),
-  ) + $li_next;
-
-  $variables['items'] = array(
-    '#theme' => 'item_list__pager',
-    '#items' => $items,
-    '#attributes' => array('class' => array('pager')),
-  );
 }
 
 /**
