@@ -137,7 +137,8 @@ function statistics_top_visitors() {
     ->groupBy('u.name')
     ->groupBy('bl.iid')
     ->limit(30)
-    ->orderByHeader($header);
+    ->orderByHeader($header)
+    ->orderBy('a.hostname');
 
   $uniques_query = db_select('accesslog')->distinct();
   $uniques_query->fields('accesslog', array('uid', 'hostname'));
