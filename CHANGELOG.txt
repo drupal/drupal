@@ -1,6 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Added a "theme_hook_original" variable to templates and theme functions and
+  an optional sitewide theme debug mode, to provide contextual information in
+  the page's HTML to theme developers (API addition).
 - Added an entity_view_mode_prepare() API function to allow entity-defining
   modules to properly invoke hook_entity_view_mode_alter(), and used it
   throughout Drupal core to fix bugs with the invocation of that hook.
