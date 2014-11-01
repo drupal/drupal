@@ -71,6 +71,7 @@ class ConfigTranslationUiTest extends WebTestBase {
         'access site-wide contact form',
         'access contextual links',
         'administer views',
+        'administer account settings',
       )
     );
     // Create and login user.
@@ -251,12 +252,17 @@ class ConfigTranslationUiTest extends WebTestBase {
     $translation_base_url = 'admin/structure/contact/manage/feedback/translate';
     $this->assertLinkByHref($translation_base_url);
 
+    // Make sure translate tab is present.
+    $this->drupalGet('admin/structure/contact/manage/feedback');
+    $this->assertLink(t('Translate @type', array('@type' => 'contact form')));
+
     // Visit the form to confirm the changes.
     $this->drupalGet('contact/feedback');
     $this->assertText($label);
 
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($translation_base_url);
+      $this->assertLink(t('Translate @type', array('@type' => 'contact form')));
 
       // 'Add' link should be present for $langcode translation.
       $translation_page_url = "$translation_base_url/$langcode/add";
@@ -429,7 +435,11 @@ class ConfigTranslationUiTest extends WebTestBase {
   public function testAccountSettingsConfigurationTranslation() {
     $this->drupalLogin($this->admin_user);
 
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertLink(t('Translate @type', array('@type' => 'account settings')));
+
     $this->drupalGet('admin/config/people/accounts/translate');
+    $this->assertLink(t('Translate @type', array('@type' => 'account settings')));
     $this->assertLinkByHref('admin/config/people/accounts/translate/fr/add');
 
     // Update account settings fields for French.
