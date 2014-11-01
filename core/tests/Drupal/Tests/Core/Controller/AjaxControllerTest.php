@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\Core\Controller\AjaxControllerTest
+ * @coversDefaultClass \Drupal\Core\Controller\AjaxController
  * @group Ajax
  */
 class AjaxControllerTest extends UnitTestCase {
@@ -47,9 +47,9 @@ class AjaxControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the renderMainContent method.
+   * Tests the content method.
    *
-   * @covers \Drupal\Core\Controller\AjaxController::renderContentIntoResponse
+   * @covers ::content
    */
   public function testRenderWithFragmentObject() {
     $main_content = ['#markup' => 'example content'];
@@ -71,9 +71,9 @@ class AjaxControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the handle method with a Json response object.
+   * Tests the content method with a Json response object.
    *
-   * @covers \Drupal\Core\Controller\AjaxController::handle
+   * @covers ::content
    */
   public function testRenderWithResponseObject() {
     $json_response = new JsonResponse(array('foo' => 'bar'));
@@ -85,9 +85,9 @@ class AjaxControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the handle method with an Ajax response object.
+   * Tests the content method with an Ajax response object.
    *
-   * @covers \Drupal\Core\Controller\AjaxController::handle
+   * @covers ::content
    */
   public function testRenderWithAjaxResponseObject() {
     $ajax_response = new AjaxResponse(array('foo' => 'bar'));
