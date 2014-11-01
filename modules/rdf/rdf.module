@@ -471,27 +471,17 @@ function rdf_preprocess_node(&$variables) {
   $variables['attributes_array']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
   $variables['attributes_array']['typeof'] = empty($variables['node']->rdf_mapping['rdftype']) ? NULL : $variables['node']->rdf_mapping['rdftype'];
 
-  // Adds RDFa markup to the title of the node. Because the RDFa markup is
-  // added to the <h2> tag which might contain HTML code, we specify an empty
-  // datatype to ensure the value of the title read by the RDFa parsers is a
-  // literal.
-  $variables['title_attributes_array']['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
-  $variables['title_attributes_array']['datatype'] = '';
-
-  // In full node mode, the title is not displayed by node.tpl.php so it is
-  // added in the <head> tag of the HTML page.
-  if ($variables['page']) {
-    $element = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'content' => $variables['node']->title,
-        'about' => $variables['node_url'],
+  // Adds RDFa markup about the title of the node to the title_suffix.
+  if (!empty($variables['node']->rdf_mapping['title']['predicates'])) {
+    $variables['title_suffix']['rdf_meta_title'] = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => array(
+        array(
+          'property' => $variables['node']->rdf_mapping['title']['predicates'],
+          'content' => $variables['node']->title,
+        ),
       ),
     );
-    if (!empty($variables['node']->rdf_mapping['title']['predicates'])) {
-      $element['#attributes']['property'] = $variables['node']->rdf_mapping['title']['predicates'];
-    }
-    drupal_add_html_head($element, 'rdf_node_title');
   }
 
   // Adds RDFa markup for the date.
