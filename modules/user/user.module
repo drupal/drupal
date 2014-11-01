@@ -3768,8 +3768,8 @@ function user_register_form($form, &$form_state) {
   // inside the submit function interferes with form processing and breaks
   // hook_form_alter().
   $form['administer_users'] = array(
-     '#type' => 'value',
-     '#value' => $admin,
+    '#type' => 'value',
+    '#value' => $admin,
   );
 
   // If we aren't admin but already logged on, go to the user page instead.
