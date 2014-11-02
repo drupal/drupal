@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -98,7 +99,7 @@ class EntityReferenceAutocomplete {
           $key = "$label ($entity_id)";
           // Strip things like starting/trailing white spaces, line breaks and
           // tags.
-          $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(decode_entities(strip_tags($key)))));
+          $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(String::decodeEntities(strip_tags($key)))));
           // Names containing commas or quotes must be wrapped in quotes.
           $key = Tags::encode($key);
           $matches[] = array('value' => $prefix . $key, 'label' => $label);

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -48,7 +49,7 @@ class OptionsSelectWidget extends OptionsWidgetBase {
    */
   protected function sanitizeLabel(&$label) {
     // Select form inputs allow unencoded HTML entities, but no HTML tags.
-    $label = decode_entities(strip_tags($label));
+    $label = String::decodeEntities(strip_tags($label));
   }
 
   /**

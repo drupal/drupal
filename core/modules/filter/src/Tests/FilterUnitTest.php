@@ -1016,7 +1016,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) !== FALSE, $message, $group);
+    return $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
   }
 
   /**
@@ -1040,6 +1040,6 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
+    return $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
   }
 }

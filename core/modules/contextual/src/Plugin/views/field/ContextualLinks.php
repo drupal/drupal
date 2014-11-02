@@ -8,6 +8,7 @@
 namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -98,7 +99,7 @@ class ContextualLinks extends FieldPluginBase {
       if (!empty($title) && !empty($path)) {
         // Make sure that tokens are replaced for this paths as well.
         $tokens = $this->getRenderTokens(array());
-        $path = strip_tags(decode_entities(strtr($path, $tokens)));
+        $path = strip_tags(String::decodeEntities(strtr($path, $tokens)));
 
         $links[$field] = array(
           'href' => $path,

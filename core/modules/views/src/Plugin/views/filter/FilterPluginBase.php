@@ -1187,7 +1187,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       else {
         // Cast the label to a string since it can be an object.
         // @see \Drupal\Core\StringTranslation\TranslationWrapper
-        $options[$value] = strip_tags(decode_entities((string) $label));
+        $options[$value] = strip_tags(UtilityString::decodeEntities((string) $label));
       }
     }
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url as UrlObject;
 
@@ -77,7 +78,7 @@ abstract class Links extends FieldPluginBase {
       }
       // Make sure that tokens are replaced for this paths as well.
       $tokens = $this->getRenderTokens(array());
-      $path = strip_tags(decode_entities(strtr($path, $tokens)));
+      $path = strip_tags(String::decodeEntities(strtr($path, $tokens)));
 
       $links[$field] = array(
         'url' => UrlObject::fromUri('base://' . $path),

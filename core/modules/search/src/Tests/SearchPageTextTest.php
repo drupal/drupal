@@ -7,6 +7,7 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -58,7 +59,7 @@ class SearchPageTextTest extends SearchTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $actual_title = (string) current($this->xpath('//title'));
-    $this->assertEqual($actual_title, decode_entities(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)))), 'Search page title is correct');
+    $this->assertEqual($actual_title, String::decodeEntities(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)))), 'Search page title is correct');
 
     $edit['keys'] = $this->searching_user->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));

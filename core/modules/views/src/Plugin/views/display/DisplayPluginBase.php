@@ -1060,7 +1060,7 @@ abstract class DisplayPluginBase extends PluginBase {
        // Use strip tags as there should never be HTML in the path.
        // However, we need to preserve special characters like " that
        // were removed by String::checkPlain().
-      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
+      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(String::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
     return $tokens;

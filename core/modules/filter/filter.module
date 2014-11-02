@@ -612,7 +612,7 @@ function _filter_url_parse_full_links($match) {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
-  $match[$i] = decode_entities($match[$i]);
+  $match[$i] = String::decodeEntities($match[$i]);
   $caption = String::checkPlain(_filter_url_trim($match[$i]));
   $match[$i] = String::checkPlain($match[$i]);
   return '<a href="' . $match[$i] . '">' . $caption . '</a>';
@@ -627,7 +627,7 @@ function _filter_url_parse_email_links($match) {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 0;
 
-  $match[$i] = decode_entities($match[$i]);
+  $match[$i] = String::decodeEntities($match[$i]);
   $caption = String::checkPlain(_filter_url_trim($match[$i]));
   $match[$i] = String::checkPlain($match[$i]);
   return '<a href="mailto:' . $match[$i] . '">' . $caption . '</a>';
@@ -642,7 +642,7 @@ function _filter_url_parse_partial_links($match) {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
-  $match[$i] = decode_entities($match[$i]);
+  $match[$i] = String::decodeEntities($match[$i]);
   $caption = String::checkPlain(_filter_url_trim($match[$i]));
   $match[$i] = String::checkPlain($match[$i]);
   return '<a href="http://' . $match[$i] . '">' . $caption . '</a>';

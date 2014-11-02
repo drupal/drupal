@@ -1276,7 +1276,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : $this->t('more');
         $more_link_text = strtr(Xss::filterAdmin($more_link_text), $tokens);
         $more_link_path = $this->options['alter']['more_link_path'];
-        $more_link_path = strip_tags(decode_entities(strtr($more_link_path, $tokens)));
+        $more_link_path = strip_tags(String::decodeEntities(strtr($more_link_path, $tokens)));
 
         // Make sure that paths which were run through _url() work as well.
         $base_path = base_path();
@@ -1354,7 +1354,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
       // were removed by String::checkPlain().
-      $path = strip_tags(decode_entities(strtr($path, $tokens)));
+      $path = strip_tags(String::decodeEntities(strtr($path, $tokens)));
 
       if (!empty($alter['path_case']) && $alter['path_case'] != 'none') {
         $path = $this->caseTransform($path, $this->options['alter']['path_case']);
@@ -1426,7 +1426,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $alt = strtr($alter['alt'], $tokens);
     // Set the title attribute of the link only if it improves accessibility
     if ($alt && $alt != $text) {
-      $options['attributes']['title'] = decode_entities($alt);
+      $options['attributes']['title'] = String::decodeEntities($alt);
     }
 
     $class = strtr($alter['link_class'], $tokens);
@@ -1514,7 +1514,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
       // were removed by String::checkPlain().
-      $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
+      $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(String::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
     // Get flattened set of tokens for any array depth in query parameters.
@@ -1596,7 +1596,7 @@ abstract class FieldPluginBase extends HandlerBase {
       else {
         // Create a token key based on array element structure.
         $token_string = !empty($parent_keys) ? implode('_', $parent_keys) . '_' . $param : $param;
-        $tokens['%' . $token_string] = strip_tags(decode_entities($val));
+        $tokens['%' . $token_string] = strip_tags(String::decodeEntities($val));
       }
     }
 
