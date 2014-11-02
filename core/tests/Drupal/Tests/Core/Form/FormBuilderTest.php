@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Form {
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -115,9 +116,6 @@ class FormBuilderTest extends FormTestBase {
     $response = $this->getMockBuilder($class)
       ->disableOriginalConstructor()
       ->getMock();
-    $response->expects($this->any())
-      ->method('prepare')
-      ->will($this->returnValue($response));
 
     $form_arg = $this->getMockForm($form_id, $expected_form);
     $form_arg->expects($this->any())
@@ -131,12 +129,12 @@ class FormBuilderTest extends FormTestBase {
       $input['form_id'] = $form_id;
       $form_state->setUserInput($input);
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
-      $this->fail('TestFormBuilder::sendResponse() was not triggered.');
+      $this->fail('EnforcedResponseException was not thrown.');
     }
-    catch (\Exception $e) {
-      $this->assertSame('exit', $e->getMessage());
+    catch (EnforcedResponseException $e) {
+      $this->assertSame($response, $e->getResponse());
     }
-    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $form_state->getResponse());
+    $this->assertSame($response, $form_state->getResponse());
   }
 
   /**
@@ -160,16 +158,11 @@ class FormBuilderTest extends FormTestBase {
     $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')
       ->disableOriginalConstructor()
       ->getMock();
-    $response->expects($this->once())
-      ->method('prepare')
-      ->will($this->returnValue($response));
 
     // Set up a redirect that will not be called.
     $redirect = $this->getMockBuilder('Symfony\Component\HttpFoundation\RedirectResponse')
       ->disableOriginalConstructor()
       ->getMock();
-    $redirect->expects($this->never())
-      ->method('prepare');
 
     $form_arg = $this->getMockForm($form_id, $expected_form);
     $form_arg->expects($this->any())
@@ -185,10 +178,10 @@ class FormBuilderTest extends FormTestBase {
       $input['form_id'] = $form_id;
       $form_state->setUserInput($input);
       $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
-      $this->fail('TestFormBuilder::sendResponse() was not triggered.');
+      $this->fail('EnforcedResponseException was not thrown.');
     }
-    catch (\Exception $e) {
-      $this->assertSame('exit', $e->getMessage());
+    catch (EnforcedResponseException $e) {
+      $this->assertSame($response, $e->getResponse());
     }
     $this->assertSame($response, $form_state->getResponse());
   }
@@ -370,9 +363,6 @@ class FormBuilderTest extends FormTestBase {
     $expected_form = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')
       ->disableOriginalConstructor()
       ->getMock();
-    $expected_form->expects($this->once())
-      ->method('prepare')
-      ->will($this->returnValue($expected_form));
 
     $form_arg = $this->getMockForm($form_id, $expected_form);
 

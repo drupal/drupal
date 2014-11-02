@@ -8,6 +8,7 @@
 namespace Drupal\form_test\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -29,10 +30,22 @@ class FormTestEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Adds custom headers to the response.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The kernel request event.
+   */
+  public function onKernelResponse(FilterResponseEvent $event) {
+    $response = $event->getResponse();
+    $response->headers->set('X-Form-Test-Response-Event', 'invoked');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequest');
+    $events[KernelEvents::RESPONSE][] = array('onKernelResponse');
     return $events;
   }
 

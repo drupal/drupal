@@ -294,6 +294,14 @@ form_test.url:
   requirements:
     _access: 'TRUE'
 
+form_test.response:
+  path: '/form-test/response'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestResponseForm'
+    _title: 'Response'
+  requirements:
+    _access: 'TRUE'
+
 form_test.disabled_elements:
   path: '/form-test/disabled-elements'
   defaults:

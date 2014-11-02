@@ -5,3 +5,7 @@ services:
     class: Drupal\form_test\EventSubscriber\FormTestEventSubscriber
     tags:
       - { name: event_subscriber }
+  form_test.http_middleware:
+    class: Drupal\form_test\StackMiddleware\FormTestMiddleware
+    tags:
+      - { name: http_middleware, priority: 0 }

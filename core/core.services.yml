@@ -173,7 +173,7 @@ services:
     arguments: [default]
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token', '@?kernel']
+    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token']
   form_validator:
     class: Drupal\Core\Form\FormValidator
     arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form']
@@ -800,6 +800,10 @@ services:
     arguments: ['@config.factory', '@http_kernel']
   exception.test_site:
     class: Drupal\Core\EventSubscriber\ExceptionTestSiteSubscriber
+    tags:
+      - { name: event_subscriber }
+  exception.enforced_form_response:
+    class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     tags:
       - { name: event_subscriber }
   route_processor_manager:

@@ -14,7 +14,6 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Site\Settings;
@@ -22,9 +21,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Provides form building and processing.
@@ -60,17 +56,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
   protected $csrfToken;
-
-  /**
-   * The kernel to handle forms returning response objects.
-   *
-   * Explicitly use the DrupalKernel as that is consistent with index.php for
-   * terminating the request and in case someone rebuilds the container,
-   * this kernel is synthetic and always points to the new container.
-   *
-   * @var \Drupal\Core\DrupalKernelInterface
-   */
-  protected $kernel;
 
   /**
    * The class resolver.
@@ -131,10 +116,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The theme manager.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
-   * @param \Drupal\Core\DrupalKernelInterface $kernel
-   *   The kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL, DrupalKernelInterface $kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->formCache = $form_cache;
@@ -143,7 +126,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $this->requestStack = $request_stack;
     $this->classResolver = $class_resolver;
     $this->csrfToken = $csrf_token;
-    $this->kernel = $kernel;
     $this->themeManager = $theme_manager;
   }
 
@@ -265,10 +247,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // can use it to know or update information about the state of the form.
     $response = $this->processForm($form_id, $form, $form_state);
 
-    // If the form returns some kind of response, deliver it.
+    // If the form returns a response, skip subsequent page construction by
+    // throwing an exception.
+    // @see Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
+    //
+    // @todo Exceptions should not be used for code flow control. However, the
+    //   Form API does not integrate with the HTTP Kernel based architecture of
+    //   Drupal 8. In order to resolve this issue properly it is necessary to
+    //   completely separate form submission from rendering.
+    //   @see https://www.drupal.org/node/2367555
     if ($response instanceof Response) {
-      $this->sendResponse($response);
-      exit;
+      throw new EnforcedResponseException($response);
     }
 
     // If this was a successful submission of a single-step form or the last
@@ -416,10 +405,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $args = array_merge(array($form, &$form_state), $args);
 
     $form = call_user_func_array($callback, $args);
-    // If the form returns some kind of response, deliver it.
+    // If the form returns a response, skip subsequent page construction by
+    // throwing an exception.
+    // @see Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
+    //
+    // @todo Exceptions should not be used for code flow control. However, the
+    //   Form API currently allows any form builder functions to return a
+    //   response.
+    //   @see https://www.drupal.org/node/2363189
     if ($form instanceof Response) {
-      $this->sendResponse($form);
-      exit;
+      throw new EnforcedResponseException($form);
     }
     $form['#form_id'] = $form_id;
 
@@ -1078,24 +1073,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       return TRUE;
     }
     return FALSE;
-  }
-
-  /**
-   * Triggers kernel.response and sends a form response.
-   *
-   * @param \Symfony\Component\HttpFoundation\Response $response
-   *   A response object.
-   */
-  protected function sendResponse(Response $response) {
-    $request = $this->requestStack->getCurrentRequest();
-    $event = new FilterResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
-
-    $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
-    // Prepare and send the response.
-    $event->getResponse()
-      ->prepare($request)
-      ->send();
-    $this->kernel->terminate($request, $response);
   }
 
   /**

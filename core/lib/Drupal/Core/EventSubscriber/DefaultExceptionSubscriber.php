@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\ContentNegotiation;
+use Drupal\Core\Form\EnforcedResponse;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Page\HtmlFragment;
 use Drupal\Core\Page\HtmlFragmentRendererInterface;
@@ -201,8 +202,21 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     $fragment = new HtmlFragment($body);
     $fragment->setTitle($title);
 
-    $page = $this->fragmentRenderer->render($fragment, $response_code);
-    return new Response($this->htmlPageRenderer->render($page), $page->getStatusCode());
+    // Normally the EnforcedFormResponseSubscriber takes care of the
+    // EnforcedResponseException. But outside of HttpKernel::handleRaw(), it is
+    // necessary to catch and handle it manually.
+    try {
+      $page = $this->fragmentRenderer->render($fragment, $response_code);
+      return new Response($this->htmlPageRenderer->render($page), $page->getStatusCode());
+    }
+    catch (\Exception $e) {
+      if ($response = EnforcedResponse::createFromException($e)) {
+        return $response;
+      }
+      else {
+        throw $e;
+      }
+    }
   }
 
   /**
