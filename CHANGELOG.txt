@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Removed the Field module's field_modules_uninstalled() function, since it did
+  not do anything when it was invoked.
 - Added a "theme_hook_original" variable to templates and theme functions and
   an optional sitewide theme debug mode, to provide contextual information in
   the page's HTML to theme developers (API addition).
