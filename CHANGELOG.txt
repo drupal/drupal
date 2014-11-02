@@ -1,6 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Added a "preferred_menu_links" tag to the database query that is used by
+  menu_link_get_preferred() to find the preferred menu link for a given path,
+  to make it easier to alter.
 - Increased the maximum allowed length of block titles to 255 characters
   (database schema change to the {block} table).
 - Removed the Field module's field_modules_uninstalled() function, since it did
