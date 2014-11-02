@@ -1083,6 +1083,74 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests parsing of the HTTP response status line.
+ */
+class DrupalHTTPResponseStatusLineTest extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal HTTP request response status parsing',
+      'description' => 'Perform unit tests on _drupal_parse_response_status().',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Tests parsing HTTP response status line.
+   */
+  public function testStatusLine() {
+    // Grab the big array of test data from statusLineData().
+    $data = $this->statusLineData();
+    foreach($data as $test_case) {
+      $test_data = array_shift($test_case);
+      $expected = array_shift($test_case);
+
+      $outcome = _drupal_parse_response_status($test_data);
+
+      foreach(array_keys($expected) as $key) {
+        $this->assertIdentical($outcome[$key], $expected[$key]);
+      }
+    }
+  }
+
+  /**
+   * Data provider for testStatusLine().
+   *
+   * @return array
+   *   Test data.
+   */
+  protected function statusLineData() {
+    return array(
+      array(
+        'HTTP/1.1 200 OK',
+        array(
+          'http_version' => 'HTTP/1.1',
+          'response_code' => '200',
+          'reason_phrase' => 'OK',
+        ),
+      ),
+      // Data set with no reason phrase.
+      array(
+        'HTTP/1.1 200',
+        array(
+          'http_version' => 'HTTP/1.1',
+          'response_code' => '200',
+          'reason_phrase' => '',
+        ),
+      ),
+      // Arbitrary strings.
+      array(
+        'version code multi word explanation',
+        array(
+          'http_version' => 'version',
+          'response_code' => 'code',
+          'reason_phrase' => 'multi word explanation',
+        ),
+      ),
+    );
+  }
+}
+
+/**
  * Testing drupal_add_region_content and drupal_get_region_content.
  */
 class DrupalSetContentTestCase extends DrupalWebTestCase {
