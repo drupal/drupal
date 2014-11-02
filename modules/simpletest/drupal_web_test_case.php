@@ -2682,28 +2682,26 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * Will click the first link found with this link text by default, or a later
    * one if an index is given. Match is case sensitive with normalized space.
-   * The label is translated label. There is an assert for successful click.
+   * The label is translated label.
+   *
+   * If the link is discovered and clicked, the test passes. Fail otherwise.
    *
    * @param $label
    *   Text between the anchor tags.
    * @param $index
    *   Link position counting from zero.
    * @return
-   *   Page on success, or FALSE on failure.
+   *   Page contents on success, or FALSE on failure.
    */
   protected function clickLink($label, $index = 0) {
     $url_before = $this->getUrl();
     $urls = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
-
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-    }
-
-    $this->assertTrue(isset($urls[$index]), t('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), t('Browser'));
-
-    if (isset($url_target)) {
+      $this->pass(t('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
       return $this->drupalGet($url_target);
     }
+    $this->fail(t('Link %label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
     return FALSE;
   }
 
