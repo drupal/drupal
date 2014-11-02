@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Increased the maximum allowed length of block titles to 255 characters
+  (database schema change to the {block} table).
 - Removed the Field module's field_modules_uninstalled() function, since it did
   not do anything when it was invoked.
 - Added a "theme_hook_original" variable to templates and theme functions and

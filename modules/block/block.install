@@ -79,7 +79,7 @@ function block_schema() {
       ),
       'title' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
@@ -470,6 +470,22 @@ function block_update_7007() {
  */
 function block_update_7008() {
   db_drop_field('block', 'throttle');
+}
+
+/**
+ * Increase {block}.title length to 255 characters.
+ */
+function block_update_7009() {
+  db_change_field('block', 'title', 'title',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
+      'translatable' => TRUE,
+    )
+  );
 }
 
 /**

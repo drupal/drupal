@@ -272,7 +272,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   $form['settings']['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Block title'),
-    '#maxlength' => 64,
+    '#maxlength' => 255,
     '#description' => $block->module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>!placeholder</em> to display no title, or leave blank to use the default block title.', array('!placeholder' => '&lt;none&gt;')),
     '#default_value' => isset($block->title) ? $block->title : '',
     '#weight' => -19,
