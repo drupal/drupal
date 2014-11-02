@@ -5287,8 +5287,6 @@ function drupal_cron_run() {
     foreach ($queues as $queue_name => $info) {
       DrupalQueue::get($queue_name)->createQueue();
     }
-    // Register shutdown callback.
-    drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
     foreach (module_implements('cron') as $module) {
@@ -5340,10 +5338,13 @@ function drupal_cron_run() {
 }
 
 /**
- * Shutdown function: Performs cron cleanup.
+ * DEPRECATED: Shutdown function: Performs cron cleanup.
  *
- * @see drupal_cron_run()
- * @see drupal_register_shutdown_function()
+ * This function is deprecated because the 'cron_semaphore' variable it
+ * references no longer exists. It is therefore no longer used as a shutdown
+ * function by Drupal core.
+ *
+ * @deprecated
  */
 function drupal_cron_cleanup() {
   // See if the semaphore is still locked.
