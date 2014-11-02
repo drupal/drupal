@@ -3311,6 +3311,8 @@ function form_process_container($element, &$form_state) {
  */
 function theme_container($variables) {
   $element = $variables['element'];
+  // Ensure #attributes is set.
+  $element += array('#attributes' => array());
 
   // Special handling for form elements.
   if (isset($element['#array_parents'])) {
