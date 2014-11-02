@@ -40,7 +40,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     }
     else {
       $db_info = Database::getConnectionInfo();
-      $info['database'] = $db_info['default']['database'];
+      $info['database'] = $db_info[$this->connection->getTarget()]['database'];
       $info['table'] = $table;
     }
     return $info;
