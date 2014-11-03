@@ -720,7 +720,6 @@ function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
       '#type' => 'radios',
       '#title' => t('Choices'),
       '#title_display' => 'invisible',
-      '#default_value' => -1,
       '#options' => $list,
     );
   }
@@ -748,7 +747,7 @@ function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
  * Validation function for processing votes
  */
 function poll_view_voting_validate($form, &$form_state) {
-  if ($form_state['values']['choice'] == -1) {
+  if (empty($form_state['values']['choice'])) {
     form_set_error( 'choice', t('Your vote could not be recorded because you did not select any of the choices.'));
   }
 }

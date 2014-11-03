@@ -315,6 +315,11 @@ class PollVoteTestCase extends PollTestCase {
 
     $this->drupalLogin($vote_user);
 
+    // Record a vote without selecting any choice.
+    $edit = array();
+    $this->drupalPost('node/' . $poll_nid, $edit, t('Vote'));
+    $this->assertText(t('Your vote could not be recorded because you did not select any of the choices.'), 'Found the empty poll submission error message.');
+
     // Record a vote for the first choice.
     $edit = array(
       'choice' => '1',
