@@ -242,6 +242,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
           '#default_value' => $translate,
           '#description' => t('When this option is checked, this translation needs to be updated. Uncheck when the translation is up to date again.'),
         );
+        $form['content_translation']['#open'] = TRUE;
       }
 
       // Default to the anonymous user.
