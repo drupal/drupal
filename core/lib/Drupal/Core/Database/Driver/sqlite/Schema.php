@@ -125,7 +125,7 @@ class Schema extends DatabaseSchema {
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to uppercase.
     if (isset($field['sqlite_type'])) {
-      $field['sqlite_type'] = drupal_strtoupper($field['sqlite_type']);
+      $field['sqlite_type'] = Unicode::strtoupper($field['sqlite_type']);
     }
     else {
       $map = $this->getFieldTypeMap();

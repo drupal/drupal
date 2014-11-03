@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Mail;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\WebTestBase;
 
@@ -242,8 +243,8 @@ class HtmlToTextTest extends WebTestBase {
     if (!$pass) {
       $this->verbose($this->stringToHtml($output));
     }
-    $output_upper = drupal_strtoupper($output);
-    $upper_input = drupal_strtoupper($input);
+    $output_upper = Unicode::strtoupper($output);
+    $upper_input = Unicode::strtoupper($input);
     $upper_output = drupal_html_to_text($upper_input);
     $pass = $this->assertEqual(
       $upper_output,

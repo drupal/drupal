@@ -226,12 +226,12 @@ class MailFormatHelper {
           // Fancy headers.
           case 'h1':
             $indent[] = '======== ';
-            $casing = 'drupal_strtoupper';
+            $casing = '\Drupal\Component\Utility\Unicode::strtoupper';
             break;
 
           case 'h2':
             $indent[] = '-------- ';
-            $casing = 'drupal_strtoupper';
+            $casing = '\Drupal\Component\Utility\Unicode::strtoupper';
             break;
 
           case '/h1':
@@ -273,7 +273,7 @@ class MailFormatHelper {
       if (isset($chunk)) {
         // Apply any necessary case conversion.
         if (isset($casing)) {
-          $chunk = $casing($chunk);
+          $chunk = call_user_func($casing, $chunk);
         }
         $line_endings = Settings::get('mail_line_endings', PHP_EOL);
         // Format it and apply the current indentation.
