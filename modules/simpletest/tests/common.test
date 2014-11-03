@@ -918,9 +918,10 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
    * Tests basic CSS loading with and without optimization via drupal_load_stylesheet().
    *
    * Known tests:
-   * - Retain white-space in selectors. (http://drupal.org/node/472820)
-   * - Proper URLs in imported files. (http://drupal.org/node/265719)
-   * - Retain pseudo-selectors. (http://drupal.org/node/460448)
+   * - Retain white-space in selectors. (https://drupal.org/node/472820)
+   * - Proper URLs in imported files. (https://drupal.org/node/265719)
+   * - Retain pseudo-selectors. (https://drupal.org/node/460448)
+   * - Don't adjust data URIs. (https://drupal.org/node/2142441)
    */
   function testLoadCssBasic() {
     // Array of files to test living in 'simpletest/files/css_test_files/'.
