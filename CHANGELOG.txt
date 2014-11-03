@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Prevented the Bartik theme from lower-casing the "Permalink" link on
+  comments, for improved multilingual support (minor UI change).
 - Added a "preferred_menu_links" tag to the database query that is used by
   menu_link_get_preferred() to find the preferred menu link for a given path,
   to make it easier to alter.
