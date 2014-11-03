@@ -925,7 +925,6 @@ function template_preprocess_poll_results(&$variables) {
  *
  * @see poll-bar.tpl.php
  * @see poll-bar--block.tpl.php
- * @see theme_poll_bar()
  */
 function template_preprocess_poll_bar(&$variables) {
   if ($variables['block']) {
