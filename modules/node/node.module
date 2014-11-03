@@ -2599,9 +2599,10 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     $node->link = url("node/$node->nid", array('absolute' => TRUE));
     $node->rss_namespaces = array();
+    $account = user_load($node->uid);
     $node->rss_elements = array(
       array('key' => 'pubDate', 'value' => gmdate('r', $node->created)),
-      array('key' => 'dc:creator', 'value' => $node->name),
+      array('key' => 'dc:creator', 'value' => format_username($account)),
       array('key' => 'guid', 'value' => $node->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))
     );
 
