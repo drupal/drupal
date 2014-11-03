@@ -46,6 +46,18 @@ interface ThirdPartySettingsInterface {
    */
   public function getThirdPartySetting($module, $key, $default = NULL);
 
+
+  /**
+   * Gets all third-party settings of a given module.
+   *
+   * @param string $module
+   *   The module providing the third-party settings.
+   *
+   * @return array
+   *   An array of key-value pairs.
+   */
+  public function getThirdPartySettings($module);
+
   /**
    * Unsets a third-party setting.
    *
