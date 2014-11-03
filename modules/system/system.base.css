@@ -31,12 +31,13 @@
 }
 /* Animated throbber */
 html.js input.form-autocomplete {
-  background-image: url(../../misc/throbber.gif);
-  background-position: 100% 2px; /* LTR */
+  background-image: url(../../misc/throbber-inactive.png);
+  background-position: 100% center; /* LTR */
   background-repeat: no-repeat;
 }
 html.js input.throbbing {
-  background-position: 100% -18px; /* LTR */
+  background-image: url(../../misc/throbber-active.gif);
+  background-position: 100% center; /* LTR */
 }
 
 /**
@@ -164,7 +165,7 @@ table.sticky-header {
   display: inline-block;
 }
 .ajax-progress .throbber {
-  background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
+  background: transparent url(../../misc/throbber-active.gif) no-repeat 0px center;
   float: left; /* LTR */
   height: 15px;
   margin: 2px;

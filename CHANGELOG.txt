@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused the Ajax progress throbber to appear misaligned in
+  many situatons (minor styling change).
 - Prevented the Bartik theme from lower-casing the "Permalink" link on
   comments, for improved multilingual support (minor UI change).
 - Added a "preferred_menu_links" tag to the database query that is used by
