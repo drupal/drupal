@@ -18,6 +18,20 @@ use Drupal\Tests\UnitTestCase;
 class LanguageUnitTest extends UnitTestCase {
 
   /**
+   * @covers ::__construct
+   */
+  public function testConstruct() {
+    $name = $this->randomMachineName();
+    $language_code = $this->randomMachineName(2);
+    $uuid = $this->randomMachineName();
+    $language = new Language(array('id' => $language_code, 'name' => $name, 'uuid' => $uuid));
+    // Test that nonexistent properties are not added to the language object.
+    $this->assertTrue(property_exists($language, 'id'));
+    $this->assertTrue(property_exists($language, 'name'));
+    $this->assertFalse(property_exists($language, 'uuid'));
+  }
+
+  /**
    * @covers ::getName()
    * @covers ::setName()
    */

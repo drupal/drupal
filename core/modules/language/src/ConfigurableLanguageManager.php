@@ -17,7 +17,6 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Url;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -247,7 +246,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       $this->negotiatedMethods = array();
       $this->languageTypes = NULL;
       $this->languageTypesInfo = NULL;
-      $this->languages = NULL;
+      $this->languages = array();
       if ($this->negotiator) {
         $this->negotiator->reset();
       }
@@ -279,37 +278,47 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * {@inheritdoc}
    */
   public function getLanguages($flags = LanguageInterface::STATE_CONFIGURABLE) {
-    if (!isset($this->languages)) {
-      // Prepopulate the language list with the default language to keep things
-      // working even if we have no configuration.
-      $default = $this->getDefaultLanguage();
-      $this->languages = array($default->getId() => $default);
-
-      // Retrieve the list of languages defined in configuration.
-      $prefix = 'language.entity.';
-      $config_ids = $this->configFactory->listAll($prefix);
-
-      // Instantiate languages from config objects.
-      $weight = 0;
-      foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
-        $data = $config->get();
-        $langcode = $data['id'];
-        // Initialize default property so callers have an easy reference and can
-        // save the same object without data loss.
-        $data['default'] = ($langcode == $default->getId());
-        $data['name'] = $data['label'];
-        $this->languages[$langcode] = new Language($data);
-        $weight = max(array($weight, $this->languages[$langcode]->getWeight()));
-      }
-
-      // Add locked languages, they will be filtered later if needed.
-      $this->languages += $this->getDefaultLockedLanguages($weight);
-
-      // Sort the language list by weight then title.
-      Language::sort($this->languages);
+    // If a config override is set, cache using that language's ID.
+    if ($override_language = $this->getConfigOverrideLanguage()) {
+      $static_cache_id = $override_language->getId();
+    }
+    else {
+      $static_cache_id = $this->getCurrentLanguage()->getId();
     }
 
-    return parent::getLanguages($flags);
+    if (!isset($this->languages[$static_cache_id][$flags])) {
+      // Initialize the language list with the default language and default
+      // locked languages. These cannot be removed. This serves as a fallback
+      // list if this method is invoked while the language module is installed
+      // and the configuration entities for languages are not yet fully
+      // imported.
+      $default = $this->getDefaultLanguage();
+      $languages = array($default->getId() => $default);
+      $languages += $this->getDefaultLockedLanguages($default->getWeight());
+
+      // Load configurable languages on top of the defaults. Ideally this could
+      // use the entity API to load and instantiate ConfigurableLanguage
+      // objects. However the entity API depends on the language system, so that
+      // would result in infinite loops. We use the configuration system
+      // directly and instantiate runtime Language objects. When language
+      // entities are imported those cover the default and locked languages, so
+      // site-specific configuration will prevail over the fallback values.
+      // Having them in the array already ensures if this is invoked in the
+      // middle of importing language configuration entities, the defaults are
+      // always present.
+      $config_ids = $this->configFactory->listAll('language.entity.');
+      foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
+        $data = $config->get();
+        $data['name'] = $data['label'];
+        $languages[$data['id']] = new Language($data);
+      }
+      Language::sort($languages);
+
+      // Filter the full list of languages based on the value of $flags.
+      $this->languages[$static_cache_id][$flags] = $this->filterLanguages($languages, $flags);
+    }
+
+    return $this->languages[$static_cache_id][$flags];
   }
 
   /**

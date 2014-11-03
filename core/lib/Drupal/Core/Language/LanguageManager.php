@@ -27,11 +27,17 @@ class LanguageManager implements LanguageManagerInterface {
   protected $translation;
 
   /**
-   * An array of all the available languages keyed by language code.
+   * A static cache of translated language lists.
+   *
+   * Array of arrays to cache the result of self::getLanguages() keyed by the
+   * language the list is translated to (first level) and the flags provided to
+   * the method (second level).
    *
    * @var \Drupal\Core\Language\LanguageInterface[]
+   *
+   * @see \Drupal\Core\Language\LanguageManager::getLanguages()
    */
-  protected $languages;
+  protected $languages = array();
 
   /**
    * The default language object.
@@ -130,35 +136,19 @@ class LanguageManager implements LanguageManagerInterface {
    * {@inheritdoc}
    */
   public function getLanguages($flags = LanguageInterface::STATE_CONFIGURABLE) {
-    // Initialize master language list.
-    if (!isset($this->languages)) {
-      // No language module, so use the default language only.
+    $static_cache_id = $this->getCurrentLanguage()->getId();
+    if (!isset($this->languages[$static_cache_id][$flags])) {
+      // If this language manager is used, there are no configured languages.
+      // The default language and locked languages comprise the full language
+      // list.
       $default = $this->getDefaultLanguage();
-      $this->languages = array($default->getId() => $default);
-      // Add the special languages, they will be filtered later if needed.
-      $this->languages += $this->getDefaultLockedLanguages($default->getWeight());
+      $languages = array($default->getId() => $default);
+      $languages += $this->getDefaultLockedLanguages($default->getWeight());
+
+      // Filter the full list of languages based on the value of $flags.
+      $this->languages[$static_cache_id][$flags] = $this->filterLanguages($languages, $flags);
     }
-
-    // Filter the full list of languages based on the value of the $all flag. By
-    // default we remove the locked languages, but the caller may request for
-    // those languages to be added as well.
-    $filtered_languages = array();
-
-    // Add the site's default language if flagged as allowed value.
-    if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
-      // Setup a language to have the defaults, but with overridden name.
-      $default = $this->getDefaultLanguage();
-      $default->setName($this->t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
-      $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
-    }
-
-    foreach ($this->languages as $id => $language) {
-      if (($language->isLocked() && ($flags & LanguageInterface::STATE_LOCKED)) || (!$language->isLocked() && ($flags & LanguageInterface::STATE_CONFIGURABLE))) {
-        $filtered_languages[$id] = $language;
-      }
-    }
-
-    return $filtered_languages;
+    return $this->languages[$static_cache_id][$flags];
   }
 
   /**
@@ -380,6 +370,46 @@ class LanguageManager implements LanguageManagerInterface {
    */
   public function getConfigOverrideLanguage() {
     return $this->getCurrentLanguage();
+  }
+
+
+  /**
+   * Filters the full list of languages based on the value of the flag.
+   *
+   * The locked languages are removed by default.
+   *
+   * @param \Drupal\Core\Language\LanguageInterface[] $languages
+   *    Array with languages to be filtered.
+   * @param int $flags
+   *   (optional) Specifies the state of the languages that have to be returned.
+   *   It can be: LanguageInterface::STATE_CONFIGURABLE,
+   *   LanguageInterface::STATE_LOCKED, or LanguageInterface::STATE_ALL.
+   *
+   * @return \Drupal\Core\Language\LanguageInterface[]
+   *   An associative array of languages, keyed by the language code.
+   */
+  protected function filterLanguages(array $languages, $flags = LanguageInterface::STATE_CONFIGURABLE) {
+    // STATE_ALL means we don't actually filter, so skip the rest of the method.
+    if ($flags == LanguageInterface::STATE_ALL) {
+      return $languages;
+    }
+
+    $filtered_languages = array();
+    // Add the site's default language if requested.
+    if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
+      // Setup a language to have the defaults, but with overridden name.
+      $default = $this->getDefaultLanguage();
+      $default->setName($this->t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
+      $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
+    }
+
+    foreach ($languages as $id => $language) {
+      if (($language->isLocked() && ($flags & LanguageInterface::STATE_LOCKED)) || (!$language->isLocked() && ($flags & LanguageInterface::STATE_CONFIGURABLE))) {
+        $filtered_languages[$id] = $language;
+      }
+    }
+
+    return $filtered_languages;
   }
 
 }
