@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Component\Plugin;
 
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Tests\UnitTestCase;
 
 /**

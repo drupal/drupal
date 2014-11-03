@@ -12,7 +12,6 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Component\Uuid\Com;
 use Drupal\Component\Uuid\Pecl;
 use Drupal\Component\Uuid\Php;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**

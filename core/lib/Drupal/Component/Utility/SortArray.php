@@ -20,7 +20,7 @@ class SortArray {
    * Note that the sorting is by the 'weight' array element, not by the render
    * element property '#weight'.
    *
-   * Callback for uasort() used in various functions.
+   * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative
@@ -39,7 +39,7 @@ class SortArray {
   /**
    * Sorts a structured array by '#weight' property.
    *
-   * Callback for uasort() within \Drupal\Core\Render\Element::children().
+   * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative
@@ -57,7 +57,7 @@ class SortArray {
   /**
    * Sorts a structured array by 'title' key (no # prefix).
    *
-   * Callback for uasort() within system_admin_index().
+   * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative arrays
@@ -75,9 +75,7 @@ class SortArray {
   /**
    * Sorts a structured array by '#title' property.
    *
-   * Callback for uasort() within:
-   * - system_modules()
-   * - theme_simpletest_test_table()
+   * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative arrays

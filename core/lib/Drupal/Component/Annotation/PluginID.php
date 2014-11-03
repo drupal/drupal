@@ -24,7 +24,7 @@ class PluginID extends AnnotationBase {
   public $value;
 
   /**
-   * Implements \Drupal\Core\Annotation\AnnotationInterface::get().
+   * {@inheritdoc}
    */
   public function get() {
     return array(

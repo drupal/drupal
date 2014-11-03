@@ -8,28 +8,11 @@
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 
 /**
  * Base test for PHP storages.
  */
 abstract class PhpStorageTestBase extends UnitTestCase {
-
-  /**
-   * The storage factory object.
-   *
-   * @var \Drupal\Component\PhpStorage\PhpStorageFactory
-   */
-  protected $storageFactory;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->storageFactory = new PhpStorageFactory();
-  }
 
   /**
    * Assert that a PHP storage's load/save/delete operations work.
