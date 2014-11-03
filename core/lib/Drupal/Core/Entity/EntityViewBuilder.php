@@ -9,13 +9,13 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -59,6 +59,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    */
   protected $languageManager;
+
+  /**
+   * The EntityViewDisplay objects created for individual field rendering.
+   *
+   * @see \Drupal\Core\Entity\EntityViewBuilder::getSingleFieldDisplay()
+   *
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface[]
+   */
+  protected $singleFieldDisplays;
 
   /**
    * Constructs a new EntityViewBuilder.
@@ -393,32 +402,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public function viewField(FieldItemListInterface $items, $display_options = array()) {
-    $output = array();
     $entity = $items->getEntity();
     $field_name = $items->getFieldDefinition()->getName();
+    $display = $this->getSingleFieldDisplay($entity, $field_name, $display_options);
 
-    // Get the display object.
-    if (is_string($display_options)) {
-      $view_mode = $display_options;
-      $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-      // Hide all fields except the current one.
-      foreach (array_keys($entity->getFieldDefinitions()) as $name) {
-        if ($name != $field_name) {
-          $display->removeComponent($name);
-        }
-      }
-    }
-    else {
-      $view_mode = '_custom';
-      $display = entity_create('entity_view_display', array(
-        'targetEntityType' => $entity->getEntityTypeId(),
-        'bundle' => $entity->bundle(),
-        'mode' => $view_mode,
-        'status' => TRUE,
-      ));
-      $display->setComponent($field_name, $display_options);
-    }
-
+    $output = array();
     $build = $display->build($entity);
     if (isset($build[$field_name])) {
       $output = $build[$field_name];
@@ -449,6 +437,52 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     }
 
     return $output;
+  }
+
+  /**
+   * Returns an EntityViewDisplay for rendering an individual field.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   * @param string $field_name
+   *   The field name.
+   * @param string|array $display_options
+   *   The display options passed to the viewField() method.
+   *
+   * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   */
+  protected function getSingleFieldDisplay($entity, $field_name, $display_options) {
+    if (is_string($display_options)) {
+      // View mode: use the Display configured for the view mode.
+      $view_mode = $display_options;
+      $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+      // Hide all fields except the current one.
+      foreach (array_keys($entity->getFieldDefinitions()) as $name) {
+        if ($name != $field_name) {
+          $display->removeComponent($name);
+        }
+      }
+    }
+    else {
+      // Array of custom display options: use a runtime Display for the
+      // '_custom' view mode. Persist the displays created, to reduce the number
+      // of objects (displays and formatter plugins) created when rendering a
+      // series of fields individually for cases such as views tables.
+      $entity_type_id = $entity->getEntityTypeId();
+      $bundle = $entity->bundle();
+      $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . crc32(serialize($display_options));
+      if (!isset($this->singleFieldDisplays[$key])) {
+        $this->singleFieldDisplays[$key] = EntityViewDisplay::create(array(
+          'targetEntityType' => $entity_type_id,
+          'bundle' => $bundle,
+          'mode' => '_custom',
+          'status' => TRUE,
+        ))->setComponent($field_name, $display_options);
+      }
+      $display = $this->singleFieldDisplays[$key];
+    }
+
+    return $display;
   }
 
 }
