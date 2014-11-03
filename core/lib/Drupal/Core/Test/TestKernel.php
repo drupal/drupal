@@ -9,7 +9,6 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
-use Composer\Autoload\ClassLoader;
 
 /**
  * Kernel to mock requests to test simpletest.
@@ -19,7 +18,7 @@ class TestKernel extends DrupalKernel {
   /**
    * {@inheritdoc}
    */
-  public static function createFromRequest(Request $request, ClassLoader $class_loader, $environment, $allow_dumping = TRUE) {
+  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE) {
     // Include our bootstrap file.
     require_once __DIR__ . '/../../../../includes/bootstrap.inc';
 
