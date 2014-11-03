@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Tags;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -84,11 +85,11 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
       switch ($vocabulary->hierarchy) {
         case TAXONOMY_HIERARCHY_DISABLED:
-          return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
         case TAXONOMY_HIERARCHY_SINGLE:
-          return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => Unicode::ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
         case TAXONOMY_HIERARCHY_MULTIPLE:
-          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
+          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->name))) . '</p>';
       }
   }
 }

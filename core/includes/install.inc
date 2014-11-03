@@ -5,6 +5,7 @@
  * API functions for installing modules and themes.
  */
 
+use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
@@ -610,7 +611,7 @@ function drupal_verify_profile($install_state) {
   if (count($missing_modules)) {
     $modules = array();
     foreach ($missing_modules as $module) {
-      $modules[] = '<span class="admin-missing">' . drupal_ucfirst($module) . '</span>';
+      $modules[] = '<span class="admin-missing">' . Unicode::ucfirst($module) . '</span>';
     }
     $requirements['required_modules'] = array(
       'title'       => t('Required modules'),
