@@ -69,7 +69,7 @@ function menu_menu() {
     'title' => 'Parent menu items',
     'page callback' => 'menu_parent_options_js',
     'type' => MENU_CALLBACK,
-    'access arguments' => array(TRUE),
+    'access arguments' => array('administer menu'),
   );
   $items['admin/structure/menu/list'] = array(
     'title' => 'List menus',

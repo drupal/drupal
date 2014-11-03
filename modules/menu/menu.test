@@ -514,6 +514,23 @@ class MenuTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test administrative users other than user 1 can access the menu parents AJAX callback.
+   */
+  public function testMenuParentsJsAccess() {
+    $admin = $this->drupalCreateUser(array('administer menu'));
+    $this->drupalLogin($admin);
+    // Just check access to the callback overall, the POST data is irrelevant.
+    $this->drupalGetAJAX('admin/structure/menu/parents');
+    $this->assertResponse(200);
+
+    // Do standard user tests.
+    // Login the user.
+    $this->drupalLogin($this->std_user);
+    $this->drupalGetAJAX('admin/structure/menu/parents');
+    $this->assertResponse(403);
+  }
+
+  /**
    * Get standard menu link.
    */
   private function getStandardMenuLink() {
