@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\KernelTestBase;
@@ -89,7 +90,7 @@ abstract class FieldUnitTestBase extends KernelTestBase {
     $field = 'field' . $suffix;
     $field_definition = 'field_definition' . $suffix;
 
-    $this->fieldTestData->$field_name = drupal_strtolower($this->randomMachineName() . '_field_name' . $suffix);
+    $this->fieldTestData->$field_name = Unicode::strtolower($this->randomMachineName() . '_field_name' . $suffix);
     $this->fieldTestData->$field_storage = entity_create('field_storage_config', array(
       'field_name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,

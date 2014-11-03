@@ -51,7 +51,7 @@ class HtmlToTextTest extends WebTestBase {
    *   set of tags supported by drupal_html_to_text().
    */
   protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
-    preg_match_all('/<([a-z0-6]+)/', drupal_strtolower($html), $matches);
+    preg_match_all('/<([a-z0-6]+)/', Unicode::strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = drupal_html_to_text($html, $allowed_tags);

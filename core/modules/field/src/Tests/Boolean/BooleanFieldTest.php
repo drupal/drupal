@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\Boolean;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
@@ -63,7 +64,7 @@ class BooleanFieldTest extends WebTestBase {
     $label = $this->randomMachineName();
 
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $this->field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

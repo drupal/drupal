@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\search\Tests;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests that CJK tokenizer works as intended.
@@ -97,7 +98,7 @@ class SearchTokenizerTest extends SearchTestBase {
     // Merge into a string and tokenize.
     $string = implode('', $chars);
     $out = trim(search_simplify($string));
-    $expected = drupal_strtolower(implode(' ', $chars));
+    $expected = Unicode::strtolower(implode(' ', $chars));
 
     // Verify that the output matches what we expect.
     $this->assertEqual($out, $expected, 'CJK tokenizer worked on all supplied CJK characters');

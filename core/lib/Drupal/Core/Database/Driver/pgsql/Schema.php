@@ -8,6 +8,7 @@
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -294,7 +295,7 @@ class Schema extends DatabaseSchema {
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to lowercase.
     if (isset($field['pgsql_type'])) {
-      $field['pgsql_type'] = drupal_strtolower($field['pgsql_type']);
+      $field['pgsql_type'] = Unicode::strtolower($field['pgsql_type']);
     }
     else {
       $map = $this->getFieldTypeMap();

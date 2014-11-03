@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -41,7 +42,7 @@ class FilterHooksTest extends WebTestBase {
     // Add a text format.
     $name = $this->randomMachineName();
     $edit = array();
-    $edit['format'] = drupal_strtolower($this->randomMachineName());
+    $edit['format'] = Unicode::strtolower($this->randomMachineName());
     $edit['name'] = $name;
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));

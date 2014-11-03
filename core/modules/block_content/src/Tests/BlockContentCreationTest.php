@@ -165,7 +165,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Place the block.
     $instance = array(
-      'id' => drupal_strtolower($edit['info[0][value]']),
+      'id' => Unicode::strtolower($edit['info[0][value]']),
       'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
     );

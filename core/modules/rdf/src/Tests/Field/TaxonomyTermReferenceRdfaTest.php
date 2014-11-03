@@ -6,6 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\Entity\Role;
@@ -48,7 +49,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();

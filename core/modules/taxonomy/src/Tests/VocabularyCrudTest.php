@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -157,7 +158,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Change the machine name.
     $old_name = $this->vocabulary->id();
-    $new_name = drupal_strtolower($this->randomMachineName());
+    $new_name = Unicode::strtolower($this->randomMachineName());
     $this->vocabulary->vid = $new_name;
     $this->vocabulary->save();
 
@@ -176,7 +177,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testUninstallReinstall() {
     // Field storages and fields attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
-    $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
+    $field_name = Unicode::strtolower($this->randomMachineName() . '_field_name');
     $storage_definition = array(
       'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',

@@ -62,7 +62,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests link field URL validation.
    */
   function testURLValidation() {
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
@@ -182,7 +182,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests the link title settings of a link field.
    */
   function testLinkTitle() {
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
@@ -296,7 +296,7 @@ class LinkFieldTest extends WebTestBase {
    * Tests the default 'link' formatter.
    */
   function testLinkFormatter() {
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
@@ -436,7 +436,7 @@ class LinkFieldTest extends WebTestBase {
    * merged, since they involve different configuration and output.
    */
   function testLinkSeparateFormatter() {
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $field_name,

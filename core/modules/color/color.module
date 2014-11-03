@@ -4,6 +4,7 @@
  * Allows users to change the color scheme of themes.
  */
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
@@ -515,7 +516,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Prepare color conversion table.
   $conversion = $palette;
   foreach ($conversion as $k => $v) {
-    $conversion[$k] = drupal_strtolower($v);
+    $conversion[$k] = Unicode::strtolower($v);
   }
   $default = color_get_palette($theme, TRUE);
 
@@ -534,7 +535,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Iterate over all the parts.
   foreach ($style as $chunk) {
     if ($is_color) {
-      $chunk = drupal_strtolower($chunk);
+      $chunk = Unicode::strtolower($chunk);
       // Check if this is one of the colors in the default palette.
       if ($key = array_search($chunk, $default)) {
         $chunk = $conversion[$key];

@@ -107,13 +107,13 @@ class ContactSitewideTest extends WebTestBase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
     $max_length_exceeded = $max_length + 1;
-    $this->addContactForm($id = drupal_strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
     $this->assertText(format_string('Machine-readable name cannot be longer than !max characters but is currently !exceeded characters long.', array('!max' => $max_length, '!exceeded' => $max_length_exceeded)));
-    $this->addContactForm($id = drupal_strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
     // Create first valid form.
-    $this->addContactForm($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
     // Check that the form was created in site default language.
@@ -148,10 +148,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add more forms.
-    $this->addContactForm(drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
+    $this->addContactForm(Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
-    $this->addContactForm($name = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
+    $this->addContactForm($name = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
     // Try adding a form that already exists.
@@ -221,7 +221,7 @@ class ContactSitewideTest extends WebTestBase {
 
     $label = $this->randomMachineName(16);
     $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
-    $contact_form = drupal_strtolower($this->randomMachineName(16));
+    $contact_form = Unicode::strtolower($this->randomMachineName(16));
     $this->addContactForm($contact_form, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
     $this->clickLink(t('Edit'));

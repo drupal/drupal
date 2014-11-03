@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -34,7 +35,7 @@ class FilterDefaultFormatTest extends WebTestBase {
     $formats = array();
     for ($i = 0; $i < 2; $i++) {
       $edit = array(
-        'format' => drupal_strtolower($this->randomMachineName()),
+        'format' => Unicode::strtolower($this->randomMachineName()),
         'name' => $this->randomMachineName(),
       );
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));

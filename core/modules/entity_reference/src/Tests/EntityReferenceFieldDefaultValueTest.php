@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     // Create a node to be referenced.
     $referenced_node = $this->drupalCreateNode(array('type' => 'referenced_content'));
 
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',

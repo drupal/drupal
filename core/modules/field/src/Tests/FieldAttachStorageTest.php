@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\field\Tests;
+use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -282,7 +283,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
+    $new_bundle = 'test_bundle_' . Unicode::strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add a field to that bundle.
@@ -299,7 +300,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, "Data is retrieved for the new bundle");
 
     // Rename the bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
+    $new_bundle = 'test_bundle_' . Unicode::strtolower($this->randomMachineName());
     entity_test_rename_bundle($this->fieldTestData->field_definition['bundle'], $new_bundle, $entity_type);
 
     // Check that the field definition has been updated.
@@ -321,7 +322,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('', $entity_type);
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomMachineName());
+    $new_bundle = 'test_bundle_' . Unicode::strtolower($this->randomMachineName());
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add a field to that bundle.
@@ -329,7 +330,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     entity_create('field_config', $this->fieldTestData->field_definition)->save();
 
     // Create a second field for the test bundle
-    $field_name = drupal_strtolower($this->randomMachineName() . '_field_name');
+    $field_name = Unicode::strtolower($this->randomMachineName() . '_field_name');
     $field_storage = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,

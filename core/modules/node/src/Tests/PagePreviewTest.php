@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\NodeType;
 
@@ -61,7 +62,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->term = $term;
 
     // Create a field.
-    $this->field_name = drupal_strtolower($this->randomMachineName());
+    $this->field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',

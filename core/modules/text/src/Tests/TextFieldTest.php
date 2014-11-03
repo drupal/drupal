@@ -8,6 +8,7 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -43,7 +44,7 @@ class TextFieldTest extends WebTestBase {
   function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -85,7 +86,7 @@ class TextFieldTest extends WebTestBase {
    */
   function _testTextfieldWidgets($field_type, $widget_type) {
     // Create a field.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -146,7 +147,7 @@ class TextFieldTest extends WebTestBase {
    */
   function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     // Create a field.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -204,7 +205,7 @@ class TextFieldTest extends WebTestBase {
     // access to it.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'format' => drupal_strtolower($this->randomMachineName()),
+      'format' => Unicode::strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     );
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));

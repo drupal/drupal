@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -51,7 +52,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
 
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->vocabulary->save();
@@ -152,7 +153,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // Make sure the computed term reflects updates to the term id.
     $vocabulary2 = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary2->save();

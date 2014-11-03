@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldException;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -44,7 +45,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     parent::setUp();
 
     $this->fieldStorageDefinition = array(
-      'field_name' => drupal_strtolower($this->randomMachineName()),
+      'field_name' => Unicode::strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );

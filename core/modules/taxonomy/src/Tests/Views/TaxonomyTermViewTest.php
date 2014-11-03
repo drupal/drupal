@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -38,7 +39,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     // Create a vocabulary and add two term reference fields to article nodes.
 
-    $this->field_name_1 = drupal_strtolower($this->randomMachineName());
+    $this->field_name_1 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name_1,
       'entity_type' => 'node',

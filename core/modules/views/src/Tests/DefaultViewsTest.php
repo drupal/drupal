@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -48,7 +49,7 @@ class DefaultViewsTest extends ViewTestBase {
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('page' => 'page'),
@@ -57,7 +58,7 @@ class DefaultViewsTest extends ViewTestBase {
     $this->vocabulary->save();
 
     // Create a field.
-    $this->field_name = drupal_strtolower($this->randomMachineName());
+    $this->field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',

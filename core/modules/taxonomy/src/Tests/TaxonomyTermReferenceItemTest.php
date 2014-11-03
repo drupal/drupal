@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -41,7 +42,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();

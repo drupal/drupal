@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\Number;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class NumberFieldTest extends WebTestBase {
    */
   function testNumberDecimalField() {
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -132,7 +133,7 @@ class NumberFieldTest extends WebTestBase {
     $maximum = rand(2000, 4000);
 
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -226,7 +227,7 @@ class NumberFieldTest extends WebTestBase {
   */
   function testNumberFloatField() {
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -311,9 +312,9 @@ class NumberFieldTest extends WebTestBase {
    * Test default formatter behavior
    */
   function testNumberFormatter() {
-    $type = drupal_strtolower($this->randomMachineName());
-    $float_field = drupal_strtolower($this->randomMachineName());
-    $integer_field = drupal_strtolower($this->randomMachineName());
+    $type = Unicode::strtolower($this->randomMachineName());
+    $float_field = Unicode::strtolower($this->randomMachineName());
+    $integer_field = Unicode::strtolower($this->randomMachineName());
     $thousand_separators = array('', '.', ',', ' ', chr(8201), "'");
     $decimal_separators = array('.', ',');
     $prefix = $this->randomMachineName();

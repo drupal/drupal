@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\simpletest\WebTestBase;
 
@@ -63,7 +64,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->content_type = $this->drupalCreateContentType();
 
     // Create a field.
-    $this->fieldName = drupal_strtolower($this->randomMachineName());
+    $this->fieldName = Unicode::strtolower($this->randomMachineName());
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

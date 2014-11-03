@@ -5,6 +5,7 @@
  * Code required only when rendering the available updates report.
  */
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 
@@ -67,7 +68,7 @@ function template_preprocess_update_report(&$variables) {
         '#attributes' => array('class' => array('update')),
       );
     }
-    $row_key = !empty($project['title']) ? drupal_strtolower($project['title']) : drupal_strtolower($project['name']);
+    $row_key = !empty($project['title']) ? Unicode::strtolower($project['title']) : Unicode::strtolower($project['name']);
 
     // Add the project status row and details.
     $rows[$project['project_type']][$row_key]['status'] = $project_status;

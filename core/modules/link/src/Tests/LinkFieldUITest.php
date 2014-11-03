@@ -7,6 +7,7 @@
 
 namespace Drupal\link\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -40,7 +41,7 @@ class LinkFieldUITest extends WebTestBase {
 
     // Add a link field to the newly-created type.
     $label = $this->randomMachineName();
-    $field_name = drupal_strtolower($label);
+    $field_name = Unicode::strtolower($label);
     $edit = array(
       'fields[_add_new_field][label]' => $label,
       'fields[_add_new_field][field_name]' => $field_name,

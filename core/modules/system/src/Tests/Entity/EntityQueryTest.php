@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,8 +57,8 @@ class EntityQueryTest extends EntityUnitTestBase {
 
     $this->installConfig(array('language'));
 
-    $figures = drupal_strtolower($this->randomMachineName());
-    $greetings = drupal_strtolower($this->randomMachineName());
+    $figures = Unicode::strtolower($this->randomMachineName());
+    $greetings = Unicode::strtolower($this->randomMachineName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
       $field_storage = entity_create('field_storage_config', array(
         'field_name' => $field_name,

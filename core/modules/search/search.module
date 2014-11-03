@@ -244,7 +244,7 @@ function search_simplify($text, $langcode = NULL) {
   $text = String::decodeEntities($text);
 
   // Lowercase
-  $text = drupal_strtolower($text);
+  $text = Unicode::strtolower($text);
 
   // Call an external processor for word handling.
   search_invoke_preprocess($text, $langcode);
@@ -415,7 +415,7 @@ function search_index($sid, $type, $text, $langcode) {
     if ($tag) {
       // Increase or decrease score per word based on tag
       list($tagname) = explode(' ', $value, 2);
-      $tagname = drupal_strtolower($tagname);
+      $tagname = Unicode::strtolower($tagname);
       // Closing or opening tag?
       if ($tagname[0] == '/') {
         $tagname = substr($tagname, 1);

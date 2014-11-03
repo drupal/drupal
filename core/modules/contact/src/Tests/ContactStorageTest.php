@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\Message;
 
@@ -53,7 +54,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->drupalLogin($admin_user);
     // Create first valid contact form.
     $mail = 'simpletest@example.com';
-    $this->addContactForm($id = drupal_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($mail)), '', TRUE, [
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($mail)), '', TRUE, [
       'send_a_pony' => 1,
     ]);
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));

@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
@@ -34,7 +35,7 @@ class TermIndexTest extends TaxonomyTestBase {
     // Create a vocabulary and add two term reference fields to article nodes.
     $this->vocabulary = $this->createVocabulary();
 
-    $this->field_name_1 = drupal_strtolower($this->randomMachineName());
+    $this->field_name_1 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name_1,
       'entity_type' => 'node',
@@ -65,7 +66,7 @@ class TermIndexTest extends TaxonomyTestBase {
       ))
       ->save();
 
-    $this->field_name_2 = drupal_strtolower($this->randomMachineName());
+    $this->field_name_2 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name_2,
       'entity_type' => 'node',

@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\system\Tests\Entity;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests the Entity Query relationship API.
@@ -69,7 +70,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // We want a taxonomy term reference field. It needs a vocabulary, terms,
     // a field storage and a field. First, create the vocabulary.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'vid' => drupal_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
     ));
     $vocabulary->save();
     // Second, create the field.

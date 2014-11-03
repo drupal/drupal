@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -36,7 +37,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->vocabulary2 = $this->createVocabulary();
 
     // Set up a field storage and a field.
-    $this->field_name = drupal_strtolower($this->randomMachineName());
+    $this->field_name = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',

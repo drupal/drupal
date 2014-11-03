@@ -7,6 +7,7 @@
 
 namespace Drupal\datetime\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -52,7 +53,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->drupalLogin($web_user);
 
     // Create a field with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -283,7 +284,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'date_content'));
 
     // Create a field storage with settings to validate.
-    $field_name = drupal_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',

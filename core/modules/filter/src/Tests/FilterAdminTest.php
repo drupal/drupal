@@ -8,6 +8,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -98,7 +99,7 @@ class FilterAdminTest extends WebTestBase {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
-    $format_id = drupal_strtolower($this->randomMachineName());
+    $format_id = Unicode::strtolower($this->randomMachineName());
     $name = $this->randomMachineName();
     $edit = array(
       'format' => $format_id,
@@ -231,7 +232,7 @@ class FilterAdminTest extends WebTestBase {
 
     // Add format.
     $edit = array();
-    $edit['format'] = drupal_strtolower($this->randomMachineName());
+    $edit['format'] = Unicode::strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
