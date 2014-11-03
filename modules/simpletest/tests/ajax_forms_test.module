@@ -254,6 +254,15 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
     ),
   );
 
+  // Shows the Ajax 'add_css' command.
+  $form['add_css_command_example'] = array(
+    '#type' => 'submit',
+    '#value' => t("AJAX 'add_css' command"),
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_advanced_commands_add_css_callback',
+    ),
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -403,6 +412,15 @@ function ajax_forms_test_advanced_commands_settings_callback($form, $form_state)
   $commands = array();
   $setting['ajax_forms_test']['foo'] = 42;
   $commands[] = ajax_command_settings($setting);
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Ajax callback for 'add_css'.
+ */
+function ajax_forms_test_advanced_commands_add_css_callback($form, $form_state) {
+  $commands = array();
+  $commands[] = ajax_command_add_css('my/file.css');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 

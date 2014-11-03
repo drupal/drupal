@@ -368,6 +368,14 @@ class AJAXCommandsTestCase extends AJAXTestCase {
       'settings' => array('ajax_forms_test' => array('foo' => 42)),
     );
     $this->assertCommand($commands, $expected, "'settings' AJAX command issued with correct data");
+
+    // Tests the 'add_css' command.
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'add_css' command")));
+    $expected = array(
+      'command' => 'add_css',
+      'data' => 'my/file.css',
+    );
+    $this->assertCommand($commands, $expected, "'add_css' AJAX command issued with correct data");
   }
 }
 

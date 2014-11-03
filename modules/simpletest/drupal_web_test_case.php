@@ -2301,6 +2301,8 @@ class DrupalWebTestCase extends DrupalTestCase {
             break;
           case 'restripe':
             break;
+          case 'add_css':
+            break;
         }
       }
       $content = $dom->saveHTML();

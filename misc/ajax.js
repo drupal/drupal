@@ -619,6 +619,26 @@ Drupal.ajax.prototype.commands = {
   },
 
   /**
+   * Command to add css.
+   *
+   * Uses the proprietary addImport method if available as browsers which
+   * support that method ignore @import statements in dynamically added
+   * stylesheets.
+   */
+  add_css: function (ajax, response, status) {
+    // Add the styles in the normal way.
+    $('head').prepend(response.data);
+    // Add imports in the styles using the addImport method if available.
+    var match, importMatch = /^@import url\("(.*)"\);$/igm;
+    if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
+      importMatch.lastIndex = 0;
+      while (match = importMatch.exec(response.data)) {
+        document.styleSheets[0].addImport(match[1]);
+      }
+    }
+  },
+
+  /**
    * Command to update a form's build ID.
    */
   updateBuildId: function(ajax, response, status) {
