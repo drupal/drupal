@@ -11,6 +11,7 @@ use Drupal\aggregator\ItemStorageInterface;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatter;
@@ -213,8 +214,8 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       }
 
       // Make sure the item title and author fit in the 255 varchar column.
-      $entry->setTitle(truncate_utf8($item['title'], 255, TRUE, TRUE));
-      $entry->setAuthor(truncate_utf8($item['author'], 255, TRUE, TRUE));
+      $entry->setTitle(Unicode::truncate($item['title'], 255, TRUE, TRUE));
+      $entry->setAuthor(Unicode::truncate($item['author'], 255, TRUE, TRUE));
 
       $entry->setFeedId($feed->id());
       $entry->setLink($item['link']);

@@ -12,6 +12,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
@@ -67,8 +68,8 @@ class LinkSeparateFormatter extends LinkFormatter {
       }
       $url_title = $url->toString();
       if (!empty($settings['trim_length'])) {
-        $link_title = truncate_utf8($link_title, $settings['trim_length'], FALSE, TRUE);
-        $url_title = truncate_utf8($url_title, $settings['trim_length'], FALSE, TRUE);
+        $link_title = Unicode::truncate($link_title, $settings['trim_length'], FALSE, TRUE);
+        $url_title = Unicode::truncate($url_title, $settings['trim_length'], FALSE, TRUE);
       }
 
       $element[$delta] = array(

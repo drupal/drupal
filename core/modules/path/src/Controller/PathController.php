@@ -7,6 +7,7 @@
 
 namespace Drupal\path\Controller;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
@@ -85,10 +86,10 @@ class PathController extends ControllerBase {
     $destination = drupal_get_destination();
     foreach ($this->aliasStorage->getAliasesForAdminListing($header, $keys) as $data) {
       $row = array();
-      $row['data']['alias'] = _l(truncate_utf8($data->alias, 50, FALSE, TRUE), $data->source, array(
+      $row['data']['alias'] = _l(Unicode::truncate($data->alias, 50, FALSE, TRUE), $data->source, array(
         'attributes' => array('title' => $data->alias),
       ));
-      $row['data']['source'] = _l(truncate_utf8($data->source, 50, FALSE, TRUE), $data->source, array(
+      $row['data']['source'] = _l(Unicode::truncate($data->source, 50, FALSE, TRUE), $data->source, array(
         'alias' => TRUE,
         'attributes' => array('title' => $data->source),
       ));

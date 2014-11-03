@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -98,7 +99,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   // sentence boundaries.
 
   // The summary may not be longer than maximum length specified. Initial slice.
-  $summary = truncate_utf8($text, $size);
+  $summary = Unicode::truncate($text, $size);
 
   // Store the actual length of the UTF8 string -- which might not be the same
   // as $size.

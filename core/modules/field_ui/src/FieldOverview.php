@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -228,7 +229,7 @@ class FieldOverview extends OverviewBase {
           '@label' => $info['label'],
           '@field' => $info['field'],
         ));
-        $existing_field_options[$field_name] = truncate_utf8($text, 80, FALSE, TRUE);
+        $existing_field_options[$field_name] = Unicode::truncate($text, 80, FALSE, TRUE);
       }
       asort($existing_field_options);
       $name = '_add_existing_field';

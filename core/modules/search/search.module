@@ -357,7 +357,7 @@ function _search_index_truncate(&$text) {
   if (is_numeric($text)) {
     $text = ltrim($text, '0');
   }
-  $text = truncate_utf8($text, 50);
+  $text = Unicode::truncate($text, 50);
 }
 
 /**
@@ -663,7 +663,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     // We didn't find any keyword matches, so just return the first part of the
     // text. We also need to re-encode any HTML special characters that we
     // entity-decoded above.
-    return String::checkPlain(truncate_utf8($text, 256, TRUE, TRUE));
+    return String::checkPlain(Unicode::truncate($text, 256, TRUE, TRUE));
   }
 
   // Sort the text ranges by starting position.

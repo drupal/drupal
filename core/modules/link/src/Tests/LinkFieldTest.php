@@ -8,6 +8,7 @@
 namespace Drupal\link\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\link\LinkItemInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -384,11 +385,11 @@ class LinkFieldTest extends WebTestBase {
         switch ($setting) {
           case 'trim_length':
             $url = $url1;
-            $title = isset($new_value) ? truncate_utf8($title1, $new_value, FALSE, TRUE) : $title1;
+            $title = isset($new_value) ? Unicode::truncate($title1, $new_value, FALSE, TRUE) : $title1;
             $this->assertRaw('<a href="' . String::checkPlain($url) . '">' . String::checkPlain($title) . '</a>');
 
             $url = $url2;
-            $title = isset($new_value) ? truncate_utf8($title2, $new_value, FALSE, TRUE) : $title2;
+            $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
             $this->assertRaw('<a href="' . String::checkPlain($url) . '">' . String::checkPlain($title) . '</a>');
             break;
 
@@ -503,15 +504,15 @@ class LinkFieldTest extends WebTestBase {
         switch ($setting) {
           case 'trim_length':
             $url = $url1;
-            $url_title = isset($new_value) ? truncate_utf8($url, $new_value, FALSE, TRUE) : $url;
+            $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . String::checkPlain($url) . '">' . String::checkPlain($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
 
             $url = $url2;
-            $url_title = isset($new_value) ? truncate_utf8($url, $new_value, FALSE, TRUE) : $url;
-            $title = isset($new_value) ? truncate_utf8($title2, $new_value, FALSE, TRUE) : $title2;
+            $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
+            $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . String::checkPlain($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . String::checkPlain($url) . '">' . String::checkPlain($url_title) . '</a></div>';

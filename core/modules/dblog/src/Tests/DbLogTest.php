@@ -297,7 +297,7 @@ class DbLogTest extends WebTestBase {
     $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), 'DBLog event was recorded: [logout user]');
     // Delete user.
     $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->getEmail() . '>'));
-    $message_text = truncate_utf8(Xss::filter($message, array()), 56, TRUE, TRUE);
+    $message_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
     // Verify that the full message displays on the details page.
     $link = FALSE;
     if ($links = $this->xpath('//a[text()="' . html_entity_decode($message_text) . '"]')) {
@@ -650,7 +650,7 @@ class DbLogTest extends WebTestBase {
    *   The message to pass to simpletest.
    */
   protected function assertLogMessage($log_message, $message) {
-    $message_text = truncate_utf8(Xss::filter($log_message, array()), 56, TRUE, TRUE);
+    $message_text = Unicode::truncate(Xss::filter($log_message, array()), 56, TRUE, TRUE);
     // After \Drupal\Component\Utility\Xss::filter(), HTML entities should be
     // converted to their character equivalents because assertLink() uses this
     // string in xpath() to query the Document Object Model (DOM).
