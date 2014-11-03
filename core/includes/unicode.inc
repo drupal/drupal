@@ -255,23 +255,6 @@ function drupal_strtolower($text) {
 }
 
 /**
- * Capitalizes the first letter of a UTF-8 string.
- *
- * @param $text
- *   The string to convert.
- *
- * @return string
- *   The string with the first letter as uppercase.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::ucfirst().
- * @ingroup php_wrappers
- */
-function drupal_ucfirst($text) {
-  return Unicode::ucfirst($text);
-}
-
-/**
  * Cuts off a piece of a string based on character indices and counts.
  *
  * @param $text
