@@ -1,6 +1,9 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in which field_has_data() did not return TRUE for fields that
+  only had data in older entity revisions, leading to loss of the field's data
+  when the field configuration was edited.
 - Fixed a bug which caused the Ajax progress throbber to appear misaligned in
   many situatons (minor styling change).
 - Prevented the Bartik theme from lower-casing the "Permalink" link on

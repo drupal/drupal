@@ -936,14 +936,17 @@ function field_get_items($entity_type, $entity, $field_name, $langcode = NULL) {
  */
 function field_has_data($field) {
   $query = new EntityFieldQuery();
-  return (bool) $query
-    ->fieldCondition($field)
+  $query = $query->fieldCondition($field)
     ->range(0, 1)
     ->count()
     // Neutralize the 'entity_field_access' query tag added by
     // field_sql_storage_field_storage_query(). The result cannot depend on the
     // access grants of the current user.
-    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
+
+  return (bool) $query
+    ->execute() || (bool) $query
+    ->age(FIELD_LOAD_REVISION)
     ->execute();
 }
 
