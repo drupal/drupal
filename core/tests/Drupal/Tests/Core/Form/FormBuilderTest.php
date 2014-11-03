@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\Form\FormBuilderTest.
  */
 
-namespace Drupal\Tests\Core\Form {
+namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
@@ -417,14 +417,5 @@ class TestForm implements FormInterface {
 class TestFormInjected extends TestForm implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static();
-  }
-}
-
-}
-
-namespace {
-  use Drupal\Core\Form\FormStateInterface;
-
-  function test_form_id_custom_submit(array &$form, FormStateInterface $form_state) {
   }
 }
