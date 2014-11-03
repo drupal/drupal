@@ -649,6 +649,10 @@ body:not(:target) .region-primary-menu .menu-toggle:after {
   position: absolute;
   right: 10px; /* LTR */
 }
+[dir="rtl"] body:not(:target) .region-primary-menu .menu-toggle:after {
+  right: initial;
+  left: 10px;
+}
 body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle,
 body:not(:target) .region-primary-menu .menu-toggle--hide {
   display: none;
