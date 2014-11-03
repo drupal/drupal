@@ -221,23 +221,6 @@ function drupal_strlen($text) {
 }
 
 /**
- * Uppercase a UTF-8 string.
- *
- * @param $text
- *   The string to run the operation on.
- *
- * @return string
- *   The string in uppercase.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::strtoupper().
- * @ingroup php_wrappers
- */
-function drupal_strtoupper($text) {
-  return Unicode::strtoupper($text);
-}
-
-/**
  * Lowercase a UTF-8 string.
  *
  * @param $text
