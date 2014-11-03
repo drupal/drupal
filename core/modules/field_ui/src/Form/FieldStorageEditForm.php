@@ -154,7 +154,11 @@ class FieldStorageEditForm extends FormBase {
     $form['field_storage']['translatable'] = array('#type' => 'value', '#value' => $field_storage->isTranslatable());
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Save field settings'),
+      '#button_type' => 'primary',
+    );
     return $form;
   }
 

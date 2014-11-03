@@ -160,7 +160,8 @@ class FieldEditForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Save settings')
+      '#value' => $this->t('Save settings'),
+      '#button_type' => 'primary',
     );
     $form['actions']['delete'] = array(
       '#type' => 'submit',
