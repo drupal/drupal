@@ -70,6 +70,15 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $this->assertFalse($db_format->status, 'Database: Disabled text format is marked as disabled.');
     $formats = filter_formats();
     $this->assertTrue(!isset($formats[$format->format]), 'filter_formats: Disabled text format no longer exists.');
+
+    // Add a new format to check for Xss in format name.
+    $format = new stdClass();
+    $format->format = 'xss_format';
+    $format->name = '<script>alert(123)</script>';
+    filter_format_save($format);
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(filter_permission_name($format) => 1));
+    $this->drupalGet('filter/tips');
+    $this->assertNoRaw($format->name, 'Text format name contains no xss.');
   }
 
   /**

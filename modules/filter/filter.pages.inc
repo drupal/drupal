@@ -68,7 +68,7 @@ function theme_filter_tips($variables) {
     foreach ($tips as $name => $tiplist) {
       if ($multiple) {
         $output .= '<div class="filter-type filter-' . drupal_html_class($name) . '">';
-        $output .= '<h3>' . $name . '</h3>';
+        $output .= '<h3>' . check_plain($name) . '</h3>';
       }
 
       if (count($tiplist) > 0) {
