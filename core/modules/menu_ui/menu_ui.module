@@ -69,20 +69,6 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setLinkTemplate('add-link-form', 'entity.menu.add_link_form');
 }
 
-
-/**
- * Implements hook_theme().
- */
-function menu_ui_theme() {
-  return array(
-    'menu_overview_form' => array(
-      'file' => 'menu_ui.admin.inc',
-      'render element' => 'form',
-      'function' => 'theme_menu_overview_form',
-    ),
-  );
-}
-
 /**
  * Implements hook_ENTITY_TYPE_insert( for menu entities.
  */

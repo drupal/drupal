@@ -2139,8 +2139,8 @@ function _drupal_add_library($library_name, $every_page = NULL) {
  * In a situation where tree relationships are present, adding multiple
  * subgroups is not necessary, because the table will contain indentations that
  * provide enough information about the sibling and parent relationships. See
- * theme_menu_overview_form() for an example creating a table containing parent
- * relationships.
+ * MenuForm::BuildOverviewForm for an example creating a table
+ * containing parent relationships.
  *
  * @param $element
  *   A form element to attach the tableDrag behavior to.
@@ -2177,7 +2177,7 @@ function _drupal_add_library($library_name, $every_page = NULL) {
  *     to FALSE if the column should not be hidden.
  *   - 'limit': (optional) Limit the maximum amount of parenting in this table.
  *
- * @see theme_menu_overview_form()
+ * @see MenuForm::BuildOverviewForm()
  */
 function drupal_attach_tabledrag(&$element, array $options) {
   // Add default values to elements.

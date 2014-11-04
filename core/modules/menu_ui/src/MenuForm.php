@@ -213,9 +213,6 @@ class MenuForm extends EntityForm {
   protected function buildOverviewForm(array &$form, FormStateInterface $form_state) {
     // Ensure that menu_overview_form_submit() knows the parents of this form
     // section.
-    $form['#tree'] = TRUE;
-    $form['#theme'] = 'menu_overview_form';
-
     if (!$form_state->has('menu_overview_form_parents')) {
       $form_state->set('menu_overview_form_parents', []);
     }
@@ -242,10 +239,85 @@ class MenuForm extends EntityForm {
     };
     $delta = max($count($tree), 50);
 
-    $form = array_merge($form, $this->buildOverviewTreeForm($tree, $delta));
+    $form['links'] = array(
+      '#type' => 'table',
+      '#theme' => 'table__menu_overview',
+      '#header' => array(
+        $this->t('Menu link'),
+        array(
+          'data' => $this->t('Enabled'),
+          'class' => array('checkbox'),
+        ),
+        $this->t('Weight'),
+        array(
+          'data' => $this->t('Operations'),
+          'colspan' => 3,
+        ),
+      ),
+      '#attributes' => array(
+        'id' => 'menu-overview',
+      ),
+      '#tabledrag' => array(
+        array(
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'menu-parent',
+          'subgroup' => 'menu-parent',
+          'source' => 'menu-id',
+          'hidden' => TRUE,
+          'limit' => \Drupal::menuTree()->maxDepth() - 1,
+        ),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'menu-weight',
+        ),
+      ),
+    );
+
     $destination = $this->getUrlGenerator()->getPathFromRoute('entity.menu.edit_form', array('menu' => $this->entity->id()));
     $url = $destination = $this->url('entity.menu.add_link_form', array('menu' => $this->entity->id()), array('query' => array('destination' => $destination)));
-    $form['#empty_text'] = $this->t('There are no menu links yet. <a href="@url">Add link</a>.', array('@url' => $url));
+    $form['links']['#empty'] = $this->t('There are no menu links yet. <a href="@url">Add link</a>.', array('@url' => $url));
+    $links = $this->buildOverviewTreeForm($tree, $delta);
+    foreach (Element::children($links) as $id) {
+      if (isset($links[$id]['#item'])) {
+        $element = $links[$id];
+
+        $form['links'][$id]['#item'] = $element['#item'];
+
+        // TableDrag: Mark the table row as draggable.
+        $form['links'][$id]['#attributes'] = $element['#attributes'];
+        $form['links'][$id]['#attributes']['class'][] = 'draggable';
+
+        $form['links'][$id]['#item'] = $element['#item'];
+
+        // TableDrag: Sort the table row according to its existing/configured weight.
+        $form['links'][$id]['#weight'] = $element['#item']->link->getWeight();
+
+        // Add special classes to be used for tabledrag.js.
+        $element['parent']['#attributes']['class'] = array('menu-parent');
+        $element['weight']['#attributes']['class'] = array('menu-weight');
+        $element['id']['#attributes']['class'] = array('menu-id');
+
+        $form['links'][$id]['title'] = array(
+          array(
+            '#theme' => 'indentation',
+            '#size' => $element['#item']->depth - 1,
+          ),
+          $element['title'],
+        );
+        $form['links'][$id]['enabled'] = $element['enabled'];
+        $form['links'][$id]['enabled']['#wrapper_attributes']['class'] = array('checkbox', 'menu-enabled');
+
+        $form['links'][$id]['weight'] = $element['weight'];
+
+        // Operations (dropbutton) column.
+        $form['links'][$id]['operations'] = $element['operations'];
+
+        $form['links'][$id]['id'] = $element['id'];
+        $form['links'][$id]['parent'] = $element['parent'];
+      }
+    }
 
     return $form;
   }
@@ -374,9 +446,10 @@ class MenuForm extends EntityForm {
     $form = array_intersect_key(array_merge($order, $form), $form);
 
     $fields = array('weight', 'parent', 'enabled');
-    foreach (Element::children($form) as $id) {
-      if (isset($form[$id]['#item'])) {
-        $element = $form[$id];
+    $form_links = $form['links'];
+    foreach (Element::children($form_links) as $id) {
+      if (isset($form_links[$id]['#item'])) {
+        $element = $form_links[$id];
         $updated_values = array();
         // Update any fields that have changed in this menu item.
         foreach ($fields as $field) {
