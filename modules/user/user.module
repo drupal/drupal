@@ -594,16 +594,16 @@ function user_save($account, $edit = array(), $category = 'account') {
       user_module_invoke('insert', $edit, $account, $category);
       module_invoke_all('entity_insert', $account, 'user');
 
-      // Save user roles.
-      if (count($account->roles) > 1) {
+      // Save user roles. Skip built-in roles, and ones that were already saved
+      // to the database during hook calls.
+      $rids_to_skip = array_merge(array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID), db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol());
+      if ($rids_to_save = array_diff(array_keys($account->roles), $rids_to_skip)) {
         $query = db_insert('users_roles')->fields(array('uid', 'rid'));
-        foreach (array_keys($account->roles) as $rid) {
-          if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-            $query->values(array(
-              'uid' => $account->uid,
-              'rid' => $rid,
-            ));
-          }
+        foreach ($rids_to_save as $rid) {
+          $query->values(array(
+            'uid' => $account->uid,
+            'rid' => $rid,
+          ));
         }
         $query->execute();
       }
