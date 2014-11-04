@@ -174,6 +174,16 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test that an invalid source image returns a 404.
+   */
+  function testImageStyleUrlForMissingSourceImage() {
+    $non_existent_uri = 'public://foo.png';
+    $generated_url = image_style_url($this->style_name, $non_existent_uri);
+    $this->drupalGet($generated_url);
+    $this->assertResponse(404, 'Accessing an image style URL with a source image that does not exist provides a 404 error response.');
+  }
+
+  /**
    * Test image_style_url().
    */
   function _testImageStyleUrlAndPath($scheme, $clean_url = TRUE, $extra_slash = FALSE) {

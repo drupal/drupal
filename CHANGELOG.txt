@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Made image derivative generation HTTP requests return a 404 error (rather
+  than a 500 error) when the source image does not exist.
 - Fixed a bug which caused user pictures to be removed from the user object
   after saving, and resulted in data loss if the user account was subsequently
   re-saved.
