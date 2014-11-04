@@ -89,10 +89,10 @@ class PathController extends ControllerBase {
       $row['data']['alias'] = _l(Unicode::truncate($data->alias, 50, FALSE, TRUE), $data->source, array(
         'attributes' => array('title' => $data->alias),
       ));
-      $row['data']['source'] = _l(Unicode::truncate($data->source, 50, FALSE, TRUE), $data->source, array(
+      $row['data']['source'] = $this->l(Unicode::truncate($data->source, 50, FALSE, TRUE), Url::fromUri('base://' . $data->source, array(
         'alias' => TRUE,
         'attributes' => array('title' => $data->source),
-      ));
+      )));
       if ($multilanguage) {
         $row['data']['language_name'] = $this->languageManager()->getLanguageName($data->langcode);
       }

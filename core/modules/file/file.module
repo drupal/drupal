@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
@@ -1259,7 +1260,7 @@ function template_preprocess_file_link(&$variables) {
     $options['attributes']['title'] = String::checkPlain($file_entity->getFilename());
   }
 
-  $variables['link'] = _l($link_text, $url, $options);
+  $variables['link'] = \Drupal::l($link_text, Url::fromUri($url, $options));
   $variables['attributes'] = array('class' => array('file'));
 }
 

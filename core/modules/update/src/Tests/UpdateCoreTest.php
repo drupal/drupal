@@ -7,6 +7,8 @@
 
 namespace Drupal\update\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Tests the Update Manager module through a series of functional tests using
  * mock XML data.
@@ -72,9 +74,9 @@ class UpdateCoreTest extends UpdateTestBase {
         $this->standardTests();
         $this->drupalGet('admin/reports/updates/check');
         $this->assertNoText(t('Security update required!'));
-        $this->assertRaw(_l("8.$minor_version.1" . $extra_version, "http://example.com/drupal-8-$minor_version-1$extra_version-release"), 'Link to release appears.');
-        $this->assertRaw(_l(t('Download'), "http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz"), 'Link to download appears.');
-        $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-8-$minor_version-1$extra_version-release"), 'Link to release notes appears.');
+        $this->assertRaw(\Drupal::l("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release appears.');
+        $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz")), 'Link to download appears.');
+        $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release notes appears.');
 
         switch ($minor_version) {
           case 0:
@@ -130,9 +132,9 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->standardTests();
           $this->drupalGet('admin/reports/updates/check');
           $this->assertNoText(t('Security update required!'));
-          $this->assertRaw(_l('9.0.0', "http://example.com/drupal-9-0-0-release"), 'Link to release appears.');
-          $this->assertRaw(_l(t('Download'), "http://example.com/drupal-9-0-0.tar.gz"), 'Link to download appears.');
-          $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-9-0-0-release"), 'Link to release notes appears.');
+          $this->assertRaw(\Drupal::l('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release appears.');
+          $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz")), 'Link to download appears.');
+          $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release notes appears.');
           $this->assertNoText(t('Up to date'));
           $this->assertText(t('Not supported!'));
           $this->assertText(t('Recommended version:'));
@@ -153,9 +155,9 @@ class UpdateCoreTest extends UpdateTestBase {
       $this->assertNoText(t('Up to date'));
       $this->assertNoText(t('Update available'));
       $this->assertText(t('Security update required!'));
-      $this->assertRaw(_l("8.$minor_version.2", "http://example.com/drupal-8-$minor_version-2-release"), 'Link to release appears.');
-      $this->assertRaw(_l(t('Download'), "http://example.com/drupal-8-$minor_version-2.tar.gz"), 'Link to download appears.');
-      $this->assertRaw(_l(t('Release notes'), "http://example.com/drupal-8-$minor_version-2-release"), 'Link to release notes appears.');
+      $this->assertRaw(\Drupal::l("8.$minor_version.2", Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release appears.');
+      $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-2.tar.gz")), 'Link to download appears.');
+      $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release notes appears.');
     }
   }
 

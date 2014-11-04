@@ -64,10 +64,5 @@ function template_preprocess_link_formatter_link_separate(&$variables) {
     $variables['title'] = String::checkPlain($variables['title']);
   }
 
-  if (!$variables['url']->isExternal()) {
-    $variables['link'] = \Drupal::l($variables['url_title'], $variables['url']);
-  }
-  else {
-    $variables['link'] = _l($variables['url_title'], $variables['url']->getUri(), $variables['url']->getOptions());
-  }
+  $variables['link'] = \Drupal::l($variables['url_title'], $variables['url']);
 }

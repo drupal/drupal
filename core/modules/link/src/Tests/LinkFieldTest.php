@@ -9,6 +9,7 @@ namespace Drupal\link\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -276,7 +277,7 @@ class LinkFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
-    $expected_link = _l($value, $value);
+    $expected_link = \Drupal::l($value, Url::fromUri($value));
     $this->assertRaw($expected_link);
 
     // Verify that a link with text is rendered using the link text.
@@ -288,7 +289,7 @@ class LinkFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
-    $expected_link = _l($title, $value);
+    $expected_link = \Drupal::l($title, Url::fromUri($value));
     $this->assertRaw($expected_link);
   }
 

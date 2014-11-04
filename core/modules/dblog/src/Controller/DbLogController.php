@@ -254,11 +254,11 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Location'), 'header' => TRUE),
-          _l($dblog->location, $dblog->location),
+          $this->l($dblog->location, $dblog->location ? Url::fromUri('base://' . $dblog->location) : Url::fromRoute('<none>')),
         ),
         array(
           array('data' => $this->t('Referrer'), 'header' => TRUE),
-          _l($dblog->referer, $dblog->referer),
+          $this->l($dblog->referer, $dblog->referer ? Url::fromUri('base://' . $dblog->referer) : Url::fromRoute('<none>')),
         ),
         array(
           array('data' => $this->t('Message'), 'header' => TRUE),

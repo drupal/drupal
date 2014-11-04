@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutable;
@@ -693,7 +694,7 @@ class ViewUI implements ViewStorageInterface {
               Xss::filterAdmin($this->executable->getTitle()),
             );
             if (isset($path)) {
-              $path = _l($path, $path);
+              $path = \Drupal::l($path, Url::fromUri('base://' . $path));
             }
             else {
               $path = t('This display has no path.');

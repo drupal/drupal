@@ -134,11 +134,11 @@ class UrlTest extends WebTestBase {
    */
   function testLinkRenderArrayText() {
     // Build a link with _l() for reference.
-    $l = _l('foo', 'http://drupal.org');
+    $l = \Drupal::l('foo', Url::fromUri('http://drupal.org'));
 
     // Test a renderable array passed to _l().
     $renderable_text = array('#markup' => 'foo');
-    $l_renderable_text = _l($renderable_text, 'http://drupal.org');
+    $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('http://drupal.org'));
     $this->assertEqual($l_renderable_text, $l);
 
     // Test a themed link with plain text 'text'.

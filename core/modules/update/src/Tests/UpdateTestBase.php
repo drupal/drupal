@@ -21,6 +21,7 @@
 
 namespace Drupal\update\Tests;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -55,7 +56,7 @@ abstract class UpdateTestBase extends WebTestBase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(_l(t('Drupal'), 'http://example.com/project/drupal'), 'Link to the Drupal project appears.');
+    $this->assertRaw(\Drupal::l(t('Drupal'), Url::fromUri('http://example.com/project/drupal')), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
 }

@@ -73,15 +73,19 @@ abstract class Links extends FieldPluginBase {
       }
       $title = $this->view->field[$field]->last_render_text;
       $path = '';
+      $url = NULL;
       if (!empty($this->view->field[$field]->options['alter']['path'])) {
         $path = $this->view->field[$field]->options['alter']['path'];
+      }
+      elseif (!empty($this->view->field[$field]->options['alter']['url']) && $this->view->field[$field]->options['alter']['url'] instanceof UrlObject) {
+        $url = $this->view->field[$field]->options['alter']['url'];
       }
       // Make sure that tokens are replaced for this paths as well.
       $tokens = $this->getRenderTokens(array());
       $path = strip_tags(String::decodeEntities(strtr($path, $tokens)));
 
       $links[$field] = array(
-        'url' => UrlObject::fromUri('base://' . $path),
+        'url' => $path ? UrlObject::fromUri('base://' . $path) : $url,
         'title' => $title,
       );
       if (!empty($this->options['destination'])) {

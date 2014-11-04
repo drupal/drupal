@@ -88,6 +88,13 @@ abstract class FieldPluginBase extends HandlerBase {
   var $additional_fields = array();
 
   /**
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $linkGenerator;
+
+  /**
    * Overrides Drupal\views\Plugin\views\HandlerBase::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
@@ -1345,6 +1352,10 @@ abstract class FieldPluginBase extends HandlerBase {
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
     );
 
+    $alter += [
+      'path' => NULL
+    ];
+
     // $path will be run through check_url() by _l() so we do not need to
     // sanitize it ourselves.
     $path = $alter['path'];
@@ -1376,7 +1387,7 @@ abstract class FieldPluginBase extends HandlerBase {
     // If the path is empty do not build a link around the given text and return
     // it as is.
     // http://www.example.com URLs will not have a $url['path'], so check host as well.
-    if (empty($url['path']) && empty($url['host']) && empty($url['fragment'])) {
+    if (empty($url['path']) && empty($url['host']) && empty($url['fragment']) && empty($url['url'])) {
       return $text;
     }
 
@@ -1483,7 +1494,12 @@ abstract class FieldPluginBase extends HandlerBase {
       $options['entity_type'] = $alter['entity_type'];
     }
 
-    $value .= _l($text, $path, $options);
+    if (isset($options['url']) && $options['url'] instanceof Url) {
+      $value .= $this->linkGenerator()->generate($text, $options['url']);
+    }
+    else {
+      $value .= _l($text, $path, $options);
+    }
 
     if (!empty($alter['suffix'])) {
       $value .= Xss::filterAdmin(strtr($alter['suffix'], $tokens));
@@ -1718,6 +1734,17 @@ abstract class FieldPluginBase extends HandlerBase {
     return $value;
   }
 
+  /**
+   * Gets the link generator.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected function linkGenerator() {
+    if (!isset($this->linkGenerator)) {
+      $this->linkGenerator = \Drupal::linkGenerator();
+    }
+    return $this->linkGenerator;
+  }
 }
 
 /**

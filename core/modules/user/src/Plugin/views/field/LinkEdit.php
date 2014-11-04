@@ -28,8 +28,7 @@ class LinkEdit extends Link {
 
       $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
 
-      $this->options['alter']['path'] = $entity->getSystemPath('edit-form');
-      $this->options['alter']['query'] = drupal_get_destination();
+      $this->options['alter']['url'] = $entity->urlInfo('edit-form', ['query' => ['destination' => drupal_get_destination()]]);
 
       return $text;
     }

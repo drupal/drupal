@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Tests\Views;
 
+use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
@@ -107,7 +108,7 @@ class IntegrationTest extends ViewUnitTestBase {
     // Ensure that the rendering of the linked title works as expected.
     foreach ($view->result as $row) {
       $iid = $view->field['iid']->getValue($row);
-      $expected_link = _l($items[$iid]->getTitle(), $items[$iid]->getLink(), array('absolute' => TRUE));
+      $expected_link = \Drupal::l($items[$iid]->getTitle(), Url::fromUri($items[$iid]->getLink(), ['absolute' => TRUE]));
       $this->assertEqual($view->field['title']->advancedRender($row), $expected_link, 'Ensure the right link is generated');
 
       $expected_author = aggregator_filter_xss($items[$iid]->getAuthor());
