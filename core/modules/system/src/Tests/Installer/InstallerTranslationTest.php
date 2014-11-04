@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Installer;
 
 use Drupal\simpletest\InstallerTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Selects German as the installation language and verifies the following page
@@ -50,6 +51,11 @@ class InstallerTranslationTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
+
+    $account = User::load(0);
+    $this->assertEqual($account->language()->getId(), 'de', 'Anonymous user is German.');
+    $account = User::load(1);
+    $this->assertEqual($account->language()->getId(), 'de', 'Administrator user is German.');
 
     // Ensure that we can enable basic_auth on a non-english site.
     $this->drupalPostForm('admin/modules', array('modules[Web services][basic_auth][enable]' => TRUE), t('Save configuration'));

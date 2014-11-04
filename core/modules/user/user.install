@@ -65,15 +65,11 @@ function user_schema() {
  */
 function user_install() {
   $storage = \Drupal::entityManager()->getStorage('user');
-  // @todo Rely on the default value for langcode in
-  //   https://drupal.org/node/1966436
-  $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
   // Insert a row for the anonymous user.
   $storage
     ->create(array(
       'uid' => 0,
       'status' => 0,
-      'langcode' => $langcode,
     ))
     ->save();
 
@@ -85,7 +81,6 @@ function user_install() {
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
       'status' => TRUE,
-      'langcode' => $langcode,
     ))
     ->save();
 }
