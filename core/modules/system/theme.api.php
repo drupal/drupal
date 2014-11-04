@@ -818,7 +818,7 @@ function hook_page_attachments(array &$page) {
  * Alter attachments (typically assets) to a page before it is rendered.
  *
  * Use this hook when you want to remove or alter attachments on the page, or
- * add attachments to the page that depend on aonther module's attachments (this
+ * add attachments to the page that depend on another module's attachments (this
  * hook runs after hook_page_attachments().
  *
  * If you want to alter the attachments added by other modules or if your module
