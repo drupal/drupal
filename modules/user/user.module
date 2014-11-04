@@ -501,12 +501,17 @@ function user_save($account, $edit = array(), $category = 'account') {
         file_usage_delete($account->original->picture, 'user', 'user', $account->uid);
         file_delete($account->original->picture);
       }
+      // Save the picture object, if it is set. drupal_write_record() expects
+      // $account->picture to be a FID.
+      $picture = empty($account->picture) ? NULL : $account->picture;
       $account->picture = empty($account->picture->fid) ? 0 : $account->picture->fid;
 
       // Do not allow 'uid' to be changed.
       $account->uid = $account->original->uid;
       // Save changes to the user table.
       $success = drupal_write_record('users', $account, 'uid');
+      // Restore the picture object.
+      $account->picture = $picture;
       if ($success === FALSE) {
         // The query failed - better to abort the save than risk further
         // data loss.
