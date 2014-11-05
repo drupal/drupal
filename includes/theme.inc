@@ -1554,7 +1554,7 @@ function _theme_render_template_debug($template_function, $template_file, $varia
     'debug_suffix' => '',
   );
   $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-  $output['debug_prefix'] .= "\n<!-- CALL: theme('{$variables['theme_hook_original']}') -->";
+  $output['debug_prefix'] .= "\n<!-- CALL: theme('" . check_plain($variables['theme_hook_original']) . "') -->";
   // If there are theme suggestions, reverse the array so more specific
   // suggestions are shown first.
   if (!empty($variables['theme_hook_suggestions'])) {
@@ -1587,10 +1587,10 @@ function _theme_render_template_debug($template_function, $template_file, $varia
       $prefix = ($template == $current_template) ? 'x' : '*';
       $suggestion = $prefix . ' ' . $template;
     }
-    $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . implode("\n   ", $suggestions) . "\n-->";
+    $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . check_plain(implode("\n   ", $suggestions)) . "\n-->";
   }
-  $output['debug_info'] .= "\n<!-- BEGIN OUTPUT from '{$template_file}' -->\n";
-  $output['debug_suffix'] .= "\n<!-- END OUTPUT from '{$template_file}' -->\n\n";
+  $output['debug_info'] .= "\n<!-- BEGIN OUTPUT from '" . check_plain($template_file) . "' -->\n";
+  $output['debug_suffix'] .= "\n<!-- END OUTPUT from '" . check_plain($template_file) . "' -->\n\n";
   return implode('', $output);
 }
 
