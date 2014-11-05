@@ -188,22 +188,6 @@ function mime_header_decode($header) {
 }
 
 /**
- * Decodes all HTML entities (including numerical ones) to regular UTF-8 bytes.
- *
- * @param $text
- *   The text to decode entities in.
- *
- * @return string
- *   The input $text, with all HTML entities decoded once.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\String::decodeEntities().
- */
-function decode_entities($text) {
-  return String::decodeEntities($text);
-}
-
-/**
  * Counts the number of characters in a UTF-8 string.
  *
  * @param $text
