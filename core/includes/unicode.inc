@@ -188,23 +188,6 @@ function mime_header_decode($header) {
 }
 
 /**
- * Counts the number of characters in a UTF-8 string.
- *
- * @param $text
- *   The string to run the operation on.
- *
- * @return integer
- *   The length of the string.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::strlen().
- * @ingroup php_wrappers
- */
-function drupal_strlen($text) {
-  return Unicode::strlen($text);
-}
-
-/**
  * Cuts off a piece of a string based on character indices and counts.
  *
  * @param $text
