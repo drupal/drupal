@@ -556,6 +556,34 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
   }
+
+  /**
+   * Tests whether the correct module metadata is returned.
+   */
+  function testModuleMetaData() {
+    // Generate the list of available modules.
+    $modules = system_rebuild_module_data();
+    // Check that the mtime field exists for the system module.
+    $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info file modification time field is present.');
+    // Use 0 if mtime isn't present, to avoid an array index notice.
+    $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
+    // Ensure the mtime field contains a number that is greater than zero.
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The system.info file modification time field contains a timestamp.');
+  }
+
+  /**
+   * Tests whether the correct theme metadata is returned.
+   */
+  function testThemeMetaData() {
+    // Generate the list of available themes.
+    $themes = system_rebuild_theme_data();
+    // Check that the mtime field exists for the bartik theme.
+    $this->assertTrue(!empty($themes['bartik']->info['mtime']), 'The bartik.info file modification time field is present.');
+    // Use 0 if mtime isn't present, to avoid an array index notice.
+    $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
+    // Ensure the mtime field contains a number that is greater than zero.
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info file modification time field contains a timestamp.');
+  }
 }
 
 /**

@@ -2399,6 +2399,10 @@ function _system_rebuild_module_data() {
       continue;
     }
 
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering module lists.
+    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
+
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
 
@@ -2536,6 +2540,10 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering theme lists.
+    $themes[$key]->info['mtime'] = filemtime($theme->uri);
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
