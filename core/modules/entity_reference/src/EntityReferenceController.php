@@ -42,8 +42,7 @@ class EntityReferenceController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_reference.autocomplete'),
-      $container->get('entity.manager')
+      $container->get('entity_reference.autocomplete')
     );
   }
 
