@@ -2,7 +2,6 @@
 namespace GuzzleHttp\Event;
 
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Ring\Future\FutureInterface;
 
 /**
  * Event that contains transfer statistics, and can be intercepted.
@@ -28,23 +27,13 @@ abstract class AbstractTransferEvent extends AbstractRequestEvent
     }
 
     /**
-     * Returns true/false if a response is available.
-     *
-     * @return bool
-     */
-    public function hasResponse()
-    {
-        return !($this->transaction->response instanceof FutureInterface);
-    }
-
-    /**
-     * Get the response.
+     * Get the response
      *
      * @return ResponseInterface|null
      */
     public function getResponse()
     {
-        return $this->hasResponse() ? $this->transaction->response : null;
+        return $this->transaction->response;
     }
 
     /**

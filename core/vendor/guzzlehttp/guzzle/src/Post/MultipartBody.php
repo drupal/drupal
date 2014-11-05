@@ -101,8 +101,8 @@ class MultipartBody implements StreamInterface
             $stream->addStream(Stream::factory("\r\n"));
         }
 
-        // Add the trailing boundary with CRLF
-        $stream->addStream(Stream::factory("--{$this->boundary}--\r\n"));
+        // Add the trailing boundary
+        $stream->addStream(Stream::factory("--{$this->boundary}--"));
 
         return $stream;
     }

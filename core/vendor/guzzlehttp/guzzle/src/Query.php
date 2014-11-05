@@ -9,8 +9,9 @@ class Query extends Collection
     const RFC3986 = 'RFC3986';
     const RFC1738 = 'RFC1738';
 
-    /** @var callable Encoding function */
-    private $encoding = 'rawurlencode';
+    /** @var bool URL encode fields and values */
+    private $encoding = self::RFC3986;
+
     /** @var callable */
     private $aggregator;
 
@@ -74,16 +75,27 @@ class Query extends Collection
 
         $result = '';
         $aggregator = $this->aggregator;
-        $encoder = $this->encoding;
 
         foreach ($aggregator($this->data) as $key => $values) {
             foreach ($values as $value) {
                 if ($result) {
                     $result .= '&';
                 }
-                $result .= $encoder($key);
-                if ($value !== null) {
-                    $result .= '=' . $encoder($value);
+                if ($this->encoding == self::RFC1738) {
+                    $result .= urlencode($key);
+                    if ($value !== null) {
+                        $result .= '=' . urlencode($value);
+                    }
+                } elseif ($this->encoding == self::RFC3986) {
+                    $result .= rawurlencode($key);
+                    if ($value !== null) {
+                        $result .= '=' . rawurlencode($value);
+                    }
+                } else {
+                    $result .= $key;
+                    if ($value !== null) {
+                        $result .= '=' . $value;
+                    }
                 }
             }
         }
@@ -117,18 +129,10 @@ class Query extends Collection
      */
     public function setEncodingType($type)
     {
-        switch ($type) {
-            case self::RFC3986:
-                $this->encoding = 'rawurlencode';
-                break;
-            case self::RFC1738:
-                $this->encoding = 'urlencode';
-                break;
-            case false:
-                $this->encoding = function ($v) { return $v; };
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid URL encoding type');
+        if ($type === false || $type === self::RFC1738 || $type === self::RFC3986) {
+            $this->encoding = $type;
+        } else {
+            throw new \InvalidArgumentException('Invalid URL encoding type');
         }
     }
 

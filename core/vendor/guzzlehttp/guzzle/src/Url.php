@@ -1,8 +1,6 @@
 <?php
 namespace GuzzleHttp;
 
-use GuzzleHttp\Ring\Core;
-
 /**
  * Parses and generates URLs based on URL parts
  */
@@ -16,9 +14,8 @@ class Url
     private $path = '';
     private $fragment;
     private static $defaultPorts = ['http' => 80, 'https' => 443, 'ftp' => 21];
-    private static $pathPattern = '/[^a-zA-Z0-9\-\._~!\$&\'\(\)\*\+,;=%:@\/]+|%(?![A-Fa-f0-9]{2})/';
-    private static $queryPattern = '/[^a-zA-Z0-9\-\._~!\$\'\(\)\*\+,;%:@\/\?=&]+|%(?![A-Fa-f0-9]{2})/';
-    /** @var Query|string Query part of the URL */
+
+    /** @var Query Query part of the URL */
     private $query;
 
     /**
@@ -31,9 +28,9 @@ class Url
      */
     public static function fromString($url)
     {
-        static $defaults = ['scheme' => null, 'host' => null,
+        static $defaults = array('scheme' => null, 'host' => null,
             'path' => null, 'port' => null, 'query' => null,
-            'user' => null, 'pass' => null, 'fragment' => null];
+            'user' => null, 'pass' => null, 'fragment' => null);
 
         if (false === ($parts = parse_url($url))) {
             throw new \InvalidArgumentException('Unable to parse malformed '
@@ -119,14 +116,14 @@ class Url
     /**
      * Create a new URL from URL parts
      *
-     * @param string             $scheme   Scheme of the URL
-     * @param string             $host     Host of the URL
-     * @param string             $username Username of the URL
-     * @param string             $password Password of the URL
-     * @param int                $port     Port of the URL
-     * @param string             $path     Path of the URL
+     * @param string                   $scheme   Scheme of the URL
+     * @param string                   $host     Host of the URL
+     * @param string                   $username Username of the URL
+     * @param string                   $password Password of the URL
+     * @param int                      $port     Port of the URL
+     * @param string                   $path     Path of the URL
      * @param Query|array|string $query    Query string of the URL
-     * @param string             $fragment Fragment of the URL
+     * @param string                   $fragment Fragment of the URL
      */
     public function __construct(
         $scheme,
@@ -144,11 +141,11 @@ class Url
         $this->username = $username;
         $this->password = $password;
         $this->fragment = $fragment;
-
-        if ($query) {
+        if (!$query) {
+            $this->query = new Query();
+        } else {
             $this->setQuery($query);
         }
-
         $this->setPath($path);
     }
 
@@ -157,9 +154,7 @@ class Url
      */
     public function __clone()
     {
-        if ($this->query instanceof Query) {
-            $this->query = clone $this->query;
-        }
+        $this->query = clone $this->query;
     }
 
     /**
@@ -227,9 +222,8 @@ class Url
     public function setScheme($scheme)
     {
         // Remove the default port if one is specified
-        if ($this->port
-            && isset(self::$defaultPorts[$this->scheme])
-            && self::$defaultPorts[$this->scheme] == $this->port
+        if ($this->port && isset(self::$defaultPorts[$this->scheme]) &&
+            self::$defaultPorts[$this->scheme] == $this->port
         ) {
             $this->port = null;
         }
@@ -277,15 +271,15 @@ class Url
     }
 
     /**
-     * Set the path part of the URL.
-     *
-     * The provided URL is URL encoded as necessary.
+     * Set the path part of the URL
      *
      * @param string $path Path string to set
      */
     public function setPath($path)
     {
-        $this->path = self::encodePath($path);
+        static $search  = [' ',   '?'];
+        static $replace = ['%20', '%3F'];
+        $this->path = str_replace($search, $replace, $path);
     }
 
     /**
@@ -417,52 +411,29 @@ class Url
      */
     public function getQuery()
     {
-        // Convert the query string to a query object if not already done.
-        if (!$this->query instanceof Query) {
-            $this->query = $this->query === null
-                ? new Query()
-                : Query::fromString($this->query);
-        }
-
         return $this->query;
     }
 
     /**
-     * Set the query part of the URL.
-     *
-     * You may provide a query string as a string and pass $rawString as true
-     * to provide a query string that is not parsed until a call to getQuery()
-     * is made. Setting a raw query string will still encode invalid characters
-     * in a query string.
+     * Set the query part of the URL
      *
      * @param Query|string|array $query Query string value to set. Can
      *     be a string that will be parsed into a Query object, an array
      *     of key value pairs, or a Query object.
-     * @param bool $rawString Set to true when providing a raw query string.
      *
      * @throws \InvalidArgumentException
      */
-    public function setQuery($query, $rawString = false)
+    public function setQuery($query)
     {
         if ($query instanceof Query) {
             $this->query = $query;
         } elseif (is_string($query)) {
-            if (!$rawString) {
-                $this->query = Query::fromString($query);
-            } else {
-                // Ensure the query does not have illegal characters.
-                $this->query = preg_replace_callback(
-                    self::$queryPattern,
-                    [__CLASS__, 'encodeMatch'],
-                    $query
-                );
-            }
-
+            $this->query = Query::fromString($query);
         } elseif (is_array($query)) {
             $this->query = new Query($query);
         } else {
             throw new \InvalidArgumentException('Query must be a Query, '
-                . 'array, or string. Got ' . Core::describeType($query));
+                . 'array, or string. ' . gettype($query) . ' provided.');
         }
     }
 
@@ -520,7 +491,16 @@ class Url
 
         // Passing a URL with a scheme overrides everything
         if ($parts['scheme']) {
-            return clone $url;
+            return new static(
+                $parts['scheme'],
+                $parts['host'],
+                $parts['user'],
+                $parts['pass'],
+                $parts['port'],
+                $parts['path'],
+                clone $parts['query'],
+                $parts['fragment']
+            );
         }
 
         // Setting a host overrides the entire rest of the URL
@@ -532,9 +512,7 @@ class Url
                 $parts['pass'],
                 $parts['port'],
                 $parts['path'],
-                $parts['query'] instanceof Query
-                    ? clone $parts['query']
-                    : $parts['query'],
+                clone $parts['query'],
                 $parts['fragment']
             );
         }
@@ -542,7 +520,7 @@ class Url
         if (!$parts['path'] && $parts['path'] !== '0') {
             // The relative URL has no path, so check if it is just a query
             $path = $this->path ?: '';
-            $query = $parts['query'] ?: $this->query;
+            $query = count($parts['query']) ? $parts['query'] : $this->query;
         } else {
             $query = $parts['query'];
             if ($parts['path'][0] == '/' || !$this->path) {
@@ -563,7 +541,7 @@ class Url
             $this->password,
             $this->port,
             $path,
-            $query instanceof Query ? clone $query : $query,
+            clone $query,
             $parts['fragment']
         );
 
@@ -572,24 +550,5 @@ class Url
         }
 
         return $result;
-    }
-
-    /**
-     * Encodes the path part of a URL without double-encoding percent-encoded
-     * key value pairs.
-     *
-     * @param string $path Path to encode
-     *
-     * @return string
-     */
-    public static function encodePath($path)
-    {
-        static $cb = [__CLASS__, 'encodeMatch'];
-        return preg_replace_callback(self::$pathPattern, $cb, $path);
-    }
-
-    private static function encodeMatch(array $match)
-    {
-        return rawurlencode($match[0]);
     }
 }

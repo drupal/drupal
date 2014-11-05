@@ -70,7 +70,7 @@ class RequestException extends TransferException
             return new self('Error completing request', $request, null, $previous);
         }
 
-        $level = floor($response->getStatusCode() / 100);
+        $level = $response->getStatusCode()[0];
         if ($level == '4') {
             $label = 'Client error response';
             $className = __NAMESPACE__ . '\\ClientException';

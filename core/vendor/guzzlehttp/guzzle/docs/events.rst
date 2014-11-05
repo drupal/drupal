@@ -202,12 +202,12 @@ priority of the listener (as shown in the ``before`` listener in the example).
             ];
         }
 
-        public function onBefore(BeforeEvent $event, $name)
+        public function onBefore(BeforeEvent $event, $name, EmitterInterface $emitter)
         {
             echo 'Before!';
         }
 
-        public function onComplete(CompleteEvent $event, $name)
+        public function onComplete(CompleteEvent $event, $name, EmitterInterface $emitter)
         {
             echo 'Complete!';
         }
