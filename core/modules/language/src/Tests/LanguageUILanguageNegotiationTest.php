@@ -59,7 +59,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'language_test', 'block', 'user');
+  public static $modules = array('locale', 'language_test', 'block', 'user', 'content_translation');
 
   protected function setUp() {
     parent::setUp();
@@ -483,5 +483,27 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $italian_url = _url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The _url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+  }
+
+  /**
+   * Tests persistence of negotiation settings for the content language type.
+   */
+  public function testContentCustomization() {
+    // Customize content language settings from their defaults.
+    $edit = array(
+      'language_content[configurable]' => TRUE,
+      'language_content[enabled][language-url]' => FALSE,
+      'language_content[enabled][language-session]' => TRUE,
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+    // Check if configurability persisted.
+    $config = \Drupal::config('language.types');
+    $this->assertTrue(in_array('language_interface', $config->get('configurable')), 'Interface language is configurable.');
+    $this->assertTrue(in_array('language_content', $config->get('configurable')), 'Content language is configurable.');
+
+    // Ensure configuration was saved.
+    $this->assertFalse(array_key_exists('language-url', $config->get('negotiation.language_content.enabled')), 'URL negotiation is not enabled for content.');
+    $this->assertTrue(array_key_exists('language-session', $config->get('negotiation.language_content.enabled')), 'Session negotiation is enabled for content.');
   }
 }
