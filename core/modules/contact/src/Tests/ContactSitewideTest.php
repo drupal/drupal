@@ -8,6 +8,7 @@
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 
@@ -299,7 +300,7 @@ class ContactSitewideTest extends WebTestBase {
     // We are testing the auto-reply, so there should be one email going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
-    $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($foo_autoreply)));
+    $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($foo_autoreply)));
 
     // Test the auto-reply for form 'bar'.
     $email = $this->randomMachineName(32) . '@example.com';
@@ -308,7 +309,7 @@ class ContactSitewideTest extends WebTestBase {
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
-    $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($bar_autoreply)));
+    $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';

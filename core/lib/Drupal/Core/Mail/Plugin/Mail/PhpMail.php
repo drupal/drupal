@@ -8,6 +8,7 @@
 namespace Drupal\Core\Mail\Plugin\Mail;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Site\Settings;
 
@@ -35,7 +36,7 @@ class PhpMail implements MailInterface {
     // Join the body array into one string.
     $message['body'] = implode("\n\n", $message['body']);
     // Convert any HTML to plain-text.
-    $message['body'] = drupal_html_to_text($message['body']);
+    $message['body'] = MailFormatHelper::htmlToText($message['body']);
     // Wrap the mail body for sending.
     $message['body'] = drupal_wrap_mail($message['body']);
 

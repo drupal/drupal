@@ -9,11 +9,12 @@ namespace Drupal\system\Tests\Mail;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for drupal_html_to_text().
+ * Tests for \Drupal\Core\Mail\MailFormatHelper::htmlToText().
  *
  * @group Mail
  */
@@ -38,7 +39,7 @@ class HtmlToTextTest extends WebTestBase {
   }
 
   /**
-   * Helper function for testing drupal_html_to_text().
+   * Helper function to test \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    *
    * @param $html
    *   The source HTML string to be converted.
@@ -48,13 +49,14 @@ class HtmlToTextTest extends WebTestBase {
    *   A text message to display in the assertion message.
    * @param $allowed_tags
    *   (optional) An array of allowed tags, or NULL to default to the full
-   *   set of tags supported by drupal_html_to_text().
+   *   set of tags supported by
+   *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
     preg_match_all('/<([a-z0-6]+)/', Unicode::strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
-    $result = drupal_html_to_text($html, $allowed_tags);
+    $result = MailFormatHelper::htmlToText($html, $allowed_tags);
     $pass = $this->assertEqual($result, $text, String::checkPlain($message));
     $verbose = 'html = <pre>' . $this->stringToHtml($html)
       . '</pre><br />' . 'result = <pre>' . $this->stringToHtml($result)
@@ -67,7 +69,7 @@ class HtmlToTextTest extends WebTestBase {
   }
 
   /**
-   * Test all supported tags of drupal_html_to_text().
+   * Test supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   public function testTags() {
     global $base_path, $base_url;
@@ -162,10 +164,11 @@ class HtmlToTextTest extends WebTestBase {
   }
 
   /**
-   * Test $allowed_tags argument of drupal_html_to_text().
+   * Tests allowing tags in \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   public function testDrupalHtmlToTextArgs() {
-    // The second parameter of drupal_html_to_text() overrules the allowed tags.
+    // The second parameter of \Drupal\Core\Mail\MailFormatHelper::htmlToText()
+    // overrules the allowed tags.
     $this->assertHtmlToText(
       'Drupal <b>Drupal</b> Drupal',
       "Drupal *Drupal* Drupal\n",
@@ -235,7 +238,7 @@ class HtmlToTextTest extends WebTestBase {
       . '<ul><li>[ul-li]</li>'
       . '<li>[li-ul]</li></ul>'
       . '[text]';
-    $output = drupal_html_to_text($input);
+    $output = MailFormatHelper::htmlToText($input);
     $pass = $this->assertFalse(
       preg_match('/\][^\n]*\[/s', $output),
       'Block-level HTML tags should force newlines'
@@ -245,7 +248,7 @@ class HtmlToTextTest extends WebTestBase {
     }
     $output_upper = Unicode::strtoupper($output);
     $upper_input = Unicode::strtoupper($input);
-    $upper_output = drupal_html_to_text($upper_input);
+    $upper_output = MailFormatHelper::htmlToText($upper_input);
     $pass = $this->assertEqual(
       $upper_output,
       $output_upper,
@@ -331,7 +334,7 @@ class HtmlToTextTest extends WebTestBase {
   }
 
   /**
-   * Tests that drupal_html_to_text() wraps before 1000 characters.
+   * Tests \Drupal\Core\Mail\MailFormatHelper::htmlToText() wrapping.
    *
    * RFC 3676 says, "The Text/Plain media type is the lowest common
    * denominator of Internet email, with lines of no more than 998 characters."
@@ -344,7 +347,7 @@ class HtmlToTextTest extends WebTestBase {
    */
   public function testVeryLongLineWrap() {
     $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
-    $output = drupal_html_to_text($input);
+    $output = MailFormatHelper::htmlToText($input);
     $eol = Settings::get('mail_line_endings', PHP_EOL);
 
     $maximum_line_length = 0;

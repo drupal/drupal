@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Url;
 
 /**
@@ -482,7 +483,7 @@ function hook_mail($key, &$message, $params) {
   $subject = strtr($context['subject'], $variables);
   $body = strtr($context['message'], $variables);
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
-  $message['body'][] = drupal_html_to_text($body);
+  $message['body'][] = MailFormatHelper::htmlToText($body);
 }
 
 /**
