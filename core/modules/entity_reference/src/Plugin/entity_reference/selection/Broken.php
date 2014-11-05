@@ -12,7 +12,12 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * A null implementation of SelectionInterface.
+ * Defines a fallback plugin for missing entity_reference selection plugins.
+ *
+ * @EntityReferenceSelection(
+ *   id = "broken",
+ *   label = @Translation("Broken/Missing")
+ * )
  */
 class SelectionBroken implements SelectionInterface {
 

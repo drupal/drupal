@@ -7,15 +7,14 @@
 
 namespace Drupal\entity_reference\Plugin\Type;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\entity_reference\Plugin\Type\Selection\SelectionBroken;
 
 /**
  * Plugin type manager for Entity Reference Selection plugins.
@@ -26,7 +25,7 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionBroken;
  * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
  * @see plugin_api
  */
-class SelectionPluginManager extends DefaultPluginManager {
+class SelectionPluginManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -41,19 +40,6 @@ class SelectionPluginManager extends DefaultPluginManager {
     $this->moduleHandler = $module_handler;
     $this->alterInfo('entity_reference_selection');
     $this->setCacheBackend($cache_backend, 'entity_reference_selection_plugins');
-  }
-
-  /**
-   * Overrides \Drupal\Component\Plugin\PluginManagerBase::createInstance().
-   */
-  public function createInstance($plugin_id, array $configuration = array()) {
-    // We want to provide a broken handler class whenever a class is not found.
-    try {
-      return parent::createInstance($plugin_id, $configuration);
-    }
-    catch (PluginException $e) {
-      return new SelectionBroken($configuration['field_definition']);
-    }
   }
 
   /**
@@ -86,8 +72,12 @@ class SelectionPluginManager extends DefaultPluginManager {
    */
   public function getSelectionGroups($entity_type) {
     $plugins = array();
+    $definitions = $this->getDefinitions();
 
-    foreach ($this->getDefinitions() as $plugin_id => $plugin) {
+    // Do not display the 'broken' plugin in the UI.
+    unset($definitions['broken']);
+
+    foreach ($definitions as $plugin_id => $plugin) {
       if (empty($plugin['entity_types']) || in_array($entity_type, $plugin['entity_types'])) {
         $plugins[$plugin['group']][$plugin_id] = $plugin;
       }
@@ -113,6 +103,13 @@ class SelectionPluginManager extends DefaultPluginManager {
       'entity' => $entity,
     );
     return $this->getInstance($options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+    return 'broken';
   }
 
 }
