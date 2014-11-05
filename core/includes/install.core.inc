@@ -1784,13 +1784,10 @@ function install_finished(&$install_state) {
     user_login_finalize($account);
   }
 
-  // @todo Temporary hack to satisfy PIFR.
-  // @see https://drupal.org/node/1317548
-  $pifr_assertion = '<span style="display: none;">Drupal installation complete</span>';
   $success_message = t('Congratulations, you installed @drupal!', array(
     '@drupal' => drupal_install_profile_distribution_name(),
   ));
-  drupal_set_message(SafeMarkup::set($success_message . $pifr_assertion));
+  drupal_set_message($success_message);
 }
 
 /**
