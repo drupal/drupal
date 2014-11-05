@@ -1568,12 +1568,13 @@ function format_string($string, array $args = array()) {
  * Also validates strings as UTF-8 to prevent cross site scripting attacks on
  * Internet Explorer 6.
  *
- * @param $text
+ * @param $text string
  *   The text to be checked or processed.
  *
- * @return
- *   An HTML safe version of $text, or an empty string if $text is not
- *   valid UTF-8.
+ * @return string
+ *   An HTML safe version of $text. If $text is not valid UTF-8, an empty string
+ *   is returned and, on PHP < 5.4, a warning may be issued depending on server
+ *   configuration (see @link https://bugs.php.net/bug.php?id=47494 @endlink).
  *
  * @see drupal_validate_utf8()
  * @ingroup sanitization
