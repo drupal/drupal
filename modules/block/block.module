@@ -848,10 +848,19 @@ function block_block_list_alter(&$blocks) {
  *   An array of visible blocks as expected by drupal_render().
  */
 function _block_render_blocks($region_blocks) {
-  // Block caching is not compatible with node access modules. We also
-  // preserve the submission of forms in blocks, by fetching from cache only
+  $cacheable = TRUE;
+
+  // We preserve the submission of forms in blocks, by fetching from cache only
   // if the request method is 'GET' (or 'HEAD').
-  $cacheable = !count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD');
+  if ($_SERVER['REQUEST_METHOD'] != 'GET' && $_SERVER['REQUEST_METHOD'] != 'HEAD') {
+    $cacheable = FALSE;
+  }
+  // Block caching is not usually compatible with node access modules, so by
+  // default it is disabled when node access modules exist. However, it can be
+  // allowed by using the variable 'block_cache_bypass_node_grants'.
+  elseif (!variable_get('block_cache_bypass_node_grants', FALSE) && count(module_implements('node_grants'))) {
+    $cacheable = FALSE;
+  }
 
   // Proceed to loop over all blocks in order to compute their respective cache
   // identifiers; this allows us to do one single cache_get_multiple() call
@@ -1054,7 +1063,7 @@ function block_menu_delete($menu) {
  * Implements hook_form_FORM_ID_alter().
  */
 function block_form_system_performance_settings_alter(&$form, &$form_state) {
-  $disabled = count(module_implements('node_grants'));
+  $disabled = (!variable_get('block_cache_bypass_node_grants', FALSE) && count(module_implements('node_grants')));
   $form['caching']['block_cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache blocks'),

@@ -435,6 +435,18 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['js_gzip_compression'] = FALSE;
 
 /**
+ * Block caching:
+ *
+ * Block caching may not be compatible with node access modules depending on
+ * how the original block cache policy is defined by the module that provides
+ * the block. By default, Drupal therefore disables block caching when one or
+ * more modules implement hook_node_grants(). If you consider block caching to
+ * be safe on your site and want to bypass this restriction, uncomment the line
+ * below.
+ */
+# $conf['block_cache_bypass_node_grants'] = TRUE;
+
+/**
  * String overrides:
  *
  * To override specific strings on your site with or without enabling the Locale

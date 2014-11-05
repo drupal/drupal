@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Added a "block_cache_bypass_node_grants" variable to allow sites which have
+  node access modules enabled to use the block cache if desired (API addition).
 - Made image derivative generation HTTP requests return a 404 error (rather
   than a 500 error) when the source image does not exist.
 - Fixed a bug which caused user pictures to be removed from the user object
