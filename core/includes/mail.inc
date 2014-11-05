@@ -170,31 +170,3 @@ function drupal_mail_system($module, $key) {
 function drupal_wrap_mail($text, $indent = '') {
   return MailFormatHelper::wrapMail($text, $indent);
 }
-
-/**
- * Transforms an HTML string into plain text, preserving its structure.
- *
- * The output will be suitable for use as 'format=flowed; delsp=yes' text
- * (RFC 3676) and can be passed directly to drupal_mail() for sending.
- *
- * We deliberately use LF rather than CRLF, see drupal_mail().
- *
- * This function provides suitable alternatives for the following tags:
- * <a> <em> <i> <strong> <b> <br> <p> <blockquote> <ul> <ol> <li> <dl> <dt>
- * <dd> <h1> <h2> <h3> <h4> <h5> <h6> <hr>
- *
- * @param $string
- *   The string to be transformed.
- * @param $allowed_tags (optional)
- *   If supplied, a list of tags that will be transformed. If omitted, all
- *   all supported tags are transformed.
- *
- * @return
- *   The transformed string.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Utility\Mail::htmlToText().
- */
-function drupal_html_to_text($string, $allowed_tags = NULL) {
-  return MailFormatHelper::htmlToText($string, $allowed_tags);
-}
