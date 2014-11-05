@@ -245,7 +245,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $url->setScheme('https');
         $this->assertEquals('https', $url->getScheme());
         $url->setQuery('a=123');
-        $this->assertEquals('a=123', $url->getQuery());
+        $this->assertEquals('a=123', (string) $url->getQuery());
         $this->assertEquals(
             'https://b:a@example.com:8080/foo/bar?a=123#abc',
             (string) $url
@@ -254,6 +254,12 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('b=boo', $url->getQuery());
         $this->assertEquals(
             'https://b:a@example.com:8080/foo/bar?b=boo#abc',
+            (string) $url
+        );
+
+        $url->setQuery('a%20=bar!', true);
+        $this->assertEquals(
+            'https://b:a@example.com:8080/foo/bar?a%20=bar!#abc',
             (string) $url
         );
     }
@@ -272,6 +278,17 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         $url = Url::fromString('http://www.test.com');
         $url->setQuery(false);
+    }
+
+    public function testDefersParsingAndEncodingQueryUntilNecessary()
+    {
+        $url = Url::fromString('http://www.test.com');
+        // Note that invalid characters are encoded.
+        $url->setQuery('foo#bar/', true);
+        $this->assertEquals('http://www.test.com?foo%23bar/', (string) $url);
+        $this->assertInternalType('string', $this->readAttribute($url, 'query'));
+        $this->assertEquals('foo%23bar%2F', (string) $url->getQuery());
+        $this->assertInstanceOf('GuzzleHttp\Query', $this->readAttribute($url, 'query'));
     }
 
     public function urlProvider()
@@ -329,5 +346,11 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $url = Url::fromString('http://foo.com/baz bar?a=b');
         $url->addPath('?');
         $this->assertEquals('http://foo.com/baz%20bar/%3F?a=b', (string) $url);
+    }
+
+    public function testCorrectlyEncodesPathWithoutDoubleEncoding()
+    {
+        $url = Url::fromString('http://foo.com/baz%20 bar:boo/baz!');
+        $this->assertEquals('/baz%20%20bar:boo/baz!', $url->getPath());
     }
 }
