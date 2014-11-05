@@ -18,6 +18,9 @@
 
 User-agent: *
 Crawl-delay: 10
+# JS/CSS
+Allow: /core/*.css$
+Allow: /core/*.js$
 # Directories
 Disallow: /core/
 Disallow: /profiles/
