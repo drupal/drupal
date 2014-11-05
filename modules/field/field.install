@@ -162,6 +162,7 @@ function field_schema() {
     ),
   );
   $schema['cache_field'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_field']['description'] = 'Cache table for the Field module to store already built field information.';
 
   return $schema;
 }
