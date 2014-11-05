@@ -398,7 +398,7 @@ function locale_language_switcher_session($type, $path) {
       $links[$langcode]['query'][$param] = $langcode;
     }
     else {
-      $links[$langcode]['attributes']['class'][] = ' session-active';
+      $links[$langcode]['attributes']['class'][] = 'session-active';
     }
   }
 
