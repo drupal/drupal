@@ -784,7 +784,7 @@ function _filter_html_escape($text) {
 function _filter_html_image_secure_process($text) {
   // Find the path (e.g. '/') to Drupal root.
   $base_path = base_path();
-  $base_path_length = drupal_strlen($base_path);
+  $base_path_length = Unicode::strlen($base_path);
 
   // Find the directory on the server where index.php resides.
   $local_dir = DRUPAL_ROOT . '/';

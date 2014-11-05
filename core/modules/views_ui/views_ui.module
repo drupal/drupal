@@ -327,7 +327,7 @@ function views_ui_views_analyze(ViewExecutable $view) {
  * This is often used in the UI to ensure long strings fit.
  */
 function views_ui_truncate($string, $length) {
-  if (drupal_strlen($string) > $length) {
+  if (Unicode::strlen($string) > $length) {
     $string = Unicode::substr($string, 0, $length);
     $string .= '...';
   }

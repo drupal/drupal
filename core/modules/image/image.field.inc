@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 
 /**
@@ -64,7 +65,7 @@ function template_preprocess_image_formatter(&$variables) {
   $item = $variables['item'];
 
   // Do not output an empty 'title' attribute.
-  if (drupal_strlen($item->title) != 0) {
+  if (Unicode::strlen($item->title) != 0) {
     $variables['image']['#title'] = $item->title;
   }
 

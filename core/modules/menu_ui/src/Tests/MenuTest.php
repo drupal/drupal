@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
@@ -175,7 +176,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
       '!name' => t('Menu name'),
       '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
-      '%length' => drupal_strlen($menu_name),
+      '%length' => Unicode::strlen($menu_name),
     )));
 
     // Change the menu_name so it no longer exceeds the maximum length.
@@ -187,7 +188,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertNoRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
       '!name' => t('Menu name'),
       '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
-      '%length' => drupal_strlen($menu_name),
+      '%length' => Unicode::strlen($menu_name),
     )));
     // Verify that the confirmation message is displayed.
     $this->assertRaw(t('Menu %label has been added.', array('%label' => $label)));

@@ -1289,7 +1289,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
         if (strpos($more_link_path, $base_path) === 0) {
-          $more_link_path = Unicode::substr($more_link_path, drupal_strlen($base_path));
+          $more_link_path = Unicode::substr($more_link_path, Unicode::strlen($base_path));
         }
 
         $more_link = _l($more_link_text, $more_link_path, array('attributes' => array('class' => array('views-more-link'))));
@@ -1705,7 +1705,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *   The trimmed string.
    */
   public static function trimText($alter, $value) {
-    if (drupal_strlen($value) > $alter['max_length']) {
+    if (Unicode::strlen($value) > $alter['max_length']) {
       $value = Unicode::substr($value, 0, $alter['max_length']);
       if (!empty($alter['word_boundary'])) {
         $regex = "(.*)\b.+";

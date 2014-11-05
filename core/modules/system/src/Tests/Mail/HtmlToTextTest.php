@@ -352,7 +352,7 @@ class HtmlToTextTest extends WebTestBase {
 
     $maximum_line_length = 0;
     foreach (explode($eol, $output) as $line) {
-      // We must use strlen() rather than drupal_strlen() in order to count
+      // We must use strlen() rather than Unicode::strlen() in order to count
       // octets rather than characters.
       $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
     }

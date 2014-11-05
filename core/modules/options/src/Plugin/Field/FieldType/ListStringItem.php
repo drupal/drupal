@@ -7,6 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -68,7 +69,7 @@ class ListStringItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected static function validateAllowedValue($option) {
-    if (drupal_strlen($option) > 255) {
+    if (Unicode::strlen($option) > 255) {
       return t('Allowed values list: each key must be a string at most 255 characters long.');
     }
   }

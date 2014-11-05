@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -379,7 +380,7 @@ abstract class AccountForm extends ContentEntityForm {
       //   automatic typed data validation in https://drupal.org/node/2227381.
       $field_definitions = $this->entityManager->getFieldDefinitions('user', $this->getEntity()->bundle());
       $max_length = $field_definitions['signature']->getSetting('max_length');
-      if (drupal_strlen($form_state->getValue('signature')) > $max_length) {
+      if (Unicode::strlen($form_state->getValue('signature')) > $max_length) {
         $form_state->setErrorByName('signature', $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $max_length)));
       }
     }

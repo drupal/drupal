@@ -306,7 +306,7 @@ function search_simplify($text, $langcode = NULL) {
 function search_expand_cjk($matches) {
   $min = \Drupal::config('search.settings')->get('index.minimum_word_size');
   $str = $matches[0];
-  $length = drupal_strlen($str);
+  $length = Unicode::strlen($str);
   // If the text is shorter than the minimum word size, don't tokenize it.
   if ($length <= $min) {
     return ' ' . $str . ' ';
@@ -453,7 +453,7 @@ function search_index($sid, $type, $text, $langcode) {
           // Add word to accumulator
           $accum .= $word . ' ';
           // Check wordlength
-          if (is_numeric($word) || drupal_strlen($word) >= $minimum_word_size) {
+          if (is_numeric($word) || Unicode::strlen($word) >= $minimum_word_size) {
             if (!isset($scored_words[$word])) {
               $scored_words[$word] = 0;
             }

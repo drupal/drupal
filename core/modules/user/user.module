@@ -556,7 +556,7 @@ function template_preprocess_username(&$variables) {
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
   $name = $variables['name_raw'] = $account->getUsername();
-  if (drupal_strlen($name) > 20) {
+  if (Unicode::strlen($name) > 20) {
     $name = Unicode::truncate($name, 15, FALSE, TRUE);
     $variables['truncated'] = TRUE;
   }
