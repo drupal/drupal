@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RequestContextAwareInterface;
@@ -24,17 +25,15 @@ use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * ChainRouter
- *
- * Allows access to a lot of different routers.
+ * The ChainRouter allows to combine several routers to try in a defined order.
  *
  * @author Henrik Bjornskov <henrik@bjrnskov.dk>
  * @author Magnus Nordlander <magnus@e-butik.se>
  */
-class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableInterface
+class ChainRouter implements ChainRouterInterface, WarmableInterface
 {
     /**
-     * @var \Symfony\Component\Routing\RequestContext
+     * @var RequestContext
      */
     private $context;
 
@@ -45,17 +44,17 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
     private $routers = array();
 
     /**
-     * @var \Symfony\Component\Routing\RouterInterface[] Array of routers, sorted by priority
+     * @var RouterInterface[] Array of routers, sorted by priority
      */
     private $sortedRouters;
 
     /**
-     * @var \Symfony\Component\Routing\RouteCollection
+     * @var RouteCollection
      */
     private $routeCollection;
 
     /**
-     * @var null|\Psr\Log\LoggerInterface
+     * @var null|LoggerInterface
      */
     protected $logger;
 
@@ -76,13 +75,15 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
     }
 
     /**
-     * Add a Router to the index
-     *
-     * @param RouterInterface $router   The router instance
-     * @param integer         $priority The priority
+     * {@inheritdoc}
      */
-    public function add(RouterInterface $router, $priority = 0)
+    public function add($router, $priority = 0)
     {
+        if (!$router instanceof RouterInterface
+            && !($router instanceof RequestMatcherInterface && $router instanceof UrlGeneratorInterface)
+        ) {
+            throw new \InvalidArgumentException(sprintf('%s is not a valid router.', get_class($router)));
+        }
         if (empty($this->routers[$priority])) {
             $this->routers[$priority] = array();
         }
@@ -92,9 +93,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
     }
 
     /**
-     * Sorts the routers and flattens them.
-     *
-     * @return RouterInterface[]
+     * {@inheritdoc}
      */
     public function all()
     {
@@ -164,21 +163,26 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
      *
      * @param string  $url
      * @param Request $request
+     *
+     * @return array An array of parameters
+     *
+     * @throws ResourceNotFoundException If no router matched.
      */
     private function doMatch($url, Request $request = null)
     {
         $methodNotAllowed = null;
 
+        $requestForMatching = $request;
         foreach ($this->all() as $router) {
             try {
                 // the request/url match logic is the same as in Symfony/Component/HttpKernel/EventListener/RouterListener.php
                 // matching requests is more powerful than matching URLs only, so try that first
                 if ($router instanceof RequestMatcherInterface) {
-                    if (null === $request) {
-                        $request = Request::create($url);
+                    if (empty($requestForMatching)) {
+                        $requestForMatching = Request::create($url);
                     }
 
-                    return $router->matchRequest($request);
+                    return $router->matchRequest($requestForMatching);
                 }
                 // every router implements the match method
                 return $router->match($url);
@@ -212,15 +216,14 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
         $debug = array();
 
         foreach ($this->all() as $router) {
-            // if $router does not implement ChainedRouterInterface and $name is not a string, continue
-            if ($name && !$router instanceof ChainedRouterInterface) {
-                if (! is_string($name)) {
-                    continue;
-                }
+            // if $router does not announce it is capable of handling
+            // non-string routes and $name is not a string, continue
+            if ($name && !is_string($name) && !$router instanceof VersatileGeneratorInterface) {
+                continue;
             }
 
-            // If $router implements ChainedRouterInterface but doesn't support this route name, continue
-            if ($router instanceof ChainedRouterInterface && !$router->supports($name)) {
+            // If $router is versatile and doesn't support this route name, continue
+            if ($router instanceof VersatileGeneratorInterface && !$router->supports($name)) {
                 continue;
             }
 

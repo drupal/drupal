@@ -14,7 +14,7 @@ It provides:
 Even though it has Symfony in its name, the Routing component does not need the
 full Symfony2 Framework and can be used in standalone projects.
 
-For Symfon2 projects, an optional
+For Symfony 2 projects, an optional
 [RoutingBundle](https://github.com/symfony-cmf/RoutingBundle)
 is also available.
 

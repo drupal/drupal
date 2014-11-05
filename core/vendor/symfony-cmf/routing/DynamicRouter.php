@@ -198,6 +198,7 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      * @throws MethodNotAllowedException If the resource was found but the
      *                                   request method is not allowed
      *
+     * @deprecated Use matchRequest exclusively to avoid problems. This method will be removed in version 2.0
      * @api
      */
     public function match($pathinfo)

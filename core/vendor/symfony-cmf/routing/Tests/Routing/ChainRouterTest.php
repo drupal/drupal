@@ -11,17 +11,31 @@
 
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
+use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Cmf\Component\Routing\Test\CmfUnitTestCase;
+use Symfony\Component\Routing\RouterInterface;
 
 class ChainRouterTest extends CmfUnitTestCase
 {
+    /**
+     * @var ChainRouter
+     */
+    private $router;
+    /**
+     * @var RequestContext|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $context;
+
     public function setUp()
     {
         $this->router = new ChainRouter($this->getMock('Psr\Log\LoggerInterface'));
@@ -54,6 +68,7 @@ class ChainRouterTest extends CmfUnitTestCase
     {
         list($low, $medium, $high) = $this->createRouterMocks();
         // We're using a mock here and not $this->router because we need to ensure that the sorting operation is done only once.
+        /** @var $router ChainRouter|\PHPUnit_Framework_MockObject_MockObject */
         $router = $this->buildMock('Symfony\Cmf\Component\Routing\ChainRouter', array('sortRouters'));
         $router
             ->expects($this->once())
@@ -87,6 +102,7 @@ class ChainRouterTest extends CmfUnitTestCase
         list($low, $medium, $high) = $this->createRouterMocks();
         $highest = clone $high;
         // We're using a mock here and not $this->router because we need to ensure that the sorting operation is done only once.
+        /** @var $router ChainRouter|\PHPUnit_Framework_MockObject_MockObject */
         $router = $this->buildMock('Symfony\Cmf\Component\Routing\ChainRouter', array('sortRouters'));
         $router
             ->expects($this->at(0))
@@ -253,7 +269,6 @@ class ChainRouterTest extends CmfUnitTestCase
     public function testMatchWithRequestMatchers()
     {
         $url = '/test';
-        $request = Request::create('/test');
 
         list($low) = $this->createRouterMocks();
 
@@ -262,7 +277,9 @@ class ChainRouterTest extends CmfUnitTestCase
         $high
             ->expects($this->once())
             ->method('matchRequest')
-            ->with($request)
+            ->with($this->callback(function (Request $r) use ($url) {
+                return $r->getPathInfo() === $url;
+            }))
             ->will($this->throwException(new \Symfony\Component\Routing\Exception\ResourceNotFoundException))
         ;
         $low
@@ -383,6 +400,31 @@ class ChainRouterTest extends CmfUnitTestCase
         $this->router->add($high, 100);
 
         $this->router->matchRequest(Request::create('/test'));
+    }
+
+    /**
+     * Call match on ChainRouter that has RequestMatcher in the chain.
+     *
+     * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
+     * @expectedExceptionMessage None of the routers in the chain matched url '/test'
+     */
+    public function testMatchWithRequestMatchersNotFound()
+    {
+        $url = '/test';
+        $request = Request::create('/test');
+
+        $high = $this->getMock('Symfony\Cmf\Component\Routing\Tests\Routing\RequestMatcher');
+
+        $high
+            ->expects($this->once())
+            ->method('matchRequest')
+            ->with($request)
+            ->will($this->throwException(new \Symfony\Component\Routing\Exception\ResourceNotFoundException))
+        ;
+
+        $this->router->add($high, 20);
+
+        $this->router->match($url);
     }
 
     /**
@@ -530,7 +572,7 @@ class ChainRouterTest extends CmfUnitTestCase
         $name = new \stdClass();
         $parameters = array('test' => 'value');
 
-        $chainedRouter = $this->getMock('Symfony\Cmf\Component\Routing\ChainedRouterInterface');
+        $chainedRouter = $this->getMock('Symfony\Cmf\Component\Routing\Tests\Routing\VersatileRouter');
         $chainedRouter
             ->expects($this->once())
             ->method('supports')
@@ -558,7 +600,7 @@ class ChainRouterTest extends CmfUnitTestCase
         $parameters = array('test' => 'value');
 
         $defaultRouter = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $chainedRouter = $this->getMock('Symfony\Cmf\Component\Routing\ChainedRouterInterface');
+        $chainedRouter = $this->getMock('Symfony\Cmf\Component\Routing\Tests\Routing\VersatileRouter');
 
         $defaultRouter
             ->expects($this->never())
@@ -644,7 +686,7 @@ class ChainRouterTest extends CmfUnitTestCase
     public function testSupport()
     {
 
-        $router = $this->getMock('Symfony\Cmf\Component\Routing\ChainedRouterInterface');
+        $router = $this->getMock('Symfony\Cmf\Component\Routing\Tests\Routing\VersatileRouter');
         $router
             ->expects($this->once())
             ->method('supports')
@@ -662,6 +704,9 @@ class ChainRouterTest extends CmfUnitTestCase
         $this->router->generate('foobar');
     }
 
+    /**
+     * @return RouterInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+     */
     protected function createRouterMocks()
     {
         return array(
@@ -672,10 +717,14 @@ class ChainRouterTest extends CmfUnitTestCase
     }
 }
 
-abstract class WarmableRouterMock implements \Symfony\Component\Routing\RouterInterface, \Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface
+abstract class WarmableRouterMock implements RouterInterface, WarmableInterface
 {
 }
 
-abstract class RequestMatcher implements \Symfony\Component\Routing\RouterInterface, \Symfony\Component\Routing\Matcher\RequestMatcherInterface
+abstract class RequestMatcher implements RouterInterface, RequestMatcherInterface
+{
+}
+
+abstract class VersatileRouter implements VersatileGeneratorInterface, RequestMatcherInterface
 {
 }

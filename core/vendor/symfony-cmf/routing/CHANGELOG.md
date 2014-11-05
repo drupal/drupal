@@ -1,6 +1,17 @@
 Changelog
 =========
 
+* **2014-09-29**: ChainRouter does not require a RouterInterface, as a
+  RequestMatcher and UrlGenerator is fine too. Fixed chain router interface to
+  not force a RouterInterface.
+* **2014-09-29**: Deprecated DynamicRouter::match in favor of matchRequest.
+
+1.3.0-RC1
+---------
+
+* **2014-08-20**: Added an interface for the ChainRouter
+* **2014-06-06**: Updated to PSR-4 autoloading
+
 1.2.0
 -----
 

@@ -101,6 +101,5 @@ class CandidatesTest extends \PHPUnit_Framework_Testcase
             ),
             $paths
         );
-
     }
 }

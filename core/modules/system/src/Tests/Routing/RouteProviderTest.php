@@ -461,4 +461,31 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEqual(count($candidates), 7);
   }
 
+  /**
+   * Tests getRoutesPaged().
+   */
+  public function testGetRoutesPaged() {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
+    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
+    $dumper->dump();
+
+    $fixture_routes = $this->fixtures->staticSampleRouteCollection();
+
+    // Query all the routes.
+    $routes = $provider->getRoutesPaged(0);
+    $this->assertEqual(array_keys($routes), array_keys($fixture_routes));
+
+    // Query non routes.
+    $routes = $provider->getRoutesPaged(0, 0);
+    $this->assertEqual(array_keys($routes), []);
+
+    // Query a limited sets of routes.
+    $routes = $provider->getRoutesPaged(1, 2);
+    $this->assertEqual(array_keys($routes), array_slice(array_keys($fixture_routes), 1, 2));
+  }
+
 }

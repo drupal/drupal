@@ -20,7 +20,7 @@
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
     "doctrine/annotations": "1.2.*",
     "guzzlehttp/guzzle": "~5.0",
-    "symfony-cmf/routing": "1.2.*",
+    "symfony-cmf/routing": "1.3.*",
     "easyrdf/easyrdf": "0.8.*",
     "phpunit/phpunit": "4.1.*",
     "phpunit/phpunit-mock-objects": "dev-master#e60bb929c50ae4237aaf680a4f6773f4ee17f0a2",

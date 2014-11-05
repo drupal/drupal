@@ -24,7 +24,7 @@ interface CandidatesInterface
     /**
      * @param Request $request
      *
-     * @return array a list of PHPCR-ODM ids
+     * @return array a list of paths
      */
     public function getCandidates(Request $request);
 
