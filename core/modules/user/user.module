@@ -108,14 +108,6 @@ function user_theme() {
 }
 
 /**
- * Implements hook_page_attachments().
- */
-function user_page_attachments(array &$page) {
-  $path = drupal_get_path('module', 'user');
-  $page['#attached']['css'][$path . '/css/user.module.css'] = array('every_page' => TRUE);
-}
-
-/**
  * Implements hook_js_alter().
  */
 function user_js_alter(&$javascript) {

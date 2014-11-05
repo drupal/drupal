@@ -65,6 +65,8 @@ class AccountSettingsForm extends ConfigFormBase {
     $mail_config = $this->config('user.mail');
     $site_config = $this->config('system.site');
 
+    $form['#attached']['library'][] = 'user/drupal.user.admin';
+
     // Settings for anonymous users.
     $form['anonymous_settings'] = array(
       '#type' => 'details',

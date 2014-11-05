@@ -1,0 +1,24 @@
+/**
+ * @file
+ * Admin styling for the User module.
+ */
+
+#permissions td.module {
+  font-weight: bold;
+}
+#permissions td.permission {
+  padding-left: 1.5em; /* LTR */
+}
+[dir="rtl"] #permissions td.permission {
+  padding-left: 0;
+  padding-right: 1.5em;
+}
+#permissions tr.odd .form-item,
+#permissions tr.even .form-item {
+  white-space: normal;
+}
+
+#user-admin-settings .details-description {
+  font-size: 0.85em;
+  padding-bottom: .5em;
+}

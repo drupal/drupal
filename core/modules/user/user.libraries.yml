@@ -10,6 +10,12 @@ drupal.user:
     - core/drupal
     - core/jquery.once
 
+drupal.user.admin:
+  version: VERSION
+  css:
+    theme:
+      css/user.admin.css: {}
+
 drupal.user.permissions:
   version: VERSION
   js:
@@ -19,6 +25,7 @@ drupal.user.permissions:
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
+    - user/drupal.user.admin
 
 drupal.user.icons:
   version: VERSION
