@@ -1568,7 +1568,7 @@ function format_string($string, array $args = array()) {
  * Also validates strings as UTF-8 to prevent cross site scripting attacks on
  * Internet Explorer 6.
  *
- * @param $text string
+ * @param string $text
  *   The text to be checked or processed.
  *
  * @return string
