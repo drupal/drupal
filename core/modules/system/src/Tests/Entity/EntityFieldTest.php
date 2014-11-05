@@ -12,12 +12,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -93,7 +91,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testReadWrite() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertReadWrite($entity_type);
+      $this->doTestReadWrite($entity_type);
     }
   }
 
@@ -103,7 +101,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertReadWrite($entity_type) {
+  protected function doTestReadWrite($entity_type) {
     $entity = $this->createTestEntity($entity_type);
 
     $langcode = 'en';
@@ -314,7 +312,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testSave() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertSave($entity_type);
+      $this->doTestSave($entity_type);
     }
   }
 
@@ -324,7 +322,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertSave($entity_type) {
+  protected function doTestSave($entity_type) {
     $entity = $this->createTestEntity($entity_type);
     $entity->save();
     $this->assertTrue((bool) $entity->id(), format_string('%entity_type: Entity has received an id.', array('%entity_type' => $entity_type)));
@@ -348,7 +346,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testIntrospection() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->checkIntrospection($entity_type);
+      $this->doTestIntrospection($entity_type);
     }
   }
 
@@ -358,7 +356,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function checkIntrospection($entity_type) {
+  protected function doTestIntrospection($entity_type) {
     // Test getting metadata upfront. The entity types used for this test have
     // a default bundle that is the same as the entity type.
     $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $entity_type);
@@ -449,7 +447,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testIterator() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertIterator($entity_type);
+      $this->doTestIterator($entity_type);
     }
   }
 
@@ -459,7 +457,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertIterator($entity_type) {
+  protected function doTestIterator($entity_type) {
     $entity = $this->createTestEntity($entity_type);
 
     foreach ($entity as $name => $field) {
@@ -488,7 +486,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testDataStructureInterfaces() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertDataStructureInterfaces($entity_type);
+      $this->doTestDataStructureInterfaces($entity_type);
     }
   }
 
@@ -498,7 +496,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertDataStructureInterfaces($entity_type) {
+  protected function doTestDataStructureInterfaces($entity_type) {
     $entity = $this->createTestEntity($entity_type);
 
     // Test using the whole tree of typed data by navigating through the tree of
@@ -673,7 +671,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testComputedProperties() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertComputedProperties($entity_type);
+      $this->doTestComputedProperties($entity_type);
     }
   }
 
@@ -683,7 +681,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertComputedProperties($entity_type) {
+  protected function doTestComputedProperties($entity_type) {
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";
     $entity->field_test_text->format = filter_default_format();
@@ -696,4 +694,5 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = entity_load($entity_type, $entity->id());
     $this->assertEqual($entity->field_test_text->processed, $target, format_string('%entity_type: Text is processed with the default filter.', array('%entity_type' => $entity_type)));
   }
+
 }
