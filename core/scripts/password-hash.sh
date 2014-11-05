@@ -15,7 +15,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-if (version_compare(PHP_VERSION, '5.4.4-14+deb7u14') < 0 && version_compare(PHP_VERSION, '5.4.5') < 0) {
+if (version_compare(PHP_VERSION, '5.4.5') < 0) {
   $version  = PHP_VERSION;
   echo <<<EOF
 

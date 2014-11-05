@@ -22,12 +22,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Minimum supported version of PHP.
- *
- * Minimum version is 5.4.5, or 5.4.4-14+deb7u14 on Debian Wheezy.
- *
- * @see https://www.drupal.org/node/2267551.
  */
-define('DRUPAL_MINIMUM_PHP', PHP_VERSION == '5.4.4-14+deb7u14' ? '5.4.4' : '5.4.5');
+const DRUPAL_MINIMUM_PHP = '5.4.5';
 
 /**
  * Minimum recommended value of PHP memory_limit.
