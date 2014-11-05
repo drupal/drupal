@@ -32,7 +32,7 @@ function aggregator_test_feed($use_last_modified = FALSE, $use_etag = FALSE) {
   // Send appropriate response. We respond with a 304 not modified on either
   // etag or on last modified.
   if ($use_last_modified) {
-    drupal_add_http_header('Last-Modified', gmdate(DATE_RFC1123, $last_modified));
+    drupal_add_http_header('Last-Modified', gmdate(DATE_RFC7231, $last_modified));
   }
   if ($use_etag) {
     drupal_add_http_header('ETag', $etag);

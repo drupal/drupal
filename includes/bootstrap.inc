@@ -249,6 +249,15 @@ define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
 define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
 
 /**
+ * A RFC7231 Compliant date.
+ *
+ * http://tools.ietf.org/html/rfc7231#section-7.1.1.1
+ *
+ * Example: Sun, 06 Nov 1994 08:49:37 GMT
+ */
+define('DATE_RFC7231', 'D, d M Y H:i:s \G\M\T');
+
+/**
  * Provides a caching wrapper to be used in place of large array structures.
  *
  * This class should be extended by systems that need to cache large amounts
@@ -1266,7 +1275,7 @@ function drupal_page_header() {
 
   $default_headers = array(
     'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
-    'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
+    'Last-Modified' => gmdate(DATE_RFC7231, REQUEST_TIME),
     'Cache-Control' => 'no-cache, must-revalidate, post-check=0, pre-check=0',
     'ETag' => '"' . REQUEST_TIME . '"',
   );
@@ -1336,7 +1345,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     drupal_add_http_header($name, $value);
   }
 
-  $default_headers['Last-Modified'] = gmdate(DATE_RFC1123, $cache->created);
+  $default_headers['Last-Modified'] = gmdate(DATE_RFC7231, $cache->created);
 
   // HTTP/1.0 proxies does not support the Vary header, so prevent any caching
   // by sending an Expires date in the past. HTTP/1.1 clients ignores the

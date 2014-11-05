@@ -1,6 +1,8 @@
 
 Drupal 7.33, xxxx-xx-xx (development version)
 -----------------------
+- Changed the date format used in various HTTP headers output by Drupal core
+  from RFC 1123 format to RFC 7231 format.
 - Added a "block_cache_bypass_node_grants" variable to allow sites which have
   node access modules enabled to use the block cache if desired (API addition).
 - Made image derivative generation HTTP requests return a 404 error (rather

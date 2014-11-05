@@ -27,7 +27,7 @@ function aggregator_aggregator_fetch($feed) {
     $headers['If-None-Match'] = $feed->etag;
   }
   if ($feed->modified) {
-    $headers['If-Modified-Since'] = gmdate(DATE_RFC1123, $feed->modified);
+    $headers['If-Modified-Since'] = gmdate(DATE_RFC7231, $feed->modified);
   }
 
   // Request feed.
