@@ -89,12 +89,16 @@ class NegotiationBrowserForm extends ConfigFormBase {
     foreach ($mappings as $browser_langcode => $drupal_langcode) {
       $form['mappings'][$browser_langcode] = array(
         'browser_langcode' => array(
+          '#title' => $this->t('Browser language code'),
+          '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#default_value' => $browser_langcode,
           '#size' => 20,
           '#required' => TRUE,
         ),
         'drupal_langcode' => array(
+          '#title' => $this->t('Site language'),
+          '#title_display' => 'invisible',
           '#type' => 'select',
           '#options' => $language_options,
           '#default_value' => $drupal_langcode,
@@ -113,14 +117,12 @@ class NegotiationBrowserForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Browser language code'),
       '#description' => $this->t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
-      '#default_value' => '',
       '#size' => 20,
     );
     $form['new_mapping']['drupal_langcode'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Drupal language'),
+      '#title' => $this->t('Site language'),
       '#options' => $language_options,
-      '#default_value' => '',
     );
 
     return parent::buildForm($form, $form_state);
@@ -134,16 +136,15 @@ class NegotiationBrowserForm extends ConfigFormBase {
     $unique_values = array();
 
     // Check all mappings.
-    $mappings = array();
     if ($form_state->hasValue('mappings')) {
       $mappings = $form_state->getValue('mappings');
       foreach ($mappings as $key => $data) {
         // Make sure browser_langcode is unique.
         if (array_key_exists($data['browser_langcode'], $unique_values)) {
-          $form_state->setErrorByName('mappings][' . $key . '][browser_langcode', $this->t('Browser language codes must be unique.'));
+          $form_state->setErrorByName('mappings][new_mapping][browser_langcode', $this->t('Browser language codes must be unique.'));
         }
         elseif (preg_match('/[^a-z\-]/', $data['browser_langcode'])) {
-          $form_state->setErrorByName('mappings][' . $key . '][browser_langcode', $this->t('Browser language codes can only contain lowercase letters and a hyphen(-).'));
+          $form_state->setErrorByName('mappings][new_mapping][browser_langcode', $this->t('Browser language codes can only contain lowercase letters and a hyphen(-).'));
         }
         $unique_values[$data['browser_langcode']] = $data['drupal_langcode'];
       }
@@ -175,7 +176,6 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $config->setData($mappings);
       $config->save();
     }
-    $form_state->setRedirect('language.negotiation');
 
     parent::submitForm($form, $form_state);
   }

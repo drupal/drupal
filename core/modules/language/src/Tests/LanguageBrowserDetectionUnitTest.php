@@ -186,6 +186,14 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
     $edit = array();
     $this->drupalPostForm('admin/config/regional/language/detection/browser/delete/' . $browser_langcode, $edit, t('Confirm'));
 
+    // We need raw here because %browser will add HTML.
+    $t_args = array(
+      '%browser' => $browser_langcode,
+    );
+    $this->assertRaw(t('The mapping for the %browser browser language code has been deleted.', $t_args), 'The test browser language code has been deleted.');
+
+    // Check we went back to the browser negotiation mapping overview.
+    $this->assertUrl(\Drupal::url('language.negotiation_browser', [], ['absolute' => TRUE]));
     // Check that ch-zn no longer exists.
     $this->assertNoField('edit-mappings-zh-cn-browser-langcode', 'Chinese browser language code no longer exists.');
 
@@ -195,7 +203,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'new_mapping[drupal_langcode]' => 'en',
     );
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
-    $this->drupalGet('admin/config/regional/language/detection/browser');
+    $this->assertUrl(\Drupal::url('language.negotiation_browser', [], ['absolute' => TRUE]));
     $this->assertField('edit-mappings-xx-browser-langcode', 'xx', 'Browser language code found.');
     $this->assertField('edit-mappings-xx-drupal-langcode', 'en', 'Drupal language code found.');
 
@@ -217,7 +225,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'mappings[xx][drupal_langcode]' => 'zh-hans',
     );
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
-    $this->drupalGet('admin/config/regional/language/detection/browser');
+    $this->assertUrl(\Drupal::url('language.negotiation_browser', [], ['absolute' => TRUE]));
     $this->assertField('edit-mappings-xx-browser-langcode', 'xx', 'Browser language code found.');
     $this->assertField('edit-mappings-xx-drupal-langcode', 'zh-hans', 'Drupal language code found.');
   }

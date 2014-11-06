@@ -63,7 +63,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'language.negotiation_browser':
-      $output = '<p>' . t('Browsers use different language codes to refer to the same languages. You can add and edit mappings from browser language codes to the <a href="!configure-languages">languages used</a>.', array('!configure-languages' => \Drupal::url('language.admin_overview'))) . '</p>';
+      $output = '<p>' . t('Browsers use different language codes to refer to the same languages. Internally, a best effort is made to determine the correct language based on the code that the browser sends. You can add and edit additional mappings from browser language codes to <a href="!configure-languages">site languages</a>.', array('!configure-languages' => \Drupal::url('language.admin_overview'))) . '</p>';
       return $output;
 
     case 'language.negotiation_selected':
