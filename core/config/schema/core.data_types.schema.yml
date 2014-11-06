@@ -556,8 +556,11 @@ field.entity_reference.value:
       label: 'Default'
       mapping:
         target_id:
-          type: integer
+          type: string
           label: 'Value'
+        target_uuid:
+          type: string
+          label: 'Target UUID'
 
 # Schema for the configuration of the Boolean field type.
 

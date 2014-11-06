@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -16,6 +17,7 @@ use Drupal\simpletest\WebTestBase;
  * @group entity_reference
  */
 class EntityReferenceFieldDefaultValueTest extends WebTestBase {
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to install.
@@ -88,6 +90,12 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     // Create a new node to check that UUID has been converted to numeric ID.
     $new_node = entity_create('node', array('type' => 'reference_content'));
     $this->assertEqual($new_node->get($field_name)->offsetGet(0)->target_id, $referenced_node->id());
+
+    // Ensure that the entity reference config schemas are correct.
+    $field_config = \Drupal::config('field.field.node.reference_content.' . $field_name);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $field_config->getName(), $field_config->get());
+    $field_storage_config = \Drupal::config('field.storage.node.' . $field_name);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $field_storage_config->getName(), $field_storage_config->get());
   }
 
 }
