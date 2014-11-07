@@ -1522,8 +1522,10 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
           // name. This will fail if the usage checked is in a non-current
           // revision because field items are from the current
           // revision.
-          if (($items = $entity->get($field_name))) {
-            foreach ($items as $item) {
+          // We also iterate over all translations because a file can be linked
+          // to a language other than the default.
+          foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+            foreach ($entity->getTranslation($langcode)->get($field_name) as $item) {
               if ($file->id() == $item->{$field_column}) {
                 $references[$file->id()][$age][$field_name][$entity_type_id][$entity->id()] = $entity;
                 break;
