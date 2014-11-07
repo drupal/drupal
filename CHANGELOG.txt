@@ -1,5 +1,5 @@
 
-Drupal 7.33, xxxx-xx-xx (development version)
+Drupal 7.33, 2014-11-07
 -----------------------
 - Began storing the file modification time of each module and theme in the
   {system} database table so that contributed modules can use it to identify
