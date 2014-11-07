@@ -629,7 +629,7 @@ function taxonomy_autocomplete_validate($element, FormStateInterface $form_state
   if ($tags = $element['#value']) {
     $typed_terms = Tags::explode($tags);
   }
-  form_set_value($element, $typed_terms, $form_state);
+  $form_state->setValueForElement($element, $typed_terms);
 }
 
 /**

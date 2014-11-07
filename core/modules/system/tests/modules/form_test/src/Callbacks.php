@@ -23,7 +23,7 @@ class Callbacks {
       // Alter the form element.
       $element['#value'] = '#value changed by #element_validate';
       // Alter the submitted value in $form_state.
-      form_set_value($element, 'value changed by form_set_value() in #element_validate', $form_state);
+      $form_state->setValueForElement($element, 'value changed by setValueForElement() in #element_validate');
 
       $triggered = TRUE;
     }
@@ -36,7 +36,7 @@ class Callbacks {
     }
     elseif ($form_state->has('form_test_name')) {
       // To simplify this test, just take over the element's value into $form_state.
-      form_set_value($element, $form_state->get('form_test_name'), $form_state);
+      $form_state->setValueForElement($element, $form_state->get('form_test_name'));
 
       $triggered = TRUE;
     }

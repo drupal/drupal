@@ -416,7 +416,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
  * Note: Changes made to the $node object within your hook implementation will
  * have no effect.  The preferred method to change a node's content is to use
  * hook_node_presave() instead. If it is really necessary to change the node at
- * the validate stage, you can use form_set_value().
+ * the validate stage, you can use setValueForElement().
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node being validated.

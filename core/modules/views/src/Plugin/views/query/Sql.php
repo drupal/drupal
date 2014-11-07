@@ -242,7 +242,7 @@ class Sql extends QueryPluginBase {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
     $value = explode(',', NestedArray::getValue($form_state->getValues(), $element['#parents']));
     $value = array_filter(array_map('trim', $value));
-    form_set_value($element, $value, $form_state);
+    $form_state->setValueForElement($element, $value);
   }
 
   /**

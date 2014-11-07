@@ -214,7 +214,7 @@ class FileItem extends EntityReferenceItem {
   public static function validateDirectory($element, FormStateInterface $form_state) {
     // Strip slashes from the beginning and end of $element['file_directory'].
     $value = trim($element['#value'], '\\/');
-    form_set_value($element, $value, $form_state);
+    $form_state->setValueForElement($element, $value);
   }
 
   /**
@@ -236,7 +236,7 @@ class FileItem extends EntityReferenceItem {
         $form_state->setError($element, t('The list of allowed extensions is not valid, be sure to exclude leading dots and to separate extensions with a comma or space.'));
       }
       else {
-        form_set_value($element, $extensions, $form_state);
+        $form_state->setValueForElement($element, $extensions);
       }
     }
   }

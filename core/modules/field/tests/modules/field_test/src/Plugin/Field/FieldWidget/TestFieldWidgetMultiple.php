@@ -94,7 +94,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
     foreach ($values as $value) {
       $items[] = array('value' => $value);
     }
-    form_set_value($element, $items, $form_state);
+    $form_state->setValueForElement($element, $items);
   }
 
   /**

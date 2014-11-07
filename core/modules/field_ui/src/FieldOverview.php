@@ -318,7 +318,7 @@ class FieldOverview extends OverviewBase {
 
         // Add the field prefix.
         $field_name = \Drupal::config('field_ui.settings')->get('field_prefix') . $field_name;
-        form_set_value($form['fields']['_add_new_field']['field_name'], $field_name, $form_state);
+        $form_state->setValueForElement($form['fields']['_add_new_field']['field_name'], $field_name);
       }
 
       // Missing field type.

@@ -252,7 +252,7 @@ function views_ui_taxonomy_autocomplete_validate($element, FormStateInterface $f
       $value['vocabulary'] = array_pop($vocabularies);
     }
   }
-  form_set_value($element, $value, $form_state);
+  $form_state->setValueForElement($element, $value);
 }
 
 /**

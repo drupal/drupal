@@ -379,10 +379,10 @@ class ImageItem extends FileItem {
           return;
         }
       }
-      form_set_value($element, $element['x']['#value'] . 'x' . $element['y']['#value'], $form_state);
+      $form_state->setValueForElement($element, $element['x']['#value'] . 'x' . $element['y']['#value']);
     }
     else {
-      form_set_value($element, '', $form_state);
+      $form_state->setValueForElement($element, '');
     }
   }
 

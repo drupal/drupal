@@ -227,7 +227,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
 
     // Store the decoded version of the submitted import.
-    form_set_value($form['import'], $data, $form_state);
+    $form_state->setValueForElement($form['import'], $data);
   }
 
   /**

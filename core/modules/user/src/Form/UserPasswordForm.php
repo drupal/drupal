@@ -118,7 +118,7 @@ class UserPasswordForm extends FormBase {
     }
     $account = reset($users);
     if ($account && $account->id()) {
-      form_set_value(array('#parents' => array('account')), $account, $form_state);
+      $form_state->setValueForElement(array('#parents' => array('account')), $account);
     }
     else {
       $form_state->setErrorByName('name', $this->t('Sorry, %name is not recognized as a username or an email address.', array('%name' => $name)));

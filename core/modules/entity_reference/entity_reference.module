@@ -150,7 +150,7 @@ function _entity_reference_form_process_merge_parent($element) {
  */
 function _entity_reference_element_validate_filter(&$element, FormStateInterface $form_state) {
   $element['#value'] = array_filter($element['#value']);
-  form_set_value($element, $element['#value'], $form_state);
+  $form_state->setValueForElement($element, $element['#value']);
 }
 
 /**

@@ -1117,7 +1117,7 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
     // FormState::$input must be updated so that
     // \Drupal\file\Element\ManagedFile::valueCallback() has correct information
     // during the rebuild.
-    form_set_value($element['fids'], implode(' ', $fids), $form_state);
+    $form_state->setValueForElement($element['fids'], implode(' ', $fids));
     NestedArray::setValue($form_state->getUserInput(), $element['fids']['#parents'], implode(' ', $fids));
   }
 

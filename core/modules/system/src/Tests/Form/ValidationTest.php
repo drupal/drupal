@@ -25,7 +25,7 @@ class ValidationTest extends WebTestBase {
   public static $modules = array('form_test');
 
   /**
-   * Tests form alterations by #element_validate, #validate, and form_set_value().
+   * Tests #element_validate and #validate.
    */
   function testValidate() {
     $this->drupalGet('form-test/validate');
@@ -36,7 +36,7 @@ class ValidationTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldByName('name', '#value changed by #element_validate', 'Form element #value was altered.');
-    $this->assertText('Name value: value changed by form_set_value() in #element_validate', 'Form element value in $form_state was altered.');
+    $this->assertText('Name value: value changed by setValueForElement() in #element_validate', 'Form element value in $form_state was altered.');
 
     // Verify that #validate handlers can alter the form and submitted
     // form values.
@@ -45,7 +45,7 @@ class ValidationTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldByName('name', '#value changed by #validate', 'Form element #value was altered.');
-    $this->assertText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was altered.');
+    $this->assertText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was altered.');
 
     // Verify that #element_validate handlers can make form elements
     // inaccessible, but values persist.
@@ -70,7 +70,7 @@ class ValidationTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
-    $this->assertNoText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was not altered.');
+    $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
   }
 

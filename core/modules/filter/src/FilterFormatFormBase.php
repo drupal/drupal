@@ -218,8 +218,8 @@ abstract class FilterFormatFormBase extends EntityForm {
     $format_name = trim($form_state->getValue('name'));
 
     // Ensure that the values to be saved later are exactly the ones validated.
-    form_set_value($form['format'], $format_format, $form_state);
-    form_set_value($form['name'], $format_name, $form_state);
+    $form_state->setValueForElement($form['format'], $format_format);
+    $form_state->setValueForElement($form['name'], $format_name);
 
     $format_exists = $this->queryFactory
       ->get('filter_format')

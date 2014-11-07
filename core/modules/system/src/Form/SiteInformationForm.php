@@ -148,11 +148,11 @@ class SiteInformationForm extends ConfigFormBase {
     // Check for empty front page path.
     if ($form_state->isValueEmpty('site_frontpage')) {
       // Set to default "user/login".
-      form_set_value($form['front_page']['site_frontpage'], 'user/login', $form_state);
+      $form_state->setValueForElement($form['front_page']['site_frontpage'], 'user/login');
     }
     else {
       // Get the normal path of the front page.
-      form_set_value($form['front_page']['site_frontpage'], $this->aliasManager->getPathByAlias($form_state->getValue('site_frontpage')), $form_state);
+      $form_state->setValueForElement($form['front_page']['site_frontpage'], $this->aliasManager->getPathByAlias($form_state->getValue('site_frontpage')));
     }
     // Validate front page path.
     if (!$this->pathValidator->isValid($form_state->getValue('site_frontpage'))) {
@@ -160,10 +160,10 @@ class SiteInformationForm extends ConfigFormBase {
     }
     // Get the normal paths of both error pages.
     if (!$form_state->isValueEmpty('site_403')) {
-      form_set_value($form['error_page']['site_403'], $this->aliasManager->getPathByAlias($form_state->getValue('site_403')), $form_state);
+      $form_state->setValueForElement($form['error_page']['site_403'], $this->aliasManager->getPathByAlias($form_state->getValue('site_403')));
     }
     if (!$form_state->isValueEmpty('site_404')) {
-      form_set_value($form['error_page']['site_404'], $this->aliasManager->getPathByAlias($form_state->getValue('site_404')), $form_state);
+      $form_state->setValueForElement($form['error_page']['site_404'], $this->aliasManager->getPathByAlias($form_state->getValue('site_404')));
     }
     // Validate 403 error path.
     if (!$form_state->isValueEmpty('site_403') && !$this->pathValidator->isValid($form_state->getValue('site_403'))) {

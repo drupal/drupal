@@ -16,8 +16,8 @@ use Drupal\form_test\Callbacks;
  *
  * Serves for testing form processing and alterations by form validation
  * handlers, especially for the case of a validation error:
- * - form_set_value() should be able to alter submitted values in
- *   $form_state->getValues() without affecting the form element.
+ * - $form_state->setValueForElement() should be able to alter submitted values
+ *   in $form_state->getValues() without affecting the form element.
  * - #element_validate handlers should be able to alter the $element in the form
  *   structure and the alterations should be contained in the rebuilt form.
  * - #validate handlers should be able to alter the $form and the alterations
@@ -64,7 +64,7 @@ class FormTestValidateForm extends FormBase {
       // Alter the form element.
       $form['name']['#value'] = '#value changed by #validate';
       // Alter the submitted value in $form_state.
-      form_set_value($form['name'], 'value changed by form_set_value() in #validate', $form_state);
+      $form_state->setValueForElement($form['name'], 'value changed by setValueForElement() in #validate');
       // Output the element's value from $form_state.
       drupal_set_message(t('@label value: @value', array('@label' => $form['name']['#title'], '@value' => $form_state->getValue('name'))));
 

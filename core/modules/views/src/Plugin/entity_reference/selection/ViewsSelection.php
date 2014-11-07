@@ -239,7 +239,7 @@ class ViewsSelection implements SelectionInterface {
     }
 
     $value = array('view_name' => $view, 'display_name' => $display, 'arguments' => $arguments);
-    form_set_value($element, $value, $form_state);
+    $form_state->setValueForElement($element, $value);
   }
 
 }

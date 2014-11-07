@@ -108,7 +108,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
     foreach ($values as $value) {
       $items[] = array($element['#key_column'] => $value);
     }
-    form_set_value($element, $items, $form_state);
+    $form_state->setValueForElement($element, $items);
   }
 
   /**
