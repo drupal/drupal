@@ -75,6 +75,9 @@ class RearrangeFieldsTest extends UITestBase {
     }
     $this->drupalPostForm('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field', $fields, t('Apply'));
     $this->assertFieldOrder($view_name, $reversedFields);
+
+    // Checks that there is a remove link for each field.
+    $this->assertEqual(count($this->cssSelect('a.views-remove-link')), count($fields));
   }
 
 }

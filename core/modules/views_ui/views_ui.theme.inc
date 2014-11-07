@@ -158,7 +158,7 @@ function theme_views_ui_build_group_filter_form($variables) {
       'value' => drupal_render($form['group_items'][$group_id]['value']),
       'remove' => array(
         'data' => array(
-          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l('<span>' . t('Remove') . '</span>', Url::fromRoute('<none>', array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true))),
+          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l('<span>' . t('Remove') . '</span>', Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true))),
         ),
       ),
     );

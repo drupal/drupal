@@ -53,6 +53,9 @@ class FilterBooleanWebTest extends UITestBase {
     $result = $this->xpath('//input[@name="options[group_info][group_items][3][value]"]');
     $this->assertEqual((int) $result[1]->attributes()->checked, 'checked');
 
+    // Test that there is a remove link for each group.
+    $this->assertEqual(count($this->cssSelect('a.views-remove-link')), 3);
+
     // Test selecting a default and removing an item.
     $edit = array();
     $edit['options[group_info][default_group]'] = 2;
