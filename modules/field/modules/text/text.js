@@ -37,8 +37,8 @@ Drupal.behaviors.textSummary = {
             $a.html(Drupal.t('Hide summary'));
             $link.appendTo($summaryLabel);
           }
-          e.preventDefault();
           toggleClick = !toggleClick;
+          return false;
         }).appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
