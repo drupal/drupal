@@ -1,4 +1,7 @@
 
+Drupal 7.34, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.33, 2014-11-07
 -----------------------
 - Began storing the file modification time of each module and theme in the
