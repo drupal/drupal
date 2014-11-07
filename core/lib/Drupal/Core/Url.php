@@ -452,6 +452,13 @@ class Url {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    return $this->toString();
+  }
+
+  /**
    * Returns all the information about the route.
    *
    * @return array
