@@ -121,6 +121,8 @@ abstract class StorageTestBase extends KernelTestBase {
     $this->assertFalse($stores[0]->get('foo'));
     $this->assertFalse($stores[0]->get('bar'));
     $this->assertFalse($stores[0]->getMultiple(array('foo', 'bar')));
+    // Verify that deleting no items does not cause an error.
+    $stores[0]->deleteMultiple(array());
     // Verify that the item in the other collection still exists.
     $this->assertIdenticalObject($this->objects[5], $stores[1]->get('foo'));
 

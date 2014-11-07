@@ -150,13 +150,12 @@ class DatabaseStorage extends StorageBase {
    */
   public function deleteMultiple(array $keys) {
     // Delete in chunks when a large array is passed.
-    do {
+    while ($keys) {
       $this->connection->delete($this->table)
         ->condition('name', array_splice($keys, 0, 1000))
         ->condition('collection', $this->collection)
         ->execute();
     }
-    while (count($keys));
   }
 
   /**
