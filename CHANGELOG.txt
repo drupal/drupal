@@ -5,6 +5,9 @@ Drupal 7.33, xxxx-xx-xx (development version)
   {system} database table so that contributed modules can use it to identify
   recently changed modules and themes (minor data structure change to the
   return value of system_get_info() and other related functions).
+- Added a "Did you mean?" feature to the run-tests.sh script for running
+  automated tests from the command line, to help developers who are attempting
+  to run a particular test class or group.
 - Changed the date format used in various HTTP headers output by Drupal core
   from RFC 1123 format to RFC 7231 format.
 - Added a "block_cache_bypass_node_grants" variable to allow sites which have
