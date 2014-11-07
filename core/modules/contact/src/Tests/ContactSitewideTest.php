@@ -8,6 +8,7 @@
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -402,7 +403,7 @@ class ContactSitewideTest extends WebTestBase {
    * Deletes all forms.
    */
   function deleteContactForms() {
-    $contact_forms = entity_load_multiple('contact_form');
+    $contact_forms = ContactForm::loadMultiple();;
     foreach ($contact_forms as $id => $contact_form) {
       if ($id == 'personal') {
         // Personal form could not be deleted.
@@ -412,7 +413,7 @@ class ContactSitewideTest extends WebTestBase {
       else {
         $this->drupalPostForm("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
         $this->assertRaw(t('Contact form %label has been deleted.', array('%label' => $contact_form->label())));
-        $this->assertFalse(entity_load('contact_form', $id), format_string('Form %contact_form not found', array('%contact_form' => $contact_form->label())));
+        $this->assertFalse(ContactForm::load($id), format_string('Form %contact_form not found', array('%contact_form' => $contact_form->label())));
       }
     }
   }
