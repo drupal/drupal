@@ -141,6 +141,21 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
+   * Tests checking for class names with the Attribute method.
+   * @covers ::hasClass()
+   */
+  public function testHasClass() {
+    // Test an attribute without any classes.
+    $attribute = new Attribute();
+    $this->assertFalse($attribute->hasClass('a-class-nowhere-to-be-found'));
+
+    // Add a class to check for.
+    $attribute->addClass('we-totally-have-this-class');
+    // Check that this class exists.
+    $this->assertTrue($attribute->hasClass('we-totally-have-this-class'));
+  }
+
+  /**
    * Tests removing class attributes with the Attribute helper methods.
    * @covers ::removeClass()
    * @covers ::addClass()

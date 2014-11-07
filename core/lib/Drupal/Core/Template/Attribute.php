@@ -189,6 +189,24 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
   }
 
   /**
+   * Checks if the class array has the given CSS class.
+   *
+   * @param string $class
+   *   The CSS class to check for.
+   *
+   * @return bool
+   *   Returns TRUE if the class exists, or FALSE otherwise.
+   */
+  public function hasClass($class) {
+    if (isset($this->storage['class']) && $this->storage['class'] instanceOf AttributeArray) {
+      return in_array($class, $this->storage['class']->value());
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
    * Implements the magic __toString() method.
    */
   public function __toString() {
