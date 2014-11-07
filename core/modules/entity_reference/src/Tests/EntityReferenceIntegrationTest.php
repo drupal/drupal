@@ -9,7 +9,6 @@ namespace Drupal\entity_reference\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
-use Drupal\entity_reference\Exception\MissingDefaultValueException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 

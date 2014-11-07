@@ -16,7 +16,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
-use Drupal\entity_reference\Exception\MissingDefaultValueException;
 
 /**
  * Defines the 'entity_reference' entity field type.
