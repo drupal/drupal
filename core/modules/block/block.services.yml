@@ -18,3 +18,6 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'event_subscriber' }
+  block.repository:
+    class: Drupal\block\BlockRepository
+    arguments: ['@entity.manager', '@theme.manager']
