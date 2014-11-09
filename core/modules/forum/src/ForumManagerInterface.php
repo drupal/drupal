@@ -57,7 +57,7 @@ interface ForumManagerInterface {
   public function resetCache();
 
   /**
-   * Protected function to wrap call to taxonomy_term_load_parents_all.
+   * Fetches the parent forums for a given forum.
    *
    * @param int $tid
    *   Term ID.
@@ -65,8 +65,8 @@ interface ForumManagerInterface {
    * @return array
    *   Array of parent terms.
    *
-   * @todo remove and inject a service when taxonomy_term_get_parents_all has an
-   *   object-oriented equivalent.
+   * @deprecated Scheduled to be removed in 9.0.x, see
+   *   https://www.drupal.org/node/2371593.
    */
   public function getParents($tid);
 
