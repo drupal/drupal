@@ -43,7 +43,7 @@
         $context.find('input:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
-        if (!$context.find('#edit-settings-node-submitted').is(':checked')) {
+        if (!$context.find('#edit-display-submitted').is(':checked')) {
           vals.unshift(Drupal.t("Don't display post information"));
         }
         return vals.join(', ');
