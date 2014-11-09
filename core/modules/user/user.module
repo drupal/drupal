@@ -49,7 +49,7 @@ const USER_REGISTER_VISITORS = 'visitors';
 const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
 
 /**
- * Implement hook_help().
+ * Implements hook_help().
  */
 function user_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
