@@ -186,7 +186,7 @@
  * // Find out when cron was last run; the key is 'system.cron_last'.
  * $time = $state->get('system.cron_last');
  * // Set the cron run time to the current request time.
- * $state->set('system_cron_last', REQUEST_TIME);
+ * $state->set('system.cron_last', REQUEST_TIME);
  * @endcode
  *
  * For more on the State API, see https://drupal.org/developing/api/8/state
