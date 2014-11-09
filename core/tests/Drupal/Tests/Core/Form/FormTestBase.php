@@ -327,6 +327,13 @@ class TestFormBuilder extends FormBuilder {
     static::$seenIds = array();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function requestUri() {
+    return '';
+  }
+
 }
 
 }

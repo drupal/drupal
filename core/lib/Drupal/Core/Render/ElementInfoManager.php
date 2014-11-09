@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -65,6 +66,12 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    * Builds up all element information.
    */
   protected function buildInfo() {
+    // Get cached definitions.
+    if ($cache = $this->cacheBackend->get('element_info_build')) {
+      return $cache->data;
+    }
+
+    // Otherwise, rebuild and cache.
     // @todo Remove this hook once all elements are converted to plugins in
     //   https://www.drupal.org/node/2311393.
     $info = $this->moduleHandler->invokeAll('element_info');
@@ -81,11 +88,14 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
       }
       $info[$element_type] = $element_info;
     }
+
     foreach ($info as $element_type => $element) {
       $info[$element_type]['#type'] = $element_type;
     }
     // Allow modules to alter the element type defaults.
     $this->moduleHandler->alter('element_info', $info);
+
+    $this->cacheBackend->set('element_info_build', $info, Cache::PERMANENT);
 
     return $info;
   }
@@ -98,5 +108,16 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   public function createInstance($plugin_id, array $configuration = array()) {
     return parent::createInstance($plugin_id, $configuration);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCachedDefinitions() {
+    $this->elementInfo = NULL;
+    $this->cacheBackend->delete('element_info_build');
+
+    parent::clearCachedDefinitions();
+  }
+
 
 }

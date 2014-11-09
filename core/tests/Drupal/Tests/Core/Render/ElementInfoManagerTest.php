@@ -69,6 +69,21 @@ class ElementInfoManagerTest extends UnitTestCase {
         return $info;
       }));
 
+    $this->cache->expects($this->at(0))
+      ->method('get')
+      ->with('element_info_build')
+      ->will($this->returnValue(FALSE));
+    $this->cache->expects($this->at(1))
+      ->method('get')
+      ->with('element_info')
+      ->will($this->returnValue(FALSE));
+    $this->cache->expects($this->at(2))
+      ->method('set')
+      ->with('element_info');
+    $this->cache->expects($this->at(3))
+      ->method('set')
+      ->with('element_info_build');
+
     $this->assertEquals($expected_info, $this->elementInfo->getInfo($type));
   }
 

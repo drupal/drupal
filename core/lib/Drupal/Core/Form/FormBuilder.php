@@ -533,6 +533,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     $form['#type'] = 'form';
 
+    // Only update the action if it is not already set.
+    if (!isset($form['#action'])) {
+      $form['#action'] = $this->requestUri();
+    }
+
     // Fix the form method, if it is 'get' in $form_state, but not in $form.
     if ($form_state->isMethodType('get') && !isset($form['#method'])) {
       $form['#method'] = 'get';
@@ -1094,6 +1099,15 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
+  }
+
+  /**
+   * Gets the current request URI.
+   *
+   * @return string
+   */
+  protected function requestUri() {
+    return request_uri();
   }
 
 }

@@ -22,7 +22,6 @@ class Form extends RenderElement {
   public function getInfo() {
     return array(
       '#method' => 'post',
-      '#action' => request_uri(),
       '#theme_wrappers' => array('form'),
     );
   }
