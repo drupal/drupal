@@ -13,24 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Composer\Autoload\ClassLoader;
 
 /**
- * Drupal-friendly var_export().
- *
- * @param mixed $var
- *   The variable to export.
- * @param string $prefix
- *   A prefix that will be added at the beginning of every lines of the output.
- *
- * @return string
- *   The variable exported in a way compatible to Drupal's coding standards.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Variable::export().
- */
-function drupal_var_export($var, $prefix = '') {
-  return Variable::export($var, $prefix);
-}
-
-/**
  * Rebuilds all caches even when Drupal itself does not work.
  *
  * Requires DRUPAL_BOOTSTRAP_CONFIGURATION.
