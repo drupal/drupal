@@ -415,7 +415,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
             '#name' => $field_name . '_settings_edit',
-            '#src' => 'core/misc/configure-dark.png',
+            '#src' => 'core/misc/icons/787878/cog.svg',
             '#attributes' => array('class' => array('field-plugin-settings-edit'), 'alt' => $this->t('Edit')),
             '#op' => 'edit',
             // Do not check errors for the 'Edit' button, but make sure we get
