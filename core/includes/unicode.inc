@@ -163,24 +163,3 @@ function mime_header_encode($string) {
 function mime_header_decode($header) {
   return Unicode::mimeHeaderDecode($header);
 }
-
-/**
- * Cuts off a piece of a string based on character indices and counts.
- *
- * @param $text
- *   The input string.
- * @param $start
- *   The position at which to start reading.
- * @param $length
- *   The number of characters to read.
- *
- * @return string
- *   The shortened string.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::substr().
- * @ingroup php_wrappers
- */
-function drupal_substr($text, $start, $length = NULL) {
-  return Unicode::substr($text, $start, $length);
-}
