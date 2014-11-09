@@ -37,10 +37,6 @@ function comment_token_info() {
     'name' => t("IP Address"),
     'description' => t("The IP address of the computer the comment was posted from."),
   );
-  $comment['name'] = array(
-    'name' => t("Name"),
-    'description' => t("The name left by the comment author."),
-  );
   $comment['mail'] = array(
     'name' => t("Email address"),
     'description' => t("The email address left by the comment author."),
@@ -96,7 +92,7 @@ function comment_token_info() {
   );
   $comment['author'] = array(
     'name' => t("Author"),
-    'description' => t("The author of the comment, if they were logged in."),
+    'description' => t("The author name of the comment."),
     'type' => 'user',
   );
 
@@ -173,9 +169,6 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = $comment->url('edit-form', $url_options);
           break;
 
-        // @todo Remove 'name' token in favour of 'author'. See
-        //   https://drupal.org/node/920056.
-        case 'name':
         case 'author':
           $name = $comment->getAuthorName();
           $replacements[$original] = $sanitize ? Xss::filter($name) : $name;

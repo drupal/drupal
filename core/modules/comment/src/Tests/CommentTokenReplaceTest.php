@@ -51,7 +51,6 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = String::checkPlain($comment->getHostname());
-    $tests['[comment:name]'] = Xss::filter($comment->getAuthorName());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
     $tests['[comment:mail]'] = String::checkPlain($this->admin_user->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
@@ -78,7 +77,6 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Generate and test unsanitized tokens.
     $tests['[comment:hostname]'] = $comment->getHostname();
-    $tests['[comment:name]'] = $comment->getAuthorName();
     $tests['[comment:author]'] = $comment->getAuthorName();
     $tests['[comment:mail]'] = $this->admin_user->getEmail();
     $tests['[comment:homepage]'] = $comment->getHomepage();
@@ -92,6 +90,15 @@ class CommentTokenReplaceTest extends CommentTestBase {
       $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
+
+    // Test anonymous comment author.
+    $author_name = $this->randomString();
+    $comment->setOwnerId(0)->setAuthorName($author_name);
+    $input = '[comment:author]';
+    $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()));
+    $this->assertEqual($output, Xss::filter($author_name), format_string('Sanitized comment author token %token replaced.', array('%token' => $input)));
+    $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
+    $this->assertEqual($output, $author_name, format_string('Unsanitized comment author token %token replaced.', array('%token' => $input)));
 
     // Load node so comment_count gets computed.
     $node = node_load($node->id());
