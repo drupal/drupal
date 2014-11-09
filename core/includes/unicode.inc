@@ -113,29 +113,6 @@ function drupal_xml_parser_create(&$data) {
 }
 
 /**
- * Converts data to UTF-8.
- *
- * @param string $data
- *   The data to be converted.
- * @param string $encoding
- *   The encoding that the data is in.
- *
- * @return string|bool
- *   Converted data or FALSE.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::convertToUtf8().
- */
-function drupal_convert_to_utf8($data, $encoding) {
-  $out = Unicode::convertToUtf8($data, $encoding);
-  if ($out === FALSE) {
-    \Drupal::logger('php')->error('Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.', array('%s' => $encoding));
-  }
-
-  return $out;
-}
-
-/**
  * Truncates a UTF-8-encoded string safely to a number of bytes.
  *
  * @param string $string
