@@ -156,4 +156,19 @@ class FullPageVariantTest extends UnitTestCase {
     $this->assertSame($expected_render_array, $display_variant->build());
   }
 
+  /**
+   * Tests the building of a full page variant with no main content set.
+   *
+   * @covers ::build
+   */
+  public function testBuildWithoutMainContent() {
+    $display_variant = $this->setUpDisplayVariant();
+    $this->blockRepository->expects($this->once())
+      ->method('getVisibleBlocksPerRegion')
+      ->willReturn([]);
+
+    $expected = ['content' => ['system_main' => []]];
+    $this->assertSame($expected, $display_variant->build());
+  }
+
 }

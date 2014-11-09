@@ -51,7 +51,7 @@ class FullPageVariant extends VariantBase implements PageVariantInterface, Conta
    *
    * @var array
    */
-  protected $mainContent;
+  protected $mainContent = [];
 
   /**
    * Constructs a new FullPageVariant.
