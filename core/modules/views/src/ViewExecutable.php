@@ -88,21 +88,21 @@ class ViewExecutable {
    *
    * @var int
    */
-  public $current_page = NULL;
+  protected $current_page = NULL;
 
   /**
    * The number of items per page.
    *
    * @var int
    */
-  public $items_per_page = NULL;
+  protected $items_per_page = NULL;
 
   /**
    * The pager offset.
    *
    * @var int
    */
-  public $offset = NULL;
+  protected $offset = NULL;
 
   /**
    * The total number of rows returned from the query.
@@ -139,7 +139,7 @@ class ViewExecutable {
    *
    * @var array
    */
-  public $exposed_input = array();
+  protected $exposed_input = array();
 
   /**
    * Exposed widget input directly from the $form_state->getValues().
@@ -569,6 +569,9 @@ class ViewExecutable {
     // Fill our input either from \Drupal::request()->query or from something
     // previously set on the view.
     if (empty($this->exposed_input)) {
+      // Ensure that we can call the method at any point in time.
+      $this->initDisplay();
+
       $this->exposed_input = \Drupal::request()->query->all();
       // unset items that are definitely not our input:
       foreach (array('page', 'q') as $key) {

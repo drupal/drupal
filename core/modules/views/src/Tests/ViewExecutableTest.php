@@ -70,7 +70,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     'attachment_before',
     'attachment_after',
     'exposed_data',
-    'exposed_input',
     'exposed_raw_input',
     'old_view',
     'parent_views',
@@ -186,6 +185,9 @@ class ViewExecutableTest extends ViewUnitTestBase {
     foreach ($this->executableProperties as $property) {
       $this->assertTrue(isset($view->{$property}));
     }
+
+    // Per default exposed input should fall back to an empty array.
+    $this->assertEqual($view->getExposedInput(), []);
   }
 
   /**

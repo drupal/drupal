@@ -267,7 +267,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
       $all_exposed = array_merge($exposed_sorts, $exposed_filters);
 
       // Set the access to FALSE if there is no exposed input.
-      if (!array_intersect_key($all_exposed, $this->view->exposed_input)) {
+      if (!array_intersect_key($all_exposed, $this->view->getExposedInput())) {
         $form['actions']['reset']['#access'] = FALSE;
       }
     }
