@@ -129,37 +129,3 @@ function drupal_xml_parser_create(&$data) {
 function drupal_truncate_bytes($string, $len) {
   return Unicode::truncateBytes($string, $len);
 }
-
-/**
- * Encodes MIME/HTTP header values that contain incorrectly encoded characters.
- *
- * @param $string
- *   The header to encode.
- *
- * @return string
- *   The mime-encoded header.
- *
- * @see mime_header_decode()
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::mimeHeaderEncode().
- */
-function mime_header_encode($string) {
-  return Unicode::mimeHeaderEncode($string);
-}
-
-/**
- * Decodes MIME/HTTP encoded header values.
- *
- * @param $header
- *   The header to decode.
- *
- * @return string
- *   The mime-decoded header.
- *
- * @see mime_header_encode()
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::mimeHeaderDecode().
- */
-function mime_header_decode($header) {
-  return Unicode::mimeHeaderDecode($header);
-}
