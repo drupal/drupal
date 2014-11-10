@@ -5,17 +5,8 @@ drupal.file:
   css:
     theme:
       css/file.admin.css: {}
-    component:
-      css/file.formatter.generic.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
-
-drupal.file.formatter.generic:
-  version: VERSION
-  css:
-    theme:
-      css/file.formatter.generic.css: {}
-

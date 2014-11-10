@@ -6,10 +6,11 @@
  * Available variables:
  * - attributes: The HTML attributes for the containing element.
  * - link: A link to the file.
+ * - icon: The icon image representing the file type.
  *
  * @see template_preprocess_file_link()
  *
  * @ingroup themeable
  */
 #}
-<span{{ attributes }}>{{ link }}</span>
+<span{{ attributes }}>{{ icon }} {{ link }}</span>
