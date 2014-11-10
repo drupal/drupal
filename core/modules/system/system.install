@@ -112,11 +112,18 @@ function system_requirements($phase) {
       '@system_requirements' => 'http://drupal.org/requirements',
     ));
 
-    $item_list = array(
-      '#theme' => 'item_list',
-      '#items' => $missing_extensions,
+    // We use twig inline_template to avoid twig's autoescape.
+    $description = array(
+      '#type' => 'inline_template',
+      '#template' => '{{ description }}{{ missing_extensions }}',
+      '#context' => array(
+        'description' => $description,
+        'missing_extensions' => array(
+          '#theme' => 'item_list',
+          '#items' => $missing_extensions,
+        ),
+      ),
     );
-    $description .= drupal_render($item_list);
 
     $requirements['php_extensions']['value'] = t('Disabled');
     $requirements['php_extensions']['severity'] = REQUIREMENT_ERROR;
@@ -189,26 +196,38 @@ function system_requirements($phase) {
   );
 
   if (!Environment::checkMemoryLimit(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
-    $description = '';
+    $description = array();
     if ($phase == 'install') {
-      $description = t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
+      $description['phase'] = t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
     }
     elseif ($phase == 'update') {
-      $description = t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the update process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
+      $description['phase'] = t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the update process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
     }
     elseif ($phase == 'runtime') {
-      $description = t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
+      $description['phase'] = t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
     }
 
-    if (!empty($description)) {
+    if (!empty($description['phase'])) {
       if ($php_ini_path = get_cfg_var('cfg_file_path')) {
-        $description .= ' ' . t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
+        $description['memory'] = t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
       }
       else {
-        $description .= ' ' . t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
+        $description['memory'] = t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
       }
 
-      $requirements['php_memory_limit']['description'] = $description . ' ' . t('For more information, see the online handbook entry for <a href="@memory-limit">increasing the PHP memory limit</a>.', array('@memory-limit' => 'http://drupal.org/node/207036'));
+      $handbook_link = t('For more information, see the online handbook entry for <a href="@memory-limit">increasing the PHP memory limit</a>.', array('@memory-limit' => 'http://drupal.org/node/207036'));
+
+      $description = array(
+        '#type' => 'inline_template',
+        '#template' => '{{ description_phase }} {{ description_memory }} {{ handbook }}',
+        '#context' => array(
+          'description_phase' => $description['phase'],
+          'description_memory' => $description['memory'],
+          'handbook' => $handbook_link,
+        ),
+      );
+
+      $requirements['php_memory_limit']['description'] = $description;
       $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
   }
@@ -231,11 +250,17 @@ function system_requirements($phase) {
         $description = $conf_errors[0];
       }
       else {
-        $item_list = array(
-          '#theme' => 'item_list',
-          '#items' => $conf_errors,
+        // We use twig inline_template to avoid double escaping.
+        $description = array(
+          '#type' => 'inline_template',
+          '#template' => '{{ configuration_error_list }}',
+          '#context' => array(
+            'configuration_error_list' => array(
+              '#theme' => 'item_list',
+              '#items' => $conf_errors,
+            ),
+          ),
         );
-        $description = drupal_render($item_list);
       }
       $requirements['configuration_files'] = array(
         'value' => t('Not protected'),
@@ -401,22 +426,30 @@ function system_requirements($phase) {
       $description = '';
       $requirements['file system']['value'] = t('Not writable');
       if (!$is_directory) {
-        $error .= t('The directory %directory does not exist.', array('%directory' => $directory)) . ' ';
+        $error = t('The directory %directory does not exist.', array('%directory' => $directory));
       }
       else {
-        $error .= t('The directory %directory is not writable.', array('%directory' => $directory)) . ' ';
+        $error = t('The directory %directory is not writable.', array('%directory' => $directory));
       }
       // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
-        $description = $error . t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => \Drupal::url('system.file_system_settings')));
+        $description = t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => \Drupal::url('system.file_system_settings')));
       }
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
         // be treated as version, so provide none there.
-        $description = $error . t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+        $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
         $requirements['file system']['value'] = '';
       }
       if (!empty($description)) {
+        $description = array(
+          '#type' => 'inline_template',
+          '#template' => '{{ error }} {{ description }}',
+          '#context' => array(
+            'error' => $error,
+            'description' => $description,
+          ),
+        );
         $requirements['file system']['description'] = $description;
         $requirements['file system']['severity'] = REQUIREMENT_ERROR;
       }
