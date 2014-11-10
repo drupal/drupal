@@ -62,6 +62,13 @@ abstract class AttributeValueBase {
   }
 
   /**
+   * Returns the raw value.
+   */
+  public function value() {
+    return $this->value;
+  }
+
+  /**
    * Implements the magic __toString() method.
    */
   abstract function __toString();

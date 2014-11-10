@@ -25,6 +25,11 @@ class AttributeTest extends UnitTestCase {
     $attribute = new Attribute(array('class' => array('example-class')));
     $this->assertTrue(isset($attribute['class']));
     $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+
+    // Test adding boolean attributes through the constructor.
+    $attribute = new Attribute(['selected' => TRUE, 'checked' => FALSE]);
+    $this->assertTrue($attribute['selected']->value());
+    $this->assertFalse($attribute['checked']->value());
   }
 
   /**
@@ -55,6 +60,73 @@ class AttributeTest extends UnitTestCase {
     $attribute = new Attribute(array('class' => array('example-class')));
     unset($attribute['class']);
     $this->assertFalse(isset($attribute['class']));
+  }
+
+  /**
+   * Tests setting attributes.
+   * @covers ::setAttribute()
+   */
+  public function testSetAttribute() {
+    $attribute = new Attribute();
+
+    // Test adding various attributes.
+    $attributes = ['alt', 'id', 'src', 'title', 'value'];
+    foreach ($attributes as $key) {
+      foreach (['kitten', ''] as $value) {
+        $attribute = new Attribute();
+        $attribute->setAttribute($key, $value);
+        $this->assertEquals($value, $attribute[$key]);
+      }
+    }
+
+    // Test adding array to class.
+    $attribute = new Attribute();
+    $attribute->setAttribute('class', ['kitten', 'cat']);
+    $this->assertArrayEquals(['kitten', 'cat'], $attribute['class']->value());
+
+    // Test adding boolean attributes.
+    $attribute = new Attribute();
+    $attribute['checked'] = TRUE;
+    $this->assertTrue($attribute['checked']->value());
+  }
+
+  /**
+   * Tests removing attributes.
+   * @covers ::removeAttribute()
+   */
+  public function testRemoveAttribute() {
+    $attributes = [
+      'alt' => 'Alternative text',
+      'id' => 'bunny',
+      'src' => 'zebra',
+      'style' => 'color: pink;',
+      'title' => 'kitten',
+      'value' => 'ostrich',
+      'checked' => TRUE,
+    ];
+    $attribute = new Attribute($attributes);
+
+    // Single value.
+    $attribute->removeAttribute('alt');
+    $this->assertEmpty($attribute['alt']);
+
+    // Multiple values.
+    $attribute->removeAttribute('id', 'src');
+    $this->assertEmpty($attribute['id']);
+    $this->assertEmpty($attribute['src']);
+
+    // Single value in array.
+    $attribute->removeAttribute(['style']);
+    $this->assertEmpty($attribute['style']);
+
+    // Boolean value.
+    $attribute->removeAttribute('checked');
+    $this->assertEmpty($attribute['checked']);
+
+    // Multiple values in array.
+    $attribute->removeAttribute(['title', 'value']);
+    $this->assertEmpty((string) $attribute);
+
   }
 
   /**
