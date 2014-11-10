@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests creating new entity (e.g. taxonomy-term) from an autocomplete widget.
@@ -103,7 +104,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $result = $query->execute();
     $this->assertTrue($result, 'Referenced node was created.');
     $referenced_nid = key($result);
-    $referenced_node = node_load($referenced_nid);
+    $referenced_node = Node::load($referenced_nid);
 
     // Assert the referenced node is associated with referencing node.
     $result = \Drupal::entityQuery('node')
@@ -111,7 +112,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       ->execute();
 
     $referencing_nid = key($result);
-    $referencing_node = node_load($referencing_nid);
+    $referencing_node = Node::load($referencing_nid);
     $this->assertEqual($referenced_nid, $referencing_node->test_field->target_id, 'Newly created node is referenced from the referencing node.');
 
     // Now try to view the node and check that the referenced node is shown.

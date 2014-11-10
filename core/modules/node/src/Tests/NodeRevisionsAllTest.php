@@ -20,7 +20,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
   protected function setUp() {
     parent::setUp();
-
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create and log in user.
     $web_user = $this->drupalCreateUser(
       array(
@@ -59,7 +59,8 @@ class NodeRevisionsAllTest extends NodeTestBase {
       $node->setNewRevision();
       $node->save();
 
-      $node = node_load($node->id(), TRUE); // Make sure we get revision information.
+      $node_storage->resetCache(array($node->id()));
+      $node = $node_storage->load($node->id()); // Make sure we get revision information.
       $nodes[] = clone $node;
     }
 
@@ -71,6 +72,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
    * Checks node revision operations.
    */
   function testRevisions() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;
 
@@ -112,7 +114,8 @@ class NodeRevisionsAllTest extends NodeTestBase {
         '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
       )),
       'Revision reverted.');
-    $reverted_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
     // Confirm that this is not the current version.

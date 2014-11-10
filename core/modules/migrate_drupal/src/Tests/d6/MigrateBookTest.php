@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\node\Entity\Node;
 
 /**
  * Upgrade book structure.
@@ -51,7 +52,7 @@ class MigrateBookTest extends MigrateDrupalTestBase {
    * Tests the Drupal 6 book structure to Drupal 8 migration.
    */
   public function testBook() {
-    $nodes = node_load_multiple(array(4, 5, 6, 7, 8));
+    $nodes = Node::loadMultiple(array(4, 5, 6, 7, 8));
     $this->assertEqual($nodes[4]->book['bid'], 4);
     $this->assertEqual($nodes[4]->book['pid'], 0);
 

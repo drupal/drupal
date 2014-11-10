@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests file listing page functionality.
  *
@@ -88,7 +90,7 @@ class FileListingTest extends FileFieldTestBase {
         'files[file_0]' => drupal_realpath($file->getFileUri()),
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $node = entity_load('node', $node->id());
+      $node = Node::load($node->id());
     }
 
     $this->drupalGet('admin/content/files');

@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Ensure that files added to nodes appear correctly in RSS feeds.
  *
@@ -25,6 +27,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    * Tests RSS enclosure formatter display for RSS feeds.
    */
   function testFileFieldRSSContent() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
     $field_settings = array(
@@ -58,7 +61,8 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $node->id());
 
     // Get the uploaded file from the node.
-    $node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
     $node_file = file_load($node->{$field_name}->target_id);
 
     // Check that the RSS enclosure appears in the RSS feed.

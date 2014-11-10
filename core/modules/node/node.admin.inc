@@ -7,6 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Updates all nodes in the passed-in array with the passed-in field values.
@@ -52,7 +53,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
   }
   else {
     if ($load && !$revisions) {
-      $nodes = entity_load_multiple('node', $nodes);
+      $nodes = Node::loadMultiple($nodes);
     }
     foreach ($nodes as $node) {
       if ($load && $revisions) {
@@ -123,7 +124,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $load, $r
     $node = array_shift($context['sandbox']['nodes']);
     if ($load) {
       $node = $revisions ?
-        entity_revision_load('node', $node) : entity_load('node', $node);
+        entity_revision_load('node', $node) : Node::load($node);
     }
     $node = _node_mass_update_helper($node, $updates);
 

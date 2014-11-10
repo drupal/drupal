@@ -8,6 +8,7 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\image\Tests\ImageFieldTestBase;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the RDFa markup of imagefields.
@@ -65,7 +66,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Save a node with the image.
     $nid = $this->uploadNodeImage($image, $this->fieldName, 'article');
-    $this->node = node_load($nid);
+    $this->node = Node::load($nid);
     $this->file = file_load($this->node->{$this->fieldName}->target_id);
   }
 

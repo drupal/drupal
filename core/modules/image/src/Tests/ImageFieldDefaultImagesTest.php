@@ -27,6 +27,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    * Tests CRUD for fields and fields fields with default images.
    */
   public function testDefaultImages() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
     // Create 10 files so the default image fids are not a single value.
@@ -189,8 +190,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes and confirm the field field defaults are used.
-    $article_built = $this->drupalBuildEntityView($article = node_load($article->id(), TRUE));
-    $page_built = $this->drupalBuildEntityView($page = node_load($page->id(), TRUE));
+    $node_storage->resetCache(array($article->id(), $page->id()));
+    $article_built = $this->drupalBuildEntityView($article = $node_storage->load($article->id()));
+    $page_built = $this->drupalBuildEntityView($page = $node_storage->load($page->id()));
     $this->assertEqual(
       $article_built[$field_name]['#items'][0]->target_id,
       $default_images['field']->id(),
@@ -225,8 +227,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes.
-    $article_built = $this->drupalBuildEntityView($article = node_load($article->id(),  TRUE));
-    $page_built = $this->drupalBuildEntityView($page = node_load($page->id(), TRUE));
+    $node_storage->resetCache(array($article->id(), $page->id()));
+    $article_built = $this->drupalBuildEntityView($article = $node_storage->load($article->id()));
+    $page_built = $this->drupalBuildEntityView($page = $node_storage->load($page->id()));
 
     // Confirm the article uses the new default.
     $this->assertEqual(
@@ -265,8 +268,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes.
-    $article_built = $this->drupalBuildEntityView($article = node_load($article->id(), TRUE));
-    $page_built = $this->drupalBuildEntityView($page = node_load($page->id(), TRUE));
+    $node_storage->resetCache(array($article->id(), $page->id()));
+    $article_built = $this->drupalBuildEntityView($article = $node_storage->load($article->id()));
+    $page_built = $this->drupalBuildEntityView($page = $node_storage->load($page->id()));
     // Confirm the article uses the new field (not field) default.
     $this->assertEqual(
       $article_built[$field_name]['#items'][0]->target_id,

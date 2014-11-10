@@ -338,7 +338,7 @@ function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterf
  * @see node_delete_confirm()
  */
 function book_form_node_delete_confirm_alter(&$form, FormStateInterface $form_state) {
-  $node = node_load($form['nid']['#value']);
+  $node = Node::load($form['nid']['#value']);
 
   if (isset($node->book) && $node->book['has_children']) {
     $form['book_warning'] = array(

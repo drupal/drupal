@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
-
+use Drupal\node\Entity\Node;
 
 /**
  * Page callback: Generates a page of tracked nodes for the site.
@@ -46,7 +46,7 @@ function tracker_page($account = NULL) {
   $rows = array();
   if (!empty($tracker_data)) {
     // Load nodes into an array with the same order as $tracker_data.
-    $nodes = entity_load_multiple('node', array_keys($tracker_data));
+    $nodes = Node::loadMultiple(array_keys($tracker_data));
 
     // Enrich the node data.
     $result = \Drupal::service('comment.statistics')->read($nodes, 'node', FALSE);

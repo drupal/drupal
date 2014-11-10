@@ -35,6 +35,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
    * Checks that unchecking 'Create new revision' works when editing a node.
    */
   function testNodeFormSaveWithoutRevision() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
 
     // Set page revision setting 'create new revision'. This will mean new
     // revisions are created by default when the node is edited.
@@ -54,7 +55,8 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Load the node again and check the revision is the same as before.
-    $node_revision = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node_revision = $node_storage->load($node->id(), TRUE);
     $this->assertEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
 
     // Verify the checkbox is checked on the node edit form.
@@ -66,7 +68,8 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Load the node again and check the revision is different from before.
-    $node_revision = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node_revision = $node_storage->load($node->id());
     $this->assertNotEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
 
   }

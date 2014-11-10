@@ -407,6 +407,7 @@ class BookTest extends WebTestBase {
    * Tests the access for deleting top-level book nodes.
    */
    function testBookDelete() {
+     $node_storage = $this->container->get('entity.manager')->getStorage('node');
      $nodes = $this->createBook();
      $this->drupalLogin($this->admin_user);
      $edit = array();
@@ -415,7 +416,8 @@ class BookTest extends WebTestBase {
      $this->drupalGet('node/' . $this->book->id() . '/outline/remove');
      $this->assertResponse('403', 'Deleting top-level book node properly forbidden.');
      $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
-     $node4 = node_load($nodes[4]->id(), TRUE);
+     $node_storage->resetCache(array($nodes[4]->id()));
+     $node4 = $node_storage->load($nodes[4]->id());
      $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
 
      // Delete all child book nodes and retest top-level node deletion.
@@ -424,7 +426,8 @@ class BookTest extends WebTestBase {
      }
      entity_delete_multiple('node', $nids);
      $this->drupalPostForm('node/' . $this->book->id() . '/outline/remove', $edit, t('Remove'));
-     $node = node_load($this->book->id(), TRUE);
+     $node_storage->resetCache(array($this->book->id()));
+     $node = $node_storage->load($this->book->id());
      $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
    }
 

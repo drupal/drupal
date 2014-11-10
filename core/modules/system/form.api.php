@@ -55,6 +55,8 @@ use Drupal\Component\Utility\String;
  *     such as how many total items were processed.
  */
 function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
+  $node_storage = $this->container->get('entity.manager')->getStorage('node');
+
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
@@ -70,7 +72,8 @@ function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
   while ($row = db_fetch_array($result)) {
 
     // Here we actually perform our processing on the current node.
-    $node = node_load($row['nid'], NULL, TRUE);
+    $node_storage->resetCache(array($row['nid']));
+    $node = $node_storage->load($row['nid']);
     $node->value1 = $options1;
     $node->value2 = $options2;
     node_save($node);

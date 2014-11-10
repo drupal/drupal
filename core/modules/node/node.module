@@ -843,7 +843,7 @@ function node_get_recent($number = 10) {
     ->addTag('node_access')
     ->execute();
 
-  $nodes = node_load_multiple($nids);
+  $nodes = Node::loadMultiple($nids);
 
   return $nodes ? $nodes : array();
 }
@@ -870,7 +870,7 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  * Constructs a drupal_render() style array from an array of loaded nodes.
  *
  * @param $nodes
- *   An array of nodes as returned by node_load_multiple().
+ *   An array of nodes as returned by Node::loadMultiple().
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser.'
  * @param $langcode
@@ -1236,6 +1236,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
+  $node_storage = \Drupal::entityManager()->getStorage('node');
   $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
   $access_control_handler->deleteGrants();
   // Only recalculate if the site is using a node_access module.
@@ -1260,7 +1261,8 @@ function node_access_rebuild($batch_mode = FALSE) {
       $entity_query->sort('nid', 'DESC');
       $nids = $entity_query->execute();
       foreach ($nids as $nid) {
-        $node = node_load($nid, TRUE);
+        $node_storage->resetCache(array($nid));
+        $node = Node::load($nid);
         // To preserve database integrity, only write grants if the node
         // loads successfully.
         if (!empty($node)) {
@@ -1291,6 +1293,7 @@ function node_access_rebuild($batch_mode = FALSE) {
  *   An array of contextual key/value information for rebuild batch process.
  */
 function _node_access_rebuild_batch_operation(&$context) {
+  $node_storage = $this->container->get('entity.manager')->getStorage('node');
   if (empty($context['sandbox'])) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
@@ -1305,7 +1308,8 @@ function _node_access_rebuild_batch_operation(&$context) {
     ->sort('nid', 'ASC')
     ->range(0, $limit)
     ->execute();
-  $nodes = node_load_multiple($nids, TRUE);
+  $node_storage->resetCache($nids);
+  $nodes = Node::loadMultiple($nids);
   foreach ($nodes as $nid => $node) {
     // To preserve database integrity, only write grants if the node
     // loads successfully.

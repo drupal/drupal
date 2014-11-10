@@ -29,6 +29,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for a single-valued File field.
    */
   function testSingleValuedWidget() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);
@@ -41,7 +42,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // @todo This only tests a 'nojs' submission, because drupalPostAjaxForm()
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-      $node = node_load($nid, TRUE);
+      $node_storage->resetCache(array($nid));
+      $node = $node_storage->load($nid);
       $node_file = file_load($node->{$field_name}->target_id);
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
@@ -74,7 +76,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
       // Save the node and ensure it does not have the file.
       $this->drupalPostForm(NULL, array(), t('Save and keep published'));
-      $node = node_load($nid, TRUE);
+      $node_storage->resetCache(array($nid));
+      $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
     }
   }
@@ -83,6 +86,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for multiple multi-valued File fields.
    */
   function testMultiValuedWidget() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
     // bug in drupalPostForm() with multiple file uploads in one form, where the
@@ -191,7 +195,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $matches = array();
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
-      $node = node_load($nid, TRUE);
+      $node_storage->resetCache(array($nid));
+      $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
     }
   }
@@ -200,6 +205,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests a file field with a "Private files" upload destination setting.
    */
   function testPrivateFileSetting() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Grant the admin user required permissions.
     user_role_grant_permissions($this->admin_user->roles[0]->target_id, array('administer node fields'));
 
@@ -214,7 +220,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = array('field_storage[settings][uri_scheme]' => 'private');
     $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$field->id/storage", $edit, t('Save field settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
     $node_file = file_load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 

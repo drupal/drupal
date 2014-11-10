@@ -151,6 +151,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       $nid = $nid_or_type;
     }
     else {
+      $node_storage = $this->container->get('entity.manager')->getStorage('node');
       // Add a new node.
       $extras['type'] = $nid_or_type;
       $node = $this->drupalCreateNode($extras);
@@ -158,7 +159,8 @@ abstract class FileFieldTestBase extends WebTestBase {
       // Save at least one revision to better simulate a real site.
       $node->setNewRevision();
       $node->save();
-      $node = node_load($nid, TRUE);
+      $node_storage->resetCache(array($nid));
+      $node = $node_storage->load($nid);
       $this->assertNotEqual($nid, $node->getRevisionId(), 'Node revision exists.');
     }
 

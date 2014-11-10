@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests the loading of multiple nodes.
  *
@@ -15,7 +17,7 @@ namespace Drupal\node\Tests;
 class NodeLoadMultipleTest extends NodeTestBase {
 
   /**
-   * Enable Views to test the frontpage against node_load_multiple() results.
+   * Enable Views to test the frontpage against Node::loadMultiple() results.
    *
    * @var array
    */
@@ -51,7 +53,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $this->assertTrue($count == 2, format_string('@count nodes loaded.', array('@count' => $count)));
 
     // Load nodes by nid. Nodes 1, 2 and 4 will be loaded.
-    $nodes = node_load_multiple(array(1, 2, 4));
+    $nodes = Node::loadMultiple(array(1, 2, 4));
     $count = count($nodes);
     $this->assertTrue(count($nodes) == 3, format_string('@count nodes loaded', array('@count' => $count)));
     $this->assertTrue(isset($nodes[$node1->id()]), 'Node is correctly keyed in the array');

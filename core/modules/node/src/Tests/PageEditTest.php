@@ -91,6 +91,7 @@ class PageEditTest extends NodeTestBase {
    * Tests changing a node's "authored by" field.
    */
   function testPageAuthoredBy() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->drupalLogin($this->admin_user);
 
     // Create node to edit.
@@ -114,14 +115,16 @@ class PageEditTest extends NodeTestBase {
     // Change the authored by field to the anonymous user (uid 0).
     $edit['uid[0][target_id]'] = 'Anonymous (0)';
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertIdentical($node->getOwnerId(), '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
     $edit['uid[0][target_id]'] = $this->web_user->getUsername();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertIdentical($node->getOwnerId(), $this->web_user->id(), 'Node authored by normal user.');
 
     // Check that normal users cannot change the authored by information.

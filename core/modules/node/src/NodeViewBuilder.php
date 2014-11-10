@@ -10,6 +10,7 @@ namespace Drupal\node;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\node\Entity\Node;
 
 /**
  * Render controller for nodes.
@@ -108,7 +109,7 @@ class NodeViewBuilder extends EntityViewBuilder {
     );
 
     if (!$context['in_preview']) {
-      $entity = entity_load('node', $context['node_entity_id'])->getTranslation($context['langcode']);
+      $entity = Node::load($context['node_entity_id'])->getTranslation($context['langcode']);
       $links['node'] = static::buildLinks($entity, $context['view_mode']);
 
       // Allow other modules to alter the node links.

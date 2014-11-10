@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests\Views;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests a node bulk form.
  *
@@ -26,6 +28,7 @@ class BulkFormTest extends NodeTestBase {
    * Tests the node bulk form.
    */
   public function testBulkForm() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->drupalLogin($this->drupalCreateUser(array('administer nodes')));
     $node = $this->drupalCreateNode(array(
       'promote' => FALSE,
@@ -43,7 +46,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertFalse($node->isPublished(), 'Node has been unpublished');
 
     // Publish action.
@@ -53,7 +57,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertTrue($node->isPublished(), 'Node has been published');
 
     // Make sticky action.
@@ -66,7 +71,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status and sticky flag.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertTrue($node->isPublished(), 'Node has been published');
     $this->assertTrue($node->isSticky(), 'Node has been made sticky');
 
@@ -77,7 +83,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the sticky flag.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
 
     // Promote to front page.
@@ -90,7 +97,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status and promoted flag.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertTrue($node->isPublished(), 'Node has been published');
     $this->assertTrue($node->isPromoted(), 'Node has been promoted to the front page');
 
@@ -101,7 +109,8 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the promoted flag.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertFalse($node->isPromoted(), 'Node has been demoted');
 
     // Delete node.
@@ -112,7 +121,8 @@ class BulkFormTest extends NodeTestBase {
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
     // Re-load the node and check if it has been deleted.
-    $node = entity_load('node', $node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertNull($node, 'Node has been deleted');
   }
 

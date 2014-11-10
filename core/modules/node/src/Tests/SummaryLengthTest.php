@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests summary length.
  *
@@ -23,7 +25,7 @@ class SummaryLengthTest extends NodeTestBase {
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);
-    $this->assertTrue(node_load($node->id()), 'Node created.');
+    $this->assertTrue(Node::load($node->id()), 'Node created.');
 
     // Render the node as a teaser.
     $content = $this->drupalBuildEntityView($node, 'teaser');

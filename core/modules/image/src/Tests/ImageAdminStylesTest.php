@@ -9,6 +9,7 @@ namespace Drupal\image\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\image\ImageStyleInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
@@ -296,7 +297,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
-    $node = node_load($nid);
+    $node = Node::load($nid);
 
     // Get node field original image URI.
     $fid = $node->get($field_name)->target_id;
@@ -430,7 +431,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
-    $node = node_load($nid);
+    $node = Node::load($nid);
 
     // Get node field original image URI.
     $fid = $node->get($field_name)->target_id;

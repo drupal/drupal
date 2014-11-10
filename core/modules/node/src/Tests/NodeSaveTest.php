@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests $node->save() for saving content.
  *
@@ -59,7 +61,7 @@ class NodeSaveTest extends NodeTestBase {
 
     $node->save();
     // Test the import.
-    $node_by_nid = node_load($test_nid);
+    $node_by_nid = Node::load($test_nid);
     $this->assertTrue($node_by_nid, 'Node load by node ID.');
 
     $node_by_title = $this->drupalGetNodeByTitle($title);
@@ -149,7 +151,7 @@ class NodeSaveTest extends NodeTestBase {
     $this->assertEqual($node->label(), 'updated_presave_update', 'Changes have been determined.');
 
     // Test the static node load cache to be cleared.
-    $node = node_load($node->id());
+    $node = Node::load($node->id());
     $this->assertEqual($node->label(), 'updated_presave', 'Static cache has been cleared.');
   }
 

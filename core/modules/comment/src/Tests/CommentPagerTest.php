@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Component\Utility\String;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests paging of comments and their settings.
@@ -240,7 +241,7 @@ class CommentPagerTest extends CommentTestBase {
       6 => 0, // Page of comment 0
     );
 
-    $node = node_load($node->id());
+    $node = Node::load($node->id());
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node);
@@ -259,7 +260,7 @@ class CommentPagerTest extends CommentTestBase {
     );
 
     \Drupal::entityManager()->getStorage('node')->resetCache(array($node->id()));
-    $node = node_load($node->id());
+    $node = Node::load($node->id());
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node);

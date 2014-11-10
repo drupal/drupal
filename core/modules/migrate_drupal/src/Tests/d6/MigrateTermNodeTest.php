@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
+use Drupal\node\Entity\Node;
 
 /**
  * Upgrade taxonomy term node associations.
@@ -33,7 +34,9 @@ class MigrateTermNodeTest extends MigrateTermNodeTestBase {
    * Tests the Drupal 6 term-node association to Drupal 8 migration.
    */
   public function testTermNode() {
-    $nodes = node_load_multiple(array(1, 2), TRUE);
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage->resetCache(array(1, 2));
+    $nodes = Node::loadMultiple(array(1, 2));
     $node = $nodes[1];
     $this->assertEqual(count($node->vocabulary_1_i_0_), 1);
     $this->assertEqual($node->vocabulary_1_i_0_[0]->target_id, 1);

@@ -12,6 +12,7 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,16 +43,26 @@ class CommentController extends ControllerBase {
   protected $commentManager;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $entityManager;
+
+  /**
    * Constructs a CommentController object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   HTTP kernel to handle requests.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(HttpKernelInterface $http_kernel, CommentManagerInterface $comment_manager) {
+  public function __construct(HttpKernelInterface $http_kernel, CommentManagerInterface $comment_manager, EntityManagerInterface $entity_manager) {
     $this->httpKernel = $http_kernel;
     $this->commentManager = $comment_manager;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -60,7 +71,8 @@ class CommentController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('http_kernel'),
-      $container->get('comment.manager')
+      $container->get('comment.manager'),
+      $container->get('entity.manager')
     );
   }
 
@@ -285,7 +297,7 @@ class CommentController extends ControllerBase {
 
     $links = array();
     foreach ($nids as $nid) {
-      $node = node_load($nid);
+      $node = $this->entityManager->getStorage('node')->load($nid);
       $new = $this->commentManager->getCountNewComments($node);
       $page_number = $this->entityManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node);

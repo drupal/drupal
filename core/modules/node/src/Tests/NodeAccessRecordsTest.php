@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Tests hook_node_access_records when acquiring grants.
  *
@@ -27,7 +29,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
   function testNodeAccessRecords() {
     // Create an article node.
     $node1 = $this->drupalCreateNode(array('type' => 'article'));
-    $this->assertTrue(node_load($node1->id()), 'Article node created.');
+    $this->assertTrue(Node::load($node1->id()), 'Article node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node1->id()))->fetchAll();
@@ -37,7 +39,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
 
     // Create an unpromoted "Basic page" node.
     $node2 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0));
-    $this->assertTrue(node_load($node2->id()), 'Unpromoted basic page node created.');
+    $this->assertTrue(Node::load($node2->id()), 'Unpromoted basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node2->id()))->fetchAll();
@@ -47,7 +49,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
 
     // Create an unpromoted, unpublished "Basic page" node.
     $node3 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0, 'status' => 0));
-    $this->assertTrue(node_load($node3->id()), 'Unpromoted, unpublished basic page node created.');
+    $this->assertTrue(Node::load($node3->id()), 'Unpromoted, unpublished basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node3->id()))->fetchAll();
@@ -57,7 +59,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
 
     // Create a promoted "Basic page" node.
     $node4 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
-    $this->assertTrue(node_load($node4->id()), 'Promoted basic page node created.');
+    $this->assertTrue(Node::load($node4->id()), 'Promoted basic page node created.');
 
     // Check to see if grant added by node_test_node_access_records was altered
     // by node_test_node_access_records_alter.

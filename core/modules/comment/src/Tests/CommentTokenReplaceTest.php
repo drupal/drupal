@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
+use Drupal\node\Entity\Node;
 
 /**
  * Generates text using placeholders for dummy content to check comment token
@@ -101,7 +102,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->assertEqual($output, $author_name, format_string('Unsanitized comment author token %token replaced.', array('%token' => $input)));
 
     // Load node so comment_count gets computed.
-    $node = node_load($node->id());
+    $node = Node::load($node->id());
 
     // Generate comment tokens for the node (it has 2 comments, both new).
     $tests = array();

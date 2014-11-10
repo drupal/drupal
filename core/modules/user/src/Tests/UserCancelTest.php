@@ -35,6 +35,7 @@ class UserCancelTest extends WebTestBase {
    * Attempt to cancel account without permission.
    */
   function testUserCancelWithoutPermission() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
@@ -58,7 +59,8 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($account->isActive(), 'User account was not canceled.');
 
     // Confirm user's content has not been altered.
-    $test_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $test_node = $node_storage->load($node->id());
     $this->assertTrue(($test_node->getOwnerId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
   }
 
@@ -105,6 +107,7 @@ class UserCancelTest extends WebTestBase {
    * Attempt invalid account cancellations.
    */
   function testUserCancelInvalid() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
@@ -139,7 +142,8 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($account->isActive(), 'User account was not canceled.');
 
     // Confirm user's content has not been altered.
-    $test_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $test_node = $node_storage->load($node->id());
     $this->assertTrue(($test_node->getOwnerId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
   }
 
@@ -182,6 +186,7 @@ class UserCancelTest extends WebTestBase {
    * Disable account and unpublish all content.
    */
   function testUserBlockUnpublish() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
     // Create comment field on page.
     \Drupal::service('comment.manager')->addDefaultField('node', 'page');
@@ -229,7 +234,8 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($account->isBlocked(), 'User has been blocked.');
 
     // Confirm user's content has been unpublished.
-    $test_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $test_node = $node_storage->load($node->id());
     $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
     $test_node = node_revision_load($node->getRevisionId());
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
@@ -247,6 +253,7 @@ class UserCancelTest extends WebTestBase {
    * Delete account and anonymize all content.
    */
   function testUserAnonymize() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
@@ -283,11 +290,13 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(user_load($account->id(), TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been attributed to anonymous user.
-    $test_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $test_node = $node_storage->load($node->id());
     $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node of the user has been attributed to anonymous user.');
     $test_node = node_revision_load($revision, TRUE);
     $this->assertTrue(($test_node->getRevisionAuthor()->id() == 0 && $test_node->isPublished()), 'Node revision of the user has been attributed to anonymous user.');
-    $test_node = node_load($revision_node->id(), TRUE);
+    $node_storage->resetCache(array($revision_node->id()));
+    $test_node = $node_storage->load($revision_node->id());
     $this->assertTrue(($test_node->getOwnerId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");
 
     // Confirm that the confirmation message made it through to the end user.
@@ -298,6 +307,7 @@ class UserCancelTest extends WebTestBase {
    * Delete account and remove all content.
    */
   function testUserDelete() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     \Drupal::moduleHandler()->install(array('comment'));
     $this->resetAll();
@@ -349,9 +359,11 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(user_load($account->id(), TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been deleted.
-    $this->assertFalse(node_load($node->id(), TRUE), 'Node of the user has been deleted.');
+    $node_storage->resetCache(array($node->id()));
+    $this->assertFalse($node_storage->load($node->id()), 'Node of the user has been deleted.');
     $this->assertFalse(node_revision_load($revision), 'Node revision of the user has been deleted.');
-    $this->assertTrue(node_load($revision_node->id(), TRUE), "Current revision of the user's node was not deleted.");
+    $node_storage->resetCache(array($revision_node->id()));
+    $this->assertTrue($node_storage->load($revision_node->id()), "Current revision of the user's node was not deleted.");
     \Drupal::entityManager()->getStorage('comment')->resetCache(array($comment->id()));
     $this->assertFalse(Comment::load($comment->id()), 'Comment of the user has been deleted.');
 

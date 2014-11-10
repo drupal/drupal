@@ -10,7 +10,6 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;
 use Drupal\Component\Utility\String;
 use Drupal\file\Entity\File;
-use Drupal\node\Entity\Node;
 
 /**
  * Uploads a test to a private node and checks access.
@@ -37,6 +36,7 @@ class FilePrivateTest extends FileFieldTestBase {
    * Tests file access for file uploaded to a private node.
    */
   function testPrivateFile() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name, array('uri_scheme' => 'private'));
@@ -44,7 +44,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
     \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
-    $node = Node::load($nid);;
+    $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
@@ -64,7 +64,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalLogin($this->admin_user);
     $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, array('private' => TRUE));
     \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
-    $node = Node::load($nid);
+    $node = $node_storage->load($nid);
     $node_file = File::load($node->{$no_access_field_name}->target_id);
 
     // Ensure the file cannot be downloaded.

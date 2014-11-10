@@ -46,6 +46,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->fieldName = strtolower($this->randomMachineName());
 
     $type_name = 'article';
@@ -65,7 +66,8 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $this->fieldName, $type_name);
 
-    $this->node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $this->node = $node_storage->load($nid);
     $this->file = file_load($this->node->{$this->fieldName}->target_id);
 
   }

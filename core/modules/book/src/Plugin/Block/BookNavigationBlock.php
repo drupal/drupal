@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Provides a 'Book navigation' block.
@@ -40,6 +41,13 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $bookManager;
 
   /**
+   * The node storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeStorage;
+
+  /**
    * Constructs a new BookNavigationBlock instance.
    *
    * @param array $configuration
@@ -52,12 +60,15 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The request stack object.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   *   The node storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->requestStack = $request_stack;
     $this->bookManager = $book_manager;
+    $this->nodeStorage = $node_storage;
   }
 
   /**
@@ -69,7 +80,8 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_id,
       $plugin_definition,
       $container->get('request_stack'),
-      $container->get('book.manager')
+      $container->get('book.manager'),
+      $container->get('entity.manager')->getStorage('node')
     );
   }
 
@@ -132,7 +144,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
           // is no reason to run an additional menu tree query for each book.
           $book['in_active_trail'] = FALSE;
           // Check whether user can access the book link.
-          $book_node = node_load($book['nid']);
+          $book_node = $this->nodeStorage->load($book['nid']);
           $book['access'] = $book_node->access('view');
           $pseudo_tree[0]['link'] = $book;
           $book_menus[$book_id] = $this->bookManager->bookTreeOutput($pseudo_tree);

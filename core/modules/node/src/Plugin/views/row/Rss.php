@@ -11,6 +11,8 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\row\RowPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\node\NodeStorageInterface;
 
 /**
  * Plugin which performs a node_view on the resulting object
@@ -35,6 +37,42 @@ class Rss extends RowPluginBase {
 
   // Stores the nodes loaded with preRender.
   var $nodes = array();
+
+  /**
+   * The node storage
+   *
+   * @var \Drupal\node\NodeStorageInterface
+   */
+  protected $nodeStorage;
+
+  /**
+   * Constructs the Rss object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param NodeStorageInterface $node_storage
+   *   The node storage.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, NodeStorageInterface $node_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->nodeStorage = $node_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')->getStorage('node')
+    );
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -80,7 +118,7 @@ class Rss extends RowPluginBase {
       $nids[] = $row->{$this->field_alias};
     }
     if (!empty($nids)) {
-      $this->nodes = node_load_multiple($nids);
+      $this->nodes = $this->nodeStorage->loadMultiple($nids);
     }
   }
 

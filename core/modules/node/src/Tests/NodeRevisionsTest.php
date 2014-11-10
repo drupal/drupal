@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\Node;
+
 /**
  * Create a node with revisions and test viewing, saving, reverting, and
  * deleting revisions for users with access for this content type.
@@ -59,7 +61,7 @@ class NodeRevisionsTest extends NodeTestBase {
       $node->setNewRevision();
       $node->save();
 
-      $node = node_load($node->id()); // Make sure we get revision information.
+      $node = Node::load($node->id()); // Make sure we get revision information.
       $nodes[] = clone $node;
     }
 
@@ -71,6 +73,7 @@ class NodeRevisionsTest extends NodeTestBase {
    * Checks node revision related operations.
    */
   function testRevisions() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;
 
@@ -95,7 +98,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
                               '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()))), 'Revision reverted.');
-    $reverted_node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
     // Confirm that this is not the default version.
@@ -157,6 +161,7 @@ class NodeRevisionsTest extends NodeTestBase {
    * Checks that revisions are correctly saved without log messages.
    */
   function testNodeRevisionWithoutLogMessage() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create a node with an initial log message.
     $revision_log = $this->randomMachineName(10);
     $node = $this->drupalCreateNode(array('revision_log' => $revision_log));
@@ -175,7 +180,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
-    $node_revision = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node_revision = $node_storage->load($node->id());
     $this->assertEqual($node_revision->revision_log->value, $revision_log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
     // Create another node with an initial revision log message.
@@ -193,7 +199,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
-    $node_revision = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node_revision = $node_storage->load($node->id());
     $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 }

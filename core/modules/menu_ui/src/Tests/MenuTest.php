@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
+use Drupal\node\Entity\Node;
 
 /**
  * Add a custom menu, add menu links to the custom menu and Tools menu, check
@@ -94,7 +95,7 @@ class MenuTest extends MenuWebTestBase {
 
     foreach ($this->items as $item) {
       // Paths were set as 'node/$nid'.
-      $node = node_load($item->getRouteParameters()['node']);
+      $node = Node::load($item->getRouteParameters()['node']);
       $this->verifyMenuLink($item, $node);
     }
 

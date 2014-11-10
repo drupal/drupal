@@ -29,6 +29,8 @@ class BulkFormTest extends WebTestBase {
    * Tests the bulk form.
    */
   public function testBulkForm() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.
     $this->drupalGet('test_bulk_form_empty');
@@ -66,14 +68,14 @@ class BulkFormTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     foreach ($nodes as $node) {
-      $changed_node = node_load($node->id());
+      $changed_node = $node_storage->load($node->id());
       $this->assertTrue($changed_node->isSticky(), format_string('Node @nid got marked as sticky.', array('@nid' => $node->id())));
     }
 
     $this->assertText('Make content sticky was applied to 10 items.');
 
     // Unpublish just one node.
-    $node = node_load($nodes[0]->id());
+    $node = $node_storage->load($nodes[0]->id());
     $this->assertTrue($node->isPublished(), 'The node is published.');
 
     $edit = array('node_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
@@ -82,11 +84,13 @@ class BulkFormTest extends WebTestBase {
     $this->assertText('Unpublish content was applied to 1 item.');
 
     // Load the node again.
-    $node = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node = $node_storage->load($node->id());
     $this->assertFalse($node->isPublished(), 'A single node has been unpublished.');
 
     // The second node should still be published.
-    $node = node_load($nodes[1]->id(), TRUE);
+    $node_storage->resetCache(array($nodes[1]->id()));
+    $node = $node_storage->load($nodes[1]->id());
     $this->assertTrue($node->isPublished(), 'An unchecked node is still published.');
 
     // Set up to include just the sticky actions.

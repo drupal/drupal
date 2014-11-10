@@ -17,6 +17,7 @@ class FileFieldPathTest extends FileFieldTestBase {
    * Tests the normal formatter display on node display.
    */
   function testUploadPath() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
     $this->createFileField($field_name, 'node', $type_name);
@@ -26,7 +27,8 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded to the file root.
-    $node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
     $node_file = file_load($node->{$field_name}->target_id);
     $this->assertPathMatch('public://' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
 
@@ -37,7 +39,8 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
     $node_file = file_load($node->{$field_name}->target_id, TRUE);
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
 
@@ -49,7 +52,8 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node = node_load($nid, TRUE);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
     $node_file = file_load($node->{$field_name}->target_id);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.

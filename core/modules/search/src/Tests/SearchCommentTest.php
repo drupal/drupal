@@ -59,6 +59,7 @@ class SearchCommentTest extends SearchTestBase {
    * Verify that comments are rendered using proper format in search results.
    */
   function testSearchResultsComment() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create basic_html format that escapes all HTML.
     $basic_html_format = entity_create('filter_format', array(
       'format' => 'basic_html',
@@ -105,7 +106,8 @@ class SearchCommentTest extends SearchTestBase {
       'keys' => "'" . $edit_comment['subject[0][value]'] . "'",
     );
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $node2 = node_load($node->id(), TRUE);
+    $node_storage->resetCache(array($node->id()));
+    $node2 = $node_storage->load($node->id());
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject[0][value]'], 'Comment subject found in search results.');
 
