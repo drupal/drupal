@@ -541,12 +541,10 @@ ul.tabs {
   box-shadow: 8px 0 0 #77b259;
   margin-left: 0;
 }
-.messages--status,
-.ok {
+.messages--status {
   color: #325e1c;
 }
-.messages--status,
-table tr.ok {
+.messages--status {
   background-color: #f3faef;
 }
 
@@ -564,7 +562,8 @@ table tr.ok {
   color: #734c00;
 }
 .messages--warning,
-table tr.warning {
+table tr.warning,
+table tr.warning:hover {
   background-color: #fdf8ed;
 }
 
@@ -582,7 +581,8 @@ table tr.warning {
   color: #a51b00;
 }
 .messages--error,
-table tr.error {
+table tr.error,
+table tr.error:hover {
   background-color: #fcf4f2;
 }
 .messages--error p.error {

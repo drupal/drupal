@@ -118,8 +118,6 @@ th.select-all {
  */
 table.system-status-report tr {
   border-top: 1px solid #ccc;
-  border-left: 1px solid #bebfb9;
-  border-right: 1px solid #bebfb9;
   border-bottom: inherit;
 }
 table.system-status-report tr:first-child {
@@ -128,18 +126,11 @@ table.system-status-report tr:first-child {
 table.system-status-report tr:last-child {
   border-bottom: 1px solid #bebfb9;
 }
-
-table.system-status-report tr.ok {
-  color: #255b1e;
-  background-color: #e5ffe2;
+table.system-status-report td {
+  padding: 12px;
 }
-table.system-status-report tr.warning {
-  color: #840;
-  background-color: #fffce5;
-}
-table.system-status-report tr.error {
-  color: #8c2e0b;
-  background-color: #fef5f1;
+table.system-status-report td:nth-child(-n+2) {
+ background-color: transparent;
 }
 
 /**
