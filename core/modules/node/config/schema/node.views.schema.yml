@@ -147,16 +147,6 @@ views.field.node_link_edit:
 views.field.node_bulk_form:
   type: views_field_bulk_form
   label: 'Node bulk form'
-  mapping:
-    include_exclude:
-      type: string
-      label: 'Available actions'
-    selected_actions:
-      type: sequence
-      label: 'Available actions'
-      sequence:
-        - type: string
-          label: 'Action'
 
 views.field.node_path:
   type: views_field

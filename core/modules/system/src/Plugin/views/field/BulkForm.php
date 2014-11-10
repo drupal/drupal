@@ -127,7 +127,7 @@ class BulkForm extends FieldPluginBase {
     parent::validateOptionsForm($form, $form_state);
 
     $selected_actions = $form_state->getValue(array('options', 'selected_actions'));
-    $form_state->getValue(array('options', 'selected_actions'), array_filter($selected_actions));
+    $form_state->setValue(array('options', 'selected_actions'), array_values(array_filter($selected_actions)));
   }
 
   /**

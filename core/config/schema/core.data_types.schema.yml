@@ -191,6 +191,15 @@ views_field_bulk_form:
     action_title:
       type: label
       label: 'Action title'
+    include_exclude:
+      type: string
+      label: 'Available actions'
+    selected_actions:
+      type: sequence
+      label: 'Available actions'
+      sequence:
+        - type: string
+          label: 'Action'
 
 # Array of routes with route_name and route_params keys.
 route:
