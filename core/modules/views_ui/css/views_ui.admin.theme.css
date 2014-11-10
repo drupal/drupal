@@ -264,15 +264,6 @@ input.form-radio {
 
 /* @end */
 
-/* @group Tables */
-
-table td,
-table th {
-  vertical-align: top;
-}
-
-/* @end */
-
 /* @group List views */
 
 /* These header classes are ambiguous and should be scoped to th elements */
