@@ -549,7 +549,7 @@ function file_theme() {
   return array(
     // From file.module.
     'file_link' => array(
-      'variables' => array('file' => NULL, 'icon_directory' => NULL, 'description' => NULL, 'attributes' => array()),
+      'variables' => array('file' => NULL, 'description' => NULL, 'attributes' => array()),
     ),
     'file_managed_file' => array(
       'render element' => 'element',
@@ -1213,43 +1213,15 @@ function template_preprocess_file_managed_file(&$variables) {
  */
 function template_preprocess_file_link(&$variables) {
   $file = $variables['file'];
-  $options = array(
-    'attributes' => $variables['attributes'],
-  );
-  $icon_directory = $variables['icon_directory'];
+  $options = array();
 
-  $url = file_create_url($file->getFileUri());
   $file_entity = ($file instanceof File) ? $file : file_load($file->fid);
+  $url = file_create_url($file_entity->getFileUri());
 
-  // Human-readable names, for use as text-alternatives to icons.
-  $mime_name = array(
-    'application/msword' => t('Microsoft Office document icon'),
-    'application/vnd.ms-excel' => t('Office spreadsheet icon'),
-    'application/vnd.ms-powerpoint' => t('Office presentation icon'),
-    'application/pdf' => t('PDF icon'),
-    'video/quicktime' => t('Movie icon'),
-    'audio/mpeg' => t('Audio icon'),
-    'audio/wav' => t('Audio icon'),
-    'image/jpeg' => t('Image icon'),
-    'image/png' => t('Image icon'),
-    'image/gif' => t('Image icon'),
-    'application/zip' => t('Package icon'),
-    'text/html' => t('HTML icon'),
-    'text/plain' => t('Plain text icon'),
-    'application/octet-stream' => t('Binary Data'),
-  );
-
-  $variables['icon'] = array(
-    '#theme' => 'image__file_icon',
-    '#uri' => file_icon_url($file_entity, $icon_directory),
-    '#alt' => (!empty($mime_name[$file->getMimeType()])) ? $mime_name[$file->getMimeType()] : t('File'),
-    '#title' => String::checkPlain($file_entity->getFilename()),
-    '#attributes' => array('class' => array('file-icon')),
-  );
-
+  $mime_type = $file->getMimeType();
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
-  $options['attributes']['type'] = $file->getMimeType() . '; length=' . $file->getSize();
+  $options['attributes']['type'] = $mime_type . '; length=' . $file->getSize();
 
   // Use the description as the link text if available.
   if (empty($variables['description'])) {
@@ -1260,93 +1232,60 @@ function template_preprocess_file_link(&$variables) {
     $options['attributes']['title'] = String::checkPlain($file_entity->getFilename());
   }
 
-  $variables['link'] = \Drupal::l($link_text, Url::fromUri($url, $options));
-  $variables['attributes'] = array('class' => array('file'));
+  // Classes to add to the file field for icons.
+  $classes = array(
+    'file',
+    // Add a specific class for each and every mime type.
+    'file--mime-' . strtr($mime_type, array('/' => '-', '.' => '-')),
+    // Add a more general class for groups of well known mime types.
+    'file--' . file_icon_class($mime_type),
+  );
+
+  // Set file classes to the options array.
+  $variables['attributes'] = new Attribute($variables['attributes']);
+  $variables['attributes']->addClass($classes);
+
+  $variables['link'] = _l($link_text, $url, $options);
 }
 
 /**
- * Creates a URL to the icon for a file entity.
+ * Gets a class for the icon for a MIME type.
  *
- * @param \Drupal\file\FileInterface $file
- *   A file entity.
- * @param $icon_directory
- *   (optional) A path to a directory of icons to be used for files. Defaults to
- *   the value of the "icon.directory" variable.
+ * @param string $mime_type
+ *   A MIME type.
  *
- * @return
- *   A URL string to the icon, or FALSE if an appropriate icon cannot be found.
+ * @return string
+ *   A class associated to the file.
  */
-function file_icon_url(FileInterface $file, $icon_directory = NULL) {
-  if ($icon_path = file_icon_path($file, $icon_directory)) {
-    return base_path() . $icon_path;
-  }
-  return FALSE;
-}
-
-/**
- * Creates a path to the icon for a file entity.
- *
- * @param \Drupal\file\FileInterface $file
- *   A file entity.
- * @param $icon_directory
- *   (optional) A path to a directory of icons to be used for files. Defaults to
- *   the value of the "icon.directory" variable.
- *
- * @return
- *   A string to the icon as a local path, or FALSE if an appropriate icon could
- *   not be found.
- */
-function file_icon_path(FileInterface $file, $icon_directory = NULL) {
-  // Use the default set of icons if none specified.
-  if (!isset($icon_directory)) {
-    $icon_directory = \Drupal::config('file.settings')->get('icon.directory');
-  }
-
-  // If there's an icon matching the exact mimetype, go for it.
-  $dashed_mime = strtr($file->getMimeType(), array('/' => '-'));
-  $icon_path = $icon_directory . '/' . $dashed_mime . '.png';
-  if (file_exists($icon_path)) {
-    return $icon_path;
-  }
-
-  // For a few mimetypes, we can "manually" map to a generic icon.
-  $generic_mime = (string) file_icon_map($file);
-  $icon_path = $icon_directory . '/' . $generic_mime . '.png';
-  if ($generic_mime && file_exists($icon_path)) {
-    return $icon_path;
+function file_icon_class($mime_type) {
+  // Search for a group with the files MIME type.
+  $generic_mime = (string) file_icon_map($mime_type);
+  if (!empty($generic_mime)) {
+    return $generic_mime;
   }
 
   // Use generic icons for each category that provides such icons.
   foreach (array('audio', 'image', 'text', 'video') as $category) {
-    if (strpos($file->getMimeType(), $category . '/') === 0) {
-      $icon_path = $icon_directory . '/' . $category . '-x-generic.png';
-      if (file_exists($icon_path)) {
-        return $icon_path;
-      }
+    if (strpos($mime_type, $category) === 0) {
+      return $category;
     }
   }
 
-  // Try application-octet-stream as last fallback.
-  $icon_path = $icon_directory . '/application-octet-stream.png';
-  if (file_exists($icon_path)) {
-    return $icon_path;
-  }
-
-  // No icon can be found.
-  return FALSE;
+  // If there's no generic icon for the type the general class.
+  return 'general';
 }
 
 /**
  * Determines the generic icon MIME package based on a file's MIME type.
  *
- * @param \Drupal\file\FileInterface $file
- *   A file entity.
+ * @param string $mime_type
+ *   A MIME type.
  *
  * @return
  *   The generic icon MIME package expected for this file.
  */
-function file_icon_map(FileInterface $file) {
-  switch ($file->getMimeType()) {
+function file_icon_map($mime_type) {
+  switch ($mime_type) {
     // Word document types.
     case 'application/msword':
     case 'application/vnd.ms-word.document.macroEnabled.12':
@@ -1456,6 +1395,14 @@ function file_icon_map(FileInterface $file) {
     case 'application/x-ms-dos-executable':
     case 'application/x-pef-executable':
       return 'application-x-executable';
+
+    // Acrobat types
+    case 'application/pdf':
+    case 'application/x-pdf':
+    case 'applications/vnd.pdf':
+    case 'text/pdf':
+    case 'text/x-pdf':
+      return 'application-pdf';
 
     default:
       return FALSE;
