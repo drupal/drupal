@@ -185,9 +185,9 @@ class BlockTest extends BlockTestBase {
     \Drupal::service('theme_handler')->install(array($theme));
     \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('admin/structure/block');
-    $this->assertRaw(String::checkPlain('<"Cat" & \'Mouse\'>'));
+    $this->assertEscaped('<"Cat" & \'Mouse\'>');
     $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
-    $this->assertRaw(String::checkPlain('Demonstrate block regions (<"Cat" & \'Mouse\'>)'));
+    $this->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
   }
 
   /**

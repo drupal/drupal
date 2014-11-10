@@ -272,7 +272,7 @@ class BreadcrumbTest extends MenuTestBase {
         $link_path => $link->getTitle(),
       );
       $this->assertBreadcrumb($link_path, $trail, $term->getName(), $tree);
-      $this->assertRaw(String::checkPlain($parent->getTitle()), 'Tagged node found.');
+      $this->assertEscaped($parent->getTitle(), 'Tagged node found.');
 
       // Additionally make sure that this link appears only once; i.e., the
       // untranslated menu links automatically generated from menu router items
@@ -366,7 +366,7 @@ class BreadcrumbTest extends MenuTestBase {
     // Ensure that the breadcrumb is safe against XSS.
     $this->drupalGet('menu-test/breadcrumb1/breadcrumb2/breadcrumb3');
     $this->assertRaw('<script>alert(12);</script>');
-    $this->assertRaw(String::checkPlain('<script>alert(123);</script>'));
+    $this->assertEscaped('<script>alert(123);</script>');
   }
 
 }

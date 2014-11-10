@@ -420,8 +420,8 @@ class LinkFieldTest extends WebTestBase {
               else {
                 $this->assertNoRaw('<a href="' . String::checkPlain($url1) . '">' . String::checkPlain($url1) . '</a>');
                 $this->assertNoRaw('<a href="' . String::checkPlain($url2) . '">' . String::checkPlain($url2) . '</a>');
-                $this->assertRaw(String::checkPlain($url1));
-                $this->assertRaw(String::checkPlain($url2));
+                $this->assertEscaped($url1);
+                $this->assertEscaped($url2);
               }
             }
             break;

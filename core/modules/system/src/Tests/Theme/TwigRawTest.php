@@ -51,7 +51,7 @@ class TwigRawTest extends WebTestBase {
     ];
     $rendered = drupal_render($build);
     $this->setRawContent($rendered);
-    $this->assertRaw(String::checkPlain($script));
+    $this->assertEscaped($script);
   }
 
 }

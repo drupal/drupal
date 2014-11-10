@@ -119,7 +119,7 @@ class SearchCommentTest extends SearchTestBase {
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, 'Comment body text found in search results.');
     $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
-    $this->assertNoRaw(String::checkPlain($edit_comment['comment_body[0][value]']), 'HTML in comment body is not escaped.');
+    $this->assertNoEscaped($edit_comment['comment_body[0][value]'], 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);

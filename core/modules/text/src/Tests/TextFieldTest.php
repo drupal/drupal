@@ -199,7 +199,7 @@ class TextFieldTest extends WebTestBase {
     $content = $display->build($entity);
     $this->drupalSetContent(drupal_render($content));
     $this->assertNoRaw($value, 'HTML tags are not displayed.');
-    $this->assertRaw(String::checkPlain($value), 'Escaped HTML is displayed correctly.');
+    $this->assertEscaped($value, 'Escaped HTML is displayed correctly.');
 
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
