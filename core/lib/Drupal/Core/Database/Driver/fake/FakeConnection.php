@@ -90,6 +90,13 @@ class FakeConnection extends Connection {
   /**
    * {@inheritdoc}
    */
+  public function delete($table, array $options = array()) {
+    return new FakeDelete($this->databaseContents, $table);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function truncate($table, array $options = array()) {
     return new FakeTruncate($this->databaseContents, $table);
   }
