@@ -248,17 +248,18 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
+    $insecure_session_id = '';
 
     if ($is_https && $this->isMixedMode()) {
       $insecure_session_name = $this->getInsecureName();
       $params = session_get_cookie_params();
-      $session_id = Crypt::randomBytesBase64();
+      $insecure_session_id = Crypt::randomBytesBase64();
       // If a session cookie lifetime is set, the session will expire
       // $params['lifetime'] seconds from the current request. If it is not set,
       // it will expire when the browser is closed.
       $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-      setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
-      $cookies->set($insecure_session_name, $session_id);
+      setcookie($insecure_session_name, $insecure_session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
+      $cookies->set($insecure_session_name, $insecure_session_id);
     }
 
     if ($this->isStarted()) {
@@ -272,19 +273,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       $params = session_get_cookie_params();
       $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
       setcookie($this->getName(), $this->getId(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-      $fields = array('sid' => Crypt::hashBase64($this->getId()));
-      if ($is_https) {
-        $fields['ssid'] = Crypt::hashBase64($this->getId());
-        // If the "secure pages" setting is enabled, use the newly-created
-        // insecure session identifier as the regenerated sid.
-        if ($this->isMixedMode()) {
-          $fields['sid'] = Crypt::hashBase64($session_id);
-        }
-      }
-      $this->connection->update('sessions')
-        ->fields($fields)
-        ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($old_session_id))
-        ->execute();
+      $this->migrateStoredSession($old_session_id, $is_https, $insecure_session_id);
     }
 
     if (!$this->isStarted()) {
@@ -404,6 +393,34 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     return array_intersect_key($mask, $_SESSION);
+  }
+
+  /**
+   * Migrates the current session to a new session id.
+   *
+   * @param string $old_session_id
+   *   The old session id. The new session id is $this->getId() unless
+   *   $new_insecure_session_id is not empty.
+   * @param bool $is_https
+   *   Whether this is a HTTPS request.
+   * @param string $new_insecure_session_id
+   *   If this is a HTTPS request and we are in mixed mode, this is the new
+   *   insecure session id. The secure session id is $this->getId().
+   */
+  protected function migrateStoredSession($old_session_id, $is_https, $new_insecure_session_id) {
+    $fields = array('sid' => Crypt::hashBase64($this->getId()));
+    if ($is_https) {
+      $fields['ssid'] = $fields['sid'];
+      // If the "secure pages" setting is enabled, use the newly-created
+      // insecure session identifier as the regenerated sid.
+      if ($this->isMixedMode()) {
+        $fields['sid'] = Crypt::hashBase64($new_insecure_session_id);
+      }
+    }
+    $this->connection->update('sessions')
+      ->fields($fields)
+      ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($old_session_id))
+      ->execute();
   }
 
 }
