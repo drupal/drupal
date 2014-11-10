@@ -82,6 +82,20 @@ class PathValidator implements PathValidatorInterface {
    * {@inheritdoc}
    */
   public function getUrlIfValid($path) {
+    return $this->getUrl($path, TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrlIfValidWithoutAccessCheck($path) {
+    return $this->getUrl($path, FALSE);
+  }
+
+  /**
+   * Helper for getUrlIfValid() and getUrlIfValidWithoutAccessCheck().
+   */
+  protected function getUrl($path, $access_check) {
     $parsed_url = UrlHelper::parse($path);
 
     $options = [];
@@ -104,7 +118,7 @@ class PathValidator implements PathValidatorInterface {
 
     $path = ltrim($path, '/');
     $request = Request::create('/' . $path);
-    $attributes = $this->getPathAttributes($path, $request);
+    $attributes = $this->getPathAttributes($path, $request, $access_check);
 
     if (!$attributes) {
       return FALSE;
@@ -123,12 +137,15 @@ class PathValidator implements PathValidatorInterface {
    *   The path to check.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object with the given path.
+   * @param bool $access_check
+   *   If FALSE then skip access check and check only whether the path is
+   *   valid.
    *
    * @return array|bool
    *   An array of request attributes of FALSE if an exception was thrown.
    */
-  protected function getPathAttributes($path, Request $request) {
-    if ($this->account->hasPermission('link to any page')) {
+  protected function getPathAttributes($path, Request $request, $access_check) {
+    if (!$access_check || $this->account->hasPermission('link to any page')) {
       $router = $this->accessUnawareRouter;
     }
     else {

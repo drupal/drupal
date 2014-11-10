@@ -329,5 +329,31 @@ class PathValidatorTest extends UnitTestCase {
     $this->assertEquals('berg', $url->getOptions()['fragment']);
   }
 
+  /**
+   * Tests the getUrlIfValidWithoutAccessCheck() method.
+   *
+   * @covers ::getUrlIfValidWithoutAccessCheck
+   */
+  public function testGetUrlIfValidWithoutAccessCheck() {
+    $this->account->expects($this->never())
+      ->method('hasPermission')
+      ->with('link to any page');
+    $this->accessAwareRouter->expects($this->never())
+      ->method('match');
+    $this->accessUnawareRouter->expects($this->once())
+      ->method('match')
+      ->with('/test-path')
+      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new ParameterBag(['key' => 'value'])]);
+    $this->pathProcessor->expects($this->once())
+      ->method('processInbound')
+      ->willReturnArgument(0);
+
+    $url = $this->pathValidator->getUrlIfValidWithoutAccessCheck('test-path');
+    $this->assertInstanceOf('Drupal\Core\Url', $url);
+
+    $this->assertEquals('test_route', $url->getRouteName());
+    $this->assertEquals(['key' => 'value'], $url->getRouteParameters());
+  }
+
 }
 

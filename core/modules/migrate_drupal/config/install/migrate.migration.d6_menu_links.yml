@@ -1,0 +1,50 @@
+id: d6_menu_links
+label: Drupal 6 menu links
+migration_groups:
+  - Drupal 6
+source:
+  plugin: d6_menu_link
+  constants:
+    bundle: menu_link_content
+process:
+  id: mlid
+  bundle: 'constants/bundle'
+  title: link_title
+  description:
+    plugin: extract
+    source:
+      - options
+    index:
+      - 0
+      - attributes
+      - title
+  menu_name:
+    plugin: migration
+    migration: d6_menu
+    source: menu_name
+  route:
+    plugin: route
+    source:
+      - link_path
+      - options
+  route_name: @route/route_name
+  route_parameters: @route/route_parameters
+  url: @route/url
+  options: @route/options
+  external: external
+  weight: weight
+  expanded: expanded
+  enabled: enabled
+  parent:
+    -
+      plugin: skip_process_on_empty
+      source: plid
+    -
+      plugin: migration
+      migration: d6_menu_links
+  changed: updated
+destination:
+  plugin: entity:menu_link_content
+migration_dependencies:
+  required:
+    - d6_menu
