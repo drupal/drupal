@@ -28,8 +28,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
-   *
-   * @covers ::__construct
    */
   protected function setUp() {
     parent::setUp();

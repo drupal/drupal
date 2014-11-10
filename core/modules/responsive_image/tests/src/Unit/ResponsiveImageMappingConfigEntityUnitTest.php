@@ -80,7 +80,7 @@ class ResponsiveImageMappingConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * @covers ::addMapping
-   * @covers ::hasMapping
+   * @covers ::hasMappings
    */
   public function testHasMappings() {
     $entity = new ResponsiveImageMapping(array());

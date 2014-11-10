@@ -81,7 +81,6 @@ class PermissionHandlerTest extends UnitTestCase {
    *
    * @covers ::__construct
    * @covers ::getPermissions
-   * @covers ::buildPermissions
    * @covers ::buildPermissionsYaml
    * @covers ::moduleProvidesPermissions
    */
@@ -154,7 +153,6 @@ class PermissionHandlerTest extends UnitTestCase {
    *
    * @covers ::__construct
    * @covers ::getPermissions
-   * @covers ::buildPermissions
    * @covers ::buildPermissionsYaml
    * @covers ::sortPermissions
    */
@@ -204,7 +202,6 @@ access_module_a1: single_description"
    *
    * @covers ::__construct
    * @covers ::getPermissions
-   * @covers ::buildPermissions
    * @covers ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback() {

@@ -81,12 +81,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for non-revisionable, non-translatable entities.
    *
    * @covers ::__construct()
-   * @covers ::getSchema()
    * @covers ::getEntitySchemaTables()
    * @covers ::initializeBaseTable()
    * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
-   * @covers ::addFieldSchema()
    * @covers ::getFieldIndexes()
    * @covers ::getFieldUniqueKeys()
    * @covers ::getFieldForeignKeys()
@@ -389,7 +387,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for revisionable, non-translatable entities.
    *
    * @covers ::__construct()
-   * @covers ::getSchema()
    * @covers ::getEntitySchemaTables()
    * @covers ::initializeBaseTable()
    * @covers ::initializeRevisionTable()
@@ -489,7 +486,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for non-revisionable, translatable entities.
    *
    * @covers ::__construct()
-   * @covers ::getSchema()
    * @covers ::getEntitySchemaTables()
    * @covers ::initializeDataTable()
    * @covers ::addTableDefaults()
@@ -579,7 +575,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for revisionable, translatable entities.
    *
    * @covers ::__construct()
-   * @covers ::getSchema()
    * @covers ::getEntitySchemaTables()
    * @covers ::initializeDataTable()
    * @covers ::addTableDefaults()

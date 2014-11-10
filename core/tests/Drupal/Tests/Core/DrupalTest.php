@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Tests the Drupal class.
  *
+ * @coversDefaultClass \Drupal
  * @group DrupalTest
  */
 class DrupalTest extends UnitTestCase {
