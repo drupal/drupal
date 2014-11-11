@@ -2178,7 +2178,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $element['#empty'] = $empty ? $view->display_handler->renderArea('empty', $empty) : array();
     $element['#exposed'] = !empty($view->exposed_widgets) ? $view->exposed_widgets : array();
     $element['#more'] = $view->display_handler->renderMoreLink();
-    $element['#feed_icon'] = !empty($view->feed_icon) ? $view->feed_icon : array();
+    $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : array();
 
     if ($view->display_handler->renderPager()) {
       $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
@@ -2213,7 +2213,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $element['#pager'] = array();
         $element['#footer'] = array();
         $element['#more'] = array();
-        $element['#feed_icon'] = array();
+        $element['#feed_icons'] = array();
       }
 
       $element['#rows'] = $form;

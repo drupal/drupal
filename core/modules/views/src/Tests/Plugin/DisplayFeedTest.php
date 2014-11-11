@@ -42,6 +42,7 @@ class DisplayFeedTest extends PluginTestBase {
    * Tests the rendered output.
    */
   public function testFeedOutput() {
+    $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalCreateNode();
 
     // Test the site name setting.
@@ -60,6 +61,17 @@ class DisplayFeedTest extends PluginTestBase {
     $this->drupalGet('test-feed-display.xml');
     $result = $this->xpath('//title');
     $this->assertEqual($result[0], 'test_display_feed', 'The display title is used for the feed title.');
+
+    // Add a block display and attach the feed.
+    $view->getExecutable()->newDisplay('block', NULL, 'test');
+    $display = &$view->getDisplay('feed_1');
+    $display['display_options']['displays']['test'] = 'test';
+    $view->save();
+    // Test the feed display adds a feed icon to the block display.
+    $this->drupalPlaceBlock('views_block:test_display_feed-test');
+    $this->drupalGet('<front>');
+    $feed_icon = $this->cssSelect('div.view-id-test_display_feed a.feed-icon');
+    $this->assertTrue(strpos($feed_icon[0]['href'], 'test-feed-display.xml'), 'The feed icon was found.');
   }
 
 }

@@ -125,6 +125,13 @@ class ViewExecutable {
    */
   public $attachment_after = array();
 
+  /**
+   * Feed icons attached to the view.
+   *
+   * @var array
+   */
+  public $feedIcons = array();
+
   // Exposed widget input
 
   /**

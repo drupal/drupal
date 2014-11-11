@@ -269,6 +269,9 @@ class Feed extends PathPluginBase {
     $clone->buildTitle();
     if ($plugin = $clone->display_handler->getPlugin('style')) {
       $plugin->attachTo($build, $display_id, $this->getPath(), $clone->getTitle());
+      foreach ($clone->feedIcons as $feed_icon) {
+        $this->view->feedIcons[] = $feed_icon;
+      }
     }
 
     // Clean up.

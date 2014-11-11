@@ -43,7 +43,7 @@ class Rss extends StylePluginBase {
     $url = _url($this->view->getUrl(NULL, $path), $url_options);
 
     // Add the RSS icon to the view.
-    $this->view->feed_icon = [
+    $this->view->feedIcons[] = [
       '#theme' => 'feed_icon',
       '#url' => $url,
       '#title' => $title,

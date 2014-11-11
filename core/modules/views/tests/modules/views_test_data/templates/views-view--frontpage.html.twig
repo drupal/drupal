@@ -20,7 +20,7 @@
  * - empty: The content to display if there are no rows.
  * - pager: The optional pager next/prev links to display.
  * - exposed: Exposed widget form/info to display.
- * - feed_icon: An optional feed icon to display.
+ * - feed_icons: Optional feed icons to display.
  * - more: An optional link to the next page of results.
  * - title: Title of the view, only used when displaying in the admin preview.
  * - title_prefix: Additional output populated by modules, intended to be
@@ -80,9 +80,9 @@
       {{ footer }}
     </div>
   {% endif %}
-  {% if feed_icon %}
-    <div class="feed-icon">
-      {{ feed_icon }}
+  {% if feed_icons %}
+    <div class="feed-icons">
+      {{ feed_icons }}
     </div>
   {% endif %}
 </div>

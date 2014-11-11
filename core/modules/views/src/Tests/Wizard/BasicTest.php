@@ -74,6 +74,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText($node2->label());
 
     // Check if we have the feed.
+    $this->assertLinkByHref(_url($view2['page[feed_properties][path]']));
     $elements = $this->cssSelect('link[href="' . _url($view2['page[feed_properties][path]'], ['absolute' => TRUE]) . '"]');
     $this->assertEqual(count($elements), 1, 'Feed found.');
     $this->drupalGet($view2['page[feed_properties][path]']);

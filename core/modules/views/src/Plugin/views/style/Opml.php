@@ -48,12 +48,11 @@ class Opml extends StylePluginBase {
       }
     }
     else {
-      $feed_icon = array(
+      $this->view->feedIcons[] = array(
         '#theme' => 'feed_icon',
         '#url' => $url,
         '#title' => $title,
       );
-      $this->view->feed_icon = $feed_icon;
     }
   }
 

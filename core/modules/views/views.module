@@ -110,7 +110,7 @@ function views_theme($existing, $type, $theme, $path) {
       'empty' => array(),
       'exposed' => array(),
       'more' => array(),
-      'feed_icon' => array(),
+      'feed_icons' => array(),
       'pager' => array(),
       'title' => '',
       'attachment_before' => array(),
