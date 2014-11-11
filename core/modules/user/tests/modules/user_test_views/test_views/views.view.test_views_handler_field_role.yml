@@ -81,7 +81,6 @@ display:
           anonymous_text: ''
           format_username: '1'
           plugin_id: user_name
-          provider: user
         rid:
           id: rid
           table: users_roles
@@ -133,7 +132,6 @@ display:
           type: separator
           separator: ''
           plugin_id: user_roles
-          provider: user
       filters:
         status:
           value: '1'
@@ -144,7 +142,6 @@ display:
             operator: '0'
           group: '1'
           plugin_id: boolean
-          provider: views
       sorts: {  }
       title: test_user_role
   page_1:

@@ -82,4 +82,13 @@ class RowTest extends RowPluginBase {
     return $this->getOutput();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [
+      'test_dependency' => ['row'],
+    ];
+  }
+
 }

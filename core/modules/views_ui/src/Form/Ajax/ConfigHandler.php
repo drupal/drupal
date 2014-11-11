@@ -242,14 +242,6 @@ class ConfigHandler extends ViewsFormBase {
     // extra stuff on the form is not sent through.
     $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
-    // Add any dependencies as the handler is saved. Put it here so
-    // it does not need to be declared in defineOptions().
-    if ($dependencies = $handler->getDependencies()) {
-      $handler->options['dependencies'] = $dependencies;
-    }
-    // Add the module providing the handler as a dependency as well.
-    $handler->options['dependencies']['module'][] = $handler->definition['provider'];
-
     // Store the item back on the view
     $executable->setHandler($display_id, $type, $id, $handler->options);
 

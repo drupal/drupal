@@ -22,13 +22,11 @@ display:
           id: uid
           table: users
           field: uid
-          provider: user
         changed:
           id: changed
           table: users_field_data
           field: changed
           label: Updated date
-          provider: user
           date_format: html_date
       filters: { }
     display_plugin: default

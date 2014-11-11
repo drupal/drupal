@@ -118,7 +118,6 @@ display:
           hide_alter_empty: true
           link_to_node: false
           plugin_id: node
-          provider: node
       filters:
         status:
           value: true
@@ -128,7 +127,6 @@ display:
           expose:
             operator: ''
           group: 1
-          provider: views
       sorts:
         created:
           id: created
@@ -142,7 +140,6 @@ display:
           expose:
             label: ''
           granularity: second
-          provider: views
       title: test_node_view
       header: {  }
       footer: {  }
@@ -188,7 +185,6 @@ display:
           transform_dash: false
           break_phrase: false
           plugin_id: node_type
-          provider: node
 label: test_node_view
 module: views
 id: test_node_view

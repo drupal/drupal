@@ -27,15 +27,12 @@ display:
           distinct: false
           replica: false
           query_tags: {  }
-        provider: views
       access:
         type: none
         options: {  }
-        provider: views
       cache:
         type: none
         options: {  }
-        provider: views
       exposed_form:
         type: basic
         options:
@@ -46,7 +43,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
       pager:
         type: mini
         options:
@@ -65,7 +61,6 @@ display:
           tags:
             previous: ‹‹
             next: ››
-        provider: views
       sorts:
         sticky:
           id: sticky
@@ -79,7 +74,6 @@ display:
           exposed: false
           expose:
             label: ''
-          provider: views
         created:
           id: created
           table: taxonomy_index
@@ -93,7 +87,6 @@ display:
           expose:
             label: ''
           granularity: second
-          provider: views
       arguments:
         tid:
           id: tid
@@ -102,9 +95,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - taxonomy
           default_action: ignore
           exception:
             value: all
@@ -139,7 +129,6 @@ display:
           require_value: false
           reduce_duplicates: false
           plugin_id: taxonomy_index_tid
-          provider: taxonomy
       filters:
         langcode:
           id: langcode
@@ -148,9 +137,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -182,7 +168,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
-          provider: views
       style:
         type: default
         options:
@@ -190,13 +175,11 @@ display:
           row_class: ''
           default_row_class: true
           uses_fields: false
-        provider: views
       row:
         type: 'entity:node'
         options:
           view_mode: teaser
           comments: false
-        provider: views
       header:
         entity_taxonomy_term:
           id: entity_taxonomy_term
@@ -211,7 +194,6 @@ display:
           view_mode: full
           bypass_access: false
           plugin_id: entity
-          provider: views
       footer: {  }
       empty: {  }
       relationships: {  }
@@ -227,7 +209,6 @@ display:
       query:
         type: views_query
         options: {  }
-        provider: views
       path: taxonomy/term/%
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -240,7 +221,6 @@ display:
       query:
         type: views_query
         options: {  }
-        provider: views
       pager:
         type: full
         options:
@@ -262,7 +242,6 @@ display:
             first: '« first'
             last: 'last »'
           quantity: 9
-        provider: views
       path: taxonomy/term/%/feed
       displays:
         page: page
@@ -273,12 +252,10 @@ display:
           description: ''
           grouping: {  }
           uses_fields: false
-        provider: views
       row:
         type: node_rss
         options:
           relationship: none
           view_mode: default
-        provider: views
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

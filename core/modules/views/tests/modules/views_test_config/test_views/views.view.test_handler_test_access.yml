@@ -9,52 +9,44 @@ display:
           table: views_test_data
           field: access_callback
           plugin_id: numeric
-          provider: views_test_data
         access_callback_arguments:
           id: access_callback_arguments
           table: views_test_data
           field: access_callback_arguments
           plugin_id: numeric
-          provider: views_test_data
       filters:
         access_callback:
           id: access_callback
           table: views_test_data
           field: access_callback
           plugin_id: numeric
-          provider: views_test_data
         access_callback_arguments:
           id: access_callback_arguments
           table: views_test_data
           field: access_callback_arguments
           plugin_id: numeric
-          provider: views_test_data
       arguments:
         access_callback:
           id: access_callback
           table: views_test_data
           field: access_callback
           plugin_id: numeric
-          provider: views_test_data
         access_callback_arguments:
           id: access_callback_arguments
           table: views_test_data
           field: access_callback_arguments
           plugin_id: numeric
-          provider: views_test_data
       sorts:
         access_callback:
           id: access_callback
           table: views_test_data
           field: access_callback
           plugin_id: standard
-          provider: views_test_data
         access_callback_arguments:
           id: access_callback_arguments
           table: views_test_data
           field: access_callback_arguments
           plugin_id: standard
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

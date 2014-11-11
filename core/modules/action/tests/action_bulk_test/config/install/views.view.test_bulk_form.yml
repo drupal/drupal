@@ -71,7 +71,6 @@ display:
           empty_zero: false
           link_to_node: true
           plugin_id: node
-          provider: node
         node_bulk_form:
           id: node_bulk_form
           table: node
@@ -121,7 +120,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: node_bulk_form
-          provider: node
       filters:
         status:
           value: true
@@ -132,7 +130,6 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
-          provider: views
       sorts:
         created:
           id: created
@@ -140,7 +137,6 @@ display:
           field: created
           order: DESC
           plugin_id: date
-          provider: views
       title: form
   page_1:
     display_plugin: page
@@ -169,7 +165,6 @@ display:
           empty: true
           content: 'This view is empty.'
           plugin_id: text_custom
-          provider: views
 base_field: nid
 status: true
 module: views

@@ -9,17 +9,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
       cache:
         type: none
         options: {  }
-        provider: views
       query:
         type: views_query
         options:
@@ -28,7 +25,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
       exposed_form:
         type: basic
         options:
@@ -39,7 +35,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
       pager:
         type: full
         options:
@@ -61,7 +56,6 @@ display:
             first: '« first'
             last: 'last »'
           quantity: 9
-        provider: views
       style:
         type: default
         options:
@@ -69,7 +63,6 @@ display:
           row_class: ''
           default_row_class: true
           uses_fields: false
-        provider: views
       row:
         type: fields
         options:
@@ -77,13 +70,11 @@ display:
           separator: ''
           hide_empty: false
           default_field_elements: true
-        provider: views
       fields:
         name:
           id: name
           table: taxonomy_term_data
           field: name
-          provider: taxonomy
           label: ''
           alter:
             alter_text: false
@@ -127,7 +118,6 @@ display:
           admin_label: Parent
           required: true
           plugin_id: standard
-          provider: views
       arguments: {  }
 label: test_taxonomy_parent
 module: views

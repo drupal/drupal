@@ -23,7 +23,6 @@ display:
           table: views_test_data
           id: id
           plugin_id: id
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

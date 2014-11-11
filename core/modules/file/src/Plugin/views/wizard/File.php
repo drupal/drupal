@@ -44,7 +44,6 @@ class File extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['provider'] = 'user';
 
     // Remove the default fields, since we are customizing them here.
     unset($display_options['fields']);
@@ -53,7 +52,6 @@ class File extends WizardPluginBase {
     $display_options['fields']['filename']['id'] = 'filename';
     $display_options['fields']['filename']['table'] = 'file_managed';
     $display_options['fields']['filename']['field'] = 'filename';
-    $display_options['fields']['filename']['provider'] = 'file';
     $display_options['fields']['filename']['label'] = '';
     $display_options['fields']['filename']['alter']['alter_text'] = 0;
     $display_options['fields']['filename']['alter']['make_link'] = 0;

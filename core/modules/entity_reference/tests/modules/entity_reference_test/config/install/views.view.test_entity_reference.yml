@@ -9,7 +9,6 @@ display:
     id: entity_reference_1
     display_title: EntityReference
     position: null
-    provider: entity_reference
     display_options:
       style:
         type: entity_reference
@@ -92,7 +91,6 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
-          provider: node
       filters:
         status:
           value: true
@@ -103,7 +101,6 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
-          provider: views
       sorts:
         created:
           id: created
@@ -111,7 +108,6 @@ display:
           field: created
           order: DESC
           plugin_id: date
-          provider: views
 label: 'Entity reference'
 module: entity_reference_test
 id: test_entity_reference

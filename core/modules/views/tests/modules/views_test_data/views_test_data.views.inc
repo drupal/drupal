@@ -23,7 +23,7 @@ function views_test_data_views_data() {
   $count++;
   $state->set('views_test_data_views_data_count', $count);
 
-  return $state->get('views_test_data_views_data');
+  return $state->get('views_test_data_views_data', []);
 }
 
 /**

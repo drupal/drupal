@@ -17,18 +17,6 @@ display:
           id: cid
           table: comment
           plugin_id: comment
-        nid:
-          field: nid
-          id: nid
-          table: node
-          relationship: node
-          plugin_id: node
-        uid:
-          field: uid
-          id: uid
-          table: users
-          relationship: uid
-          plugin_id: user
       filter_groups:
         groups: {  }
         operator: AND
@@ -41,18 +29,8 @@ display:
         node:
           field: node
           id: node
-          required: '1'
           table: comment_field_data
-          plugin_id: standard
-        uid:
-          admin_label: ''
-          field: uid
-          group_type: group
-          id: uid
-          label: author
-          relationship: node
-          required: '0'
-          table: node_field_data
+          required: true
           plugin_id: standard
       sorts: {  }
       style:
@@ -63,6 +41,6 @@ display:
     display_title: Master
     id: default
     position: 0
-label: test_field_get_entity
-id: test_field_get_entity
+label: test_relationship_dependency
+id: test_relationship_dependency
 tag: default

@@ -140,4 +140,13 @@ class DisplayTest extends DisplayPluginBase {
     return $this->execute();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return parent::calculateDependencies() + [
+      'test_dependency' => ['display'],
+    ];
+  }
+
 }

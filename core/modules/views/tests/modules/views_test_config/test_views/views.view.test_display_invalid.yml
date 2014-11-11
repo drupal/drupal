@@ -13,7 +13,6 @@ display:
           table: node
           field: nid
           plugin_id: numeric
-          provider: node
     display_plugin: default
     display_title: Master
     id: default
@@ -30,7 +29,6 @@ display:
     id: block_1
     display_title: Block
     position: 1
-    provider: views
 label: ''
 id: test_display_invalid
 tag: ''

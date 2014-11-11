@@ -112,49 +112,6 @@ class ViewEditTest extends UITestBase {
   }
 
   /**
-   * Tests that plugins selected from the view edit form contain providers.
-   */
-  public function testPluginProviders() {
-    $plugin_data = array(
-      'access' => array(
-        'value' => 'test_static',
-        'provider' => 'views_test_data',
-      ),
-      'cache' => array(
-        'value' => 'time',
-        'provider' => 'views',
-      ),
-      'exposed_form' => array(
-        'value' => 'input_required',
-        'provider' => 'views',
-      ),
-      'pager' => array(
-        'value' => 'full',
-        'provider' => 'views',
-      ),
-      'row' => array(
-        'value' => 'test_row',
-        'provider' => 'views_test_data',
-      ),
-      'style' => array(
-        'value' => 'test_style',
-        'provider' => 'views_test_data',
-      ),
-    );
-
-    foreach ($plugin_data as $plugin_type => $plugin_options) {
-      $element_name = $plugin_type . '[type]';
-      // Save the plugin form, to change the plugin used.
-      $this->drupalPostForm("admin/structure/views/nojs/display/test_view/default/$plugin_type", array($element_name => $plugin_options['value']), t('Apply'));
-      $this->drupalPostForm('admin/structure/views/view/test_view', array(), t('Save'));
-      // Check the plugin provider.
-      $view = Views::getView('test_view');
-      $displays = $view->storage->get('display');
-      $this->assertIdentical($displays['default']['display_options'][$plugin_type]['provider'], $plugin_options['provider'], String::format('Expected provider found for @plugin.', array('@plugin' => $plugin_type)));
-    }
-  }
-
-  /**
    * Tests Representative Node for a Taxonomy Term.
    */
   public function testRelationRepresentativeNode() {

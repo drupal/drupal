@@ -42,4 +42,13 @@ class StaticTest extends AccessPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [
+      'test_dependency' => ['access'],
+    ];
+  }
+
 }

@@ -11,34 +11,29 @@ display:
           field: nid
           required: true
           plugin_id: standard
-          provider: views
       fields:
         vid:
           id: vid
           table: node_revision
           field: vid
           plugin_id: standard
-          provider: views
         nid_1:
           id: nid_1
           table: node_revision
           field: nid
           plugin_id: standard
-          provider: views
         nid:
           id: nid
           table: node
           field: nid
           relationship: nid
           plugin_id: node
-          provider: node
       arguments:
         nid:
           id: nid
           table: node_revision
           field: nid
           plugin_id: node_nid
-          provider: node
     display_plugin: default
     display_title: Master
     id: default

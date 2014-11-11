@@ -29,7 +29,6 @@ display:
           id: nid
           table: node
           plugin_id: numeric
-          provider: views
         title:
           id: title
           table: node_field_data
@@ -46,7 +45,6 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
-          provider: node
       filters:
         type:
           id: type
@@ -86,7 +84,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: bundle
-          provider: views
       group_by: '1'
       pager:
         type: some

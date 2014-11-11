@@ -18,7 +18,6 @@ display:
           entity_id: 1
           view_mode: full
           plugin_id: entity
-          provider: views
       footer:
         entity_entity_test:
           field: entity_entity_test
@@ -27,7 +26,6 @@ display:
           entity_id: '!1'
           view_mode: full
           plugin_id: entity
-          provider: views
       fields:
         id:
           field: id
@@ -35,14 +33,12 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       arguments:
         id:
           id: id
           table: views_test_data
           field: id
           plugin_id: numeric
-          provider: views_test_data
       pager:
         options:
           offset: '0'

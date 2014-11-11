@@ -17,7 +17,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -31,7 +30,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       use_more: '1'
       use_more_always: '1'
       use_more_text: 'custom more text'

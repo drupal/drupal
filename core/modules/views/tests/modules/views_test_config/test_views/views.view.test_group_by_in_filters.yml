@@ -27,7 +27,6 @@ display:
           id: name
           table: entity_test
           plugin_id: standard
-          provider: views
       filters:
         id:
           field: id
@@ -38,7 +37,6 @@ display:
           value:
             value: '3'
           plugin_id: numeric
-          provider: views
       group_by: '1'
       pager:
         type: some

@@ -20,13 +20,11 @@ display:
           table: users
           field: user_bulk_form
           plugin_id: user_bulk_form
-          provider: user
         name:
           id: name
           table: users_field_data
           field: name
           plugin_id: user_name
-          provider: user
       sorts:
         uid:
           id: uid
@@ -34,7 +32,6 @@ display:
           field: uid
           order: ASC
           plugin_id: user
-          provider: views
       filters:
         status:
           id: status
@@ -43,7 +40,6 @@ display:
           operator: '='
           value: '1'
           plugin_id: boolean
-          provider: views
   page_1:
     display_plugin: page
     id: page_1

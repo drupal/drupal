@@ -150,7 +150,7 @@ class HandlerTest extends UITestBase {
       $result = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
       $this->assertEqual(count($result), 1, String::format('Handler (%type) edit link found.', array('%type' => $type)));
 
-      $text = t('Broken/missing handler (Module: @module) …', array('@module' => 'views'));
+      $text = t('Broken/missing handler');
 
       $this->assertIdentical((string) $result[0], $text, 'Ensure the broken handler text was found.');
 
@@ -158,15 +158,16 @@ class HandlerTest extends UITestBase {
       $result = $this->xpath('//h1');
       $this->assertTrue(strpos((string) $result[0], $text) !== FALSE, 'Ensure the broken handler text was found.');
 
-      $description_args = array(
-        '@module' => 'views',
-        '@table' => 'views_test_data',
-        '@field' => 'id_broken',
-      );
+      $original_configuration = [
+        'field' => 'id_broken',
+        'id' => 'id_broken',
+        'relationship' => 'none',
+        'table' => 'views_test_data',
+        'plugin_id' => 'numeric',
+      ];
 
-      foreach ($description_args as $token => $value) {
-        $this->assertNoText($token, String::format('Raw @token token placeholder not found.', array('@token' => $token)));
-        $this->assertText($value, String::format('Replaced @token value found.', array('@token' => $token)));
+      foreach ($original_configuration as $key => $value) {
+        $this->assertText(String::format('@key: @value', array('@key' => $key, '@value' => $value)));
       }
     }
   }

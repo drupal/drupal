@@ -15,19 +15,16 @@ display:
           table: views_test_data
           field: id
           relationship: none
-          provider: views_test_data
         name:
           id: name
           table: views_test_data
           field: name
           relationship: none
-          provider: views_test_data
         age:
           id: age
           table: views_test_data
           field: age
           relationship: none
-          provider: views_test_data
       defaults:
         fields: '0'
         sorts: '0'
@@ -38,7 +35,6 @@ display:
           table: views_test_data
           field: id
           relationship: none
-          provider: views_test_data
 label: ''
 id: test_cache
 tag: ''

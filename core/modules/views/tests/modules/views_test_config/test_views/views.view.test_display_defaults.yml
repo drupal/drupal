@@ -36,14 +36,12 @@ display:
           id: name
           table: views_test_data
           field: name
-          provider: views_test_data
       sorts:
         created:
           id: created
           table: views_test_data
           field: created
           order: DESC
-          provider: views_test_data
 label: ''
 module: views
 id: test_display_defaults

@@ -36,4 +36,13 @@ class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
     return $this->options['value'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [
+      'test_dependency' => ['argument_default'],
+    ];
+  }
+
 }

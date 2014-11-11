@@ -20,21 +20,18 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
         id:
           field: id
           id: id
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
         name:
           field: name
           id: name
           relationship: none
           table: views_test_data
           plugin_id: string
-          provider: views_test_data
       pager:
         type: full
         options:

@@ -93,7 +93,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           link_to_node: true
-          provider: node
       filters:
         uid_touch_tracker:
           id: uid_touch_tracker
@@ -133,7 +132,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: tracker_user_uid
-          provider: tracker
       arguments:
         uid_touch_tracker:
           id: uid_touch_tracker
@@ -168,7 +166,6 @@ display:
             fail: 'not found'
           validate_options: {  }
           plugin_id: tracker_user_uid
-          provider: tracker
 label: 'tracker test'
 module: views
 id: test_tracker_user_uid

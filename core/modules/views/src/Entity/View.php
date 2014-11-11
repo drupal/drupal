@@ -199,7 +199,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       // @see \Drupal\Core\StringTranslation\TranslationWrapper
       'display_title' => (string) $title,
       'position' => $id === 'default' ? 0 : count($this->display),
-      'provider' => $plugin['provider'],
       'display_options' => array(),
     );
 
@@ -248,47 +247,32 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
 
     // Ensure that the view is dependant on the module that implements the view.
     $this->addDependency('module', $this->module);
-    // Ensure that the view is dependent on the module that provides the schema
-    // for the base table.
-    $schema = $this->drupalGetSchema($this->base_table);
-    // @todo Entity base tables are no longer registered in hook_schema(). Once
-    //   we automate the views data for entity types add the entity type
-    //   type provider as a dependency. See https://drupal.org/node/1740492.
-    if ($schema && $this->module != $schema['module']) {
-      $this->addDependency('module', $schema['module']);
-    }
 
-    $handler_types = array();
-    foreach (Views::getHandlerTypes() as $type) {
-      $handler_types[] = $type['plural'];
-    }
-    foreach ($this->get('display') as $display) {
+    $executable = $this->getExecutable();
+    $executable->initDisplay();
+    $handler_types = array_keys(Views::getHandlerTypes());
+
+    foreach ($executable->displayHandlers as $display) {
       // Add dependency for the display itself.
-      if (isset($display['provider'])) {
-        $this->addDependency('module', $display['provider']);
-      }
+      /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
+      $this->addDependency('module', $display->getProvider());
 
       // Collect all dependencies of all handlers.
       foreach ($handler_types as $handler_type) {
-        if (!empty($display['display_options'][$handler_type])) {
-          foreach ($display['display_options'][$handler_type] as $handler) {
-            // Add the provider as dependency.
-            if (isset($handler['provider'])) {
-              $this->addDependency('module', $handler['provider']);
-            }
-            // Add the additional dependencies from the handler configuration.
-            if (!empty($handler['dependencies'])) {
-              $this->addDependencies($handler['dependencies']);
-          }
+        foreach ($display->getHandlers($handler_type) as $handler) {
+          $this->calculatePluginDependencies($handler);
         }
       }
-    }
 
       // Collect all dependencies of plugins.
       foreach (Views::getPluginTypes('plugin') as $plugin_type) {
-        if (!empty($display['display_options'][$plugin_type]['options']['dependencies'])) {
-          $this->addDependencies($display['display_options'][$plugin_type]['options']['dependencies']);
+        // Argument validator/default plugins do not return a plugin.
+        // @todo https://www.drupal.org/node/2368767 Calculate argument
+        //   validator/default plugin dependencies.
+        if (!$plugin = $display->getPlugin($plugin_type)) {
+          continue;
         }
+        $this->calculatePluginDependencies($plugin);
       }
     }
 
@@ -445,13 +429,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       return 0;
     });
     $this->set('display', $displays);
-  }
-
-  /**
-   * Wraps drupal_get_schema().
-   */
-  protected function drupalGetSchema($table = NULL, $rebuild = FALSE) {
-    return drupal_get_schema($table, $rebuild);
   }
 
 }

@@ -7,7 +7,8 @@
 
 namespace Drupal\views\Tests\Entity;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Component\Utility\Unicode;
+use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
 /**
@@ -15,56 +16,93 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class ViewEntityDependenciesTest extends ViewTestBase {
+class ViewEntityDependenciesTest extends ViewUnitTestBase {
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_field_get_entity');
+  public static $testViews = ['test_field_get_entity', 'test_relationship_dependency', 'test_plugin_dependencies'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = ['node', 'comment', 'user', 'field', 'text', 'entity_reference'];
 
   /**
    * Tests the calculateDependencies method.
    */
   public function testCalculateDependencies() {
-    // The view is a view of comments, their nodes and their authors, so there
-    // are three layers of entities.
-    $account = entity_create('user', array('name' => $this->randomMachineName(), 'bundle' => 'user'));
-    $account->save();
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+
+    $comment_type = entity_create('comment_type', array(
+      'id' => 'comment',
+      'label' => 'Comment settings',
+      'description' => 'Comment settings',
+      'target_entity_type_id' => 'node',
+    ));
+    $comment_type->save();
+    $content_type = entity_create('node_type', array(
+      'type' => $this->randomMachineName(),
+      'name' => $this->randomString(),
+    ));
+    $content_type->save();
+    $field_storage = entity_create('field_storage_config', array(
+      'field_name' => Unicode::strtolower($this->randomMachineName()),
+      'entity_type' => 'node',
+      'type' => 'comment',
+    ));
+    $field_storage->save();
+    entity_create('field_config', array(
+      'field_storage' => $field_storage,
+      'bundle' => $content_type->id(),
+      'label' => $this->randomMachineName() . '_label',
+      'description' => $this->randomMachineName() . '_description',
+      'settings' => array(
+        'comment_type' => $comment_type->id(),
+      ),
+    ))->save();
     // Force a flush of the in-memory storage.
     $this->container->get('views.views_data')->clear();
 
-    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
-    $node->save();
-    $comment = entity_create('comment', array(
-      'uid' => $account->id(),
-      'entity_id' => $node->id(),
-      'entity_type' => 'node',
-      'field_name' => 'comment'
-    ));
-    $comment->save();
-
-    $view = Views::getView('test_field_get_entity');
-
-    $expected_dependencies = array(
-      'module' => array(
+    $expected = [];
+    $expected['test_field_get_entity'] = [
+      'module' => [
         'comment',
         'node',
         'user',
-      )
-    );
-    $dependencies = $view->calculateDependencies();
-    $this->assertEqual($expected_dependencies, $dependencies);
+      ]
+    ];
+    // Tests dependencies of relationships.
+    $expected['test_relationship_dependency'] = [
+      'module' => [
+        'comment',
+        'node',
+        'user',
+      ]
+    ];
+    $expected['test_plugin_dependencies'] = [
+      'module' => [
+        'comment',
+        // The argument handler has an explicit dependency on views_test_data.
+        'views_test_data',
+      ],
+      'test_dependency' => [
+        'access',
+        'row',
+        'style',
+      ]
+    ];
+    foreach ($this::$testViews as $view_id) {
+      $view = Views::getView($view_id);
+
+      $dependencies = $view->calculateDependencies();
+      $this->assertEqual($expected[$view_id], $dependencies);
+      $config = \Drupal::config('views.view.' . $view_id);
+      \Drupal::service('config.storage.staging')->write($view_id, $config->get());
+    }
   }
 
 }

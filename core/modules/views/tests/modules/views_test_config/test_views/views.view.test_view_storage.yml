@@ -18,7 +18,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       sorts:
         id:
           field: id
@@ -27,7 +26,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: standard
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

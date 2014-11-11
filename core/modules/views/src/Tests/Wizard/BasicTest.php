@@ -204,11 +204,8 @@ class BasicTest extends WizardTestBase {
     $displays = $view->storage->get('display');
 
     foreach ($displays as $display) {
-      $this->assertIdentical($display['provider'], 'views', 'Expected provider found for display.');
-
       foreach (array('query', 'exposed_form', 'pager', 'style', 'row') as $type) {
         $this->assertFalse(empty($display['display_options'][$type]['options']), String::format('Default options found for @plugin.', array('@plugin' => $type)));
-        $this->assertIdentical($display['display_options'][$type]['provider'], 'views', String::format('Expected provider found for @plugin.', array('@plugin' => $type)));
       }
     }
   }

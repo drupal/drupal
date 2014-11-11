@@ -17,7 +17,6 @@ display:
           field: id
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default
@@ -40,7 +39,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       path: test_route_with_argument
     display_plugin: page
     display_title: Page
@@ -57,7 +55,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       path: test_route_with_suffix/%/suffix
     display_plugin: page
     display_title: Page
@@ -74,14 +71,12 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
         id_2:
           field: id
           id: id_2
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       path: test_route_with_suffix_and_argument/%/suffix
     display_plugin: page
     display_title: Page
@@ -98,7 +93,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       path: test_route_with_long_argument/%
     display_plugin: page
     display_title: Page

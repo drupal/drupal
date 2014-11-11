@@ -21,7 +21,6 @@ display:
           label: ''
           table: node_field_data
           plugin_id: node
-          provider: node
       filters:
         status:
           expose:
@@ -32,7 +31,6 @@ display:
           table: node_field_data
           value: '1'
           plugin_id: boolean
-          provider: views
       pager:
         type: full
       query:

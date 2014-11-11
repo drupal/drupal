@@ -9,7 +9,6 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: none
@@ -35,11 +34,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ""
-          dependencies:
-            module:
-            - aggregator
-            - aggregator
-            - aggregator
           label: Title
           exclude: false
           alter:
@@ -83,7 +77,6 @@ display:
           hide_alter_empty: true
           display_as_link: false
           plugin_id: aggregator_title_link
-          provider: aggregator
         url:
           id: url
           table: aggregator_feed
@@ -91,9 +84,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ""
-          dependencies:
-            module:
-            - views
           label: URL
           exclude: false
           alter:
@@ -137,7 +127,6 @@ display:
           hide_alter_empty: true
           display_as_link: false
           plugin_id: url
-          provider: views
         description:
           id: description
           table: aggregator_feed
@@ -145,9 +134,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ""
-          dependencies:
-            module:
-            - views
           label: Description
           exclude: false
           alter:
@@ -190,7 +176,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: xss
-          provider: views
         modified:
           id: modified
           table: aggregator_feed
@@ -198,9 +183,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ""
-          dependencies:
-            module:
-            - views
           label: Last modified
           exclude: false
           alter:
@@ -246,7 +228,6 @@ display:
           custom_date_format: ""
           timezone: ""
           plugin_id: date
-          provider: views
       filters: []
       sorts: []
       title: test_style_opml
@@ -260,7 +241,6 @@ display:
     id: page_1
     display_title: Page
     position: 1
-    provider: views
     display_options:
       path: test-opml-style
   feed_1:
@@ -268,7 +248,6 @@ display:
     id: feed_1
     display_title: Feed
     position: 2
-    provider: views
     display_options:
       pager:
         type: some
@@ -276,7 +255,6 @@ display:
         type: opml
         options:
           grouping: []
-        provider: views
       row:
         type: opml_fields
         options:
@@ -288,7 +266,6 @@ display:
           language_field: ""
           xml_url_field: url
           url_field: ""
-        provider: views
       path: test-feed-opml-style
       displays: {  }
 label: test_style_opml

@@ -75,7 +75,6 @@ display:
           id: title
           table: node_field_data
           field: title
-          provider: node
           label: ''
           alter:
             alter_text: false
@@ -108,7 +107,6 @@ display:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: '0'
@@ -157,7 +155,6 @@ display:
           hierarchy: true
           error_message: true
           plugin_id: taxonomy_index_tid
-          provider: taxonomy
       sorts: {  }
       header: {  }
       footer: {  }

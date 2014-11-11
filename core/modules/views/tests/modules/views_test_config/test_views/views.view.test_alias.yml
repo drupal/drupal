@@ -32,7 +32,6 @@ display:
           overwrite_anonymous: '0'
           table: users_field_data
           plugin_id: user_name
-          provider: user
       filters:
         uid_raw:
           admin_label: ''
@@ -73,7 +72,6 @@ display:
             min: ''
             value: '1'
           plugin_id: numeric
-          provider: views
       pager:
         type: full
       query:

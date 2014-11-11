@@ -44,7 +44,6 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
-          provider: views_test_data
       title: test_display_attachment
   page_1:
     display_plugin: page

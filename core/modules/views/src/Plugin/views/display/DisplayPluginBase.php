@@ -908,7 +908,9 @@ abstract class DisplayPluginBase extends PluginBase {
       $types = ViewExecutable::getHandlerTypes();
       $plural = $types[$type]['plural'];
 
-      foreach ($this->getOption($plural) as $id => $info) {
+      // Cast to an array so that if the display does not have any handlers of
+      // this type there is no PHP error.
+      foreach ((array) $this->getOption($plural) as $id => $info) {
         // If this is during form submission and there are temporary options
         // which can only appear if the view is in the edit cache, use those
         // options instead. This is used for AJAX multi-step stuff.
@@ -1988,7 +1990,6 @@ abstract class DisplayPluginBase extends PluginBase {
             $plugin_options = array(
               'type' => $type,
               'options' => $plugin->options,
-              'provider' => $plugin->definition['provider']
             );
             $this->setOption($plugin_type, $plugin_options);
             if ($plugin->usesOptions()) {

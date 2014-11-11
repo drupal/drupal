@@ -35,7 +35,7 @@ class EntityViewsDataTest extends UnitTestCase {
   /**
    * Entity info to use in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\Drupal\views\Tests\TestEntityType
    */
   protected $baseEntityType;
 
@@ -88,6 +88,7 @@ class EntityViewsDataTest extends UnitTestCase {
       'id' => 'entity_test',
       'label' => 'Entity test',
       'entity_keys' => ['id' => 'id'],
+      'provider' => 'entity_test',
     ]);
 
     $this->translationManager = $this->getStringTranslationStub();
@@ -160,6 +161,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->assertEquals('entity_test', $data['entity_test']['table']['entity type']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['group']);
+    $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     $this->assertEquals('id', $data['entity_test']['table']['base']['field']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['base']['title']);
@@ -188,6 +190,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->assertEquals('entity_test_mul', $data['entity_test_mul_property_data']['table']['entity type']);
     $this->assertEquals('Entity test', $data['entity_test_mul_property_data']['table']['group']);
+    $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
     $this->assertEquals(['field' => 'label', 'table' => 'entity_test_mul_property_data'], $data['entity_test']['table']['base']['defaults']);
 
     // Ensure the join information is set up properly.
@@ -214,6 +217,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_revision']['table']['entity type']);
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
     // Tests the join definition between the base and the revision table.

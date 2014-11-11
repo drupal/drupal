@@ -17,21 +17,18 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
         id:
           field: id
           id: id
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
         name:
           field: name
           id: file_extension
           relationship: none
           table: views_test_data
           plugin_id: string
-          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -45,7 +42,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

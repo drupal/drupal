@@ -16,7 +16,6 @@ display:
           value: '1'
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -67,7 +66,6 @@ display:
             fail: 'not found'
           validate_options: {  }
           plugin_id: search
-          provider: search
       title: 'Arg Page'
   default:
     display_plugin: default
@@ -118,7 +116,6 @@ display:
           id: title
           table: node_field_data
           field: title
-          provider: node
           alter:
             alter_text: false
             make_link: false
@@ -151,7 +148,6 @@ display:
           value: '1'
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -187,7 +183,6 @@ display:
           value: '1'
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -228,7 +223,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: search_keywords
-          provider: search
       defaults:
         filters: false
         filter_groups: false

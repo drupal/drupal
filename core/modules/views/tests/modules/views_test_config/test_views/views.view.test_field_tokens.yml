@@ -21,25 +21,21 @@ display:
           table: views_test_data
           field: name
           plugin_id: string
-          provider: views_test_data
         name_1:
           id: name_1
           table: views_test_data
           field: name
           plugin_id: string
-          provider: views_test_data
         name_2:
           id: name_2
           table: views_test_data
           field: name
           plugin_id: string
-          provider: views_test_data
         job:
           id: job
           table: views_test_data
           field: job
           plugin_id: string
-          provider: views_test_data
       style:
         type: default
       row:

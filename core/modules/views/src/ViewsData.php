@@ -7,6 +7,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -230,7 +231,18 @@ class ViewsData {
       return $data->data;
     }
     else {
-      $data = $this->moduleHandler->invokeAll('views_data');
+      $modules = $this->moduleHandler->getImplementations('views_data');
+      $data = [];
+      foreach ($modules as $module) {
+        $views_data = $this->moduleHandler->invoke($module, 'views_data');
+        // Set the provider key for each base table.
+        foreach ($views_data as &$table) {
+          if (isset($table['table']) && !isset($table['table']['provider'])) {
+            $table['table']['provider'] = $module;
+          }
+        }
+        $data = NestedArray::mergeDeep($data, $views_data);
+      }
       $this->moduleHandler->alter('views_data', $data);
 
       $this->processEntityTypes($data);

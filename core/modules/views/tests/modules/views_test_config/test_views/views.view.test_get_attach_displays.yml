@@ -50,7 +50,6 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
-          provider: node
       filters:
         status:
           value: '1'
@@ -61,7 +60,6 @@ display:
           expose:
             operator: '0'
           group: '1'
-          provider: views
       sorts:
         created:
           id: created
@@ -69,7 +67,6 @@ display:
           field: created
           order: DESC
           plugin_id: date
-          provider: views
       title: test_get_attach_displays
   page_1:
     display_plugin: page

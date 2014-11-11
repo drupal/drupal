@@ -42,7 +42,6 @@ class TaxonomyTerm extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['provider'] = 'user';
 
     // Remove the default fields, since we are customizing them here.
     unset($display_options['fields']);
@@ -51,7 +50,6 @@ class TaxonomyTerm extends WizardPluginBase {
     $display_options['fields']['name']['id'] = 'name';
     $display_options['fields']['name']['table'] = 'taxonomy_term_field_data';
     $display_options['fields']['name']['field'] = 'name';
-    $display_options['fields']['name']['provider'] = 'taxonomy';
     $display_options['fields']['name']['label'] = '';
     $display_options['fields']['name']['alter']['alter_text'] = 0;
     $display_options['fields']['name']['alter']['make_link'] = 0;

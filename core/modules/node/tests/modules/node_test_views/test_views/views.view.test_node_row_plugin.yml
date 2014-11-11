@@ -22,7 +22,6 @@ display:
           table: node
           value: true
           plugin_id: boolean
-          provider: views
       pager:
         options:
           items_per_page: 10

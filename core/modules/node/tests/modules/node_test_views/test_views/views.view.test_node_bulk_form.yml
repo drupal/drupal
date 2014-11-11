@@ -20,13 +20,11 @@ display:
           table: node
           field: node_bulk_form
           plugin_id: node_bulk_form
-          provider: node
         title:
           id: title
           table: node_field_data
           field: title
           plugin_id: node
-          provider: node
       sorts:
         nid:
           id: nid
@@ -34,7 +32,6 @@ display:
           field: nid
           order: ASC
           plugin_id: standard
-          provider: views
   page_1:
     display_plugin: page
     id: page_1

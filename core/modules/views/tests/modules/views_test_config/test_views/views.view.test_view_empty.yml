@@ -17,7 +17,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       pager:
         options:
           offset: '0'

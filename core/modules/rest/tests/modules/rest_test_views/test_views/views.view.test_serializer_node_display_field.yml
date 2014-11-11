@@ -31,7 +31,6 @@ display:
           table: node
           field: nid
           plugin_id: numeric
-          provider: node
         body:
           id: body
           table: node__body
@@ -94,7 +93,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-          provider: field
       title: 'Test serialize'
       arguments: {  }
   rest_export_1:
@@ -102,7 +100,6 @@ display:
     id: rest_export_1
     display_title: serializer
     position: null
-    provider: rest
     display_options:
       defaults:
         access: false

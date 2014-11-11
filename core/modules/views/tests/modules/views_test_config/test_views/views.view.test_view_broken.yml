@@ -17,7 +17,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       filters:
         id_broken:
           field: id_broken
@@ -25,7 +24,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       arguments:
         id_broken:
           field: id_broken
@@ -33,7 +31,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       sorts:
         id_broken:
           field: id_broken
@@ -42,7 +39,6 @@ display:
           table: views_test_data
           plugin_id: numeric
           order: ASC
-          provider: views
       relationships:
         id_broken:
           field: id_broken
@@ -50,7 +46,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       header:
         id_broken:
           field: id_broken
@@ -58,7 +53,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       footer:
         id_broken:
           field: id_broken
@@ -66,7 +60,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       empty:
         id_broken:
           field: id_broken
@@ -74,7 +67,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views
       pager:
         options:
           offset: '0'

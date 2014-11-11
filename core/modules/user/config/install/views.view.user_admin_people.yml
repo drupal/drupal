@@ -14,10 +14,8 @@ display:
         type: perm
         options:
           perm: 'administer users'
-        provider: user
       cache:
         type: none
-        provider: views
       query:
         type: views_query
         options:
@@ -26,7 +24,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
       exposed_form:
         type: basic
         options:
@@ -37,7 +34,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
       pager:
         type: full
         options:
@@ -59,7 +55,6 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
-        provider: views
       style:
         type: table
         options:
@@ -133,10 +128,8 @@ display:
               responsive: ''
           default: created
           empty_table: true
-        provider: views
       row:
         type: fields
-        provider: views
       fields:
         user_bulk_form:
           id: user_bulk_form
@@ -187,7 +180,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: user_bulk_form
-          provider: user
         name:
           id: name
           table: users_field_data
@@ -241,7 +233,6 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
-          provider: user
         status:
           id: status
           table: users_field_data
@@ -295,7 +286,6 @@ display:
           type_custom_false: ''
           not: '0'
           plugin_id: boolean
-          provider: views
         rid:
           id: rid
           table: users_roles
@@ -347,7 +337,6 @@ display:
           type: ul
           separator: ', '
           plugin_id: user_roles
-          provider: user
         created:
           id: created
           table: users_field_data
@@ -400,7 +389,6 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
-          provider: views
         access:
           id: access
           table: users_field_data
@@ -453,7 +441,6 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
-          provider: views
         edit_node:
           id: edit_node
           table: users
@@ -504,7 +491,6 @@ display:
           hide_alter_empty: true
           text: Edit
           plugin_id: user_link_edit
-          provider: user
         dropbutton:
           id: dropbutton
           table: views
@@ -695,7 +681,6 @@ display:
             group_items: {  }
           reduce_duplicates: false
           plugin_id: user_roles
-          provider: user
         permission:
           id: permission
           table: users_roles
@@ -736,7 +721,6 @@ display:
             group_items: {  }
           reduce_duplicates: false
           plugin_id: user_permissions
-          provider: user
         status:
           id: status
           table: users_field_data
@@ -783,7 +767,6 @@ display:
                 operator: '='
                 value: '0'
           plugin_id: boolean
-          provider: views
         uid_raw:
           id: uid_raw
           table: users
@@ -823,7 +806,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-          provider: views
       sorts:
         created:
           id: created
@@ -838,7 +820,6 @@ display:
             label: ''
           granularity: second
           plugin_id: date
-          provider: views
       title: People
       empty:
         area_text_custom:
@@ -852,7 +833,6 @@ display:
           tokenize: false
           content: 'No people available.'
           plugin_id: text_custom
-          provider: views
       use_more: false
       use_more_always: false
       use_more_text: more

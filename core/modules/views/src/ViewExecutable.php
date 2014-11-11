@@ -1912,9 +1912,6 @@ class ViewExecutable {
     $data = Views::viewsData()->get($table);
     if (isset($data[$field][$handler_type]['id'])) {
       $fields[$id]['plugin_id'] = $data[$field][$handler_type]['id'];
-      if ($definition = Views::pluginManager($handler_type)->getDefinition($fields[$id]['plugin_id'], FALSE)) {
-        $fields[$id]['provider'] = isset($definition['provider']) ? $definition['provider'] : 'views';
-      }
     }
 
     $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);

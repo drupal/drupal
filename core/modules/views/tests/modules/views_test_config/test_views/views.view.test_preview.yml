@@ -38,7 +38,6 @@ display:
           label: Name
           exclude: '0'
           plugin_id: standard
-          provider: views_test_data
       filters:
         id:
           id: id
@@ -66,7 +65,6 @@ display:
             multiple: '0'
           is_grouped: '0'
           plugin_id: numeric
-          provider: views_test_data
       sorts: {  }
       filter_groups:
         operator: AND
@@ -84,7 +82,6 @@ display:
           title_enable: '0'
           title: ''
           plugin_id: numeric
-          provider: views_test_data
       header:
         area_text_custom:
           id: area_text_custom
@@ -97,7 +94,6 @@ display:
           content: 'Test header text'
           tokenize: '0'
           plugin_id: text_custom
-          provider: views
       footer:
         area_text_custom:
           id: area_text_custom
@@ -110,7 +106,6 @@ display:
           content: 'Test footer text'
           tokenize: '0'
           plugin_id: text_custom
-          provider: views
       empty:
         area_text_custom:
           id: area_text_custom
@@ -123,7 +118,6 @@ display:
           content: 'Test empty text'
           tokenize: '0'
           plugin_id: text_custom
-          provider: views
 label: test_preview
 module: views
 id: test_preview

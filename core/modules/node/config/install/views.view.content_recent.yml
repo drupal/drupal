@@ -24,11 +24,9 @@ display:
         type: perm
         options:
           perm: 'access content'
-        provider: user
       cache:
         type: none
         options: {  }
-        provider: views
       query:
         type: views_query
         options:
@@ -37,7 +35,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
       exposed_form:
         type: basic
         options:
@@ -48,13 +45,11 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
       pager:
         type: some
         options:
           items_per_page: 10
           offset: 0
-        provider: views
       style:
         type: table
         options:
@@ -110,10 +105,8 @@ display:
               responsive: ''
           default: '-1'
           empty_table: false
-        provider: views
       row:
         type: fields
-        provider: views
       fields:
         title:
           id: title
@@ -165,7 +158,6 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
-          provider: node
         name:
           id: name
           table: users_field_data
@@ -219,7 +211,6 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
-          provider: user
         edit_node:
           id: edit_node
           table: node
@@ -270,7 +261,6 @@ display:
           hide_alter_empty: true
           text: edit
           plugin_id: node_link_edit
-          provider: node
         delete_node:
           id: delete_node
           table: node
@@ -321,7 +311,6 @@ display:
           hide_alter_empty: true
           text: delete
           plugin_id: node_link_delete
-          provider: node
       filters:
         status_extra:
           id: status_extra
@@ -359,7 +348,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: node_status
-          provider: node
         langcode:
           id: langcode
           table: node_field_data
@@ -367,9 +355,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -401,7 +386,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
-          provider: views
       sorts:
         changed:
           id: changed
@@ -416,7 +400,6 @@ display:
             label: ''
           granularity: second
           plugin_id: date
-          provider: views
       title: 'Recent content'
       header: {  }
       footer: {  }
@@ -432,7 +415,6 @@ display:
           tokenize: false
           content: 'No content available.'
           plugin_id: text_custom
-          provider: views
       relationships:
         uid:
           id: uid
@@ -443,7 +425,6 @@ display:
           admin_label: author
           required: true
           plugin_id: standard
-          provider: views
       arguments: {  }
       filter_groups:
         operator: AND
@@ -464,4 +445,3 @@ display:
       block_category: 'Lists (Views)'
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
-    provider: views

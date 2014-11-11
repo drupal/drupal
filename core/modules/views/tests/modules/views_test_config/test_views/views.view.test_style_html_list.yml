@@ -34,7 +34,6 @@ display:
           type: ul
           wrapper_class: ''
           class: ''
-        provider: views
       row:
         type: fields
         options: {  }
@@ -43,7 +42,6 @@ display:
           id: name
           table: views_test_data
           field: name
-          provider: views_test_data
 label: ''
 module: views
 id: test_style_html_list

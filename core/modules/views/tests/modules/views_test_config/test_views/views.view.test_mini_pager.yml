@@ -64,7 +64,6 @@ display:
           empty_zero: '0'
           link_to_node: '1'
           plugin_id: node
-          provider: views
       filters: {  }
       sorts:
         nid:
@@ -73,7 +72,6 @@ display:
           field: nid
           plugin_id: standard
           order: ASC
-          provider: views
       title: test_mini_pager
       filter_groups:
         operator: AND

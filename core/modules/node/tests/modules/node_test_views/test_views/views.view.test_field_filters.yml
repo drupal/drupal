@@ -18,19 +18,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
@@ -39,8 +34,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -51,8 +44,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: none
         options:
@@ -72,7 +63,6 @@ display:
           id: title
           table: node_field_data
           field: title
-          provider: node
           label: ''
           alter:
             alter_text: false
@@ -89,7 +79,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies: {  }
           exclude: false
           element_type: ''
           element_class: ''
@@ -106,7 +95,6 @@ display:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -118,11 +106,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -152,7 +135,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       sorts:
         created:
           id: created
@@ -162,7 +144,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies: {  }
           exposed: false
           expose:
             label: ''
@@ -180,7 +161,6 @@ display:
     id: page_tf
     display_title: 'Title filter page'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -196,7 +176,6 @@ display:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -208,12 +187,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
-              - views
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -243,7 +216,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       filter_groups:
         operator: AND
         groups:
@@ -253,7 +225,6 @@ display:
     id: page_bf
     display_title: 'Body filter page'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -269,7 +240,6 @@ display:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -281,10 +251,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -314,7 +280,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       filter_groups:
         operator: AND
         groups:
@@ -324,7 +289,6 @@ display:
     id: page_bfp
     display_title: 'Body filter page Paris'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -340,7 +304,6 @@ display:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -352,11 +315,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -386,7 +344,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       filter_groups:
         operator: AND
         groups:
@@ -396,7 +353,6 @@ display:
     id: page_tfp
     display_title: 'Title filter page Paris'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

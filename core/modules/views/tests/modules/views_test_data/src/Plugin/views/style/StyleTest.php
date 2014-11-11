@@ -111,4 +111,13 @@ class StyleTest extends StylePluginBase {
     return $output;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [
+      'test_dependency' => ['style'],
+    ];
+  }
+
 }

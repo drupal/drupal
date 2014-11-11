@@ -17,14 +17,12 @@ display:
           id: nid
           table: node
           plugin_id: node
-          provider: node
       filters:
         created:
           field: created
           id: created
           table: node_field_data
           plugin_id: date
-          provider: views
       pager:
         type: full
       query:

@@ -31,14 +31,12 @@ display:
           id: name
           table: views_test_data
           field: name
-          provider: views_test_data
       title: test_view_block
   block_1:
     display_plugin: block
     id: block_1
     display_title: Block
     position: null
-    provider: views
     display_options:
       field:
         title:

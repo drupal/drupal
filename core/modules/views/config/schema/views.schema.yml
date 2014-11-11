@@ -112,8 +112,5 @@ views.view.*:
             position:
               type: integer
               label: 'Position'
-            provider:
-              type: string
-              label: 'Display provider module'
             display_options:
               type: views.display.[%parent.display_plugin]

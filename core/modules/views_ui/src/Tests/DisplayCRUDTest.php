@@ -52,11 +52,6 @@ class DisplayCRUDTest extends UITestBase {
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", array('path' => 'test/path'), t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
-
-    // Test that the new view display contains the correct provider.
-    $view = Views::getView($view['id']);
-    $displays = $view->storage->get('display');
-    $this->assertIdentical($displays['page_1']['provider'], 'views', 'The expected provider was added to the new display.');
   }
 
   /**

@@ -141,7 +141,6 @@ class Comment extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['provider'] = 'user';
 
     // Add a relationship to nodes.
     $display_options['relationships']['node']['id'] = 'node';
@@ -149,7 +148,6 @@ class Comment extends WizardPluginBase {
     $display_options['relationships']['node']['field'] = 'node';
     $display_options['relationships']['node']['required'] = 1;
     $display_options['relationships']['node']['plugin_id'] = 'standard';
-    $display_options['relationships']['node']['provider'] = 'views';
 
     // Remove the default fields, since we are customizing them here.
     unset($display_options['fields']);
@@ -158,7 +156,6 @@ class Comment extends WizardPluginBase {
     $display_options['fields']['subject']['id'] = 'subject';
     $display_options['fields']['subject']['table'] = 'comment_field_data';
     $display_options['fields']['subject']['field'] = 'subject';
-    $display_options['fields']['subject']['provider'] = 'comment';
     $display_options['fields']['subject']['label'] = '';
     $display_options['fields']['subject']['alter']['alter_text'] = 0;
     $display_options['fields']['subject']['alter']['make_link'] = 0;

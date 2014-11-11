@@ -77,7 +77,6 @@ display:
           relationship: none
           table: node
           plugin_id: numeric
-          provider: views
       menu:
         type: tab
         title: 'Test contextual link'

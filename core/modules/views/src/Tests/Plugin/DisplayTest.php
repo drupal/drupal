@@ -66,7 +66,6 @@ class DisplayTest extends PluginTestBase {
       'id' => 'display_test_1',
       'display_title' => 'Display test',
       'position' => 1,
-      'provider' => 'views_test_data',
     );
     $this->assertEqual($displays['display_test_1'], $options);
 
@@ -79,7 +78,6 @@ class DisplayTest extends PluginTestBase {
       'id' => 'display_test_2',
       'display_title' => 'Display test 2',
       'position' => 2,
-      'provider' => 'views_test_data',
     );
     $this->assertEqual($displays['display_test_2'], $options);
 

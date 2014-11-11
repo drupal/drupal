@@ -88,7 +88,6 @@ class NodeRevision extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['provider'] = 'user';
     $display_options['access']['perm'] = 'view revisions';
 
     // Remove the default fields, since we are customizing them here.
@@ -98,7 +97,6 @@ class NodeRevision extends WizardPluginBase {
     $display_options['fields']['changed']['id'] = 'changed';
     $display_options['fields']['changed']['table'] = 'node_field_revision';
     $display_options['fields']['changed']['field'] = 'changed';
-    $display_options['fields']['changed']['provider'] = 'node';
     $display_options['fields']['changed']['alter']['alter_text'] = FALSE;
     $display_options['fields']['changed']['alter']['make_link'] = FALSE;
     $display_options['fields']['changed']['alter']['absolute'] = FALSE;
@@ -114,7 +112,6 @@ class NodeRevision extends WizardPluginBase {
     $display_options['fields']['title']['id'] = 'title';
     $display_options['fields']['title']['table'] = 'node_field_revision';
     $display_options['fields']['title']['field'] = 'title';
-    $display_options['fields']['title']['provider'] = 'node';
     $display_options['fields']['title']['label'] = '';
     $display_options['fields']['title']['alter']['alter_text'] = 0;
     $display_options['fields']['title']['alter']['make_link'] = 0;

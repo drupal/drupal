@@ -17,7 +17,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -31,7 +30,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-          provider: views_test_data
       header:
         view:
           field: view
@@ -40,7 +38,6 @@ display:
           view_to_insert: test_simple_argument:default
           inherit_arguments: 1
           plugin_id: view
-          provider: views
     display_plugin: default
     display_title: Master
     id: default

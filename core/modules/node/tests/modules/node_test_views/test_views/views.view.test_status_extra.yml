@@ -76,7 +76,6 @@ display:
           hide_alter_empty: true
           link_to_node: false
           plugin_id: node
-          provider: node
       filters:
         status_extra:
           id: status_extra
@@ -114,7 +113,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: node_status
-          provider: node
       sorts:
         nid:
           id: nid
@@ -122,7 +120,6 @@ display:
           field: nid
           order: ASC
           plugin_id: standard
-          provider: views
       filter_groups:
         operator: AND
         groups:

@@ -11,7 +11,6 @@ display:
           id: type
           table: node_field_data
           plugin_id: node_type
-          provider: node
     display_plugin: default
     display_title: Master
     id: default

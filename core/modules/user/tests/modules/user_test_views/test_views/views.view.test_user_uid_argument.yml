@@ -11,7 +11,6 @@ display:
           table: users
           field: uid
           plugin_id: user
-          provider: user
       arguments:
         uid:
           id: uid
@@ -20,7 +19,6 @@ display:
           title_enable: true
           title: '%1'
           plugin_id: user_uid
-          provider: user
     display_plugin: default
     display_title: Master
     id: default

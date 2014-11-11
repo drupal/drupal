@@ -15,21 +15,18 @@ display:
           id: test_example
           table: views
           plugin_id: test_example
-          provider: views_test_data
       footer:
         test_example:
           field: test_example
           id: test_example
           table: views
           plugin_id: test_example
-          provider: views_test_data
       empty:
         test_example:
           field: test_example
           id: test_example
           table: views
           plugin_id: test_example
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

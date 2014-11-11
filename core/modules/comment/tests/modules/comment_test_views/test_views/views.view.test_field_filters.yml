@@ -18,19 +18,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
@@ -39,8 +34,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -51,8 +44,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: none
         options:
@@ -72,17 +63,14 @@ display:
           field: node
           required: true
           plugin_id: standard
-          provider: views
           relationship: none
           group_type: group
           admin_label: Content
-          dependencies: {  }
       fields:
         subject:
           id: subject
           table: comment_field_data
           field: subject
-          provider: comment
           label: ''
           alter:
             alter_text: false
@@ -99,7 +87,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies: {  }
           exclude: false
           element_type: ''
           element_class: ''
@@ -120,9 +107,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -152,7 +136,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       sorts: {  }
       title: 'Title filter page'
       header: {  }
@@ -166,7 +149,6 @@ display:
     id: page_tc
     display_title: 'Title Comida'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -177,7 +159,6 @@ display:
     id: page_bp
     display_title: 'Body Paris'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -191,9 +172,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -223,7 +201,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -238,7 +215,6 @@ display:
     id: page_tp
     display_title: 'Title Paris'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -252,10 +228,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -285,7 +257,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -298,7 +269,6 @@ display:
     id: page_bf
     display_title: 'Body Comida'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -312,10 +282,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -345,7 +311,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false

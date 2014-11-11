@@ -45,7 +45,6 @@ display:
           link_to_user: '1'
           overwrite_anonymous: '0'
           plugin_id: string
-          provider: views
         data:
           id: data
           table: users
@@ -108,7 +107,6 @@ display:
             operator: '0'
           group: '1'
           plugin_id: numeric
-          provider: user
       sorts:
         created:
           id: created
@@ -116,7 +114,6 @@ display:
           field: created
           order: DESC
           plugin_id: date
-          provider: views
 label: test_user_data
 module: views
 id: test_user_data

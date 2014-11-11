@@ -129,6 +129,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Setup base information of the views data.
     $data[$base_table]['table']['entity type'] = $this->entityType->id();
     $data[$base_table]['table']['group'] = $this->entityType->getLabel();
+    $data[$base_table]['table']['provider'] = $this->entityType->getProvider();
     $data[$base_table]['table']['base'] = [
       'field' => $base_field,
       'title' => $this->entityType->getLabel(),
@@ -157,10 +158,12 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       ];
       $data[$data_table]['table']['entity type'] = $this->entityType->id();
       $data[$data_table]['table']['group'] = $this->entityType->getLabel();
+      $data[$data_table]['table']['provider'] = $this->entityType->getProvider();
     }
     if ($revision_table) {
       $data[$revision_table]['table']['entity type'] = $this->entityType->id();
       $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
+      $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
       $data[$revision_table]['table']['base'] = array(
         'field' => $revision_field,
         'title' => $this->t('@entity_type revisions', array('@entity_type' => $this->entityType->getLabel())),

@@ -18,19 +18,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
@@ -39,8 +34,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -51,8 +44,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: none
         options:
@@ -67,7 +58,6 @@ display:
           inline: {  }
           separator: ''
           hide_empty: false
-        provider: views
       fields:
         title:
           id: title
@@ -76,9 +66,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - node
           label: ''
           exclude: false
           alter:
@@ -121,7 +108,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           link_to_node: 0
-          provider: node
         langcode:
           id: langcode
           table: node_field_data
@@ -129,9 +115,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - node
           label: Language
           exclude: false
           alter:
@@ -176,13 +159,11 @@ display:
           link_to_node: false
           native_language: 0
           plugin_id: node_language
-          provider: node
       filters:
         status:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
@@ -200,12 +181,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
-              - views
-              - views
           operator: in
           value:
             fr: fr
@@ -238,7 +213,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
-          provider: views
       sorts:
         langcode:
           id: langcode
@@ -247,16 +221,11 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           order: ASC
           exposed: false
           expose:
             label: ''
           plugin_id: standard
-          provider: views
       title: 'Language filter test'
       header: {  }
       footer: {  }
@@ -270,9 +239,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           default_action: ignore
           exception:
             value: all
@@ -299,7 +265,6 @@ display:
             fail: 'not found'
           validate_options: {  }
           plugin_id: language
-          provider: views
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:
@@ -307,7 +272,6 @@ display:
     id: page_1
     display_title: Page
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

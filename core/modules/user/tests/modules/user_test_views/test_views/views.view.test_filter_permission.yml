@@ -128,7 +128,6 @@ display:
           expose:
             label: ''
           plugin_id: standard
-          provider: views
 human_name: test_filter_permission
 module: views
 id: test_filter_permission

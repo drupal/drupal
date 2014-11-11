@@ -64,7 +64,6 @@ class Users extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['provider'] = 'user';
     $display_options['access']['perm'] = 'access user profiles';
 
     // Remove the default fields, since we are customizing them here.
@@ -74,7 +73,6 @@ class Users extends WizardPluginBase {
     $display_options['fields']['name']['id'] = 'name';
     $display_options['fields']['name']['table'] = 'users_field_data';
     $display_options['fields']['name']['field'] = 'name';
-    $display_options['fields']['name']['provider'] = 'user';
     $display_options['fields']['name']['label'] = '';
     $display_options['fields']['name']['alter']['alter_text'] = 0;
     $display_options['fields']['name']['alter']['make_link'] = 0;

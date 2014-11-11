@@ -23,7 +23,6 @@ display:
           id: type
           table: node_field_data
           plugin_id: node_type
-          provider: views
         body_value:
           id: body_value
           table: node__body
@@ -64,7 +63,6 @@ display:
                 operator: empty
                 value: ''
           plugin_id: string
-          provider: views
       pager:
         type: full
       sorts:
@@ -73,7 +71,6 @@ display:
           id: created
           table: node_field_data
           plugin_id: date
-          provider: views
       style:
         type: default
       row:

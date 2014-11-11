@@ -37,7 +37,6 @@ display:
           id: node
           required: true
           table: comment_field_data
-          provider: views
       fields:
         subject:
           id: subject
@@ -57,7 +56,6 @@ display:
           hide_empty: false
           empty_zero: false
           link_to_comment: true
-          provider: comment
       filters: {  }
       sorts: {  }
 label: test_comment_rss

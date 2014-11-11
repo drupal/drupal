@@ -30,7 +30,6 @@ display:
           label: ''
           exclude: '0'
           alter: {  }
-          provider: views_test_config
       filters: {  }
       sorts: {  }
       header: {  }

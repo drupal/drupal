@@ -11,21 +11,18 @@ display:
           table: node_field_data
           field: title
           plugin_id: node
-          provider: node
       relationships:
         comment_cid:
           id: comment_cid
           table: node
           field: comment_cid
           plugin_id: standard
-          provider: views
         nid:
           id: nid
           table: comment_field_data
           field: node
           relationship: comment_cid
           plugin_id: standard
-          provider: views
     display_plugin: default
     display_title: Master
     id: default

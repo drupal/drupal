@@ -20,14 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
 
   /**
-   * Returns an array of module dependencies for this plugin.
+   * Returns the plugin provider.
    *
-   * Dependencies are a list of module names, which might depend on the
-   * configuration.
-   *
-   * @return array
+   * @return string
    */
-  public function getDependencies();
+  public function getProvider();
 
   /**
    * Return the human readable name of the display.

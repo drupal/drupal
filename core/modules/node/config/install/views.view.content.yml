@@ -20,13 +20,10 @@ display:
         type: perm
         options:
           perm: 'access content overview'
-        provider: user
       cache:
         type: none
-        provider: views
       query:
         type: views_query
-        provider: views
       exposed_form:
         type: basic
         options:
@@ -37,12 +34,10 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
       pager:
         type: full
         options:
           items_per_page: 50
-        provider: views
       style:
         type: table
         options:
@@ -136,10 +131,8 @@ display:
               responsive: ''
           default: changed
           empty_table: true
-        provider: views
       row:
         type: fields
-        provider: views
       fields:
         node_bulk_form:
           id: node_bulk_form
@@ -156,7 +149,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: node_bulk_form
-          provider: node
         title:
           id: title
           table: node_field_data
@@ -173,7 +165,6 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
-          provider: node
         type:
           id: type
           table: node_field_data
@@ -191,7 +182,6 @@ display:
           link_to_node: false
           machine_name: ''
           plugin_id: node_type
-          provider: node
         name:
           id: name
           table: users_field_data
@@ -212,7 +202,6 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
-          provider: user
         status:
           id: status
           table: node_field_data
@@ -232,7 +221,6 @@ display:
           type_custom_false: ''
           not: ''
           plugin_id: boolean
-          provider: views
         changed:
           id: changed
           table: node_field_data
@@ -251,7 +239,6 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
-          provider: views
         edit_node:
           id: edit_node
           table: node
@@ -260,7 +247,6 @@ display:
           exclude: true
           text: Edit
           plugin_id: node_link_edit
-          provider: node
         delete_node:
           id: delete_node
           table: node
@@ -269,7 +255,6 @@ display:
           exclude: true
           text: Delete
           plugin_id: node_link_delete
-          provider: node
         dropbutton:
           id: dropbutton
           table: views
@@ -280,7 +265,6 @@ display:
             delete_node: delete_node
           destination: true
           plugin_id: dropbutton
-          provider: views
       filters:
         status_extra:
           id: status_extra
@@ -289,7 +273,6 @@ display:
           operator: '='
           value: false
           plugin_id: node_status
-          provider: node
           group: 1
         status:
           id: status
@@ -335,7 +318,6 @@ display:
                 operator: '='
                 value: '0'
           plugin_id: boolean
-          provider: views
         type:
           id: type
           table: node_field_data
@@ -375,7 +357,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: bundle
-          provider: views
         title:
           id: title
           table: node_field_data
@@ -414,7 +395,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
         langcode:
           id: langcode
           table: node_field_data
@@ -422,9 +402,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: in
           value: {  }
           group: 1
@@ -457,7 +434,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
-          provider: views
       sorts: {  }
       title: Content
       empty:
@@ -468,7 +444,6 @@ display:
           empty: true
           content: 'No content available.'
           plugin_id: text_custom
-          provider: views
       arguments: {  }
       relationships:
         uid:
@@ -478,7 +453,6 @@ display:
           admin_label: author
           required: true
           plugin_id: standard
-          provider: views
       show_admin_links: false
       filter_groups:
         operator: AND

@@ -18,7 +18,6 @@ display:
           validate:
             type: php
           plugin_id: 'null'
-          provider: views
       cache:
         type: none
       exposed_form:

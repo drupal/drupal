@@ -18,14 +18,12 @@ display:
           id: name
           table: taxonomy_term_field_data
           plugin_id: taxonomy
-          provider: taxonomy
         nid:
           field: nid
           id: nid
           relationship: tid_representative
           table: node
           plugin_id: node
-          provider: node
       pager:
         options:
           items_per_page: 10
@@ -48,7 +46,6 @@ display:
           subquery_view: ''
           table: taxonomy_term_data
           plugin_id: groupwise_max
-          provider: views
       row:
         type: fields
       sorts:
@@ -58,7 +55,6 @@ display:
           order: DESC
           table: taxonomy_term_data
           plugin_id: standard
-          provider: views
       style:
         type: default
       title: test_groupwise

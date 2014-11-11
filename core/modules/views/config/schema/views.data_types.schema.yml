@@ -24,12 +24,6 @@ views_display:
           label: 'Pager type'
         options:
           type: views.pager.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     exposed_form:
       type: mapping
       label: 'Exposed form'
@@ -40,12 +34,6 @@ views_display:
         options:
           label: 'Options'
           type: views.exposed_form.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     access:
       type: mapping
       label: 'Access'
@@ -55,12 +43,6 @@ views_display:
           label: 'Access type'
         options:
           type: views.access.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     cache:
       type: views.cache.[type]
     empty:
@@ -105,12 +87,6 @@ views_display:
           label: 'Type'
         options:
           type: views.style.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     row:
       type: mapping
       label: 'Row'
@@ -120,12 +96,6 @@ views_display:
           label: 'Row type'
         options:
           type: views.row.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     query:
       type: mapping
       label: 'Query'
@@ -135,12 +105,6 @@ views_display:
           label: 'Query type'
         options:
           type: views.query.[%parent.type]
-        provider:
-          type: string
-          label: 'Provider'
-        dependencies:
-          type: config_dependencies
-          label: 'Dependencies'
     defaults:
       type: mapping
       label: 'Defaults'
@@ -355,12 +319,6 @@ views_handler:
     admin_label:
       type: label
       label: 'A string to identify the handler instance in the admin UI.'
-    provider:
-      type: string
-      label: 'Provider'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 views_argument:
   type: views_handler
@@ -451,10 +409,6 @@ views_argument:
     plugin_id:
       type: string
       label: 'Plugin ID'
-    provider:
-      type: string
-      label: 'Provider'
-
 
 views_exposed_form:
   type: mapping
@@ -611,9 +565,6 @@ views_field:
     plugin_id:
       type: string
       label: 'Plugin ID'
-    provider:
-      type: string
-      label: 'Provider'
 
 views_pager:
   type: mapping
@@ -802,9 +753,6 @@ views_filter:
     plugin_id:
       type: string
       label: 'Plugin ID'
-    provider:
-      type: string
-      label: 'Provider'
 
 views_filter_group_items:
   type: sequence
@@ -849,9 +797,6 @@ views_relationship:
     required:
       type: boolean
       label: 'Require this relationship'
-    provider:
-      type: string
-      label: 'Provider'
 
 views_query:
   type: mapping
@@ -898,9 +843,3 @@ views_cache:
     type:
       type: string
       label: 'Cache type'
-    provider:
-      type: string
-      label: 'Provider'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'

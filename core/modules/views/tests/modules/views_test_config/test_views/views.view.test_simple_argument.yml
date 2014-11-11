@@ -17,19 +17,16 @@ display:
           id: age
           relationship: none
           table: views_test_data
-          provider: views_test_data
         id:
           field: id
           id: id
           relationship: none
           table: views_test_data
-          provider: views_test_data
         name:
           field: name
           id: name
           relationship: none
           table: views_test_data
-          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -42,7 +39,6 @@ display:
           order: ASC
           relationship: none
           table: views_test_data
-          provider: views_test_data
       arguments:
         age:
           default_action: ignore
@@ -79,7 +75,6 @@ display:
           validate_argument_transform: '0'
           validate_user_restrict_roles: '0'
           validate_argument_php: ''
-          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default

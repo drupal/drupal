@@ -143,6 +143,12 @@ function hook_views_data() {
   // a field, filter, etc. you can also filter by the group.
   $data['example_table']['table']['group'] = t('Example table');
 
+  // Within 'table', the value of 'provider' is the module that provides schema
+  // or the entity type that causes the table to exist. Setting this ensures
+  // that views have the correct dependencies. This is automatically set to the
+  // module that implements hook_views_data().
+  $data['example_table']['table']['provider'] = 'example_module';
+
   // Some tables are "base" tables, meaning that they can be the base tables
   // for views. Non-base tables can only be brought in via relationships in
   // views based on other tables. To define a table to be a base table, add

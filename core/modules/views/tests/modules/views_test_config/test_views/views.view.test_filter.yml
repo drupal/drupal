@@ -20,14 +20,12 @@ display:
           label: ''
           table: views_test_data
           plugin_id: string
-          provider: views_test_data
       filters:
         type:
           field: name
           id: test_filter
           table: views_test_data
           plugin_id: string
-          provider: views_test_data
       query:
         type: views_query
       use_more_always: '0'

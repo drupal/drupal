@@ -17,19 +17,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
@@ -38,8 +33,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -50,8 +43,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: full
         options:
@@ -73,8 +64,6 @@ display:
             first: '« first'
             last: 'last »'
           quantity: 9
-        provider: views
-        dependencies: {  }
       style:
         type: default
         options:
@@ -82,8 +71,6 @@ display:
           row_class: ''
           default_row_class: true
           uses_fields: false
-        provider: views
-        dependencies: {  }
       row:
         type: fields
         options:
@@ -91,8 +78,6 @@ display:
           separator: ''
           hide_empty: false
           default_field_elements: true
-        provider: views
-        dependencies: {  }
       fields:
         name:
           id: name
@@ -101,9 +86,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - taxonomy
           label: Name
           exclude: false
           alter:
@@ -148,7 +130,6 @@ display:
           link_to_taxonomy: true
           convert_spaces: false
           plugin_id: taxonomy
-          provider: taxonomy
       filters: {  }
       sorts:
         tid:
@@ -158,15 +139,11 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           order: ASC
           exposed: false
           expose:
             label: ''
           plugin_id: standard
-          provider: views
       header: {  }
       footer: {  }
       empty: {  }

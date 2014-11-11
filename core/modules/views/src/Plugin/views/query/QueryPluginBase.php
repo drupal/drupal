@@ -118,6 +118,21 @@ abstract class QueryPluginBase extends PluginBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = [];
+
+    foreach ($this->getEntityTableInfo() as $entity_type => $info) {
+      if (!empty($info['provider'])) {
+        $dependencies['module'][] = $info['provider'];
+      }
+    }
+
+    return $dependencies;
+  }
+
+  /**
    * Set a LIMIT on the query, specifying a maximum number of results.
    */
   public function setLimit($limit) {
@@ -260,9 +275,15 @@ abstract class QueryPluginBase extends PluginBase {
         'entity_type' => $base_table_data['table']['entity type'],
         'revision' => FALSE,
       );
+
+      // Include the entity provider.
+      if (!empty($table_data['table']['provider'])) {
+        $entity_tables[$table_data['table']['entity type']]['provider'] = $table_data['table']['provider'];
+      }
     }
+
     // Include all relationships.
-    foreach ($this->view->relationship as $relationship_id => $relationship) {
+    foreach ((array) $this->view->relationship as $relationship_id => $relationship) {
       $table_data = $views_data->get($relationship->definition['base']);
       if (isset($table_data['table']['entity type'])) {
         $entity_tables[$table_data['table']['entity type']] = array(
@@ -272,6 +293,11 @@ abstract class QueryPluginBase extends PluginBase {
           'entity_type' => $table_data['table']['entity type'],
           'revision' => FALSE,
         );
+
+        // Include the entity provider.
+        if (!empty($table_data['table']['provider'])) {
+          $entity_tables[$table_data['table']['entity type']]['provider'] = $table_data['table']['provider'];
+        }
       }
     }
 

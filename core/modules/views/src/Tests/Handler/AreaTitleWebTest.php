@@ -51,7 +51,6 @@ class AreaTitleWebTest extends ViewTestBase {
       'table' => 'views_test_data',
       'relationship' => 'none',
       'plugin_id' => 'numeric',
-      'provider' => 'views_test_data',
       // Add a value which does not exist.
       'value' => ['value' => '042118160112'],
     ];

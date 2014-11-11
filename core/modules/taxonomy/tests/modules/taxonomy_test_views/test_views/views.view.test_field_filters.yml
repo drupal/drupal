@@ -18,19 +18,14 @@ display:
     id: default
     display_title: Master
     position: 0
-    provider: views
     display_options:
       access:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
@@ -39,8 +34,6 @@ display:
           replica: false
           query_comment: false
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -51,8 +44,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: none
         options:
@@ -67,7 +58,6 @@ display:
           id: name
           table: taxonomy_term_field_data
           field: name
-          provider: taxonomy
           label: ''
           alter:
             alter_text: false
@@ -84,7 +74,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies: {  }
           exclude: false
           element_type: ''
           element_class: ''
@@ -105,9 +94,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -137,7 +123,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       sorts: {  }
       title: 'Name filter page'
       header: {  }
@@ -152,7 +137,6 @@ display:
     id: page_dc
     display_title: 'Description Comida'
     position: 3
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -166,9 +150,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -198,7 +179,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -213,7 +193,6 @@ display:
     id: page_dp
     display_title: 'Description Comida'
     position: 3
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -227,10 +206,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -260,7 +235,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -275,7 +249,6 @@ display:
     id: page_nc
     display_title: 'Name Comida'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -286,7 +259,6 @@ display:
     id: page_np
     display_title: 'Name Paris'
     position: 1
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -300,10 +272,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -333,7 +301,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -346,7 +313,6 @@ display:
     id: page_fp
     display_title: 'Field Paris'
     position: 3
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -360,10 +326,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
           operator: contains
           value: Paris
           group: 1
@@ -393,7 +355,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false
@@ -408,7 +369,6 @@ display:
     id: page_fc
     display_title: 'Field Comida'
     position: 3
-    provider: views
     display_options:
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -422,9 +382,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
           operator: contains
           value: Comida
           group: 1
@@ -454,7 +411,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
-          provider: views
       defaults:
         filters: false
         filter_groups: false

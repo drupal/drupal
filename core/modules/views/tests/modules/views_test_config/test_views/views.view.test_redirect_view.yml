@@ -50,7 +50,6 @@ display:
           empty_zero: '0'
           link_to_node: '1'
           plugin_id: node
-          provider: node
       filters:
         status:
           value: '1'
@@ -61,7 +60,6 @@ display:
             operator: '0'
           group: '1'
           plugin_id: boolean
-          provider: views
       sorts:
         created:
           id: created
@@ -69,7 +67,6 @@ display:
           field: created
           order: DESC
           plugin_id: date
-          provider: views
       title: test_redirect_view
   page_1:
     display_plugin: page

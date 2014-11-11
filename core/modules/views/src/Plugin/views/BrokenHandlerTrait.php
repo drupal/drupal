@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -20,10 +21,7 @@ trait BrokenHandlerTrait {
    * @see \Drupal\views\Plugin\views\PluginBase::defineOptions().
    */
   public function adminLabel($short = FALSE) {
-    $args = array(
-      '@module' => $this->definition['original_configuration']['provider'],
-    );
-    return t('Broken/missing handler (Module: @module) …', $args);
+    return t('Broken/missing handler');
   }
 
   /**
@@ -60,11 +58,11 @@ trait BrokenHandlerTrait {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $description_top = t('The handler for this item is broken or missing. The following details are available:');
 
-    $items = array(
-      t('Module: @module', array('@module' => $this->definition['original_configuration']['provider'])),
-      t('Table: @table', array('@table' => $this->definition['original_configuration']['table'])),
-      t('Field: @field', array('@field' => $this->definition['original_configuration']['field'])),
-    );
+    foreach ($this->definition['original_configuration'] as $key => $value) {
+      if (is_scalar($value)) {
+        $items[] = String::format('@key: @value', array('@key' => $key, '@value' => $value));
+      }
+    }
 
     $description_bottom = t('Enabling the appropriate module will may solve this issue. Otherwise, check to see if there is a module update available.');
 
@@ -95,6 +93,17 @@ trait BrokenHandlerTrait {
    */
   public function broken() {
     return TRUE;
+  }
+
+  /**
+   * Gets dependencies for a broken handler.
+   *
+   * @return array
+   *
+   * @see \Drupal\views\Plugin\views\PluginBase::calculateDependencies().
+   */
+  public function calculateDependencies() {
+    return [];
   }
 
 }

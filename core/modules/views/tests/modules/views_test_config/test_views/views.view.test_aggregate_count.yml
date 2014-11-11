@@ -17,7 +17,6 @@ display:
             format: default_summary
           table: entity_test
           plugin_id: string
-          provider: views
       cache:
         type: none
       exposed_form:
@@ -39,7 +38,6 @@ display:
           link_to_node: '0'
           table: entity_test
           plugin_id: numeric
-          provider: views
       group_by: '1'
       pager:
         type: some
