@@ -44,6 +44,7 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
+    $this->installConfig(array('field'));
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(

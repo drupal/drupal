@@ -31,4 +31,12 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
    */
   public function isLocked();
 
+  /**
+   * Checks if the field storage can be deleted.
+   *
+   * @return bool
+   *   TRUE if the field storage can be deleted.
+   */
+  public function isDeletable();
+
 }

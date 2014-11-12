@@ -134,6 +134,21 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   public $locked = FALSE;
 
   /**
+   * Flag indicating whether the field storage should be deleted when orphaned.
+   *
+   * By default field storages for configurable fields are removed when there
+   * are no remaining fields using them. If multiple modules provide bundles
+   * which need to use the same field storage then setting this to TRUE will
+   * preserve the field storage regardless of what happens to the bundles. The
+   * classic use case for this is node body field storage since Book, Forum, the
+   * Standard profile and bundle (node type) creation through the UI all use
+   * same field storage.
+   *
+   * @var bool
+   */
+  protected $persist_with_no_fields = FALSE;
+
+  /**
    * The custom storage indexes for the field data storage.
    *
    * This set of indexes is merged with the "default" indexes specified by the
@@ -731,6 +746,15 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public static function loadByName($entity_type_id, $field_name) {
     return \Drupal::entityManager()->getStorage('field_storage_config')->load($entity_type_id . '.' . $field_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDeletable() {
+    // The field storage is not deleted, is configured to be removed when there
+    // are no fields and the field storage has no bundles.
+    return !$this->deleted && !$this->persist_with_no_fields && count($this->getBundles()) == 0;
   }
 
 }

@@ -20,7 +20,6 @@ class NodeConditionTest extends EntityUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
 
     // Create the node bundles required for testing.
     $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));

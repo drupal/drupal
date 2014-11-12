@@ -25,7 +25,6 @@ class EditorFileUsageTest extends EntityUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
     $this->installEntitySchema('file');
     $this->installSchema('node', array('node_access'));
     $this->installSchema('file', array('file_usage'));

@@ -30,7 +30,6 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
     $this->installConfig(array('filter'));
 
     $node_type = entity_create('node_type', array('type' => 'article', 'name' => 'Article'));

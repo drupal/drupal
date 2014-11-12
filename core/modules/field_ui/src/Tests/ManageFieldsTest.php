@@ -72,6 +72,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->cardinalitySettings();
     $this->fieldListAdminPage();
     $this->deleteField();
+    $this->addPersistentFieldStorage();
   }
 
   /**
@@ -223,6 +224,30 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $field_id);
     $this->drupalPostForm(NULL, array(), t('Delete field'));
     $this->assertResponse(200);
+  }
+
+  /**
+   * Tests that persistent field storage appears in the field UI.
+   */
+  protected function addPersistentFieldStorage() {
+    $field_storage = FieldStorageConfig::loadByName('node', $this->field_name);
+    // Persist the field storage even if there are no fields.
+    $field_storage->set('persist_with_no_fields', TRUE)->save();
+    // Delete all instances of the field.
+    foreach ($field_storage->getBundles() as $node_type) {
+      // Delete all the body field instances.
+      $this->drupalPostForm('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->field_name, array(), t('Delete field'));
+      $this->drupalPostForm(NULL, array(), t('Delete'));
+    }
+    // Check "Re-use existing field" appears.
+    $this->drupalGet('admin/structure/types/manage/page/fields');
+    $this->assertRaw(t('Re-use existing field'), '"Re-use existing field" was found.');
+    // Add a new field for the orphaned storage.
+    $edit = array(
+      'fields[_add_existing_field][label]' => $this->randomMachineName(),
+      'fields[_add_existing_field][field_name]' => $this->field_name,
+    );
+    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $edit);
   }
 
   /**

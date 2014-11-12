@@ -33,6 +33,16 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
   public static $modules = ['node', 'comment', 'user', 'field', 'text', 'entity_reference'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    // Install the necessary dependencies for node type creation to work.
+    $this->installEntitySchema('node');
+    $this->installConfig(array('field'));
+  }
+
+  /**
    * Tests the calculateDependencies method.
    */
   public function testCalculateDependencies() {

@@ -28,7 +28,6 @@ class NodeValidationTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
 
     // Create a node type for testing.
     $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));

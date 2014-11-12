@@ -17,3 +17,4 @@ dependencies:
   module:
     - entity_test
     - text
+persist_with_no_fields: false

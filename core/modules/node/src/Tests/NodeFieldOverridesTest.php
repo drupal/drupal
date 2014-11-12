@@ -38,7 +38,6 @@ class NodeFieldOverridesTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
     $this->installConfig(array('user'));
     $this->user = $this->createUser();
     \Drupal::service('current_user')->setAccount($this->user);

@@ -16,3 +16,4 @@ dependencies:
   module:
     - options
     - taxonomy
+persist_with_no_fields: false

@@ -20,3 +20,4 @@ dependencies:
   module:
     - node
     - taxonomy
+persist_with_no_fields: false

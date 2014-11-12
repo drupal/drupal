@@ -215,11 +215,12 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
       return;
     }
 
-    // Delete field storages that have no more fields.
+    // Delete the associated field storages if they are not used anymore and are
+    // not persistent.
     $storages_to_delete = array();
     foreach ($fields as $field) {
       $storage_definition = $field->getFieldStorageDefinition();
-      if (!$field->deleted && empty($field->noFieldDelete) && !$field->isUninstalling() && count($storage_definition->getBundles()) == 0) {
+      if (!$field->deleted && empty($field->noFieldDelete) && !$field->isUninstalling() && $storage_definition->isDeletable()) {
         // Key by field UUID to avoid deleting the same storage twice.
         $storages_to_delete[$storage_definition->uuid()] = $storage_definition;
       }

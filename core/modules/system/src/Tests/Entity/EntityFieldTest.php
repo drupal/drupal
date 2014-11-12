@@ -50,8 +50,6 @@ class EntityFieldTest extends EntityUnitTestBase  {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('node');
-
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_mulrev');

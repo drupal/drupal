@@ -16,6 +16,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -218,15 +219,14 @@ class FieldOverview extends OverviewBase {
       );
     }
 
-    // Additional row: re-use existing field.
-    $existing_fields = $this->getExistingFieldOptions();
+    // Additional row: re-use existing field storages.
+    $existing_fields = $this->getExistingFieldStorageOptions();
     if ($existing_fields) {
       // Build list of options.
       $existing_field_options = array();
       foreach ($existing_fields as $field_name => $info) {
-        $text = $this->t('@type: @field (@label)', array(
+        $text = $this->t('@type: @field', array(
           '@type' => $info['type_label'],
-          '@label' => $info['label'],
           '@field' => $info['field'],
         ));
         $existing_field_options[$field_name] = Unicode::truncate($text, 80, FALSE, TRUE);
@@ -485,45 +485,31 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Returns an array of existing fields to be added to a bundle.
+   * Returns an array of existing field storages that can be added to a bundle.
    *
    * @return array
-   *   An array of existing fields keyed by field name.
+   *   An array of existing field storages keyed by name.
    */
-  protected function getExistingFieldOptions() {
+  protected function getExistingFieldStorageOptions() {
     $options = array();
-
-    // Collect candidate fields: all fields of field storages for this
-    // entity type that are not already present in the current bundle.
-    $field_map = \Drupal::entityManager()->getFieldMap();
-    $field_ids = array();
-    if (!empty($field_map[$this->entity_type])) {
-      foreach ($field_map[$this->entity_type] as $field_name => $data) {
-        if (!in_array($this->bundle, $data['bundles'])) {
-          $bundle = reset($data['bundles']);
-          $field_ids[] = $this->entity_type . '.' . $bundle . '.' . $field_name;
-        }
-      }
-    }
-
-    // Load the fields and build the list of options.
-    if ($field_ids) {
-      $field_types = $this->fieldTypeManager->getDefinitions();
-      $fields = $this->entityManager->getStorage('field_config')->loadMultiple($field_ids);
-      foreach ($fields as $field) {
-        // Do not show:
-        // - locked fields,
-        // - fields that should not be added via user interface.
-        $field_type = $field->getType();
-        $field_storage = $field->getFieldStorageDefinition();
-        if (empty($field_storage->locked) && empty($field_types[$field_type]['no_ui'])) {
-          $options[$field->getName()] = array(
-            'type' => $field_type,
-            'type_label' => $field_types[$field_type]['label'],
-            'field' => $field->getName(),
-            'label' => $field->getLabel(),
-          );
-        }
+    // Load the field_storages and build the list of options.
+    $field_types = $this->fieldTypeManager->getDefinitions();
+    foreach ($this->entityManager->getFieldStorageDefinitions($this->entity_type) as $field_name => $field_storage) {
+      // Do not show:
+      // - non-configurable field storages,
+      // - locked field_storages,
+      // - field_storages that should not be added via user interface,
+      // - field_storages that already have a field in the bundle.
+      $field_type = $field_storage->getType();
+      if ($field_storage instanceof FieldStorageConfigInterface
+        && !$field_storage->isLocked()
+        && empty($field_types[$field_type]['no_ui'])
+        && !in_array($this->bundle, $field_storage->getBundles(), TRUE)) {
+        $options[$field_name] = array(
+          'type' => $field_type,
+          'type_label' => $field_types[$field_type]['label'],
+          'field' => $field_name,
+        );
       }
     }
 

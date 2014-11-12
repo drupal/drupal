@@ -21,7 +21,6 @@ class EntityFormDisplayTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('field'));
   }
 
   /**

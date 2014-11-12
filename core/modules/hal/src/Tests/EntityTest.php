@@ -30,7 +30,6 @@ class EntityTest extends NormalizerTestBase {
     \Drupal::service('router.builder')->rebuild();
     $this->installSchema('system', array('sequences'));
     $this->installSchema('comment', array('comment_entity_statistics'));
-    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
   }

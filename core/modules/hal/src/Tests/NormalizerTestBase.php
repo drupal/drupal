@@ -64,6 +64,25 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $this->installSchema('system', array('url_alias', 'router'));
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
+    // If the concrete test sub-class installs node.module, ensure that the node
+    // entity schema is created before the field configurations are installed,
+    // because the node entity tables need to be created before the body field
+    // storage tables. This prevents trying to create the body field tables
+    // twice.
+    $class = get_class($this);
+    while ($class) {
+      if (property_exists($class, 'modules')) {
+        // Only check the modules, if the $modules property was not inherited.
+        $rp = new \ReflectionProperty($class, 'modules');
+        if ($rp->class == $class) {
+          if (in_array('node', $class::$modules, TRUE)) {
+            $this->installEntitySchema('node');
+            break;
+          }
+        }
+      }
+      $class = get_parent_class($class);
+    }
     $this->installConfig(array('field', 'language'));
 
     // Add German as a language.
