@@ -63,8 +63,10 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->getId());
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
     $tests['[comment:parent:title]'] = String::checkPlain($parent_comment->getSubject());
-    $tests['[comment:node:nid]'] = $comment->getCommentedEntityId();
-    $tests['[comment:node:title]'] = String::checkPlain($node->getTitle());
+    $tests['[comment:entity]'] = String::checkPlain($node->getTitle());
+    // Test node specific tokens.
+    $tests['[comment:entity:nid]'] = $comment->getCommentedEntityId();
+    $tests['[comment:entity:title]'] = String::checkPlain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
     $tests['[comment:author:name]'] = String::checkPlain($this->admin_user->getUsername());
 
@@ -84,7 +86,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:title]'] = $comment->getSubject();
     $tests['[comment:body]'] = $comment->comment_body->value;
     $tests['[comment:parent:title]'] = $parent_comment->getSubject();
-    $tests['[comment:node:title]'] = $node->getTitle();
+    $tests['[comment:entity]'] = $node->getTitle();
     $tests['[comment:author:name]'] = $this->admin_user->getUsername();
 
     foreach ($tests as $input => $expected) {
@@ -108,9 +110,6 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests = array();
     $tests['[entity:comment-count]'] = 2;
     $tests['[entity:comment-count-new]'] = 2;
-    // Also test the deprecated legacy token.
-    $tests['[node:comment-count]'] = 2;
-    $tests['[node:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('entity' => $node, 'node' => $node), array('langcode' => $language_interface->getId()));

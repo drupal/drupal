@@ -83,13 +83,6 @@ function comment_token_info() {
     'description' => t("The entity the comment was posted to."),
     'type' => 'entity',
   );
-  // Support legacy comment node tokens, since tokens are embedded in user data
-  // and can't be upgraded directly.
-  $comment['node'] = array(
-    'name' => t("Node"),
-    'description' => t("DEPRECATED: The node the comment was posted to."),
-    'type' => 'node',
-  );
   $comment['author'] = array(
     'name' => t("Author"),
     'description' => t("The author name of the comment."),
@@ -101,8 +94,6 @@ function comment_token_info() {
     'tokens' => array(
       'entity' => $entity,
       'comment' => $comment,
-      // Support deprecated node tokens.
-      'node' => $entity,
     ),
   );
 }
@@ -194,20 +185,6 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $title = $entity->label();
           $replacements[$original] = $sanitize ? Xss::filter($title) : $title;
           break;
-
-        case 'node':
-          // Support legacy comment node tokens, since tokens are embedded in
-          // user data and can't be upgraded directly.
-          // @todo Remove in Drupal 9, see https://drupal.org/node/2031901.
-          if ($comment->getCommentedEntityTypeId() == 'node') {
-            $entity = $comment->getCommentedEntity();
-            $title = $entity->label();
-            $replacements[$original] = $sanitize ? Xss::filter($title) : $title;
-          }
-          else {
-            $replacements[$original] = NULL;
-          }
-          break;
       }
     }
 
@@ -215,11 +192,6 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
       $entity = $comment->getCommentedEntity();
       $replacements += $token_service->generate($comment->getCommentedEntityTypeId(), $entity_tokens, array($comment->getCommentedEntityTypeId() => $entity), $options);
-    }
-
-    if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->getCommentedEntityTypeId() == 'node') {
-      $node = $comment->getCommentedEntity();
-      $replacements += $token_service->generate('node', $node_tokens, array('node' => $node), $options);
     }
 
     if ($date_tokens = $token_service->findwithPrefix($tokens, 'created')) {
@@ -238,10 +210,9 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
       $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
-  elseif (($type == 'entity' & !empty($data['entity'])) ||
-    ($type == 'node' & !empty($data['node']))) {
+  elseif ($type == 'entity' & !empty($data['entity'])) {
     /** @var $entity \Drupal\Core\Entity\FieldableEntityInterface */
-    $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
+    $entity = $data['entity'];
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
