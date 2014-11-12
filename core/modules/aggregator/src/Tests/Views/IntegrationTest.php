@@ -24,7 +24,7 @@ class IntegrationTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('aggregator', 'aggregator_test_views', 'system', 'entity', 'field', 'options', 'user');
+  public static $modules = array('aggregator', 'aggregator_test_views', 'system', 'field', 'options', 'user');
 
   /**
    * Views used by this test.

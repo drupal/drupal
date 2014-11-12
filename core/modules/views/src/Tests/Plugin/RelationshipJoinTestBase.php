@@ -22,7 +22,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'entity', 'field');
+  public static $modules = array('system', 'user', 'field');
 
   /**
    * @var \Drupal\user\Entity\User

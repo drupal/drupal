@@ -28,7 +28,7 @@ class StringFormatterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'field', 'text', 'entity_test', 'system', 'filter', 'user');
+  public static $modules = array('field', 'text', 'entity_test', 'system', 'filter', 'user');
 
   /**
    * @var string

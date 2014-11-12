@@ -22,7 +22,7 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  static $modules = array('entity', 'config_test');
+  static $modules = array('config_test');
 
   /**
    * Stores the search results for alter comparison.

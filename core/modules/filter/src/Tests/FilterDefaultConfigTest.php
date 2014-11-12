@@ -16,7 +16,7 @@ use Drupal\simpletest\KernelTestBase;
  */
 class FilterDefaultConfigTest extends KernelTestBase {
 
-  public static $modules = array('system', 'user', 'filter', 'filter_test', 'entity');
+  public static $modules = array('system', 'user', 'filter', 'filter_test');
 
   protected function setUp() {
     parent::setUp();

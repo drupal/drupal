@@ -22,7 +22,7 @@ class NodeImportCreateTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'entity', 'field', 'text', 'system', 'user', 'entity_reference');
+  public static $modules = array('node', 'field', 'text', 'system', 'user', 'entity_reference');
 
   /**
    * Set the default field storage backend for fields created during tests.

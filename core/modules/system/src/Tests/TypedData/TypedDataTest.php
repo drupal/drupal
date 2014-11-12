@@ -33,7 +33,7 @@ class TypedDataTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field', 'file', 'user');
+  public static $modules = array('system', 'field', 'file', 'user');
 
   protected function setUp() {
     parent::setup();

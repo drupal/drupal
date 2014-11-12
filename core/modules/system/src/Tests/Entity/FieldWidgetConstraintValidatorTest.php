@@ -18,7 +18,7 @@ use Drupal\system\Tests\TypedData;
  */
 class FieldWidgetConstraintValidatorTest extends KernelTestBase {
 
-  public static $modules = array('entity', 'entity_test', 'field', 'user');
+  public static $modules = array('entity_test', 'field', 'user');
 
   /**
    * Tests widget constraint validation.

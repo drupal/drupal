@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ViewExecutableTest extends ViewUnitTestBase {
 
-  public static $modules = array('system', 'node', 'comment', 'user', 'filter', 'entity', 'field', 'text', 'entity_reference');
+  public static $modules = array('system', 'node', 'comment', 'user', 'filter', 'field', 'text', 'entity_reference');
 
   /**
    * Views used by this test.

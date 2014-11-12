@@ -20,7 +20,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'user', 'system', 'field', 'text', 'filter', 'entity_test', 'entity_reference');
+  public static $modules = array('user', 'system', 'field', 'text', 'filter', 'entity_test', 'entity_reference');
 
   /**
    * The entity manager service.

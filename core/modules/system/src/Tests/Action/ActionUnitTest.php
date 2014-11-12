@@ -20,7 +20,7 @@ class ActionUnitTest extends DrupalUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system','entity' , 'field', 'user', 'action_test');
+  public static $modules = array('system', 'field', 'user', 'action_test');
 
   /**
    * The action manager.

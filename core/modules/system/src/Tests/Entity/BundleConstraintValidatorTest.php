@@ -25,7 +25,7 @@ class BundleConstraintValidatorTest extends DrupalUnitTestBase {
    */
   protected $typedData;
 
-  public static $modules = array('entity', 'node', 'field', 'text', 'user');
+  public static $modules = array('node', 'field', 'text', 'user');
 
   protected function setUp() {
     parent::setUp();

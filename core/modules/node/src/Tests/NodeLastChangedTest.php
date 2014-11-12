@@ -21,7 +21,7 @@ class NodeLastChangedTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'user', 'node', 'field', 'system', 'text', 'filter');
+  public static $modules = array('user', 'node', 'field', 'system', 'text', 'filter');
 
   protected function setUp() {
     parent::setUp();

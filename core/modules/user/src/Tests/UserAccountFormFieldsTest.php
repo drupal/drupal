@@ -23,7 +23,7 @@ class UserAccountFormFieldsTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'entity', 'field');
+  public static $modules = array('system', 'user', 'field');
 
   /**
    * Tests the root user account form section in the "Configure site" form.

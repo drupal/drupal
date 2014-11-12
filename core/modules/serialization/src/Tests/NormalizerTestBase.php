@@ -16,7 +16,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('serialization', 'system', 'entity', 'field', 'entity_test', 'text', 'filter', 'user');
+  public static $modules = array('serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user');
 
   protected function setUp() {
     parent::setUp();

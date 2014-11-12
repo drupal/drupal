@@ -22,7 +22,7 @@ abstract class FieldUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'entity', 'system', 'field', 'text', 'entity_test', 'field_test', 'entity_reference');
+  public static $modules = array('user', 'system', 'field', 'text', 'entity_test', 'field_test', 'entity_reference');
 
   /**
    * Bag of created field storages and fields.

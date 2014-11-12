@@ -31,7 +31,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field', 'text', 'user', 'node', 'entity_reference');
+  public static $modules = array('system', 'field', 'text', 'user', 'node', 'entity_reference');
 
   protected function setUp() {
     parent::setUp();

@@ -19,7 +19,7 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_test', 'filter', 'user', 'text', 'quickedit', 'entity_reference');
+  public static $modules = array('system', 'entity_test', 'field', 'field_test', 'filter', 'user', 'text', 'quickedit', 'entity_reference');
 
   /**
    * Bag of created fields.
