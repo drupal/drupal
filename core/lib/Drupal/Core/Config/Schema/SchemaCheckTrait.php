@@ -81,7 +81,7 @@ trait SchemaCheckTrait {
     $error_key = $this->configName . ':' . $key;
     $element = $this->schema->get($key);
     if ($element instanceof Undefined) {
-      return array($error_key => 'Missing schema.');
+      return array($error_key => 'missing schema');
     }
 
     // Do not check value if it is defined to be ignored.
@@ -104,13 +104,13 @@ trait SchemaCheckTrait {
       }
       $class = get_class($element);
       if (!$success) {
-        return array($error_key => "Variable type is $type but applied schema class is $class.");
+        return array($error_key => "variable type is $type but applied schema class is $class");
       }
     }
     else {
       $errors = array();
       if (!$element instanceof TraversableTypedDataInterface) {
-        $errors[$error_key] = 'Non-scalar value but not defined as an array (such as mapping or sequence).';
+        $errors[$error_key] = 'non-scalar value but not defined as an array (such as mapping or sequence)';
       }
 
       // Go on processing so we can get errors on all levels. Any non-scalar

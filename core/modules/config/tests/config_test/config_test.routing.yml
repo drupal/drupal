@@ -58,3 +58,10 @@ entity.config_test.delete_form_config_test_no_status:
     _entity_form: 'config_test_no_status.delete'
   requirements:
     _access: 'TRUE'
+
+config_test.schema_listener:
+  path: '/config_test/schema_listener'
+  defaults:
+    _content: '\Drupal\config_test\SchemaListenerController::test'
+  requirements:
+    _access: 'TRUE'

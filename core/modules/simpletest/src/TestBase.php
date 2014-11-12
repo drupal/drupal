@@ -203,6 +203,15 @@ abstract class TestBase {
   protected $originalSessionName;
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id

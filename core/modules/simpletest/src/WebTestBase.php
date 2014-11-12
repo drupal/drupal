@@ -821,7 +821,17 @@ abstract class WebTestBase extends TestBase {
       // Copy the testing-specific service overrides in place.
       copy($settings_services_file, $directory . '/services.yml');
     }
-
+    if ($this->strictConfigSchema) {
+      // Add a listener to validate configuration schema on save.
+      $yaml = new \Symfony\Component\Yaml\Yaml();
+      $services = $yaml->parse($directory . '/services.yml');
+      $services['services']['simpletest.config_schema_checker'] = [
+        'class' => 'Drupal\Core\Config\Testing\ConfigSchemaChecker',
+        'arguments' => ['@config.typed'],
+        'tags' => [['name' => 'event_subscriber']]
+      ];
+      file_put_contents($directory . '/services.yml', $yaml->dump($services));
+    }
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
     // reload the newly written custom settings.php manually.

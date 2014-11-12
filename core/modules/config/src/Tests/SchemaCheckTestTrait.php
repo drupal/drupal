@@ -45,7 +45,7 @@ trait SchemaCheckTestTrait {
       foreach ($errors as $key => $error) {
         // @todo Since the use of this trait is under TestBase, it works.
         //  Can be fixed as part of https://drupal.org/node/2260053.
-        $this->fail($key . ': ' . $error);
+        $this->fail(String::format('Schema key @key failed with: @error', array('@key' => $key, '@error' => $error)));
       }
     }
   }

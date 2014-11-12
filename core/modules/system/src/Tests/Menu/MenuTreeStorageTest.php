@@ -307,15 +307,15 @@ class MenuTreeStorageTest extends KernelTestBase {
       array('foo' => 'bar'),
       array(0 => 'wrong'),
     );
-    $msg = 'An invalid property name throws an exception.';
+    $message = 'An invalid property name throws an exception.';
     foreach ($tests as $properties) {
       try {
         $this->treeStorage->loadByProperties($properties);
-        $this->fail($msg);
+        $this->fail($message);
       }
       catch (\InvalidArgumentException $e) {
         $this->assertTrue(preg_match('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage()), 'Found expected exception message.');
-        $this->pass($msg);
+        $this->pass($message);
       }
     }
     $this->addMenuLink('test_link.1', '', 'test', array(), 'menu1');

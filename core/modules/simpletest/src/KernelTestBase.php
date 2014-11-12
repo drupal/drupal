@@ -263,6 +263,13 @@ abstract class KernelTestBase extends TestBase {
       ->addArgument(Database::getConnection())
       ->addArgument('config');
 
+    if ($this->strictConfigSchema) {
+      $container
+        ->register('simpletest.config_schema_checker', 'Drupal\Core\Config\Testing\ConfigSchemaChecker')
+        ->addArgument(new Reference('config.typed'))
+        ->addTag('event_subscriber');
+    }
+
     $keyvalue_options = $container->getParameter('factory.keyvalue') ?: array();
     $keyvalue_options['default'] = 'keyvalue.memory';
     $container->setParameter('factory.keyvalue', $keyvalue_options);
