@@ -823,7 +823,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Compare revision ID of the base and revision table, if equal then this
       // is the default revision.
-      $query->addExpression('base.' . $this->revisionKey . ' = revision.' . $this->revisionKey, 'isDefaultRevision');
+      $query->addExpression('CASE base.' . $this->revisionKey . ' WHEN revision.' . $this->revisionKey . ' THEN 1 ELSE 0 END', 'isDefaultRevision');
     }
 
     $query->fields('base', $entity_fields);
