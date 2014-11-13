@@ -1415,9 +1415,18 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // table. For this reason the revision ID field cannot be marked as NOT
       // NULL.
       unset($keys['label'], $keys['revision']);
+
       // Key fields may not be NULL.
       if (in_array($field_name, $keys)) {
         $schema['fields'][$schema_field_name]['not null'] = TRUE;
+      }
+      // All the other columns have to be able to be NULL regardless of the
+      // actual field storage schema in order to support adding a base field
+      // definition to an entity type with non-empty base table(s).
+      // @todo Revisit the strict 'not null' => FALSE requirement for all
+      // non-key columns in https://www.drupal.org/node/2346019.
+      elseif (isset($schema['fields'][$schema_field_name]['not null'])) {
+        $schema['fields'][$schema_field_name]['not null'] = FALSE;
       }
     }
 
