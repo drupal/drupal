@@ -25,7 +25,7 @@ services:
       - { name: cache.context}
   cache_context.theme:
     class: Drupal\Core\Cache\ThemeCacheContext
-    arguments: ['@current_route_match', '@theme.negotiator']
+    arguments: ['@theme.manager']
     tags:
       - { name: cache.context}
   cache_context.timezone:

@@ -8,7 +8,7 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Theme\ThemeNegotiatorInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Defines the ThemeCacheContext service, for "per theme" caching.
@@ -16,30 +16,20 @@ use Drupal\Core\Theme\ThemeNegotiatorInterface;
 class ThemeCacheContext implements CacheContextInterface {
 
   /**
-   * The current route match.
+   * The theme manager.
    *
-   * @var \Drupal\Core\Routing\RouteMatch
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
-  protected $routeMatch;
-
-  /**
-   * The theme negotiator.
-   *
-   * @var \Drupal\Core\Theme\ThemeNegotiator
-   */
-  protected $themeNegotiator;
+  protected $themeManager;
 
   /**
    * Constructs a new ThemeCacheContext service.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match.
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
-   *   The theme negotiator.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
    */
-  public function __construct(RouteMatchInterface $route_match, ThemeNegotiatorInterface $theme_negotiator) {
-    $this->routeMatch = $route_match;
-    $this->themeNegotiator = $theme_negotiator;
+  public function __construct(ThemeManagerInterface $theme_manager) {
+    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -53,7 +43,7 @@ class ThemeCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public function getContext() {
-    return $this->themeNegotiator->determineActiveTheme($this->routeMatch) ?: 'stark';
+    return $this->themeManager->getActiveTheme()->getName() ?: 'stark';
   }
 
 }

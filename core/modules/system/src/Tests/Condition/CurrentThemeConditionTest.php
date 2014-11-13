@@ -45,6 +45,8 @@ class CurrentThemeConditionTest extends KernelTestBase {
 
     // Set the expected theme to be used.
     \Drupal::config('system.theme')->set('default', 'test_theme')->save();
+    \Drupal::theme()->resetActiveTheme();
+
     $this->assertTrue($condition->execute());
     $this->assertFalse($condition_negated->execute());
   }

@@ -11,8 +11,7 @@ use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Theme\ThemeNegotiatorInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,11 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CurrentThemeCondition extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The theme negotiator.
+   * The theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
-  protected $themeNegotiator;
+  protected $themeManager;
 
   /**
    * The theme handler.
@@ -38,13 +37,6 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
    * @var \Drupal\Core\Extension\ThemeHandlerInterface
    */
   protected $themeHandler;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
 
   /**
    * Constructs a CurrentThemeCondition condition plugin.
@@ -55,18 +47,15 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
-   *   The theme negotiator.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ThemeNegotiatorInterface $theme_negotiator, ThemeHandlerInterface $theme_handler, RouteMatchInterface $route_match) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->themeNegotiator = $theme_negotiator;
+    $this->themeManager = $theme_manager;
     $this->themeHandler = $theme_handler;
-    $this->routeMatch = $route_match;
   }
 
   /**
@@ -77,9 +66,8 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('theme.negotiator'),
-      $container->get('theme_handler'),
-      $container->get('current_route_match')
+      $container->get('theme.manager'),
+      $container->get('theme_handler')
     );
   }
 
@@ -121,7 +109,7 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
       return TRUE;
     }
 
-    return $this->themeNegotiator->determineActiveTheme($this->routeMatch) == $this->configuration['theme'];
+    return $this->themeManager->getActiveTheme()->getName() == $this->configuration['theme'];
   }
 
   /**
