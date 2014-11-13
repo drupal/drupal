@@ -139,8 +139,9 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
         // once more in the backtrace.
         array_shift($backtrace);
 
-        // Generate a backtrace containing only scalar argument values.
-        $message .= '<pre class="backtrace">' . Error::formatFlattenedBacktrace($backtrace) . '</pre>';
+        // Generate a backtrace containing only scalar argument values. Make
+        // sure the backtrace is escaped as it can contain user submitted data.
+        $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatFlattenedBacktrace($backtrace)) . '</pre>';
       }
       drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }

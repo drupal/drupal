@@ -107,6 +107,13 @@ router_test.16:
   requirements:
     _permission: 'administer users'
 
+router_test.17:
+  path: '/router_test/test17'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test10'
+  requirements:
+    _access: 'TRUE'
+
 router_test.hierarchy_parent:
   path: '/menu-test/parent'
   defaults:

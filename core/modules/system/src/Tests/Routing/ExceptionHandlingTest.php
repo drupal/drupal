@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,5 +100,27 @@ class ExceptionHandlingTest extends KernelTestBase {
     $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
   }
 
-}
+  /**
+   * Tests if exception backtraces are properly escaped when output to HTML.
+   */
+  public function testBacktraceEscaping() {
+    // Enable verbose error logging.
+    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
 
+    $request = Request::create('/router_test/test17');
+    $request->headers->set('Accept', 'text/html');
+    $request->setFormat('html', ['text/html']);
+
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+    $response = $kernel->handle($request)->prepare($request);
+    $this->assertEqual($response->getStatusCode(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
+
+    // Test both that the backtrace is properly escaped, and that the unescaped
+    // string is not output at all.
+    $this->assertTrue(strpos($response->getContent(), String::checkPlain('<script>alert(\'xss\')</script>')) !== FALSE);
+    $this->assertTrue(strpos($response->getContent(), '<script>alert(\'xss\')</script>') === FALSE);
+  }
+
+}

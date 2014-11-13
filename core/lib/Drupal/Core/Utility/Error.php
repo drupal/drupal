@@ -196,7 +196,8 @@ class Error {
    *   The backtrace of a Symfony\Component\Debug\Exception\FlattenException.
    *
    * @return string
-   *   A plain-text line-wrapped string ready to be put inside <pre>.
+   *   A plain-text line-wrapped string. The string needs to be run through
+   *   SafeMarkup::escape when rendering it as HTML.
    */
   public static function formatFlattenedBacktrace(array $backtrace) {
     $return = '';
