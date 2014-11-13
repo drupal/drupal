@@ -65,6 +65,13 @@ class SystemTestController extends ControllerBase {
 
     // Remove the first.
     unset($_SESSION['messages']['status'][0]);
+
+    // Duplicate message check.
+    drupal_set_message('Non Duplicated message', 'status', FALSE);
+    drupal_set_message('Non Duplicated message', 'status', FALSE);
+
+    drupal_set_message('Duplicated message', 'status', TRUE);
+    drupal_set_message('Duplicated message', 'status', TRUE);
     return [];
   }
 

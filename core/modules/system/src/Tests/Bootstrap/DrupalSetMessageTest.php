@@ -34,4 +34,13 @@ class DrupalSetMessageTest extends WebTestBase {
     $this->assertText('Second message (not removed).');
   }
 
+  /**
+   * Tests setting duplicated messages.
+   */
+  function testDuplicatedMessages() {
+    $this->drupalGet('system-test/drupal-set-message');
+    $this->assertUniqueText('Non Duplicated message');
+    $this->assertNoUniqueText('Duplicated message');
+  }
+
 }

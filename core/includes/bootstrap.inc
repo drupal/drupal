@@ -703,11 +703,12 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
       $_SESSION['messages'][$type] = array();
     }
 
-    if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type][] = array(
-        'safe' => SafeMarkup::isSafe($message),
-        'message' => $message,
-      );
+    $new = array(
+      'safe' => SafeMarkup::isSafe($message),
+      'message' => $message,
+    );
+    if ($repeat || !in_array($new, $_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type][] = $new;
     }
 
     // Mark this page as being uncacheable.
