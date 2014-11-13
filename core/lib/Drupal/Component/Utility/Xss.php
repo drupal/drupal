@@ -15,18 +15,6 @@ namespace Drupal\Component\Utility;
 class Xss {
 
   /**
-   * Indicates that XSS filtering must be applied in whitelist mode: only
-   * specified HTML tags are allowed.
-   */
-  const FILTER_MODE_WHITELIST = TRUE;
-
-  /**
-   * Indicates that XSS filtering must be applied in blacklist mode: only
-   * specified HTML tags are disallowed.
-   */
-  const FILTER_MODE_BLACKLIST = FALSE;
-
-  /**
    * The list of html tags allowed by filterAdmin().
    *
    * @var array
@@ -55,10 +43,6 @@ class Xss {
    *   can cause an XSS attack.
    * @param array $html_tags
    *   An array of HTML tags.
-   * @param bool $mode
-   *   (optional) Defaults to FILTER_MODE_WHITELIST ($html_tags is used as a
-   *   whitelist of allowed tags), but can also be set to FILTER_MODE_BLACKLIST
-   *   ($html_tags is used as a blacklist of disallowed tags).
    *
    * @return string
    *   An XSS safe version of $string, or an empty string if $string is not
@@ -69,7 +53,7 @@ class Xss {
    *
    * @ingroup sanitization
    */
-  public static function filter($string, $html_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'), $mode = Xss::FILTER_MODE_WHITELIST) {
+  public static function filter($string, $html_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
     // Only operate on valid UTF-8 strings. This is necessary to prevent cross
     // site scripting issues on Internet Explorer 6.
     if (!Unicode::validateUtf8($string)) {
@@ -90,8 +74,10 @@ class Xss {
     // Named entities.
     $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
     $html_tags = array_flip($html_tags);
-    $splitter = function ($matches) use ($html_tags, $mode) {
-      return static::split($matches[1], $html_tags, $mode);
+    // Late static binding does not work inside anonymous functions.
+    $class = get_called_class();
+    $splitter = function ($matches) use ($html_tags, $class) {
+      return $class::split($matches[1], $html_tags, $class);
     };
     return SafeMarkup::set(preg_replace_callback('%
       (
@@ -134,15 +120,16 @@ class Xss {
    * @param array $html_tags
    *   An array where the keys are the allowed tags and the values are not
    *   used.
-   * @param bool $split_mode
-   *   Whether $html_tags is a list of allowed (if FILTER_MODE_WHITELIST) or
-   *   disallowed (if FILTER_MODE_BLACKLIST) HTML tags.
+   * @param string $class
+   *   The called class. This method is called from an anonymous function which
+   *   breaks late static binding. See https://bugs.php.net/bug.php?id=66622 for
+   *   more information.
    *
    * @return string
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($string, $html_tags, $split_mode) {
+  protected static function split($string, $html_tags, $class) {
     if (substr($string, 0, 1) != '<') {
       // We matched a lone ">" character.
       return '&gt;';
@@ -167,11 +154,7 @@ class Xss {
     }
 
     // When in whitelist mode, an element is disallowed when not listed.
-    if ($split_mode === static::FILTER_MODE_WHITELIST && !isset($html_tags[strtolower($elem)])) {
-      return '';
-    }
-    // When in blacklist mode, an element is disallowed when listed.
-    elseif ($split_mode === static::FILTER_MODE_BLACKLIST && isset($html_tags[strtolower($elem)])) {
+    if ($class::needsRemoval($html_tags, $elem)) {
       return '';
     }
 
@@ -188,7 +171,7 @@ class Xss {
     $xhtml_slash = $count ? ' /' : '';
 
     // Clean up attributes.
-    $attr2 = implode(' ', static::attributes($attrlist));
+    $attr2 = implode(' ', $class::attributes($attrlist));
     $attr2 = preg_replace('/[<>]/', '', $attr2);
     $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
 
@@ -301,6 +284,21 @@ class Xss {
       $attributes_array[] = $attribute_name;
     }
     return $attributes_array;
+  }
+
+  /**
+   * Whether this element needs to be removed altogether.
+   *
+   * @param $html_tags
+   *   The list of HTML tags.
+   * @param $elem
+   *   The name of the HTML element.
+   *
+   * @return bool
+   *   TRUE if this element needs to be removed.
+   */
+  protected static function needsRemoval($html_tags, $elem) {
+    return !isset($html_tags[strtolower($elem)]);
   }
 
 }

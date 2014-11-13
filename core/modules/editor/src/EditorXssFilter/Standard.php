@@ -14,7 +14,7 @@ use Drupal\editor\EditorXssFilterInterface;
 /**
  * Defines the standard text editor XSS filter.
  */
-class Standard implements EditorXssFilterInterface {
+class Standard extends Xss implements EditorXssFilterInterface {
 
   /**
    * {@inheritdoc}
@@ -85,7 +85,7 @@ class Standard implements EditorXssFilterInterface {
     // Also blacklist tags that are explicitly forbidden in either text format.
     $blacklisted_tags = array_merge($blacklisted_tags, $forbidden_tags);
 
-    return Xss::filter($html, $blacklisted_tags, Xss::FILTER_MODE_BLACKLIST);
+    return static::filter($html, $blacklisted_tags);
   }
 
 
@@ -131,6 +131,15 @@ class Standard implements EditorXssFilterInterface {
     else {
       return $restrictions['forbidden_tags'];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function needsRemoval($html_tags, $elem) {
+    // See static::filterXss() about how this class uses blacklisting instead
+    // of the normal whitelisting.
+    return !parent::needsRemoval($html_tags, $elem);
   }
 
 }

@@ -443,66 +443,6 @@ class XssTest extends UnitTestCase {
   }
 
   /**
-   * Tests removing disallowed tags and XSS prevention.
-   *
-   * \Drupal\Component\Utility\Xss::filter() has the ability to run in blacklist
-   * mode, in which it still applies the exact same filtering, with one
-   * exception: it no longer works with a list of allowed tags, but with a list
-   * of disallowed tags.
-   *
-   * @param string $value
-   *   The value to filter.
-   * @param string $expected
-   *   The string that is expected to be missing.
-   * @param string $message
-   *   The assertion message to display upon failure.
-   * @param array $disallowed_tags
-   *   (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
-   *
-   * @dataProvider providerTestBlackListMode
-   */
-  public function testBlacklistMode($value, $expected, $message, array $disallowed_tags) {
-    $value = Xss::filter($value, $disallowed_tags, Xss::FILTER_MODE_BLACKLIST);
-    $this->assertSame($expected, $value, $message);
-  }
-
-  /**
-   * Data provider for testBlacklistMode().
-   *
-   * @see testBlacklistMode()
-   *
-   * @return array
-   *   An array of arrays containing the following elements:
-   *     - The value to filter.
-   *     - The value to expect after filtering.
-   *     - The assertion message.
-   *     - (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
-   */
-  public function providerTestBlackListMode() {
-    return array(
-      array(
-        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
-        '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4">alert(0)',
-        'Disallow only the script tag',
-        array('script')
-      ),
-      array(
-        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
-        '<unknown>Pink Fairy Armadillo</unknown>alert(0)',
-        'Disallow both the script and video tags',
-        array('script', 'video')
-      ),
-      // No real use case for this, but it is an edge case we must ensure works.
-      array(
-        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
-        '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
-        'Disallow no tags',
-        array()
-      ),
-    );
-  }
-
-  /**
    * Checks that invalid multi-byte sequences are rejected.
    *
    * @param string $value
