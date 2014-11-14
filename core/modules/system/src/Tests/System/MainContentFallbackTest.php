@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- *  Test system module main content rendering fallback.
+ *  Test SimplePageVariant main content rendering fallback page display variant.
  *
  * @group system
  */
@@ -42,7 +42,7 @@ class MainContentFallbackTest extends WebTestBase {
   }
 
   /**
-   * Test availability of main content.
+   * Test availability of main content: Drupal falls back to SimplePageVariant.
    */
   function testMainContentFallback() {
     $edit = array();
@@ -54,20 +54,13 @@ class MainContentFallbackTest extends WebTestBase {
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('block'), 'Block module uninstall.');
 
-    // At this point, no region is filled and fallback should be triggered.
+    // When Block module is not installed and BlockPageVariant is not available,
+    // Drupal should fall back to SimplePageVariant. Both for the admin and the
+    // front-end theme.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertField('site_name', 'Admin interface still available.');
-
-    // Fallback should not trigger when another module is handling content.
-    $this->drupalGet('system-test/main-content-handling');
-    $this->assertRaw('id="system-test-content"', 'Content handled by another module');
-    $this->assertNoText(t('Content to test main content fallback'), 'Main content not displayed.');
-
-    // Fallback should trigger when another module
-    // indicates that it is not handling the content.
+    $this->assertField('site_name', 'Fallback to SimplePageVariant works for admin theme.');
     $this->drupalGet('system-test/main-content-fallback');
-    $this->assertText(t('Content to test main content fallback'), 'Main content fallback properly triggers.');
-
+    $this->assertText(t('Content to test main content fallback'), 'Fallback to SimplePageVariant works for front-end theme.');
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->web_user->id() . '/edit');

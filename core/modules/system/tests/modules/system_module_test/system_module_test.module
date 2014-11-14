@@ -5,3 +5,16 @@
  * Provides System module hook implementations for testing purposes.
  */
 
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function system_module_test_page_attachments_alter(&$page) {
+  // Remove the HTML5 mobile meta-tags.
+  $meta_tags_to_remove = ['MobileOptimized', 'HandheldFriendly', 'viewport', 'cleartype'];
+  foreach ($page['#attached']['html_head'] as $index => $parts) {
+    if (in_array($parts[1], $meta_tags_to_remove)) {
+      unset($page['#attached']['html_head'][$index]);
+    }
+  }
+
+}

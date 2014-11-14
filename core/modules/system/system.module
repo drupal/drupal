@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -529,6 +530,85 @@ function system_page_attachments(array &$page) {
   $page['#attached']['library'][] = 'system/base';
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $page['#attached']['library'][] = 'system/admin';
+  }
+
+  // Attach libraries and CSS used by this theme.
+  $active_theme = \Drupal::theme()->getActiveTheme();
+  foreach ($active_theme->getLibraries() as $library) {
+    $page['#attached']['library'][] = $library;
+  }
+  foreach ($active_theme->getStyleSheets() as $media => $stylesheets) {
+    foreach ($stylesheets as $stylesheet) {
+      $page['#attached']['css'][$stylesheet] = array(
+        'group' => CSS_AGGREGATE_THEME,
+        'every_page' => TRUE,
+        'media' => $media
+      );
+    }
+  }
+
+  // Attach favicon.
+  if (theme_get_setting('features.favicon')) {
+    $favicon = theme_get_setting('favicon.url');
+    $type = theme_get_setting('favicon.mimetype');
+    $element['#attached']['html_head_link'][][] = array(
+      'rel' => 'shortcut icon',
+      'href' => UrlHelper::stripDangerousProtocols($favicon),
+      'type' => $type,
+    );
+  }
+
+  // Get the major Drupal version.
+  list($version, ) = explode('.', \Drupal::VERSION);
+
+  // Attach default meta tags.
+  $meta_default = array(
+    // Make sure the Content-Type comes first because the IE browser may be
+    // vulnerable to XSS via encoding attacks from any content that comes
+    // before this META tag, such as a TITLE tag.
+    'system_meta_content_type' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'charset',
+        'charset' => 'utf-8',
+      ),
+      // Security: This always has to be output first.
+      '#weight' => -1000,
+    ),
+    // Show Drupal and the major version number in the META GENERATOR tag.
+    'system_meta_generator' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'Generator',
+        'content' => 'Drupal ' . $version . ' (http://drupal.org)',
+      ),
+    ),
+    // Attach default mobile meta tags for responsive design.
+    'MobileOptimized' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'MobileOptimized',
+        'content' => 'width',
+      ),
+    ),
+    'HandheldFriendly' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'HandheldFriendly',
+        'content' => 'true',
+      ),
+    ),
+    'viewport' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'viewport',
+        'content' => 'width=device-width, initial-scale=1.0',
+      ),
+    ),
+  );
+  foreach ($meta_default as $key => $value) {
+    $page['#attached']['html_head'][] = [$value, $key];
   }
 
   // Handle setting the "active" class on links by:

@@ -419,13 +419,13 @@ system.admin_config:
   requirements:
     _permission: 'access administration pages'
 
-# @todo system.batch_page.html does not work due to some ordering issues.
-system.batch_page.normal:
+system.batch_page.html:
   path: '/batch'
   defaults:
     _content: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:
     _access: 'TRUE'
+    _format: 'html'
   options:
     _admin_route: TRUE
 

@@ -62,44 +62,22 @@ function block_theme() {
 }
 
 /**
- * Renders blocks into their regions.
- *
- * @todo Clean this up as part of https://www.drupal.org/node/2352155.
+ * Implements hook_page_top().
  */
-function _block_page_build(&$page) {
-  $theme = \Drupal::theme()->getActiveTheme()->getName();
-
-  // Fetch a list of regions for the current theme.
-  $all_regions = system_region_list($theme);
-  if (\Drupal::routeMatch()->getRouteName() != 'block.admin_demo') {
-    // Create a full page display variant, which will load blocks into their
-    // regions.
-    $page += \Drupal::service('plugin.manager.display_variant')
-      ->createInstance('full_page')
-      ->setMainContent(drupal_set_page_content())
-      ->build();
-  }
-  else {
-    // Append region description if we are rendering the regions demo page.
-    $visible_regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
-    foreach ($visible_regions as $region) {
-      $description = '<div class="block-region demo-block">' . $all_regions[$region] . '</div>';
-      $page[$region]['block_description'] = array(
-        '#markup' => $description,
-        '#weight' => 15,
-      );
-    }
-    $page['page_top']['backlink'] = array(
+function block_page_top(array &$page_top) {
+  if (\Drupal::routeMatch()->getRouteName() === 'block.admin_demo') {
+    $theme = \Drupal::theme()->getActiveTheme()->getName();
+    $page_top['backlink'] = array(
       '#type' => 'link',
       '#title' => t('Exit block region demonstration'),
       '#options' => array('attributes' => array('class' => array('block-demo-backlink'))),
       '#weight' => -10,
     );
     if (\Drupal::config('system.theme')->get('default') == $theme) {
-      $page['page_top']['backlink']['#url'] = Url::fromRoute('block.admin_display');
+      $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display');
     }
     else {
-      $page['page_top']['backlink']['#url'] = Url::fromRoute('block.admin_display_theme', ['theme' => $theme]);
+      $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display_theme', ['theme' => $theme]);
     }
   }
 }

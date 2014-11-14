@@ -25,7 +25,6 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 
 // Change the directory to the Drupal root.
 chdir('..');
@@ -150,7 +149,7 @@ else {
 
 if (!empty($output)) {
   $response->headers->set('Content-Type', 'text/html; charset=utf-8');
-  $response->setContent(DefaultHtmlPageRenderer::renderPage($output, $page_title, 'maintenance', array(
+  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderMaintenancePage($output, $page_title, array(
     '#show_messages' => $show_messages,
   )));
   $response->send();

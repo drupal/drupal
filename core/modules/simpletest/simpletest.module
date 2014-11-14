@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Page\HtmlPage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;

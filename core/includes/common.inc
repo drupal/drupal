@@ -1117,9 +1117,6 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE, $theme_add_css = TRUE)
     '#type' => 'styles',
     '#items' => $css,
   );
-  if (!empty($setting)) {
-    $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
-  }
 
   return drupal_render($styles);
 }
@@ -2262,39 +2259,6 @@ function drupal_page_set_cache(Response $response, Request $request) {
 }
 
 /**
- * Sets the main page content value for later use.
- *
- * Given the nature of the Drupal page handling, this will be called once with
- * a string or array. We store that and return it later as the block is being
- * displayed.
- *
- * @param $content
- *   A string or renderable array representing the body of the page.
- *
- * @return
- *   If called without $content, a renderable array representing the body of
- *   the page.
- */
-function drupal_set_page_content($content = NULL) {
-  $content_block = &drupal_static(__FUNCTION__, NULL);
-  $main_content_display = &drupal_static('system_main_content_added', FALSE);
-
-  // Filter out each empty value, though allow '0' and 0, which would be
-  // filtered out by empty().
-  if ($content !== NULL && $content !== '') {
-    $content_block = (is_array($content) ? $content : array('main' => array('#markup' => $content)));
-  }
-  else {
-    // Indicate that the main content has been requested. We assume that
-    // the module requesting the content will be adding it to the page.
-    // A module can indicate that it does not handle the content by setting
-    // the static variable back to FALSE after calling this function.
-    $main_content_display = TRUE;
-    return $content_block;
-  }
-}
-
-/**
  * Pre-render callback: Renders a link into #markup.
  *
  * @deprecated Use \Drupal\Core\Render\Element\Link::preRenderLink().
@@ -2396,111 +2360,6 @@ function drupal_pre_render_links($element) {
     }
   }
   return $element;
-}
-
-/**
- * Processes the page render array, enhancing it as necessary.
- *
- * @param $page
- *   A string or array representing the content of a page. The array consists of
- *   the following keys:
- *   - #type: Value is always 'page'. This pushes the theming through
- *     the page template (required).
- *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
- *     API (optional).
- *
- * @return array
- *   The processed render array for the page.
- *
- * @see hook_page_attachments()
- * @see hook_page_attachments_alter()
- * @see hook_page_top()
- * @see hook_page_bottom()
- * @see element_info()
- */
-function drupal_prepare_page($page) {
-  $main_content_display = &drupal_static('system_main_content_added', FALSE);
-
-  // Pull out the page title to set it back later.
-  if (is_array($page) && isset($page['#title'])) {
-    $title = $page['#title'];
-  }
-
-  // Allow menu callbacks to return strings or arbitrary arrays to render.
-  // If the array returned is not of #type page directly, we need to fill
-  // in the page with defaults.
-  if (is_string($page) || (is_array($page) && (!isset($page['#type']) || ($page['#type'] != 'page')))) {
-    drupal_set_page_content($page);
-    $page = element_info('page');
-  }
-
-  // Modules can add attachments.
-  $attachments = [];
-  foreach (\Drupal::moduleHandler()->getImplementations('page_attachments') as $module) {
-    $function = $module . '_page_attachments';
-    $function($attachments);
-  }
-  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_attachments().');
-  }
-  // Modules and themes can alter page attachments.
-  \Drupal::moduleHandler()->alter('page_attachments', $attachments);
-  \Drupal::theme()->alter('page_attachments', $attachments);
-  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_attachments_alter().');
-  }
-  if (isset($attachments['#attached'])) {
-    $page['#attached'] = $attachments['#attached'];
-  }
-  if (isset($attachments['#post_render_cache'])) {
-    $page['#post_render_cache'] = $attachments['#post_render_cache'];
-  }
-
-  // Modules can add renderable arrays to the top and bottom of the page.
-  $pseudo_page_top = [];
-  $pseudo_page_bottom = [];
-  foreach (\Drupal::moduleHandler()->getImplementations('page_top') as $module) {
-    $function = $module . '_page_top';
-    $function($pseudo_page_top);
-  }
-  foreach (\Drupal::moduleHandler()->getImplementations('page_bottom') as $module) {
-    $function = $module . '_page_bottom';
-    $function($pseudo_page_bottom);
-  }
-  if (!empty($pseudo_page_top)) {
-    $page['page_top'] = $pseudo_page_top;
-  }
-  if (!empty($pseudo_page_bottom)) {
-    $page['page_bottom'] = $pseudo_page_bottom;
-  }
-
-  // @todo Clean this up as part of https://www.drupal.org/node/2352155.
-  if (\Drupal::moduleHandler()->moduleExists('block')) {
-    _block_page_build($page);
-    // Find all non-empty page regions, and add a theme wrapper function that
-    // allows them to be consistently themed.
-    $regions = system_region_list(\Drupal::theme()->getActiveTheme()->getName());
-    foreach (array_keys($regions) as $region) {
-      if (!empty($page[$region])) {
-        $page[$region]['#theme_wrappers'][] = 'region';
-        $page[$region]['#region'] = $region;
-      }
-    }
-  }
-
-  // If no module has taken care of the main content, add it to the page now.
-  // This allows the site to still be usable even if no modules that
-  // control page regions (for example, the Block module) are enabled.
-  if (!$main_content_display) {
-    $page['content']['system_main'] = drupal_set_page_content();
-  }
-
-  // Set back the previously stored title.
-  if (isset($title)) {
-    $page['#title'] = $title;
-  }
-
-  return $page;
 }
 
 /**

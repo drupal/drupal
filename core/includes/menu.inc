@@ -110,13 +110,15 @@ use Drupal\Core\Template\Attribute;
  * class and method. Page controller classes do not necessarily need to
  * implement any particular interface or extend any particular base class. The
  * only requirement is that the method specified in your *.routing.yml file
- * return one of the following, depending on whether you specified _content or
- * _controller in the routing file defaults section:
+ * returns:
  * - A render array (see the
  *   @link theme_render Theme and render topic @endlink for more information),
  *   if _content is used in the routing file.
- * - A \Drupal\Core\Page\HtmlFragmentInterface object (fragment or page), if
- *   _content is used in the routing file.
+ *   This render array is then rendered in the requested format (HTML, dialog,
+ *   modal, AJAX are supported by default). In the case of HTML, it will be
+ *   surrounded by blocks by default: the Block module is enabled by default,
+ *   and hence its Page Display Variant that surrounds the main content with
+ *   blocks is also used by default.
  * - A \Symfony\Component\HttpFoundation\Response object, if _controller is
  *   used in the routing file.
  * As a note, if your module registers multiple simple routes, it is usual

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\DisplayVariant\FullPageVariant.
+ * Contains \Drupal\block\Plugin\DisplayVariant\BlockPageVariant.
  */
 
 namespace Drupal\block\Plugin\DisplayVariant;
@@ -16,14 +16,14 @@ use Drupal\Core\Display\VariantBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a display variant that represents the full page.
+ * Provides a page display variant that decorates the main content with blocks.
  *
  * @PageDisplayVariant(
- *   id = "full_page",
- *   admin_label = @Translation("Full page")
+ *   id = "block_page",
+ *   admin_label = @Translation("Page with blocks")
  * )
  */
-class FullPageVariant extends VariantBase implements PageVariantInterface, ContainerFactoryPluginInterface {
+class BlockPageVariant extends VariantBase implements PageVariantInterface, ContainerFactoryPluginInterface {
 
   /**
    * The block repository.
@@ -54,7 +54,7 @@ class FullPageVariant extends VariantBase implements PageVariantInterface, Conta
   protected $mainContent = [];
 
   /**
-   * Constructs a new FullPageVariant.
+   * Constructs a new BlockPageVariant.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

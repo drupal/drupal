@@ -12,7 +12,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
@@ -69,6 +69,13 @@ class DbUpdateController extends ControllerBase {
   protected $entityDefinitionUpdateManager;
 
   /**
+   * The bare HTML page renderer.
+   *
+   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
+   */
+  protected $bareHtmlPageRenderer;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
@@ -83,14 +90,17 @@ class DbUpdateController extends ControllerBase {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $entity_definition_update_manager
    *   The entity definition update manager.
+   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
+   *   The bare HTML page renderer.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, EntityDefinitionUpdateManagerInterface $entity_definition_update_manager) {
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, EntityDefinitionUpdateManagerInterface $entity_definition_update_manager, BareHtmlPageRendererInterface $bare_html_page_renderer) {
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
     $this->state = $state;
     $this->moduleHandler = $module_handler;
     $this->account = $account;
     $this->entityDefinitionUpdateManager = $entity_definition_update_manager;
+    $this->bareHtmlPageRenderer = $bare_html_page_renderer;
   }
 
   /**
@@ -103,7 +113,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('state'),
       $container->get('module_handler'),
       $container->get('current_user'),
-      $container->get('entity.definition_update_manager')
+      $container->get('entity.definition_update_manager'),
+      $container->get('bare_html_page_renderer')
     );
   }
 
@@ -176,7 +187,7 @@ class DbUpdateController extends ControllerBase {
     }
     $title = isset($output['#title']) ? $output['#title'] : $this->t('Drupal database update');
 
-    return new Response(DefaultHtmlPageRenderer::renderPage($output, $title, 'maintenance', $regions));
+    return new Response($this->bareHtmlPageRenderer->renderMaintenancePage($output, $title, $regions));
   }
 
   /**

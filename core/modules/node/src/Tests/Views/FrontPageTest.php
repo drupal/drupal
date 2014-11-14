@@ -30,7 +30,7 @@ class FrontPageTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('node', 'contextual');
 
   protected function setUp() {
     parent::setUp();

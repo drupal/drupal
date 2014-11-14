@@ -306,7 +306,7 @@ function views_page_display_pre_render(array $element) {
 /**
  * Implements MODULE_preprocess_HOOK().
  */
-function views_preprocess_page(&$variables) {
+function views_preprocess_html(&$variables) {
   // Early-return to prevent adding unnecessary JavaScript.
   if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
@@ -325,20 +325,8 @@ function views_preprocess_page(&$variables) {
   // page.html.twig, so we can only find it using JavaScript. We therefore
   // remove the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
-  if (!empty($variables['page']['#views_contextual_links']) && isset($variables['attributes']['class'])) {
-    /** @var \Drupal\Core\Page\HtmlPage $page_object */
-    $page_object = $variables['page']['#page'];
-    $attributes = $page_object->getBodyAttributes();
-    $class = $attributes['class'] ?: array();
-
-    $key = array_search('contextual-region', $variables['attributes']['class'] instanceof AttributeArray ? $variables['attributes']['class']->value() : $variables['attributes']['class']);
-    if ($key !== FALSE) {
-      /** @var \Drupal\Core\Page\HtmlPage $page_object */
-      unset($class[$key]);
-      $attributes['class'] = $class;
-      $attributes['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
-      $variables['#attached']['library'][] = 'views/views.contextual-links';
-    }
+  if (!empty($variables['page']['#views_contextual_links'])) {
+    $variables['attributes']['data-views-page-contextual-id'] = _contextual_links_to_id($variables['page']['#contextual_links']);
   }
 }
 
@@ -460,6 +448,12 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
               'display_id' => $display_id,
             ),
           );
+          // If we're setting contextual links on a page, for a page view, for a
+          // user that may use contextual links, attach Views' contextual links
+          // JavaScript.
+          if ($location === 'page' && $render_element['#type'] === 'page' && \Drupal::currentUser()->hasPermission('access contextual links')) {
+            $render_element['#attached']['library'][] = 'views/views.contextual-links';
+          }
         }
       }
     }

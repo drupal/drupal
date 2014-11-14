@@ -87,8 +87,12 @@ class ReadTest extends RESTTestBase {
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $response = $this->httpRequest($account->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
-    $this->assertResponse(404);
-    $expected_message = Json::encode(['error' => 'A fatal error occurred: Unable to find the controller for path "/user/4". Maybe you forgot to add the matching route in your routing configuration?']);
+    // AcceptHeaderMatcher considers the canonical, non-REST route a match, but
+    // a lower quality one: no format restrictions means there's always a match,
+    // and hence when there is no matching REST route, the non-REST route is
+    // used, but it can't render into application/hal+json, so it returns a 406.
+    $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
+    $expected_message = '{"message":"Not Acceptable.","supported_mime_types":["text\\/html","application\\/vnd.drupal-ajax","application\\/vnd.drupal-dialog","application\\/vnd.drupal-modal"]}';
     $this->assertIdentical($expected_message, $response);
   }
 

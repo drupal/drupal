@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\block\Unit\Plugin\DisplayVariant\FullPageVariantTest.
+ * Contains \Drupal\Tests\block\Unit\Plugin\DisplayVariant\BlockPageVariantTest.
  */
 
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
@@ -10,10 +10,10 @@ namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\DisplayVariant\FullPageVariant
+ * @coversDefaultClass \Drupal\block\Plugin\DisplayVariant\BlockPageVariant
  * @group block
  */
-class FullPageVariantTest extends UnitTestCase {
+class BlockPageVariantTest extends UnitTestCase {
 
   /**
    * The block repository.
@@ -51,7 +51,7 @@ class FullPageVariantTest extends UnitTestCase {
    * @param array $definition
    *   The plugin definition array.
    *
-   * @return \Drupal\block\Plugin\DisplayVariant\FullPageVariant|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\block\Plugin\DisplayVariant\BlockPageVariant|\PHPUnit_Framework_MockObject_MockObject
    *   A mocked display variant plugin.
    */
   public function setUpDisplayVariant($configuration = array(), $definition = array()) {
@@ -59,7 +59,7 @@ class FullPageVariantTest extends UnitTestCase {
     $this->blockViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
     $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->themeNegotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
-    return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\FullPageVariant')
+    return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
       ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->routeMatch, $this->themeNegotiator))
       ->setMethods(array('getRegionNames'))
       ->getMock();

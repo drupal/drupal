@@ -19,7 +19,6 @@ use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\Percentage;
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -136,7 +135,7 @@ function _batch_progress_page() {
     // additional HTML output by PHP shows up inside the page rather than below
     // it. While this causes invalid HTML, the same would be true if we didn't,
     // as content is not allowed to appear after </html> anyway.
-    $fallback = DefaultHtmlPageRenderer::renderPage($fallback, $current_set['title'], 'maintenance', array(
+    $fallback = \Drupal::service('bare_html_page_renderer')->renderMaintenancePage($fallback, $current_set['title'], array(
       '#show_messages' => FALSE,
     ));
     list($fallback) = explode('<!--partial-->', $fallback);

@@ -650,15 +650,34 @@ services:
     class: Drupal\Core\EventSubscriber\RouteMethodSubscriber
     tags:
       - { name: event_subscriber }
-  controller.page:
-    class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@controller_resolver', '@title_resolver', '@render_html_renderer']
-  controller.ajax:
-    class: Drupal\Core\Controller\AjaxController
-    arguments: ['@controller_resolver', '@element_info']
-  controller.dialog:
-    class: Drupal\Core\Controller\DialogController
-    arguments: ['@controller_resolver', '@title_resolver']
+
+  # Main content view subscriber plus the renderers it uses.
+  main_content_view_subscriber:
+    class: Drupal\Core\EventSubscriber\MainContentViewSubscriber
+    arguments: ['@class_resolver', '@current_route_match', '%main_content_renderers%']
+    tags:
+      - { name: event_subscriber }
+  main_content_renderer.html:
+    class: Drupal\Core\Render\MainContent\HtmlRenderer
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler']
+    tags:
+      - { name: render.main_content_renderer, format: html }
+  main_content_renderer.ajax:
+    class: Drupal\Core\Render\MainContent\AjaxRenderer
+    arguments: ['@element_info']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_ajax }
+  main_content_renderer.dialog:
+    class: Drupal\Core\Render\MainContent\DialogRenderer
+    arguments: ['@title_resolver']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_dialog }
+  main_content_renderer.modal:
+    class: Drupal\Core\Render\MainContent\ModalRenderer
+    arguments: ['@title_resolver']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_modal }
+
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
@@ -671,19 +690,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@content_negotiation', '@title_resolver']
-  html_view_subscriber:
-    class: Drupal\Core\EventSubscriber\HtmlViewSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@html_fragment_renderer', '@html_page_renderer']
-  render_html_renderer:
-    class: Drupal\Core\Page\RenderHtmlRenderer
-    arguments: ['@url_generator']
-  html_fragment_renderer:
-    class: Drupal\Core\Page\DefaultHtmlFragmentRenderer
-    arguments: ['@language_manager']
-  html_page_renderer:
-    class: Drupal\Core\Page\DefaultHtmlPageRenderer
+  bare_html_page_renderer:
+    class: Drupal\Core\Render\BareHtmlPageRenderer
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -732,7 +740,7 @@ services:
     arguments: ['@state', '@current_user']
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user']
+    arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user', '@bare_html_page_renderer']
     tags:
       - { name: event_subscriber }
   path_subscriber:
@@ -777,7 +785,7 @@ services:
     class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@html_fragment_renderer', '@html_page_renderer', '@config.factory']
+    arguments: ['@config.factory', '@bare_html_page_renderer']
   exception.logger:
     class: Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber
     tags:

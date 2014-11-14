@@ -14,7 +14,6 @@ use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -934,7 +933,7 @@ function install_display_output($output, $install_state) {
     'ETag' => '"' . REQUEST_TIME . '"',
   );
   $response->headers->add($default_headers);
-  $response->setContent(DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions));
+  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderInstallPage($output, $output['#title'], $regions));
   $response->send();
   exit;
 }

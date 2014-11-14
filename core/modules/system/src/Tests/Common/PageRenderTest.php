@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Core\Render\MainContent\HtmlRenderer;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -59,16 +60,18 @@ class PageRenderTest extends KernelTestBase {
    *   The page render hook to assert expected exceptions for.
    */
   function assertPageRenderHookExceptions($module, $hook) {
+    $html_renderer = \Drupal::getContainer()->get('main_content_renderer.html');
+
     // Assert a valid hook implementation doesn't trigger an exception.
     $page = [];
-    drupal_prepare_page($page);
+    $html_renderer->invokePageAttachmentHooks($page);
 
     // Assert an invalid hook implementation doesn't trigger an exception.
     \Drupal::state()->set($module . '.' . $hook . '.descendant_attached', TRUE);
     $assertion = $hook . '() implementation that sets #attached on a descendant triggers an exception';
     $page = [];
     try {
-      drupal_prepare_page($page);
+      $html_renderer->invokePageAttachmentHooks($page);
       $this->error($assertion);
     }
     catch (\LogicException $e) {
@@ -82,7 +85,7 @@ class PageRenderTest extends KernelTestBase {
     $assertion = $hook . '() implementation that sets a child render array triggers an exception';
     $page = [];
     try {
-      drupal_prepare_page($page);
+      $html_renderer->invokePageAttachmentHooks($page);
       $this->error($assertion);
     }
     catch (\LogicException $e) {

@@ -10,7 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -58,6 +58,13 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $urlGenerator;
 
   /**
+   * The bare HTML page renderer.
+   *
+   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
+   */
+  protected $bareHtmlPageRenderer;
+
+  /**
    * Constructs a new MaintenanceModeSubscriber.
    *
    * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
@@ -70,13 +77,16 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The url generator.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
+   *   The bare HTML page renderer.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer) {
     $this->maintenanceMode = $maintenance_mode;
     $this->config = $config_factory;
     $this->stringTranslation = $translation;
     $this->urlGenerator = $url_generator;
     $this->account = $account;
+    $this->bareHtmlPageRenderer = $bare_html_page_renderer;
   }
 
   /**
@@ -95,11 +105,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         $content = Xss::filterAdmin(String::format($this->config->get('system.maintenance')->get('message'), array(
           '@site' => $this->config->get('system.site')->get('name'),
         )));
-        // @todo Break the dependency on DefaultHtmlPageRenderer, see:
-        //   https://www.drupal.org/node/2295609
-        $content = DefaultHtmlPageRenderer::renderPage($content, $this->t('Site under maintenance'));
-        $response = new Response('Service unavailable', 503);
-        $response->setContent($content);
+        $output = $this->bareHtmlPageRenderer->renderMaintenancePage($content, $this->t('Site under maintenance'));
+        $response = new Response($output, 503);
         $event->setResponse($response);
       }
       else {

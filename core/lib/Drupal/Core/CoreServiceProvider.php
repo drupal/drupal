@@ -20,6 +20,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\Plugin\PluginManagerPass;
+use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
@@ -53,6 +54,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new BackendCompilerPass());
 
     $container->addCompilerPass(new StackedKernelPass());
+
+    $container->addCompilerPass(new MainContentRenderersPass());
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());

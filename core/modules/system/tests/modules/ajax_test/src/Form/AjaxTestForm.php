@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Dummy form for testing DialogController with _form routes.
+ * Dummy form for testing DialogRenderer with _form routes.
  */
 class AjaxTestForm implements FormInterface {
 

@@ -25,8 +25,9 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Plugin namespace: Plugin\DisplayVariant
  *
- * For a working example, see
- * \Drupal\block\Plugin\DisplayVariant\FullPageVariant
+ * For working examples, see
+ * - \Drupal\Core\Render\Plugin\DisplayVariant\SimplePageVariant
+ * - \Drupal\block\Plugin\DisplayVariant\BlockPageVariant
  *
  * @see \Drupal\Core\Display\VariantInterface
  * @see \Drupal\Core\Display\VariantBase

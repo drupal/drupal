@@ -13,7 +13,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Defines a subscriber for setting the format of the request.
+ * Defines a subscriber to negotiate a _controller to use for a _content route.
+ *
+ * @todo Remove this event subscriber after both
+ *   https://www.drupal.org/node/2092647 and https://www.drupal.org/node/2331919
+ *   have landed.
+ *
+ * @see \Drupal\Core\EventSubscriber\MainContentViewSubscriber
  */
 class ContentControllerSubscriber implements EventSubscriberInterface {
 
@@ -35,19 +41,9 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Associative array of supported mime types and their appropriate controller.
-   *
-   * @var array
-   */
-  protected $types = array(
-    'drupal_dialog' => 'controller.dialog:dialog',
-    'drupal_modal' => 'controller.dialog:modal',
-    'html' => 'controller.page:content',
-    'drupal_ajax' => 'controller.ajax:content',
-  );
-
-  /**
    * Sets the derived request format on the request.
+   *
+   * @todo Remove when https://www.drupal.org/node/2331919 lands.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.
@@ -61,19 +57,20 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the _controller on a request based on the request format.
+   * Sets _content (if it exists) as the _controller.
+   *
+   * @todo Remove when https://www.drupal.org/node/2092647 lands.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.
    */
-  public function onRequestDeriveContentWrapper(GetResponseEvent $event) {
+  public function onRequestDeriveController(GetResponseEvent $event) {
     $request = $event->getRequest();
 
     $controller = $request->attributes->get('_controller');
-    if (empty($controller) && ($type = $request->getRequestFormat())) {
-      if (isset($this->types[$type])) {
-        $request->attributes->set('_controller', $this->types[$type]);
-      }
+    $content = $request->attributes->get('_content');
+    if (empty($controller) && !empty($content)) {
+      $request->attributes->set('_controller',  $content);
     }
   }
 
@@ -85,7 +82,7 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormat', 31);
-    $events[KernelEvents::REQUEST][] = array('onRequestDeriveContentWrapper', 30);
+    $events[KernelEvents::REQUEST][] = array('onRequestDeriveController', 30);
 
     return $events;
   }

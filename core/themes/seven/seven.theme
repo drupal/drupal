@@ -10,24 +10,33 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function seven_preprocess_html(&$variables) {
+  // Add information about the number of sidebars.
+  if (!empty($variables['page']['sidebar_first'])) {
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-first';
+  }
+  else {
+    $variables['attributes']['class'][] = 'no-sidebars';
+  }
+
+  // If on a node add or edit page, add a node-layout class.
+  $path_args = explode('/', \Drupal::request()->getPathInfo());
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
+        $variables['attributes']['class'][] = drupal_html_class('node-form-layout');
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK() for page templates.
  */
 function seven_preprocess_page(&$variables) {
-  /** @var \Drupal\Core\Page\HtmlPage $page_object */
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getBodyAttributes();
-  $classes = $attributes['class'];
-  // Add information about the number of sidebars.
-
-  if (!empty($variables['page']['sidebar_first'])) {
-    $classes[] = 'layout-one-sidebar';
-    $classes[] = 'layout-sidebar-first';
-  }
-  else {
-    $classes[] = 'layout-no-sidebars';
-  }
-  $attributes['class'] = $classes;
-
   $variables['primary_local_tasks'] = $variables['tabs'];
   unset($variables['primary_local_tasks']['#secondary']);
   $variables['secondary_local_tasks'] = array(
@@ -145,12 +154,6 @@ function seven_element_info_alter(&$type) {
  * Implements hook_preprocess_install_page().
  */
 function seven_preprocess_install_page(&$variables) {
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getHtmlAttributes();
-  $classes = $attributes['class'];
-  $classes[] = 'install-background';
-  $attributes['class'] = $classes;
-
   // Seven has custom styling for the install page.
   $variables['#attached']['library'][] = 'seven/install-page';
 }
@@ -159,12 +162,6 @@ function seven_preprocess_install_page(&$variables) {
  * Implements hook_preprocess_maintenance_page().
  */
 function seven_preprocess_maintenance_page(&$variables) {
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getHtmlAttributes();
-  $classes = $attributes['class'];
-  $classes[] = 'maintenance-background';
-  $attributes['class'] = $classes;
-
   // Seven has custom styling for the maintenance page.
   $variables['#attached']['library'][] = 'seven/maintenance-page';
 }
@@ -207,16 +204,4 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   );
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
-}
-
-function seven_preprocess_html(&$variables) {
-  // If on a node add or edit page, add a node-layout class.
-  $path_args = explode('/', \Drupal::request()->getPathInfo());
-  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
-    foreach ($suggestions as $suggestion) {
-      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
-        $variables['attributes']['class'][] = drupal_html_class('node-form-layout');
-      }
-    }
-  }
 }

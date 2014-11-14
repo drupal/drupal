@@ -5,7 +5,7 @@
  * Unfortunately we have to make our styling quite strong, to override the
  * .maintenance-page styling.
  */
-.install-background {
+.install-page {
   background-color: #1275b2;
   background-image:
     url(../../images/noise-low.png),

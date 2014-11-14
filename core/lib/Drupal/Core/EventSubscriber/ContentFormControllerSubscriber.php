@@ -57,6 +57,8 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
   /**
    * Sets the _controller on a request based on the request format.
    *
+   * @todo Remove when https://www.drupal.org/node/2092647 lands.
+   *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.
    */
@@ -65,7 +67,7 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
 
     if ($form = $request->attributes->get('_form')) {
       $wrapper = new HtmlFormController($this->classResolver, $this->controllerResolver, $this->container, $form, $this->formBuilder);
-      $request->attributes->set('_content', array($wrapper, 'getContentResult'));
+      $request->attributes->set('_controller', array($wrapper, 'getContentResult'));
     }
   }
 

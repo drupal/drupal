@@ -18,8 +18,6 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
-use Drupal\Core\Page\LinkElement;
-use Drupal\Core\Page\MetaElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
@@ -1646,22 +1644,37 @@ function drupal_pre_render_html(array $element) {
  *   - page: A render element representing the page.
  */
 function template_preprocess_html(&$variables) {
-  /** @var $page \Drupal\Core\Page\HtmlPage */
-  $page = $variables['page_object'];
+  $variables['page'] = $variables['html']['page'];
+  unset($variables['html']['page']);
+  $variables['page_top'] = NULL;
+  if (isset($variables['html']['page_top'])) {
+    $variables['page_top'] = $variables['html']['page_top'];
+    unset($variables['html']['page_top']);
+  }
+  $variables['page_bottom'] = NULL;
+  if (isset($variables['html']['page_bottom'])) {
+    $variables['page_bottom'] = $variables['html']['page_bottom'];
+    unset($variables['html']['page_bottom']);
+  }
 
-  $variables['html_attributes'] = $page->getHtmlAttributes();
-  $variables['attributes'] = $page->getBodyAttributes();
-  $variables['page'] = $page;
+  $variables['html_attributes'] = new Attribute();
+
+  // HTML element attributes.
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  $variables['html_attributes']['lang'] = $language_interface->getId();
+  $variables['html_attributes']['dir'] = $language_interface->getDirection();
 
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain
   // type, etc.).
-  $body_classes = $variables['attributes']['class'];
+  if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
+    $variables['attributes']['class'][] = 'db-offline';
+  }
 
   // Add a class that tells us whether the page is viewed by an authenticated
   // user.
   if ($variables['logged_in']) {
-    $body_classes[] = 'user-logged-in';
+    $variables['attributes']['class'][] = 'user-logged-in';
   }
   // Add a class that tells us what path the page is located make it possible
   // to theme the page depending on the current path (e.g. node, admin, user,
@@ -1669,20 +1682,18 @@ function template_preprocess_html(&$variables) {
   $path = \Drupal::request()->getPathInfo();
 
   if (drupal_is_front_page()) {
-    $body_classes[] = 'path-frontpage';
+    $variables['attributes']['class'][] = 'path-frontpage';
   }
   else {
     $segment = explode('/', $path);
-    $body_classes[] = 'path-' . drupal_html_class($segment[1]);
+    $variables['attributes']['class'][] = 'path-' . drupal_html_class($segment[1]);
   }
-
-  $variables['attributes']['class'] = $body_classes;
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
-  if ($page->hasTitle()) {
+  if (!empty($variables['page']['#title'])) {
     $head_title = array(
-      'title' => SafeMarkup::set(trim(strip_tags($page->getTitle()))),
+      'title' => SafeMarkup::set(trim(strip_tags($variables['page']['#title']))),
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
@@ -1710,35 +1721,27 @@ function template_preprocess_html(&$variables) {
   }
   $variables['head_title'] = SafeMarkup::set($output);
 
-  // @todo Remove drupal_*_html_head() and refactor accordingly.
-  $html_heads = drupal_get_html_head(FALSE);
-  uasort($html_heads, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-  foreach ($html_heads as $name => $tag) {
-    if ($tag['#tag'] == 'link') {
-      $link = new LinkElement($name, isset($tag['#attributes']['content']) ? $tag['#attributes']['content'] : NULL, $tag['#attributes']);
-      if (!empty($tag['#noscript'])) {
-        $link->setNoScript();
-      }
-      $page->addLinkElement($link);
-    }
-    elseif ($tag['#tag'] == 'meta') {
-      $metatag = new MetaElement(NULL, $tag['#attributes']);
-      if (!empty($tag['#noscript'])) {
-        $metatag->setNoScript();
-      }
-      $page->addMetaElement($metatag);
-    }
+  // Collect all attachments. This must happen in the preprocess function for
+  // #type => html, to ensure that attachments added in #pre_render callbacks
+  // for #type => html are included.
+  $attached = $variables['html']['#attached'];
+  $attached = drupal_merge_attached($attached, $variables['page']['#attached']);
+  if (isset($variables['page_top'])) {
+    $attached = drupal_merge_attached($attached, $variables['page_top']['#attached']);
+  }
+  if (isset($variables['page_bottom'])) {
+    $attached = drupal_merge_attached($attached, $variables['page_bottom']['#attached']);
   }
 
-  // Add favicon.
-  if (theme_get_setting('features.favicon')) {
-    $url = UrlHelper::stripDangerousProtocols(theme_get_setting('favicon.url'));
-    $link = new LinkElement($url, 'shortcut icon', ['type' => theme_get_setting('favicon.mimetype')]);
-    $page->addLinkElement($link);
-  }
+  // Render the attachments into HTML markup to be used directly in the template
+  // for #type => html: html.html.twig.
+  $all_attached = ['#attached' => $attached];
+  drupal_process_attached($all_attached);
 
-  $variables['page_top'][] = array('#markup' => $page->getBodyTop());
-  $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());
+  $variables['styles'] = drupal_get_css();
+  $variables['scripts'] = drupal_get_js();
+  $variables['scripts_bottom'] = drupal_get_js('footer');
+  $variables['head'] = drupal_get_html_head(FALSE);
 }
 
 /**
@@ -1749,8 +1752,6 @@ function template_preprocess_html(&$variables) {
  * Most themes use their own copy of page.html.twig. The default is located
  * inside "modules/system/page.html.twig". Look in there for the full list of
  * variables.
- *
- * @see DefaultHtmlFragmentRenderer::render()
  */
 function template_preprocess_page(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
@@ -1890,15 +1891,6 @@ function template_preprocess_maintenance_page(&$variables) {
   // @todo Rename the templates to page--maintenance + page--install.
   template_preprocess_page($variables);
 
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getBodyAttributes();
-  $classes = $attributes['class'];
-  $classes[] = 'maintenance-page';
-  if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $classes[] = 'db-offline';
-  }
-  $attributes['class'] = $classes;
-
   // @see system_page_attachments()
   $variables['#attached']['library'][] = 'core/normalize';
   $variables['#attached']['library'][] = 'system/maintenance';
@@ -1917,12 +1909,6 @@ function template_preprocess_maintenance_page(&$variables) {
  */
 function template_preprocess_install_page(&$variables) {
   template_preprocess_maintenance_page($variables);
-
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getBodyAttributes();
-  $classes = $attributes['class'];
-  $classes[] = 'install-page';
-  $attributes['class'] = $classes;
 
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
@@ -2161,7 +2147,7 @@ function drupal_common_theme() {
   return array(
     // From theme.inc.
     'html' => array(
-      'variables' => array('page_object' => NULL),
+      'render element' => 'html',
     ),
     'page' => array(
       'render element' => 'page',

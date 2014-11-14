@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -236,7 +235,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         install_display_output($output, $GLOBALS['install_state']);
       }
       else {
-        $output = DefaultHtmlPageRenderer::renderPage($message, 'Error');
+        $output = \Drupal::service('bare_html_page_renderer')->renderMaintenancePage($message, 'Error');
       }
 
       $response = new Response($output, 500);

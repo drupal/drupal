@@ -10,51 +10,49 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Implements hook_preprocess_HOOK() for page.html.twig.
+ * Implements hook_preprocess_HOOK() for HTML document templates.
  *
  * Adds body classes if certain regions have content.
  */
-function bartik_preprocess_page(&$variables) {
+function bartik_preprocess_html(&$variables) {
   // Add information about the number of sidebars.
-  /** @var \Drupal\Core\Page\HtmlPage $page_object */
-  $page_object = $variables['page']['#page'];
-  $attributes = $page_object->getBodyAttributes();
-  $classes = $attributes['class'];
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
-    $classes[] = 'layout-two-sidebars';
+    $variables['attributes']['class'][] = 'layout-two-sidebars';
   }
   elseif (!empty($variables['page']['sidebar_first'])) {
-    $classes[] = 'layout-one-sidebar';
-    $classes[] = 'layout-sidebar-first';
+    $variables['attributes']['class'][] = 'layout-one-sidebar';
+    $variables['attributes']['class'][] = 'layout-sidebar-first';
   }
   elseif (!empty($variables['page']['sidebar_second'])) {
-    $classes[] = 'layout-one-sidebar';
-    $classes[] = 'layout-sidebar-second';
+    $variables['attributes']['class'][] = 'layout-one-sidebar';
+    $variables['attributes']['class'][] = 'layout-sidebar-second';
   }
   else {
-    $classes[] = 'layout-no-sidebars';
+    $variables['attributes']['class'][] = 'layout-no-sidebars';
   }
 
   if (!empty($variables['page']['featured'])) {
-    $classes[] = 'featured';
+    $variables['attributes']['class'][] = 'featured';
   }
 
   if (!empty($variables['page']['triptych_first'])
     || !empty($variables['page']['triptych_middle'])
     || !empty($variables['page']['triptych_last'])) {
-    $classes[] = 'triptych';
+    $variables['attributes']['class'][] = 'triptych';
   }
 
   if (!empty($variables['page']['footer_firstcolumn'])
     || !empty($variables['page']['footer_secondcolumn'])
     || !empty($variables['page']['footer_thirdcolumn'])
     || !empty($variables['page']['footer_fourthcolumn'])) {
-    $classes[] = 'footer-columns';
+    $variables['attributes']['class'][] = 'footer-columns';
   }
+}
 
-  // Store back the classes to the htmlpage object.
-  $attributes['class'] = $classes;
-
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function bartik_preprocess_page(&$variables) {
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);
 
