@@ -220,7 +220,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => array(
         'target_id' => array(
           'type' => 'int',
-          'not null' => TRUE,
         ),
         'target_revision_id' => array(
           'type' => 'int',
@@ -316,7 +315,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'editor_revision__target_id' => array(
             'description' => 'The editor_revision field.',
             'type' => 'int',
-            'not null' => FALSE,
           ),
           'editor_revision__target_revision_id' => array(
             'description' => 'The editor_revision field.',
