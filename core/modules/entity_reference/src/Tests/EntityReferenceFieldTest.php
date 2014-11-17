@@ -127,6 +127,12 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $reference_field[5] = $reference_field[0];
     $target_entities[5] = $target_entities[0];
 
+    // Create a new target entity that is not saved, thus testing the
+    // "autocreate" feature.
+    $target_entity_unsaved = entity_create($this->referencedEntityType, array('type' => $this->bundle, 'name' => $this->randomString()));
+    $reference_field[6]['entity'] = $target_entity_unsaved;
+    $target_entities[6] = $target_entity_unsaved;
+
     // Set the field value.
     $entity->{$this->fieldName}->setValue($reference_field);
 
@@ -138,9 +144,16 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     // - Non-existent entities must not be retrieved in target entities result.
     foreach ($target_entities as $delta => $target_entity) {
       if (!empty($target_entity)) {
-        // There must be an entity in the loaded set having the same id for the
-        // same delta.
-        $this->assertEqual($target_entity->id(), $entities[$delta]->id());
+        if (!$target_entity->isNew()) {
+          // There must be an entity in the loaded set having the same id for
+          // the same delta.
+          $this->assertEqual($target_entity->id(), $entities[$delta]->id());
+        }
+        else {
+          // For entities that were not yet saved, there must an entity in the
+          // loaded set having the same label for the same delta.
+          $this->assertEqual($target_entity->label(), $entities[$delta]->label());
+        }
       }
       else {
         // A non-existent or NULL entity target id must not return any item in

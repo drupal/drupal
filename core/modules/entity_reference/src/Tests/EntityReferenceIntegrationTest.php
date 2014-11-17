@@ -85,7 +85,11 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Try to post the form again with no modification and check if the field
       // values remain the same.
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
-      $this->drupalPostForm($this->entityType . '/manage/' . $entity->id(), array(), t('Save'));
+      $this->drupalGet($this->entityType . '/manage/' . $entity->id());
+      $this->assertFieldByName($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
+      $this->assertFieldByName($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
+
+      $this->drupalPostForm(NULL, array(), t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test the 'entity_reference_autocomplete_tags' widget.
@@ -107,7 +111,10 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Try to post the form again with no modification and check if the field
       // values remain the same.
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
-      $this->drupalPostForm($this->entityType . '/manage/' . $entity->id(), array(), t('Save'));
+      $this->drupalGet($this->entityType . '/manage/' . $entity->id());
+      $this->assertFieldByName($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
+
+      $this->drupalPostForm(NULL, array(), t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test all the other widgets supported by the entity reference field.

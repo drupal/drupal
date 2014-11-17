@@ -8,7 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Config\Entity\ConfigEntityType;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -166,7 +166,7 @@ class EntityReferenceItem extends FieldItemBase {
 
     // If there is an unsaved entity, return it as part of the field item values
     // to ensure idempotency of getValue() / setValue().
-    if ($this->hasUnsavedEntity()) {
+    if ($this->hasNewEntity()) {
       $values['entity'] = $this->entity;
     }
     return $values;
@@ -191,11 +191,10 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function isEmpty() {
     // Avoid loading the entity by first checking the 'target_id'.
-    $target_id = $this->target_id;
-    if ($target_id !== NULL) {
+    if ($this->target_id !== NULL) {
       return FALSE;
     }
-    if ($this->entity && $this->entity instanceof Entity) {
+    if ($this->entity && $this->entity instanceof EntityInterface) {
       return FALSE;
     }
     return TRUE;
@@ -205,12 +204,12 @@ class EntityReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function preSave() {
-    if ($this->hasUnsavedEntity()) {
+    if ($this->hasNewEntity()) {
       $this->entity->save();
     }
     // Handle the case where an unsaved entity was directly set using the public
     // 'entity' property and then saved before this entity. In this case
-    // ::hasUnsavedEntity() will return FALSE but $this->target_id will still be
+    // ::hasNewEntity() will return FALSE but $this->target_id will still be
     // empty.
     if (empty($this->target_id) && $this->entity) {
       $this->target_id = $this->entity->id();
@@ -239,7 +238,7 @@ class EntityReferenceItem extends FieldItemBase {
    * @return bool
    *   TRUE if the item holds an unsaved entity.
    */
-  public function hasUnsavedEntity() {
+  public function hasNewEntity() {
     return $this->target_id === NULL && ($entity = $this->entity) && $entity->isNew();
   }
 

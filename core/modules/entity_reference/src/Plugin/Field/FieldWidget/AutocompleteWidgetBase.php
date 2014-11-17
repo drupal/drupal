@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -116,45 +117,30 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * Gets the entity labels.
    */
-  protected function getLabels(FieldItemListInterface $items, $delta) {
+  protected function getLabels(EntityReferenceFieldItemListInterface $items, $delta) {
     if ($items->isEmpty()) {
       return array();
     }
 
     $entity_labels = array();
+    $handles_multiple_values = $this->handlesMultipleValues();
+    foreach ($items->referencedEntities() as $referenced_delta => $referenced_entity) {
+      // The autocomplete widget outputs one entity label per form element.
+      if (!$handles_multiple_values && $referenced_delta != $delta) {
+        continue;
+      }
 
-    // Load those entities and loop through them to extract their labels.
-    $entities = entity_load_multiple($this->getFieldSetting('target_type'), $this->getEntityIds($items, $delta));
+      $key = $referenced_entity->label();
 
-    foreach ($entities as $entity_id => $entity_item) {
-      $label = $entity_item->label();
-      $key = "$label ($entity_id)";
+      // Take into account "autocreate" items.
+      if (!$referenced_entity->isNew()) {
+        $key .= ' (' . $referenced_entity->id() . ')';
+      }
+
       // Labels containing commas or quotes must be wrapped in quotes.
-      $key = Tags::encode($key);
-      $entity_labels[] = $key;
+      $entity_labels[] = Tags::encode($key);
     }
     return $entity_labels;
-  }
-
-  /**
-   * Builds an array of entity IDs for which to get the entity labels.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $items
-   *   Array of default values for this field.
-   * @param int $delta
-   *   The order of a field item in the array of subelements (0, 1, 2, etc).
-   *
-   * @return array
-   *   An array of entity IDs.
-   */
-  protected function getEntityIds(FieldItemListInterface $items, $delta) {
-    $entity_ids = array();
-
-    foreach ($items as $item) {
-      $entity_ids[] = $item->target_id;
-    }
-
-    return $entity_ids;
   }
 
   /**

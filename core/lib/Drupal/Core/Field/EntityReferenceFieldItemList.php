@@ -23,27 +23,29 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
       return array();
     }
 
-    // Get a list of items having non-empty target ids.
-    $list = array_filter($this->list, function($item) {
-      return (bool) $item->target_id;
-    });
-
-    $ids = array();
-    foreach ($list as $delta => $item) {
-      $ids[$delta] = $item->target_id;
-    }
-    if (empty($ids)) {
-      return array();
-    }
-
-    $target_type = $this->getFieldDefinition()->getSetting('target_type');
-    $entities = \Drupal::entityManager()->getStorage($target_type)->loadMultiple($ids);
-
-    $target_entities = array();
-    foreach ($ids as $delta => $target_id) {
-      if (isset($entities[$target_id])) {
-        $target_entities[$delta] = $entities[$target_id];
+    // Collect the IDs of existing entities to load, and directly grab the
+    // "autocreate" entities that are already populated in $item->entity.
+    $target_entities = $ids = array();
+    foreach ($this->list as $delta => $item) {
+      if ($item->target_id !== NULL) {
+        $ids[$delta] = $item->target_id;
       }
+      elseif ($item->hasNewEntity()) {
+        $target_entities[$delta] = $item->entity;
+      }
+    }
+
+    // Load and add the existing entities.
+    if ($ids) {
+      $target_type = $this->getFieldDefinition()->getSetting('target_type');
+      $entities = \Drupal::entityManager()->getStorage($target_type)->loadMultiple($ids);
+      foreach ($ids as $delta => $target_id) {
+        if (isset($entities[$target_id])) {
+          $target_entities[$delta] = $entities[$target_id];
+        }
+      }
+      // Ensure the returned array is ordered by deltas.
+      ksort($target_entities);
     }
 
     return $target_entities;

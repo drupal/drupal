@@ -37,7 +37,9 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
             $term = $translated_term;
           }
         }
-        $terms[$term->id()] = $term;
+        if (!$term->isNew()) {
+          $terms[$term->id()] = $term;
+        }
       }
     }
     if ($terms) {
@@ -53,7 +55,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
             $item->entity = $terms[$item->target_id];
           }
           // Terms to be created are not in $terms, but are still legitimate.
-          elseif ($item->hasUnsavedEntity()) {
+          elseif ($item->hasNewEntity()) {
             // Leave the item in place.
           }
           // Otherwise, unset the instance value, since the term does not exist.

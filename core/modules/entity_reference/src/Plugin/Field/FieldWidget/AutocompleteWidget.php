@@ -7,7 +7,6 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -41,18 +40,6 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
       'autocomplete_type' => 'tags',
       'placeholder' => '',
     ) + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEntityIds(FieldItemListInterface $items, $delta) {
-    // The autocomplete widget outputs one entity label per form element.
-    if (isset($items[$delta])) {
-      return array($items[$delta]->target_id);
-    }
-
-    return array();
   }
 
   /**
