@@ -158,10 +158,10 @@ function theme_authorize_message($variables) {
   $message = $variables['message'];
   $success = $variables['success'];
   if ($success) {
-    $item = array('data' => $message, 'class' => array('authorize-results__success'));
+    $item = array('data' => array('#markup' => $message), 'class' => array('authorize-results__success'));
   }
   else {
-    $item = array('data' => $message, 'class' => array('authorize-results__failure'));
+    $item = array('data' => array('#markup' => $message), 'class' => array('authorize-results__failure'));
   }
   return $item;
 }
