@@ -7,7 +7,9 @@
 
 namespace Drupal\toolbar\Element;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Element;
 
 /**
  * Provides a render element for the default Drupal toolbar.
@@ -96,6 +98,11 @@ class Toolbar extends RenderElement {
 
     // Merge in the original toolbar values.
     $element = array_merge($element, $items);
+
+    // Assign each item a unique ID, based on its key.
+    foreach (Element::children($element) as $key) {
+      $element[$key]['#id'] = Html::getId('toolbar-item-' . $key);
+    }
 
     // Render the children.
     $element['#children'] = drupal_render_children($element);

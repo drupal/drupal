@@ -7,7 +7,6 @@
 
 namespace Drupal\toolbar\Element;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
 
@@ -50,8 +49,7 @@ class ToolbarItem extends RenderElement {
    *   A renderable array.
    */
   public static function preRenderToolbarItem($element) {
-    // Assign each item a unique ID.
-    $id = Html::getUniqueId('toolbar-item');
+    $id = $element['#id'];
 
     // Provide attributes for a toolbar item.
     $attributes = array(
