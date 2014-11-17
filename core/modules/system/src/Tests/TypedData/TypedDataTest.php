@@ -244,7 +244,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     $files = array();
     for ($i = 0; $i < 3; $i++){
       $path = "public://example_$i.png";
-      file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', $path);
+      file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', $path);
       $image = entity_create('file', array('uri' => $path));
       $image->save();
       $files[] = $image;

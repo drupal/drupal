@@ -179,7 +179,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  * Returns an array of modules required by core.
  */
 function drupal_required_modules() {
-  $listing = new ExtensionDiscovery();
+  $listing = new ExtensionDiscovery(\Drupal::root());
   $files = $listing->scan('module');
   $required = array();
 

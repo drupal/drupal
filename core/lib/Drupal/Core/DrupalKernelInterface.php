@@ -74,6 +74,13 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   public function getSitePath();
 
   /**
+   * Gets the app root.
+   *
+   * @return string
+   */
+  public function getAppRoot();
+
+  /**
    * Updates the kernel's list of modules to the new list.
    *
    * The kernel needs to update its bundle list and container to match the new

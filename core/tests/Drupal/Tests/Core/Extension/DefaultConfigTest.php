@@ -28,7 +28,7 @@ class DefaultConfigTest extends UnitTestCase {
    * would not exist. Installation hooks would never be executed.
    */
   public function testConfigIsEmpty() {
-    $config = Yaml::parse(file_get_contents(DRUPAL_ROOT . '/core/config/install/core.extension.yml'));
+    $config = Yaml::parse(file_get_contents($this->root . '/core/config/install/core.extension.yml'));
     $expected = array(
       'module' => array(),
       'theme' => array(),

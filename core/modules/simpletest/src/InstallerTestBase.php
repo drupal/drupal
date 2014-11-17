@@ -117,6 +117,8 @@ abstract class InstallerTestBase extends WebTestBase {
     $this->container
       ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
       ->addArgument(new Reference('language_manager'));
+    $this->container
+      ->set('app.root', DRUPAL_ROOT);
     \Drupal::setContainer($this->container);
 
     $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
@@ -138,8 +140,8 @@ abstract class InstallerTestBase extends WebTestBase {
 
     // Import new settings.php written by the installer.
     $request = Request::createFromGlobals();
-    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
-    Settings::initialize(DrupalKernel::findSitePath($request), $class_loader);
+    $class_loader = require $this->container->get('app.root') . '/core/vendor/autoload.php';
+    Settings::initialize($this->container->get('app.root'), DrupalKernel::findSitePath($request), $class_loader);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;
     }
@@ -150,7 +152,7 @@ abstract class InstallerTestBase extends WebTestBase {
     // directory has to be writable.
     // WebTestBase::tearDown() will delete the entire test site directory.
     // Not using File API; a potential error must trigger a PHP warning.
-    chmod(DRUPAL_ROOT . '/' . $this->siteDirectory, 0777);
+    chmod($this->container->get('app.root') . '/' . $this->siteDirectory, 0777);
     $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
     $this->kernel->prepareLegacyRequest($request);
     $this->container = $this->kernel->getContainer();

@@ -439,7 +439,7 @@ class TestDiscovery {
    *   An array of Extension objects, keyed by extension name.
    */
   protected function getExtensions() {
-    $listing = new ExtensionDiscovery();
+    $listing = new ExtensionDiscovery(DRUPAL_ROOT);
     // Ensure that tests in all profiles are discovered.
     $listing->setProfileDirectories(array());
     $extensions = $listing->scan('module', TRUE);

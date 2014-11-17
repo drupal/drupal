@@ -59,7 +59,7 @@ class PhpStorageFactoryTest extends DrupalUnitTestBase {
     $this->setSettings('test', array('directory' => NULL));
     $php = PhpStorageFactory::get('test');
     $this->assertTrue($php instanceof MockPhpStorage, 'An MockPhpStorage instance was returned from overridden settings.');
-    $this->assertIdentical(DRUPAL_ROOT . '/' . PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
+    $this->assertIdentical(\Drupal::root() . '/' . PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
 
     // Test that a default storage class is set if it's empty.
     $this->setSettings('test', array('class' => NULL));

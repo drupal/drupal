@@ -130,8 +130,17 @@ class Registry implements DestructableInterface {
   protected $themeName;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a \Drupal\Core\\Theme\Registry object.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend interface to use for the complete theme registry data.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -141,7 +150,8 @@ class Registry implements DestructableInterface {
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, $theme_name = NULL) {
+    $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->moduleHandler = $module_handler;
@@ -180,14 +190,14 @@ class Registry implements DestructableInterface {
         $ancestor = $themes[$ancestor]->base_theme;
         $this->baseThemes[] = $themes[$ancestor];
         if (!empty($themes[$ancestor]->owner)) {
-          include_once DRUPAL_ROOT . '/' . $themes[$ancestor]->owner;
+          include_once $this->root . '/' . $themes[$ancestor]->owner;
         }
       }
       $this->baseThemes = array_reverse($this->baseThemes);
 
       if (isset($this->theme->engine)) {
         $this->engine = $this->theme->engine;
-        include_once DRUPAL_ROOT . '/' . $this->theme->owner;
+        include_once $this->root . '/' . $this->theme->owner;
         if (function_exists($this->theme->engine . '_init')) {
           foreach ($this->baseThemes as $base) {
             call_user_func($this->theme->engine . '_init', $base);
@@ -444,7 +454,7 @@ class Registry implements DestructableInterface {
         if (isset($info['file'])) {
           $include_file = isset($info['path']) ? $info['path'] : $path;
           $include_file .= '/' . $info['file'];
-          include_once DRUPAL_ROOT . '/' . $include_file;
+          include_once $this->root . '/' . $include_file;
           $result[$hook]['includes'][] = $include_file;
         }
 

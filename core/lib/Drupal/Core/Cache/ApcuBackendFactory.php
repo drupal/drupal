@@ -20,9 +20,12 @@ class ApcuBackendFactory implements CacheFactoryInterface {
 
   /**
    * Constructs an ApcuBackendFactory object.
+   *
+   * @param string $root
+   *   The app root.
    */
-  public function __construct() {
-    $this->sitePrefix = Crypt::hashBase64(DRUPAL_ROOT . '/' . conf_path());
+  public function __construct($root) {
+    $this->sitePrefix = Crypt::hashBase64($root . '/' . conf_path());
   }
 
   /**

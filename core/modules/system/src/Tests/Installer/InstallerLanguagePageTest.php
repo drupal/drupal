@@ -21,8 +21,8 @@ class InstallerLanguagePageTest extends InstallerTestBase {
    */
   protected function setUpLanguage() {
     // Place a custom local translation in the translations directory.
-    mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    touch(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.xoxo.po');
+    mkdir(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
+    touch(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.xoxo.po');
 
     // Check that all predefined languages show up with their native names.
     $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');

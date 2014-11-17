@@ -193,7 +193,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     );
     entity_create('field_config', $field_definition)->save();
 
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
+    require_once \Drupal::root() . '/core/includes/install.inc';
     $this->container->get('module_handler')->uninstall(array('taxonomy'));
     \Drupal::moduleHandler()->install(array('taxonomy'));
 

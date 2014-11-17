@@ -25,7 +25,7 @@ $request = Request::createFromGlobals();
 // Manually resemble early bootstrap of DrupalKernel::boot().
 require_once __DIR__ . '/includes/bootstrap.inc';
 DrupalKernel::bootEnvironment();
-Settings::initialize(DrupalKernel::findSitePath($request), $autoloader);
+Settings::initialize(dirname(__DIR__), DrupalKernel::findSitePath($request), $autoloader);
 
 if (Settings::get('rebuild_access', FALSE) ||
   ($request->get('token') && $request->get('timestamp') &&

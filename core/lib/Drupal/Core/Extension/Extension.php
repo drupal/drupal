@@ -43,8 +43,17 @@ class Extension implements \Serializable {
   protected $splFileInfo;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new Extension object.
    *
+   * @param string $root
+   *   The app root.
    * @param string $type
    *   The type of the extension; e.g., 'module'.
    * @param string $pathname
@@ -53,7 +62,8 @@ class Extension implements \Serializable {
    * @param string $filename
    *   (optional) The filename of the main extension file; e.g., 'node.module'.
    */
-  public function __construct($type, $pathname, $filename = NULL) {
+  public function __construct($root, $type, $pathname, $filename = NULL) {
+    $this->root = $root;
     $this->type = $type;
     $this->pathname = $pathname;
     $this->filename = $filename;
@@ -132,7 +142,7 @@ class Extension implements \Serializable {
    */
   public function load() {
     if ($this->filename) {
-      include_once DRUPAL_ROOT . '/' . $this->getPath() . '/' . $this->filename;
+      include_once $this->root . '/' . $this->getPath() . '/' . $this->filename;
       return TRUE;
     }
     return FALSE;
@@ -157,6 +167,7 @@ class Extension implements \Serializable {
    */
   public function serialize() {
     $data = array(
+      'root' => $this->root,
       'type' => $this->type,
       'pathname' => $this->pathname,
       'filename' => $this->filename,
@@ -177,6 +188,7 @@ class Extension implements \Serializable {
    */
   public function unserialize($data) {
     $data = unserialize($data);
+    $this->root = $data['root'];
     $this->type = $data['type'];
     $this->pathname = $data['pathname'];
     $this->filename = $data['filename'];

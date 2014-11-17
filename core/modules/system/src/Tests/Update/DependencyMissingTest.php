@@ -27,7 +27,7 @@ class DependencyMissingTest extends WebTestBase {
     // Only install update_test_2.module, even though its updates have a
     // dependency on update_test_3.module.
     parent::setUp();
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
+    require_once \Drupal::root() . '/core/includes/update.inc';
   }
 
   function testMissingUpdate() {

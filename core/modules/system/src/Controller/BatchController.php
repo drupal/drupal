@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -14,7 +16,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * Controller routines for batch routes.
  */
-class BatchController {
+class BatchController implements ContainerInjectionInterface {
+
+  /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
+   * Constructs a new BatchController.
+   *
+   * @param string $root
+   *   The app root.
+   */
+  public function __construct($root) {
+    $this->root = $root;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('app.root')
+    );
+  }
 
   /**
    * Returns a system batch page.
@@ -28,7 +56,7 @@ class BatchController {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function batchPage(Request $request) {
-    require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+    require_once $this->root . '/core/includes/batch.inc';
     $output = _batch_page($request);
 
     if ($output === FALSE) {

@@ -787,7 +787,7 @@ function _filter_html_image_secure_process($text) {
   $base_path_length = Unicode::strlen($base_path);
 
   // Find the directory on the server where index.php resides.
-  $local_dir = DRUPAL_ROOT . '/';
+  $local_dir = \Drupal::root() . '/';
 
   $html_dom = Html::load($text);
   $images = $html_dom->getElementsByTagName('img');

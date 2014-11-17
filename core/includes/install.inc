@@ -593,7 +593,7 @@ function drupal_verify_profile($install_state) {
   $info = $install_state['profile_info'];
 
   // Get the list of available modules for the selected installation profile.
-  $listing = new ExtensionDiscovery();
+  $listing = new ExtensionDiscovery(DRUPAL_ROOT);
   $present_modules = array();
   foreach ($listing->scan('module') as $present_module) {
     $present_modules[] = $present_module->getName();

@@ -27,12 +27,22 @@ class UpdateManagerInstall extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new UpdateManagerInstall.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ModuleHandlerInterface $module_handler) {
+    $this->root = $root;
     $this->moduleHandler = $module_handler;
   }
 
@@ -48,6 +58,7 @@ class UpdateManagerInstall extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('app.root'),
       $container->get('module_handler')
     );
   }
@@ -207,7 +218,7 @@ class UpdateManagerInstall extends FormBase {
     // update_authorize_run_install() directly.
     if (fileowner($project_real_location) == fileowner(conf_path())) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
-      $filetransfer = new Local(DRUPAL_ROOT);
+      $filetransfer = new Local($this->root);
       call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));
     }
 

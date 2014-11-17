@@ -74,13 +74,30 @@ class ExtensionDiscovery {
   protected $profileDirectories;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
+   * Constructs a new ExtensionDiscovery object.
+   *
+   * @param string $root
+   *   The app root.
+   */
+  public function __construct($root) {
+    $this->root = $root;
+  }
+
+  /**
    * Discovers available extensions of a given type.
    *
    * Finds all extensions (modules, themes, etc) that exist on the site. It
    * searches in several locations. For instance, to discover all available
    * modules:
    * @code
-   * $listing = new ExtensionDiscovery();
+   * $listing = new ExtensionDiscovery(\Drupal::root());
    * $modules = $listing->scan('module');
    * @endcode
    *
@@ -304,9 +321,9 @@ class ExtensionDiscovery {
     // be used (which also improves performance, since any configured PHP
     // include_paths will not be consulted). Retain the relative originating
     // directory being scanned, so relative paths can be reconstructed below
-    // (all paths are expected to be relative to DRUPAL_ROOT).
+    // (all paths are expected to be relative to $this->root).
     $dir_prefix = ($dir == '' ? '' : "$dir/");
-    $absolute_dir = ($dir == '' ? DRUPAL_ROOT : DRUPAL_ROOT . "/$dir");
+    $absolute_dir = ($dir == '' ? $this->root : $this->root . "/$dir");
 
     if (!is_dir($absolute_dir)) {
       return $files;
@@ -370,7 +387,7 @@ class ExtensionDiscovery {
         $filename = NULL;
       }
 
-      $extension = new Extension($type, $pathname, $filename);
+      $extension = new Extension($this->root, $type, $pathname, $filename);
 
       // Track the originating directory for sorting purposes.
       $extension->subpath = $fileinfo->getSubPath();

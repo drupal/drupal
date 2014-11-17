@@ -62,8 +62,10 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    parent::setUp();
+
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->moduleHandler);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler);
   }
 
   /**
@@ -78,7 +80,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('example_module', 'example');
@@ -105,7 +107,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('theme', 'example_theme', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('example_theme');
@@ -129,7 +131,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files_not_existing';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module', $path);
 
     $this->assertSame($this->libraryDiscoveryParser->buildByExtension('example_module'), array());
@@ -149,7 +151,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'invalid_file', $path);
 
     $this->libraryDiscoveryParser->buildByExtension('invalid_file');
@@ -170,7 +172,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module_missing_information', $path);
 
     $this->libraryDiscoveryParser->buildByExtension('example_module_missing_information');
@@ -188,7 +190,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'external', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('external', 'example_external');
@@ -210,7 +212,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'css_weights', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('css_weights');
@@ -250,7 +252,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'js_positive_weight', $path);
 
     $this->libraryDiscoveryParser->buildByExtension('js_positive_weight');
@@ -268,7 +270,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'css_js_settings', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('css_js_settings');
@@ -299,7 +301,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'dependencies', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('dependencies');
@@ -322,7 +324,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'data_types', $path);
 
     $this->libraryDiscoveryParser->setFileValidUri('public://test.css', TRUE);
@@ -354,7 +356,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'js', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('js');
@@ -379,7 +381,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'licenses_missing_information', $path);
 
     $this->libraryDiscoveryParser->buildByExtension('licenses_missing_information');
@@ -397,7 +399,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen(DRUPAL_ROOT) + 1);
+    $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'licenses', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('licenses');

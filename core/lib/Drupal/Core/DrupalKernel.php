@@ -180,6 +180,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $sitePath;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Create a DrupalKernel object from a request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -198,7 +205,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE) {
     // Include our bootstrap file.
-    require_once dirname(dirname(dirname(__DIR__))) . '/includes/bootstrap.inc';
+    $core_root = dirname(dirname(dirname(__DIR__)));
+    require_once $core_root . '/includes/bootstrap.inc';
 
     $kernel = new static($environment, $class_loader, $allow_dumping);
 
@@ -206,7 +214,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     static::bootEnvironment();
 
     // Get our most basic settings setup.
-    $kernel->initializeSettings($request);
+    $site_path = static::findSitePath($request);
+    $kernel->setSitePath($site_path);
+    Settings::initialize(dirname($core_root), $site_path, $class_loader);
 
     // Redirect the user to the installation script if Drupal has not been
     // installed yet (i.e., if no $databases array has been defined in the
@@ -217,18 +227,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     return $kernel;
-  }
-
-  /**
-   * Initializes the kernel's site path and the Settings singleton.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request that will be used to determine the site path.
-   */
-  protected function initializeSettings(Request $request) {
-    $site_path = static::findSitePath($request);
-    $this->setSitePath($site_path);
-    Settings::initialize($site_path, $this->classLoader);
   }
 
   /**
@@ -248,6 +246,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->environment = $environment;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
+    $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
 
   /**
@@ -352,6 +351,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
+  public function getAppRoot() {
+    return $this->root;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function boot() {
     if ($this->booted) {
       return $this;
@@ -361,21 +367,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     Timer::start('page');
 
     // Load legacy and other functional code.
-    require_once DRUPAL_ROOT . '/core/includes/common.inc';
-    require_once DRUPAL_ROOT . '/core/includes/database.inc';
-    require_once DRUPAL_ROOT . '/core/includes/path.inc';
-    require_once DRUPAL_ROOT . '/core/includes/module.inc';
-    require_once DRUPAL_ROOT . '/core/includes/theme.inc';
-    require_once DRUPAL_ROOT . '/core/includes/pager.inc';
-    require_once DRUPAL_ROOT . '/core/includes/menu.inc';
-    require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
-    require_once DRUPAL_ROOT . '/core/includes/file.inc';
-    require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-    require_once DRUPAL_ROOT . '/core/includes/form.inc';
-    require_once DRUPAL_ROOT . '/core/includes/mail.inc';
-    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-    require_once DRUPAL_ROOT . '/core/includes/schema.inc';
-    require_once DRUPAL_ROOT . '/core/includes/entity.inc';
+    require_once $this->root . '/core/includes/common.inc';
+    require_once $this->root . '/core/includes/database.inc';
+    require_once $this->root . '/core/includes/path.inc';
+    require_once $this->root . '/core/includes/module.inc';
+    require_once $this->root . '/core/includes/theme.inc';
+    require_once $this->root . '/core/includes/pager.inc';
+    require_once $this->root . '/core/includes/menu.inc';
+    require_once $this->root . '/core/includes/tablesort.inc';
+    require_once $this->root . '/core/includes/file.inc';
+    require_once $this->root . '/core/includes/unicode.inc';
+    require_once $this->root . '/core/includes/form.inc';
+    require_once $this->root . '/core/includes/mail.inc';
+    require_once $this->root . '/core/includes/errors.inc';
+    require_once $this->root . '/core/includes/schema.inc';
+    require_once $this->root . '/core/includes/entity.inc';
 
     // Ensure that findSitePath is set.
     if (!$this->sitePath) {
@@ -588,7 +594,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function moduleData($module) {
     if (!$this->moduleData) {
       // First, find profiles.
-      $listing = new ExtensionDiscovery();
+      $listing = new ExtensionDiscovery($this->root);
       $listing->setProfileDirectories(array());
       $all_profiles = $listing->scan('profile');
       $profiles = array_intersect_key($all_profiles, $this->moduleList);
@@ -1017,7 +1023,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Entity
     // - Plugin
     foreach (array('Core', 'Component') as $parent_directory) {
-      $path = DRUPAL_ROOT . '/core/lib/Drupal/' . $parent_directory;
+      $path = $this->root . '/core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;
       foreach (new \DirectoryIterator($path) as $component) {
         /** @var $component \DirectoryIterator */
@@ -1230,7 +1236,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = array();
     foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = DRUPAL_ROOT . '/' . dirname($filename) . '/src';
+      $namespaces["Drupal\\$module"] = $this->root . '/' . dirname($filename) . '/src';
     }
     return $namespaces;
   }

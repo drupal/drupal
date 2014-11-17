@@ -33,7 +33,7 @@ class HtaccessTest extends WebTestBase {
    *   Path to file. Without leading slash.
    */
   protected function assertNoFileAccess($path) {
-    $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $path));
+    $this->assertTrue(file_exists(\Drupal::root() . '/' . $path));
     $this->drupalGet($path);
     $this->assertResponse(403);
   }

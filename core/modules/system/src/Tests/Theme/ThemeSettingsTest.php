@@ -38,7 +38,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
     $this->installConfig(array('system'));
 
     if (!isset($this->availableThemes)) {
-      $discovery = new ExtensionDiscovery();
+      $discovery = new ExtensionDiscovery(\Drupal::root());
       $this->availableThemes = $discovery->scan('theme');
     }
   }

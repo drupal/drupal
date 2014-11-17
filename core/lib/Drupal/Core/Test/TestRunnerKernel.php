@@ -42,8 +42,8 @@ class TestRunnerKernel extends DrupalKernel {
       'simpletest' => 0,
     );
     $this->moduleData = array(
-      'system' => new Extension('module', 'core/modules/system/system.info.yml', 'system.module'),
-      'simpletest' => new Extension('module', 'core/modules/simpletest/simpletest.info.yml', 'simpletest.module'),
+      'system' => new Extension(DRUPAL_ROOT, 'module', 'core/modules/system/system.info.yml', 'system.module'),
+      'simpletest' => new Extension(DRUPAL_ROOT, 'module', 'core/modules/simpletest/simpletest.info.yml', 'simpletest.module'),
     );
   }
 

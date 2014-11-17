@@ -49,6 +49,7 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTest {
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('theme_handler', $theme_handler);
+    $container->set('app.root', $this->root);
     \Drupal::setContainer($container);
   }
 

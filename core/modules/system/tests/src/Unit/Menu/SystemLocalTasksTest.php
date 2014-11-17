@@ -36,7 +36,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTest {
 
     $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
 
-    $theme = new Extension('theme', DRUPAL_ROOT . '/core/themes/bartik', 'bartik.info.yml');
+    $theme = new Extension($this->root, 'theme', '/core/themes/bartik', 'bartik.info.yml');
     $theme->status = 1;
     $theme->info = array('name' => 'bartik');
     $this->themeHandler->expects($this->any())

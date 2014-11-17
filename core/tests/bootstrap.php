@@ -83,7 +83,6 @@ drupal_phpunit_register_extension_dirs($loader, $dirs);
 
 // Look into removing these later.
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
-define('DRUPAL_ROOT', realpath(__DIR__ . '/../../'));
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.

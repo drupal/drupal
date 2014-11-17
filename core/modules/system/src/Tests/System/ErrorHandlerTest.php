@@ -121,7 +121,7 @@ class ErrorHandlerTest extends WebTestBase {
 
     // The exceptions are expected. Do not interpret them as a test failure.
     // Not using File API; a potential error must trigger a PHP warning.
-    unlink(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
+    unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
   }
 
   /**

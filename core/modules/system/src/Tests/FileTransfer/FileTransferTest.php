@@ -25,7 +25,7 @@ class FileTransferTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->testConnection = TestFileTransfer::factory(DRUPAL_ROOT, array('hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port));
+    $this->testConnection = TestFileTransfer::factory(\Drupal::root(), array('hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port));
   }
 
   function _getFakeModuleFiles() {
@@ -87,7 +87,7 @@ class FileTransferTest extends WebTestBase {
 
     $gotit = TRUE;
     try {
-      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/' . PublicStream::basePath());
+      $this->testConnection->copyDirectory($source, \Drupal::root() . '/' . PublicStream::basePath());
     }
     catch (FileTransferException $e) {
       $gotit = FALSE;

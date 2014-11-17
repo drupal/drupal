@@ -69,6 +69,7 @@ class DbUpdateController extends ControllerBase {
   protected $entityDefinitionUpdateManager;
 
   /**
+<<<<<<< ours
    * The bare HTML page renderer.
    *
    * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
@@ -76,8 +77,17 @@ class DbUpdateController extends ControllerBase {
   protected $bareHtmlPageRenderer;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new UpdateController.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The keyvalue expirable factory.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -93,7 +103,8 @@ class DbUpdateController extends ControllerBase {
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
    *   The bare HTML page renderer.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, EntityDefinitionUpdateManagerInterface $entity_definition_update_manager, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, EntityDefinitionUpdateManagerInterface $entity_definition_update_manager, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+    $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
     $this->state = $state;
@@ -108,6 +119,7 @@ class DbUpdateController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('app.root'),
       $container->get('keyvalue.expirable'),
       $container->get('cache.default'),
       $container->get('state'),
@@ -134,8 +146,8 @@ class DbUpdateController extends ControllerBase {
    *   A response object object.
    */
   public function handle($op, Request $request) {
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
+    require_once $this->root . '/core/includes/install.inc';
+    require_once $this->root . '/core/includes/update.inc';
 
     drupal_load_updates();
     update_fix_compatibility();
@@ -175,7 +187,7 @@ class DbUpdateController extends ControllerBase {
 
         // Regular batch ops : defer to batch processing API.
         default:
-          require_once DRUPAL_ROOT . '/core/includes/batch.inc';
+          require_once $this->root . '/core/includes/batch.inc';
           $regions['sidebar_first'] = $this->updateTasksList('run');
           $output = _batch_page($request);
           break;

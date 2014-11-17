@@ -150,7 +150,7 @@ function color_get_info($theme) {
   }
 
   $path = drupal_get_path('theme', $theme);
-  $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
+  $file = \Drupal::root() . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
     // Add in default values.
@@ -308,7 +308,7 @@ function template_preprocess_color_scheme_form(&$variables) {
   $form['scheme']['#attached']['js'][$preview_js_path] = array('weight' => -1);
 
   // Attempt to load preview HTML if the theme provides it.
-  $preview_html_path = DRUPAL_ROOT . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
+  $preview_html_path = \Drupal::root() . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
   $variables['html_preview'] = SafeMarkup::set(file_get_contents($preview_html_path));
 }
 

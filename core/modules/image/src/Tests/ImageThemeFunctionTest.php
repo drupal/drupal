@@ -50,7 +50,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       'field_name' => 'image_test',
       'bundle' => 'entity_test',
     ))->save();
-    file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', 'public://example.jpg');
+    file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = entity_create('file', array(
       'uri' => 'public://example.jpg',
     ));

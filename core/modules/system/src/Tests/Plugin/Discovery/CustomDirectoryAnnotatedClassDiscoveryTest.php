@@ -73,7 +73,7 @@ class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
       ),
     );
 
-    $base_directory = DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/src';
+    $base_directory = \Drupal::root() . '/core/modules/system/tests/modules/plugin_test/src';
     $namespaces = new \ArrayObject(array('Drupal\plugin_test' => $base_directory));
 
     $this->discovery = new AnnotatedClassDiscovery('', $namespaces);

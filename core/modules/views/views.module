@@ -181,7 +181,7 @@ function views_theme($existing, $type, $theme, $path) {
       // Whenever we have a theme file, we include it directly so we can
       // auto-detect the theme function.
       if (isset($def['theme_file'])) {
-        $include = DRUPAL_ROOT . '/' . $module_dir . '/' . $def['theme_file'];
+        $include = \Drupal::root() . '/' . $module_dir. '/' . $def['theme_file'];
         if (is_file($include)) {
           require_once $include;
         }

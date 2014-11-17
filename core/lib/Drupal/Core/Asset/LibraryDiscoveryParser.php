@@ -27,10 +27,22 @@ class LibraryDiscoveryParser {
   protected $moduleHandler;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
+   * Constructs a new LibraryDiscoveryParser instance.
+   *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ModuleHandlerInterface $module_handler) {
+    $this->root = $root;
     $this->moduleHandler = $module_handler;
   }
 
@@ -67,7 +79,7 @@ class LibraryDiscoveryParser {
 
     $library_file = $path . '/' . $extension . '.libraries.yml';
 
-    if ($library_file && file_exists(DRUPAL_ROOT . '/' . $library_file)) {
+    if ($library_file && file_exists($this->root . '/' . $library_file)) {
       $libraries = $this->parseLibraryInfo($extension, $library_file);
     }
 
@@ -222,7 +234,7 @@ class LibraryDiscoveryParser {
    */
   protected function parseLibraryInfo($extension, $library_file) {
     try {
-      $libraries = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/' . $library_file));
+      $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file));
     }
     catch (InvalidDataTypeException $e) {
       // Rethrow a more helpful exception to provide context.

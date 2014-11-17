@@ -27,6 +27,13 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
   protected $randomGenerator;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -34,6 +41,8 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
     \Drupal::setContainer(NULL);
+
+    $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
 
   /**

@@ -125,8 +125,7 @@ class FormCacheTest extends UnitTestCase {
     $this->requestStack = $this->getMock('\Symfony\Component\HttpFoundation\RequestStack');
     $this->requestPolicy = $this->getMock('\Drupal\Core\PageCache\RequestPolicyInterface');
 
-
-    $this->formCache = new FormCache($this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy);
+    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy);
   }
 
   /**
@@ -511,8 +510,9 @@ class FormCacheTest extends UnitTestCase {
     // Rebuild the FormCache with a config factory that will return a config
     // object with the internal page cache enabled.
     $this->configFactory = $this->getConfigFactoryStub(['system.performance' => ['cache.page.use_internal' => TRUE]]);
+    $root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
     $this->formCache = $this->getMockBuilder('Drupal\Core\Form\FormCache')
-      ->setConstructorArgs([$this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy])
+      ->setConstructorArgs([$root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy])
       ->setMethods(['isPageCacheable'])
       ->getMock();
 

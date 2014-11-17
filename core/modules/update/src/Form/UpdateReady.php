@@ -21,6 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UpdateReady extends FormBase {
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -37,12 +44,15 @@ class UpdateReady extends FormBase {
   /**
    * Constructs a new UpdateReady object.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The object that manages enabled modules in a Drupal installation.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state) {
+    $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
   }
@@ -59,6 +69,7 @@ class UpdateReady extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('app.root'),
       $container->get('module_handler'),
       $container->get('state')
     );
@@ -133,7 +144,7 @@ class UpdateReady extends FormBase {
       // and invoke update_authorize_run_update() directly.
       if (fileowner($project_real_location) == fileowner(conf_path())) {
         $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
-        $filetransfer = new Local(DRUPAL_ROOT);
+        $filetransfer = new Local($this->root);
         update_authorize_run_update($filetransfer, $updates);
       }
       // Otherwise, go through the regular workflow to prompt for FTP/SSH

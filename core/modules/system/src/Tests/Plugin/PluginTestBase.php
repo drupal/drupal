@@ -47,7 +47,7 @@ abstract class PluginTestBase extends KernelTestBase {
     //   as derivatives and ReflectionFactory.
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
-    $module_handler = new ModuleHandler(array(), $this->container->get('kernel'), new MemoryBackend('plugin'), $this->container->get('event_dispatcher'));
+    $module_handler = new ModuleHandler(\Drupal::root(), array(), $this->container->get('kernel'), new MemoryBackend('plugin'));
     $this->defaultsTestPluginManager = new DefaultsTestPluginManager($module_handler);
 
     // The expected plugin definitions within each manager. Several tests assert

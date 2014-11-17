@@ -850,7 +850,7 @@ function system_get_info($type, $name = NULL) {
  *   An associative array of module information.
  */
 function _system_rebuild_module_data() {
-  $listing = new ExtensionDiscovery();
+  $listing = new ExtensionDiscovery(\Drupal::root());
   // Find modules
   $modules = $listing->scan('module');
 

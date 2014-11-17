@@ -93,8 +93,17 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $alterFunctions;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a ModuleHandler object.
    *
+   * @param string $root
+   *   The app root.
    * @param array $module_list
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
@@ -107,10 +116,11 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct(array $module_list = array(), DrupalKernelInterface $kernel, CacheBackendInterface $cache_backend) {
+  public function __construct($root, array $module_list = array(), DrupalKernelInterface $kernel, CacheBackendInterface $cache_backend) {
+    $this->root = $root;
     $this->moduleList = array();
     foreach ($module_list as $name => $module) {
-      $this->moduleList[$name] = new Extension($module['type'], $module['pathname'], $module['filename']);
+      $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
     $this->kernel = $kernel;
     $this->cacheBackend = $cache_backend;
@@ -212,8 +222,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
-    $filename = file_exists(DRUPAL_ROOT . "/$path/$name.$type") ? "$name.$type" : NULL;
-    $this->moduleList[$name] = new Extension($type, $pathname, $filename);
+    $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
+    $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
   }
 
@@ -262,12 +272,12 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function loadInclude($module, $type, $name = NULL) {
     if ($type == 'install') {
       // Make sure the installation API is available
-      include_once DRUPAL_ROOT . '/core/includes/install.inc';
+      include_once $this->root . '/core/includes/install.inc';
     }
 
     $name = $name ?: $module;
     if (isset($this->moduleList[$module])) {
-      $file = DRUPAL_ROOT . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
+      $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
         return $file;
@@ -736,7 +746,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     // Required for module installation checks.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    include_once $this->root . '/core/includes/install.inc';
 
     /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
     $config_installer = \Drupal::service('config.installer');
@@ -783,7 +793,7 @@ class ModuleHandler implements ModuleHandlerInterface {
             $module_path = drupal_get_path('module', $name);
             $pathname = "$module_path/$name.info.yml";
             $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
-            $module_filenames[$name] = new Extension('module', $pathname, $filename);
+            $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
           }
         }
 
@@ -1076,7 +1086,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function getModuleDirectories() {
     $dirs = array();
     foreach ($this->getModuleList() as $name => $module) {
-      $dirs[$name] = DRUPAL_ROOT . '/' . $module->getPath();
+      $dirs[$name] = $this->root . '/' . $module->getPath();
     }
     return $dirs;
   }

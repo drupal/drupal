@@ -95,6 +95,8 @@ class ThemeHandlerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    parent::setUp();
+
     $this->configFactory = $this->getConfigFactoryStub(array(
       'core.extension' => array(
         'module' => array(),
@@ -117,7 +119,7 @@ class ThemeHandlerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilderIndicator, $this->extensionDiscovery);
+    $this->themeHandler = new TestThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilderIndicator, $this->extensionDiscovery);
 
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheBins($cache_backend);
@@ -133,17 +135,17 @@ class ThemeHandlerTest extends UnitTestCase {
       ->method('scan')
       ->with('theme')
       ->will($this->returnValue(array(
-        'seven' => new Extension('theme', DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', 'seven.theme'),
+        'seven' => new Extension($this->root, 'theme', $this->root . '/core/themes/seven/seven.info.yml', 'seven.theme'),
       )));
     $this->extensionDiscovery->expects($this->at(1))
       ->method('scan')
       ->with('theme_engine')
       ->will($this->returnValue(array(
-        'twig' => new Extension('theme_engine', DRUPAL_ROOT . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
+        'twig' => new Extension($this->root, 'theme_engine', $this->root . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
       )));
     $this->infoParser->expects($this->once())
       ->method('parse')
-      ->with(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml')
+      ->with($this->root . '/core/themes/seven/seven.info.yml')
       ->will($this->returnCallback(function ($file) {
         $info_parser = new InfoParser();
         return $info_parser->parse($file);
@@ -162,9 +164,9 @@ class ThemeHandlerTest extends UnitTestCase {
     // Ensure some basic properties.
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info);
     $this->assertEquals('seven', $info->getName());
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->getPathname());
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.theme', $info->getExtensionPathname());
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine', $info->owner);
+    $this->assertEquals($this->root . '/core/themes/seven/seven.info.yml', $info->getPathname());
+    $this->assertEquals($this->root . '/core/themes/seven/seven.theme', $info->getExtensionPathname());
+    $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info->owner);
     $this->assertEquals('twig', $info->prefix);
 
     $this->assertEquals('twig', $info->info['engine']);
@@ -173,40 +175,40 @@ class ThemeHandlerTest extends UnitTestCase {
     // Ensure that the css paths are set with the proper prefix.
     $this->assertEquals(array(
       'screen' => array(
-        'css/base/elements.css' => DRUPAL_ROOT . '/core/themes/seven/css/base/elements.css',
-        'css/base/typography.css' => DRUPAL_ROOT . '/core/themes/seven/css/base/typography.css',
-        'css/components/admin-list.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-list.css',
-        'css/components/admin-options.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-options.css',
-        'css/components/admin-panel.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/admin-panel.css',
-        'css/components/block-recent-content.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/block-recent-content.css',
-        'css/components/content-header.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/content-header.css',
-        'css/components/breadcrumb.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/breadcrumb.css',
-        'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
-        'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',
-        'css/components/comments.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/comments.css',
-        'css/components/messages.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/messages.css',
-        'css/components/dropbutton.component.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/dropbutton.component.css',
-        'css/components/entity-meta.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/entity-meta.css',
-        'css/components/field-ui.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/field-ui.css',
-        'css/components/form.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/form.css',
-        'css/components/help.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/help.css',
-        'css/components/menus-and-lists.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/menus-and-lists.css',
-        'css/components/modules-page.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/modules-page.css',
-        'css/components/node.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/node.css',
-        'css/components/page-title.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/page-title.css',
-        'css/components/pager.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/pager.css',
-        'css/components/skip-link.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/skip-link.css',
-        'css/components/tables.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/tables.css',
-        'css/components/tabs.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/tabs.css',
-        'css/components/tour.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/tour.theme.css',
-        'css/components/update-status.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/update-status.css',
-        'css/components/views-ui.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/views-ui.css',
-        'css/layout/layout.css' => DRUPAL_ROOT . '/core/themes/seven/css/layout/layout.css',
-        'css/layout/node-add.css' => DRUPAL_ROOT . '/core/themes/seven/css/layout/node-add.css',
-        'css/theme/appearance-page.css' => DRUPAL_ROOT . '/core/themes/seven/css/theme/appearance-page.css',
+        'css/base/elements.css' => $this->root . '/core/themes/seven/css/base/elements.css',
+        'css/base/typography.css' => $this->root . '/core/themes/seven/css/base/typography.css',
+        'css/components/admin-list.css' => $this->root . '/core/themes/seven/css/components/admin-list.css',
+        'css/components/admin-options.css' => $this->root . '/core/themes/seven/css/components/admin-options.css',
+        'css/components/admin-panel.css' => $this->root . '/core/themes/seven/css/components/admin-panel.css',
+        'css/components/block-recent-content.css' => $this->root . '/core/themes/seven/css/components/block-recent-content.css',
+        'css/components/content-header.css' => $this->root . '/core/themes/seven/css/components/content-header.css',
+        'css/components/breadcrumb.css' => $this->root . '/core/themes/seven/css/components/breadcrumb.css',
+        'css/components/buttons.css' => $this->root . '/core/themes/seven/css/components/buttons.css',
+        'css/components/buttons.theme.css' => $this->root . '/core/themes/seven/css/components/buttons.theme.css',
+        'css/components/comments.css' => $this->root . '/core/themes/seven/css/components/comments.css',
+        'css/components/messages.css' => $this->root . '/core/themes/seven/css/components/messages.css',
+        'css/components/dropbutton.component.css' => $this->root . '/core/themes/seven/css/components/dropbutton.component.css',
+        'css/components/entity-meta.css' => $this->root . '/core/themes/seven/css/components/entity-meta.css',
+        'css/components/field-ui.css' => $this->root . '/core/themes/seven/css/components/field-ui.css',
+        'css/components/form.css' => $this->root . '/core/themes/seven/css/components/form.css',
+        'css/components/help.css' => $this->root . '/core/themes/seven/css/components/help.css',
+        'css/components/menus-and-lists.css' => $this->root . '/core/themes/seven/css/components/menus-and-lists.css',
+        'css/components/modules-page.css' => $this->root . '/core/themes/seven/css/components/modules-page.css',
+        'css/components/node.css' => $this->root . '/core/themes/seven/css/components/node.css',
+        'css/components/page-title.css' => $this->root . '/core/themes/seven/css/components/page-title.css',
+        'css/components/pager.css' => $this->root . '/core/themes/seven/css/components/pager.css',
+        'css/components/skip-link.css' => $this->root . '/core/themes/seven/css/components/skip-link.css',
+        'css/components/tables.css' => $this->root . '/core/themes/seven/css/components/tables.css',
+        'css/components/tabs.css' => $this->root . '/core/themes/seven/css/components/tabs.css',
+        'css/components/tour.theme.css' => $this->root . '/core/themes/seven/css/components/tour.theme.css',
+        'css/components/update-status.css' => $this->root . '/core/themes/seven/css/components/update-status.css',
+        'css/components/views-ui.css' => $this->root . '/core/themes/seven/css/components/views-ui.css',
+        'css/layout/layout.css' => $this->root . '/core/themes/seven/css/layout/layout.css',
+        'css/layout/node-add.css' => $this->root . '/core/themes/seven/css/layout/node-add.css',
+        'css/theme/appearance-page.css' => $this->root . '/core/themes/seven/css/theme/appearance-page.css',
       ),
     ), $info->info['stylesheets']);
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/screenshot.png', $info->info['screenshot']);
+    $this->assertEquals($this->root . '/core/themes/seven/screenshot.png', $info->info['screenshot']);
   }
 
   /**
@@ -217,25 +219,25 @@ class ThemeHandlerTest extends UnitTestCase {
       ->method('scan')
       ->with('theme')
       ->will($this->returnValue(array(
-        'test_subtheme' => new Extension('theme', DRUPAL_ROOT . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
-        'test_basetheme' => new Extension('theme', DRUPAL_ROOT . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
+        'test_subtheme' => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
+        'test_basetheme' => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
       )));
     $this->extensionDiscovery->expects($this->at(1))
       ->method('scan')
       ->with('theme_engine')
       ->will($this->returnValue(array(
-        'twig' => new Extension('theme_engine', DRUPAL_ROOT . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
+        'twig' => new Extension($this->root, 'theme_engine', $this->root . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
       )));
     $this->infoParser->expects($this->at(0))
       ->method('parse')
-      ->with(DRUPAL_ROOT . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml')
+      ->with($this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml')
       ->will($this->returnCallback(function ($file) {
         $info_parser = new InfoParser();
         return $info_parser->parse($file);
       }));
     $this->infoParser->expects($this->at(1))
       ->method('parse')
-      ->with(DRUPAL_ROOT . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml')
+      ->with($this->root . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml')
       ->will($this->returnCallback(function ($file) {
         $info_parser = new InfoParser();
         return $info_parser->parse($file);
@@ -260,9 +262,9 @@ class ThemeHandlerTest extends UnitTestCase {
     $info_subtheme->info['base theme'] = 'test_basetheme';
     $info_basetheme->sub_themes = array('test_subtheme');
 
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine', $info_basetheme->owner);
+    $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info_basetheme->owner);
     $this->assertEquals('twig', $info_basetheme->prefix);
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine', $info_subtheme->owner);
+    $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info_subtheme->owner);
     $this->assertEquals('twig', $info_subtheme->prefix);
   }
 

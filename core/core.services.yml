@@ -42,6 +42,7 @@ services:
     arguments: ['@database']
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
+    arguments: ['@app.root']
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
   cache.bootstrap:
@@ -182,7 +183,7 @@ services:
     arguments: ['@request_stack', '@url_generator']
   form_cache:
     class: Drupal\Core\Form\FormCache
-    arguments: ['@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@config.factory', '@request_stack', '@page_cache_request_policy']
+    arguments: ['@app.root', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@config.factory', '@request_stack', '@page_cache_request_policy']
     public: false  # Private to form_builder
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
@@ -287,10 +288,10 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%container.modules%', '@kernel', '@cache.bootstrap']
+    arguments: ['@app.root', '%container.modules%', '@kernel', '@cache.bootstrap']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder_indicator']
+    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder_indicator']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@entity.definitions.installed', '@event_dispatcher']
@@ -382,6 +383,13 @@ services:
   event_dispatcher:
     class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
+  app.root:
+    class: SplString
+    factory_service: 'app.root.factory'
+    factory_method: 'get'
+  app.root.factory:
+    class: Drupal\Core\AppRootFactory
+    arguments: ['@kernel']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@class_resolver', '@logger.channel.default']
@@ -989,10 +997,10 @@ services:
     arguments: ['@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack']
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
-    arguments: ['@theme_handler', '@state']
+    arguments: ['@app.root', '@theme_handler', '@state']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['@cache.default', '@lock', '@module_handler']
+    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler']
     tags:
       - { name: needs_destruction }
   authentication:
@@ -1049,12 +1057,12 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['@module_handler']
+    arguments: ['@app.root', '@module_handler']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
   twig:
     class: Drupal\Core\Template\TwigEnvironment
-    arguments: ['@twig.loader', '@module_handler', '@theme_handler', '%twig.config%']
+    arguments: ['@app.root', '@twig.loader', '@module_handler', '@theme_handler', '%twig.config%']
     tags:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
   twig.extension:
@@ -1074,7 +1082,7 @@ services:
     alias: twig.loader.filesystem
   twig.loader.filesystem:
     class: Twig_Loader_Filesystem
-    arguments: ['%app.root%']
+    arguments: ['@app.root']
   element_info:
     alias: plugin.manager.element_info
   file.mime_type.guesser:

@@ -115,8 +115,17 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $configManager;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new ThemeHandler.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory to get the installed themes.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -141,7 +150,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, ConfigManagerInterface $config_manager = NULL, RouteBuilderIndicatorInterface $route_builder_indicator = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct($root, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser,LoggerInterface $logger, AssetCollectionOptimizerInterface $css_collection_optimizer = NULL, ConfigInstallerInterface $config_installer = NULL, ConfigManagerInterface $config_manager = NULL, RouteBuilderIndicatorInterface $route_builder_indicator = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+    $this->root = $root;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
@@ -639,7 +649,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    */
   protected function getExtensionDiscovery() {
     if (!isset($this->extensionDiscovery)) {
-      $this->extensionDiscovery = new ExtensionDiscovery();
+      $this->extensionDiscovery = new ExtensionDiscovery($this->root);
     }
     return $this->extensionDiscovery;
   }
@@ -700,7 +710,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function getThemeDirectories() {
     $dirs = array();
     foreach ($this->listInfo() as $name => $theme) {
-      $dirs[$name] = DRUPAL_ROOT . '/' . $theme->getPath();
+      $dirs[$name] = $this->root . '/' . $theme->getPath();
     }
     return $dirs;
   }

@@ -37,13 +37,13 @@ class SystemListingTest extends DrupalUnitTestBase {
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
         $filename = "$directory/$module/$module.info.yml";
-        $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $filename), format_string('@filename exists.', array('@filename' => $filename)));
+        $this->assertTrue(file_exists(\Drupal::root() . '/' . $filename), format_string('@filename exists.', array('@filename' => $filename)));
       }
     }
 
     // Now scan the directories and check that the files take precedence as
     // expected.
-    $listing = new ExtensionDiscovery();
+    $listing = new ExtensionDiscovery(\Drupal::root());
     $listing->setProfileDirectories(array('core/profiles/testing'));
     $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {

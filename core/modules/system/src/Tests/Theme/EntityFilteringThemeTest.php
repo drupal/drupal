@@ -79,7 +79,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     parent::setUp();
 
     // Install all available non-testing themes.
-    $listing = new ExtensionDiscovery();
+    $listing = new ExtensionDiscovery(\Drupal::root());
     $this->themes = $listing->scan('theme', FALSE);
     \Drupal::service('theme_handler')->install(array_keys($this->themes));
 

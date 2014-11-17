@@ -287,7 +287,7 @@ function install_begin_request(&$install_state) {
 
   $site_path = DrupalKernel::findSitePath($request, FALSE);
   $class_loader = require __DIR__ . '/../vendor/autoload.php';
-  Settings::initialize($site_path, $class_loader);
+  Settings::initialize(dirname(dirname(__DIR__)), $site_path, $class_loader);
 
   // Ensure that procedural dependencies are loaded as early as possible,
   // since the error/exception handlers depend on them.
@@ -389,7 +389,7 @@ function install_begin_request(&$install_state) {
   }
 
   // Add list of all available profiles to the installation state.
-  $listing = new ExtensionDiscovery();
+  $listing = new ExtensionDiscovery($container->get('app.root'));
   $listing->setProfileDirectories(array());
   $install_state['profiles'] += $listing->scan('profile');
 
@@ -717,7 +717,7 @@ function install_tasks($install_state) {
     $profile = $install_state['parameters']['profile'];
     $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
     if (file_exists($profile_install_file)) {
-      include_once DRUPAL_ROOT . '/' . $profile_install_file;
+      include_once \Drupal::root() . '/' . $profile_install_file;
     }
     $function = $install_state['parameters']['profile'] . '_install_tasks';
     if (function_exists($function)) {

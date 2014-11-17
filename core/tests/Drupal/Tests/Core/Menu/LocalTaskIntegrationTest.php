@@ -47,9 +47,12 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    parent::setUp();
+
     $container = new ContainerBuilder();
     $config_factory = $this->getConfigFactoryStub(array());
     $container->set('config.factory', $config_factory);
+    $container->set('app.root', $this->root);
     \Drupal::setContainer($container);
     $this->container = $container;
   }
@@ -142,7 +145,7 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
 
     $directory_list = array();
     foreach ($this->directoryList as $key => $value) {
-      $directory_list[$key] = DRUPAL_ROOT . '/' . $value;
+      $directory_list[$key] = $this->root . '/' . $value;
     }
 
     $manager = $this->getLocalTaskManager($directory_list, $route_name, $route_params);

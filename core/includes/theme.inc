@@ -341,7 +341,7 @@ function _theme($hook, $variables = array()) {
   // elsewhere.
   if (!empty($info['includes'])) {
     foreach ($info['includes'] as $include_file) {
-      include_once DRUPAL_ROOT . '/' . $include_file;
+      include_once \Drupal::root() . '/' . $include_file;
     }
   }
 
@@ -353,7 +353,7 @@ function _theme($hook, $variables = array()) {
     // might reside there.
     if (!empty($base_hook_info['includes'])) {
       foreach ($base_hook_info['includes'] as $include_file) {
-        include_once DRUPAL_ROOT . '/' . $include_file;
+        include_once \Drupal::root() . '/' . $include_file;
       }
     }
     // Replace the preprocess functions with those from the base hook.

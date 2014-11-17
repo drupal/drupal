@@ -33,14 +33,17 @@ class TwigEnvironment extends \Twig_Environment {
   /**
    * Constructs a TwigEnvironment object and stores cache and storage
    * internally.
+   *
+   * @param string $root
+   *   The app root;
    */
-  public function __construct(\Twig_LoaderInterface $loader = NULL, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $options = array()) {
+  public function __construct($root, \Twig_LoaderInterface $loader = NULL, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $options = array()) {
     // @todo Pass as arguments from the DIC.
     $this->cache_object = \Drupal::cache();
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like twig_drupal_escape_filter are called.
-    require_once DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine';
+    require_once $root . '/core/themes/engines/twig/twig.engine';
 
     // Set twig path namespace for themes and modules.
     $namespaces = array();

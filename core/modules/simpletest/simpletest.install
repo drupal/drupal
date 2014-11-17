@@ -66,17 +66,17 @@ function simpletest_requirements($phase) {
   }
 
   $site_directory = 'sites/simpletest';
-  if (!drupal_verify_install_file(DRUPAL_ROOT . '/' . $site_directory, FILE_EXIST|FILE_READABLE|FILE_WRITABLE|FILE_EXECUTABLE, 'dir')) {
+  if (!drupal_verify_install_file(\Drupal::root() . '/' . $site_directory, FILE_EXIST|FILE_READABLE|FILE_WRITABLE|FILE_EXECUTABLE, 'dir')) {
     $requirements['simpletest_site_directory'] = array(
       'title' => t('Simpletest site directory'),
-      'value' => is_dir(DRUPAL_ROOT . '/' . $site_directory) ? t('Not writable') : t('Missing'),
+      'value' => is_dir(\Drupal::root() . '/' . $site_directory) ? t('Not writable') : t('Missing'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('The testing framework requires the !sites-simpletest directory to exist and be writable in order to run tests.', array(
         '!sites-simpletest' => '<code>./' . String::checkPlain($site_directory) . '</code>',
       )),
     );
   }
-  elseif (!file_save_htaccess(DRUPAL_ROOT . '/' . $site_directory, FALSE)) {
+  elseif (!file_save_htaccess(\Drupal::root() . '/' . $site_directory, FALSE)) {
     $requirements['simpletest_site_directory'] = array(
       'title' => t('Simpletest site directory'),
       'value' => t('Not protected'),

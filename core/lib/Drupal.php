@@ -153,6 +153,15 @@ class Drupal {
   }
 
   /**
+   * Gets the app root.
+   *
+   * @return string
+   */
+  public static function root() {
+    return static::$container->get('app.root');
+  }
+
+  /**
    * Indicates if there is a currently active request object.
    *
    * @return bool

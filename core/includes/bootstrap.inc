@@ -277,7 +277,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     }
     // If still unknown, perform a filesystem scan.
     if (!isset($files[$type][$name])) {
-      $listing = new ExtensionDiscovery();
+      $listing = new ExtensionDiscovery(DRUPAL_ROOT);
       // Prevent an infinite recursion by this legacy function.
       if ($original_type == 'profile') {
         $listing->setProfileDirectories(array());
@@ -1190,7 +1190,7 @@ function _current_path($path = NULL) {
  */
 function drupal_classloader_register($name, $path) {
   $loader = \Drupal::service('class_loader');
-  $loader->addPsr4('Drupal\\' . $name . '\\', DRUPAL_ROOT . '/' . $path . '/src');
+  $loader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
 }
 
 /**

@@ -44,9 +44,12 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp() {
+    parent::setUp();
+
     $this->kernel = $this->getMock('Drupal\Core\DrupalKernelInterface');
+
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->moduleHandler = new ModuleHandler(array(
+    $this->moduleHandler = new ModuleHandler($this->root, array(
       'module_handler_test' => array(
         'type' => 'module',
         'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
@@ -97,6 +100,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testModuleReloading() {
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
+        $this->root,
         array(
           'module_handler_test' => array(
             'type' => 'module',
@@ -141,7 +145,7 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testGetModuleList() {
     $this->assertEquals($this->moduleHandler->getModuleList(), array(
-      'module_handler_test' => new Extension('module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
+      'module_handler_test' => new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
     ));
   }
 
@@ -151,7 +155,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::getModule
    */
   public function testGetModuleWithExistingModule() {
-    $this->assertEquals($this->moduleHandler->getModule('module_handler_test'), new Extension('module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
+    $this->assertEquals($this->moduleHandler->getModule('module_handler_test'), new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
   }
 
   /**
@@ -171,7 +175,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testSetModuleList() {
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->kernel, $this->cacheBackend
+        $this->root, array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -199,7 +203,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->kernel, $this->cacheBackend
+        $this->root, array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -221,7 +225,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(), $this->kernel, $this->cacheBackend
+        $this->root, array(), $this->kernel, $this->cacheBackend
       ))
       ->setMethods(array('resetImplementations'))
       ->getMock();
@@ -251,6 +255,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->assertTrue(true);
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
+        $this->root,
         array(
           'module_handler_test' => array(
             'type' => 'module',
@@ -332,7 +337,7 @@ class ModuleHandlerTest extends UnitTestCase {
     // Ensure buildImplementationInfo doesn't get called and that we work off cached results.
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(
+        $this->root, array(
           'module_handler_test' => array(
             'type' => 'module',
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
@@ -367,7 +372,7 @@ class ModuleHandlerTest extends UnitTestCase {
     // Ensure buildImplementationInfo doesn't get called and that we work off cached results.
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->setConstructorArgs(array(
-        array(
+        $this->root, array(
           'module_handler_test' => array(
             'type' => 'module',
             'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
@@ -512,6 +517,6 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testGetModuleDirectories() {
     $this->moduleHandler->setModuleList(array());
     $this->moduleHandler->addModule('module', 'place');
-    $this->assertEquals(array('module' => DRUPAL_ROOT . '/place'), $this->moduleHandler->getModuleDirectories());
+    $this->assertEquals(array('module' => $this->root . '/place'), $this->moduleHandler->getModuleDirectories());
   }
 }

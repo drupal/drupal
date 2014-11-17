@@ -293,7 +293,7 @@ class UrlGeneratorTest extends UnitTestCase {
         // To reproduce the values install Drupal like that and use a debugger.
         $server = [
           'SCRIPT_NAME' => '/subdir/index.php',
-          'SCRIPT_FILENAME' => DRUPAL_ROOT . '/index.php',
+          'SCRIPT_FILENAME' => $this->root . '/index.php',
           'SERVER_NAME' => 'http://www.example.com',
         ];
         $request = Request::create('/subdir/' . $script_path, 'GET', [], [], [], $server);

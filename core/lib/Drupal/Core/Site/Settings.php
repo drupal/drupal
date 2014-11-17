@@ -85,6 +85,8 @@ final class Settings {
   /**
    * Bootstraps settings.php and the Settings singleton.
    *
+   * @param string $app_root
+   *   The app root.
    * @param string $site_path
    *   The current site path.
    * @param \Composer\Autoload\ClassLoader $class_loader
@@ -94,7 +96,7 @@ final class Settings {
    *
    * @see default.settings.php
    */
-  public static function initialize($site_path, &$class_loader) {
+  public static function initialize($app_root, $site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
     global $base_url, $cookie_domain, $config_directories, $config;
     $settings = array();
@@ -102,8 +104,8 @@ final class Settings {
     $databases = array();
 
     // Make conf_path() available as local variable in settings.php.
-    if (is_readable(DRUPAL_ROOT . '/' . $site_path . '/settings.php')) {
-      require DRUPAL_ROOT . '/' . $site_path . '/settings.php';
+    if (is_readable($app_root . '/' . $site_path . '/settings.php')) {
+      require $app_root . '/' . $site_path . '/settings.php';
     }
 
     // Initialize Database.

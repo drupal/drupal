@@ -41,8 +41,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
-    $container->setParameter('app.root', DRUPAL_ROOT);
-
     $this->registerUuid($container);
     $this->registerTest($container);
 

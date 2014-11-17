@@ -49,6 +49,8 @@ class RegistryTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    parent::setUp();
+
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
@@ -65,7 +67,7 @@ class RegistryTest extends UnitTestCase {
     $this->registry->setBaseThemes(array());
 
     // Include the module so that hook_theme can be called.
-    include_once DRUPAL_ROOT . '/core/modules/system/tests/modules/theme_test/theme_test.module';
+    include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     $this->moduleHandler->expects($this->once())
       ->method('getImplementations')
       ->with('theme')
@@ -96,7 +98,7 @@ class RegistryTest extends UnitTestCase {
   }
 
   protected function setupTheme($theme_name = NULL) {
-    $this->registry = new TestRegistry($this->cache, $this->lock, $this->moduleHandler, $theme_name);
+    $this->registry = new TestRegistry($this->root, $this->cache, $this->lock, $this->moduleHandler, $theme_name);
   }
 
 }

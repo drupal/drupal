@@ -82,8 +82,17 @@ class FormCache implements FormCacheInterface {
   protected $requestPolicy;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new FormCache.
    *
+   * @param string $root
+   *   The app root.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The key value expirable factory, used to create key value expirable
    *   stores for the form cache and form state cache.
@@ -102,7 +111,8 @@ class FormCache implements FormCacheInterface {
    * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
    *   A policy rule determining the cacheability of a request.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, ConfigFactoryInterface $config_factory, RequestStack $request_stack, RequestPolicyInterface $request_policy) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, ConfigFactoryInterface $config_factory, RequestStack $request_stack, RequestPolicyInterface $request_policy) {
+    $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
@@ -160,7 +170,7 @@ class FormCache implements FormCacheInterface {
           $this->moduleHandler->loadInclude($file['module'], $file['type'], $file['name']);
         }
         elseif (file_exists($file)) {
-          require_once DRUPAL_ROOT . '/' . $file;
+          require_once $this->root . '/' . $file;
         }
       }
       // Retrieve the list of previously known safe strings and store it for

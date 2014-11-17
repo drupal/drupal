@@ -29,8 +29,8 @@ class UserAccountFormFieldsTest extends DrupalUnitTestBase {
    * Tests the root user account form section in the "Configure site" form.
    */
   function testInstallConfigureForm() {
-    require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
+    require_once \Drupal::root() . '/core/includes/install.core.inc';
+    require_once \Drupal::root() . '/core/includes/install.inc';
     $install_state = install_state_defaults();
     $form_state = new FormState();
     $form_state->addBuildInfo('args', [&$install_state]);

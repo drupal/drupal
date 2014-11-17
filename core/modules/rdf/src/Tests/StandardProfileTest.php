@@ -131,7 +131,7 @@ class StandardProfileTest extends WebTestBase {
     $this->term->save();
 
     // Create image.
-    file_unmanaged_copy(DRUPAL_ROOT . '/core/misc/druplicon.png', 'public://example.jpg');
+    file_unmanaged_copy(\Drupal::root() . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = entity_create('file', array('uri' => 'public://example.jpg'));
     $this->image->save();
 
