@@ -1,8 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.article.body
+    - field.field.node.article.comment
+    - field.field.node.article.field_image
+    - field.field.node.article.field_tags
+    - node.type.article
+  module:
+    - comment
+    - image
+    - taxonomy
+    - text
+    - user
 id: node.article.default
+label: null
 targetEntityType: node
 bundle: article
 mode: default
-status: true
 content:
   field_image:
     type: image
@@ -24,14 +39,17 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-dependencies:
-  config:
-    - field.field.node.article.body
-    - field.field.node.article.field_image
-    - field.field.node.article.field_tags
-    - node.type.article
-  module:
-    - comment
-    - image
-    - taxonomy
-    - text
+  comment:
+    label: above
+    type: comment_default
+    weight: 20
+    settings:
+      pager_id: '0'
+    third_party_settings: {  }
+  links:
+    weight: 100
+hidden:
+  langcode: true
+  field_image: true
+  field_tags: true
+third_party_settings: {  }

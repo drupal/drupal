@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.forum.body
+    - field.field.node.forum.comment_forum
+    - field.field.node.forum.taxonomy_forums
+    - node.type.forum
+  module:
+    - comment
+    - taxonomy
+    - text
+    - user
+id: node.forum.default
+label: null
+targetEntityType: node
+bundle: forum
+mode: default
+content:
+  taxonomy_forums:
+    type: taxonomy_term_reference_link
+    weight: 10
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  comment_forum:
+    label: hidden
+    type: comment_default
+    weight: 20
+    settings:
+      pager_id: '0'
+    third_party_settings: {  }
+  body:
+    label: hidden
+    type: text_default
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 101
+hidden:
+  langcode: true
+third_party_settings: {  }

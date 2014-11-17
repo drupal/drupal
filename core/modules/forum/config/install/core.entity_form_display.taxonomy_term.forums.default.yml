@@ -1,8 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.forums
+  module:
+    - text
 id: taxonomy_term.forums.default
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default
-status: true
 content:
   name:
     type: string_textfield
@@ -14,8 +20,7 @@ content:
   description:
     type: text_textfield
     weight: 0
-    settings: { }
+    settings: {  }
     third_party_settings: {  }
-dependencies:
-  config:
-    - taxonomy.vocabulary.forums
+hidden: {  }
+third_party_settings: {  }

@@ -48,6 +48,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     // Create a node type for testing.
     $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));
     $type->save();
+    node_add_body_field($type);
   }
 
   /**

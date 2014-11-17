@@ -22,7 +22,9 @@ abstract class MigrateNodeTestBase extends MigrateDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    entity_create('node_type', array('type' => 'test_planet'))->save();
+    $node_type = entity_create('node_type', array('type' => 'test_planet'));
+    $node_type->save();
+    node_add_body_field($node_type);
     $node_type = entity_create('node_type', array('type' => 'story'));
     $node_type->save();
     node_add_body_field($node_type);

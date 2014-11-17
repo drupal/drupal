@@ -9,6 +9,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_install().
@@ -22,65 +23,15 @@ function forum_install() {
   \Drupal::state()->set('node.type.locked', $locked);
 
   if (!\Drupal::service('config.installer')->isSyncing()) {
-    // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
-    // is being enabled at the same time as taxonomy after both modules have been
-    // enabled, the field might exist but still be marked inactive.
-    if (!FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
-      entity_create('field_storage_config', array(
-        'field_name' => 'taxonomy_forums',
-        'entity_type' => 'node',
-        'type' => 'taxonomy_term_reference',
-        'settings' => array(
-          'allowed_values' => array(
-            array(
-              'vocabulary' => 'forums',
-              'parent' => 0,
-            ),
-          ),
-        ),
-      ))->save();
-
-      // Create a default forum so forum posts can be created.
-      $term = entity_create('taxonomy_term', array(
-        'name' => t('General discussion'),
-        'description' => '',
-        'parent' => array(0),
-        'vid' => 'forums',
-        'forum_container' => 0,
-      ));
-      $term->save();
-
-      // Create the instance on the bundle.
-      entity_create('field_config', array(
-        'field_name' => 'taxonomy_forums',
-        'entity_type' => 'node',
-        'label' => 'Forums',
-        'bundle' => 'forum',
-        'required' => TRUE,
-      ))->save();
-
-      // Assign form display settings for the 'default' form mode.
-      entity_get_form_display('node', 'forum', 'default')
-        ->setComponent('taxonomy_forums', array(
-          'type' => 'options_select',
-        ))
-        ->save();
-
-      // Assign display settings for the 'default' and 'teaser' view modes.
-      entity_get_display('node', 'forum', 'default')
-        ->setComponent('taxonomy_forums', array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ))
-        ->save();
-
-      entity_get_display('node', 'forum', 'teaser')
-        ->setComponent('taxonomy_forums', array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ))
-        ->save();
-    }
+    // Create a default forum so forum posts can be created.
+    $term = Term::create(array(
+      'name' => t('General discussion'),
+      'description' => '',
+      'parent' => array(0),
+      'vid' => 'forums',
+      'forum_container' => 0,
+    ));
+    $term->save();
     // Add the comment field to the forum node type.
     $field_storages = entity_load_multiple_by_properties('field_storage_config', array(
       'type' => 'comment',

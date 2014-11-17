@@ -2,49 +2,23 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.article.body
-    - field.field.node.article.comment
-    - field.field.node.article.field_image
-    - field.field.node.article.field_tags
-    - node.type.article
+    - field.field.node.page.body
+    - node.type.page
   module:
-    - comment
     - entity_reference
-    - image
     - path
-    - taxonomy
     - text
-id: node.article.default
+id: node.page.default
 targetEntityType: node
-bundle: article
+bundle: page
 mode: default
 content:
   title:
     type: string_textfield
-    weight: 0
+    weight: -5
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  body:
-    type: text_textarea_with_summary
-    weight: 1
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-    third_party_settings: {  }
-  field_tags:
-    type: taxonomy_autocomplete
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-  field_image:
-    type: image_image
-    weight: 4
-    settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
@@ -72,15 +46,18 @@ content:
       display_label: '1'
     weight: 16
     third_party_settings: {  }
-  comment:
-    type: comment_default
-    weight: 20
-    settings: {  }
-    third_party_settings: {  }
   path:
     type: path
     weight: 30
     settings: {  }
+    third_party_settings: {  }
+  body:
+    type: text_textarea_with_summary
+    weight: 31
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
     third_party_settings: {  }
 hidden: {  }
 third_party_settings: {  }

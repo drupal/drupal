@@ -39,11 +39,10 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
    * Tests configuration renaming.
    */
   public function testConfigurationRename() {
-    $content_type = entity_create('node_type', array(
+    $content_type = $this->drupalCreateContentType(array(
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ));
-    $content_type->save();
     $staged_type = $content_type->type;
 
     // Check the default status value for a node of this type.

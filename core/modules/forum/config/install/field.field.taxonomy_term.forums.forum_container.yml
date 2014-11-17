@@ -1,19 +1,21 @@
-id: taxonomy_term.forums.forum_container
-status: true
 langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.forum_container
+    - taxonomy.vocabulary.forums
+id: taxonomy_term.forums.forum_container
+field_name: forum_container
 entity_type: taxonomy_term
 bundle: forums
-field_name: forum_container
 label: Container
 description: ''
 required: true
+translatable: true
 default_value:
   -
     value: 0
 default_value_callback: ''
 settings: {  }
+third_party_settings: {  }
 field_type: boolean
-dependencies:
-  config:
-    - field.storage.taxonomy_term.forum_container
-    - taxonomy.vocabulary.forums

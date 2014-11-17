@@ -364,11 +364,10 @@ class ManageDisplayTest extends FieldUiTestBase {
    */
   function testNoFieldsDisplayOverview() {
     // Create a fresh content type without any fields.
-    $this->drupalCreateContentType(array(
+    entity_create('node_type', array(
       'type' => 'no_fields',
       'name' => 'No fields',
-      'create_body' => FALSE,
-    ));
+    ))->save();
 
     $this->drupalGet('admin/structure/types/manage/no_fields/display');
     $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => \Drupal::url('field_ui.overview_node', array('node_type' => 'no_fields')))));

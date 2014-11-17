@@ -66,6 +66,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
       'name' => 'Node type one',
     ));
     $content_type->save();
+    node_add_body_field($content_type);
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $staging */
@@ -84,6 +85,7 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
       'name' => 'Node type two',
     ));
     $content_type->save();
+    node_add_body_field($content_type);
 
     $this->configImporter->reset();
     // A node type, a field, an entity view display and an entity form display

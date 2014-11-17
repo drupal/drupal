@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.forum.body
+    - field.field.node.forum.comment_forum
+    - field.field.node.forum.taxonomy_forums
+    - node.type.forum
+  module:
+    - taxonomy
+    - text
+    - user
+id: node.forum.teaser
+label: null
+targetEntityType: node
+bundle: forum
+mode: teaser
+content:
+  taxonomy_forums:
+    type: taxonomy_term_reference_link
+    weight: 10
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 100
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  links:
+    weight: 101
+hidden:
+  langcode: true
+  comment_forum: true
+third_party_settings: {  }

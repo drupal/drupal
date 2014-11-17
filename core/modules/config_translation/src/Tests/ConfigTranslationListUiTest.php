@@ -232,11 +232,10 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doContentTypeListTest() {
     // Create a test content type to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $content_type = entity_create('node_type', array(
+    $content_type = $this->drupalCreateContentType(array(
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ));
-    $content_type->save();
 
     // Get the content type listing.
     $this->drupalGet('admin/structure/types');
@@ -383,11 +382,10 @@ class ConfigTranslationListUiTest extends WebTestBase {
    */
   public function doFieldListTest() {
     // Create a base content type.
-    $content_type = entity_create('node_type', array(
+    $content_type = $this->drupalCreateContentType(array(
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ));
-    $content_type->save();
 
     // Look at a few fields on a few entity types.
     $pages = array(
