@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\text\Tests\TextSummaryItemTest.
+ * Contains \Drupal\text\Tests\TextWithSummaryItemTest.
  */
 
 namespace Drupal\text\Tests;
