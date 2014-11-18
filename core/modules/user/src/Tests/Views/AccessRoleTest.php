@@ -61,6 +61,24 @@ class AccessRoleTest extends AccessTestBase {
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
     $this->assertResponse(200);
+
+    // Test allowing multiple roles.
+    $view = Views::getView('test_access_role')->storage;
+    $display = &$view->getDisplay('default');
+    $display['display_options']['access']['options']['role'] = array(
+      $this->normalRole => $this->normalRole,
+      'anonymous' => 'anonymous',
+    );
+    $view->save();
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet('test-role');
+    $this->assertResponse(403);
+    $this->drupalLogout();
+    $this->drupalGet('test-role');
+    $this->assertResponse(200);
+    $this->drupalLogin($this->normalUser);
+    $this->drupalGet('test-role');
+    $this->assertResponse(200);
   }
 
 }

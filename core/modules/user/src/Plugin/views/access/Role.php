@@ -43,7 +43,7 @@ class Role extends AccessPluginBase {
    */
   public function alterRouteDefinition(Route $route) {
     if ($this->options['role']) {
-      $route->setRequirement('_role', (string) implode(',', $this->options['role']));
+      $route->setRequirement('_role', (string) implode('+', $this->options['role']));
     }
   }
 
