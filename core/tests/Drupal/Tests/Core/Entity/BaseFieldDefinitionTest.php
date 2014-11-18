@@ -295,7 +295,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   public function testDefaultValueCallback() {
     $definition = BaseFieldDefinition::create($this->fieldType);
     $callback = get_class($this) . '::mockDefaultValueCallback';
-    $definition->setDefaultValueCallback($callback);
+    // setDefaultValueCallback returns $this.
+    $this->assertSame($definition, $definition->setDefaultValueCallback($callback));
   }
 
   /**
@@ -306,7 +307,10 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   public function testInvalidDefaultValueCallback() {
     $definition = BaseFieldDefinition::create($this->fieldType);
-    $definition->setDefaultValueCallback([get_class($this), 'mockDefaultValueCallback']);
+    // setDefaultValueCallback returns $this.
+    $this->assertSame($definition,
+      $definition->setDefaultValueCallback([get_class($this), 'mockDefaultValueCallback'])
+    );
   }
 
   /**
@@ -316,7 +320,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   public function testNullDefaultValueCallback() {
     $definition = BaseFieldDefinition::create($this->fieldType);
-    $definition->setDefaultValueCallback(NULL);
+    // setDefaultValueCallback returns $this.
+    $this->assertSame($definition, $definition->setDefaultValueCallback(NULL));
   }
 
   /**

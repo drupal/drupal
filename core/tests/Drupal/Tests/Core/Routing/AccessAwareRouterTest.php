@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Routing\Router
+ * @coversDefaultClass \Drupal\Core\Routing\AccessAwareRouter
  * @group Routing
  */
 class AccessAwareRouterTest extends UnitTestCase {

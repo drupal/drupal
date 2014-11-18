@@ -53,7 +53,8 @@ class CacheTest extends UnitTestCase {
     if ($expected_exception_message !== FALSE) {
       $this->setExpectedException('LogicException', $expected_exception_message);
     }
-    Cache::validateTags($tags);
+    // If it doesn't throw an exception, validateTags() returns NULL.
+    $this->assertNull(Cache::validateTags($tags));
   }
 
   /**

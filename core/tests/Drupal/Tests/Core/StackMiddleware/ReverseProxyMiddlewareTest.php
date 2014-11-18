@@ -51,7 +51,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
   /**
    * Tests that subscriber sets trusted headers when reverse proxy is set.
    *
-   * @dataProvider testReverseProxyEnabledProvider
+   * @dataProvider reverseProxyEnabledProvider
    */
   public function testReverseProxyEnabled($provided_settings) {
       // Enable reverse proxy and add test values.
@@ -62,7 +62,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
   /**
    * Data provider for testReverseProxyEnabled.
    */
-  public function testReverseProxyEnabledProvider() {
+  public function reverseProxyEnabledProvider() {
     return array(
       array(
         array(
