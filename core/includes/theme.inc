@@ -1608,17 +1608,6 @@ function _template_preprocess_default_variables() {
     'logged_in' => FALSE,
   );
 
-  // drupal_is_front_page() might throw an exception.
-  try {
-    $variables['is_front'] = drupal_is_front_page();
-  }
-  catch (Exception $e) {
-    // If the database is not yet available, set default values for these
-    // variables.
-    $variables['is_front'] = FALSE;
-    $variables['db_is_active'] = FALSE;
-  }
-
   // Give modules a chance to alter the default template variables.
   \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
 
@@ -1774,6 +1763,16 @@ function template_preprocess_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
 
+  // An exception might be thrown.
+  try {
+    $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  }
+  catch (Exception $e) {
+    // If the database is not yet available, set default values for these
+    // variables.
+    $variables['is_front'] = FALSE;
+    $variables['db_is_active'] = FALSE;
+  }
   if (!defined('MAINTENANCE_MODE')) {
     $variables['action_links']   = menu_get_local_actions();
     $variables['tabs']           = menu_local_tabs();
