@@ -53,8 +53,8 @@ interface MailInterface {
    *   - subject: Subject of the email to be sent. This must not contain any
    *     newline characters, or the mail may not be sent properly.
    *   - body: Message to be sent. Accepts both CRLF and LF line-endings.
-   *     Email bodies must be wrapped. You can use drupal_wrap_mail() for
-   *     smart plain text wrapping.
+   *     Email bodies must be wrapped. For smart plain text wrapping you can use
+   *     \Drupal\Core\Mail\MailFormatHelper::wrapMail() .
    *   - headers: Associative array containing all additional mail headers not
    *     defined by one of the other parameters.  PHP's mail() looks for Cc and
    *     Bcc headers and sends the mail to addresses in these headers too.

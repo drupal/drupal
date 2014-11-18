@@ -362,28 +362,31 @@ class HtmlToTextTest extends WebTestBase {
   }
 
   /**
-   * Tests that drupal_wrap_mail() removes trailing whitespace before newlines.
+   * Tests that trailing whitespace is removed before newlines.
+   *
+   * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
   public function testRemoveTrailingWhitespace() {
     $text = "Hi there! \nHerp Derp";
-    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertNotEqual(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
   }
 
   /**
-   * Tests that drupal_wrap_mail() does not remove the trailing whitespace from
-   * Usenet style signatures.
+   * Tests that trailing whitespace from Usenet style signatures is not removed.
    *
    * RFC 3676 says, "This is a special case; an (optionally quoted or quoted and
    * stuffed) line consisting of DASH DASH SP is neither fixed nor flowed."
+   *
+   * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
   public function testUsenetSignature() {
     $text = "Hi there!\n-- \nHerp Derp";
-    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertEqual("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
 
     $text = "Hi there!\n--  \nHerp Derp";
-    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertEqual("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
   }
 }

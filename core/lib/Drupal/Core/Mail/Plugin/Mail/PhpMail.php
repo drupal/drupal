@@ -38,7 +38,7 @@ class PhpMail implements MailInterface {
     // Convert any HTML to plain-text.
     $message['body'] = MailFormatHelper::htmlToText($message['body']);
     // Wrap the mail body for sending.
-    $message['body'] = drupal_wrap_mail($message['body']);
+    $message['body'] = MailFormatHelper::wrapMail($message['body']);
 
     return $message;
   }
