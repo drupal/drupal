@@ -35,12 +35,20 @@ class CommentTypeForm extends EntityForm {
   protected $logger;
 
   /**
+   * The comment manager.
+   *
+   * @var \Drupal\comment\CommentManagerInterface
+   */
+  protected $commentManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('logger.factory')->get('comment')
+      $container->get('logger.factory')->get('comment'),
+      $container->get('comment.manager')
     );
   }
 
@@ -51,10 +59,13 @@ class CommentTypeForm extends EntityForm {
    *   The entity manager service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   *   The comment manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LoggerInterface $logger) {
+  public function __construct(EntityManagerInterface $entity_manager, LoggerInterface $logger, CommentManagerInterface $comment_manager) {
     $this->entityManager = $entity_manager;
     $this->logger = $logger;
+    $this->commentManager = $comment_manager;
   }
 
   /**
@@ -156,6 +167,7 @@ class CommentTypeForm extends EntityForm {
       $this->logger->notice('Comment type %label has been updated.', array('%label' => $comment_type->label(), 'link' => $edit_link));
     }
     else {
+      $this->commentManager->addBodyField($comment_type->id());
       drupal_set_message(t('Comment type %label has been added.', array('%label' => $comment_type->label())));
       $this->logger->notice('Comment type %label has been added.', array('%label' => $comment_type->label(), 'link' =>  $edit_link));
     }

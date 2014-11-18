@@ -92,14 +92,4 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
     return $this->target_entity_type_id;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-    if (!$update && !$this->isSyncing()) {
-      \Drupal::service('comment.manager')->addBodyField($this->id());
-    }
-  }
-
 }

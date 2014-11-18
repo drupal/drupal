@@ -5,10 +5,7 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\comment\CommentManagerInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -32,29 +29,6 @@ function forum_install() {
       'forum_container' => 0,
     ));
     $term->save();
-    // Add the comment field to the forum node type.
-    $field_storages = entity_load_multiple_by_properties('field_storage_config', array(
-      'type' => 'comment',
-      'field_name' => 'comment_forum',
-      'include_deleted' => FALSE,
-    ));
-    if (empty($field_storages)) {
-      Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', CommentItemInterface::OPEN, 'comment_forum');
-
-      // Add here because we don't have param in addDefaultField function.
-      $field = FieldConfig::loadByName('node', 'forum', 'comment_forum');
-      $field->settings['default_mode'] = CommentManagerInterface::COMMENT_MODE_FLAT;
-      $field->save();
-
-      // Hide label for comment field.
-      entity_get_display('node', 'forum', 'default')
-        ->setComponent('comment_forum', array(
-          'label' => 'hidden',
-          'type' => 'comment_default',
-          'weight' => 20,
-        ))
-        ->save();
-    }
   }
 }
 

@@ -28,16 +28,13 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     parent::setUp();
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
-    $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
-      'id' => 'comment',
-      'label' => 'comment',
-      'target_entity_type_id' => 'node',
-    ))->save();
+    \Drupal::service('comment.manager')->addDefaultField('node', 'story');
     $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
       'id' => 'comment_no_subject',
       'label' => 'comment_no_subject',
       'target_entity_type_id' => 'node',
     ))->save();
+    \Drupal::service('comment.manager')->addBodyField('comment_no_subject');
 
     $node = entity_create('node', array(
       'type' => 'story',
@@ -55,7 +52,6 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    \Drupal::service('comment.manager')->addDefaultField('node', 'story');
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment');
 

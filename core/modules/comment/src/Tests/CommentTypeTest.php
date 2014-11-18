@@ -109,6 +109,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Manage fields');
     $this->assertUrl(\Drupal::url('field_ui.overview_comment', array('comment_type' => 'comment'), array('absolute' => TRUE)), [], 'Original machine name was used in URL.');
+    $this->assertTrue($this->cssSelect('tr#comment-body'), 'Body field exists.');
 
     // Remove the body field.
     $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete', array(), t('Delete'));
@@ -116,7 +117,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalPostForm('admin/structure/comment/manage/comment', array(), t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('admin/structure/comment/manage/comment/fields');
-    $this->assertNoRaw('comment_body', 'Body field was not found.');
+    $this->assertFalse($this->cssSelect('tr#comment-body'), 'Body field does not exist.');
   }
 
   /**

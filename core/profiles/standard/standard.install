@@ -23,14 +23,6 @@ function standard_install() {
   // Set front page to "node".
   \Drupal::config('system.site')->set('page.front', 'node')->save();
 
-  // Add comment field to article node type.
-  \Drupal::service('comment.manager')->addDefaultField('node', 'article', 'comment', CommentItemInterface::OPEN);
-
-  // Hide the comment field in the rss view mode.
-  entity_get_display('node', 'article', 'rss')
-    ->removeComponent('comment')
-    ->save();
-
   // Allow visitor account creation with administrative approval.
   $user_settings = \Drupal::config('user.settings');
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();

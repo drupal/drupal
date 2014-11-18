@@ -40,9 +40,10 @@ class CommentFieldsTest extends CommentTestBase {
 
     $field->delete();
 
-    // Check that the 'comment_body' field is deleted.
+    // Check that the 'comment_body' field is not deleted since it is persisted
+    // even if it has no fields.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $this->assertTrue(empty($field_storage), 'The comment_body field was deleted');
+    $this->assertTrue($field_storage, 'The comment_body field storage was not deleted');
 
     // Create a new content type.
     $type_name = 'test_node_type_2';

@@ -29,7 +29,6 @@ class CommentValidationTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('comment');
     $this->installSchema('comment', array('comment_entity_statistics'));
   }
 

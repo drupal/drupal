@@ -36,6 +36,8 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('comment');
     $this->installSchema('comment', array('comment_entity_statistics'));
+    // Create the comment body field storage.
+    $this->installConfig(array('field'));
   }
 
   /**

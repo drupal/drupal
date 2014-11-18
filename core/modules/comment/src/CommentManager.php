@@ -217,24 +217,13 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function addBodyField($comment_type_id) {
-    // Create the field if needed.
-    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    if (!$field_storage) {
-      $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
-        'field_name' => 'comment_body',
-        'type' => 'text_long',
-        'entity_type' => 'comment',
-      ));
-      $field_storage->save();
-    }
     if (!FieldConfig::loadByName('comment', $comment_type_id, 'comment_body')) {
       // Attaches the body field by default.
       $field = $this->entityManager->getStorage('field_config')->create(array(
-        'field_name' => 'comment_body',
         'label' => 'Comment',
-        'entity_type' => 'comment',
         'bundle' => $comment_type_id,
         'required' => TRUE,
+        'field_storage' => FieldStorageConfig::loadByName('comment', 'comment_body'),
       ));
       $field->save();
 

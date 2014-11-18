@@ -1,3 +1,10 @@
+langcode: und
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+  module:
+    - comment
 id: comment.comment
 targetEntityType: comment
 bundle: comment
@@ -23,9 +30,4 @@ fieldMappings:
   uid:
     properties:
       - 'schema:author'
-    mapping_type: 'rel'
-dependencies:
-  module:
-    - comment
-  config:
-    - comment.type.comment
+    mapping_type: rel
