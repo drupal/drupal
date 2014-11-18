@@ -231,6 +231,51 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Confirms that generated routes will have aliased paths with options.
+   *
+   * @dataProvider providerTestAliasGenerationWithOptions
+   */
+  public function testAliasGenerationWithOptions($route_name, $route_parameters, $options, $expected) {
+    $url = $this->generator->generateFromRoute($route_name, $route_parameters, $options);
+    $this->assertSame($expected, $url);
+  }
+
+  /**
+   * Provides test data for testAliasGenerationWithOptions.
+   */
+  public function providerTestAliasGenerationWithOptions() {
+    $data = [];
+    // Extra parameters should appear in the query string.
+    $data[] = [
+      'test_1',
+      ['zoo' => '5'],
+      ['fragment' => 'top'],
+      '/hello/world?zoo=5#top',
+    ];
+    $data[] = [
+      'test_2',
+      ['narf' => '5'],
+      ['query' => ['page' => '1'], 'fragment' => 'bottom'],
+      '/goodbye/cruel/world?page=1#bottom',
+    ];
+    // Changing the parameters, the route still matches but there is no alias.
+    $data[] = [
+      'test_2',
+      ['narf' => '7'],
+      ['query' => ['page' => '1'], 'fragment' => 'bottom'],
+      '/test/two/7?page=1#bottom',
+    ];
+    // Query string values containing '/' should be decoded.
+    $data[] = [
+      'test_2',
+      ['narf' => '7'],
+      ['query' => ['page' => '1/2'], 'fragment' => 'bottom'],
+      '/test/two/7?page=1/2#bottom',
+    ];
+    return $data;
+  }
+
+  /**
    * Tests URL generation from route with trailing start and end slashes.
    */
   public function testGetPathFromRouteTrailing() {
