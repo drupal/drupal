@@ -133,7 +133,7 @@ function toolbar_toolbar() {
       ),
     ),
     '#wrapper_attributes' => array(
-      'class' => array('hidden'),
+      'class' => array('hidden', 'home-toolbar-tab'),
     ),
     '#attached' => array(
       'library' => array(
