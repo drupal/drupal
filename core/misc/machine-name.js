@@ -29,6 +29,8 @@
     attach: function (context, settings) {
       var self = this;
       var $context = $(context);
+      var timeout = null;
+      var xhr = null;
 
       function clickEditHandler(e) {
         var data = e.data;
@@ -47,14 +49,29 @@
         var rx = new RegExp(options.replace_pattern, 'g');
         var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
-        if (baseValue.toLowerCase() !== expected) {
-          self.transliterate(baseValue, options).done(function (machine) {
-            self.showMachineName(machine.substr(0, options.maxlength), data);
-          });
+        // Abort the last pending request because the label has changed and it
+        // is no longer valid.
+        if (xhr && xhr.readystate !== 4) {
+          xhr.abort();
+          xhr = null;
         }
-        else {
-          self.showMachineName(expected, data);
+
+        // Wait 300 milliseconds since the last event to update the machine name
+        // i.e., after the user has stopped typing.
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
         }
+        timeout = setTimeout(function () {
+          if (baseValue.toLowerCase() !== expected) {
+            xhr = self.transliterate(baseValue, options).done(function (machine) {
+              self.showMachineName(machine.substr(0, options.maxlength), data);
+            });
+          }
+          else {
+            self.showMachineName(expected, data);
+          }
+        }, 300);
       }
 
       Object.keys(settings.machineName).forEach(function (source_id) {
