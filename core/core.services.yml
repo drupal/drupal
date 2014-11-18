@@ -163,7 +163,7 @@ services:
     arguments: ['@typed_data_manager']
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager', '@logger.channel.cron', '@plugin.manager.queue_worker']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker']
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
     arguments: ['@config.factory']
@@ -1012,6 +1012,9 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@authentication']
+  account_switcher:
+    class: Drupal\Core\Session\AccountSwitcher
+    arguments: ['@current_user', '@session_manager']
   current_user:
     class: Drupal\Core\Session\AccountProxy
     arguments: ['@authentication', '@request_stack']
