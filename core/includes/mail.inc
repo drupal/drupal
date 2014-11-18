@@ -146,27 +146,3 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $reply = 
 function drupal_mail_system($module, $key) {
   return \Drupal::service('plugin.manager.mail')->getInstance(array('module' => $module, 'key' => $key));
 }
-
-/**
- * Performs format=flowed soft wrapping for mail (RFC 3676).
- *
- * We use delsp=yes wrapping, but only break non-spaced languages when
- * absolutely necessary to avoid compatibility issues.
- *
- * We deliberately use LF rather than CRLF, see drupal_mail().
- *
- * @param $text
- *   The plain text to process.
- * @param $indent (optional)
- *   A string to indent the text with. Only '>' characters are repeated on
- *   subsequent wrapped lines. Others are replaced by spaces.
- *
- * @return
- *   The content of the email as a string with formatting applied.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Utility\Mail::wrapMail().
- */
-function drupal_wrap_mail($text, $indent = '') {
-  return MailFormatHelper::wrapMail($text, $indent);
-}
