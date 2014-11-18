@@ -443,7 +443,7 @@ Theme maintainers
 
 Bartik theme
 - Jen Simmons 'jensimmons' http://drupal.org/user/140882
-- Jeff Burns 'Jeff Burnz' http://drupal.org/user/61393
+- Emma Maria Karayiannis 'emma.maria' https://drupal.org/user/2104556
 
 Seven theme
 - Lewis Nyman 'LewisNyman' https://drupal.org/user/751964
