@@ -130,6 +130,34 @@ class PathAliasTest extends PathTestBase {
     $this->assertNoText($alias, 'The untruncated alias was not found.');
     // The 'truncated' alias will always be found.
     $this->assertText($truncated_alias, 'The truncated alias was found.');
+
+    // Create third test node.
+    $node3 = $this->drupalCreateNode();
+
+    // Create absolute path alias.
+    $edit = array();
+    $edit['source'] = 'node/' . $node3->id();
+    $edit['alias'] = '/' . $this->randomMachineName(8);
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+
+    // Confirm that the alias was converted to a relative path.
+    $this->assertNoText($edit['alias'], 'The absolute alias was not found.');
+    // The 'relative' alias will always be found.
+    $this->assertText(trim($edit['alias'], '/'), 'The relative alias was found.');
+
+    // Create fourth test node.
+    $node4 = $this->drupalCreateNode();
+
+    // Create alias with trailing slash.
+    $edit = array();
+    $edit['source'] = 'node/' . $node4->id();
+    $edit['alias'] = $this->randomMachineName(8) . '/';
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+
+    // Confirm that the alias with trailing slash is not found.
+    $this->assertNoText($edit['alias'], 'The absolute alias was not found.');
+    // The alias without trailing flash is found.
+    $this->assertText(trim($edit['alias'], '/'), 'The alias without trailing slash was found.');
   }
 
   /**
@@ -189,6 +217,30 @@ class PathAliasTest extends PathTestBase {
     $this->drupalGet($edit['path[0][alias]']);
     $this->assertNoText($node1->label(), 'Alias was successfully deleted.');
     $this->assertResponse(404);
+
+    // Create third test node.
+    $node3 = $this->drupalCreateNode();
+
+    // Set its path alias to an absolute path.
+    $edit = array('path[0][alias]' => '/' . $this->randomMachineName(8));
+    $this->drupalPostForm('node/' . $node3->id() . '/edit', $edit, t('Save'));
+
+    // Confirm that the alias was converted to a relative path.
+    $this->drupalGet(trim($edit['path[0][alias]'], '/'));
+    $this->assertText($node3->label(), 'Alias became relative.');
+    $this->assertResponse(200);
+
+    // Create fourth test node.
+    $node4 = $this->drupalCreateNode();
+
+    // Set its path alias to have a trailing slash.
+    $edit = array('path[0][alias]' => $this->randomMachineName(8) . '/');
+    $this->drupalPostForm('node/' . $node4->id() . '/edit', $edit, t('Save'));
+
+    // Confirm that the alias was converted to a relative path.
+    $this->drupalGet(trim($edit['path[0][alias]'], '/'));
+    $this->assertText($node4->label(), 'Alias trimmed trailing slash.');
+    $this->assertResponse(200);
   }
 
   /**

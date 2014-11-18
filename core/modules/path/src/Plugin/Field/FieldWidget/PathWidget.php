@@ -58,7 +58,7 @@ class PathWidget extends WidgetBase {
       '#default_value' => $path['alias'],
       '#required' => $element['#required'],
       '#maxlength' => 255,
-      '#description' => $this->t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
+      '#description' => $this->t('The alternative URL for this content. Use a relative path. For example, enter "about" for the about page.'),
     );
     $element['pid'] = array(
       '#type' => 'value',
@@ -84,8 +84,8 @@ class PathWidget extends WidgetBase {
    *   The form state.
    */
   public static function validateFormElement(array &$element, FormStateInterface $form_state) {
-    // Trim the submitted value.
-    $alias = trim($element['alias']['#value']);
+    // Trim the submitted value of whitespace and slashes.
+    $alias = trim(trim($element['alias']['#value']), " \\/");
     if (!empty($alias)) {
       $form_state->setValueForElement($element['alias'], $alias);
 
