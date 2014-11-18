@@ -124,9 +124,9 @@
   {% endif %}
 
   {% if page.featured %}
-    <aside id="featured"><div class="section clearfix">
+    <div id="featured"><aside class="section clearfix" role="complementary">
       {{ page.featured }}
-    </div></aside> <!-- /.section, /#featured -->
+    </aside></div> <!-- /.section, /#featured -->
   {% endif %}
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
@@ -157,13 +157,13 @@
     </section></main> <!-- /.section, /#content -->
 
     {% if page.sidebar_first %}
-      <div id="sidebar-first" class="column sidebar"><aside class="section">
+      <div id="sidebar-first" class="column sidebar"><aside class="section" role="complementary">
         {{ page.sidebar_first }}
       </aside></div><!-- /.section, /#sidebar-first -->
     {% endif %}
 
     {% if page.sidebar_second %}
-      <div id="sidebar-second" class="column sidebar"><aside class="section">
+      <div id="sidebar-second" class="column sidebar"><aside class="section" role="complementary">
         {{ page.sidebar_second }}
       </aside></div><!-- /.section, /#sidebar-second -->
     {% endif %}
@@ -171,7 +171,7 @@
   </div></div><!-- /#main, /#main-wrapper -->
 
   {% if page.triptych_first or page.triptych_middle or page.triptych_last %}
-    <div id="triptych-wrapper"><aside id="triptych" class="clearfix">
+    <div id="triptych-wrapper"><aside id="triptych" class="clearfix" role="complementary">
       {{ page.triptych_first }}
       {{ page.triptych_middle }}
       {{ page.triptych_last }}

@@ -10,7 +10,7 @@ body,
   min-height: 100%;
 }
 #header div.section,
-#featured div.section,
+#featured aside.section,
 #messages div.section,
 #main,
 #triptych,
@@ -140,7 +140,7 @@ body,
 @media all and (min-width: 851px) {
 
   #header div.section,
-  #featured div.section,
+  #featured aside.section,
   #messages div.section,
   #main,
   #triptych,
