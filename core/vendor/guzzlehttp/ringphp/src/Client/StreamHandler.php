@@ -214,10 +214,10 @@ class StreamHandler
 
     private function getDefaultOptions(array $request)
     {
-        $headers = [];
+        $headers = "";
         foreach ($request['headers'] as $name => $value) {
             foreach ((array) $value as $val) {
-                $headers[] = "$name: $val";
+                $headers .= "$name: $val\r\n";
             }
         }
 
@@ -225,7 +225,7 @@ class StreamHandler
             'http' => [
                 'method'           => $request['http_method'],
                 'header'           => $headers,
-                'protocol_version' => '1.1',
+                'protocol_version' => isset($request['version']) ? $request['version'] : 1.1,
                 'ignore_errors'    => true,
                 'follow_location'  => 0,
             ],
@@ -236,9 +236,11 @@ class StreamHandler
             $context['http']['content'] = $body;
             // Prevent the HTTP handler from adding a Content-Type header.
             if (!Core::hasHeader($request, 'Content-Type')) {
-                $context['http']['header'][] .= "Content-Type:";
+                $context['http']['header'] .= "Content-Type:\r\n";
             }
         }
+
+        $context['http']['header'] = rtrim($context['http']['header']);
 
         return $context;
     }

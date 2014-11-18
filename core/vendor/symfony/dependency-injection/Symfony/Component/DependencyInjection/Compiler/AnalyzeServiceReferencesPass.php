@@ -59,7 +59,7 @@ class AnalyzeServiceReferencesPass implements RepeatablePassInterface
     public function process(ContainerBuilder $container)
     {
         $this->container = $container;
-        $this->graph     = $container->getCompiler()->getServiceReferenceGraph();
+        $this->graph = $container->getCompiler()->getServiceReferenceGraph();
         $this->graph->clear();
 
         foreach ($container->getDefinitions() as $id => $definition) {
@@ -80,6 +80,9 @@ class AnalyzeServiceReferencesPass implements RepeatablePassInterface
                 $this->processArguments($definition->getProperties());
                 if ($definition->getConfigurator()) {
                     $this->processArguments(array($definition->getConfigurator()));
+                }
+                if ($definition->getFactory()) {
+                    $this->processArguments(array($definition->getFactory()));
                 }
             }
         }

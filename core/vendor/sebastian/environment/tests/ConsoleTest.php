@@ -62,6 +62,14 @@ class ConsoleTest extends PHPUnit_Framework_TestCase
      */
     public function testCanDetectColorSupport()
     {
-        $this->assertTrue($this->console->hasColorSupport());
+        $this->assertInternalType('boolean', $this->console->hasColorSupport());
+    }
+
+    /**
+     * @covers \SebastianBergmann\Environment\Console::hasColorSupport
+     */
+    public function testCanDetectNumberOfColumns()
+    {
+        $this->assertInternalType('integer', $this->console->getNumberOfColumns());
     }
 }

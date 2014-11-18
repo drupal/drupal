@@ -16,12 +16,18 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  */
 class ProjectServiceContainer extends Container
 {
+    private static $parameters = array(
+            'baz_class' => 'BazClass',
+            'foo_class' => 'Bar\\FooClass',
+            'foo' => 'bar',
+        );
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        parent::__construct(new ParameterBag($this->getDefaultParameters()));
+        parent::__construct(new ParameterBag(self::$parameters));
         $this->methodMap = array(
             'bar' => 'getBarService',
             'baz' => 'getBazService',
@@ -38,7 +44,10 @@ class ProjectServiceContainer extends Container
             'foo_with_inline' => 'getFooWithInlineService',
             'inlined' => 'getInlinedService',
             'method_call1' => 'getMethodCall1Service',
+            'new_factory' => 'getNewFactoryService',
+            'new_factory_service' => 'getNewFactoryServiceService',
             'request' => 'getRequestService',
+            'service_from_static_method' => 'getServiceFromStaticMethodService',
         );
         $this->aliases = array(
             'alias_for_alias' => 'foo',
@@ -266,6 +275,23 @@ class ProjectServiceContainer extends Container
     }
 
     /**
+     * Gets the 'new_factory_service' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \FooBarBaz A FooBarBaz instance.
+     */
+    protected function getNewFactoryServiceService()
+    {
+        $this->services['new_factory_service'] = $instance = $this->get('new_factory')->getInstance();
+
+        $instance->foo = 'bar';
+
+        return $instance;
+    }
+
+    /**
      * Gets the 'request' service.
      *
      * This service is shared.
@@ -276,6 +302,19 @@ class ProjectServiceContainer extends Container
     protected function getRequestService()
     {
         throw new RuntimeException('You have requested a synthetic service ("request"). The DIC does not know how to construct this service.');
+    }
+
+    /**
+     * Gets the 'service_from_static_method' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \Bar\FooClass A Bar\FooClass instance.
+     */
+    protected function getServiceFromStaticMethodService()
+    {
+        return $this->services['service_from_static_method'] = \Bar\FooClass::getInstance();
     }
 
     /**
@@ -332,16 +371,23 @@ class ProjectServiceContainer extends Container
     }
 
     /**
-     * Gets the default parameters.
+     * Gets the 'new_factory' service.
      *
-     * @return array An array of the default parameters
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * This service is private.
+     * If you want to be able to request this service from the container directly,
+     * make it public, otherwise you might end up with broken code.
+     *
+     * @return \FactoryClass A FactoryClass instance.
      */
-    protected function getDefaultParameters()
+    protected function getNewFactoryService()
     {
-        return array(
-            'baz_class' => 'BazClass',
-            'foo_class' => 'Bar\\FooClass',
-            'foo' => 'bar',
-        );
+        $this->services['new_factory'] = $instance = new \FactoryClass();
+
+        $instance->foo = 'bar';
+
+        return $instance;
     }
 }

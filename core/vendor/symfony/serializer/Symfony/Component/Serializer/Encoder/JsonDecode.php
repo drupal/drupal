@@ -41,8 +41,8 @@ class JsonDecode implements DecoderInterface
     /**
      * Constructs a new JsonDecode instance.
      *
-     * @param bool     $associative True to return the result associative array, false for a nested stdClass hierarchy
-     * @param int      $depth       Specifies the recursion depth
+     * @param bool $associative True to return the result associative array, false for a nested stdClass hierarchy
+     * @param int  $depth       Specifies the recursion depth
      */
     public function __construct($associative = false, $depth = 512)
     {
@@ -95,9 +95,9 @@ class JsonDecode implements DecoderInterface
     {
         $context = $this->resolveContext($context);
 
-        $associative    = $context['json_decode_associative'];
+        $associative = $context['json_decode_associative'];
         $recursionDepth = $context['json_decode_recursion_depth'];
-        $options        = $context['json_decode_options'];
+        $options = $context['json_decode_options'];
 
         if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
             $decodedData = json_decode($data, $associative, $recursionDepth, $options);

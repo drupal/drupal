@@ -38,6 +38,21 @@ abstract class AbstractComparisonValidator extends ConstraintValidator
 
         $comparedValue = $constraint->value;
 
+        // Convert strings to DateTimes if comparing another DateTime
+        // This allows to compare with any date/time value supported by
+        // the DateTime constructor:
+        // http://php.net/manual/en/datetime.formats.php
+        if (is_string($comparedValue)) {
+            if ($value instanceof \DatetimeImmutable) {
+                // If $value is immutable, convert the compared value to a
+                // DateTimeImmutable too
+                $comparedValue = new \DatetimeImmutable($comparedValue);
+            } elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
+                // Otherwise use DateTime
+                $comparedValue = new \DateTime($comparedValue);
+            }
+        }
+
         if (!$this->compareValues($value, $comparedValue)) {
             $this->buildViolation($constraint->message)
                 ->setParameter('{{ value }}', $this->formatValue($value, self::OBJECT_TO_STRING | self::PRETTY_DATE))

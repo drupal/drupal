@@ -25,6 +25,7 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\InstantiatorInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\RealServiceInstantiator;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * ContainerBuilder is a DI container that provides an API to easily describe services.
@@ -83,6 +84,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @var ExpressionLanguage|null
      */
     private $expressionLanguage;
+
+    /**
+     * @var ExpressionFunctionProviderInterface[]
+     */
+    private $expressionLanguageProviders = array();
 
     /**
      * Sets the track resources flag.
@@ -462,10 +468,6 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         if ($service = parent::get($id, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
             return $service;
-        }
-
-        if (isset($this->loading[$id])) {
-            throw new LogicException(sprintf('The service "%s" has a circular reference to itself.', $id), 0, $e);
         }
 
         if (!$this->hasDefinition($id) && isset($this->aliasDefinitions[$id])) {
@@ -939,7 +941,19 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         $arguments = $this->resolveServices($parameterBag->unescapeValue($parameterBag->resolveValue($definition->getArguments())));
 
-        if (null !== $definition->getFactoryMethod()) {
+        if (null !== $definition->getFactory()) {
+            $factory = $definition->getFactory();
+
+            if (is_string($factory)) {
+                $callable = $definition->getFactory();
+            } elseif (is_array($factory)) {
+                $callable = array($this->resolveServices($factory[0]), $factory[1]);
+            } else {
+                throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
+            }
+
+            $service = call_user_func_array($callable, $arguments);
+        } elseif (null !== $definition->getFactoryMethod()) {
             if (null !== $definition->getFactoryClass()) {
                 $factory = $parameterBag->resolveValue($definition->getFactoryClass());
             } elseif (null !== $definition->getFactoryService()) {
@@ -1056,6 +1070,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         return array_unique($tags);
     }
 
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    {
+        $this->expressionLanguageProviders[] = $provider;
+    }
+
     /**
      * Returns the Service Conditionals.
      *
@@ -1161,7 +1180,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
                 throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
             }
-            $this->expressionLanguage = new ExpressionLanguage();
+            $this->expressionLanguage = new ExpressionLanguage(null, $this->expressionLanguageProviders);
         }
 
         return $this->expressionLanguage;

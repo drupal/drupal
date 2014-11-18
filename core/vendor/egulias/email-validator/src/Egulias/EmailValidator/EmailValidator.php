@@ -2,8 +2,6 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\Parser\LocalPart;
-
 /**
  * EmailValidator
  *
@@ -97,7 +95,7 @@ class EmailValidator
             return false;
         }
 
-        return ($strict) ? (!$this->hasWarnings() && $dns) : true;
+        return !$strict || (!$this->hasWarnings() && $dns);
     }
 
     /**
@@ -146,16 +144,9 @@ class EmailValidator
 
     protected function checkDNS()
     {
-        $checked = false;
-        if (!function_exists('dns_get_record') && (
-            in_array(self::DNSWARN_NO_RECORD, $this->warnings) &&
-            in_array(self::DNSWARN_NO_MX_RECORD, $this->warnings)
-        )) {
-            return $checked;
-        }
+        $checked = true;
 
         $result = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'MX');
-        $checked = true;
 
         if (!$result) {
             $this->warnings[] = self::DNSWARN_NO_RECORD;

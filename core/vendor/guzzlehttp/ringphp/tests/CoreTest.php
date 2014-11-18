@@ -15,6 +15,22 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(Core::firstHeader([], 'Foo'));
     }
 
+    public function testChecksIfHasHeader()
+    {
+        $message = [
+            'headers' => [
+                'Foo' => ['Bar', 'Baz'],
+                'foo' => ['hello'],
+                'bar' => ['1']
+            ]
+        ];
+        $this->assertTrue(Core::hasHeader($message, 'Foo'));
+        $this->assertTrue(Core::hasHeader($message, 'foo'));
+        $this->assertTrue(Core::hasHeader($message, 'FoO'));
+        $this->assertTrue(Core::hasHeader($message, 'bar'));
+        $this->assertFalse(Core::hasHeader($message, 'barr'));
+    }
+
     public function testReturnsFirstHeaderWhenSimple()
     {
         $this->assertEquals('Bar', Core::firstHeader([
@@ -34,6 +50,19 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'hello',
             Core::header(['headers' => ['foo' => ['hello']]], 'FoO')
+        );
+    }
+
+    public function testExtractsCaseInsensitiveHeaderLines()
+    {
+        $this->assertEquals(
+            ['a', 'b', 'c', 'd'],
+            Core::headerLines([
+                'headers' => [
+                    'foo' => ['a', 'b'],
+                    'Foo' => ['c', 'd']
+                ]
+            ], 'foo')
         );
     }
 

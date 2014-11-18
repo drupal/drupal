@@ -173,4 +173,30 @@ class CompiledRoute extends SymfonyCompiledRoute {
     return $this->route->getRequirements();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    $data = unserialize(parent::serialize());
+    $data['fit'] = $this->fit;
+    $data['patternOutline'] = $this->patternOutline;
+    $data['numParts'] = $this->numParts;
+
+    return serialize($data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized)
+  {
+    parent::unserialize($serialized);
+    $data = unserialize($serialized);
+
+    $this->fit = $data['fit'];
+    $this->patternOutline = $data['patternOutline'];
+    $this->numParts = $data['numParts'];
+  }
+
+
 }

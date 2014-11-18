@@ -76,20 +76,17 @@ class CurlFactory
             $response['effective_url'] = $response['transfer_stats']['url'];
         }
 
-        if (isset($headers[0])) {
+        if (!empty($headers)) {
             $startLine = explode(' ', array_shift($headers), 3);
-            // Trim out 100-Continue start-lines
-            if ($startLine[1] == '100') {
-                $startLine = explode(' ', array_shift($headers), 3);
-            }
-            $response['headers'] = Core::headersFromLines($headers);
+            $headerList = Core::headersFromLines($headers);
+            $response['headers'] = $headerList;
             $response['status'] = isset($startLine[1]) ? (int) $startLine[1] : null;
             $response['reason'] = isset($startLine[2]) ? $startLine[2] : null;
             $response['body'] = $body;
             Core::rewindBody($response);
         }
 
-        return !empty($response['curl']['errno']) || !isset($startLine[1])
+        return !empty($response['curl']['errno']) || !isset($response['status'])
             ? self::createErrorResponse($handler, $request, $response)
             : $response;
     }
@@ -159,6 +156,7 @@ class CurlFactory
     private function getDefaultOptions(array $request, array &$headers)
     {
         $url = Core::url($request);
+        $startingResponse = false;
 
         $options = [
             '_headers'             => $request['headers'],
@@ -167,14 +165,23 @@ class CurlFactory
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_HEADER         => false,
             CURLOPT_CONNECTTIMEOUT => 150,
-            CURLOPT_HEADERFUNCTION => function ($ch, $h) use (&$headers) {
-                $length = strlen($h);
-                if ($value = trim($h)) {
-                    $headers[] = trim($h);
+            CURLOPT_HEADERFUNCTION => function ($ch, $h) use (&$headers, &$startingResponse) {
+                $value = trim($h);
+                if ($value === '') {
+                    $startingResponse = true;
+                } elseif ($startingResponse) {
+                    $startingResponse = false;
+                    $headers = [$value];
+                } else {
+                    $headers[] = $value;
                 }
-                return $length;
+                return strlen($h);
             },
         ];
+
+        if (isset($request['version'])) {
+            $options[CURLOPT_HTTP_VERSION] = $request['version'] == 1.1 ? CURL_HTTP_VERSION_1_1 : CURL_HTTP_VERSION_1_0;
+        }
 
         if (defined('CURLOPT_PROTOCOLS')) {
             $options[CURLOPT_PROTOCOLS] = CURLPROTO_HTTP | CURLPROTO_HTTPS;

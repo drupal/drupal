@@ -43,6 +43,10 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('"user,name"@example.com'),
             array('"user name"@example.com'),
             array('"user@name"@example.com'),
+            array('"\a"@iana.org'),
+            array('"test\ test"@iana.org'),
+            array('""@iana.org'),
+            array('"\""@iana.org'),
         );
     }
 
@@ -57,9 +61,10 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function getInvalidEmails()
     {
         return array(
+
             array('example.@example.co.uk'),
             array('example@example@example.co.uk'),
-            array('(fabien_potencier@example.fr)'),
+            array('(test_exampel@example.fr)'),
             array('example(example)example@example.co.uk'),
             array('.example@localhost'),
             array('ex\ample@localhost'),
@@ -72,6 +77,27 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('username@example,com'),
             array('usern,ame@example.com'),
             array('user[na]me@example.com'),
+            array('"""@iana.org'),
+            array('"\"@iana.org'),
+            array('"test"test@iana.org'),
+            array('"test""test"@iana.org'),
+            array('"test"."test"@iana.org'),
+            array('"test".test@iana.org'),
+            array('"test"' . chr(0) . '@iana.org'),
+            array('"test\"@iana.org'),
+            array(chr(226) . '@iana.org'),
+            array('test@' . chr(226) . '.org'),
+            array('\r\ntest@iana.org'),
+            array('\r\n test@iana.org'),
+            array('\r\n \r\ntest@iana.org'),
+            array('\r\n \r\ntest@iana.org'),
+            array('\r\n \r\n test@iana.org'),
+            array('test@iana.org \r\n'),
+            array('test@iana.org \r\n '),
+            array('test@iana.org \r\n \r\n'),
+            array('test@iana.org \r\n\r\n'),
+            array('test@iana.org  \r\n\r\n '),
+            array('test@iana/icann.org'),
         );
     }
 
@@ -120,6 +146,16 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidEmailsWithWarningsCheck($warnings, $email)
     {
         $this->assertTrue($this->validator->isValid($email, true));
+
+        $this->assertEquals($warnings, $this->validator->getWarnings());
+    }
+
+    /**
+     * @dataProvider getInvalidEmailsWithWarnings
+     */
+    public function testInvalidEmailsWithDnsCheckAndStrictMode($warnings, $email)
+    {
+        $this->assertFalse($this->validator->isValid($email, true, true));
 
         $this->assertEquals($warnings, $this->validator->getWarnings());
     }
@@ -275,6 +311,17 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
             ),
+            array(
+                array(
+                    EmailValidator::DNSWARN_NO_RECORD,
+                ),
+                'test@test'
+            ),
         );
+    }
+
+    public function testInvalidEmailsWithStrict()
+    {
+        $this->assertFalse($this->validator->isValid('"test"@test', false, true));
     }
 }

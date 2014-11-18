@@ -93,13 +93,20 @@ interface ConstraintViolationBuilderInterface
     /**
      * Sets the violation code.
      *
-     * @param mixed $code The violation code
+     * @param int $code The violation code
      *
      * @return ConstraintViolationBuilderInterface This builder
-     *
-     * @internal This method is internal and should not be used by user code
      */
     public function setCode($code);
+
+    /**
+     * Sets the cause of the violation.
+     *
+     * @param mixed $cause The cause of the violation
+     *
+     * @return ConstraintViolationBuilderInterface This builder
+     */
+    public function setCause($cause);
 
     /**
      * Adds the violation to the current execution context.

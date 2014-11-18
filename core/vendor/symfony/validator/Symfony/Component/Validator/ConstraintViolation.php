@@ -54,28 +54,41 @@ class ConstraintViolation implements ConstraintViolationInterface
     private $invalidValue;
 
     /**
+     * @var Constraint|null
+     */
+    private $constraint;
+
+    /**
      * @var mixed
      */
     private $code;
 
     /**
+     * @var mixed
+     */
+    private $cause;
+
+    /**
      * Creates a new constraint violation.
      *
-     * @param string       $message         The violation message
-     * @param string       $messageTemplate The raw violation message
-     * @param array        $parameters      The parameters to substitute in the
-     *                                      raw violation message
-     * @param mixed        $root            The value originally passed to the
-     *                                      validator
-     * @param string       $propertyPath    The property path from the root
-     *                                      value to the invalid value
-     * @param mixed        $invalidValue    The invalid value that caused this
-     *                                      violation
-     * @param int|null     $plural          The number for determining the plural
-     *                                      form when translating the message
-     * @param mixed        $code            The error code of the violation
+     * @param string          $message         The violation message
+     * @param string          $messageTemplate The raw violation message
+     * @param array           $parameters      The parameters to substitute in the
+     *                                         raw violation message
+     * @param mixed           $root            The value originally passed to the
+     *                                         validator
+     * @param string          $propertyPath    The property path from the root
+     *                                         value to the invalid value
+     * @param mixed           $invalidValue    The invalid value that caused this
+     *                                         violation
+     * @param int|null        $plural          The number for determining the plural
+     *                                         form when translating the message
+     * @param mixed           $code            The error code of the violation
+     * @param Constraint|null $constraint      The constraint whose validation
+     *                                         caused the violation
+     * @param mixed           $cause           The cause of the violation
      */
-    public function __construct($message, $messageTemplate, array $parameters, $root, $propertyPath, $invalidValue, $plural = null, $code = null)
+    public function __construct($message, $messageTemplate, array $parameters, $root, $propertyPath, $invalidValue, $plural = null, $code = null, Constraint $constraint = null, $cause = null)
     {
         $this->message = $message;
         $this->messageTemplate = $messageTemplate;
@@ -84,7 +97,9 @@ class ConstraintViolation implements ConstraintViolationInterface
         $this->root = $root;
         $this->propertyPath = $propertyPath;
         $this->invalidValue = $invalidValue;
+        $this->constraint = $constraint;
         $this->code = $code;
+        $this->cause = $cause;
     }
 
     /**
@@ -186,6 +201,26 @@ class ConstraintViolation implements ConstraintViolationInterface
     public function getInvalidValue()
     {
         return $this->invalidValue;
+    }
+
+    /**
+     * Returns the constraint whose validation caused the violation.
+     *
+     * @return Constraint|null The constraint or null if it is not known
+     */
+    public function getConstraint()
+    {
+        return $this->constraint;
+    }
+
+    /**
+     * Returns the cause of the violation.
+     *
+     * @return mixed
+     */
+    public function getCause()
+    {
+        return $this->cause;
     }
 
     /**

@@ -41,24 +41,17 @@ class Core
      */
     public static function headerLines($message, $header)
     {
-        // Slight optimization for exact matches.
-        if (isset($message['headers'][$header])) {
-            return $message['headers'][$header];
-        }
+        $result = [];
 
-        // Check for message with no headers after the "fast" isset check.
-        if (!isset($message['headers'])) {
-            return [];
-        }
-
-        // Iterate and case-insensitively find the header by name.
-        foreach ($message['headers'] as $name => $value) {
-            if (!strcasecmp($name, $header)) {
-                return $value;
+        if (!empty($message['headers'])) {
+            foreach ($message['headers'] as $name => $value) {
+                if (!strcasecmp($name, $header)) {
+                    $result = array_merge($result, $value);
+                }
             }
         }
 
-        return [];
+        return $result;
     }
 
     /**
@@ -91,18 +84,17 @@ class Core
      */
     public static function firstHeader($message, $header)
     {
-        $match = self::headerLines($message, $header);
-
-        if (!isset($match[0])) {
-            return null;
+        if (!empty($message['headers'])) {
+            foreach ($message['headers'] as $name => $value) {
+                if (!strcasecmp($name, $header)) {
+                    // Return the match itself if it is a single value.
+                    $pos = strpos($value[0], ',');
+                    return $pos ? substr($value[0], 0, $pos) : $value[0];
+                }
+            }
         }
 
-        // Return the match itself if it is a single value.
-        if (!($pos = strpos($match[0], ','))) {
-            return $match[0];
-        }
-
-        return substr($match[0], 0, $pos);
+        return null;
     }
 
     /**
@@ -115,7 +107,15 @@ class Core
      */
     public static function hasHeader($message, $header)
     {
-        return (bool) self::headerLines($message, $header);
+        if (!empty($message['headers'])) {
+            foreach ($message['headers'] as $name => $value) {
+                if (!strcasecmp($name, $header)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

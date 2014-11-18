@@ -404,6 +404,19 @@ class CurlFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, Core::body($response));
     }
 
+    public function testProtocolVersion()
+    {
+        Server::flush();
+        Server::enqueue([['status' => 200]]);
+        $a = new CurlMultiHandler();
+        $a([
+            'http_method' => 'GET',
+            'headers'     => ['host' => [Server::$host]],
+            'version'     => 1.0,
+        ]);
+        $this->assertEquals(CURL_HTTP_VERSION_1_0, $_SERVER['_curl'][CURLOPT_HTTP_VERSION]);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -570,7 +583,7 @@ class CurlFactoryTest extends \PHPUnit_Framework_TestCase
             'http_method' => 'GET',
             'headers'     => [
                 'host'           => [Server::$host],
-                'content-length' => 3,
+                'content-length' => [3],
             ],
             'body' => 'foo',
         ]);
@@ -708,6 +721,71 @@ class CurlFactoryTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertInstanceOf('GuzzleHttp\Ring\Exception\ConnectException', $response['error']);
+    }
+
+    public function testParsesLastResponseOnly()
+    {
+        $response1  = [
+            'status'  => 301,
+            'headers' => [
+                'Content-Length' => ['0'],
+                'Location' => ['/foo']
+            ]
+        ];
+
+        $response2 = [
+            'status'  => 200,
+            'headers' => [
+                'Content-Length' => ['0'],
+                'Foo' => ['bar']
+            ]
+        ];
+
+        Server::flush();
+        Server::enqueue([$response1, $response2]);
+
+        $a = new CurlMultiHandler();
+        $response = $a([
+            'http_method' => 'GET',
+            'headers'     => ['Host'   => [Server::$host]],
+            'client' => [
+                'curl' => [
+                    CURLOPT_FOLLOWLOCATION => true
+                ]
+            ]
+        ])->wait();
+
+        $this->assertEquals(1, $response['transfer_stats']['redirect_count']);
+        $this->assertEquals('http://127.0.0.1:8125/foo', $response['effective_url']);
+        $this->assertEquals(['bar'], $response['headers']['Foo']);
+        $this->assertEquals(200, $response['status']);
+        $this->assertFalse(Core::hasHeader($response, 'Location'));
+    }
+
+    public function testMaintainsMultiHeaderOrder()
+    {
+        Server::flush();
+        Server::enqueue([
+            [
+                'status'  => 200,
+                'headers' => [
+                    'Content-Length' => ['0'],
+                    'Foo' => ['a', 'b'],
+                    'foo' => ['c', 'd'],
+                ]
+            ]
+        ]);
+
+        $a = new CurlMultiHandler();
+        $response = $a([
+            'http_method' => 'GET',
+            'headers'     => ['Host'   => [Server::$host]]
+        ])->wait();
+
+        $this->assertEquals(
+            ['a', 'b', 'c', 'd'],
+            Core::headerLines($response, 'Foo')
+        );
     }
 }
 

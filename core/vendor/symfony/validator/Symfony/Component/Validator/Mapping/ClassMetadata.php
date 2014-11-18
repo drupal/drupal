@@ -158,7 +158,7 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
             $pathPrefix = empty($propertyPath) ? '' : $propertyPath.'.';
 
             foreach ($this->getConstrainedProperties() as $property) {
-                foreach ($this->getMemberMetadatas($property) as $member) {
+                foreach ($this->getPropertyMetadata($property) as $member) {
                     $member->accept($visitor, $member->getPropertyValue($value), $group, $pathPrefix.$property, $propagatedGroup);
                 }
             }
@@ -266,12 +266,27 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
         if (!isset($this->properties[$property])) {
             $this->properties[$property] = new PropertyMetadata($this->getClassName(), $property);
 
-            $this->addMemberMetadata($this->properties[$property]);
+            $this->addPropertyMetadata($this->properties[$property]);
         }
 
         $constraint->addImplicitGroupName($this->getDefaultGroup());
 
         $this->properties[$property]->addConstraint($constraint);
+
+        return $this;
+    }
+
+    /**
+     * @param string       $property
+     * @param Constraint[] $constraints
+     *
+     * @return ClassMetadata
+     */
+    public function addPropertyConstraints($property, array $constraints)
+    {
+        foreach ($constraints as $constraint) {
+            $this->addPropertyConstraint($property, $constraint);
+        }
 
         return $this;
     }
@@ -292,12 +307,27 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
         if (!isset($this->getters[$property])) {
             $this->getters[$property] = new GetterMetadata($this->getClassName(), $property);
 
-            $this->addMemberMetadata($this->getters[$property]);
+            $this->addPropertyMetadata($this->getters[$property]);
         }
 
         $constraint->addImplicitGroupName($this->getDefaultGroup());
 
         $this->getters[$property]->addConstraint($constraint);
+
+        return $this;
+    }
+
+    /**
+     * @param string       $property
+     * @param Constraint[] $constraints
+     *
+     * @return ClassMetadata
+     */
+    public function addGetterConstraints($property, array $constraints)
+    {
+        foreach ($constraints as $constraint) {
+            $this->addGetterConstraint($property, $constraint);
+        }
 
         return $this;
     }
@@ -314,16 +344,16 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
         }
 
         foreach ($source->getConstrainedProperties() as $property) {
-            foreach ($source->getMemberMetadatas($property) as $member) {
+            foreach ($source->getPropertyMetadata($property) as $member) {
                 $member = clone $member;
 
                 foreach ($member->getConstraints() as $constraint) {
                     $constraint->addImplicitGroupName($this->getDefaultGroup());
                 }
 
-                $this->addMemberMetadata($member);
+                $this->addPropertyMetadata($member);
 
-                if (!$member->isPrivate($this->name)) {
+                if ($member instanceof MemberMetadata && !$member->isPrivate($this->name)) {
                     $property = $member->getPropertyName();
 
                     if ($member instanceof PropertyMetadata && !isset($this->properties[$property])) {
@@ -340,12 +370,12 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
      * Adds a member metadata.
      *
      * @param MemberMetadata $metadata
+     *
+     * @deprecated Deprecated since version 2.6, to be removed in 3.0.
      */
     protected function addMemberMetadata(MemberMetadata $metadata)
     {
-        $property = $metadata->getPropertyName();
-
-        $this->members[$property][] = $metadata;
+        $this->addPropertyMetadata($metadata);
     }
 
     /**
@@ -354,10 +384,12 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
      * @param string $property The name of the property
      *
      * @return bool
+     *
+     * @deprecated Deprecated since version 2.6, to be removed in 3.0. Use {@link hasPropertyMetadata} instead.
      */
     public function hasMemberMetadatas($property)
     {
-        return array_key_exists($property, $this->members);
+        return $this->hasPropertyMetadata($property);
     }
 
     /**
@@ -366,14 +398,12 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
      * @param string $property The name of the property
      *
      * @return MemberMetadata[] An array of MemberMetadata
+     *
+     * @deprecated Deprecated since version 2.6, to be removed in 3.0. Use {@link getPropertyMetadata} instead.
      */
     public function getMemberMetadatas($property)
     {
-        if (!isset($this->members[$property])) {
-            return array();
-        }
-
-        return $this->members[$property];
+        return $this->getPropertyMetadata($property);
     }
 
     /**
@@ -502,5 +532,17 @@ class ClassMetadata extends ElementMetadata implements ClassMetadataInterface
     public function getCascadingStrategy()
     {
         return CascadingStrategy::NONE;
+    }
+
+    /**
+     * Adds a property metadata.
+     *
+     * @param PropertyMetadataInterface $metadata
+     */
+    private function addPropertyMetadata(PropertyMetadataInterface $metadata)
+    {
+        $property = $metadata->getPropertyName();
+
+        $this->members[$property][] = $metadata;
     }
 }

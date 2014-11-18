@@ -103,5 +103,20 @@ $container
     ->register('decorator_service_with_name', 'stdClass')
     ->setDecoratedService('decorated', 'decorated.pif-pouf')
 ;
+$container
+    ->register('new_factory', 'FactoryClass')
+    ->setProperty('foo', 'bar')
+    ->setScope('container')
+    ->setPublic(false)
+;
+$container
+    ->register('new_factory_service', 'FooBarBaz')
+    ->setProperty('foo', 'bar')
+    ->setFactory(array(new Reference('new_factory'), 'getInstance'))
+;
+$container
+    ->register('service_from_static_method', 'Bar\FooClass')
+    ->setFactory(array('Bar\FooClass', 'getInstance'))
+;
 
 return $container;

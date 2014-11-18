@@ -12,6 +12,7 @@
 namespace Symfony\Component\Validator\Violation;
 
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Util\PropertyPath;
@@ -73,11 +74,21 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     private $plural;
 
     /**
+     * @var Constraint
+     */
+    private $constraint;
+
+    /**
      * @var mixed
      */
     private $code;
 
-    public function __construct(ConstraintViolationList $violations, $message, array $parameters, $root, $propertyPath, $invalidValue, TranslatorInterface $translator, $translationDomain = null)
+    /**
+     * @var mixed
+     */
+    private $cause;
+
+    public function __construct(ConstraintViolationList $violations, Constraint $constraint, $message, array $parameters, $root, $propertyPath, $invalidValue, TranslatorInterface $translator, $translationDomain = null)
     {
         $this->violations = $violations;
         $this->message = $message;
@@ -87,6 +98,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
         $this->invalidValue = $invalidValue;
         $this->translator = $translator;
         $this->translationDomain = $translationDomain;
+        $this->constraint = $constraint;
     }
 
     /**
@@ -162,6 +174,16 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function setCause($cause)
+    {
+        $this->cause = $cause;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addViolation()
     {
         if (null === $this->plural) {
@@ -195,7 +217,9 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
             $this->propertyPath,
             $this->invalidValue,
             $this->plural,
-            $this->code
+            $this->code,
+            $this->constraint,
+            $this->cause
         ));
     }
 }

@@ -202,6 +202,20 @@ class StreamHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($content, Core::body($response));
     }
 
+    public function testProtocolVersion()
+    {
+        $this->queueRes();
+        $handler = new StreamHandler();
+        $handler([
+            'http_method' => 'GET',
+            'uri'         => '/',
+            'headers'     => ['host' => [Server::$host]],
+            'version'     => 1.0,
+        ]);
+
+        $this->assertEquals(1.0, Server::received()[0]['version']);
+    }
+
     protected function getSendResult(array $opts)
     {
         $this->queueRes();

@@ -28,9 +28,7 @@ trait BaseFutureTrait
     private $isRealized = false;
 
     /**
-     * @param PromiseInterface $promise Promise to shadow with the future. Only
-     *                                  supply if the promise is not owned
-     *                                  by the deferred value.
+     * @param PromiseInterface $promise Promise to shadow with the future.
      * @param callable         $wait    Function that blocks until the deferred
      *                                  computation has been resolved. This
      *                                  function MUST resolve the deferred value

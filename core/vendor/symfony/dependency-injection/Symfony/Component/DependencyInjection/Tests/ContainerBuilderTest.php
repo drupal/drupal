@@ -344,6 +344,23 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Symfony\Component\DependencyInjection\ContainerBuilder::createService
      */
+    public function testCreateServiceFactory()
+    {
+        $builder = new ContainerBuilder();
+        $builder->register('foo', 'Bar\FooClass')->setFactory('Bar\FooClass::getInstance');
+        $builder->register('qux', 'Bar\FooClass')->setFactory(array('Bar\FooClass', 'getInstance'));
+        $builder->register('bar', 'Bar\FooClass')->setFactory(array(new Definition('Bar\FooClass'), 'getInstance'));
+        $builder->register('baz', 'Bar\FooClass')->setFactory(array(new Reference('bar'), 'getInstance'));
+
+        $this->assertTrue($builder->get('foo')->called, '->createService() calls the factory method to create the service instance');
+        $this->assertTrue($builder->get('qux')->called, '->createService() calls the factory method to create the service instance');
+        $this->assertTrue($builder->get('bar')->called, '->createService() uses anonymous service as factory');
+        $this->assertTrue($builder->get('baz')->called, '->createService() uses another service as factory');
+    }
+
+    /**
+     * @covers Symfony\Component\DependencyInjection\ContainerBuilder::createService
+     */
     public function testCreateServiceMethodCalls()
     {
         $builder = new ContainerBuilder();
@@ -569,7 +586,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
 
         $container->compile();
 
-        $classesPath       = realpath(__DIR__.'/Fixtures/includes/classes.php');
+        $classesPath = realpath(__DIR__.'/Fixtures/includes/classes.php');
         $matchingResources = array_filter(
             $container->getResources(),
             function (ResourceInterface $resource) use ($classesPath) {
@@ -643,16 +660,16 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testPrivateServiceUser()
     {
-        $fooDefinition     = new Definition('BarClass');
+        $fooDefinition = new Definition('BarClass');
         $fooUserDefinition = new Definition('BarUserClass', array(new Reference('bar')));
-        $container         = new ContainerBuilder();
+        $container = new ContainerBuilder();
         $container->setResourceTracking(false);
 
         $fooDefinition->setPublic(false);
 
         $container->addDefinitions(array(
-            'bar'       => $fooDefinition,
-            'bar_user'  => $fooUserDefinition,
+            'bar' => $fooDefinition,
+            'bar_user' => $fooUserDefinition,
         ));
 
         $container->compile();
