@@ -135,16 +135,29 @@ class UpdateManagerUpdate extends FormBase {
       }
 
       $recommended_release = $project['releases'][$project['recommended']];
-      $recommended_version = $recommended_release['version'] . ' ' . $this->l($this->t('(Release notes)'), Url::fromUri($recommended_release['release_link'], array('attributes' => array('title' => $this->t('Release notes for @project_title', array('@project_title' => $project['title']))))));
+      $recommended_version = '{{ release_version }} (<a href="{{ release_link }}" title="{{ project_title }}">{{ release_notes }}</a>)';
       if ($recommended_release['version_major'] != $project['existing_major']) {
-        $recommended_version .= '<div title="Major upgrade warning" class="update-major-version-warning">' . $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version.  It is recommended that you read the release notes and proceed at your own risk.') . '</div>';
+        $recommended_version .= '<div title="{{ major_update_warning_title }}" class="update-major-version-warning">{{ major_update_warning_text }}</div>';
       }
+
+      $recommended_version = array(
+        '#type' => 'inline_template',
+        '#template' => $recommended_version,
+        '#context' => array(
+          'release_version' => $recommended_release['version'],
+          'release_link' => $recommended_release['release_link'],
+          'project_title' => $this->t('Release notes for @project_title', array('@project_title' => $project['title'])),
+          'major_update_warning_title' => $this->t('Major upgrade warning'),
+          'major_update_warning_text' => $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version. It is recommended that you read the release notes and proceed at your own risk.'),
+          'release_notes' => $this->t('Release notes'),
+        ),
+      );
 
       // Create an entry for this project.
       $entry = array(
         'title' => $project_name,
         'installed_version' => $project['existing_version'],
-        'recommended_version' => $recommended_version,
+        'recommended_version' => array('data' => $recommended_version),
       );
 
       switch ($project['status']) {
