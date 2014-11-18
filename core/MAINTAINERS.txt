@@ -333,7 +333,6 @@ Menu UI module
 - ?
 
 Menu Link module
-- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
 Migrate module
