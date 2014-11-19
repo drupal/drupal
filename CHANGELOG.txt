@@ -1,4 +1,8 @@
 
+Drupal 7.34, 2014-11-19
+----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-006.
+
 Drupal 7.33, 2014-11-07
 -----------------------
 - Began storing the file modification time of each module and theme in the
