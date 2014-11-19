@@ -21,7 +21,7 @@ class PageNotFoundTest extends WebTestBase {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'link to any page'));
 
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user profiles'));
     user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user profiles'));

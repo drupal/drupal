@@ -11,8 +11,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form controller for the user register forms.
@@ -41,11 +39,6 @@ class RegisterForm extends AccountForm {
       '#type' => 'value',
       '#value' => $admin,
     );
-
-    // If we aren't admin but already logged on, go to the user page instead.
-    if (!$admin && $user->isAuthenticated()) {
-      return new RedirectResponse($this->url('entity.user.canonical', ['user' => \Drupal::currentUser()->id()], array('absolute' => TRUE)));
-    }
 
     $form['#attached']['library'][] = 'core/drupal.form';
 

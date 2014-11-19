@@ -17,7 +17,12 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Redirects anonymous users from user.page to user.login.
+ * Redirects users when access is denied.
+ *
+ * Anonymous users are taken to the login page when attempting to access the
+ * user profile pages. Authenticated users are redirected from the login form to
+ * their profile page and from the user registration form to their profile edit
+ * form.
  */
 class AccessDeniedSubscriber implements EventSubscriberInterface {
 
@@ -44,7 +49,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Redirects anonymous users from user.page to user.login.
+   * Redirects users when access is denied.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    *   The event to process.
@@ -53,7 +58,20 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
     $exception = $event->getException();
     if ($exception instanceof AccessDeniedHttpException) {
       $route_name = RouteMatch::createFromRequest($event->getRequest())->getRouteName();
-      if ($route_name == 'user.page' && !$this->account->isAuthenticated()) {
+      if ($this->account->isAuthenticated()) {
+        switch ($route_name) {
+          case 'user.login';
+            // Redirect an authenticated user to the profile page.
+            $event->setResponse($this->redirect('entity.user.canonical', ['user' => $this->account->id()]));
+            break;
+
+          case 'user.register';
+            // Redirect an authenticated user to the profile form.
+            $event->setResponse($this->redirect('entity.user.edit_form', ['user' => $this->account->id()]));
+            break;
+        }
+      }
+      elseif ($route_name === 'user.page') {
         $event->setResponse($this->redirect('user.login'));
       }
     }

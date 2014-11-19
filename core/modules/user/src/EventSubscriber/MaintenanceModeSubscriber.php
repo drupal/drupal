@@ -12,7 +12,6 @@ use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -51,7 +50,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Determine whether the page is configured to be offline.
+   * Logout users if site is in maintenance mode.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event to process.
@@ -59,26 +58,12 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onKernelRequestMaintenance(GetResponseEvent $event) {
     $request = $event->getRequest();
     $route_match = RouteMatch::createFromRequest($request);
-    $path = $request->attributes->get('_system_path');
     if ($this->maintenanceMode->applies($route_match)) {
       // If the site is offline, log out unprivileged users.
       if ($this->account->isAuthenticated() && !$this->maintenanceMode->exempt($this->account)) {
         user_logout();
         // Redirect to homepage.
-        $event->setResponse(new RedirectResponse($this->url('<front>', [], ['absolute' => TRUE])));
-        return;
-      }
-    }
-    if ($this->account->isAuthenticated()) {
-      if ($path == 'user/login') {
-        // If the user is already logged in, redirect to their profile page.
-        $event->setResponse($this->redirect('entity.user.canonical', ['user' => $this->account->id()]));
-        return;
-      }
-      if ($path == 'user/register') {
-        // If the user is already registered, redirect to their edit page.
-        $event->setResponse(new RedirectResponse($this->url('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE])));
-        return;
+        $event->setResponse($this->redirect($this->url('<front>')));
       }
     }
   }
@@ -87,7 +72,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestMaintenance', 35);
+    $events[KernelEvents::REQUEST][] = ['onKernelRequestMaintenance', 31];
     return $events;
   }
 

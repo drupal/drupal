@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Authentication;
 
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AnonymousUserSession;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
@@ -89,8 +89,8 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
 
     $account = NULL;
 
-    // Iterate the available providers.
-    foreach ($this->getSortedProviders() as $provider_id => $provider) {
+    // Iterate the allowed providers.
+    foreach ($this->filterProviders($this->getSortedProviders(), $request) as $provider_id => $provider) {
       if ($provider->applies($request)) {
         // Try to authenticate with this provider, skipping all others.
         $account = $provider->authenticate($request);
@@ -156,6 +156,36 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   }
 
   /**
+   * Filters a list of providers and only return those allowed on the request.
+   *
+   * @param \Drupal\Core\Authentication\AuthenticationProviderInterface[] $providers
+   *   An array of authentication provider objects.
+   * @param Request $request
+   *   The request object.
+   *
+   * @return \Drupal\Core\Authentication\AuthenticationProviderInterface[]
+   *   The filtered array authentication provider objects.
+   */
+  protected function filterProviders(array $providers, Request $request) {
+    $route = RouteMatch::createFromRequest($request)->getRouteObject();
+    $allowed_providers = array();
+    if ($route && $route->hasOption('_auth')) {
+      $allowed_providers = $route->getOption('_auth');
+    }
+    elseif ($default_provider = $this->defaultProviderId()) {
+      // @todo Mirrors the defective behavior of AuthenticationEnhancer and
+      // restricts the list of allowed providers to the default provider if no
+      // _auth was specified on the current route.
+      //
+      // This restriction will be removed by https://www.drupal.org/node/2286971
+      // See also https://www.drupal.org/node/2283637
+      $allowed_providers = array($default_provider);
+    }
+
+    return array_intersect_key($providers, array_flip($allowed_providers));
+  }
+
+  /**
    * Cleans up the authentication.
    *
    * Allow the triggered provider to clean up before the response is sent, e.g.
@@ -177,18 +207,11 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * {@inheritdoc}
    */
   public function handleException(GetResponseForExceptionEvent $event) {
-    $request = $event->getRequest();
-
-    $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
-    $active_providers = ($route && $route->getOption('_auth')) ? $route->getOption('_auth') : array($this->defaultProviderId());
-
-    // Get the sorted list of active providers for the given route.
-    $providers = array_intersect($active_providers, array_keys($this->getSortedProviders()));
-
-    foreach ($providers as $provider_id) {
-      if ($this->providers[$provider_id]->handleException($event) == TRUE) {
+    foreach ($this->filterProviders($this->getSortedProviders(), $event->getRequest()) as $provider) {
+      if ($provider->handleException($event) === TRUE) {
         break;
       }
     }
   }
+
 }

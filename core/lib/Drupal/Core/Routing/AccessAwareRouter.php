@@ -88,6 +88,10 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   public function matchRequest(Request $request) {
     $parameters = $this->chainRouter->matchRequest($request);
     $request->attributes->add($parameters);
+    // Trigger a session start and authentication by accessing any property of
+    // the current user.
+    // @todo This will be removed in https://www.drupal.org/node/2229145.
+    $this->account->id();
     $this->checkAccess($request);
     // We can not return $parameters because the access check can change the
     // request attributes.

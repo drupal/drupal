@@ -67,6 +67,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       array(
         'administer languages',
         'administer site configuration',
+        'link to any page',
         'administer contact forms',
         'access site-wide contact form',
         'access contextual links',
