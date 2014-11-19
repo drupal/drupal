@@ -13,15 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function seven_preprocess_html(&$variables) {
-  // Add information about the number of sidebars.
-  if (!empty($variables['page']['sidebar_first'])) {
-    $variables['attributes']['class'][] = 'one-sidebar';
-    $variables['attributes']['class'][] = 'sidebar-first';
-  }
-  else {
-    $variables['attributes']['class'][] = 'no-sidebars';
-  }
-
   // If on a node add or edit page, add a node-layout class.
   $path_args = explode('/', \Drupal::request()->getPathInfo());
   if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
