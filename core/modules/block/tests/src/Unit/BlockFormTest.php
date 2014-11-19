@@ -17,6 +17,59 @@ use Drupal\Tests\UnitTestCase;
 class BlockFormTest extends UnitTestCase {
 
   /**
+   * The condition plugin manager.
+   *
+   * @var \Drupal\Core\Executable\ExecutableManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $conditionManager;
+
+  /**
+   * The block storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $storage;
+
+  /**
+   * The event dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $dispatcher;
+
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $language;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->conditionManager = $this->getMock('Drupal\Core\Executable\ExecutableManagerInterface');
+    $this->language = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+
+    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->will($this->returnValue($this->storage));
+
+  }
+
+  /**
    * Tests the unique machine name generator.
    *
    * @see \Drupal\block\BlockForm::getUniqueMachineName()
@@ -38,22 +91,11 @@ class BlockFormTest extends UnitTestCase {
       ->method('execute')
       ->will($this->returnValue(array('test', 'other_test', 'other_test_1', 'other_test_2')));
 
-    $block_storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
-    $block_storage->expects($this->exactly(5))
+    $this->storage->expects($this->exactly(5))
       ->method('getQuery')
       ->will($this->returnValue($query));
 
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
-    $entity_manager->expects($this->any())
-      ->method('getStorage')
-      ->will($this->returnValue($block_storage));
-
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
-
-    $block_form_controller = new BlockForm($entity_manager, $language_manager, $config_factory);
+    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->dispatcher, $this->language);
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.

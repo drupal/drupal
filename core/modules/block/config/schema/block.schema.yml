@@ -24,6 +24,12 @@ block.block.*:
       label: 'Plugin'
     settings:
       type: block.settings.[%parent.plugin]
+    visibility:
+      type: sequence
+      label: 'Visibility Conditions'
+      sequence:
+        - type: condition.plugin.[id]
+          label: 'Visibility Condition'
 
 block.settings.*:
   type: block_settings

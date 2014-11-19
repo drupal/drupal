@@ -300,12 +300,6 @@ block_settings:
     view_mode:
       type: string
       label: 'View mode'
-    visibility:
-      type: sequence
-      label: 'Visibility Conditions'
-      sequence:
-        - type: condition.plugin.[id]
-          label: 'Visibility Condition'
     provider:
       type: string
       label: 'Provider'

@@ -6,7 +6,6 @@ langcode: en
 region: '-1'
 plugin: test_html
 settings:
-  visibility: {  }
   label: 'Test HTML block'
   provider: block_test
   label_display: 'hidden'
@@ -15,3 +14,4 @@ dependencies:
     - block_test
   theme:
     - stark
+visibility: {  }

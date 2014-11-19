@@ -59,7 +59,7 @@ class SearchBlockTest extends SearchTestBase {
 
     $visibility = $block->getVisibility();
     $visibility['request_path']['pages'] = 'search';
-    $block->getPlugin()->setVisibilityConfig('request_path', $visibility['request_path']);
+    $block->setVisibilityConfig('request_path', $visibility['request_path']);
 
     $this->submitGetForm('', $terms, t('Search'));
     $this->assertResponse(200);

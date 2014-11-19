@@ -6,7 +6,6 @@ langcode: en
 region: sidebar_first
 plugin: user_login_block
 settings:
-  visibility: {  }
   label: 'User login'
   provider: user
   label_display: visible
@@ -15,3 +14,4 @@ dependencies:
     - user
   theme:
     - stark
+visibility: {  }

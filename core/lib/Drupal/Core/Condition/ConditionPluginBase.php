@@ -9,6 +9,7 @@ namespace Drupal\Core\Condition;
 
 use Drupal\Core\Executable\ExecutablePluginBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 
 /**
  * Provides a basis for fulfilling contexts for condition plugins.
@@ -20,6 +21,8 @@ use Drupal\Core\Form\FormStateInterface;
  * @ingroup plugin_api
  */
 abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
+
+  use ContextAwarePluginAssignmentTrait;
 
   /**
    * {@inheritdoc}
@@ -41,6 +44,9 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $temporary = $form_state->getTemporary();
+    $contexts = isset($temporary['gathered_contexts']) ? $temporary['gathered_contexts'] : [];
+    $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
     $form['negate'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Negate the condition'),

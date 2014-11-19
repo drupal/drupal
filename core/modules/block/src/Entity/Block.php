@@ -8,6 +8,7 @@
 namespace Drupal\block\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block\BlockPluginCollection;
 use Drupal\block\BlockInterface;
@@ -78,11 +79,39 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   protected $plugin;
 
   /**
+   * The visibility settings for this block.
+   *
+   * @var array
+   */
+  protected $visibility = [];
+
+  /**
    * The plugin collection that holds the block plugin for this entity.
    *
    * @var \Drupal\block\BlockPluginCollection
    */
   protected $pluginCollection;
+
+  /**
+   * The available contexts for this block and its visibility conditions.
+   *
+   * @var array
+   */
+  protected $contexts = [];
+
+  /**
+   * The visibility collection.
+   *
+   * @var \Drupal\Core\Condition\ConditionPluginCollection
+   */
+  protected $visibilityCollection;
+
+  /**
+   * The condition plugin manager.
+   *
+   * @var \Drupal\Core\Executable\ExecutableManagerInterface
+   */
+  protected $conditionPluginManager;
 
   /**
    * {@inheritdoc}
@@ -108,7 +137,10 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    * {@inheritdoc}
    */
   public function getPluginCollections() {
-    return array('settings' => $this->getPluginCollection());
+    return [
+      'settings' => $this->getPluginCollection(),
+      'visibility' => $this->getVisibilityConditions(),
+    ];
   }
 
   /**
@@ -186,8 +218,69 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
+  public function setContexts(array $contexts) {
+    $this->contexts = $contexts;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContexts() {
+    return $this->contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getVisibility() {
-    return $this->getPlugin()->getVisibilityConditions()->getConfiguration();
+    return $this->getVisibilityConditions()->getConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVisibilityConfig($instance_id, array $configuration) {
+    $conditions = $this->getVisibilityConditions();
+    if (!$conditions->has($instance_id)) {
+      $configuration['id'] = $instance_id;
+      $conditions->addInstanceId($instance_id, $configuration);
+    }
+    else {
+      $conditions->setInstanceConfiguration($instance_id, $configuration);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVisibilityConditions() {
+    if (!isset($this->visibilityCollection)) {
+      $this->visibilityCollection = new ConditionPluginCollection($this->conditionPluginManager(), $this->get('visibility'));
+    }
+    return $this->visibilityCollection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVisibilityCondition($instance_id) {
+    return $this->getVisibilityConditions()->get($instance_id);
+  }
+
+  /**
+   * Gets the condition plugin manager.
+   *
+   * @return \Drupal\Core\Executable\ExecutableManagerInterface
+   *   The condition plugin manager.
+   */
+  protected function conditionPluginManager() {
+    $this->conditionPluginManager;
+    if (!isset($this->conditionPluginManager)) {
+      $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
+    }
+    return $this->conditionPluginManager;
   }
 
 }

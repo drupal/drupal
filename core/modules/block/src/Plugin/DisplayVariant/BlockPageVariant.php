@@ -8,12 +8,15 @@
 namespace Drupal\block\Plugin\DisplayVariant;
 
 use Drupal\block\BlockRepositoryInterface;
+use Drupal\block\Event\BlockContextEvent;
+use Drupal\block\Event\BlockEvents;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Display\VariantBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a page display variant that decorates the main content with blocks.
@@ -66,11 +69,14 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
    *   The block repository.
    * @param \Drupal\Core\Entity\EntityViewBuilderInterface $block_view_builder
    *   The block view builder.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   The event dispatcher.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, EventDispatcherInterface $dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->blockRepository = $block_repository;
     $this->blockViewBuilder = $block_view_builder;
+    $this->dispatcher = $dispatcher;
   }
 
   /**
@@ -82,7 +88,8 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
       $plugin_id,
       $plugin_definition,
       $container->get('block.repository'),
-      $container->get('entity.manager')->getViewBuilder('block')
+      $container->get('entity.manager')->getViewBuilder('block'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -102,8 +109,9 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
     $main_content_block_displayed = FALSE;
 
     $build = array();
+    $contexts = $this->getActiveBlockContexts();
     // Load all region content assigned via blocks.
-    foreach ($this->blockRepository->getVisibleBlocksPerRegion() as $region => $blocks) {
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts) as $region => $blocks) {
       /** @var $blocks \Drupal\block\BlockInterface[] */
       foreach ($blocks as $key => $block) {
         $block_plugin = $block->getPlugin();
@@ -128,6 +136,16 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
     }
 
     return $build;
+  }
+
+  /**
+   * Returns an array of context objects to set on the blocks.
+   *
+   * @return \Drupal\Component\Plugin\Context\ContextInterface[]
+   *   An array of contexts to set on the blocks.
+   */
+  protected function getActiveBlockContexts() {
+    return $this->dispatcher->dispatch(BlockEvents::ACTIVE_CONTEXT, new BlockContextEvent())->getContexts();
   }
 
 }

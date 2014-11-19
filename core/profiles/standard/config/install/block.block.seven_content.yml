@@ -6,7 +6,6 @@ langcode: en
 region: content
 plugin: system_main_block
 settings:
-  visibility: {  }
   id: system_main_block
   label: 'Main page content'
   provider: system
@@ -16,3 +15,4 @@ dependencies:
     - system
   theme:
     - seven
+visibility: {  }

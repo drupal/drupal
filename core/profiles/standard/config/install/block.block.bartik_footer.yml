@@ -6,7 +6,6 @@ langcode: en
 region: footer
 plugin: 'system_menu_block:footer'
 settings:
-  visibility: {  }
   id: 'system_menu_block:footer'
   label: 'Footer menu'
   provider: system
@@ -23,3 +22,4 @@ dependencies:
     - system
   theme:
     - bartik
+visibility: {  }

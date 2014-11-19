@@ -7,6 +7,7 @@
 
 namespace Drupal\block\EventSubscriber;
 
+use Drupal\block\Event\BlockContextEvent;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -15,7 +16,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Sets the current language as a context.
  */
-class CurrentLanguageContext extends BlockConditionContextSubscriberBase {
+class CurrentLanguageContext extends BlockContextSubscriberBase {
 
   use StringTranslationTrait;
 
@@ -39,10 +40,24 @@ class CurrentLanguageContext extends BlockConditionContextSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function determineBlockContext() {
-    $context = new Context(new ContextDefinition('language', $this->t('Current language')));
-    $context->setContextValue($this->languageManager->getCurrentLanguage());
-    $this->addContext('language', $context);
+  public function onBlockActiveContext(BlockContextEvent $event) {
+    // Add a context for each language type.
+    $language_types = $this->languageManager->getLanguageTypes();
+    $info = $this->languageManager->getDefinedLanguageTypesInfo();
+    foreach ($language_types as $type_key) {
+      if (isset($info[$type_key]['name'])) {
+        $context = new Context(new ContextDefinition('language', $info[$type_key]['name']));
+        $context->setContextValue($this->languageManager->getCurrentLanguage($type_key));
+        $event->setContext('language.' . $type_key, $context);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onBlockAdministrativeContext(BlockContextEvent $event) {
+    $this->onBlockActiveContext($event);
   }
 
 }

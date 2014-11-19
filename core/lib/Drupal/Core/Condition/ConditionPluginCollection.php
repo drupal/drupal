@@ -41,6 +41,12 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
       $default_config = array();
       $default_config['id'] = $instance_id;
       $default_config += $this->get($instance_id)->defaultConfiguration();
+      // In order to determine if a plugin is configured, we must compare it to
+      // its default configuration. The default configuration of a plugin does
+      // not contain context_mapping and it is not used when the plugin is not
+      // configured, so remove the context_mapping from the instance config to
+      // compare the remaining values.
+      unset($instance_config['context_mapping']);
       if ($default_config === $instance_config) {
         unset($configuration[$instance_id]);
       }

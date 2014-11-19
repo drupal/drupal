@@ -7,11 +7,17 @@
 
 namespace Drupal\block;
 
+use Drupal\block\Event\BlockContextEvent;
+use Drupal\block\Event\BlockEvents;
+use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides form for block instance forms.
@@ -33,13 +39,43 @@ class BlockForm extends EntityForm {
   protected $storage;
 
   /**
+   * The condition plugin manager.
+   *
+   * @var \Drupal\Core\Condition\ConditionManager
+   */
+  protected $manager;
+
+  /**
+   * The event dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $dispatcher;
+
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $language;
+
+  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
+   *   The ConditionManager for building the visibility UI.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   The EventDispatcher for gathering administrative contexts.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language
+   *   The language manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, EventDispatcherInterface $dispatcher, LanguageManagerInterface $language) {
     $this->storage = $entity_manager->getStorage('block');
+    $this->manager = $manager;
+    $this->dispatcher = $dispatcher;
+    $this->language = $language;
   }
 
   /**
@@ -47,7 +83,10 @@ class BlockForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.condition'),
+      $container->get('event_dispatcher'),
+      $container->get('language_manager')
     );
   }
 
@@ -63,8 +102,15 @@ class BlockForm extends EntityForm {
     }
     $form_state->set('block_theme', $theme);
 
+    // Store the gathered contexts in the form state for other objects to use
+    // during form building.
+    $temporary = $form_state->getTemporary();
+    $temporary['gathered_contexts'] = $this->dispatcher->dispatch(BlockEvents::ADMINISTRATIVE_CONTEXT, new BlockContextEvent())->getContexts();
+    $form_state->setTemporary($temporary);
+
     $form['#tree'] = TRUE;
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
+    $form['visibility'] = $this->buildVisibilityInterface([], $form_state);
 
     // If creating a new block, calculate a safe default machine name.
     $form['id'] = array(
@@ -133,6 +179,79 @@ class BlockForm extends EntityForm {
   }
 
   /**
+   * Helper function for building the visibility UI form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The form array with the visibility UI added in.
+   */
+  protected function buildVisibilityInterface(array $form, FormStateInterface $form_state) {
+    $form['visibility_tabs'] = [
+      '#type' => 'vertical_tabs',
+      '#title' => $this->t('Visibility'),
+      '#parents' => ['visibility_tabs'],
+      '#attached' => [
+        'library' => [
+          'block/drupal.block',
+        ],
+      ],
+    ];
+    // @todo Allow list of conditions to be configured in
+    //   https://drupal.org/node/2284687.
+    $visibility = $this->entity->getVisibility();
+    foreach ($this->manager->getDefinitions() as $condition_id => $definition) {
+      // Don't display the current theme condition.
+      if ($condition_id == 'current_theme') {
+        continue;
+      }
+      // Don't display the language condition until we have multiple languages.
+      if ($condition_id == 'language' && !$this->language->isMultilingual()) {
+        continue;
+      }
+      /** @var \Drupal\Core\Condition\ConditionInterface $condition */
+      $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+      $form_state->set(['conditions', $condition_id], $condition);
+      $condition_form = $condition->buildConfigurationForm([], $form_state);
+      $condition_form['#type'] = 'details';
+      $condition_form['#title'] = $condition->getPluginDefinition()['label'];
+      $condition_form['#group'] = 'visibility_tabs';
+      $form[$condition_id] = $condition_form;
+    }
+
+    if (isset($form['node_type'])) {
+      $form['node_type']['#title'] = $this->t('Content types');
+      $form['node_type']['bundles']['#title'] = $this->t('Content types');
+      $form['node_type']['negate']['#type'] = 'value';
+      $form['node_type']['negate']['#title_display'] = 'invisible';
+      $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+    }
+    if (isset($form['user_role'])) {
+      $form['user_role']['#title'] = $this->t('Roles');
+      unset($form['user_role']['roles']['#description']);
+      $form['user_role']['negate']['#type'] = 'value';
+      $form['user_role']['negate']['#value'] = $form['user_role']['negate']['#default_value'];
+    }
+    if (isset($form['request_path'])) {
+      $form['request_path']['#title'] = $this->t('Pages');
+      $form['request_path']['negate']['#type'] = 'radios';
+      $form['request_path']['negate']['#title_display'] = 'invisible';
+      $form['request_path']['negate']['#options'] = [
+        $this->t('Show for the listed pages'),
+        $this->t('Hide for the listed pages'),
+      ];
+    }
+    if (isset($form['language'])) {
+      $form['language']['negate']['#type'] = 'value';
+      $form['language']['negate']['#value'] = $form['language']['negate']['#default_value'];
+    }
+    return $form;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
@@ -154,6 +273,28 @@ class BlockForm extends EntityForm {
     $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
     // Update the original form values.
     $form_state->setValue('settings', $settings->getValues());
+    $this->validateVisibility($form, $form_state);
+  }
+
+  /**
+   * Helper function to independently validate the visibility UI.
+   *
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function validateVisibility(array $form, FormStateInterface $form_state) {
+    // Validate visibility condition settings.
+    foreach ($form_state->getValue('visibility') as $condition_id => $values) {
+      // Allow the condition to validate the form.
+      $condition = $form_state->get(['conditions', $condition_id]);
+      $condition_values = (new FormState())
+        ->setValues($values);
+      $condition->validateConfigurationForm($form, $condition_values);
+      // Update the original form values.
+      $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
+    }
   }
 
   /**
@@ -172,6 +313,24 @@ class BlockForm extends EntityForm {
     $entity->getPlugin()->submitConfigurationForm($form, $settings);
     // Update the original form values.
     $form_state->setValue('settings', $settings->getValues());
+
+    // Submit visibility condition settings.
+    foreach ($form_state->getValue('visibility') as $condition_id => $values) {
+      // Allow the condition to submit the form.
+      $condition = $form_state->get(['conditions', $condition_id]);
+      $condition_values = (new FormState())
+        ->setValues($values);
+      $condition->submitConfigurationForm($form, $condition_values);
+      if ($condition instanceof ContextAwarePluginInterface) {
+        $context_mapping = isset($values['context_mapping']) ? $values['context_mapping'] : [];
+        $condition->setContextMapping($context_mapping);
+      }
+      // Update the original form values.
+      $condition_configuration = $condition->getConfiguration();
+      $form_state->setValue(['visibility', $condition_id], $condition_configuration);
+      // Update the visibility conditions on the block.
+      $entity->getVisibilityConditions()->addInstanceId($condition_id, $condition_configuration);
+    }
 
     // Save the settings of the plugin.
     $entity->save();

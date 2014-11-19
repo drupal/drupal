@@ -23,9 +23,9 @@ class LanguageBlockSettingsVisibilityTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/regional/language/add', array('predefined_langcode' => 'hu'), t('Add language'));
     $this->drupalGet('admin/structure/block/add/system_menu_block:admin/stark');
-    $this->assertNoFieldByXPath('//input[@id="edit-settings-visibility-language-langcodes-und"]', NULL, '\'Not specified\' option does not appear at block config, language settings section.');
-    $this->assertNoFieldByXpath('//input[@id="edit-settings-visibility-language-langcodes-zxx"]', NULL, '\'Not applicable\' option does not appear at block config, language settings section.');
-    $this->assertFieldByXPath('//input[@id="edit-settings-visibility-language-langcodes-en"]', NULL, '\'English\' option appears at block config, language settings section.');
-    $this->assertFieldByXpath('//input[@id="edit-settings-visibility-language-langcodes-hu"]', NULL, '\'Hungarian\' option appears at block config, language settings section.');
+    $this->assertNoFieldByXPath('//input[@id="edit-visibility-language-langcodes-und"]', NULL, '\'Not specified\' option does not appear at block config, language settings section.');
+    $this->assertNoFieldByXpath('//input[@id="edit-visibility-language-langcodes-zxx"]', NULL, '\'Not applicable\' option does not appear at block config, language settings section.');
+    $this->assertFieldByXPath('//input[@id="edit-visibility-language-langcodes-en"]', NULL, '\'English\' option appears at block config, language settings section.');
+    $this->assertFieldByXpath('//input[@id="edit-visibility-language-langcodes-hu"]', NULL, '\'Hungarian\' option appears at block config, language settings section.');
   }
 }

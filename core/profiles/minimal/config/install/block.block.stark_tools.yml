@@ -6,7 +6,6 @@ langcode: en
 region: sidebar_first
 plugin: 'system_menu_block:tools'
 settings:
-  visibility: {  }
   label: Tools
   provider: system
   label_display: visible
@@ -22,3 +21,4 @@ dependencies:
     - system
   theme:
     - stark
+visibility: {  }

@@ -6,7 +6,6 @@ langcode: en
 region: sidebar_first
 plugin: search_form_block
 settings:
-  visibility: {  }
   id: search_form_block
   label: Search
   provider: search
@@ -16,3 +15,4 @@ dependencies:
     - search
   theme:
     - bartik
+visibility: {  }

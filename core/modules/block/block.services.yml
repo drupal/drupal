@@ -24,4 +24,4 @@ services:
       - { name: 'event_subscriber' }
   block.repository:
     class: Drupal\block\BlockRepository
-    arguments: ['@entity.manager', '@theme.manager']
+    arguments: ['@entity.manager', '@theme.manager', '@context.handler']

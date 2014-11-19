@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Plugin\Context;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\String;
@@ -73,12 +72,7 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array()) {
-    if ($plugin instanceof ConfigurablePluginInterface) {
-      $configuration = $plugin->getConfiguration();
-      if (isset($configuration['context_mapping'])) {
-        $mappings += array_flip($configuration['context_mapping']);
-      }
-    }
+    $mappings += $plugin->getContextMapping();
     $plugin_contexts = $plugin->getContextDefinitions();
     // Loop through each context and set it on the plugin if it matches one of
     // the contexts expected by the plugin.

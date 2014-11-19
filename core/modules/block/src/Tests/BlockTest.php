@@ -35,9 +35,9 @@ class BlockTest extends BlockTestBase {
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $edit['settings[visibility][request_path][pages]'] = 'user*';
-    $edit['settings[visibility][request_path][negate]'] = TRUE;
-    $edit['settings[visibility][user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $edit['visibility[request_path][pages]'] = 'user*';
+    $edit['visibility[request_path][negate]'] = TRUE;
+    $edit['visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
@@ -58,6 +58,42 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
+   * Tests that visibility can be properly toggled.
+   */
+  public function testBlockToggleVisibility() {
+    $block_name = 'system_powered_by_block';
+    // Create a random title for the block.
+    $title = $this->randomMachineName(8);
+    // Enable a standard block.
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    $edit = array(
+      'id' => strtolower($this->randomMachineName(8)),
+      'region' => 'sidebar_first',
+      'settings[label]' => $title,
+    );
+    $block_id = $edit['id'];
+    // Set the block to be shown only to authenticated users.
+    $edit['visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->clickLink('Configure');
+    $this->assertFieldChecked('edit-visibility-user-role-roles-authenticated');
+
+    $edit = [
+      'visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']' => FALSE,
+    ];
+    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->clickLink('Configure');
+    $this->assertNoFieldChecked('edit-visibility-user-role-roles-authenticated');
+
+    // Ensure that no visibility is configured.
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = Block::load($block_id);
+    $visibility_config = $block->getVisibilityConditions()->getConfiguration();
+    $this->assertIdentical([], $visibility_config);
+    $this->assertIdentical([], $block->get('visibility'));
+  }
+
+  /**
    * Test block visibility when leaving "pages" textarea empty.
    */
   function testBlockVisibilityListedEmpty() {
@@ -70,7 +106,7 @@ class BlockTest extends BlockTestBase {
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
-      'settings[visibility][request_path][negate]' => TRUE,
+      'visibility[request_path][negate]' => TRUE,
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.

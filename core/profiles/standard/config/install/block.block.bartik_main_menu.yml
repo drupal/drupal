@@ -6,7 +6,6 @@ langcode: en
 region: primary_menu
 plugin: 'system_menu_block:main'
 settings:
-  visibility: {}
   id: 'system_menu_block:main'
   label: 'Main navigation'
   provider: system
@@ -23,3 +22,4 @@ dependencies:
     - system
   theme:
     - bartik
+visibility: {}

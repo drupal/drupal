@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Plugin;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -47,6 +48,47 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
       throw new ContextException("Passed $name context must be an instance of \\Drupal\\Core\\Plugin\\Context\\ContextInterface");
     }
     parent::setContext($name, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextMapping() {
+    $configuration = $this instanceof ConfigurablePluginInterface ? $this->getConfiguration() : $this->configuration;
+    return isset($configuration['context_mapping']) ? array_flip($configuration['context_mapping']) : [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setContextMapping(array $context_mapping) {
+    if ($this instanceof ConfigurablePluginInterface) {
+      $configuration = $this->getConfiguration();
+      $configuration['context_mapping'] = $context_mapping;
+      $this->setConfiguration($configuration);
+    }
+    else {
+      $this->configuration['context_mapping'] = $context_mapping;
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface[]
+   */
+  public function getContextDefinitions() {
+    return parent::getContextDefinitions();
+  }
+
+  /**
+   * Wraps the context handler.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextHandlerInterface
+   */
+  protected function contextHandler() {
+    return \Drupal::service('context.handler');
   }
 
 }

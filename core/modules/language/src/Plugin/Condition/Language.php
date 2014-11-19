@@ -31,23 +31,23 @@ class Language extends ConditionPluginBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     if (\Drupal::languageManager()->isMultilingual()) {
       // Fetch languages.
-      $languages = language_list(LanguageInterface::STATE_CONFIGURABLE);
+      $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_CONFIGURABLE);
       $langcodes_options = array();
       foreach ($languages as $language) {
         $langcodes_options[$language->getId()] = $language->getName();
       }
       $form['langcodes'] = array(
         '#type' => 'checkboxes',
-        '#title' => t('Language selection'),
+        '#title' => $this->t('Language selection'),
         '#default_value' => $this->configuration['langcodes'],
         '#options' => $langcodes_options,
-        '#description' => t('Select languages to enforce. If none are selected, all languages will be allowed.'),
+        '#description' => $this->t('Select languages to enforce. If none are selected, all languages will be allowed.'),
       );
     }
     else {
       $form['langcodes'] = array(
         '#type' => 'value',
-        '#value' => $this->configuration['langcodes'],
+        '#default_value' => $this->configuration['langcodes'],
       );
     }
     return parent::buildConfigurationForm($form, $form_state);

@@ -26,7 +26,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'system');
+  public static $modules = array('block', 'block_test');
 
   /**
    * The block storage.
@@ -94,7 +94,6 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'provider' => NULL,
       'plugin' => 'test_html',
       'settings' => array(
-        'visibility' => array(),
         'id' => 'test_html',
         'label' => '',
         'provider' => 'block_test',
@@ -104,6 +103,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
           'contexts' => array(),
         ),
       ),
+      'visibility' => array(),
     );
 
     $this->assertIdentical($actual_properties, $expected_properties);

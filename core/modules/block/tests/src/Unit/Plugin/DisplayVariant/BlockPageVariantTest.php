@@ -30,18 +30,18 @@ class BlockPageVariantTest extends UnitTestCase {
   protected $blockViewBuilder;
 
   /**
-   * The current route match.
+   * The event dispatcher.
    *
-   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $routeMatch;
+  protected $dispatcher;
 
   /**
-   * The theme negotiator.
+   * The plugin context handler.
    *
-   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $themeNegotiator;
+  protected $contextHandler;
 
   /**
    * Sets up a display variant plugin for testing.
@@ -57,10 +57,13 @@ class BlockPageVariantTest extends UnitTestCase {
   public function setUpDisplayVariant($configuration = array(), $definition = array()) {
     $this->blockRepository = $this->getMock('Drupal\block\BlockRepositoryInterface');
     $this->blockViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
-    $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
-    $this->themeNegotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->dispatcher->expects($this->any())
+      ->method('dispatch')
+      ->willReturnArgument(1);
+    $this->contextHandler = $this->getMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
     return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
-      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->routeMatch, $this->themeNegotiator))
+      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->dispatcher, $this->contextHandler))
       ->setMethods(array('getRegionNames'))
       ->getMock();
   }

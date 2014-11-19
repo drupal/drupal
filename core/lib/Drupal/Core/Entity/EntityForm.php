@@ -291,10 +291,17 @@ class EntityForm extends FormBase implements EntityFormInterface {
    *   The current state of the form.
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    if ($this->entity instanceof EntityWithPluginCollectionInterface) {
+      // Do not manually update values represented by plugin collections.
+      $values = array_diff_key($values, $this->entity->getPluginCollections());
+    }
+
     // @todo: This relies on a method that only exists for config and content
     //   entities, in a different way. Consider moving this logic to a config
     //   entity specific implementation.
-    foreach ($form_state->getValues() as $key => $value) {
+    foreach ($values as $key => $value) {
       $entity->set($key, $value);
     }
   }

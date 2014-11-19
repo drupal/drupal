@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\block\Unit;
 
+use Drupal\Component\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -16,46 +18,77 @@ use Drupal\Tests\UnitTestCase;
 class BlockRepositoryTest extends UnitTestCase {
 
   /**
-   * Tests the retrieval of block entities.
-   *
-   * @covers ::getVisibleBlocksPerRegion
-   *
-   * @dataProvider providerBlocksConfig
+   * @var \Drupal\block\BlockRepository
    */
-  function testGetVisibleBlocksPerRegion(array $blocks_config, array $expected_blocks) {
-    $theme = $this->randomMachineName();
+  protected $blockRepository;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $blockStorage;
+
+  /**
+   * @var string
+   */
+  protected $theme;
+
+  /**
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $contextHandler;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
     $active_theme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->theme = $this->randomMachineName();
     $active_theme->expects($this->atLeastOnce())
       ->method('getName')
-      ->willReturn($theme);
+      ->willReturn($this->theme);
+
     $theme_manager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
     $theme_manager->expects($this->once())
       ->method('getActiveTheme')
       ->will($this->returnValue($active_theme));
 
-    $block_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $this->contextHandler = $this->getMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
+    $this->blockStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
       ->method('getStorage')
-      ->willReturn($block_storage);
+      ->willReturn($this->blockStorage);
 
-    $block_repository = $this->getMockBuilder('Drupal\block\BlockRepository')
-      ->setConstructorArgs([$entity_manager, $theme_manager])
+    $this->blockRepository = $this->getMockBuilder('Drupal\block\BlockRepository')
+      ->setConstructorArgs([$entity_manager, $theme_manager, $this->contextHandler])
       ->setMethods(['getRegionNames'])
       ->getMock();
-    $block_repository->expects($this->once())
+    $this->blockRepository->expects($this->once())
       ->method('getRegionNames')
       ->willReturn([
         'top' => 'Top',
         'center' => 'Center',
         'bottom' => 'Bottom',
       ]);
+  }
 
+  /**
+   * Tests the retrieval of block entities.
+   *
+   * @covers ::getVisibleBlocksPerRegion
+   *
+   * @dataProvider providerBlocksConfig
+   */
+  public function testGetVisibleBlocksPerRegion(array $blocks_config, array $expected_blocks) {
     $blocks = [];
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
+      $block->expects($this->once())
+        ->method('setContexts')
+        ->willReturnSelf();
       $block->expects($this->once())
         ->method('access')
         ->will($this->returnValue($block_config[0]));
@@ -69,12 +102,12 @@ class BlockRepositoryTest extends UnitTestCase {
       $blocks[$block_id] = $block;
     }
 
-    $block_storage->expects($this->once())
+    $this->blockStorage->expects($this->once())
       ->method('loadByProperties')
-      ->with(['theme' => $theme])
+      ->with(['theme' => $this->theme])
       ->willReturn($blocks);
     $result = [];
-    foreach ($block_repository->getVisibleBlocksPerRegion() as $region => $resulting_blocks) {
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion([]) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $block) {
         $result[$region][] = $plugin_id;
@@ -82,7 +115,6 @@ class BlockRepositoryTest extends UnitTestCase {
     }
     $this->assertSame($result, $expected_blocks);
   }
-
 
   public function providerBlocksConfig() {
     $blocks_config = array(
@@ -113,4 +145,48 @@ class BlockRepositoryTest extends UnitTestCase {
     return $test_cases;
   }
 
+  /**
+   * Tests the retrieval of block entities that are context-aware.
+   *
+   * @covers ::getVisibleBlocksPerRegion
+   */
+  public function testGetVisibleBlocksPerRegionWithContext() {
+    $block = $this->getMock('Drupal\block\BlockInterface');
+    $block->expects($this->once())
+      ->method('setContexts')
+      ->willReturnSelf();
+    $block->expects($this->once())
+      ->method('access')
+      ->willReturn(TRUE);
+    $block->expects($this->once())
+      ->method('get')
+      ->with('region')
+      ->willReturn('top');
+    $blocks['block_id'] = $block;
+
+    $contexts = [];
+    $this->blockStorage->expects($this->once())
+      ->method('loadByProperties')
+      ->with(['theme' => $this->theme])
+      ->willReturn($blocks);
+    $result = [];
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts) as $region => $resulting_blocks) {
+      $result[$region] = [];
+      foreach ($resulting_blocks as $plugin_id => $block) {
+        $result[$region][] = $plugin_id;
+      }
+    }
+    $expected = [
+      'top' => [
+        'block_id',
+      ],
+      'center' => [],
+      'bottom' => [],
+    ];
+    $this->assertSame($expected, $result);
+  }
+
+}
+
+interface TestContextAwareBlockInterface extends BlockPluginInterface, ContextAwarePluginInterface {
 }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 
 /**
  * @defgroup plugin_context Annotation for context definition
@@ -94,9 +95,18 @@ class ContextDefinition extends Plugin {
     $values += array(
       'required' => TRUE,
       'multiple' => FALSE,
-      'label' => NULL,
-      'description' => NULL,
     );
+    // Annotation classes extract data from passed annotation classes directly
+    // used in the classes they pass to.
+    foreach (['label', 'description'] as $key) {
+      // @todo Remove this workaround in https://www.drupal.org/node/2362727.
+      if (isset($values[$key]) && $values[$key] instanceof TranslationWrapper) {
+        $values[$key] = (string) $values[$key]->get();
+      }
+      else {
+        $values[$key] = NULL;
+      }
+    }
     if (isset($values['class']) && !in_array('Drupal\Core\Plugin\Context\ContextDefinitionInterface', class_implements($values['class']))) {
       throw new \Exception('ContextDefinition class must implement \Drupal\Core\Plugin\Context\ContextDefinitionInterface.');
     }

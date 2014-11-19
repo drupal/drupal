@@ -382,13 +382,14 @@ abstract class WebTestBase extends TestBase {
         'max_age' => 0,
       ),
     );
-    foreach (array('region', 'id', 'theme', 'plugin', 'weight') as $key) {
+    $values = [];
+    foreach (array('region', 'id', 'theme', 'plugin', 'weight', 'visibility') as $key) {
       $values[$key] = $settings[$key];
       // Remove extra values that do not belong in the settings array.
       unset($settings[$key]);
     }
-    foreach ($settings['visibility'] as $id => $visibility) {
-      $settings['visibility'][$id]['id'] = $id;
+    foreach ($values['visibility'] as $id => $visibility) {
+      $values['visibility'][$id]['id'] = $id;
     }
     $values['settings'] = $settings;
     $block = entity_create('block', $values);

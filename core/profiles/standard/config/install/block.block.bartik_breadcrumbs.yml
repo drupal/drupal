@@ -6,7 +6,6 @@ langcode: en
 region: '-1'
 plugin: system_breadcrumb_block
 settings:
-  visibility: {  }
   id: system_breadcrumb_block
   label: Breadcrumbs
   provider: system
@@ -16,3 +15,4 @@ dependencies:
     - system
   theme:
     - bartik
+visibility: {  }

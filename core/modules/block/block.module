@@ -301,7 +301,7 @@ function block_configurable_language_delete(ConfigurableLanguageInterface $langu
     $visibility = $block->getVisibility();
     if (isset($visibility['language']['langcodes'][$language->id()])) {
       unset($visibility['language']['langcodes'][$language->id()]);
-      $block->getPlugin()->setVisibilityConfig('language', $visibility['language']);
+      $block->setVisibilityConfig('language', $visibility['language']);
       $block->save();
     }
   }

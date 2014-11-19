@@ -12,11 +12,6 @@ weight: null
 provider: null
 plugin: 'block_content:fb5e8434-3617-4a1d-a252-8273e95ec30e'
 settings:
-  visibility:
-    request_path:
-      id: request_path
-      pages: ''
-      negate: false
   id: 'block_content:fb5e8434-3617-4a1d-a252-8273e95ec30e'
   label: 'Foobar Gorilla'
   provider: block_content
@@ -27,3 +22,8 @@ settings:
   status: true
   info: ''
   view_mode: default
+visibility:
+  request_path:
+    id: request_path
+    pages: ''
+    negate: false

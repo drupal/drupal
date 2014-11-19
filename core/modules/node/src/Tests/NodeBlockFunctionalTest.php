@@ -117,6 +117,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $block = $this->drupalPlaceBlock('system_powered_by_block', array(
       'visibility' => array(
         'node_type' => array(
+          'context_mapping' => array(
+            'node' => 'node.node',
+          ),
           'bundles' => array(
             'article' => 'article',
           ),

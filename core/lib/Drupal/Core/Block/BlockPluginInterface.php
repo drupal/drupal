@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Block;
 
-use Drupal\Component\Plugin\Context\ContextInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
@@ -142,36 +141,5 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    *   The suggested machine name.
    */
   public function getMachineNameSuggestion();
-
-  /**
-   * Gets conditions for this block.
-   *
-   * @return \Drupal\Core\Condition\ConditionInterface[]|\Drupal\Core\Condition\ConditionPluginCollection
-   *   An array or collection of configured condition plugins.
-   */
-  public function getVisibilityConditions();
-
-  /**
-   * Gets a visibility condition plugin instance.
-   *
-   * @param string $instance_id
-   *   The condition plugin instance ID.
-   *
-   * @return \Drupal\Core\Condition\ConditionInterface
-   *   A condition plugin.
-   */
-  public function getVisibilityCondition($instance_id);
-
-  /**
-   * Sets the visibility condition configuration.
-   *
-   * @param string $instance_id
-   *   The condition instance ID.
-   * @param array $configuration
-   *   The condition configuration.
-   *
-   * @return $this
-   */
-  public function setVisibilityConfig($instance_id, array $configuration);
 
 }

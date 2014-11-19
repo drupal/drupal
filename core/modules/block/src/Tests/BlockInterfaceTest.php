@@ -39,7 +39,6 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
       'label' => 'Custom Display Message',
     );
     $expected_configuration = array(
-      'visibility' => array(),
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'provider' => 'block_test',

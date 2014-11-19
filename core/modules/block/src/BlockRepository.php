@@ -8,6 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
@@ -36,10 +37,13 @@ class BlockRepository implements BlockRepositoryInterface {
    *   The entity manager.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
+   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
+   *   The plugin context handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ThemeManagerInterface $theme_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, ThemeManagerInterface $theme_manager, ContextHandlerInterface $context_handler) {
     $this->blockStorage = $entity_manager->getStorage('block');
     $this->themeManager = $theme_manager;
+    $this->contextHandler = $context_handler;
   }
 
   /**
@@ -65,13 +69,15 @@ class BlockRepository implements BlockRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVisibleBlocksPerRegion() {
+  public function getVisibleBlocksPerRegion(array $contexts) {
     // Build an array of the region names in the right order.
     $empty = array_fill_keys(array_keys($this->getRegionNames()), array());
 
     $full = array();
     foreach ($this->blockStorage->loadByProperties(array('theme' => $this->getTheme())) as $block_id => $block) {
-      if ($block->access('view')) {
+      /** @var \Drupal\block\BlockInterface $block */
+      // Set the contexts on the block before checking access.
+      if ($block->setContexts($contexts)->access('view')) {
         $full[$block->get('region')][$block_id] = $block;
       }
     }

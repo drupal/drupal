@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -92,6 +93,34 @@ class EntityFormTest extends UnitTestCase {
         'operation' => 'delete',
       )),
     );
+  }
+
+  /**
+   * @covers ::copyFormValuesToEntity
+   */
+  public function testCopyFormValuesToEntity() {
+    $entity_id = 'test_config_entity_id';
+    $values = ['id' => $entity_id];
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
+      ->setConstructorArgs([$values, 'test_config_entity'])
+      ->setMethods(['getPluginCollections'])
+      ->getMock();
+    $entity->expects($this->atLeastOnce())
+      ->method('getPluginCollections')
+      ->willReturn(['key_controlled_by_plugin_collection' => NULL]);
+    $this->entityForm->setEntity($entity);
+
+    $form_state = (new FormState())->setValues([
+      'regular_key' => 'foo',
+      'key_controlled_by_plugin_collection' => 'bar',
+    ]);
+    $result = $this->entityForm->buildEntity([], $form_state);
+
+    $this->assertSame($entity_id, $result->id());
+    // The regular key should have a value, but the one controlled by a plugin
+    // collection should not have been set.
+    $this->assertSame('foo', $result->get('regular_key'));
+    $this->assertNull($result->get('key_controlled_by_plugin_collection'));
   }
 
 }

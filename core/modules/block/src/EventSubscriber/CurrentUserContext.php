@@ -7,6 +7,7 @@
 
 namespace Drupal\block\EventSubscriber;
 
+use Drupal\block\Event\BlockContextEvent;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -16,7 +17,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Sets the current user as a context.
  */
-class CurrentUserContext extends BlockConditionContextSubscriberBase {
+class CurrentUserContext extends BlockContextSubscriberBase {
 
   use StringTranslationTrait;
 
@@ -50,12 +51,19 @@ class CurrentUserContext extends BlockConditionContextSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function determineBlockContext() {
+  public function onBlockActiveContext(BlockContextEvent $event) {
     $current_user = $this->userStorage->load($this->account->id());
 
     $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')));
     $context->setContextValue($current_user);
-    $this->addContext('current_user', $context);
+    $event->setContext('user.current_user', $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onBlockAdministrativeContext(BlockContextEvent $event) {
+    $this->onBlockActiveContext($event);
   }
 
 }

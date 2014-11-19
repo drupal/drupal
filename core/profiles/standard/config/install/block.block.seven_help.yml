@@ -6,7 +6,6 @@ langcode: en
 region: help
 plugin: system_help_block
 settings:
-  visibility: {  }
   id: system_help_block
   label: 'System Help'
   provider: system
@@ -16,3 +15,4 @@ dependencies:
     - system
   theme:
     - seven
+visibility: {  }

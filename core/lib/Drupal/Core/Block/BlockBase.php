@@ -8,13 +8,7 @@
 namespace Drupal\Core\Block;
 
 use Drupal\block\BlockInterface;
-use Drupal\block\Event\BlockConditionContextEvent;
-use Drupal\block\Event\BlockEvents;
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Condition\ConditionAccessResolverTrait;
-use Drupal\Core\Condition\ConditionPluginCollection;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\Unicode;
@@ -34,22 +28,6 @@ use Drupal\Component\Transliteration\TransliterationInterface;
  * @ingroup block_api
  */
 abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface {
-
-  use ConditionAccessResolverTrait;
-
-  /**
-   * The condition plugin collection.
-   *
-   * @var \Drupal\Core\Condition\ConditionPluginCollection
-   */
-  protected $conditionCollection;
-
-  /**
-   * The condition plugin manager.
-   *
-   * @var \Drupal\Core\Executable\ExecutableManagerInterface
-   */
-  protected $conditionPluginManager;
 
   /**
    * The transliteration service.
@@ -84,9 +62,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
-      'visibility' => $this->getVisibilityConditions()->getConfiguration(),
-    ) + $this->configuration;
+    return $this->configuration;
   }
 
   /**
@@ -107,13 +83,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    *   An associative array with the default configuration.
    */
   protected function baseConfigurationDefaults() {
-    // @todo Allow list of conditions to be configured in
-    //   https://drupal.org/node/2284687.
-    $visibility = array_map(function ($definition) {
-      return array('id' => $definition['id']);
-    }, $this->conditionPluginManager()->getDefinitions());
-    unset($visibility['current_theme']);
-
     return array(
       'id' => $this->getPluginId(),
       'label' => '',
@@ -123,7 +92,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
         'max_age' => 0,
         'contexts' => array(),
       ),
-      'visibility' => $visibility,
     );
   }
 
@@ -152,43 +120,16 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    // @todo Add in a context mapping until the UI supports configuring them,
-    //   see https://drupal.org/node/2284687.
-    $mappings['user_role']['current_user'] = 'user';
-
-    $conditions = $this->getVisibilityConditions();
-    $contexts = $this->getConditionContexts();
-    foreach ($conditions as $condition_id => $condition) {
-      if ($condition instanceof ContextAwarePluginInterface) {
-        if (!isset($mappings[$condition_id])) {
-          $mappings[$condition_id] = array();
-        }
-        $this->contextHandler()->applyContextMapping($condition, $contexts, $mappings[$condition_id]);
-      }
-    }
-    // This should not be hardcoded to an uncacheable access check result, but
-    // in order to fix that, we need condition plugins to return cache contexts,
-    // otherwise it will be impossible to determine by which cache contexts the
-    // result should be varied.
-    if ($this->resolveConditions($conditions, 'and', $contexts, $mappings) !== FALSE && $this->blockAccess($account)) {
+    // @todo Remove self::blockAccess() and force individual plugins to return
+    //   their own AccessResult logic. Until that is done in
+    //   https://www.drupal.org/node/2375689 the access will be set uncacheable.
+    if ($this->blockAccess($account)) {
       $access = AccessResult::allowed();
     }
     else {
       $access = AccessResult::forbidden();
     }
     return $access->setCacheable(FALSE);
-  }
-
-  /**
-   * Gets the values for all defined contexts.
-   *
-   * @return \Drupal\Component\Plugin\Context\ContextInterface[]
-   *   An array of set contexts, keyed by context name.
-   */
-  protected function getConditionContexts() {
-    $conditions = $this->getVisibilityConditions();
-    $this->eventDispatcher()->dispatch(BlockEvents::CONDITION_CONTEXT, new BlockConditionContextEvent($conditions));
-    return $conditions->getConditionContexts();
   }
 
   /**
@@ -287,53 +228,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       $form['cache']['contexts']['#description'] .= ' ' . t('This block is <em>always</em> varied by the following contexts: %required-context-list.', array('%required-context-list' => $required_context_list));
     }
 
-    $form['visibility_tabs'] = array(
-      '#type' => 'vertical_tabs',
-      '#title' => $this->t('Visibility'),
-      '#parents' => array('visibility_tabs'),
-      '#attached' => array(
-        'library' => array(
-          'block/drupal.block',
-        ),
-      ),
-    );
-    foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
-      $condition_form = $condition->buildConfigurationForm(array(), $form_state);
-      $condition_form['#type'] = 'details';
-      $condition_form['#title'] = $condition->getPluginDefinition()['label'];
-      $condition_form['#group'] = 'visibility_tabs';
-      $form['visibility'][$condition_id] = $condition_form;
-    }
-
-    // @todo Determine if there is a better way to rename the conditions.
-    if (isset($form['visibility']['node_type'])) {
-      $form['visibility']['node_type']['#title'] = $this->t('Content types');
-      $form['visibility']['node_type']['bundles']['#title'] = $this->t('Content types');
-      $form['visibility']['node_type']['negate']['#type'] = 'value';
-      $form['visibility']['node_type']['negate']['#title_display'] = 'invisible';
-      $form['visibility']['node_type']['negate']['#value'] = $form['visibility']['node_type']['negate']['#default_value'];
-    }
-    if (isset($form['visibility']['user_role'])) {
-      $form['visibility']['user_role']['#title'] = $this->t('Roles');
-      unset($form['visibility']['user_role']['roles']['#description']);
-      $form['visibility']['user_role']['negate']['#type'] = 'value';
-      $form['visibility']['user_role']['negate']['#value'] = $form['visibility']['user_role']['negate']['#default_value'];
-    }
-    if (isset($form['visibility']['request_path'])) {
-      $form['visibility']['request_path']['#title'] = $this->t('Pages');
-      $form['visibility']['request_path']['negate']['#type'] = 'radios';
-      $form['visibility']['request_path']['negate']['#title_display'] = 'invisible';
-      $form['visibility']['request_path']['negate']['#default_value'] = (int) $form['visibility']['request_path']['negate']['#default_value'];
-      $form['visibility']['request_path']['negate']['#options'] = array(
-        $this->t('Show for the listed pages'),
-        $this->t('Hide for the listed pages'),
-      );
-    }
-    if (isset($form['visibility']['language'])) {
-      $form['visibility']['language']['negate']['#type'] = 'value';
-      $form['visibility']['language']['negate']['#value'] = $form['visibility']['language']['negate']['#default_value'];
-    }
-
     // Add plugin-specific settings for this block type.
     $form += $this->blockForm($form, $form_state);
     return $form;
@@ -362,15 +256,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $contexts = $form_state->getValue(array('cache', 'contexts'));
     $form_state->setValue(array('cache', 'contexts'), array_values(array_filter($contexts)));
 
-    foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
-      // Allow the condition to validate the form.
-      $condition_values = (new FormState())
-        ->setValues($form_state->getValue(['visibility', $condition_id]));
-      $condition->validateConfigurationForm($form, $condition_values);
-      // Update the original form values.
-      $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
-    }
-
     $this->blockValidate($form, $form_state);
   }
 
@@ -394,14 +279,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       $this->configuration['label_display'] = $form_state->getValue('label_display');
       $this->configuration['provider'] = $form_state->getValue('provider');
       $this->configuration['cache'] = $form_state->getValue('cache');
-      foreach ($this->getVisibilityConditions() as $condition_id => $condition) {
-        // Allow the condition to submit the form.
-        $condition_values = (new FormState())
-          ->setValues($form_state->getValue(['visibility', $condition_id]));
-        $condition->submitConfigurationForm($form, $condition_values);
-        // Update the original form values.
-        $form_state->setValue(['visibility', $condition_id], $condition_values->getValues());
-      }
       $this->blockSubmit($form, $form_state);
     }
   }
@@ -501,63 +378,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     // return FALSE.
     $max_age = $this->getCacheMaxAge();
     return $max_age === Cache::PERMANENT || $max_age > 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getVisibilityConditions() {
-    if (!isset($this->conditionCollection)) {
-      $this->conditionCollection = new ConditionPluginCollection($this->conditionPluginManager(), $this->configuration['visibility']);
-    }
-    return $this->conditionCollection;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getVisibilityCondition($instance_id) {
-    return $this->getVisibilityConditions()->get($instance_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setVisibilityConfig($instance_id, array $configuration) {
-    $this->getVisibilityConditions()->setInstanceConfiguration($instance_id, $configuration);
-    return $this;
-  }
-
-  /**
-   * Gets the condition plugin manager.
-   *
-   * @return \Drupal\Core\Executable\ExecutableManagerInterface
-   *   The condition plugin manager.
-   */
-  protected function conditionPluginManager() {
-    if (!isset($this->conditionPluginManager)) {
-      $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
-    }
-    return $this->conditionPluginManager;
-  }
-
-  /**
-   * Wraps the event dispatcher.
-   *
-   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   *   The event dispatcher.
-   */
-  protected function eventDispatcher() {
-    return \Drupal::service('event_dispatcher');
-  }
-
-  /**
-   * Wraps the context handler.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected function contextHandler() {
-    return \Drupal::service('context.handler');
   }
 
 }
