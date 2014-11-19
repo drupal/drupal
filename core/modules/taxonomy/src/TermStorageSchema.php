@@ -74,6 +74,12 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
           'not null' => TRUE,
           'default' => 0,
         ),
+        'status' => array(
+          'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 1,
+        ),
         'sticky' => array(
           'description' => 'Boolean indicating whether the node is sticky.',
           'type' => 'int',
@@ -90,7 +96,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       ),
       'primary key' => array('nid', 'tid'),
       'indexes' => array(
-        'term_node' => array('tid', 'sticky', 'created'),
+        'term_node' => array('tid', 'status', 'sticky', 'created'),
       ),
       'foreign keys' => array(
         'tracked_node' => array(

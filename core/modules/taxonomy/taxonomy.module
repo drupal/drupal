@@ -162,6 +162,7 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
   $query->addTag('node_access');
   $query->addMetaData('base_table', 'taxonomy_index');
   $query->condition('tid', $tid);
+  $query->condition('status', NODE_PUBLISHED);
   if ($pager) {
     $count_query = clone $query;
     $count_query->addExpression('COUNT(t.nid)');
@@ -686,7 +687,7 @@ function taxonomy_build_node_index($node) {
     if (!empty($tid_all)) {
       foreach ($tid_all as $tid) {
         db_merge('taxonomy_index')
-          ->key(array('nid' => $node->id(), 'tid' => $tid))
+          ->key(array('nid' => $node->id(), 'tid' => $tid, 'status' => $node->isPublished()))
           ->fields(array('sticky' => $sticky, 'created' => $node->getCreatedTime()))
           ->execute();
       }

@@ -214,6 +214,15 @@ class TermViewsData extends EntityViewsData {
       ),
     );
 
+    $data['taxonomy_index']['status'] = [
+      'title' => t('Publish status'),
+      'help' => t('Whether or not the content related to a term is published.'),
+      'filter' => [
+        'id' => 'boolean',
+        'label' => t('Published status'),
+        'type' => 'yes-no',
+      ],
+    ];
 
     $data['taxonomy_index']['sticky'] = [
       'title' => t('Sticky status'),

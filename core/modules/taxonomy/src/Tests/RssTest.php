@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\views\Views;
 
 /**
  * Ensure that data added as terms appears in RSS feeds if "RSS Category" format
@@ -106,5 +107,27 @@ class RssTest extends TaxonomyTestBase {
     // Test that the feed page exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}/feed");
     $this->assertRaw('<rss version="2.0"', "Feed page is RSS.");
+
+    // Check that the "Exception value" is disabled by default.
+    $this->drupalGet('taxonomy/term/all/feed');
+    $this->assertResponse(404);
+    // Set the exception value to 'all'.
+    $view = Views::getView('taxonomy_term');
+    $arguments = $view->getDisplay()->getOption('arguments');
+    $arguments['tid']['exception']['value'] = 'all';
+    $view->getDisplay()->overrideOption('arguments', $arguments);
+    $view->storage->save();
+    // Check the article is shown in the feed.
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $raw_xml = format_xml_elements([[
+      'key' => 'title',
+      'value' => $node->label(),
+    ]]);
+    $this->drupalGet('taxonomy/term/all/feed');
+    $this->assertRaw($raw_xml);
+    // Unpublish the article and check that it is not shown in the feed.
+    $node->setPublished(FALSE)->save();
+    $this->drupalGet('taxonomy/term/all/feed');
+    $this->assertNoRaw($raw_xml);
   }
 }
