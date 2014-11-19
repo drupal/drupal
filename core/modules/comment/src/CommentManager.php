@@ -122,6 +122,7 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment') {
+    // Create the comment type if needed.
     $comment_type_storage = $this->entityManager->getStorage('comment_type');
     if ($comment_type = $comment_type_storage->load($comment_type_id)) {
       if ($comment_type->getTargetEntityTypeId() !== $entity_type) {
@@ -132,7 +133,6 @@ class CommentManager implements CommentManagerInterface {
       }
     }
     else {
-      // Silently create the comment-type for the calling code.
       $comment_type_storage->create(array(
         'id' => $comment_type_id,
         'label' => Unicode::ucfirst($comment_type_id),
@@ -140,10 +140,13 @@ class CommentManager implements CommentManagerInterface {
         'description' => 'Default comment field',
       ))->save();
     }
-    // Make sure the field doesn't already exist.
-    if (!FieldStorageConfig::loadByName($entity_type, $field_name)) {
-      // Add a default comment field for existing node comments.
-      $field_storage = $this->entityManager->getStorage('field_storage_config')->create(array(
+    // Add a body field to the comment type.
+    $this->addBodyField($comment_type_id);
+
+    // Add a comment field to the host entity type. Create the field storage if
+    // needed.
+    if (!array_key_exists($field_name, $this->entityManager->getFieldStorageDefinitions($entity_type))) {
+      $this->entityManager->getStorage('field_storage_config')->create(array(
         'entity_type' => $entity_type,
         'field_name' => $field_name,
         'type' => 'comment',
@@ -151,13 +154,11 @@ class CommentManager implements CommentManagerInterface {
         'settings' => array(
           'comment_type' => $comment_type_id,
         ),
-      ));
-      // Create the field.
-      $field_storage->save();
+      ))->save();
     }
-    // Make sure the instance doesn't already exist.
+    // Create the field if needed, and configure its form and view displays.
     if (!array_key_exists($field_name, $this->entityManager->getFieldDefinitions($entity_type, $bundle))) {
-      $field = $this->entityManager->getStorage('field_config')->create(array(
+      $this->entityManager->getStorage('field_config')->create(array(
         'label' => 'Comments',
         'description' => '',
         'field_name' => $field_name,
@@ -173,18 +174,16 @@ class CommentManager implements CommentManagerInterface {
             'last_comment_uid' => 0,
           ),
         ),
-      ));
-      $field->save();
+      ))->save();
 
-      // Assign widget settings for the 'default' form mode.
+      // Entity form displays: assign widget settings for the 'default' form
+      // mode, and hide the field in all other form modes.
       entity_get_form_display($entity_type, $bundle, 'default')
         ->setComponent($field_name, array(
           'type' => 'comment_default',
           'weight' => 20,
         ))
         ->save();
-
-      // The comment field should be hidden in all other form displays.
       foreach ($this->entityManager->getFormModes($entity_type) as $id => $form_mode) {
         $display = entity_get_form_display($entity_type, $bundle, $id);
         // Only update existing displays.
@@ -192,7 +191,9 @@ class CommentManager implements CommentManagerInterface {
           $display->removeComponent($field_name)->save();
         }
       }
-      // Set default to display comment list.
+
+      // Entity view displays: assign widget settings for the 'default' view
+      // mode, and hide the field in all other view modes.
       entity_get_display($entity_type, $bundle, 'default')
         ->setComponent($field_name, array(
           'label' => 'above',
@@ -200,7 +201,6 @@ class CommentManager implements CommentManagerInterface {
           'weight' => 20,
         ))
         ->save();
-      // The comment field should be hidden in all other view displays.
       foreach ($this->entityManager->getViewModes($entity_type) as $id => $view_mode) {
         $display = entity_get_display($entity_type, $bundle, $id);
         // Only update existing displays.
@@ -208,9 +208,7 @@ class CommentManager implements CommentManagerInterface {
           $display->removeComponent($field_name)->save();
         }
       }
-
     }
-    $this->addBodyField($comment_type_id);
   }
 
   /**
