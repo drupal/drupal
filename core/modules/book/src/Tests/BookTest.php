@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
 class BookTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
@@ -373,9 +373,9 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Tests the book navigation block when an access module is enabled.
+   * Tests the book navigation block when an access module is installed.
    */
-  function testNavigationBlockOnAccessModuleEnabled() {
+  function testNavigationBlockOnAccessModuleInstalled() {
     $this->drupalLogin($this->admin_user);
     $block = $this->drupalPlaceBlock('book_navigation', array('block_mode' => 'book pages'));
 
@@ -633,7 +633,7 @@ class BookTest extends WebTestBase {
     // Create a new book.
     $this->createBook();
 
-    // Must be a user with 'node test view' permission since node_access_test is enabled.
+    // Must be a user with 'node test view' permission since node_access_test is installed.
     $this->drupalLogin($this->web_user);
 
     // Load the book page and assert the created book title is displayed.
