@@ -170,17 +170,14 @@ function simpletest_run_tests($test_list) {
  * @param $unescaped_test_classnames
  *   An array of test class names, including full namespaces, to be passed as
  *   a regular expression to PHPUnit's --filter option.
- * @param int $status
- *   (optional) The exit status code of the PHPUnit process will be assigned to
- *   this variable.
  *
  * @return array
  *   The parsed results of PHPUnit's JUnit XML output, in the format of
  *   {simpletest}'s schema.
  */
-function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames, &$status = NULL) {
+function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
-  simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file, $status);
+  simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
   return simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
 }
 
@@ -235,14 +232,11 @@ function simpletest_phpunit_configuration_filepath() {
  *   a regular expression to PHPUnit's --filter option.
  * @param string $phpunit_file
  *   A filepath to use for PHPUnit's --log-junit option.
- * @param int $status
- *   (optional) The exit status code of the PHPUnit process will be assigned to
- *   this variable.
  *
  * @return string
  *  The results as returned by exec().
  */
-function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file, &$status = NULL) {
+function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
   $phpunit_bin = simpletest_phpunit_command();
 
   $command = array(
@@ -276,7 +270,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
   // exec in a subshell so that the environment is isolated when running tests
   // via the simpletest UI.
-  $ret = exec(join($command, " "), $output, $status);
+  $ret = exec(join($command, " "));
   chdir($old_cwd);
   return $ret;
 }
