@@ -8,6 +8,10 @@
 namespace Drupal\forum\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\forum\ForumManagerInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\TermStorageInterface;
@@ -41,6 +45,27 @@ class ForumController extends ControllerBase {
   protected $termStorage;
 
   /**
+   * Node access control handler.
+   *
+   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
+   */
+  protected $nodeAccess;
+
+  /**
+   * Field map of existing fields on the site.
+   *
+   * @var array
+   */
+  protected $fieldMap;
+
+  /**
+   * Node type storage handler.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeTypeStorage;
+
+  /**
    * Constructs a ForumController object.
    *
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
@@ -49,21 +74,39 @@ class ForumController extends ControllerBase {
    *   Vocabulary storage.
    * @param \Drupal\taxonomy\TermStorageInterface $term_storage
    *   Term storage.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current logged in user.
+   * @param \Drupal\Core\Entity\EntityAccessControlHandlerInterface $node_access
+   *   Node access control handler.
+   * @param array $field_map
+   *   Array of active fields on the site.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
+   *   Node type storage handler.
    */
-  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage) {
+  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage) {
     $this->forumManager = $forum_manager;
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
+    $this->currentUser = $current_user;
+    $this->nodeAccess = $node_access;
+    $this->fieldMap = $field_map;
+    $this->nodeTypeStorage = $node_type_storage;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
+    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $container->get('forum_manager'),
-      $container->get('entity.manager')->getStorage('taxonomy_vocabulary'),
-      $container->get('entity.manager')->getStorage('taxonomy_term')
+      $entity_manager->getStorage('taxonomy_vocabulary'),
+      $entity_manager->getStorage('taxonomy_term'),
+      $container->get('current_user'),
+      $entity_manager->getAccessControlHandler('node'),
+      $entity_manager->getFieldMap(),
+      $entity_manager->getStorage('node_type')
     );
   }
 
@@ -148,7 +191,10 @@ class ForumController extends ControllerBase {
       $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
     }
 
-    return $build;
+    return [
+      'action' => $this->buildActionLinks($config->get('vocabulary'), $term),
+      'forum' => $build,
+    ];
   }
 
   /**
@@ -179,6 +225,70 @@ class ForumController extends ControllerBase {
       'forum_container' => 1,
     ));
     return $this->entityFormBuilder()->getForm($taxonomy_term, 'container');
+  }
+
+  /**
+   * Generates an action link to display at the top of the forum listing.
+   *
+   * @param string $vid
+   *   Vocabulary ID.
+   * @param \Drupal\taxonomy\TermInterface $forum_term
+   *   The term for which the links are to be built.
+   *
+   * @return array
+   *   Render array containing the links.
+   */
+  protected function buildActionLinks($vid, TermInterface $forum_term = NULL) {
+    $user = $this->currentUser();
+
+    $links = [];
+    // Loop through all bundles for forum taxonomy vocabulary field.
+    foreach ($this->fieldMap['node']['taxonomy_forums']['bundles'] as $type) {
+      if ($this->nodeAccess->createAccess($type)) {
+        $links[$type] = [
+          '#attributes' => ['class' => ['action--forum']],
+          '#theme' => 'menu_local_action',
+          '#link' => [
+            'title' => $this->t('Add new @node_type', [
+              '@node_type' => $this->nodeTypeStorage->load($type)->label(),
+            ]),
+            'url' => Url::fromRoute('node.add', ['node_type' => $type]),
+          ],
+        ];
+        if ($forum_term && $forum_term->bundle() == $vid) {
+          // We are viewing a forum term (specific forum), append the tid to
+          // the url.
+          $links[$type]['#link']['localized_options']['query']['forum_id'] = $forum_term->id();
+        }
+      }
+    }
+    if (empty($links)) {
+      // Authenticated user does not have access to create new topics.
+      if ($user->isAuthenticated()) {
+        $links['disallowed'] = [
+          '#markup' => $this->t('You are not allowed to post new content in the forum.'),
+        ];
+      }
+      // Anonymous user does not have access to create new topics.
+      else {
+        $links['login'] = [
+          '#attributes' => ['class' => ['action--forum']],
+          '#theme' => 'menu_local_action',
+          '#link' => array(
+            'title' => $this->t('Log in to post new content in the forum.'),
+            'url' => Url::fromRoute('user.login', [], ['query' => $this->getDestination()]),
+          ),
+        ];
+      }
+    }
+    return $links;
+  }
+
+  /**
+   * Wraps drupal_get_destination().
+   */
+  protected function getDestination() {
+    return drupal_get_destination();
   }
 
 }

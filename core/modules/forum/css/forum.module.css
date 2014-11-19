@@ -65,3 +65,6 @@
   text-align: right;
   float: left;
 }
+.action--forum {
+  list-style: none;
+}
