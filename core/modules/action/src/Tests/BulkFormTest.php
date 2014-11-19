@@ -19,7 +19,7 @@ use Drupal\views\Views;
 class BulkFormTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

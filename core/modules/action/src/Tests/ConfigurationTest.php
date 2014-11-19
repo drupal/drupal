@@ -19,7 +19,7 @@ use Drupal\simpletest\WebTestBase;
 class ConfigurationTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
 class ActionUninstallTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
