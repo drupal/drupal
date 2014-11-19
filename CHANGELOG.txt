@@ -1,6 +1,10 @@
 
-Drupal 6.34-dev, xxxx-xx-xx (development release)
+Drupal 6.35-dev, xxxx-xx-xx (development release)
 ----------------------
+
+Drupal 6.34, 2014-11-19
+----------------------
+- Fixed security issues (session hijacking). See SA-CORE-2014-006.
 
 Drupal 6.33, 2014-08-06
 ----------------------
