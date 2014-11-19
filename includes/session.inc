@@ -41,7 +41,7 @@ function sess_read($key) {
   register_shutdown_function('session_write_close');
 
   // Handle the case of first time visitors and clients that don't store cookies (eg. web crawlers).
-  if (!isset($_COOKIE[session_name()])) {
+  if (empty($key) || !isset($_COOKIE[session_name()])) {
     $user = drupal_anonymous_user();
     return '';
   }
