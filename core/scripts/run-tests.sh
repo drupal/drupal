@@ -528,7 +528,7 @@ function simpletest_script_execute_batch($test_classes) {
       $test_class = array_shift($test_classes);
       // Process phpunit tests immediately since they are fast and we don't need
       // to fork for them.
-      if (is_subclass_of($test_class, '\PHPUnit_Framework_TestCase')) {
+      if (is_subclass_of($test_class, 'Drupal\Tests\UnitTestCase')) {
         $phpunit_status = simpletest_script_run_phpunit($test_id, $test_class);
         if ($phpunit_status > $total_status) {
           $total_status = $phpunit_status;
@@ -831,7 +831,7 @@ function simpletest_script_get_test_list() {
         else {
           foreach ($matches[1] as $class_name) {
             $namespace_class = $namespace . '\\' . $class_name;
-            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, '\PHPUnit_Framework_TestCase')) {
+            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, '\Drupal\Tests\UnitTestCase')) {
               $test_list[] = $namespace_class;
             }
           }
