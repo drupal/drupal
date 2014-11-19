@@ -388,7 +388,7 @@ function views_preprocess_html(&$variables) {
  *   The ID of the display within $view whose contextual links will be added.
  *
  * @see \Drupal\views\Plugin\block\block\ViewsBlock::addContextualLinks()
- * @see views_page_alter()
+ * @see views_preprocess_page()
  * @see template_preprocess_views_view()
  */
 function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {

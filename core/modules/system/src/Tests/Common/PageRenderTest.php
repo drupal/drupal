@@ -34,24 +34,6 @@ class PageRenderTest extends KernelTestBase {
   }
 
   /**
-   * Tests hook_page_build() exceptions, a deprecated hook kept around for BC.
-   */
-  function testHookPageBuildExceptions() {
-    // Also enable the system module, because that module invokes the BC hooks.
-    $this->enableModules(['bc_test', 'system']);
-    $this->assertPageRenderHookExceptions('bc_test', 'hook_page_build');
-  }
-
-  /**
-   * Tests hook_page_alter(), a deprecated hook kept around for BC.
-   */
-  function testHookPageAttachmentsAlter() {
-    // Also enable the system module, because that module invokes the BC hooks.
-    $this->enableModules(['bc_test', 'system']);
-    $this->assertPageRenderHookExceptions('bc_test', 'hook_page_alter');
-  }
-
-  /**
    * Asserts whether expected exceptions are thrown for invalid hook implementations.
    *
    * @param string $module

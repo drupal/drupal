@@ -813,60 +813,6 @@ function hook_css_alter(&$css) {
 /**
  * Add attachments (typically assets) to a page before it is rendered.
  *
- * Kept around for backwards compatibility, but now allows only attachments to
- * be added, adding renderable arrays is no longer allowed.
- *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0. Successor:
- *   hook_page_attachments(). Is now effectively an alias of that hook.
- *
- * @param $page
- *   The page to which to add attachments.
- *
- * @see hook_page_attachments()
- */
-function hook_page_build(&$page) {
-  $path = drupal_get_path('module', 'foo');
-  // Add JavaScript/CSS assets to all pages.
-  // @see drupal_process_attached()
-  $page['#attached']['js'][$path . '/foo.js'] = array('every_page' => TRUE);
-  $page['#attached']['css'][$path . '/foo.base.css'] = array('every_page' => TRUE);
-  $page['#attached']['css'][$path . '/foo.theme.css'] = array('every_page' => TRUE);
-
-  // Add a special CSS file to a certain page only.
-  if (drupal_is_front_page()) {
-    $page['#attached']['css'][] = $path . '/foo.front.css';
-  }
-}
-
-/**
- * Perform alterations before a page is rendered.
- *
- * Kept around for backwards compatibility, but now allows only attachments to
- * be added, altering the renderable array for the page is no longer allowed.
- *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0. Successor:
- *   hook_page_attachments_alter(). Is now effectively an alias of that hook.
- *
- * Use this hook when you want to remove or alter attachments at the page
- * level, or add attachments at the page level that depend on an other module's
- * attachments (this hook runs after hook_page_build().
- *
- * @param $page
- *   An empty renderable array representing the page.
- *
- * @see hook_page_build()
- */
-function hook_page_alter(&$page) {
-  // Conditionally remove an asset.
-  if (in_array('core/jquery', $page['#attached']['library'])) {
-    $index = array_search('core/jquery', $page['#attached']['library']);
-    unset($page['#attached']['library'][$index]);
-  }
-}
-
-/**
- * Add attachments (typically assets) to a page before it is rendered.
- *
  * Use this hook when you want to conditionally add attachments to a page.
  *
  * If you want to alter the attachments added by other modules or if your module

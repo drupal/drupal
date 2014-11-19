@@ -260,7 +260,8 @@ function common_test_post_render_cache_placeholder(array $element, array $contex
  * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
  */
 function common_test_page_attachments(array &$page) {
-  $page['#attached']['library'][] = 'core/jquery';
+  $page['#attached']['library'][] = 'core/foo';
+  $page['#attached']['library'][] = 'core/bar';
 
   if (\Drupal::state()->get('common_test.hook_page_attachments.descendant_attached', FALSE)) {
     $page['content']['#attached']['library'][] = 'core/jquery';
@@ -279,7 +280,12 @@ function common_test_page_attachments(array &$page) {
  * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
  */
 function common_test_page_attachments_alter(array &$page) {
-  $page['#attached']['library'][] = 'core/jquery';
+  // Remove a library that was added in common_test_page_attachments(), to test
+  // that this hook can do what it claims to do.
+  if (isset($page['#attached']['library']) && ($index = array_search('core/bar', $page['#attached']['library'])) && $index !== FALSE) {
+    unset($page['#attached']['library'][$index]);
+  }
+  $page['#attached']['library'][] = 'core/baz';
 
   if (\Drupal::state()->get('common_test.hook_page_attachments_alter.descendant_attached', FALSE)) {
     $page['content']['#attached']['library'][] = 'core/jquery';

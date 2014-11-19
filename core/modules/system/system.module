@@ -632,28 +632,6 @@ function system_page_attachments(array &$page) {
       )
     );
   }
-
-  // Invoke hook_page_build() for modules and hook_page_alter() for both modules
-  // and themes, for backwards compatibility.
-  $attachments = [];
-  foreach (\Drupal::moduleHandler()->getImplementations('page_build') as $module) {
-    $function = $module . '_page_build';
-    $function($attachments);
-  }
-  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_build().');
-  }
-  \Drupal::moduleHandler()->alter('page', $attachments);
-  \Drupal::theme()->alter('page', $attachments);
-  if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-    throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_alter().');
-  }
-  if (isset($attachments['#attached'])) {
-    $page['#attached'] = $attachments['#attached'];
-  }
-  if (isset($attachments['#post_render_cache'])) {
-    $page['#post_render_cache'] = $attachments['#post_render_cache'];
-  }
 }
 
 /**
