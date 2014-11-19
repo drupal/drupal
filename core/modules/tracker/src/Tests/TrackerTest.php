@@ -112,6 +112,8 @@ class TrackerTest extends WebTestBase {
     $this->assertText($my_published->label(), "Published nodes show up in the user's tracker listing.");
     $this->assertNoText($other_published_no_comment->label(), "Another user's nodes do not show up in the user's tracker listing.");
     $this->assertText($other_published_my_comment->label(), "Nodes that the user has commented on appear in the user's tracker listing.");
+    $this->assertLink($my_published->label());
+    $this->assertNoLink($unpublished->label());
     // Verify that title and tab title have been set correctly.
     $this->assertText('Activity', 'The user activity tab has the name "Activity".');
     $this->assertTitle(t('@name | @site', array('@name' => $this->user->getUsername(), '@site' => \Drupal::config('system.site')->get('name'))), 'The user tracker page has the correct page title.');
@@ -212,6 +214,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
     $this->drupalGet('activity');
     $this->assertText('1 new', 'New comments are counted on the tracker listing pages.');
+    $this->assertLink(t('1 new'));
   }
 
   /**

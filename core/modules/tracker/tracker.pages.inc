@@ -73,8 +73,15 @@ function tracker_page($account = NULL) {
         $comments = $node->comment_count;
 
         if ($new = \Drupal::service('comment.manager')->getCountNewComments($node)) {
-          $comments .= '<br />';
-          $comments .= \Drupal::l(format_plural($new, '1 new', '@count new'), $node->urlInfo()->setOptions(array('fragment' => 'new')));
+          $comments = array(
+            '#type' => 'link',
+            '#url' => $node->urlInfo(),
+            '#title' => \Drupal::translation()->formatPlural($new, '1 new', '@count new'),
+            '#options' => array(
+              'fragment' => 'new',
+            ),
+            '#prefix' => $node->comment_count . '<br />',
+          );
         }
       }
 
@@ -85,10 +92,29 @@ function tracker_page($account = NULL) {
 
       $row = array(
         'type' => String::checkPlain(node_get_type_label($node)),
-        'title' => array('data' => \Drupal::l($node->getTitle(), $node->urlInfo()) . ' ' . drupal_render($mark_build)),
-        'author' => array('data' => array('#theme' => 'username', '#account' => $node->getOwner())),
-        'replies' => array('class' => array('replies'), 'data' => $comments),
-        'last updated' => array('data' => t('!time ago', array('!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->last_activity)))),
+        'title' => array(
+          'data' => array(
+            '#type' => 'link',
+            '#url' => $node->urlInfo(),
+            '#title' => $node->getTitle(),
+            '#suffix' => ' ' . drupal_render($mark_build),
+          ),
+        ),
+        'author' => array(
+          'data' => array(
+            '#theme' => 'username',
+            '#account' => $node->getOwner(),
+          ),
+        ),
+        'replies' => array(
+          'class' => array('replies'),
+          'data' => $comments,
+        ),
+        'last updated' => array(
+          'data' => t('!time ago', array(
+            '!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->last_activity),
+          )),
+        ),
       );
 
       $rows[] = $row;
