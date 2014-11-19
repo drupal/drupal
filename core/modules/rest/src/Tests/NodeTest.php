@@ -17,7 +17,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class NodeTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * Ensure that the node resource works with comment module enabled.
    *

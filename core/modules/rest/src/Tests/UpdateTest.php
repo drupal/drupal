@@ -18,7 +18,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class UpdateTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

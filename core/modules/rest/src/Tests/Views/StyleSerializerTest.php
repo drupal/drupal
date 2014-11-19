@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class StyleSerializerTest extends PluginTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

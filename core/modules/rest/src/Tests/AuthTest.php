@@ -17,7 +17,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class AuthTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

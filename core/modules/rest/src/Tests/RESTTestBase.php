@@ -44,7 +44,7 @@ abstract class RESTTestBase extends WebTestBase {
   protected $defaultAuth;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

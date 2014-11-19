@@ -17,7 +17,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class DeleteTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

@@ -18,7 +18,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class ReadTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

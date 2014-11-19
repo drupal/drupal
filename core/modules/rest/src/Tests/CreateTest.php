@@ -17,7 +17,7 @@ use Drupal\Component\Serialization\Json;
 class CreateTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

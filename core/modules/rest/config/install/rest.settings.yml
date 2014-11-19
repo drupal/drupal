@@ -1,5 +1,5 @@
 # Enable all methods on nodes.
-# You must enable Hal and Basic_auth modules for this to work. Also, if you are
+# You must install Hal and Basic_auth modules for this to work. Also, if you are
 # going to use Basic_auth in a production environment then you should consider
 # setting up SSL.
 # There are alternatives to Basic_auth in contrib such as OAuth module.

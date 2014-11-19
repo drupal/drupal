@@ -17,7 +17,7 @@ use Drupal\rest\Tests\RESTTestBase;
 class ResourceTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

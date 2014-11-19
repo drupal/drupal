@@ -13,7 +13,7 @@ namespace Drupal\rest\Tests;
 class CsrfTest extends RESTTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

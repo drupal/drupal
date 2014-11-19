@@ -123,8 +123,8 @@ class EntityDerivative implements ContainerDeriverInterface {
             }
             catch (RouteNotFoundException $e) {
               // If the route does not exist it means we are in a brittle state
-              // of module enabling/disabling, so we simply exclude this entity
-              // type.
+              // of module installing/uninstalling, so we simply exclude this
+              // entity type.
               unset($this->derivatives[$entity_type_id]);
               // Continue with the next entity type;
               continue 2;
