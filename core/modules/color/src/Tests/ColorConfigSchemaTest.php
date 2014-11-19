@@ -20,7 +20,7 @@ class ColorConfigSchemaTest extends WebTestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
