@@ -193,16 +193,7 @@ class AliasStorage implements AliasStorageInterface {
   }
 
   /**
-   * Checks if alias already exists.
-   *
-   * @param string $alias
-   *   Alias to check against.
-   * @param string $langcode
-   *   Language of the alias.
-   * @param string $source
-   *   Path that alias is to be assigned to (optional).
-   * @return boolean
-   *   TRUE if alias already exists and FALSE otherwise.
+   * {@inheritdoc}
    */
   public function aliasExists($alias, $langcode, $source = NULL) {
     $query = $this->connection->select('url_alias')
@@ -217,24 +208,14 @@ class AliasStorage implements AliasStorageInterface {
   }
 
   /**
-   * Checks if there are any aliases with language defined.
-   *
-   * @return bool
-   *   TRUE if aliases with language exist.
+   * {@inheritdoc}
    */
   public function languageAliasExists() {
     return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))->fetchField();
   }
 
   /**
-   * Loads aliases for admin listing.
-   *
-   * @param array $header
-   *   Table header.
-   * @param string $keys
-   *   Search keys.
-   * @return array
-   *   Array of items to be displayed on the current page.
+   * {@inheritdoc}
    */
   public function getAliasesForAdminListing($header, $keys = NULL) {
     $query = $this->connection->select('url_alias')
@@ -253,13 +234,7 @@ class AliasStorage implements AliasStorageInterface {
   }
 
   /**
-   * Check if any alias exists starting with $initial_substring.
-   *
-   * @param $initial_substring
-   *   Initial path substring to test against.
-   *
-   * @return
-   *   TRUE if any alias exists, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function pathHasMatchingAlias($initial_substring) {
     $query = $this->connection->select('url_alias', 'u');
