@@ -145,35 +145,52 @@ entity_form_display.field.string_textfield:
           type: label
           label: 'Placeholder'
 
+entity_form_display.field.string_textarea:
+  type: entity_field_form_display_base
+  label: 'Textarea display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        rows:
+          type: integer
+          label: 'Rows'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
+entity_form_display.field.email_default:
+  type: entity_field_form_display_base
+  label: 'Email field display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
 entity_form_display.field.datetime_timestamp:
   type: entity_field_form_display_base
   label: 'Datetime timestamp display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.boolean_checkbox:
   type: entity_field_form_display_base
   label: 'Boolean checkbox display format settings'
   mapping:
     settings:
-      type: sequence
+      type: mapping
       label: 'Settings'
-      sequence:
-        - type: string
+      mapping:
+        display_label:
+          type: boolean
+          label: 'Display label'
 
 entity_form_display.field.hidden:
   type: entity_field_form_display_base
   label: '- Hidden - format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.number:
   type: entity_field_form_display_base
@@ -238,29 +255,11 @@ entity_view_display.field.number_integer:
 entity_view_display.field.number_unformatted:
   type: entity_field_view_display_base
   label: 'Number unformatted display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.uri_link:
   type: entity_field_view_display_base
   label: 'URI as link display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.timestamp_ago:
   type: entity_field_view_display_base
   label: 'Timestamp ago display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string

@@ -70,43 +70,18 @@ field.file.field_settings:
 entity_view_display.field.file_default:
   type: entity_field_view_display_base
   label: 'Generic file format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.file_rss_enclosure:
   type: entity_field_view_display_base
   label: 'RSS enclosure format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.file_table:
   type: entity_field_view_display_base
   label: 'Table of files format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.file_url_plain:
   type: entity_field_view_display_base
   label: 'URL to file format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
-
 
 entity_form_display.field.file_generic:
   type: entity_field_form_display_base

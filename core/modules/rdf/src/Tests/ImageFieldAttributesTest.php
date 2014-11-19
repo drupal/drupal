@@ -59,6 +59,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
         'properties' => array('og:image'),
         'mapping_type' => 'rel',
       ))
+      ->setBundleMapping(array('types' => array()))
       ->save();
 
     // Get the test image that simpletest provides.

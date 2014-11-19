@@ -3,6 +3,3 @@
 entity_form_display.field.path:
   type: entity_field_form_display_base
   label: 'Link format settings'
-  mapping:
-    settings:
-      type: sequence

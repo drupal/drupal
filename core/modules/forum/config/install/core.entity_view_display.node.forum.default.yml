@@ -28,7 +28,7 @@ content:
     type: comment_default
     weight: 20
     settings:
-      pager_id: '0'
+      pager_id: 0
     third_party_settings: {  }
   body:
     label: hidden

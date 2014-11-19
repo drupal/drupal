@@ -103,7 +103,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Use the responsive image formatter linked to file formatter.
     $display_options = array(
       'type' => 'responsive_image',
-      'module' => 'responsive_image',
       'settings' => array(
         'image_link' => 'file'
       ),

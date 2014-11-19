@@ -650,6 +650,9 @@ field.integer.field_settings:
     suffix:
       type: string
       label: 'Suffix'
+    size:
+      type: string
+      label: 'Database storage size'
 
 field.integer.value:
   type: sequence

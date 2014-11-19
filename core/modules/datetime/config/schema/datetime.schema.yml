@@ -41,12 +41,6 @@ entity_view_display.field.datetime_default:
 entity_view_display.field.datetime_plain:
   type: entity_field_view_display_base
   label: 'Datetime plain display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.datetime_datelist:
   type: entity_field_form_display_base
@@ -69,9 +63,3 @@ entity_form_display.field.datetime_datelist:
 entity_form_display.field.datetime_default:
   type: entity_field_form_display_base
   label: 'Datetime default display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string

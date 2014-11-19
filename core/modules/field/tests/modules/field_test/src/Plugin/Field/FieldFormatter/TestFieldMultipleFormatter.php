@@ -32,6 +32,7 @@ class TestFieldMultipleFormatter extends FormatterBase {
   public static function defaultSettings() {
     return array(
       'test_formatter_setting_multiple' => 'dummy test string',
+      'alter' => FALSE,
     ) + parent::defaultSettings();
   }
 

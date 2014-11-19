@@ -94,12 +94,6 @@ entity_view_display.field.taxonomy_term_reference_rss_category:
 entity_view_display.field.taxonomy_term_reference_link:
   type: entity_field_view_display_base
   label: 'Taxonomy format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.taxonomy_autocomplete:
   type: entity_field_form_display_base

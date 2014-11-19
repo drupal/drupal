@@ -34,6 +34,7 @@ image.effect.image_crop:
   mapping:
     anchor:
       label: 'Anchor'
+      type: string
 
 image.effect.image_resize:
   type: image_size
@@ -48,6 +49,7 @@ image.effect.image_rotate:
       label: 'Rotation angle'
     bgcolor:
       label: 'Background color'
+      type: color_hex
     random:
       type: boolean
       label: 'Randomize'
@@ -59,6 +61,10 @@ image.effect.image_scale:
     upscale:
       type: boolean
       label: 'Upscale'
+
+# The image desaturate effect has no settings.
+image.effect.image_desaturate:
+  type: sequence
 
 image.effect.image_scale_and_crop:
   type: image_size
@@ -139,10 +145,15 @@ entity_view_display.field.image:
   label: 'Image field display format settings'
   mapping:
     settings:
-      type: sequence
-      label: 'Format settings'
-      sequence:
-        - type: string
+      type: mapping
+      label: 'Settings'
+      mapping:
+        image_link:
+          type: string
+          label: 'Link image to'
+        image_style:
+          type: string
+          label: 'Image style'
 
 entity_form_display.field.image_image:
   type: entity_field_form_display_base
@@ -150,7 +161,7 @@ entity_form_display.field.image_image:
   mapping:
     settings:
       type: mapping
-      label: 'Format settings'
+      label: 'Settings'
       mapping:
         progress_indicator:
           type: string

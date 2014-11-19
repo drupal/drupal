@@ -28,6 +28,15 @@ use Drupal\simpletest\WebTestBase;
 abstract class ImageFieldTestBase extends WebTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -72,13 +81,15 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
     ))->save();
 
+    $description = !empty($field_settings['description']) ? $field_settings['description'] : '';
+    unset($field_settings['description']);
     $field_config = entity_create('field_config', array(
       'field_name' => $name,
       'label' => $name,
       'entity_type' => 'node',
       'bundle' => $type_name,
       'required' => !empty($field_settings['required']),
-      'description' => !empty($field_settings['description']) ? $field_settings['description'] : '',
+      'description' => $description,
       'settings' => $field_settings,
     ));
     $field_config->save();

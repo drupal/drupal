@@ -9,8 +9,8 @@ namespace Drupal\datetime\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Datetime field functionality.
@@ -18,6 +18,15 @@ use Drupal\Core\Datetime\DrupalDateTime;
  * @group datetime
  */
 class DateTimeFieldTest extends WebTestBase {
+
+  /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
 
   /**
    * Modules to enable.
@@ -141,6 +150,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
+    $this->display_options['settings'] = array();
     entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
       ->setComponent($field_name, $this->display_options)
       ->save();
@@ -206,6 +216,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Verify that the plain formatter works.
     $this->display_options['type'] = 'datetime_plain';
+    $this->display_options['settings'] = array();
     entity_get_display($this->field->entity_type, $this->field->bundle, 'full')
       ->setComponent($field_name, $this->display_options)
       ->save();

@@ -93,12 +93,6 @@ field.text_with_summary.value:
 entity_view_display.field.text_default:
   type: entity_field_view_display_base
   label: 'Formatted text default display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.text_summary_or_trimmed:
   type: entity_field_view_display_base

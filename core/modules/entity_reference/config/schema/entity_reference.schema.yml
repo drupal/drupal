@@ -55,12 +55,6 @@ entity_view_display.field.entity_reference_entity_view:
 entity_view_display.field.entity_reference_entity_id:
   type: entity_field_view_display_base
   label: 'Entity reference entity ID display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.entity_reference_label:
   type: entity_field_view_display_base

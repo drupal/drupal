@@ -18,6 +18,15 @@ use Drupal\simpletest\WebTestBase;
 class NumberFieldTest extends WebTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -49,7 +58,7 @@ class NumberFieldTest extends WebTestBase {
       'entity_type' => 'entity_test',
       'type' => 'decimal',
       'settings' => array(
-        'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
+        'precision' => 8, 'scale' => 4,
       )
     ))->save();
     entity_create('field_config', array(

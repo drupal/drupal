@@ -114,39 +114,15 @@ field.list_string.value:
 entity_view_display.field.list_default:
   type: entity_field_view_display_base
   label: 'Options list default display settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_view_display.field.list_key:
   type: entity_field_view_display_base
   label: 'Key format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.options_buttons:
   type: entity_field_form_display_base
   label: 'Check boxes/radio buttons format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 entity_form_display.field.options_select:
   type: entity_field_form_display_base
   label: 'Select list format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string

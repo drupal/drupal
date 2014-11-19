@@ -5,20 +5,16 @@ entity_view_display.field.comment_default:
   label: 'Comment display format settings'
   mapping:
     settings:
-      type: sequence
+      type: mapping
       label: 'Settings'
-      sequence:
-        - type: string
+      mapping:
+        pager_id:
+          type: integer
+          label: 'Pager ID'
 
 entity_form_display.field.comment_default:
   type: entity_field_form_display_base
   label: 'Comment display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
 
 action.configuration.comment_publish_action:
   type: action_configuration_default
