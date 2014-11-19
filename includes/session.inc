@@ -79,7 +79,7 @@ function _drupal_session_read($sid) {
   // Handle the case of first time visitors and clients that don't store
   // cookies (eg. web crawlers).
   $insecure_session_name = substr(session_name(), 1);
-  if (!isset($_COOKIE[session_name()]) && !isset($_COOKIE[$insecure_session_name])) {
+  if (empty($sid) || (!isset($_COOKIE[session_name()]) && !isset($_COOKIE[$insecure_session_name]))) {
     $user = drupal_anonymous_user();
     return '';
   }
