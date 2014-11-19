@@ -74,6 +74,10 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     // information about this; the exact same pattern is used there and
     // explained in detail there.
     drupal_render_root($html['page']);
+
+    // Add the bare minimum of attachments from the system module and the
+    // current maintenance theme.
+    system_page_attachments($html['page']);
     return drupal_render($html);
   }
 

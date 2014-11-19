@@ -32,4 +32,14 @@ class InstallerTest extends InstallerTestBase {
     )));
   }
 
+  /**
+   * Installer step: Select language.
+   */
+  protected function setUpLanguage() {
+    // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets and
+    // metatags as expected to the first page of the installer.
+    $this->assertRaw('core/themes/seven/css/components/buttons.css');
+    $this->assertRaw('<meta name="charset" charset="utf-8" />');
+    parent::setUpLanguage();
+  }
 }
