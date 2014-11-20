@@ -18,7 +18,11 @@ interface AccountProxyInterface extends AccountInterface {
    * Sets the currently wrapped account.
    *
    * Setting the current account is highly discouraged! Instead, make sure to
-   * inject the desired user object into the dependent code directly
+   * inject the desired user object into the dependent code directly.
+   *
+   * A preferable method of account impersonation is to use
+   * \Drupal\Core\Session\AccountSwitcherInterface::switchTo() and
+   * \Drupal\Core\Session\AccountSwitcherInterface::switchBack().
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current account.
