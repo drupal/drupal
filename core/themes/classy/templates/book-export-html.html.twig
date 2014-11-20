@@ -37,7 +37,7 @@
     #}
 
   {% for i in 1..depth-1 if depth > 1 %}
-    <div>
+    <div class="section-{{ i }}">
   {% endfor %}
   {{ contents }}
   {% for i in 1..depth-1 if depth > 1 %}

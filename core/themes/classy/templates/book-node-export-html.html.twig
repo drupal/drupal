@@ -15,8 +15,8 @@
  * @ingroup themeable
  */
 #}
-<article>
-  <h1>{{ title }}</h1>
+<article id="node-{{ node.id }}" class="section-{{ depth }}">
+  <h1 class="book-heading">{{ title }}</h1>
   {{ content }}
   {{ children }}
 </article>

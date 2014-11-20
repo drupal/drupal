@@ -18,7 +18,7 @@
  */
 #}
 {% for book in book_menus %}
-  <nav role="navigation" aria-label="{% trans %}Book outline for {{ book.title }}{% endtrans %}">
+  <nav id="book-block-menu-{{ book.id }}" class="book-block-menu" role="navigation" aria-label="{% trans %}Book outline for {{ book.title }}{% endtrans %}">
     {{ book.menu }}
   </nav>
 {% endfor %}

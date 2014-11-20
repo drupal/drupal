@@ -31,23 +31,23 @@
  */
 #}
 {% if tree or has_links %}
-  <nav id="book-navigation-{{ book_id }}" role="navigation" aria-labelledby="book-label-{{ book_id }}">
+  <nav id="book-navigation-{{ book_id }}" class="book-navigation" role="navigation" aria-labelledby="book-label-{{ book_id }}">
     {{ tree }}
     {% if has_links %}
-      <h2>{{ 'Book traversal links for'|t }} {{ book_title }}</h2>
-      <ul>
+      <h2 class="visually-hidden" id="book-label-{{ book_id }}">{{ 'Book traversal links for'|t }} {{ book_title }}</h2>
+      <ul class="book-pager">
       {% if prev_url %}
-        <li>
+        <li class="previous">
           <a href="{{ prev_url }}" rel="prev" title="{{ 'Go to previous page'|t }}"><b>{{ '‹'|t }}</b> {{ prev_title }}</a>
         </li>
       {% endif %}
       {% if parent_url %}
-        <li>
+        <li class="up">
           <a href="{{ parent_url }}" title="{{ 'Go to parent page'|t }}">{{ 'Up'|t }}</a>
         </li>
       {% endif %}
       {% if next_url %}
-        <li>
+        <li class="next">
           <a href="{{ next_url }}" rel="next" title="{{ 'Go to next page'|t }}">{{ next_title }} <b>{{ '›'|t }}</b></a>
         </li>
       {% endif %}
