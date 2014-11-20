@@ -1,7 +1,7 @@
 help.main:
   path: '/admin/help'
   defaults:
-    _content: '\Drupal\help\Controller\HelpController::helpMain'
+    _controller: '\Drupal\help\Controller\HelpController::helpMain'
     _title: 'Help'
   requirements:
     _permission: 'access administration pages'
@@ -9,7 +9,7 @@ help.main:
 help.page:
   path: '/admin/help/{name}'
   defaults:
-    _content: '\Drupal\help\Controller\HelpController::helpPage'
+    _controller: '\Drupal\help\Controller\HelpController::helpPage'
     _title: 'Help'
   requirements:
     _permission: 'access administration pages'

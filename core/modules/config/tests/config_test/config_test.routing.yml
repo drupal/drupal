@@ -32,7 +32,7 @@ entity.config_test.edit_form_config_test_no_status:
 entity.config_test.enable:
   path: '/admin/structure/config_test/manage/{config_test}/enable'
   defaults:
-    _content: '\Drupal\config_test\ConfigTestController::enable'
+    _controller: '\Drupal\config_test\ConfigTestController::enable'
     entity_type: 'config_test'
   requirements:
     _access: 'TRUE'
@@ -40,7 +40,7 @@ entity.config_test.enable:
 entity.config_test.disable:
   path: '/admin/structure/config_test/manage/{config_test}/disable'
   defaults:
-    _content: '\Drupal\config_test\ConfigTestController::disable'
+    _controller: '\Drupal\config_test\ConfigTestController::disable'
     entity_type: 'config_test'
   requirements:
     _access: 'TRUE'
@@ -62,6 +62,6 @@ entity.config_test.delete_form_config_test_no_status:
 config_test.schema_listener:
   path: '/config_test/schema_listener'
   defaults:
-    _content: '\Drupal\config_test\SchemaListenerController::test'
+    _controller: '\Drupal\config_test\SchemaListenerController::test'
   requirements:
     _access: 'TRUE'

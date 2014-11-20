@@ -9,7 +9,7 @@ update.settings:
 update.status:
   path: '/admin/reports/updates'
   defaults:
-    _content: '\Drupal\update\Controller\UpdateController::updateStatus'
+    _controller: '\Drupal\update\Controller\UpdateController::updateStatus'
     _title: 'Available updates'
   requirements:
     _permission: 'administer site configuration'
@@ -18,7 +18,7 @@ update.manual_status:
   path: '/admin/reports/updates/check'
   defaults:
     _title: 'Manual update check'
-    _content: '\Drupal\update\Controller\UpdateController::updateStatusManually'
+    _controller: '\Drupal\update\Controller\UpdateController::updateStatusManually'
   requirements:
     _permission: 'administer site configuration'
 

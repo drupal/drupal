@@ -1,7 +1,7 @@
 tracker.page:
   path: '/activity'
   defaults:
-    _content: '\Drupal\tracker\Controller\TrackerPage::getContent'
+    _controller: '\Drupal\tracker\Controller\TrackerPage::getContent'
     _title: 'Recent content'
   requirements:
     _permission: 'access content'
@@ -9,7 +9,7 @@ tracker.page:
 tracker.users_recent_content:
   path: '/activity/{user}'
   defaults:
-    _content: '\Drupal\tracker\Controller\TrackerUserRecent::getContent'
+    _controller: '\Drupal\tracker\Controller\TrackerUserRecent::getContent'
     _title: 'My recent content'
   options:
     _access_mode: 'ALL'
@@ -20,7 +20,7 @@ tracker.users_recent_content:
 tracker.user_tab:
   path: '/user/{user}/activity'
   defaults:
-    _content: '\Drupal\tracker\Controller\TrackerUserTab::getContent'
+    _controller: '\Drupal\tracker\Controller\TrackerUserTab::getContent'
     _title_callback: '\Drupal\tracker\Controller\TrackerUserTab::getTitle'
   options:
     _access_mode: 'ALL'

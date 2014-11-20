@@ -56,7 +56,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       $route = new Route(
         $path,
         array(
-          '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
+          '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
           'entity_type_id' => $entity_type_id,
         ),
         array(
@@ -76,7 +76,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       $route = new Route(
         $path . '/add/{source}/{target}',
         array(
-          '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::add',
+          '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::add',
           'source' => NULL,
           'target' => NULL,
           '_title' => 'Add',
@@ -108,7 +108,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       $route = new Route(
         $path . '/edit/{language}',
         array(
-          '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::edit',
+          '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::edit',
           'language' => NULL,
           '_title' => 'Edit',
           'entity_type_id' => $entity_type_id,

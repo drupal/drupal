@@ -1,35 +1,35 @@
 database_test.db_query_temporary:
   path: '/database_test/db_query_temporary'
   defaults:
-    _content: '\Drupal\database_test\Controller\DatabaseTestController::dbQueryTemporary'
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::dbQueryTemporary'
   requirements:
     _access: 'TRUE'
 
 database_test.pager_query_even:
   path: '/database_test/pager_query_even/{limit}'
   defaults:
-    _content: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryEven'
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryEven'
   requirements:
     _access: 'TRUE'
 
 database_test.pager_query_odd:
   path: '/database_test/pager_query_odd/{limit}'
   defaults:
-    _content: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryOdd'
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryOdd'
   requirements:
     _access: 'TRUE'
 
 database_test.tablesort:
   path: '/database_test/tablesort'
   defaults:
-    _content: '\Drupal\database_test\Controller\DatabaseTestController::testTablesort'
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::testTablesort'
   requirements:
     _access: 'TRUE'
 
 database_test.tablesort_first:
   path: '/database_test/tablesort_first'
   defaults:
-    _content: '\Drupal\database_test\Controller\DatabaseTestController::testTablesortFirst'
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::testTablesortFirst'
   requirements:
     _access: 'TRUE'
 

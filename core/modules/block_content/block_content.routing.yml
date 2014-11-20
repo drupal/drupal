@@ -9,7 +9,7 @@ block_content.type_list:
 block_content.add_page:
   path: '/block/add'
   defaults:
-    _content: '\Drupal\block_content\Controller\BlockContentController::add'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::add'
     _title: 'Add custom block'
   options:
     _admin_route: TRUE
@@ -19,7 +19,7 @@ block_content.add_page:
 block_content.add_form:
   path: '/block/add/{block_content_type}'
   defaults:
-    _content: '\Drupal\block_content\Controller\BlockContentController::addForm'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::addForm'
     _title_callback: 'Drupal\block_content\Controller\BlockContentController::getAddFormTitle'
   options:
     _admin_route: TRUE

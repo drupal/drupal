@@ -1,7 +1,7 @@
 entity.menu.add_link_form:
   path: '/admin/structure/menu/manage/{menu}/add'
   defaults:
-    _content: '\Drupal\menu_link_content\Controller\MenuController::addLink'
+    _controller: '\Drupal\menu_link_content\Controller\MenuController::addLink'
     _title: 'Add menu link'
   requirements:
     _entity_create_access: 'menu_link_content'

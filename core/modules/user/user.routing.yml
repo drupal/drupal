@@ -30,7 +30,7 @@ user.autocomplete_anonymous:
 user.admin_index:
   path: '/admin/config/people'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'People'
   requirements:
     _permission: 'access administration pages'
@@ -128,7 +128,7 @@ user.pass:
 user.page:
   path: '/user'
   defaults:
-    _content: '\Drupal\user\Controller\UserController::userPage'
+    _controller: '\Drupal\user\Controller\UserController::userPage'
     _title: 'My account'
   requirements:
     _user_is_logged_in: 'TRUE'
@@ -175,7 +175,7 @@ user.cancel_confirm:
   path: '/user/{user}/cancel/confirm/{timestamp}/{hashed_pass}'
   defaults:
     _title: 'Confirm account cancellation'
-    _content: '\Drupal\user\Controller\UserController::confirmCancel'
+    _controller: '\Drupal\user\Controller\UserController::confirmCancel'
     timestamp: 0
     hashed_pass: ''
   requirements:
@@ -184,7 +184,7 @@ user.cancel_confirm:
 user.reset:
   path: '/user/reset/{uid}/{timestamp}/{hash}'
   defaults:
-    _content: '\Drupal\user\Controller\UserController::resetPass'
+    _controller: '\Drupal\user\Controller\UserController::resetPass'
     _title: 'Reset password'
   requirements:
     _access: 'TRUE'

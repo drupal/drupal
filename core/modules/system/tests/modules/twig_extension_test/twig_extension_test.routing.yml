@@ -1,12 +1,12 @@
 twig_extension_test.filter:
   path: '/twig-extension-test/filter'
   defaults:
-    _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFilterRender'
+    _controller: '\Drupal\twig_extension_test\TwigExtensionTestController::testFilterRender'
   requirements:
     _access: 'TRUE'
 twig_extension_test.function:
   path: '/twig-extension-test/function'
   defaults:
-    _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFunctionRender'
+    _controller: '\Drupal\twig_extension_test\TwigExtensionTestController::testFunctionRender'
   requirements:
     _access: 'TRUE'

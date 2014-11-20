@@ -49,8 +49,7 @@ class EntityResolverManager {
    * Gets the controller class using route defaults.
    *
    * By design we cannot support all possible routes, but just the ones which
-   * use the defaults provided by core, which are _content, _controller
-   * and _form.
+   * use the defaults provided by core, which are _controller and _form.
    *
    * Rather than creating an instance of every controller determine the class
    * and method that would be used. This is not possible for the service:method
@@ -67,9 +66,6 @@ class EntityResolverManager {
    */
   protected function getControllerClass(array $defaults) {
     $controller = NULL;
-    if (isset($defaults['_content'])) {
-      $controller = $defaults['_content'];
-    }
     if (isset($defaults['_controller'])) {
       $controller = $defaults['_controller'];
     }

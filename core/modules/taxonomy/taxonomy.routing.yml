@@ -9,7 +9,7 @@ taxonomy.vocabulary_list:
 entity.taxonomy_term.add_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
   defaults:
-    _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
+    _controller: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
     _title: 'Add term'
   requirements:
     _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'

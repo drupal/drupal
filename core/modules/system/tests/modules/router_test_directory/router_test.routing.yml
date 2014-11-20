@@ -8,21 +8,21 @@ router_test.1:
 router_test.2:
   path: '/router_test/test2'
   defaults:
-    _content: '\Drupal\router_test\TestControllers::test2'
+    _controller: '\Drupal\router_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
 
 router_test.3:
   path: '/router_test/test3/{value}'
   defaults:
-    _content: '\Drupal\router_test\TestControllers::test3'
+    _controller: '\Drupal\router_test\TestControllers::test3'
   requirements:
     _access: 'TRUE'
 
 router_test.4:
   path: '/router_test/test4/{value}'
   defaults:
-    _content: '\Drupal\router_test\TestControllers::test4'
+    _controller: '\Drupal\router_test\TestControllers::test4'
     value: 'narf'
   requirements:
     _access: 'TRUE'
@@ -30,7 +30,7 @@ router_test.4:
 router_test.6:
   path: '/router_test/test6'
   defaults:
-    _content: '\Drupal\router_test\TestControllers::test1'
+    _controller: '\Drupal\router_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
@@ -59,7 +59,7 @@ router_test.9:
 router_test.10:
   path: '/router_test/test10'
   defaults:
-    _content: '\Drupal\router_test\TestContent::test1'
+    _controller: '\Drupal\router_test\TestContent::test1'
   requirements:
     _access: 'TRUE'
 
@@ -70,21 +70,21 @@ router_test.11:
   requirements:
     _user_is_logged_in: 'TRUE'
   defaults:
-    _content: '\Drupal\router_test\TestContent::test11'
+    _controller: '\Drupal\router_test\TestContent::test11'
 
 router_test.12:
   path: '/router_test/test12/{user}'
   requirements:
     _access: 'TRUE'
   defaults:
-    _content: '\Drupal\router_test\TestContent::subrequestTest'
+    _controller: '\Drupal\router_test\TestContent::subrequestTest'
 
 router_test.13:
   path: '/router_test/test13/{user}'
   requirements:
     _access: 'TRUE'
   defaults:
-    _content: '\Drupal\router_test\TestContent::testAccount'
+    _controller: '\Drupal\router_test\TestContent::testAccount'
 
 router_test.14:
   path: '/router_test/test14/{uid}'

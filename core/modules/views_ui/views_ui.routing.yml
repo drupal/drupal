@@ -33,7 +33,7 @@ views_ui.settings_advanced:
 views_ui.reports_fields:
   path: '/admin/reports/fields/views-fields'
   defaults:
-    _content: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
     _title: 'Used in views'
   requirements:
     _permission: 'administer views'
@@ -41,7 +41,7 @@ views_ui.reports_fields:
 views_ui.reports_plugins:
   path: '/admin/reports/views-plugins'
   defaults:
-    _content: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
     _title: 'Views plugins'
   requirements:
     _permission: 'administer views'
@@ -95,7 +95,7 @@ entity.view.edit_form:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
     _entity_access: view.update
 
@@ -107,7 +107,7 @@ entity.view.edit_display_form:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
   requirements:
     _entity_access: view.update
@@ -141,7 +141,7 @@ views_ui.form_add_handler:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\AddHandler::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\AddHandler::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -154,7 +154,7 @@ views_ui.form_edit_details:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -167,7 +167,7 @@ views_ui.form_reorder_displays:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -180,7 +180,7 @@ views_ui.form_analyze:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -193,7 +193,7 @@ views_ui.form_rearrange:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -206,7 +206,7 @@ views_ui.form_rearrange_filter:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -219,7 +219,7 @@ views_ui.form_display:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\Display::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\Display::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -232,7 +232,7 @@ views_ui.form_handler:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandler::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigHandler::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -245,7 +245,7 @@ views_ui.form_handler_extra:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerExtra::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigHandlerExtra::getForm'
   requirements:
     _entity_access: view.update
     js: 'nojs|ajax'
@@ -258,7 +258,7 @@ views_ui.form_handler_group:
         tempstore: TRUE
         type: entity:view
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerGroup::getForm'
+    _controller: '\Drupal\views_ui\Form\Ajax\ConfigHandlerGroup::getForm'
     form_state: NULL
   requirements:
     _entity_access: view.update

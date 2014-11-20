@@ -17,7 +17,7 @@ forum.settings:
 forum.index:
   path: '/forum'
   defaults:
-    _content: '\Drupal\forum\Controller\ForumController::forumIndex'
+    _controller: '\Drupal\forum\Controller\ForumController::forumIndex'
     _title: 'Forums'
   requirements:
     _permission: 'access content'
@@ -25,7 +25,7 @@ forum.index:
 forum.page:
   path: '/forum/{taxonomy_term}'
   defaults:
-    _content: '\Drupal\forum\Controller\ForumController::forumPage'
+    _controller: '\Drupal\forum\Controller\ForumController::forumPage'
     _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _permission: 'access content'
@@ -33,7 +33,7 @@ forum.page:
 forum.add_container:
   path: '/admin/structure/forum/add/container'
   defaults:
-    _content: '\Drupal\forum\Controller\ForumController::addContainer'
+    _controller: '\Drupal\forum\Controller\ForumController::addContainer'
     _title: 'Add container'
   requirements:
     _permission: 'administer forums'
@@ -41,7 +41,7 @@ forum.add_container:
 forum.add_forum:
   path: '/admin/structure/forum/add/forum'
   defaults:
-    _content: '\Drupal\forum\Controller\ForumController::addForum'
+    _controller: '\Drupal\forum\Controller\ForumController::addForum'
     _title: 'Add forum'
   requirements:
     _permission: 'administer forums'

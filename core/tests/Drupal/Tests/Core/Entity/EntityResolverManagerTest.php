@@ -134,7 +134,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    */
   public function testSetRouteOptionsWithContentController($controller) {
     $route = new Route('/example/{argument}', array(
-      '_content' => $controller,
+      '_controller' => $controller,
       'argument' => 'test',
     ));
 
@@ -168,7 +168,7 @@ class EntityResolverManagerTest extends UnitTestCase {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', array(
-      '_content' => $controller,
+      '_controller' => $controller,
     ));
 
     $defaults = $route->getDefaults();
@@ -201,7 +201,7 @@ class EntityResolverManagerTest extends UnitTestCase {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', array(
-      '_content' => $controller,
+      '_controller' => $controller,
     ));
 
     $defaults = $route->getDefaults();

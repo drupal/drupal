@@ -9,7 +9,7 @@ system_test.main_content_handling:
   path: '/system-test/main-content-handling'
   defaults:
     _title: 'Test main content handling'
-    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
   requirements:
     _access: 'TRUE'
 
@@ -17,7 +17,7 @@ system_test.drupal_set_message:
   path: '/system-test/drupal-set-message'
   defaults:
     _title: 'Set messages with drupal_set_message()'
-    _content: '\Drupal\system_test\Controller\SystemTestController::drupalSetMessageTest'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::drupalSetMessageTest'
   requirements:
     _access: 'TRUE'
 
@@ -25,7 +25,7 @@ system_test.main_content_fallback:
   path: '/system-test/main-content-fallback'
   defaults:
     _title: 'Test main content fallback'
-    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
   requirements:
     _access: 'TRUE'
 
@@ -33,7 +33,7 @@ system_test.lock_acquire:
   path: '/system-test/lock-acquire'
   defaults:
     _title: 'Lock acquire'
-    _content: '\Drupal\system_test\Controller\SystemTestController::lockAcquire'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::lockAcquire'
   requirements:
     _access: 'TRUE'
 
@@ -41,7 +41,7 @@ system_test.lock_exit:
   path: '/system-test/lock-exit'
   defaults:
     _title: 'Lock acquire then exit'
-    _content: '\Drupal\system_test\Controller\SystemTestController::lockExit'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::lockExit'
   requirements:
     _access: 'TRUE'
 
@@ -49,14 +49,14 @@ system_test.lock_persist:
   path: '/system-test/lock-persist/{lock_name}'
   defaults:
     _title: 'Persistent lock acquire'
-    _content: '\Drupal\system_test\Controller\SystemTestController::lockPersist'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::lockPersist'
   requirements:
     _access: 'TRUE'
 
 system_test.cache_tags_page:
   path: '/system-test/cache_tags_page'
   defaults:
-    _content: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_tags_page'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_tags_page'
   requirements:
     _access: 'TRUE'
 
@@ -70,14 +70,14 @@ system_test.authorize_init:
 system_test.set_header:
   path: '/system-test/set-header'
   defaults:
-    _content: '\Drupal\system_test\Controller\SystemTestController::setHeader'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::setHeader'
   requirements:
     _access: 'TRUE'
 
 system_test.shutdown_functions:
   path: '/system-test/shutdown-functions/{arg1}/{arg2}'
   defaults:
-    _content: '\Drupal\system_test\Controller\SystemTestController::shutdownFunctions'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::shutdownFunctions'
   requirements:
     _access: 'TRUE'
 

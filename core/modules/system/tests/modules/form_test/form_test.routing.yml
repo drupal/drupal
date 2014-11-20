@@ -437,7 +437,7 @@ form_test.form_state_database:
 form_test.two_instances:
   path: '/form-test/two-instances-of-same-form'
   defaults:
-    _content: '\Drupal\form_test\Controller\FormTestController::twoFormInstances'
+    _controller: '\Drupal\form_test\Controller\FormTestController::twoFormInstances'
   requirements:
     _module_dependencies: 'node'
     _permission: 'create page content'

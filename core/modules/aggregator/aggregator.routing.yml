@@ -1,7 +1,7 @@
 aggregator.admin_overview:
   path: '/admin/config/services/aggregator'
   defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
     _title: 'Feed aggregator'
   requirements:
     _permission: 'administer news feeds'
@@ -25,7 +25,7 @@ aggregator.feed_items_delete:
 aggregator.feed_refresh:
   path: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
     _title: 'Update items'
   requirements:
     _permission: 'administer news feeds'
@@ -42,7 +42,7 @@ aggregator.opml_add:
 aggregator.feed_add:
   path: '/aggregator/sources/add'
   defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
     _title: 'Add feed'
   requirements:
     _permission: 'administer news feeds'
@@ -80,7 +80,7 @@ entity.aggregator_feed.delete_form:
 aggregator.page_last:
   path: '/aggregator'
   defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
     _title: 'Feed aggregator'
   requirements:
     _permission: 'access news feeds'

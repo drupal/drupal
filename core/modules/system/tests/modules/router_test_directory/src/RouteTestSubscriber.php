@@ -20,7 +20,7 @@ class RouteTestSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection) {
     $route = $collection->get('router_test.6');
     // Change controller method from test1 to test5.
-    $route->setDefault('_content', '\Drupal\router_test\TestControllers::test5');
+    $route->setDefault('_controller', '\Drupal\router_test\TestControllers::test5');
   }
 
 }

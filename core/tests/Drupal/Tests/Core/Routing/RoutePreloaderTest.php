@@ -68,8 +68,8 @@ class RoutePreloaderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $route_collection = new RouteCollection();
-    $route_collection->add('test', new Route('/admin/foo', array('_content' => 'Drupal\ExampleController')));
-    $route_collection->add('test2', new Route('/admin/bar', array('_content' => 'Drupal\ExampleController')));
+    $route_collection->add('test', new Route('/admin/foo', array('_controller' => 'Drupal\ExampleController')));
+    $route_collection->add('test2', new Route('/admin/bar', array('_controller' => 'Drupal\ExampleController')));
     $event->expects($this->once())
       ->method('getRouteCollection')
       ->will($this->returnValue($route_collection));
@@ -89,10 +89,10 @@ class RoutePreloaderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $route_collection = new RouteCollection();
-    $route_collection->add('test', new Route('/foo/admin/foo', array('_content' => 'Drupal\ExampleController')));
-    $route_collection->add('test2', new Route('/bar/admin/bar', array('_content' => 'Drupal\ExampleController')));
-    $route_collection->add('test3', new Route('/administrator/a', array('_content' => 'Drupal\ExampleController')));
-    $route_collection->add('test4', new Route('/admin', array('_content' => 'Drupal\ExampleController')));
+    $route_collection->add('test', new Route('/foo/admin/foo', array('_controller' => 'Drupal\ExampleController')));
+    $route_collection->add('test2', new Route('/bar/admin/bar', array('_controller' => 'Drupal\ExampleController')));
+    $route_collection->add('test3', new Route('/administrator/a', array('_controller' => 'Drupal\ExampleController')));
+    $route_collection->add('test4', new Route('/admin', array('_controller' => 'Drupal\ExampleController')));
     $event->expects($this->once())
       ->method('getRouteCollection')
       ->will($this->returnValue($route_collection));
@@ -113,8 +113,8 @@ class RoutePreloaderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $route_collection = new RouteCollection();
-    $route_collection->add('test', new Route('/admin/foo', array('_content' => 'Drupal\ExampleController')));
-    $route_collection->add('test2', new Route('/bar', array('_content' => 'Drupal\ExampleController')));
+    $route_collection->add('test', new Route('/admin/foo', array('_controller' => 'Drupal\ExampleController')));
+    $route_collection->add('test2', new Route('/bar', array('_controller' => 'Drupal\ExampleController')));
     // Non content routes, like ajax callbacks should be ignored.
     $route_collection->add('test3', new Route('/bar', array('_controller' => 'Drupal\ExampleController')));
     $event->expects($this->once())

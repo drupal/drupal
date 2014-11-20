@@ -34,7 +34,7 @@ contact.site_page:
   path: '/contact'
   defaults:
     _title: 'Contact'
-    _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
+    _controller: '\Drupal\contact\Controller\ContactController::contactSitePage'
     contact_form: NULL
   requirements:
     _permission: 'access site-wide contact form'
@@ -43,7 +43,7 @@ contact.site_page_form:
   path: '/contact/{contact_form}'
   defaults:
     _title: 'Contact'
-    _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
+    _controller: '\Drupal\contact\Controller\ContactController::contactSitePage'
   requirements:
     _entity_access: 'contact_form.view'
 
@@ -51,6 +51,6 @@ entity.user.contact_form:
   path: '/user/{user}/contact'
   defaults:
     _title: 'Contact'
-    _content: '\Drupal\contact\Controller\ContactController::contactPersonalPage'
+    _controller: '\Drupal\contact\Controller\ContactController::contactPersonalPage'
   requirements:
     _access_contact_personal_tab: 'TRUE'

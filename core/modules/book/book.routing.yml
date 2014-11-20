@@ -1,7 +1,7 @@
 book.render:
   path: '/book'
   defaults:
-    _content: '\Drupal\book\Controller\BookController::bookRender'
+    _controller: '\Drupal\book\Controller\BookController::bookRender'
     _title: 'Books'
   requirements:
     _permission: 'access content'
@@ -9,7 +9,7 @@ book.render:
 book.admin:
   path: '/admin/structure/book'
   defaults:
-    _content: '\Drupal\book\Controller\BookController::adminOverview'
+    _controller: '\Drupal\book\Controller\BookController::adminOverview'
     _title: 'Books'
   requirements:
     _permission: 'administer book outlines'

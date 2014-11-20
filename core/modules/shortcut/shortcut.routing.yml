@@ -49,7 +49,7 @@ entity.shortcut_set.customize_form:
 shortcut.link_add:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link'
   defaults:
-    _content: '\Drupal\shortcut\Controller\ShortcutController::addForm'
+    _controller: '\Drupal\shortcut\Controller\ShortcutController::addForm'
     _title: 'Add link'
   requirements:
     _entity_create_access: 'shortcut:{shortcut_set}'

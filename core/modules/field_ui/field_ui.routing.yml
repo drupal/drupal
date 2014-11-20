@@ -9,7 +9,7 @@ field_ui.list:
 field_ui.display_mode:
   path: '/admin/structure/display-modes'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Display modes'
   requirements:
     _permission: 'administer display modes'
@@ -25,7 +25,7 @@ field_ui.entity_view_mode_list:
 field_ui.entity_view_mode_add:
   path: '/admin/structure/display-modes/view/add'
   defaults:
-    _content: '\Drupal\field_ui\Controller\EntityDisplayModeController::viewModeTypeSelection'
+    _controller: '\Drupal\field_ui\Controller\EntityDisplayModeController::viewModeTypeSelection'
     _title: 'Choose view mode entity type'
   requirements:
     _permission: 'administer display modes'
@@ -65,7 +65,7 @@ field_ui.entity_form_mode_list:
 field_ui.entity_form_mode_add:
   path: '/admin/structure/display-modes/form/add'
   defaults:
-    _content: '\Drupal\field_ui\Controller\EntityDisplayModeController::formModeTypeSelection'
+    _controller: '\Drupal\field_ui\Controller\EntityDisplayModeController::formModeTypeSelection'
     _title: 'Choose form mode entity type'
   requirements:
     _permission: 'administer display modes'

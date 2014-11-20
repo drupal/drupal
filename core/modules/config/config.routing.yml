@@ -9,7 +9,7 @@ config.sync:
 config.diff:
   path: '/admin/config/development/configuration/sync/diff/{source_name}/{target_name}'
   defaults:
-    _content: '\Drupal\config\Controller\ConfigController::diff'
+    _controller: '\Drupal\config\Controller\ConfigController::diff'
     target_name: NULL
   requirements:
     _permission: 'synchronize configuration'
@@ -17,7 +17,7 @@ config.diff:
 config.diff_collection:
   path: '/admin/config/development/configuration/sync/diff_collection/{collection}/{source_name}/{target_name}'
   defaults:
-    _content: '\Drupal\config\Controller\ConfigController::diff'
+    _controller: '\Drupal\config\Controller\ConfigController::diff'
     target_name: NULL
   requirements:
     _permission: 'synchronize configuration'

@@ -1,7 +1,7 @@
 block.admin_demo:
   path: '/admin/structure/block/demo/{theme}'
   defaults:
-    _content: '\Drupal\block\Controller\BlockController::demo'
+    _controller: '\Drupal\block\Controller\BlockController::demo'
     _title_callback: 'theme_handler:getName'
   requirements:
     _access_theme: 'TRUE'
@@ -28,7 +28,7 @@ entity.block.edit_form:
 block.admin_display:
   path: '/admin/structure/block'
   defaults:
-    _content: '\Drupal\block\Controller\BlockListController::listing'
+    _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
   requirements:
     _permission: 'administer blocks'
@@ -36,7 +36,7 @@ block.admin_display:
 block.admin_display_theme:
   path: 'admin/structure/block/list/{theme}'
   defaults:
-    _content: '\Drupal\block\Controller\BlockListController::listing'
+    _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
   requirements:
     _access_theme: 'TRUE'
@@ -45,7 +45,7 @@ block.admin_display_theme:
 block.admin_add:
   path: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:
-    _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
+    _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
     theme: null
     _title: 'Configure block'
   requirements:

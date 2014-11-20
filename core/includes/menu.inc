@@ -54,7 +54,7 @@ use Drupal\Core\Template\Attribute;
  * dblog.overview:
  *   path: '/admin/reports/dblog'
  *   defaults:
- *     _content: '\Drupal\dblog\Controller\DbLogController::overview'
+ *     _controller: '\Drupal\dblog\Controller\DbLogController::overview'
  *     _title: 'Recent log messages'
  *   requirements:
  *     _permission: 'access site reports'
@@ -69,8 +69,6 @@ use Drupal\Core\Template\Attribute;
  *   and can also give other information, such as the page title and additional
  *   arguments for the route controller method. There are several possibilities
  *   for how to build the main content, including:
- *   - _content: A callable, usually a method on a page controller class
- *     (see @ref sec_controller below for details).
  *   - _controller: A callable, usually a method on a page controller class
  *     (see @ref sec_controller below for details).
  *   - _form: A form controller class. See the

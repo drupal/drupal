@@ -55,7 +55,7 @@ entity.entity_test.render_no_view_mode:
 entity.entity_test.list_referencing_entities:
   path: '/entity_test/list/{entity_reference_field_name}/{referenced_entity_type}/{referenced_entity_id}'
   defaults:
-    _content: '\Drupal\entity_test\Controller\EntityTestController::listReferencingEntities'
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listReferencingEntities'
     _title: 'List entity_test entities referencing the given entity'
   requirements:
     _access: 'TRUE'
@@ -63,7 +63,7 @@ entity.entity_test.list_referencing_entities:
 entity.entity_test.list_labels_alphabetically:
   path: '/entity_test/list_labels_alphabetically/{entity_type_id}'
   defaults:
-    _content: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesAlphabetically'
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesAlphabetically'
     _title: 'List labels of entities of the given entity type alphabetically'
   requirements:
     _access: 'TRUE'
@@ -71,7 +71,7 @@ entity.entity_test.list_labels_alphabetically:
 entity.entity_test.list_empty:
   path: '/entity_test/list_empty/{entity_type_id}'
   defaults:
-    _content: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesEmpty'
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesEmpty'
     _title: 'Empty list of entities of the given entity type, empty because no entities match the query'
   requirements:
     _access: 'TRUE'

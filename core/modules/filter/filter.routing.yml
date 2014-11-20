@@ -1,7 +1,7 @@
 filter.tips_all:
   path: '/filter/tips'
   defaults:
-    _content: '\Drupal\filter\Controller\FilterController::filterTips'
+    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
     _title: 'Compose tips'
   requirements:
     _access: 'TRUE'
@@ -9,7 +9,7 @@ filter.tips_all:
 filter.tips:
   path: '/filter/tips/{filter_format}'
   defaults:
-    _content: '\Drupal\filter\Controller\FilterController::filterTips'
+    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
     _title: 'Compose tips'
   requirements:
     _entity_access: 'filter_format.use'
@@ -17,7 +17,7 @@ filter.tips:
 filter.admin_overview:
   path: '/admin/config/content/formats'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'filter_format'
     _title: 'Text formats and editors'
   requirements:

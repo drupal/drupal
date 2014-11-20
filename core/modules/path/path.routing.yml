@@ -10,7 +10,7 @@ path.admin_overview:
   path: '/admin/config/search/path'
   defaults:
     _title: 'URL aliases'
-    _content: '\Drupal\path\Controller\PathController::adminOverview'
+    _controller: '\Drupal\path\Controller\PathController::adminOverview'
     keys: NULL
   requirements:
     _permission: 'administer url aliases'
@@ -19,7 +19,7 @@ path.admin_overview_filter:
   path: '/admin/config/search/path/filter'
   defaults:
     _title: 'URL aliases'
-    _content: '\Drupal\path\Controller\PathController::adminOverview'
+    _controller: '\Drupal\path\Controller\PathController::adminOverview'
   requirements:
     _permission: 'administer url aliases'
 

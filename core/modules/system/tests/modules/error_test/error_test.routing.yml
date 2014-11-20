@@ -1,14 +1,14 @@
 error_test.generate_warnings:
   path: '/error-test/generate-warnings'
   defaults:
-    _content: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
   requirements:
     _access: 'TRUE'
 
 error_test.generate_warnings_with_report:
   path: '/error-test/generate-warnings-with-report'
   defaults:
-    _content: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
     collect_errors: TRUE
   requirements:
     _access: 'TRUE'
@@ -16,13 +16,13 @@ error_test.generate_warnings_with_report:
 error_test.trigger_exception:
   path: '/error-test/trigger-exception'
   defaults:
-    _content: '\Drupal\error_test\Controller\ErrorTestController::triggerException'
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerException'
   requirements:
     _access: 'TRUE'
 
 error_test.trigger_pdo_exception:
   path: '/error-test/trigger-pdo-exception'
   defaults:
-    _content: '\Drupal\error_test\Controller\ErrorTestController::triggerPDOException'
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerPDOException'
   requirements:
     _access: 'TRUE'

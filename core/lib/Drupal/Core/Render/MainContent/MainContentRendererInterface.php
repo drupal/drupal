@@ -11,10 +11,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * The interface for "main content" (@code _content @endcode) renderers.
+ * The interface for "main content" (@code _controller @endcode) renderers.
  *
  * Classes implementing this interface are able to render the main content (as
- * received from "_content" controllers) into a response of  a certain format
+ * received from controllers) into a response of  a certain format
  * (HTML, JSON …) and/or in a certain decorated manner (e.g. in the case of the
  * default HTML main content renderer: with a page display variant applied).
  */

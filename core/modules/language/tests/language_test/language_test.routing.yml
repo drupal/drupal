@@ -1,7 +1,7 @@
 language_test.l_active_class:
   path: '/language_test/type-link-active-class'
   defaults:
-    _content: '\Drupal\language_test\Controller\LanguageTestController::typeLinkActiveClass'
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::typeLinkActiveClass'
   requirements:
     _access: 'TRUE'
 

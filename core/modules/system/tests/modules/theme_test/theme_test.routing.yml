@@ -3,28 +3,28 @@ theme_test.function_template_override:
   options:
     _custom_theme: 'test_theme'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
+    _controller: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
   requirements:
     _access: 'TRUE'
 
 theme_test.info_stylesheets:
   path: '/theme-test/info/stylesheets'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testInfoStylesheets'
+    _controller: '\Drupal\theme_test\ThemeTestController::testInfoStylesheets'
   requirements:
     _access: 'TRUE'
 
 theme_test.template_test:
   path: '/theme-test/template-test'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testTemplate'
+    _controller: '\Drupal\theme_test\ThemeTestController::testTemplate'
   requirements:
     _access: 'TRUE'
 
 theme_test.inline_template_test:
   path: '/theme-test/inline-template-test'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testInlineTemplate'
+    _controller: '\Drupal\theme_test\ThemeTestController::testInlineTemplate'
   requirements:
     _access: 'TRUE'
 
@@ -33,7 +33,7 @@ theme_test.suggestion:
   options:
     _custom_theme: 'test_theme'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testSuggestion'
+    _controller: '\Drupal\theme_test\ThemeTestController::testSuggestion'
     _title: 'Suggestion'
   requirements:
     _access: 'TRUE'
@@ -43,7 +43,7 @@ theme_test.priority:
   options:
     _custom_theme: 'test_theme'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testSuggestion'
+    _controller: '\Drupal\theme_test\ThemeTestController::testSuggestion'
     _title: 'Suggestion'
   requirements:
     _access: 'TRUE'
@@ -51,49 +51,49 @@ theme_test.priority:
 theme_test.request_listener:
   path: '/theme-test/request-listener'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::testRequestListener'
+    _controller: '\Drupal\theme_test\ThemeTestController::testRequestListener'
   requirements:
     _access: 'TRUE'
 
 suggestion_alter:
   path: '/theme-test/suggestion-alter'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::suggestionAlter'
+    _controller: '\Drupal\theme_test\ThemeTestController::suggestionAlter'
   requirements:
     _access: 'TRUE'
 
 theme_test.general_suggestion_alter:
   path: '/theme-test/general-suggestion-alter'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::generalSuggestionAlter'
+    _controller: '\Drupal\theme_test\ThemeTestController::generalSuggestionAlter'
   requirements:
     _access: 'TRUE'
 
 suggestion_provided:
   path: '/theme-test/suggestion-provided'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::suggestionProvided'
+    _controller: '\Drupal\theme_test\ThemeTestController::suggestionProvided'
   requirements:
     _access: 'TRUE'
 
 specific_suggestion_alter:
   path: '/theme-test/specific-suggestion-alter'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::specificSuggestionAlter'
+    _controller: '\Drupal\theme_test\ThemeTestController::specificSuggestionAlter'
   requirements:
     _access: 'TRUE'
 
 function_suggestion_alter:
   path: '/theme-test/function-suggestion-alter'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::functionSuggestionAlter'
+    _controller: '\Drupal\theme_test\ThemeTestController::functionSuggestionAlter'
   requirements:
     _access: 'TRUE'
 
 suggestion_alter_include:
   path: '/theme-test/suggestion-alter-include'
   defaults:
-    _content: '\Drupal\theme_test\ThemeTestController::suggestionAlterInclude'
+    _controller: '\Drupal\theme_test\ThemeTestController::suggestionAlterInclude'
   requirements:
     _access: 'TRUE'
 

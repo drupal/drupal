@@ -67,22 +67,6 @@ class Page extends PathPluginBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function getRoute($view_id, $display_id) {
-    $route = parent::getRoute($view_id, $display_id);
-
-    // Move _controller to _content for page displays, which will return a
-    // normal Drupal HTML page.
-    $defaults = $route->getDefaults();
-    $defaults['_content'] = $defaults['_controller'];
-    unset($defaults['_controller']);
-    $route->setDefaults($defaults);
-
-    return $route;
-  }
-
-  /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
    */
   public function execute() {

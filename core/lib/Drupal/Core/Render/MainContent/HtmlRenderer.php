@@ -155,8 +155,9 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   If the selected display variant does not implement PageVariantInterface.
    */
   protected function prepare(array $main_content, Request $request, RouteMatchInterface $route_match) {
-    // If the _content result already is #type => page, we have no work to do:
-    // the "main content" already is an entire "page" (see html.html.twig).
+    // If the _controller result already is #type => page,
+    // we have no work to do: The "main content" already is an entire "page"
+    // (see html.html.twig).
     if (isset($main_content['#type']) && $main_content['#type'] === 'page') {
       $page = $main_content;
     }

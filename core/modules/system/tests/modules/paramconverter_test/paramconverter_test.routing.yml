@@ -1,14 +1,14 @@
 paramconverter_test.user_node_foo:
   path: '/paramconverter_test/test_user_node_foo/{user}/{node}/{foo}'
   defaults:
-    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+    _controller: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
     _access: 'TRUE'
 
 paramconverter_test.node_user_user:
   path: '/paramconverter_test/test_node_user_user/{node}/{foo}/{user}'
   defaults:
-    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+    _controller: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
     _access: 'TRUE'
   options:
@@ -19,7 +19,7 @@ paramconverter_test.node_user_user:
 paramconverter_test.node_node_foo:
   path: '/paramconverter_test/test_node_node_foo/{user}/{node}/{foo}'
   defaults:
-    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+    _controller: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
     _access: 'TRUE'
   options:
@@ -32,7 +32,7 @@ paramconverter_test.node_set_parent:
   requirements:
     _access: 'TRUE'
   defaults:
-    _content: '\Drupal\paramconverter_test\TestControllers::testNodeSetParent'
+    _controller: '\Drupal\paramconverter_test\TestControllers::testNodeSetParent'
   options:
     parameters:
       parent:
@@ -43,4 +43,4 @@ paramconverter_test.node_check_language:
   requirements:
     _access: 'TRUE'
   defaults:
-    _content: '\Drupal\paramconverter_test\TestControllers::testEntityLanguage'
+    _controller: '\Drupal\paramconverter_test\TestControllers::testEntityLanguage'

@@ -61,18 +61,18 @@ class EntityRouteEnhancer implements RouteEnhancerInterface {
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (empty($defaults['_content'])) {
+    if (empty($defaults['_controller'])) {
       if (!empty($defaults['_entity_form'])) {
         $wrapper = new HtmlEntityFormController($this->resolver, $this->manager, $this->formBuilder, $defaults['_entity_form']);
-        $defaults['_content'] = array($wrapper, 'getContentResult');
+        $defaults['_controller'] = array($wrapper, 'getContentResult');
       }
       elseif (!empty($defaults['_entity_list'])) {
-        $defaults['_content'] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
+        $defaults['_controller'] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
         $defaults['entity_type'] = $defaults['_entity_list'];
         unset($defaults['_entity_list']);
       }
       elseif (!empty($defaults['_entity_view'])) {
-        $defaults['_content'] = '\Drupal\Core\Entity\Controller\EntityViewController::view';
+        $defaults['_controller'] = '\Drupal\Core\Entity\Controller\EntityViewController::view';
         if (strpos($defaults['_entity_view'], '.') !== FALSE) {
           // The _entity_view entry is of the form entity_type.view_mode.
           list($entity_type, $view_mode) = explode('.', $defaults['_entity_view']);
