@@ -88,7 +88,7 @@ class UpdateFetcherTest extends UnitTestCase {
 
     $data[] = array($project, $site_key, $expected);
 
-    // For enabled projects, adding the site key
+    // For enabled projects, test adding the site key.
     $project['project_type'] = '';
     $expected = 'http://www.example.com/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
     $expected .= '?site_key=site_key';
@@ -96,8 +96,7 @@ class UpdateFetcherTest extends UnitTestCase {
 
     $data[] = array($project, $site_key, $expected);
 
-    // http://drupal.org/node/1481156 test incorrect logic when URL contains
-    // a question mark.
+    // Test when the URL contains a question mark.
     $project['info']['project status url'] = 'http://www.example.com/?project=';
     $expected = 'http://www.example.com/?project=/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
     $expected .= '&site_key=site_key';
