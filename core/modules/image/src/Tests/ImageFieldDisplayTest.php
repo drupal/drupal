@@ -178,7 +178,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'max_resolution' => '100x100',
       'min_resolution' => '10x10',
       'title_field' => 1,
-      'description' => '[site:name]_description',
     );
     $widget_settings = array(
       'preview_image_style' => 'medium',
