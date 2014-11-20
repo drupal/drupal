@@ -44,13 +44,16 @@
      */
     onActiveTrayChange: function (model, tray) {
       var relevantTray = (tray === null) ? model.previous('activeTray') : tray;
-      var trayName = relevantTray.querySelector('.toolbar-tray-name').textContent;
+      var action = (tray === null) ? Drupal.t('closed') : Drupal.t('opened');
+      var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
       var text;
-      if (tray === null) {
-        text = Drupal.t('Tray "@tray" closed.', { '@tray': trayName });
+      if (trayNameElement !== null) {
+        text = Drupal.t('Tray "@tray" @action.', {
+          '@tray': trayNameElement.textContent, '@action': action
+        });
       }
       else {
-        text = Drupal.t('Tray "@tray" opened.', { '@tray': trayName });
+        text = Drupal.t('Tray @action.', {'@action': action});
       }
       Drupal.announce(text);
     }
