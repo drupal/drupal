@@ -73,22 +73,20 @@ class ContextHandler implements ContextHandlerInterface {
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array()) {
     $mappings += $plugin->getContextMapping();
-    $plugin_contexts = $plugin->getContextDefinitions();
-    // Loop through each context and set it on the plugin if it matches one of
-    // the contexts expected by the plugin.
-    foreach ($contexts as $name => $context) {
+    // Loop through each of the expected contexts.
+    foreach (array_keys($plugin->getContextDefinitions()) as $plugin_context_id) {
       // If this context was given a specific name, use that.
-      $assigned_name = isset($mappings[$name]) ? $mappings[$name] : $name;
-      if (isset($plugin_contexts[$assigned_name])) {
+      $context_id = isset($mappings[$plugin_context_id]) ? $mappings[$plugin_context_id] : $plugin_context_id;
+      if (!empty($contexts[$context_id])) {
         // This assignment has been used, remove it.
-        unset($mappings[$name]);
-        $plugin->setContextValue($assigned_name, $context->getContextValue());
+        unset($mappings[$plugin_context_id]);
+        $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextValue());
       }
     }
 
     // If there are any mappings that were not satisfied, throw an exception.
     if (!empty($mappings)) {
-      throw new ContextException(String::format('Assigned contexts were not satisfied: @mappings', array('@mappings' => implode(',', $mappings))));
+      throw new ContextException(String::format('Assigned contexts were not satisfied: @mappings', ['@mappings' => implode(',', array_keys($mappings))]));
     }
   }
 

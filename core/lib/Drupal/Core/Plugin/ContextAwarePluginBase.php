@@ -55,7 +55,7 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
    */
   public function getContextMapping() {
     $configuration = $this instanceof ConfigurablePluginInterface ? $this->getConfiguration() : $this->configuration;
-    return isset($configuration['context_mapping']) ? array_flip($configuration['context_mapping']) : [];
+    return isset($configuration['context_mapping']) ? $configuration['context_mapping'] : [];
   }
 
   /**

@@ -305,7 +305,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContextValue')
       ->with('hit', array('foo'));
 
-    $this->contextHandler->applyContextMapping($plugin, $contexts, array('name' => 'hit'));
+    $this->contextHandler->applyContextMapping($plugin, $contexts, ['hit' => 'name']);
   }
 
   /**
@@ -333,7 +333,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('setContextValue');
 
-    $this->contextHandler->applyContextMapping($plugin, $contexts, array('name' => 'miss'));
+    $this->contextHandler->applyContextMapping($plugin, $contexts, ['miss' => 'name']);
   }
 
 }

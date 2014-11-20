@@ -70,9 +70,9 @@ interface ContextHandlerInterface {
    *   match the plugin's context definitions.
    * @param array $mappings
    *   (optional) A mapping of the expected assignment names to their context
-   *   names. For example, if one of the $contexts is named 'entity', but the
-   *   plugin expects a context named 'node', then this map would contain
-   *   'entity' => 'node'.
+   *   names. For example, if one of the $contexts is named 'current_user', but the
+   *   plugin expects a context named 'user', then this map would contain
+   *   'user' => 'current_user'.
    *
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   Thrown when a context assignment was not satisfied.

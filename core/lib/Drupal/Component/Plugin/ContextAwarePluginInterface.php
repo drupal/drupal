@@ -130,9 +130,9 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    *
    * @return array
    *   A mapping of the expected assignment names to their context names. For
-   *   example, if one of the $contexts is named 'current_user', but the plugin
-   *   expects a context named 'user', then this map would contain
-   *   'current_user' => 'user'.
+   *   example, if one of the $contexts is named 'user.current_user', but the
+   *   plugin expects a context named 'user', then this map would contain
+   *   'user' => 'user.current_user'.
    */
   public function getContextMapping();
 
@@ -141,9 +141,9 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    *
    * @param array $context_mapping
    *   A mapping of the expected assignment names to their context names. For
-   *   example, if one of the $contexts is named 'current_user', but the plugin
-   *   expects a context named 'user', then this map would contain
-   *   'current_user' => 'user'.
+   *   example, if one of the $contexts is named 'user.current_user', but the
+   *   plugin expects a context named 'user', then this map would contain
+   *   'user' => 'user.current_user'.
    *
    * @return $this
    */
