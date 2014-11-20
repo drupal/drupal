@@ -183,7 +183,7 @@ class EntityRow extends RowPluginBase {
   protected function getRenderer() {
     if (!isset($this->renderer)) {
       $class = '\Drupal\views\Entity\Render\\' . Container::camelize($this->options['rendering_language']);
-      $this->renderer = new $class($this->view, $this->entityType);
+      $this->renderer = new $class($this->view, $this->languageManager, $this->entityType);
     }
     return $this->renderer;
   }

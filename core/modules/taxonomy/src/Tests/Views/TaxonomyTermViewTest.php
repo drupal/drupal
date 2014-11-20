@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
+use Drupal\views\Views;
 
 /**
  * Tests the taxonomy term view page and its translation.
@@ -118,6 +119,27 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $this->assertText($term->label());
     $this->assertNoText($original_title);
     $this->assertText($translated_title);
+
+    // Uninstall language module and ensure that the language is not part of the
+    // query anymore.
+    // @see \Drupal\views\Plugin\views\filter\LanguageFilter::query()
+    \Drupal::moduleHandler()->uninstall(['content_translation', 'language']);
+
+    $view = Views::getView('taxonomy_term');
+    $view->initDisplay();
+    $view->setArguments([$term->id()]);
+    $view->build();
+    /** @var \Drupal\Core\Database\Query\Select $query */
+    $query = $view->build_info['query'];
+    $tables = $query->getTables();
+
+    // Ensure that the join to node_field_data is not added by default.
+    $this->assertEqual(['node', 'taxonomy_index'], array_keys($tables));
+    // Ensure that the filter to the language column is not there by default.
+    $condition = $query->conditions();
+    // We only want to check the no. of conditions in the query.
+    unset($condition['#conjunction']);
+    $this->assertEqual(1, count($condition));
   }
 
 }
