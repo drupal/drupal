@@ -23,7 +23,15 @@ drupal.ckeditor.plugins.drupalimagecaption:
 drupal.ckeditor.admin:
   version: VERSION
   js:
+    # Core.
     js/ckeditor.admin.js: {}
+    # Models.
+    js/models/Model.js: {}
+    # Views.
+    js/views/AuralView.js: {}
+    js/views/KeyboardView.js: {}
+    js/views/ControllerView.js: {}
+    js/views/VisualView.js: {}
   css:
     theme:
       css/ckeditor.admin.css: {}
