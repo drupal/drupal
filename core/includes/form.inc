@@ -71,18 +71,6 @@ function form_state_values_clean(FormStateInterface $form_state) {
 }
 
 /**
- * Changes submitted form values during form validation.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use $form_state->setValueForElement().
- *
- * @see \Drupal\Core\Form\FormStateInterface::setValueForElement().
- */
-function form_set_value($element, $value, FormStateInterface $form_state) {
-  $form_state->setValueForElement($element, $value);
-}
-
-/**
  * Allows PHP array processing of multiple select options with the same value.
  *
  * Used for form select elements which need to validate HTML option groups
