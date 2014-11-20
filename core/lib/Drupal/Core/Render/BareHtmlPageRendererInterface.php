@@ -45,12 +45,14 @@ namespace Drupal\Core\Render;
 interface BareHtmlPageRendererInterface {
 
   /**
-   * Renders a "maintenance" page, styled as such.
+   * Renders a bare page.
    *
-   * @param string|array $content
+   * @param array $content
    *   The main content to render in the 'content' region.
    * @param string $title
    *   The title for this maintenance page.
+   * @param string $page_theme_property
+   *   The #theme property to set on #type 'page'.
    * @param array $page_additions
    *   Additional regions to add to the page. May also be used to pass the
    *   #show_messages property for #type 'page'.
@@ -58,22 +60,6 @@ interface BareHtmlPageRendererInterface {
    * @return string
    *   The rendered HTML page.
    */
-  public function renderMaintenancePage($content, $title, array $page_additions = []);
-
-  /**
-   * Renders an "install" page, styled as such.
-   *
-   * @param string|array $content
-   *   The main content to render in the 'content' region.
-   * @param string $title
-   *   The title for this maintenance page.
-   * @param array $page_additions
-   *   Additional regions to add to the page. May also be used to pass the
-   *   #show_messages property for #type 'page'.
-   *
-   * @return string
-   *   The rendered HTML page.
-   */
-  public function renderInstallPage($content, $title, array $page_additions = []);
+  public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []);
 
 }

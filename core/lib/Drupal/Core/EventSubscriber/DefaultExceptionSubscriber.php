@@ -133,7 +133,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     }
 
     $content = $this->t('The website has encountered an error. Please try again later.');
-    $output = $this->bareHtmlPageRenderer->renderMaintenancePage($content, $this->t('Error'));
+    $output = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Error'), 'maintenance_page');
     $response = new Response($output);
 
     if ($exception instanceof HttpExceptionInterface) {

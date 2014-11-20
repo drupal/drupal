@@ -933,7 +933,7 @@ function install_display_output($output, $install_state) {
     'ETag' => '"' . REQUEST_TIME . '"',
   );
   $response->headers->add($default_headers);
-  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderInstallPage($output, $output['#title'], $regions));
+  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderBarePage($output, $output['#title'], 'install_page', $regions));
   $response->send();
   exit;
 }

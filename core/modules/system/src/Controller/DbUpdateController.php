@@ -199,7 +199,7 @@ class DbUpdateController extends ControllerBase {
     }
     $title = isset($output['#title']) ? $output['#title'] : $this->t('Drupal database update');
 
-    return new Response($this->bareHtmlPageRenderer->renderMaintenancePage($output, $title, $regions));
+    return new Response($this->bareHtmlPageRenderer->renderBarePage($output, $title, 'maintenance_page', $regions));
   }
 
   /**

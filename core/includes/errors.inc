@@ -235,7 +235,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         install_display_output($output, $GLOBALS['install_state']);
       }
       else {
-        $output = \Drupal::service('bare_html_page_renderer')->renderMaintenancePage($message, 'Error');
+        $output = \Drupal::service('bare_html_page_renderer')->renderBarePage(['#markup' => $message], 'Error', 'maintenance_page');
       }
 
       $response = new Response($output, 500);

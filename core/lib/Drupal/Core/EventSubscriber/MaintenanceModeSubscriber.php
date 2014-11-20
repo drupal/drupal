@@ -105,7 +105,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         $content = Xss::filterAdmin(String::format($this->config->get('system.maintenance')->get('message'), array(
           '@site' => $this->config->get('system.site')->get('name'),
         )));
-        $output = $this->bareHtmlPageRenderer->renderMaintenancePage($content, $this->t('Site under maintenance'));
+        $output = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Site under maintenance'), 'maintenance_page');
         $response = new Response($output, 503);
         $event->setResponse($response);
       }

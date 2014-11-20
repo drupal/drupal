@@ -149,7 +149,7 @@ else {
 
 if (!empty($output)) {
   $response->headers->set('Content-Type', 'text/html; charset=utf-8');
-  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderMaintenancePage($output, $page_title, array(
+  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderBarePage(['#markup' => $output], $page_title, 'maintenance_page', array(
     '#show_messages' => $show_messages,
   )));
   $response->send();
