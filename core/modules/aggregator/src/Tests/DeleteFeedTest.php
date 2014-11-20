@@ -15,7 +15,7 @@ namespace Drupal\aggregator\Tests;
 class DeleteFeedTest extends AggregatorTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

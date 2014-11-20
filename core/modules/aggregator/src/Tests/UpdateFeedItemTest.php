@@ -64,7 +64,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($before === $after, format_string('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
 
-    // Make sure updating items works even after disabling a module
+    // Make sure updating items works even after uninstalling a module
     // that provides the selected plugins.
     $this->enableTestPlugins();
     $this->container->get('module_handler')->uninstall(array('aggregator_test'));

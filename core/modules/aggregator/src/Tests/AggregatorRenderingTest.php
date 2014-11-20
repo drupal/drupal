@@ -17,7 +17,7 @@ use Drupal\Component\Utility\String;
 class AggregatorRenderingTest extends AggregatorTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

@@ -17,7 +17,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class FeedLanguageTest extends AggregatorTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

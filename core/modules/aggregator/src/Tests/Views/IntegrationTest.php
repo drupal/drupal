@@ -20,7 +20,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
 class IntegrationTest extends ViewUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

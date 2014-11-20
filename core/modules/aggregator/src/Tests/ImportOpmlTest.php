@@ -15,7 +15,7 @@ namespace Drupal\aggregator\Tests;
 class ImportOpmlTest extends AggregatorTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

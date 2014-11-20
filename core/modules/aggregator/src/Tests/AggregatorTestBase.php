@@ -17,7 +17,7 @@ use Drupal\aggregator\FeedInterface;
 abstract class AggregatorTestBase extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
