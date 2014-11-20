@@ -123,7 +123,7 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests getActiveLink().
    *
-   * @covers ::getActiveLink()
+   * @covers ::getActiveLink
    * @dataProvider provider
    */
   public function testGetActiveLink(Request $request, $links, $menu_name, $expected_link) {
@@ -143,8 +143,8 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests getActiveTrailIds().
    *
-   * @covers ::getActiveTrailIds()
-   * @covers ::getActiveTrailCacheKey()
+   * @covers ::getActiveTrailIds
+   * @covers ::getActiveTrailCacheKey
    * @dataProvider provider
    */
   public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail, $expected_cache_key) {

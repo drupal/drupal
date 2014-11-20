@@ -23,7 +23,7 @@ class AnonymousUserSessionTest extends UnitTestCase {
   /**
    * Tests creating an AnonymousUserSession when the request is available.
    *
-   * @covers ::__construct()
+   * @covers ::__construct
    */
   public function testAnonymousUserSessionWithRequest() {
     $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
@@ -44,7 +44,7 @@ class AnonymousUserSessionTest extends UnitTestCase {
   /**
    * Tests creating an AnonymousUserSession when the request is not available.
    *
-   * @covers ::__construct()
+   * @covers ::__construct
    */
   public function testAnonymousUserSessionWithNoRequest() {
     $container = new ContainerBuilder();

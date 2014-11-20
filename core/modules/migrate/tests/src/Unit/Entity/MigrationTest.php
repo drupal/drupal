@@ -20,7 +20,7 @@ class MigrationTest extends UnitTestCase {
   /**
    * Tests Migration::getProcessPlugins()
    *
-   * @covers ::getProcessPlugins()
+   * @covers ::getProcessPlugins
    */
   public function testGetProcessPlugins() {
     $migration = new Migration([], 'migration');

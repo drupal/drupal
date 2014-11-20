@@ -47,7 +47,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the urlInfo() method.
    *
-   * @covers ::urlInfo()
+   * @covers ::urlInfo
    *
    * @dataProvider providerTestUrlInfo
    */
@@ -75,7 +75,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the urlInfo() method with an invalid link template.
    *
-   * @covers ::urlInfo()
+   * @covers ::urlInfo
    *
    * @expectedException \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    * @expectedExceptionMessage No link template "canonical" found for the "test_entity_type" entity type
@@ -142,7 +142,7 @@ class EntityUrlTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Entity\EntityInterface::isNew()
    *
-   * @covers ::urlInfo()
+   * @covers ::urlInfo
    *
    * @expectedException \Drupal\Core\Entity\EntityMalformedException
    */
@@ -154,7 +154,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the _url() method.
    *
-   * @covers ::url()
+   * @covers ::url
    */
   public function testUrl() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -201,7 +201,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the getPathByAlias() method.
    *
-   * @covers ::getSystemPath()
+   * @covers ::getSystemPath
    */
   public function testGetSystemPath() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -233,8 +233,8 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the retrieval of link templates.
    *
-   * @covers ::hasLinkTemplate()
-   * @covers ::linkTemplates()
+   * @covers ::hasLinkTemplate
+   * @covers ::linkTemplates
    *
    * @dataProvider providerTestLinkTemplates
    */

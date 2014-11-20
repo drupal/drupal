@@ -81,7 +81,7 @@ class TempStoreTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::get()
+   * @covers ::get
    */
   public function testGet() {
     $this->keyValue->expects($this->at(0))
@@ -100,7 +100,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the getIfOwner() method.
    *
-   * @covers ::getIfOwner()
+   * @covers ::getIfOwner
    */
   public function testGetIfOwner() {
     $this->keyValue->expects($this->at(0))
@@ -124,7 +124,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the set() method with no lock available.
    *
-   * @covers ::set()
+   * @covers ::set
    * @expectedException \Drupal\user\TempStoreException
    */
   public function testSetWithNoLockAvailable() {
@@ -149,7 +149,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests a successful set() call.
    *
-   * @covers ::set()
+   * @covers ::set
    */
   public function testSet() {
     $this->lock->expects($this->once())
@@ -172,7 +172,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the setIfNotExists() methods.
    *
-   * @covers ::setIfNotExists()
+   * @covers ::setIfNotExists
    */
   public function testSetIfNotExists() {
     $this->keyValue->expects($this->once())
@@ -186,7 +186,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the setIfOwner() method when no key exists.
    *
-   * @covers ::setIfOwner()
+   * @covers ::setIfOwner
    */
   public function testSetIfOwnerWhenNotExists() {
     $this->keyValue->expects($this->once())
@@ -199,7 +199,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the setIfOwner() method when a key already exists but no object.
    *
-   * @covers ::setIfOwner()
+   * @covers ::setIfOwner
    */
   public function testSetIfOwnerNoObject() {
     $this->keyValue->expects($this->once())
@@ -217,7 +217,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the setIfOwner() method with matching and non matching owners.
    *
-   * @covers ::setIfOwner()
+   * @covers ::setIfOwner
    */
   public function testSetIfOwner() {
     $this->lock->expects($this->once())
@@ -241,7 +241,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the getMetadata() method.
    *
-   * @covers ::getMetadata()
+   * @covers ::getMetadata
    */
   public function testGetMetadata() {
     $this->keyValue->expects($this->at(0))
@@ -265,7 +265,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the delete() method.
    *
-   * @covers ::delete()
+   * @covers ::delete
    */
   public function testDelete() {
     $this->lock->expects($this->once())
@@ -288,7 +288,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the delete() method with no lock available.
    *
-   * @covers ::delete()
+   * @covers ::delete
    * @expectedException \Drupal\user\TempStoreException
    */
   public function testDeleteWithNoLockAvailable() {
@@ -313,7 +313,7 @@ class TempStoreTest extends UnitTestCase {
   /**
    * Tests the deleteIfOwner() method.
    *
-   * @covers ::deleteIfOwner()
+   * @covers ::deleteIfOwner
    */
   public function testDeleteIfOwner() {
     $this->lock->expects($this->once())

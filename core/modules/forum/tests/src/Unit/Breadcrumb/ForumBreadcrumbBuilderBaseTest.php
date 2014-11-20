@@ -19,7 +19,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
   /**
    * Tests ForumBreadcrumbBuilderBase::__construct().
    *
-   * @covers ::__construct()
+   * @covers ::__construct
    */
   public function testConstructor() {
     // Make some test doubles.

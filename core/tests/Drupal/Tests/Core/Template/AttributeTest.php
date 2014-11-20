@@ -64,7 +64,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests setting attributes.
-   * @covers ::setAttribute()
+   * @covers ::setAttribute
    */
   public function testSetAttribute() {
     $attribute = new Attribute();
@@ -92,7 +92,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing attributes.
-   * @covers ::removeAttribute()
+   * @covers ::removeAttribute
    */
   public function testRemoveAttribute() {
     $attributes = [
@@ -131,7 +131,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests adding class attributes with the AttributeArray helper method.
-   * @covers ::addClass()
+   * @covers ::addClass
    */
   public function testAddClasses() {
     // Add empty Attribute object with no classes.
@@ -183,7 +183,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the AttributeArray helper method.
-   * @covers ::removeClass()
+   * @covers ::removeClass
    */
   public function testRemoveClasses() {
     // Add duplicate class to ensure that both duplicates are removed.
@@ -214,7 +214,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests checking for class names with the Attribute method.
-   * @covers ::hasClass()
+   * @covers ::hasClass
    */
   public function testHasClass() {
     // Test an attribute without any classes.
@@ -229,8 +229,8 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the Attribute helper methods.
-   * @covers ::removeClass()
-   * @covers ::addClass()
+   * @covers ::removeClass
+   * @covers ::addClass
    */
   public function testChainAddRemoveClasses() {
     $attribute = new Attribute(
@@ -249,8 +249,8 @@ class AttributeTest extends UnitTestCase {
    * Tests the twig calls to the Attribute.
    * @dataProvider providerTestAttributeClassHelpers
    *
-   * @covers ::removeClass()
-   * @covers ::addClass()
+   * @covers ::removeClass
+   * @covers ::addClass
    */
   public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = array()) {
     $loader = new \Twig_Loader_String();

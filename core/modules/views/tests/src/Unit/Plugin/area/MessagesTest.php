@@ -42,8 +42,8 @@ class MessagesTest extends UnitTestCase {
   /**
    * Tests the render method.
    *
-   * @covers ::defineOptions()
-   * @covers ::render()
+   * @covers ::defineOptions
+   * @covers ::render
    */
   public function testRender() {
     // The handler is configured to show with empty views by default, so should

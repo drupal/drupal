@@ -44,8 +44,8 @@ class PathRootsSubscriberTest extends UnitTestCase {
   /**
    * Tests altering and finished event.
    *
-   * @covers ::onRouteAlter()
-   * @covers ::onRouteFinished()
+   * @covers ::onRouteAlter
+   * @covers ::onRouteFinished
    */
   public function testSubscribing() {
     $route_collection = new RouteCollection();

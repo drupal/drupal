@@ -118,7 +118,7 @@ class LinkGeneratorTest extends UnitTestCase {
   /**
    * Tests the generate() method with a route.
    *
-   * @covers ::generate()
+   * @covers ::generate
    */
   public function testGenerate() {
     $this->urlGenerator->expects($this->once())
@@ -149,7 +149,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * The set_active_class option is set to TRUE to ensure this does not cause
    * an error together with an external URL.
    *
-   * @covers ::generate()
+   * @covers ::generate
    */
   public function testGenerateExternal() {
     $this->urlAssembler->expects($this->once())

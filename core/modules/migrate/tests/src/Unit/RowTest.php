@@ -179,8 +179,8 @@ class RowTest extends UnitTestCase {
   /**
    * Tests getting/setting the ID Map.
    *
-   * @covers \Drupal\migrate\Row::setIdMap()
-   * @covers \Drupal\migrate\Row::getIdMap()
+   * @covers \Drupal\migrate\Row::setIdMap
+   * @covers \Drupal\migrate\Row::getIdMap
    */
   public function testGetSetIdMap() {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -204,7 +204,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests getting the source property.
    *
-   * @covers \Drupal\migrate\Row::getSourceProperty()
+   * @covers \Drupal\migrate\Row::getSourceProperty
    */
   public function testGetSourceProperty() {
     $row = new Row($this->testValues, $this->testSourceIds);

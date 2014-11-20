@@ -86,7 +86,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Tests locale lookups without fallback.
    *
-   * @covers ::resolveCacheMiss()
+   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithoutFallback() {
     $args = array(
@@ -122,7 +122,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * Note that context is irrelevant here. It is not used but it is required.
    *
-   * @covers ::resolveCacheMiss()
+   * @covers ::resolveCacheMiss
    *
    * @dataProvider resolveCacheMissWithFallbackProvider
    */
@@ -202,7 +202,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Tests locale lookups with persistent tracking.
    *
-   * @covers ::resolveCacheMiss()
+   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithPersist() {
     $args = array(
@@ -234,7 +234,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Tests locale lookups without a found translation.
    *
-   * @covers ::resolveCacheMiss()
+   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissNoTranslation() {
     $string = $this->getMock('Drupal\locale\StringInterface');

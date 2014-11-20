@@ -119,7 +119,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * Tests the getRouteName() method.
    *
-   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getRouteName()
+   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getRouteName
    */
   public function testGetRouteName($route_name = 'test_route_name') {
     $this->pluginDefinition['route_name'] = $route_name;
@@ -131,7 +131,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * Tests the getGroup() method.
    *
-   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getGroup()
+   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getGroup
    */
   public function testGetGroup($group_name = 'test_group') {
     $this->pluginDefinition['group'] = $group_name;
@@ -143,7 +143,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * Tests the getOptions() method.
    *
-   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getOptions()
+   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getOptions
    */
   public function testGetOptions($options = array('key' => 'value')) {
     $this->pluginDefinition['options'] = $options;
@@ -155,7 +155,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * Tests the getWeight() method.
    *
-   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getWeight()
+   * @covers \Drupal\Core\Menu\ContextualLinkDefault::getWeight
    */
   public function testGetWeight($weight = 5) {
     $this->pluginDefinition['weight'] = $weight;

@@ -223,7 +223,7 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback()
+   * @covers ::prepareCallback
    */
   public function testPrepareCallbackValidMethod() {
     $form_state = new FormState();
@@ -233,7 +233,7 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback()
+   * @covers ::prepareCallback
    */
   public function testPrepareCallbackInValidMethod() {
     $form_state = new FormState();
@@ -244,7 +244,7 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback()
+   * @covers ::prepareCallback
    */
   public function testPrepareCallbackArray() {
     $form_state = new FormState();

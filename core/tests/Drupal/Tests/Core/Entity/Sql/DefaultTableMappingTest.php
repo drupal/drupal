@@ -18,7 +18,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Tests DefaultTableMapping::getTableNames().
    *
-   * @covers ::getTableNames()
+   * @covers ::getTableNames
    */
   public function testGetTableNames() {
     // The storage definitions are only used in getColumnNames() so we do not
@@ -43,13 +43,13 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Tests DefaultTableMapping::getAllColumns().
    *
-   * @covers ::__construct()
-   * @covers ::getAllColumns()
-   * @covers ::getFieldNames()
-   * @covers ::getColumnNames()
-   * @covers ::setFieldNames()
-   * @covers ::getExtraColumns()
-   * @covers ::setExtraColumns()
+   * @covers ::__construct
+   * @covers ::getAllColumns
+   * @covers ::getFieldNames
+   * @covers ::getColumnNames
+   * @covers ::setFieldNames
+   * @covers ::getExtraColumns
+   * @covers ::setExtraColumns
    */
   public function testGetAllColumns() {
     // Set up single-column and multi-column definitions.
@@ -154,8 +154,8 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Tests DefaultTableMapping::getFieldNames().
    *
-   * @covers ::getFieldNames()
-   * @covers ::setFieldNames()
+   * @covers ::getFieldNames
+   * @covers ::setFieldNames
    */
   public function testGetFieldNames() {
     // The storage definitions are only used in getColumnNames() so we do not
@@ -184,8 +184,8 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Tests DefaultTableMapping::getColumnNames().
    *
-   * @covers ::__construct()
-   * @covers ::getColumnNames()
+   * @covers ::__construct
+   * @covers ::getColumnNames
    */
   public function testGetColumnNames() {
     $definitions['test'] = $this->setUpDefinition('test', []);
@@ -207,8 +207,8 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * Tests DefaultTableMapping::getExtraColumns().
    *
-   * @covers ::getExtraColumns()
-   * @covers ::setExtraColumns()
+   * @covers ::getExtraColumns
+   * @covers ::setExtraColumns
    */
   public function testGetExtraColumns() {
     // The storage definitions are only used in getColumnNames() so we do not

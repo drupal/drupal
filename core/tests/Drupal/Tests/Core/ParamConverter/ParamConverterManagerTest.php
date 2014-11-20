@@ -38,7 +38,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetConverter
    *
-   * @covers ::getConverter()
+   * @covers ::getConverter
    */
   public function testGetConverter($name, $class) {
     $converter = $this->getMockBuilder('Drupal\Core\ParamConverter\ParamConverterInterface')
@@ -55,7 +55,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   /**
    * Tests \Drupal\Core\ParamConverter\ParamConverterManager::getConverter().
    *
-   * @covers ::getConverter()
+   * @covers ::getConverter
    *
    * @expectedException \InvalidArgumentException
    */
@@ -128,7 +128,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setRouteParameterConverters()
+   * @covers ::setRouteParameterConverters
    *
    * @dataProvider providerTestSetRouteParameterConverters
    */
@@ -171,7 +171,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convert()
+   * @covers ::convert
    */
   public function testConvert() {
     $route = new Route('/test/{id}/{literal}/{null}');
@@ -208,7 +208,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convert()
+   * @covers ::convert
    */
   public function testConvertNoConverting() {
     $route = new Route('/test');
@@ -224,7 +224,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convert()
+   * @covers ::convert
    *
    * @expectedException \Drupal\Core\ParamConverter\ParamNotConvertedException
    * @expectedExceptionMessage The "id" parameter was not converted for the path "/test/{id}" (route name: "test_route")

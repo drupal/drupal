@@ -36,7 +36,7 @@ class EntityFormTest extends UnitTestCase {
   /**
    * Tests the form ID generation.
    *
-   * @covers ::getFormId()
+   * @covers ::getFormId
    *
    * @dataProvider providerTestFormIds
    */

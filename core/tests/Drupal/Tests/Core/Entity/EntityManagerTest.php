@@ -188,7 +188,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the clearCachedDefinitions() method.
    *
-   * @covers ::clearCachedDefinitions()
+   * @covers ::clearCachedDefinitions
    *
    */
   public function testClearCachedDefinitions() {
@@ -209,7 +209,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getDefinition() method.
    *
-   * @covers ::getDefinition()
+   * @covers ::getDefinition
    *
    * @dataProvider providerTestGetDefinition
    */
@@ -246,7 +246,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getDefinition() method with an invalid definition.
    *
-   * @covers ::getDefinition()
+   * @covers ::getDefinition
    *
    * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @expectedExceptionMessage The "pear" entity type does not exist.
@@ -260,7 +260,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the hasHandler() method.
    *
-   * @covers ::hasHandler()
+   * @covers ::hasHandler
    *
    * @dataProvider providerTestHasHandler
    */
@@ -301,7 +301,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getStorage() method.
    *
-   * @covers ::getStorage()
+   * @covers ::getStorage
    */
   public function testGetStorage() {
     $class = $this->getTestHandlerClass();
@@ -318,7 +318,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getListBuilder() method.
    *
-   * @covers ::getListBuilder()
+   * @covers ::getListBuilder
    */
   public function testGetListBuilder() {
     $class = $this->getTestHandlerClass();
@@ -335,7 +335,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getViewBuilder() method.
    *
-   * @covers ::getViewBuilder()
+   * @covers ::getViewBuilder
    */
   public function testGetViewBuilder() {
     $class = $this->getTestHandlerClass();
@@ -352,7 +352,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getAccessControlHandler() method.
    *
-   * @covers ::getAccessControlHandler()
+   * @covers ::getAccessControlHandler
    */
   public function testGetAccessControlHandler() {
     $class = $this->getTestHandlerClass();
@@ -369,7 +369,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFormObject() method.
    *
-   * @covers ::getFormObject()
+   * @covers ::getFormObject
    */
   public function testGetFormObject() {
     $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -401,7 +401,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFormObject() method with an invalid operation.
    *
-   * @covers ::getFormObject()
+   * @covers ::getFormObject
    *
    * @expectedException \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
@@ -419,7 +419,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getHandler() method.
    *
-   * @covers ::getHandler()
+   * @covers ::getHandler
    */
   public function testGetHandler() {
     $class = $this->getTestHandlerClass();
@@ -441,7 +441,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getHandler() method when no controller is defined.
    *
-   * @covers ::getHandler()
+   * @covers ::getHandler
    *
    * @expectedException \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
@@ -458,8 +458,8 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method.
    *
-   * @covers ::getBaseFieldDefinitions()
-   * @covers ::buildBaseFieldDefinitions()
+   * @covers ::getBaseFieldDefinitions
+   * @covers ::buildBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitions() {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -471,8 +471,8 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldDefinitions() method.
    *
-   * @covers ::getFieldDefinitions()
-   * @covers ::buildBundleFieldDefinitions()
+   * @covers ::getFieldDefinitions
+   * @covers ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitions() {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -484,8 +484,8 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldStorageDefinitions() method.
    *
-   * @covers ::getFieldStorageDefinitions()
-   * @covers ::buildFieldStorageDefinitions()
+   * @covers ::getFieldStorageDefinitions
+   * @covers ::buildFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitions() {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE);
@@ -517,7 +517,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with caching.
    *
-   * @covers ::getBaseFieldDefinitions()
+   * @covers ::getBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitionsWithCaching() {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -551,7 +551,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldDefinitions() method with caching.
    *
-   * @covers ::getFieldDefinitions()
+   * @covers ::getFieldDefinitions
    */
   public function testGetFieldDefinitionsWithCaching() {
     $field_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'id', 0);
@@ -591,7 +591,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldStorageDefinitions() method with caching.
    *
-   * @covers ::getFieldStorageDefinitions()
+   * @covers ::getFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitionsWithCaching() {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE, 'id', 0);
@@ -652,8 +652,8 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with an invalid definition.
    *
-   * @covers ::getBaseFieldDefinitions()
-   * @covers ::buildBaseFieldDefinitions()
+   * @covers ::getBaseFieldDefinitions
+   * @covers ::buildBaseFieldDefinitions
    *
    * @expectedException \LogicException
    */
@@ -669,8 +669,8 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests that getFieldDefinitions() method sets the 'provider' definition key.
    *
-   * @covers ::getFieldDefinitions()
-   * @covers ::buildBundleFieldDefinitions()
+   * @covers ::getFieldDefinitions
+   * @covers ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitionsProvider() {
     $this->setUpEntityWithFieldDefinition(TRUE);
@@ -767,7 +767,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the clearCachedFieldDefinitions() method.
    *
-   * @covers ::clearCachedFieldDefinitions()
+   * @covers ::clearCachedFieldDefinitions
    */
   public function testClearCachedFieldDefinitions() {
     $this->setUpEntityManager();
@@ -783,7 +783,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the clearCachedBundles() method.
    *
-   * @covers ::clearCachedBundles()
+   * @covers ::clearCachedBundles
    */
   public function testClearCachedBundles() {
     $this->setUpEntityManager();
@@ -797,7 +797,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getBundleInfo() method.
    *
-   * @covers ::getBundleInfo()
+   * @covers ::getBundleInfo
    *
    * @dataProvider providerTestGetBundleInfo
    */
@@ -844,7 +844,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getAllBundleInfo() method.
    *
-   * @covers ::getAllBundleInfo()
+   * @covers ::getAllBundleInfo
    */
   public function testGetAllBundleInfo() {
     $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -914,7 +914,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getEntityTypeLabels() method.
    *
-   * @covers ::getEntityTypeLabels()
+   * @covers ::getEntityTypeLabels
    */
   public function testGetEntityTypeLabels() {
     $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -940,7 +940,7 @@ class EntityManagerTest extends UnitTestCase {
   /**
    * Tests the getTranslationFromContext() method.
    *
-   * @covers ::getTranslationFromContext()
+   * @covers ::getTranslationFromContext
    */
   public function testGetTranslationFromContext() {
     $this->setUpEntityManager();
@@ -1283,7 +1283,7 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass()
+   * @covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClass() {
     $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
@@ -1312,7 +1312,7 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass()
+   * @covers ::getEntityTypeFromClass
    *
    * @expectedException \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
    * @expectedExceptionMessage The \Drupal\pear\Entity\Pear class does not correspond to an entity type.
@@ -1335,7 +1335,7 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass()
+   * @covers ::getEntityTypeFromClass
    *
    * @expectedException \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
    * @expectedExceptionMessage Multiple entity types found for \Drupal\apple\Entity\Apple.

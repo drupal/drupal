@@ -80,19 +80,18 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Tests the schema for non-revisionable, non-translatable entities.
    *
-   * @covers ::__construct()
-   * @covers ::getEntitySchemaTables()
-   * @covers ::initializeBaseTable()
-   * @covers ::addTableDefaults()
-   * @covers ::getEntityIndexName()
-   * @covers ::getFieldIndexes()
-   * @covers ::getFieldUniqueKeys()
-   * @covers ::getFieldForeignKeys()
-   * @covers ::getFieldSchemaData()
-   * @covers ::addDefaultLangcodeSchema()
-   * @covers ::processBaseTable()
-   * @covers ::processIdentifierSchema()
-   * @covers ::onEntityTypeCreate()
+   * @covers ::__construct
+   * @covers ::getEntitySchemaTables
+   * @covers ::initializeBaseTable
+   * @covers ::addTableDefaults
+   * @covers ::getEntityIndexName
+   * @covers ::getFieldIndexes
+   * @covers ::getFieldUniqueKeys
+   * @covers ::getFieldForeignKeys
+   * @covers ::getFieldSchemaData
+   * @covers ::addDefaultLangcodeSchema
+   * @covers ::processBaseTable
+   * @covers ::processIdentifierSchema
    */
   public function testGetSchemaBase() {
     $this->entityType = new ContentEntityType(array(
@@ -389,15 +388,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Tests the schema for revisionable, non-translatable entities.
    *
-   * @covers ::__construct()
-   * @covers ::getEntitySchemaTables()
-   * @covers ::initializeBaseTable()
-   * @covers ::initializeRevisionTable()
-   * @covers ::addTableDefaults()
-   * @covers ::getEntityIndexName()
-   * @covers ::processRevisionTable()
-   * @covers ::processIdentifierSchema()
-   * @covers ::onEntityTypeCreate()
+   * @covers ::__construct
+   * @covers ::getEntitySchemaTables
+   * @covers ::initializeBaseTable
+   * @covers ::initializeRevisionTable
+   * @covers ::addTableDefaults
+   * @covers ::getEntityIndexName
+   * @covers ::processRevisionTable
+   * @covers ::processIdentifierSchema
    */
   public function testGetSchemaRevisionable() {
     $this->entityType = new ContentEntityType(array(
@@ -489,12 +487,12 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Tests the schema for non-revisionable, translatable entities.
    *
-   * @covers ::__construct()
-   * @covers ::getEntitySchemaTables()
-   * @covers ::initializeDataTable()
-   * @covers ::addTableDefaults()
-   * @covers ::getEntityIndexName()
-   * @covers ::processDataTable()
+   * @covers ::__construct
+   * @covers ::getEntitySchemaTables
+   * @covers ::initializeDataTable
+   * @covers ::addTableDefaults
+   * @covers ::getEntityIndexName
+   * @covers ::processDataTable
    */
   public function testGetSchemaTranslatable() {
     $this->entityType = new ContentEntityType(array(
@@ -580,13 +578,13 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Tests the schema for revisionable, translatable entities.
    *
-   * @covers ::__construct()
-   * @covers ::getEntitySchemaTables()
-   * @covers ::initializeDataTable()
-   * @covers ::addTableDefaults()
-   * @covers ::getEntityIndexName()
-   * @covers ::initializeRevisionDataTable()
-   * @covers ::processRevisionDataTable()
+   * @covers ::__construct
+   * @covers ::getEntitySchemaTables
+   * @covers ::initializeDataTable
+   * @covers ::addTableDefaults
+   * @covers ::getEntityIndexName
+   * @covers ::initializeRevisionDataTable
+   * @covers ::processRevisionDataTable
    */
   public function testGetSchemaRevisionableTranslatable() {
     $this->entityType = new ContentEntityType(array(
@@ -766,6 +764,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for a field dedicated table.
    *
    * @covers ::onFieldStorageDefinitionCreate
+   * @covers ::getDedicatedTableSchema
+   * @covers ::createDedicatedTableSchema
    */
   public function testDedicatedTableSchema() {
     $entity_type_id = 'entity_test';
@@ -912,6 +912,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * Tests the schema for a field dedicated table for an entity with a string identifier.
    *
    * @covers ::onFieldStorageDefinitionCreate
+   * @covers ::getDedicatedTableSchema
+   * @covers ::createDedicatedTableSchema
    */
   public function testDedicatedTableSchemaForEntityWithStringIdentifier() {
     $entity_type_id = 'entity_test';

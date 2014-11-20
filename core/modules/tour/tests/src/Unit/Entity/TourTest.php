@@ -26,7 +26,7 @@ class TourTest extends UnitTestCase {
    * @param bool $result
    *   Expected result.
    *
-   * @covers ::hasMatchingRoute()
+   * @covers ::hasMatchingRoute
    *
    * @dataProvider routeProvider
    */

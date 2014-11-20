@@ -175,7 +175,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::toArray()
+   * @covers ::toArray
    */
   public function testToArray() {
     $field = new FieldConfig(array(

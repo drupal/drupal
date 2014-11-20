@@ -38,7 +38,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Tests that we get an exception when the length of the config prefix that is
    * returned by getConfigPrefix() exceeds the maximum defined prefix length.
    *
-   * @covers ::getConfigPrefix()
+   * @covers ::getConfigPrefix
    */
   public function testConfigPrefixLengthExceeds() {
     $message_text = 'The configuration file name prefix @config_prefix exceeds the maximum character limit of @max_char.';
@@ -61,7 +61,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Tests that a valid config prefix returned by getConfigPrefix()
    * does not throw an exception and is formatted as expected.
    *
-   * @covers ::getConfigPrefix()
+   * @covers ::getConfigPrefix
    */
   public function testConfigPrefixLengthValid() {
     // A provider length of 24 and config_prefix length of 58 (+1 for the .)

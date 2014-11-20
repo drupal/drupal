@@ -115,8 +115,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *   The expected return value of
    *   SqlContentEntityStorage::getBaseTable().
    *
-   * @covers ::__construct()
-   * @covers ::getBaseTable()
+   * @covers ::__construct
+   * @covers ::getBaseTable
    *
    * @dataProvider providerTestGetBaseTable
    */
@@ -157,8 +157,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *   The expected return value of
    *   SqlContentEntityStorage::getRevisionTable().
    *
-   * @cover ::__construct()
-   * @covers ::getRevisionTable()
+   * @covers ::__construct
+   * @covers ::getRevisionTable
    *
    * @dataProvider providerTestGetRevisionTable
    */
@@ -197,8 +197,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * Tests SqlContentEntityStorage::getDataTable().
    *
-   * @cover ::__construct()
-   * @covers ::getDataTable()
+   * @covers ::__construct
+   * @covers ::getDataTable
    */
   public function testGetDataTable() {
     $this->entityType->expects($this->once())
@@ -222,8 +222,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *   The expected return value of
    *   SqlContentEntityStorage::getRevisionDataTable().
    *
-   * @cover ::__construct()
-   * @covers ::getRevisionDataTable()
+   * @covers ::__construct
+   * @covers ::getRevisionDataTable
    *
    * @dataProvider providerTestGetRevisionDataTable
    */
@@ -269,9 +269,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * Tests ContentEntityDatabaseStorage::onEntityTypeCreate().
    *
-   * @covers ::__construct()
-   * @covers ::onEntityTypeCreate()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::onEntityTypeCreate
+   * @covers ::getTableMapping
    */
   public function testOnEntityTypeCreate() {
     $columns = array(
@@ -359,8 +359,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * Tests getTableMapping() with an empty entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    */
   public function testGetTableMappingEmpty() {
     $this->setUpEntityStorage();
@@ -377,8 +377,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -409,8 +409,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -464,8 +464,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -512,8 +512,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -586,8 +586,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -642,8 +642,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -702,8 +702,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -802,8 +802,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param string[] $entity_keys
    *   A map of entity keys to use for the mocked entity type.
    *
-   * @covers ::__construct()
-   * @covers ::getTableMapping()
+   * @covers ::__construct
+   * @covers ::getTableMapping
    *
    * @dataProvider providerTestGetTableMappingSimple()
    */
@@ -927,7 +927,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::create()
+   * @covers ::create
    */
   public function testCreate() {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');

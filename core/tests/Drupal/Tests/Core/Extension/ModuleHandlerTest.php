@@ -449,7 +449,7 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Test internal implementation cache reset.
    *
-   * @covers ::resetImplementations()
+   * @covers ::resetImplementations
    */
   public function testResetImplementations() {
 

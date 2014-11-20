@@ -498,7 +498,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * Tests the checkNamedRoute with default values.
    *
-   * @covers \Drupal\Core\Access\AccessManager::checkNamedRoute()
+   * @covers \Drupal\Core\Access\AccessManager::checkNamedRoute
    */
   public function testCheckNamedRouteWithDefaultValue() {
     $this->routeCollection = new RouteCollection();

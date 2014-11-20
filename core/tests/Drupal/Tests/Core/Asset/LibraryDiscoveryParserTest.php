@@ -71,7 +71,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that basic functionality works for getLibraryByName.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testBuildByExtensionSimple() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -98,7 +98,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that a theme can be used instead of a module.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testBuildByExtensionWithTheme() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -122,7 +122,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that a module with a missing library file results in FALSE.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testBuildByExtensionWithMissingLibraryFile() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -142,7 +142,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @expectedException \Drupal\Core\Asset\Exception\InvalidLibraryFileException
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testInvalidLibrariesFile() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -163,7 +163,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @expectedException \Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException
    * @expectedExceptionMessage Incomplete library definition for 'example' in core/tests/Drupal/Tests/Core/Asset/library_test_files/example_module_missing_information.libraries.yml
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testBuildByExtensionWithMissingInformation() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -181,7 +181,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that the version property of external libraries is handled.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testExternalLibraries() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -203,7 +203,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Ensures that CSS weights are taken into account properly.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testDefaultCssWeights() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -243,7 +243,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @expectedException \UnexpectedValueException
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testJsWithPositiveWeight() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -261,7 +261,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with CSS/JavaScript and a setting.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryWithCssJsSetting() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -292,7 +292,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with dependencies.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryWithDependencies() {
      $this->moduleHandler->expects($this->atLeastOnce())
@@ -315,7 +315,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with a couple of data formats like full URL.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryWithDataTypes() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -347,7 +347,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with JavaScript-specific flags.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryWithJavaScript() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -372,7 +372,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @expectedException \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
    * @expectedExceptionMessage Missing license information in library definition for 'no-license-info-but-remote' in core/tests/Drupal/Tests/Core/Asset/library_test_files/licenses_missing_information.libraries.yml: it has a remote, but no license.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryThirdPartyWithMissingLicense() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -390,7 +390,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with various licenses, some GPL-compatible, some not.
    *
-   * @covers ::buildByExtension()
+   * @covers ::buildByExtension
    */
   public function testLibraryWithLicenses() {
     $this->moduleHandler->expects($this->atLeastOnce())
