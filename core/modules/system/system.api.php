@@ -305,8 +305,8 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *
  * Email messages sent using functions other than drupal_mail() will not
  * invoke hook_mail_alter(). For example, a contributed module directly
- * calling the drupal_mail_system()->mail() or PHP mail() function
- * will not invoke this hook. All core modules use drupal_mail() for
+ * calling the \Drupal::service('plugin.manager.mail')->mail() or PHP mail()
+ * function will not invoke this hook. All core modules use drupal_mail() for
  * messaging, it is best practice but not mandatory in contributed modules.
  *
  * @param $message

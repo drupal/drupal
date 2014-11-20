@@ -39,7 +39,7 @@ class MailTest extends WebTestBase {
     \Drupal::config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
 
     // Get the default MailInterface class instance.
-    $mail_backend = drupal_mail_system('default', 'default');
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'default', 'key' => 'default'));
 
     // Assert whether the default mail backend is an instance of the expected
     // class.
