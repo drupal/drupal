@@ -109,7 +109,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
             if (!empty($entity->get($field_name)->comment_count)) {
               $links['comment-comments'] = array(
                 'title' => $this->formatPlural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
-                'attributes' => array('title' => $this->t('Jump to the first comment of this posting.')),
+                'attributes' => array('title' => $this->t('Jump to the first comment.')),
                 'fragment' => 'comments',
                 'url' => $entity->urlInfo(),
               );
@@ -119,7 +119,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                   'url' => Url::fromRoute('<current>'),
                   'attributes' => array(
                     'class' => 'hidden',
-                    'title' => $this->t('Jump to the first new comment of this posting.'),
+                    'title' => $this->t('Jump to the first new comment.'),
                     'data-history-node-last-comment-timestamp' => $entity->get($field_name)->last_comment_timestamp,
                     'data-history-node-field-name' => $field_name,
                   ),
@@ -134,7 +134,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
               $links['comment-add'] = array(
                 'title' => $this->t('Add new comment'),
                 'language' => $entity->language(),
-                'attributes' => array('title' => $this->t('Add a new comment to this page.')),
+                'attributes' => array('title' => $this->t('Share your thoughts and opinions.')),
                 'fragment' => 'comment-form',
               );
               if ($comment_form_location == CommentItemInterface::FORM_SEPARATE_PAGE) {
@@ -168,7 +168,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
               if ($comment_form_location == CommentItemInterface::FORM_SEPARATE_PAGE || (!empty($entity->get($field_name)->comment_count) && $this->currentUser->hasPermission('access comments'))) {
                 $links['comment-add'] = array(
                   'title' => $this->t('Add new comment'),
-                  'attributes' => array('title' => $this->t('Share your thoughts and opinions related to this posting.')),
+                  'attributes' => array('title' => $this->t('Share your thoughts and opinions.')),
                   'fragment' => 'comment-form',
                 );
                 if ($comment_form_location == CommentItemInterface::FORM_SEPARATE_PAGE) {
