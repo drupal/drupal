@@ -1,5 +1,5 @@
 # Schema for the configuration files of the Path module.
 
-entity_form_display.field.path:
-  type: entity_field_form_display_base
+field.widget.settings.path:
+  type: mapping
   label: 'Link format settings'

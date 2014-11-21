@@ -26,40 +26,32 @@ field.datetime.value:
         - type: string
           label: 'Value'
 
-entity_view_display.field.datetime_default:
-  type: entity_field_view_display_base
+field.formatter.settings.datetime_default:
+  type: mapping
   label: 'Datetime default display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        format_type:
-          type: string
-          label: 'Date format'
+    format_type:
+      type: string
+      label: 'Date format'
 
-entity_view_display.field.datetime_plain:
-  type: entity_field_view_display_base
+field.formatter.settings.datetime_plain:
+  type: mapping
   label: 'Datetime plain display format settings'
 
-entity_form_display.field.datetime_datelist:
-  type: entity_field_form_display_base
+field.widget.settings.datetime_datelist:
+  type: mapping
   label: 'Datetime select list display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        increment:
-          type: integer
-          label: 'Time increments'
-        date_order:
-          type: string
-          label: 'Date part order'
-        time_type:
-          type: string
-          label: 'Time type'
+    increment:
+      type: integer
+      label: 'Time increments'
+    date_order:
+      type: string
+      label: 'Date part order'
+    time_type:
+      type: string
+      label: 'Time type'
 
-entity_form_display.field.datetime_default:
-  type: entity_field_form_display_base
+field.widget.settings.datetime_default:
+  type: mapping
   label: 'Datetime default display format settings'

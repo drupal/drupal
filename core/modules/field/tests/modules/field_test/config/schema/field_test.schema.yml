@@ -1,26 +1,18 @@
-entity_view_display.field.field_test_multiple:
-  type: entity_field_view_display_base
+field.formatter.settings.field_test_multiple:
+  type: mapping
   label: 'field_test display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        test_formatter_setting_multiple:
-          type: string
-          label: 'Test setting'
-        alter:
-          type: boolean
-          label: 'Test altering'
+    test_formatter_setting_multiple:
+      type: string
+      label: 'Test setting'
+    alter:
+      type: boolean
+      label: 'Test altering'
 
-entity_form_display.field.test_field_widget_multiple:
-  type: entity_field_form_display_base
+field.widget.settings.test_field_widget_multiple:
+  type: mapping
   label: 'field_test display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        test_widget_setting_multiple:
-          type: string
-          label: 'Test setting'
+    test_widget_setting_multiple:
+      type: string
+      label: 'Test setting'

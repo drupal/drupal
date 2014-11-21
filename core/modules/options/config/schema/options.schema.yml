@@ -111,18 +111,18 @@ field.list_string.value:
           type: string
           label: 'Value'
 
-entity_view_display.field.list_default:
-  type: entity_field_view_display_base
+field.formatter.settings.list_default:
+  type: mapping
   label: 'Options list default display settings'
 
-entity_view_display.field.list_key:
-  type: entity_field_view_display_base
+field.formatter.settings.list_key:
+  type: mapping
   label: 'Key format settings'
 
-entity_form_display.field.options_buttons:
-  type: entity_field_form_display_base
+field.widget.settings.options_buttons:
+  type: mapping
   label: 'Check boxes/radio buttons format settings'
 
-entity_form_display.field.options_select:
-  type: entity_field_form_display_base
+field.widget.settings.options_select:
+  type: mapping
   label: 'Select list format settings'

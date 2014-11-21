@@ -1,25 +1,17 @@
 # Schema for the configuration files of the Telephone module.
 
-entity_view_display.field.telephone_link:
-  type: entity_field_view_display_base
+field.formatter.settings.telephone_link:
+  type: mapping
   label: 'Telephone link format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        title:
-          type: label
-          label: 'Title to replace basic numeric telephone number display'
+    title:
+      type: label
+      label: 'Title to replace basic numeric telephone number display'
 
-entity_form_display.field.telephone_default:
-  type: entity_field_form_display_base
+field.widget.settings.telephone_default:
+  type: mapping
   label: 'Telephone default format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    placeholder:
+      type: label
+      label: 'Placeholder'

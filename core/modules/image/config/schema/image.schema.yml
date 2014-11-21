@@ -140,32 +140,24 @@ field.image.value:
           type: integer
           label: 'Height'
 
-entity_view_display.field.image:
-  type: entity_field_view_display_base
+field.formatter.settings.image:
+  type: mapping
   label: 'Image field display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        image_link:
-          type: string
-          label: 'Link image to'
-        image_style:
-          type: string
-          label: 'Image style'
+    image_link:
+      type: string
+      label: 'Link image to'
+    image_style:
+      type: string
+      label: 'Image style'
 
-entity_form_display.field.image_image:
-  type: entity_field_form_display_base
+field.widget.settings.image_image:
+  type: mapping
   label: 'Image field display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        progress_indicator:
-          type: string
-          label: 'Progress indicator'
-        preview_image_style:
-          type: string
-          label: 'Preview image style'
+    progress_indicator:
+      type: string
+      label: 'Progress indicator'
+    preview_image_style:
+      type: string
+      label: 'Preview image style'

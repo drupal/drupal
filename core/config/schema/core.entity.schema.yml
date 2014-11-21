@@ -68,9 +68,28 @@ core.entity_view_display.*.*.*:
       label: 'View or form mode machine name'
     content:
       type: sequence
-      label: 'Field display formatters'
+      label: 'Field formatters'
       sequence:
-        - type: entity_view_display.field.[type]
+        - type: mapping
+          label: 'Field formatter'
+          mapping:
+            type:
+              type: string
+              label: 'Format type machine name'
+            weight:
+              type: integer
+              label: 'Weight'
+            third_party_settings:
+               type: sequence
+               label: 'Third party settings'
+               sequence:
+                 - type: entity_view_display.third_party.[%key]
+            label:
+               type: string
+               label: 'Label setting machine name'
+            settings:
+              type: field.formatter.settings.[%parent.type]
+              label: 'Settings'
     hidden:
       type: sequence
       label: 'Field display setting'
@@ -105,9 +124,25 @@ core.entity_form_display.*.*.*:
       label: 'Enabled'
     content:
       type: sequence
-      label: 'Field display formatters'
+      label: 'Field widgets'
       sequence:
-        - type: entity_form_display.field.[type]
+        - type: mapping
+          label: 'Field widget'
+          mapping:
+            type:
+              type: string
+              label: 'Widget type machine name'
+            weight:
+              type: integer
+              label: 'Weight'
+            third_party_settings:
+              type: sequence
+              label: 'Third party settings'
+              sequence:
+                - type: entity_form_display.third_party.[%key]
+            settings:
+              type: field.widget.settings.[%parent.type]
+              label: 'Settings'
     hidden:
       type: sequence
       label: 'Hidden'
@@ -121,145 +156,111 @@ core.entity_form_display.*.*.*:
         - type: entity_form_display.third_party.[%key]
 
 # Default schema for entity display field with undefined type.
-entity_view_display.field.*:
-  type: entity_field_view_display_base
-  label: 'Entity display default'
+field.formatter.settings.*:
+  type: mapping
 
 # Default schema for entity form display field with undefined type.
-entity_form_display.field.*:
-  type: entity_field_form_display_base
-  label: 'Entity form display default'
+field.widget.settings.*:
+  type: mapping
 
-entity_form_display.field.string_textfield:
-  type: entity_field_form_display_base
+field.widget.settings.string_textfield:
+  type: mapping
   label: 'Text field display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        size:
-          type: integer
-          label: 'Size of textfield'
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
 
-entity_form_display.field.string_textarea:
-  type: entity_field_form_display_base
+field.widget.settings.string_textarea:
+  type: mapping
   label: 'Textarea display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        rows:
-          type: integer
-          label: 'Rows'
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    rows:
+      type: integer
+      label: 'Rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'
 
-entity_form_display.field.email_default:
-  type: entity_field_form_display_base
+field.widget.settings.email_default:
+  type: mapping
   label: 'Email field display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    placeholder:
+      type: label
+      label: 'Placeholder'
 
-entity_form_display.field.datetime_timestamp:
-  type: entity_field_form_display_base
+field.widget.settings.datetime_timestamp:
+  type: mapping
   label: 'Datetime timestamp display format settings'
 
-entity_form_display.field.boolean_checkbox:
-  type: entity_field_form_display_base
+field.widget.settings.boolean_checkbox:
+  type: mapping
   label: 'Boolean checkbox display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        display_label:
-          type: boolean
-          label: 'Display label'
+    display_label:
+      type: boolean
+      label: 'Display label'
 
-entity_form_display.field.hidden:
-  type: entity_field_form_display_base
+field.widget.settings.hidden:
+  type: mapping
   label: '- Hidden - format settings'
 
-entity_form_display.field.number:
-  type: entity_field_form_display_base
+field.widget.settings.number:
+  type: mapping
   label: 'Number default display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    placeholder:
+      type: label
+      label: 'Placeholder'
 
-entity_form_display.field.checkbox:
-  type: entity_field_form_display_base
+field.widget.settings.checkbox:
+  type: mapping
   label: 'Single on/off checkbox format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        display_label:
-          type: boolean
-          label: 'Use field label instead of the "On value" as label'
+    display_label:
+      type: boolean
+      label: 'Use field label instead of the "On value" as label'
 
-entity_view_display.field.number_decimal:
-  type: entity_field_view_display_base
+field.formatter.settings.number_decimal:
+  type: mapping
   label: 'Number decimal display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        thousand_separator:
-          type: string
-          label: 'Thousand marker'
-        decimal_separator:
-          type: string
-          label: 'Decimal marker'
-        scale:
-          type: integer
-          label: 'Scale'
-        prefix_suffix:
-          type: boolean
-          label: 'Display prefix and suffix.'
+    thousand_separator:
+      type: string
+      label: 'Thousand marker'
+    decimal_separator:
+      type: string
+      label: 'Decimal marker'
+    scale:
+      type: integer
+      label: 'Scale'
+    prefix_suffix:
+      type: boolean
+      label: 'Display prefix and suffix.'
 
-entity_view_display.field.number_integer:
-  type: entity_field_view_display_base
+field.formatter.settings.number_integer:
+  type: mapping
   label: 'Number interger display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        thousand_separator:
-          type: string
-          label: 'Thousand marker'
-        prefix_suffix:
-          type: boolean
-          label: 'Display prefix and suffix.'
+    thousand_separator:
+      type: string
+      label: 'Thousand marker'
+    prefix_suffix:
+      type: boolean
+      label: 'Display prefix and suffix.'
 
-entity_view_display.field.number_unformatted:
-  type: entity_field_view_display_base
+field.formatter.settings.number_unformatted:
+  type: mapping
   label: 'Number unformatted display format settings'
 
-entity_view_display.field.uri_link:
-  type: entity_field_view_display_base
+field.formatter.settings.uri_link:
+  type: mapping
   label: 'URI as link display format settings'
 
-entity_view_display.field.timestamp_ago:
-  type: entity_field_view_display_base
+field.formatter.settings.timestamp_ago:
+  type: mapping
   label: 'Timestamp ago display format settings'

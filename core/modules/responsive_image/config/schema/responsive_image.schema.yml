@@ -42,20 +42,16 @@ responsive_image.mappings.*:
       type: config_dependencies
       label: 'Dependencies'
 
-entity_view_display.field.responsive_image:
-  type: entity_field_view_display_base
+field.formatter.settings.responsive_image:
+  type: mapping
   label: 'Responsive image list format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        responsive_image_mapping:
-          type: string
-          label: 'Responsive image mapping'
-        fallback_image_style:
-          type: string
-          label: 'Fallback image style'
-        image_link:
-          type: string
-          label: 'Link image to'
+    responsive_image_mapping:
+      type: string
+      label: 'Responsive image mapping'
+    fallback_image_style:
+      type: string
+      label: 'Fallback image style'
+    image_link:
+      type: string
+      label: 'Link image to'

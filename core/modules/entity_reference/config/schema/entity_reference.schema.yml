@@ -37,75 +37,59 @@ entity_reference.default.handler_settings:
       type: boolean
       label: 'Create referenced entities if they don''t already exist'
 
-entity_view_display.field.entity_reference_entity_view:
-  type: entity_field_view_display_base
+field.formatter.settings.entity_reference_entity_view:
+  type: mapping
   label: 'Entity reference rendered entity display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        view_mode:
-          type: string
-          label: 'View mode'
-        link:
-          type: boolean
-          label: 'Show links'
+    view_mode:
+      type: string
+      label: 'View mode'
+    link:
+      type: boolean
+      label: 'Show links'
 
-entity_view_display.field.entity_reference_entity_id:
-  type: entity_field_view_display_base
+field.formatter.settings.entity_reference_entity_id:
+  type: mapping
   label: 'Entity reference entity ID display format settings'
 
-entity_view_display.field.entity_reference_label:
-  type: entity_field_view_display_base
+field.formatter.settings.entity_reference_label:
+  type: mapping
   label: 'Entity reference label display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        link:
-          type: boolean
-          label: 'Link label to the referenced entity'
+    link:
+      type: boolean
+      label: 'Link label to the referenced entity'
 
-entity_form_display.field.entity_reference_autocomplete_tags:
-  type: entity_field_form_display_base
+field.widget.settings.entity_reference_autocomplete_tags:
+  type: mapping
   label: 'Entity reference autocomplete (Tags style) display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        match_operator:
-          type: string
-          label: 'Autocomplete matching'
-        size:
-          type: integer
-          label: 'Size of textfield'
-        autocomplete_type:
-          type: string
-          label: 'Autocomplete type'
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    autocomplete_type:
+      type: string
+      label: 'Autocomplete type'
+    placeholder:
+      type: label
+      label: 'Placeholder'
 
-entity_form_display.field.entity_reference_autocomplete:
-  type: entity_field_form_display_base
+field.widget.settings.entity_reference_autocomplete:
+  type: mapping
   label: 'Entity reference autocomplete display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        match_operator:
-          type: string
-          label: 'Autocomplete matching'
-        size:
-          type: integer
-          label: 'Size of textfield'
-        autocomplete_type:
-          type: string
-          label: 'Autocomplete type'
-        placeholder:
-          type: label
-          label: 'Placeholder'
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    autocomplete_type:
+      type: string
+      label: 'Autocomplete type'
+    placeholder:
+      type: label
+      label: 'Placeholder'

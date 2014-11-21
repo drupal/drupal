@@ -1,58 +1,46 @@
 # Schema for the configuration files of the Link module.
 
-entity_view_display.field.link:
-  type: entity_field_view_display_base
+field.formatter.settings.link:
+  type: mapping
   label: 'Link format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        trim_length:
-          type: integer
-          label: 'Trim link text length'
-        url_only:
-          type: boolean
-          label: 'URL only'
-        url_plain:
-          type: boolean
-          label: 'Show URL as plain text'
-        rel:
-          type: string
-          label: 'Add rel="nofollow" to links'
-        target:
-          type: string
-          label: 'Open link in new window'
+    trim_length:
+      type: integer
+      label: 'Trim link text length'
+    url_only:
+      type: boolean
+      label: 'URL only'
+    url_plain:
+      type: boolean
+      label: 'Show URL as plain text'
+    rel:
+      type: string
+      label: 'Add rel="nofollow" to links'
+    target:
+      type: string
+      label: 'Open link in new window'
 
-entity_view_display.field.link_separate:
-  type: entity_field_view_display_base
+field.formatter.settings.link_separate:
+  type: mapping
   label: 'Link format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        trim_length:
-          type: integer
-          label: 'Trim link text length'
-        rel:
-          type: string
-          label: 'Add rel="nofollow" to links'
-        target:
-          type: string
-          label: 'Open link in new window'
+    trim_length:
+      type: integer
+      label: 'Trim link text length'
+    rel:
+      type: string
+      label: 'Add rel="nofollow" to links'
+    target:
+      type: string
+      label: 'Open link in new window'
 
-entity_form_display.field.link_default:
-  type: entity_field_form_display_base
+field.widget.settings.link_default:
+  type: mapping
   label: 'Link format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        placeholder_url:
-          type: string
-          label: 'Placeholder for URL'
-        placeholder_title:
-          type: label
-          label: 'Placeholder for link text'
+    placeholder_url:
+      type: string
+      label: 'Placeholder for URL'
+    placeholder_title:
+      type: label
+      label: 'Placeholder for link text'

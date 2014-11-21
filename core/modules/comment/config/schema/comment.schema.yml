@@ -1,19 +1,15 @@
 # Schema for the configuration files of the Comment module.
 
-entity_view_display.field.comment_default:
-  type: entity_field_view_display_base
+field.formatter.settings.comment_default:
+  type: mapping
   label: 'Comment display format settings'
   mapping:
-    settings:
-      type: mapping
-      label: 'Settings'
-      mapping:
-        pager_id:
-          type: integer
-          label: 'Pager ID'
+    pager_id:
+      type: integer
+      label: 'Pager ID'
 
-entity_form_display.field.comment_default:
-  type: entity_field_form_display_base
+field.widget.settings.comment_default:
+  type: mapping
   label: 'Comment display format settings'
 
 action.configuration.comment_publish_action:
