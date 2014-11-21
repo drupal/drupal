@@ -147,39 +147,14 @@ class CacheTest extends PluginTestBase {
     $view->setDisplay();
     $output = $view->preview();
     drupal_render($output);
+    $this->assertTrue(in_array('views_test_data/test', $output['#attached']['library']), 'Make sure libraries are added for cached views.');
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
     $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
     $this->assertTrue(in_array($css_path, $output['#attached']['css']), 'Make sure the css is added for cached views.');
     $this->assertTrue(in_array($js_path, $output['#attached']['js']), 'Make sure the js is added for cached views.');
+    $this->assertTrue(['views_test_data:1'], $output['#cache']['tags']);
+    $this->assertTrue(['views_test_data_post_render_cache' => [['foo' => 'bar']]], $output['#post_render_cache']);
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
-
-    // Now add some css/jss before running the view.
-    // Make sure that this css is not added when running the cached view.
-    $view->storage->set('id', 'test_cache_header_storage_2');
-    $attached = array(
-      '#attached' => array(
-        'css' => array(
-          drupal_get_path('module', 'system') . '/css/system.maintenance.css' => array(),
-        ),
-        'js' => array(
-          drupal_get_path('module', 'user') . '/user.permissions.js' => array(),
-        ),
-      ),
-    );
-    drupal_render($attached);
-    drupal_process_attached($attached);
-    $view->destroy();
-
-    $output = $view->preview();
-    drupal_render($output);
-    $this->assertTrue(empty($output['#attached']['css']), 'The view does not have attached CSS.');
-    $this->assertTrue(empty($output['#attached']['js']), 'The view does not have attached JS.');
-    $view->destroy();
-
-    $output = $view->preview();
-    drupal_render($output);
-    $this->assertTrue(empty($output['#attached']['css']), 'The cached view does not have attached CSS.');
-    $this->assertTrue(empty($output['#attached']['js']), 'The cached view does not have attached JS.');
   }
 
   /**
