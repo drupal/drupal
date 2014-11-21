@@ -201,6 +201,11 @@ class ForumTest extends WebTestBase {
     $vocabulary->save();
     $this->drupalGet('forum');
     $this->assertTitle(t('Discussions | Drupal'));
+
+    // Test anonymous action link.
+    $this->drupalLogout();
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->assertLink(t('Log in to post new content in the forum.'));
   }
 
   /**
