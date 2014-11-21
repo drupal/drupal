@@ -67,7 +67,7 @@ class EntityViewControllerTest extends UnitTestCase{
 
 
     // Initialize the controller to test.
-    $controller = new EntityViewController($entity_manager);
+    $controller = new EntityViewController($entity_manager, $this->getMock('Drupal\Core\Render\RendererInterface'));
 
     // Test the view method.
     $this->assertEquals($controller->view($entity, 'full'), 'Output from rendering the entity');

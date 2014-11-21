@@ -14,6 +14,7 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\RenderEvents;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -55,6 +56,13 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $moduleHandler;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new HtmlRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
@@ -65,12 +73,15 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The event dispatcher.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->moduleHandler = $module_handler;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -108,14 +119,14 @@ class HtmlRenderer implements MainContentRendererInterface {
     // and hence may not execute any #post_render_cache_callbacks (because they
     // might add yet more assets to be attached), and therefore it must be
     // rendered with drupal_render(), not drupal_render_root().
-    drupal_render_root($html['page']);
+    $this->renderer->render($html['page'], TRUE);
     if (isset($html['page_top'])) {
-      drupal_render_root($html['page_top']);
+      $this->renderer->render($html['page_top'], TRUE);
     }
     if (isset($html['page_bottom'])) {
-      drupal_render_root($html['page_bottom']);
+      $this->renderer->render($html['page_bottom'], TRUE);
     }
-    $content = drupal_render($html);
+    $content = $this->renderer->render($html);
 
     // Store the cache tags associated with this page in a X-Drupal-Cache-Tags
     // header. Also associate the "rendered" cache tag. This allows us to
@@ -177,7 +188,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       // ::renderContentIntoResponse().
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
-        drupal_render($main_content, FALSE);
+        $this->renderer->render($main_content, FALSE);
         $main_content = [
           '#markup' => $main_content['#markup'],
           '#attached' => $main_content['#attached'],

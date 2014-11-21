@@ -667,7 +667,7 @@ services:
       - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
-    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler']
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:
@@ -700,6 +700,7 @@ services:
     arguments: ['@content_negotiation', '@title_resolver']
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
+    arguments: ['@renderer']
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -994,7 +995,7 @@ services:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack']
+    arguments: ['@app.root', '@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack', '@module_handler']
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
     arguments: ['@app.root', '@theme_handler', '@state']
@@ -1097,3 +1098,6 @@ services:
     arguments: ['@module_handler']
     tags:
       - { name: mime_type_guesser }
+  renderer:
+    class: Drupal\Core\Render\Renderer
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info']

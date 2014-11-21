@@ -11,6 +11,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,13 +27,23 @@ class EntityViewController implements ContainerInjectionInterface {
   protected $entityManager;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Creates an EntityViewController object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, RendererInterface $renderer) {
     $this->entityManager = $entity_manager;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -40,7 +51,8 @@ class EntityViewController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('renderer')
     );
   }
 
@@ -79,7 +91,7 @@ class EntityViewController implements ContainerInjectionInterface {
         $build = $this->entityManager->getTranslationFromContext($_entity)
           ->get($label_field)
           ->view($view_mode);
-        $page['#title'] = drupal_render($build);
+        $page['#title'] = $this->renderer->render($build);
       }
     }
 

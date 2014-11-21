@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
@@ -30,20 +31,33 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   protected $dateFormatter;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a NodeController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(DateFormatter $date_formatter) {
+  public function __construct(DateFormatter $date_formatter, RendererInterface $renderer) {
     $this->dateFormatter = $date_formatter;
+    $this->renderer = $renderer;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('date.formatter'));
+    return new static(
+      $container->get('date.formatter'),
+      $container->get('renderer')
+    );
   }
 
 
@@ -112,7 +126,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function revisionShow($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
-    $node_view_controller = new NodeViewController($this->entityManager);
+    $node_view_controller = new NodeViewController($this->entityManager, $this->renderer);
     $page = $node_view_controller->view($node);
     unset($page['nodes'][$node->id()]['#cache']);
     return $page;

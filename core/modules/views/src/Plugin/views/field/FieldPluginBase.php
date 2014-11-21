@@ -95,6 +95,13 @@ abstract class FieldPluginBase extends HandlerBase {
   protected $linkGenerator;
 
   /**
+   * Stores the render API renderer.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
    * Overrides Drupal\views\Plugin\views\HandlerBase::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
@@ -907,7 +914,7 @@ abstract class FieldPluginBase extends HandlerBase {
               '#items' => $items,
               '#list_type' => $type,
             );
-            $output .= drupal_render($item_list);
+            $output .= $this->getRenderer()->render($item_list);
           }
         }
       }
@@ -1153,7 +1160,7 @@ abstract class FieldPluginBase extends HandlerBase {
     else {
       $value = $this->render($values);
       if (is_array($value)) {
-        $value = drupal_render($value);
+        $value = $this->getRenderer()->render($value);
       }
       $this->last_render = $value;
       $this->original_value = $value;
@@ -1166,7 +1173,7 @@ abstract class FieldPluginBase extends HandlerBase {
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
           if (is_array($value)) {
-            $value = drupal_render($value);
+            $value = $this->getRenderer()->render($value);
           }
           $this->last_render = $value;
           $this->original_value = $this->last_render;
@@ -1184,7 +1191,7 @@ abstract class FieldPluginBase extends HandlerBase {
       }
 
       if (is_array($value)) {
-        $value = drupal_render($value);
+        $value = $this->getRenderer()->render($value);
       }
       // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
@@ -1640,7 +1647,7 @@ abstract class FieldPluginBase extends HandlerBase {
   protected function documentSelfTokens(&$tokens) { }
 
   /**
-   * Pass values to drupal_render() using $this->themeFunctions() as #theme.
+   * Pass values to $this->getRenderer()->render() using $this->themeFunctions() as #theme.
    *
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.
@@ -1655,7 +1662,7 @@ abstract class FieldPluginBase extends HandlerBase {
       '#field' => $this,
       '#row' => $values,
     );
-    return drupal_render($build);
+    return $this->getRenderer()->render($build);
   }
 
   public function themeFunctions() {
@@ -1745,6 +1752,20 @@ abstract class FieldPluginBase extends HandlerBase {
     }
     return $this->linkGenerator;
   }
+
+  /**
+   * Returns the render API renderer.
+   *
+   * @return \Drupal\Core\Render\Renderer
+   */
+  protected function getRenderer() {
+    if (!isset($this->renderer)) {
+      $this->renderer = \Drupal::service('renderer');
+    }
+
+    return $this->renderer;
+  }
+
 }
 
 /**

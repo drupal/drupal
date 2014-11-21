@@ -13,6 +13,23 @@ namespace Drupal\Core\Render;
 class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
+   * Constructs a new BareHtmlPageRenderer.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []) {
@@ -36,12 +53,12 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     // \Drupal\Core\Render\MainContent\HtmlRenderer::renderResponse() for more
     // information about this; the exact same pattern is used there and
     // explained in detail there.
-    drupal_render_root($html['page']);
+    $this->renderer->render($html['page'], TRUE);
 
     // Add the bare minimum of attachments from the system module and the
     // current maintenance theme.
     system_page_attachments($html['page']);
-    return drupal_render($html);
+    return $this->renderer->render($html);
   }
 
 }
