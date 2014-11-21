@@ -52,6 +52,9 @@
       if (!Drupal.toolbar.models.toolbarModel.get('isFixed')) {
         Drupal.toolbar.models.toolbarModel.set('activeTab', null);
       }
+      // Stopping propagation to make sure that once a toolbar-box is clicked
+      // (the whitespace part), the page is not redirected anymore.
+      event.stopPropagation();
     }
 
     /**
@@ -153,7 +156,7 @@
 
     // Bind event handlers.
     $(document)
-      .on('click.toolbar', '.toolbar-handle', toggleClickHandler)
+      .on('click.toolbar', '.toolbar-box', toggleClickHandler)
       .on('click.toolbar', '.toolbar-box a', linkClickHandler);
 
     // Return the jQuery object.

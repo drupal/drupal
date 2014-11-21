@@ -13,6 +13,9 @@
   position: relative;
   width: auto;
 }
+.toolbar .toolbar-box a {
+  display: inline-block;
+}
 .toolbar .toolbar-tray-horizontal .menu .toolbar-handle,
 .toolbar .toolbar-tray-horizontal .menu ul,
 .toolbar .toolbar-tray-vertical .menu ul {
