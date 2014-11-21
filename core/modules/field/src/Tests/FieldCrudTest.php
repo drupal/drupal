@@ -117,7 +117,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     entity_create('field_config', $this->fieldDefinition)->save();
 
     // Read the field back.
-    $field = entity_load('field_config', 'entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
+    $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $this->assertTrue($this->fieldDefinition['field_name'] == $field->getName(), 'The field was properly read.');
     $this->assertTrue($this->fieldDefinition['entity_type'] == $field->entity_type, 'The field was properly read.');
     $this->assertTrue($this->fieldDefinition['bundle'] == $field->bundle, 'The field was properly read.');
@@ -130,14 +130,14 @@ class FieldCrudTest extends FieldUnitTestBase {
     entity_create('field_config', $this->fieldDefinition)->save();
 
     // Check that basic changes are saved.
-    $field = entity_load('field_config', 'entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
+    $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $field->required = !$field->isRequired();
     $field->label = $this->randomMachineName();
     $field->description = $this->randomMachineName();
     $field->settings['test_field_setting'] = $this->randomMachineName();
     $field->save();
 
-    $field_new = entity_load('field_config', 'entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
+    $field_new = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $this->assertEqual($field->isRequired(), $field_new->isRequired(), '"required" change is saved');
     $this->assertEqual($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
     $this->assertEqual($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
@@ -171,11 +171,11 @@ class FieldCrudTest extends FieldUnitTestBase {
     $this->assertTrue(!empty($field->deleted), 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
-    $field = entity_load('field_config', 'entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
+    $field = FieldConfig::load('entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $this->assertTrue(empty($field), 'A deleted field is not loaded by default.');
 
     // Make sure the other field is not deleted.
-    $another_field = entity_load('field_config', 'entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
+    $another_field = FieldConfig::load('entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
     $this->assertTrue(!empty($another_field) && empty($another_field->deleted), 'A non-deleted field is not marked for deletion.');
   }
 

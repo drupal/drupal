@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Provides helper methods for Entity cache tags tests; for entities with URIs.
@@ -98,7 +99,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
       // is a cache miss.
       $this->pass("Test modification of entity's configurable field.", 'Debug');
       $field_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
-      $field = entity_load('field_config', $field_name);
+      $field = FieldConfig::load($field_name);
       $field->save();
       $this->verifyPageCache($entity_path, 'MISS');
 

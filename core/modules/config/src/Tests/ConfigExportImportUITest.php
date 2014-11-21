@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Archiver\ArchiveTar;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -97,7 +98,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->originalSlogan);
 
     // Delete the custom field.
-    $fields = entity_load_multiple('field_config');
+    $fields = FieldConfig::loadMultiple();
     foreach ($fields as $field) {
       if ($field->field_name == $this->fieldName) {
         $field->delete();

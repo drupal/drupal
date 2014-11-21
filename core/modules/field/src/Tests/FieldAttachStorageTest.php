@@ -371,8 +371,8 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');
 
     // Verify that the fields are gone.
-    $this->assertFalse(entity_load('field_config', 'entity_test.' . $this->fieldTestData->field->bundle . '.' . $this->fieldTestData->field_name), "First field is deleted");
-    $this->assertFalse(entity_load('field_config', 'entity_test.' . $field['bundle']. '.' . $field_name), "Second field is deleted");
+    $this->assertFalse(FieldConfig::load('entity_test.' . $this->fieldTestData->field->bundle . '.' . $this->fieldTestData->field_name), "First field is deleted");
+    $this->assertFalse(FieldConfig::load('entity_test.' . $field['bundle']. '.' . $field_name), "Second field is deleted");
   }
 
 }

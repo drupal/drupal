@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Extension\Extension;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -182,7 +183,7 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
       ->condition('id', $entity_type->id() . '.' . $bundle . '.', 'STARTS_WITH')
       ->execute();
     // Fetch all fields and key them by field name.
-    $field_configs = entity_load_multiple('field_config', $ids);
+    $field_configs = FieldConfig::loadMultiple($ids);
     $result = array();
     foreach ($field_configs as $field_instance) {
       $result[$field_instance->getName()] = $field_instance;

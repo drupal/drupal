@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Update field storage and fields during config change method invocation.
  *
@@ -45,7 +47,7 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.
-    $field = entity_load('field_config', $field_id);
+    $field = FieldConfig::load($field_id);
     $this->assertEqual($field->getLabel(), $new_label, 'field label updated');
   }
 }

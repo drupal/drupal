@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -72,7 +73,7 @@ class TranslationWebTest extends FieldTestBase {
       'bundle' => $this->entity_type,
     );
     entity_create('field_config', $field)->save();
-    $this->field = entity_load('field_config', $this->entity_type . '.' . $field['bundle'] . '.' . $this->field_name);
+    $this->field = FieldConfig::load($this->entity_type . '.' . $field['bundle'] . '.' . $this->field_name);
 
     entity_get_form_display($this->entity_type, $this->entity_type, 'default')
       ->setComponent($this->field_name)

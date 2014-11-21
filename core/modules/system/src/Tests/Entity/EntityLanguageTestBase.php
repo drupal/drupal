@@ -83,7 +83,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
         'bundle' => $entity_type,
         'translatable' => TRUE,
       ))->save();
-      $this->field[$entity_type] = entity_load('field_config', $entity_type . '.' . $entity_type . '.' . $this->field_name);
+      $this->field[$entity_type] = FieldConfig::load($entity_type . '.' . $entity_type . '.' . $this->field_name);
 
       entity_create('field_storage_config', array(
         'field_name' => $this->untranslatable_field_name,

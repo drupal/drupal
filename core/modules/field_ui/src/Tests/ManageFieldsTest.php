@@ -492,7 +492,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     entity_get_form_display('node', $this->type, 'default')
       ->setComponent($field_name)
       ->save();
-    $this->assertTrue(entity_load('field_config', 'node.' . $this->type . '.' . $field_name), format_string('A field of the field storage %field was created programmatically.', array('%field' => $field_name)));
+    $this->assertTrue(FieldConfig::load('node.' . $this->type . '.' . $field_name), format_string('A field of the field storage %field was created programmatically.', array('%field' => $field_name)));
 
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.

@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Delete field storages and fields during config delete method invocation.
@@ -78,11 +79,14 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $this->assertFalse($field_storage, 'The field storage was deleted.');
     $field_storage_2 = entity_load('field_storage_config', $field_storage_id_2, TRUE);
     $this->assertFalse($field_storage_2, 'The second field storage was deleted.');
-    $field = entity_load('field_config', $field_id, TRUE);
+    \Drupal::entityManager()->getStorage('field_config')->resetCache(array($field_id));
+    $field = FieldConfig::load($field_id);
     $this->assertFalse($field, 'The field was deleted.');
-    $field_2a = entity_load('field_config', $field_id_2a, TRUE);
+    \Drupal::entityManager()->getStorage('field_config')->resetCache(array($field_id_2a));
+    $field_2a = FieldConfig::load($field_id_2a);
     $this->assertFalse($field_2a, 'The second field on test bundle was deleted.');
-    $field_2b = entity_load('field_config', $field_id_2b, TRUE);
+    \Drupal::entityManager()->getStorage('field_config')->resetCache(array($field_id_2b));
+    $field_2b = FieldConfig::load($field_id_2b);
     $this->assertFalse($field_2b, 'The second field on test bundle 2 was deleted.');
 
     // Check that all config files are gone.
