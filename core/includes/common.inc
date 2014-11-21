@@ -2023,10 +2023,6 @@ function _drupal_add_library($library_name, $every_page = NULL) {
   // Only process the library if it exists and it was not added already.
   if (!isset($added[$extension][$name])) {
     if ($library = $library_discovery->getLibraryByName($extension, $name)) {
-      // Allow modules and themes to dynamically attach request and context
-      // specific data for this library; e.g., localization.
-      \Drupal::moduleHandler()->alter('library', $library, $library_name);
-
       // Add all components within the library.
       $elements['#attached'] = array(
         'library' => $library['dependencies'],

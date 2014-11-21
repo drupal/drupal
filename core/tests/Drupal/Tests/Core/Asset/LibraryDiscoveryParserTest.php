@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Asset\LibraryDiscoveryTest.
+ * Contains \Drupal\Tests\Core\Asset\LibraryDiscoveryParserTest.
  */
 
 namespace Drupal\Tests\Core\Asset;
@@ -31,7 +31,7 @@ if (!defined('CSS_AGGREGATE_DEFAULT')) {
 class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
-   * The tested library provider.
+   * The tested library discovery parser service.
    *
    * @var \Drupal\Core\Asset\LibraryDiscoveryParser|\Drupal\Tests\Core\Asset\TestLibraryDiscoveryParser
    */
@@ -52,7 +52,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
-   * The mocked lock backend..
+   * The mocked lock backend.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */

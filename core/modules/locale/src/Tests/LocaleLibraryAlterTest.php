@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleLibraryInfoAlterTest.
+ * Contains \Drupal\locale\Tests\LocaleLibraryAlterTest.
  */
 
 namespace Drupal\locale\Tests;
@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group locale
  */
-class LocaleLibraryInfoAlterTest extends WebTestBase {
+class LocaleLibraryAlterTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -27,9 +27,9 @@ class LocaleLibraryInfoAlterTest extends WebTestBase {
   /**
    * Verifies that the datepicker can be localized.
    *
-   * @see locale_library_info_alter()
+   * @see locale_library_alter()
    */
-  public function testLibraryInfoAlter() {
+  public function testLibraryAlter() {
     $attached['#attached']['library'][] = 'core/jquery.ui.datepicker';
     drupal_render($attached);
     drupal_process_attached($attached);
