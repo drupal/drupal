@@ -80,7 +80,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // cookies (eg. web crawlers).
     $insecure_session_name = $this->sessionManager->getInsecureName();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if (!$cookies->has($this->getName()) && !$cookies->has($insecure_session_name)) {
+    if (empty($sid) || (!$cookies->has($this->getName()) && !$cookies->has($insecure_session_name))) {
       $user = new UserSession();
       return '';
     }
