@@ -50,6 +50,27 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $field_name = strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
 
+    // Go to manage display page.
+    $this->drupalGet("admin/structure/types/manage/article/display");
+
+    // Test for existence of link to image styles configuration.
+    $this->drupalPostAjaxForm(NULL, array(), "{$field_name}_settings_edit");
+    $this->assertLinkByHref(\Drupal::url('image.style_list'), 0, 'Link to image styles configuration is found');
+
+    // Remove 'administer image styles' permission from testing admin user.
+    $admin_user_roles = $this->admin_user->getRoles(TRUE);
+    user_role_change_permissions(reset($admin_user_roles), array('administer image styles' => FALSE));
+
+    // Go to manage display page again.
+    $this->drupalGet("admin/structure/types/manage/article/display");
+
+    // Test for absence of link to image styles configuration.
+    $this->drupalPostAjaxForm(NULL, array(), "{$field_name}_settings_edit");
+    $this->assertNoLinkByHref(\Drupal::url('image.style_list'), 'Link to image styles configuration is absent when permissions are insufficient');
+
+    // Restore 'administer image styles' permission to testing admin user
+    user_role_change_permissions(reset($admin_user_roles), array('administer image styles' => TRUE));
+
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
 
