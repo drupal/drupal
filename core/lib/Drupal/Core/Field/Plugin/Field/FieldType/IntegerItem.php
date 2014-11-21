@@ -30,6 +30,9 @@ class IntegerItem extends NumericItemBase {
   public static function defaultStorageSettings() {
     return array(
       'unsigned' => FALSE,
+      // Valid size property values include: 'tiny', 'small', 'medium', 'normal'
+      // and 'big'.
+      'size' => 'normal',
     ) + parent::defaultStorageSettings();
   }
 
@@ -42,9 +45,6 @@ class IntegerItem extends NumericItemBase {
       'max' => '',
       'prefix' => '',
       'suffix' => '',
-      // Valid size property values include: 'tiny', 'small', 'medium', 'normal'
-      // and 'big'.
-      'size' => 'normal',
     ) + parent::defaultFieldSettings();
   }
 

@@ -622,11 +622,15 @@ field.email.value:
 # Schema for the configuration of the Integer field type.
 
 field.integer.storage_settings:
-  type: sequence
+  type: mapping
   label: 'Integer settings'
-  sequence:
-    - type: string
-      label: 'setting'
+  mapping:
+    unsigned:
+      type: boolean
+      label: 'Unsigned'
+    size:
+      type: string
+      label: 'Database storage size'
 
 field.integer.field_settings:
   type: mapping
@@ -644,9 +648,6 @@ field.integer.field_settings:
     suffix:
       type: string
       label: 'Suffix'
-    size:
-      type: string
-      label: 'Database storage size'
 
 field.integer.value:
   type: sequence
