@@ -240,6 +240,7 @@ input.form-radio {
 
 .views-ui-view-title {
   font-weight: bold;
+  margin-top: 0;
 }
 
 /* @end */
