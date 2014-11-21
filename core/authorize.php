@@ -22,6 +22,7 @@
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Url;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Site\Settings;
@@ -54,9 +55,16 @@ function authorize_access_allowed() {
   return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
 }
 
-$request = Request::createFromGlobals();
-$kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
-$kernel->prepareLegacyRequest($request);
+try {
+  $request = Request::createFromGlobals();
+  $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
+  $kernel->prepareLegacyRequest($request);
+}
+catch (HttpExceptionInterface $e) {
+  $response = new Response('', $e->getStatusCode());
+  $response->prepare($request)->send();
+  exit;
+}
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.

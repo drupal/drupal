@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Composer\Autoload\ClassLoader;
 
@@ -292,12 +293,19 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return string
    *   The path of the matching directory.
    *
+   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+   *   In case the host name in the request is invalid.
+   *
    * @see \Drupal\Core\DrupalKernelInterface::getSitePath()
    * @see \Drupal\Core\DrupalKernelInterface::setSitePath()
    * @see default.settings.php
    * @see example.sites.php
    */
   public static function findSitePath(Request $request, $require_settings = TRUE) {
+    if (static::validateHostname($request) === FALSE) {
+      throw new BadRequestHttpException();
+    }
+
     // Check for a simpletest override.
     if ($test_prefix = drupal_valid_test_ua()) {
       return 'sites/simpletest/' . substr($test_prefix, 10);
@@ -313,7 +321,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!$script_name) {
       $script_name = $request->server->get('SCRIPT_FILENAME');
     }
-    $http_host = $request->server->get('HTTP_HOST');
+    $http_host = $request->getHost();
 
     $sites = array();
     include DRUPAL_ROOT . '/sites/sites.php';
@@ -815,8 +823,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     else {
       // Create base URL.
-      $http_protocol = $request->isSecure() ? 'https' : 'http';
-      $base_root = $http_protocol . '://' . $request->server->get('HTTP_HOST');
+      $base_root = $request->getSchemeAndHttpHost();
 
       $base_url = $base_root;
 
@@ -898,16 +905,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // Replace "core" out of session_name so core scripts redirect properly,
       // specifically install.php.
       $session_name = preg_replace('/\/core$/', '', $session_name);
-      // HTTP_HOST can be modified by a visitor, but has been sanitized already
-      // in DrupalKernel::bootEnvironment().
-      if ($cookie_domain = $request->server->get('HTTP_HOST')) {
-        // Strip leading periods, www., and port numbers from cookie domain.
+      if ($cookie_domain = $request->getHost()) {
+        // Strip leading periods and www. from cookie domain.
         $cookie_domain = ltrim($cookie_domain, '.');
         if (strpos($cookie_domain, 'www.') === 0) {
           $cookie_domain = substr($cookie_domain, 4);
         }
-        $cookie_domain = explode(':', $cookie_domain);
-        $cookie_domain = '.' . $cookie_domain[0];
+        $cookie_domain = '.' . $cookie_domain;
       }
     }
     // Per RFC 2109, cookie domains must contain at least one dot other than the
@@ -1253,6 +1257,53 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     foreach ($namespaces as $prefix => $paths) {
       $this->classLoader->addPsr4($prefix . '\\', $paths);
     }
+  }
+
+  /**
+   * Validates a hostname length.
+   *
+   * @param string $host
+   *   A hostname.
+   *
+   * @return bool
+   *   TRUE if the length is appropriate, or FALSE otherwise.
+   */
+  protected static function validateHostnameLength($host) {
+    // Limit the length of the host name to 1000 bytes to prevent DoS attacks
+    // with long host names.
+    return strlen($host) <= 1000
+    // Limit the number of subdomains and port separators to prevent DoS attacks
+    // in findSitePath().
+    && substr_count($host, '.') <= 100
+    && substr_count($host, ':') <= 100;
+  }
+
+  /**
+   * Validates the hostname supplied from the HTTP request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object
+   *
+   * @return bool
+   *   TRUE if the hostmame is valid, or FALSE otherwise.
+   *
+   * @todo Adjust per resolution to https://github.com/symfony/symfony/issues/12349
+   */
+  public static function validateHostname(Request $request) {
+    // $request->getHost() can throw an UnexpectedValueException if it
+    // detects a bad hostname, but it does not validate the length.
+    try {
+      $http_host = $request->getHost();
+    }
+    catch (\UnexpectedValueException $e) {
+      return FALSE;
+    }
+
+    if (static::validateHostnameLength($http_host) === FALSE) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

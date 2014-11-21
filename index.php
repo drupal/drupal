@@ -10,7 +10,9 @@
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 $autoloader = require_once __DIR__ . '/core/vendor/autoload.php';
 
@@ -23,6 +25,10 @@ try {
       // Handle the response object.
       ->prepare($request)->send();
   $kernel->terminate($request, $response);
+}
+catch (HttpExceptionInterface $e) {
+  $response = new Response('', $e->getStatusCode());
+  $response->prepare($request)->send();
 }
 catch (Exception $e) {
   $message = 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="http://drupal.org/documentation/rebuild">http://drupal.org/documentation/rebuild</a>';

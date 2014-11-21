@@ -13,7 +13,9 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 // Change the directory to the Drupal root.
 chdir('..');
@@ -25,7 +27,15 @@ $request = Request::createFromGlobals();
 // Manually resemble early bootstrap of DrupalKernel::boot().
 require_once __DIR__ . '/includes/bootstrap.inc';
 DrupalKernel::bootEnvironment();
-Settings::initialize(dirname(__DIR__), DrupalKernel::findSitePath($request), $autoloader);
+
+try {
+  Settings::initialize(dirname(__DIR__), DrupalKernel::findSitePath($request), $autoloader);
+}
+catch (HttpExceptionInterface $e) {
+  $response = new Response('', $e->getStatusCode());
+  $response->prepare($request)->send();
+  exit;
+}
 
 if (Settings::get('rebuild_access', FALSE) ||
   ($request->get('token') && $request->get('timestamp') &&
