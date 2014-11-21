@@ -52,8 +52,10 @@ abstract class ViewFormBase extends EntityForm {
   protected function prepareEntity() {
     // Determine the displays available for editing.
     if ($tabs = $this->getDisplayTabs($this->entity)) {
-      // If a display isn't specified, use the first one.
       if (empty($this->displayID)) {
+        // If a display isn't specified, use the first one after sorting by
+        // #weight.
+        uasort($tabs, 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
         foreach ($tabs as $id => $tab) {
           if (!isset($tab['#access']) || $tab['#access']) {
             $this->displayID = $id;

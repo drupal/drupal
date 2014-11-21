@@ -285,6 +285,11 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
+    // Sort the displays.
+    $display = $this->get('display');
+    ksort($display);
+    $this->set('display', array('default' => $display['default']) + $display);
+
     // @todo Check whether isSyncing is needed.
     if (!$this->isSyncing()) {
       $this->addCacheMetadata();
@@ -421,13 +426,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       // Add the defaults for the display.
       $displays[$key] = $options;
     }
-    // Sort the displays.
-    uasort($displays, function ($display1, $display2) {
-      if ($display1['position'] != $display2['position']) {
-        return $display1['position'] < $display2['position'] ? -1 : 1;
-      }
-      return 0;
-    });
     $this->set('display', $displays);
   }
 

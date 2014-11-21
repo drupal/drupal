@@ -97,7 +97,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Check the displays have been loaded correctly from config display data.
-    $expected_displays = array('default', 'page_1', 'block_1');
+    $expected_displays = array('default', 'block_1', 'page_1');
     $this->assertEqual(array_keys($view->get('display')), $expected_displays, 'The correct display names are present.');
 
     // Check each ViewDisplay object and confirm that it has the correct key and

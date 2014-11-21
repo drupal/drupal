@@ -48,6 +48,9 @@ class DisplayTest extends UITestBase {
     $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
     $this->assertTrue($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
 
+    // Ensure the view displays are in the expected order in configuration.
+    $expected_display_order = array('default', 'block_1', 'page_1');
+    $this->assertEqual(array_keys(Views::getView($view['id'])->storage->get('display')), $expected_display_order, 'The correct display names are present.');
     // Put the block display in front of the page display.
     $edit = array(
       'displays[page_1][weight]' => 2,
@@ -61,6 +64,9 @@ class DisplayTest extends UITestBase {
     $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
     $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
     $this->assertEqual($displays['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
+
+    // Ensure the view displays are in the expected order in configuration.
+    $this->assertEqual(array_keys($view->storage->get('display')), $expected_display_order, 'The correct display names are present.');
   }
 
   /**
