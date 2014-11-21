@@ -104,9 +104,7 @@ class BlockForm extends EntityForm {
 
     // Store the gathered contexts in the form state for other objects to use
     // during form building.
-    $temporary = $form_state->getTemporary();
-    $temporary['gathered_contexts'] = $this->dispatcher->dispatch(BlockEvents::ADMINISTRATIVE_CONTEXT, new BlockContextEvent())->getContexts();
-    $form_state->setTemporary($temporary);
+    $form_state->setTemporaryValue('gathered_contexts', $this->dispatcher->dispatch(BlockEvents::ADMINISTRATIVE_CONTEXT, new BlockContextEvent())->getContexts());
 
     $form['#tree'] = TRUE;
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);

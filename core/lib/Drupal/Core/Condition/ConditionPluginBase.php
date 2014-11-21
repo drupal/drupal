@@ -44,8 +44,7 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $temporary = $form_state->getTemporary();
-    $contexts = isset($temporary['gathered_contexts']) ? $temporary['gathered_contexts'] : [];
+    $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
     $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
     $form['negate'] = array(
       '#type' => 'checkbox',

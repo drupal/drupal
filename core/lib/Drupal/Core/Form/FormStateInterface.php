@@ -934,6 +934,47 @@ interface FormStateInterface {
   public function getTemporary();
 
   /**
+   * Gets an arbitrary value from temporary storage.
+   *
+   * @param string|array $key
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $key is a string, it will return $temporary[$key]. If $key is an array,
+   *   each element of the array will be used as a nested key. If
+   *   $key = ['foo', 'bar'] it will return $temporary['foo']['bar'].
+   *
+   * @return mixed
+   *   A reference to the value for that key, or NULL if the property does
+   *   not exist.
+   */
+  public function &getTemporaryValue($key);
+
+  /**
+   * Sets an arbitrary value in temporary storage.
+   *
+   * @param string|array $key
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $key is a string, it will use $temporary[$key] = $value. If $key is an
+   *   array, each element of the array will be used as a nested key. If
+   *   $key = ['foo', 'bar'] it will use $temporary['foo']['bar'] = $value.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return $this
+   */
+  public function setTemporaryValue($key, $value);
+
+  /**
+   * Determines if a temporary value is present.
+   *
+   * @param string $key
+   *   Properties are often stored as multi-dimensional associative arrays. If
+   *   $key is a string, it will return isset($temporary[$key]). If $key is an
+   *   array, each element of the array will be used as a nested key. If
+   *   $key = ['foo', 'bar'] it will return isset($temporary['foo']['bar']).
+   */
+  public function hasTemporaryValue($key);
+
+  /**
    * Sets the form element that triggered submission.
    *
    * @param array|null $triggering_element

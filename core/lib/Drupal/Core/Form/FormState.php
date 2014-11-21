@@ -354,7 +354,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $temporary;
+  protected $temporary = [];
 
   /**
    * Tracks if the form has finished validation.
@@ -709,6 +709,31 @@ class FormState implements FormStateInterface {
    */
   public function getTemporary() {
     return $this->temporary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getTemporaryValue($key) {
+    $value = &NestedArray::getValue($this->temporary, (array) $key);
+    return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTemporaryValue($key, $value) {
+    NestedArray::setValue($this->temporary, (array) $key, $value, TRUE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasTemporaryValue($key) {
+    $exists = NULL;
+    NestedArray::getValue($this->temporary, (array) $key, $exists);
+    return $exists;
   }
 
   /**
