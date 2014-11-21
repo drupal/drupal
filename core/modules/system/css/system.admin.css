@@ -47,25 +47,13 @@
 /**
  * Administration blocks.
  */
-div.admin-panel {
+.admin-panel {
   margin: 0;
   padding: 5px 5px 15px 5px;
 }
-div.admin-panel .description {
+.admin-panel .description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
-}
-div.admin .expert-link {
-  text-align: right; /* LTR */
-  margin-right: 1em; /* LTR */
-  padding-right: 4px; /* LTR */
-}
-[dir="rtl"] div.admin .expert-link {
-  margin-right: 0;
-  margin-left: 1em;
-  padding-right: 0;
-  padding-left: 4px;
-  text-align: left;
 }
 
 /**
@@ -88,148 +76,148 @@ small .admin-link:after {
 /**
  * Modules page.
  */
-#system-modules thead > tr {
+.system-modules thead > tr {
   border: 0;
 }
-#system-modules div.incompatible {
+.system-modules div.incompatible {
   font-weight: bold;
 }
-#system-modules td.checkbox {
+.system-modules td.checkbox {
   min-width: 25px;
   width: 4%;
 }
-#system-modules td.module {
+.system-modules td.module {
   width: 25%;
 }
-#system-modules td {
+.system-modules td {
   vertical-align: top;
 }
-#system-modules label,
-#system-modules-uninstall label {
+.system-modules label,
+.system-modules-uninstall label {
   color: #1d1d1d;
   font-size: 1.15em;
 }
-#system-modules details {
+.system-modules details {
   color: #5c5c5b;
   line-height: 20px;
   overflow: hidden; /* truncates descriptions if too long */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#system-modules details[open] {
+.system-modules details[open] {
   height: auto;
   overflow: visible;
   white-space: normal;
 }
-#system-modules details[open] summary .text {
+.system-modules details[open] summary .text {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
   text-transform: none;
 }
-#system-modules td details a {
+.system-modules td details a {
   color: #5C5C5B;
   border: 0px;
 }
-#system-modules td details {
-  border: 0px;
-  margin: 0px;
+.system-modules td details {
+  border: 0;
+  margin: 0;
   height: 20px;
 }
-#system-modules td details summary {
-  padding: 0px;
+.system-modules td details summary {
+  padding: 0;
   text-transform: none;
   font-weight: normal;
   cursor: default;
 }
-#system-modules td {
-  padding-left: 0px;
+.system-modules td {
+  padding-left: 0;
 }
 
 @media screen and (max-width: 40em) {
-  #system-modules td.name {
+  .system-modules td.name {
     width: 20%;
   }
-  #system-modules td.description {
+  .system-modules td.description {
     width: 40%;
   }
 }
-#system-modules .requirements {
+.system-modules .requirements {
   padding: 5px 0;
   max-width: 490px;
 }
-#system-modules .links {
+.system-modules .links {
   overflow: hidden; /* prevents collapse */
 }
-#system-modules .checkbox {
+.system-modules .checkbox {
   margin: 0 5px;
 }
-#system-modules .checkbox .form-item {
+.system-modules .checkbox .form-item {
   margin-bottom: 0;
 }
-div.admin-requirements,
-div.admin-required {
+.admin-requirements,
+.admin-required {
   font-size: 0.9em;
   color: #666;
 }
-span.admin-enabled {
+.admin-enabled {
   color: #080;
 }
-span.admin-missing {
+.admin-missing {
   color: #f00;
 }
-a.module-link {
+.module-link {
   display: block;
   padding: 2px 20px;
   white-space: nowrap;
   margin-top: 2px;
   float: left; /* LTR */
 }
-[dir="rtl"] a.module-link {
+[dir="rtl"] .module-link {
   float: right;
 }
-a.module-link-help {
+.module-link-help {
   background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat;
 }
-a.module-link-permissions {
+.module-link-permissions {
   background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat;
 }
-a.module-link-configure {
+.module-link-configure {
   background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat;
 }
 
 /**
  * Status report.
  */
-table.system-status-report td {
+.system-status-report td {
   padding: 6px;
   vertical-align: top;
 }
-table.system-status-report td:nth-child(-n+2) {
+.system-status-report td:nth-child(-n+2) {
   background-color: rgba(0, 0, 0, 0.04);
 }
-table.system-status-report td.status-icon {
+.system-status-report .status-icon {
   width: 16px;
   padding-right: 0; /* LTR */
 }
-[dir="rtl"] table.system-status-report td.status-icon {
+[dir="rtl"] .system-status-report .status-icon {
   padding-left: 0;
   padding-right: 6px;
 }
-table.system-status-report td.status-icon div {
+.system-status-report .status-icon div {
   background-repeat: no-repeat;
   height: 16px;
   width: 16px;
   margin-top: 2px;
 }
-table.system-status-report tr.error td.status-icon div {
+.system-status-report .error .status-icon div {
   background-image: url(../../../misc/icons/ea2800/error.svg);
 }
-table.system-status-report tr.warning td.status-icon div {
+.system-status-report .warning .status-icon div {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
-table.system-status-report .status-title {
+.system-status-report .status-title {
   width: 25%;
 }
 
@@ -251,10 +239,14 @@ table.system-status-report .status-title {
 /**
  * Appearance page.
  */
-.theme-info h2 {
+.theme-info__header {
   margin-bottom: 0;
+  font-weight: normal;
 }
-.theme-info p {
+.theme-default .theme-info__header {
+  font-weight: bold;
+}
+.theme-info__description {
   margin-top: 0;
 }
 .system-themes-list {
@@ -264,9 +256,10 @@ table.system-status-report .status-title {
   border-top: 1px solid #cdcdcd;
   padding-top: 20px;
 }
-.system-themes-list h2 {
+.system-themes-list__header {
   margin: 0;
 }
+
 .theme-selector {
   padding-top: 20px;
 }
@@ -287,12 +280,6 @@ table.system-status-report .status-title {
   max-width: 194px;
   height: auto;
 }
-.theme-selector h3 {
-  font-weight: normal;
-}
-.theme-default h3 {
-  font-weight: bold;
-}
 
 /**
  * Theme display without vertical toolbar.
@@ -309,7 +296,7 @@ table.system-status-report .status-title {
     float: right;
     margin: 0 0 0 20px;
   }
-  body:not(.toolbar-vertical) .system-themes-list-installed h3 {
+  body:not(.toolbar-vertical) .system-themes-list-installed .system-themes-list__header {
     margin-top: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
@@ -342,7 +329,7 @@ table.system-status-report .status-title {
     float: right;
     margin: 0 0 0 20px;
   }
-  .toolbar-vertical .system-themes-list-installed h3 {
+  .toolbar-vertical .system-themes-list-installed .theme-info__header {
     margin-top: 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
@@ -397,7 +384,7 @@ table.system-status-report .status-title {
 [dir="rtl"] .theme-selector .operations li:first-child {
   padding: 0 0 0 0.7em;
 }
-#system-themes-admin-form {
+.system-themes-admin-form {
   clear: left;
 }
 

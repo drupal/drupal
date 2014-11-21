@@ -40,7 +40,7 @@
       ]
     %}
     <div{{ theme_group.attributes.addClass(theme_group_classes) }}>
-      <h2>{{ theme_group.title }}</h2>
+      <h2 class="system-themes-list__header">{{ theme_group.title }}</h2>
       {% for theme in theme_group.themes %}
         {%
           set theme_classes = [
@@ -55,13 +55,13 @@
             {{ theme.screenshot }}
           {% endif %}
           <div class="theme-info">
-            <h3>
+            <h3 class="theme-info__header">
               {{- theme.name }} {{ theme.version -}}
               {% if theme.notes %}
                 ({{ theme.notes|safe_join(', ') }})
               {%- endif -%}
             </h3>
-            <div class="theme-description">{{ theme.description }}</div>
+            <div class="theme-info__description">{{ theme.description }}</div>
             {# Display operation links if the theme is compatible. #}
             {% if theme.incompatible %}
               <div class="incompatible">{{ theme.incompatible }}</div>

@@ -1859,11 +1859,6 @@ div.add-or-remove-shortcuts {
 }
 
 /* Configuration. */
-div.admin .right,
-div.admin .left {
-  width: 49%;
-  margin: 0;
-}
 div.admin-panel {
   background: #fbfbfb;
   border: 1px solid #ccc;

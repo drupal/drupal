@@ -14,10 +14,10 @@
  * @ingroup themeable
  */
 #}
-<div class="admin clearfix">
+<div class="clearfix">
   {{ system_compact_link }}
   {% for container in containers %}
-    <div class="layout-column half clearfix">
+    <div class="layout-column half">
       {% for block in container.blocks %}
         {{ block }}
       {% endfor %}
