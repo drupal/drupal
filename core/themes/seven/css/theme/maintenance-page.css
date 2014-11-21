@@ -11,11 +11,6 @@
   min-height: 100%;
 }
 
-/* Maintenance theming */
-.install-page,
-.maintenance-page {
-  background: none;
-}
 .page-title {
   font-size: 2em;
   line-height: 1.2em;
