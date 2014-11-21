@@ -20,7 +20,7 @@ use Drupal\Core\Plugin\Context\ContextInterface;
 /**
  * Base class for plugins that are context aware.
  */
-abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
+abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase implements ContextAwarePluginInterface {
   use TypedDataTrait;
   use StringTranslationTrait;
   use DependencySerializationTrait;

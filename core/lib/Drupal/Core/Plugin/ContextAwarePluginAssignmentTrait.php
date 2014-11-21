@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
-
 /**
  * Handles context assignments for context-aware plugins.
  */
@@ -33,7 +31,7 @@ trait ContextAwarePluginAssignmentTrait {
   /**
    * Builds a form element for assigning a context to a given slot.
    *
-   * @param \Drupal\Component\Plugin\ContextAwarePluginInterface $plugin
+   * @param \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin
    *   The context-aware plugin.
    * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts.

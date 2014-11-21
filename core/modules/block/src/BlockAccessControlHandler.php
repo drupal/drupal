@@ -7,7 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
@@ -17,6 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

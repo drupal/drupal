@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\block\Unit;
 
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**

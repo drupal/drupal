@@ -8,9 +8,9 @@
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -242,7 +242,7 @@ class ContextHandlerTest extends UnitTestCase {
       'miss' => $context_miss,
     );
 
-    $plugin = $this->getMock('Drupal\Component\Plugin\ContextAwarePluginInterface');
+    $plugin = $this->getMock('Drupal\Core\Plugin\ContextAwarePluginInterface');
     $plugin->expects($this->once())
       ->method('getContextMapping')
       ->willReturn([]);

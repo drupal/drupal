@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Plugin\Context;
 
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
 /**
  * Provides methods to handle sets of contexts.

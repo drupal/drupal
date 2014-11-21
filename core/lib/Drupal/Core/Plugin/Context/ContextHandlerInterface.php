@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Plugin\Context;
 
-use Drupal\Component\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
 /**
  * Provides an interface for handling sets of contexts.
@@ -63,7 +63,7 @@ interface ContextHandlerInterface {
   /**
    * Prepares a plugin for evaluation.
    *
-   * @param \Drupal\Component\Plugin\ContextAwarePluginInterface $plugin
+   * @param \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin
    *   A plugin about to be evaluated.
    * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts to set on the plugin. They will only be set if they
