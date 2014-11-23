@@ -91,7 +91,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $this->assertText($term->label());
     $this->assertText($node->label());
 
-    \Drupal::moduleHandler()->install(array('language', 'content_translation'));
+    \Drupal::service('module_installer')->install(array('language', 'content_translation'));
     $language = ConfigurableLanguage::createFromLangcode('ur');
     $language->save();
     // Enable translation for the article content type and ensure the change is
@@ -123,7 +123,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // Uninstall language module and ensure that the language is not part of the
     // query anymore.
     // @see \Drupal\views\Plugin\views\filter\LanguageFilter::query()
-    \Drupal::moduleHandler()->uninstall(['content_translation', 'language']);
+    \Drupal::service('module_installer')->uninstall(['content_translation', 'language']);
 
     $view = Views::getView('taxonomy_term');
     $view->initDisplay();

@@ -191,7 +191,7 @@ class RouterTest extends WebTestBase {
    * Tests that routes no longer exist for a module that has been uninstalled.
    */
   public function testRouterUninstallInstall() {
-    \Drupal::moduleHandler()->uninstall(array('router_test'));
+    \Drupal::service('module_installer')->uninstall(array('router_test'));
     try {
       \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
       $this->fail('Route was delete on uninstall.');
@@ -200,7 +200,7 @@ class RouterTest extends WebTestBase {
       $this->pass('Route was delete on uninstall.');
     }
     // Install the module again.
-    \Drupal::moduleHandler()->install(array('router_test'));
+    \Drupal::service('module_installer')->install(array('router_test'));
     $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
     $this->assertNotNull($route, 'Route exists after module installation');
   }

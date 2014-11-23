@@ -150,7 +150,7 @@ class FrontPageTest extends ViewTestBase {
   public function testAdminFrontPage() {
     // When a user with sufficient permissions is logged in, views_ui adds
     // contextual links to the homepage view. This verifies there are no errors.
-    \Drupal::moduleHandler()->install(array('views_ui'));
+    \Drupal::service('module_installer')->install(array('views_ui'));
     // Login root user with sufficient permissions.
     $this->drupalLogin($this->root_user);
     // Test frontpage view.

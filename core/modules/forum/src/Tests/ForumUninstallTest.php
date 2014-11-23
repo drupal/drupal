@@ -145,7 +145,7 @@ class ForumUninstallTest extends WebTestBase {
 
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.
-    $this->container->get('module_handler')->uninstall(array('forum'));
+    $this->container->get('module_installer')->uninstall(array('forum'));
   }
 
 }

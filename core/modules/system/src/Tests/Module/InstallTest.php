@@ -41,7 +41,7 @@ class InstallTest extends WebTestBase {
    * be an array.
    */
   public function testEnableUserTwice() {
-    \Drupal::moduleHandler()->install(array('user'), FALSE);
+    \Drupal::service('module_installer')->install(array('user'), FALSE);
     $this->assertIdentical(\Drupal::config('core.extension')->get('module.user'), 0);
   }
 
@@ -62,7 +62,7 @@ class InstallTest extends WebTestBase {
     $module_name = 'invalid_module_name_over_the_maximum_allowed_character_length';
     $message = format_string('Exception thrown when enabling module %name with a name length over the allowed maximum', array('%name' => $module_name));
     try {
-      $this->container->get('module_handler')->install(array($module_name));
+      $this->container->get('module_installer')->install(array($module_name));
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {
@@ -72,7 +72,7 @@ class InstallTest extends WebTestBase {
     // Since for the UI, the submit callback uses FALSE, test that too.
     $message = format_string('Exception thrown when enabling as if via the UI the module %name with a name length over the allowed maximum', array('%name' => $module_name));
     try {
-      $this->container->get('module_handler')->install(array($module_name), FALSE);
+      $this->container->get('module_installer')->install(array($module_name), FALSE);
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {

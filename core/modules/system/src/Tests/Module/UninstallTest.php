@@ -30,7 +30,7 @@ class UninstallTest extends WebTestBase {
   function testUserPermsUninstalled() {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
-    $this->container->get('module_handler')->uninstall(array('module_test'));
+    $this->container->get('module_installer')->uninstall(array('module_test'));
 
     // Are the perms defined by module_test removed?
     $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');

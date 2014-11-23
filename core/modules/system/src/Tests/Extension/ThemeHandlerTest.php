@@ -310,15 +310,14 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
   function testThemeInfoAlter() {
     $name = 'seven';
     $this->container->get('state')->set('module_test.hook_system_info_alter', TRUE);
-    $module_handler = $this->container->get('module_handler');
 
     $this->themeHandler()->install(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
 
-    $module_handler->install(array('module_test'), FALSE);
-    $this->assertTrue($module_handler->moduleExists('module_test'));
+    $this->moduleInstaller()->install(array('module_test'), FALSE);
+    $this->assertTrue($this->moduleHandler()->moduleExists('module_test'));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]->info['regions']['test_region']));
@@ -333,8 +332,8 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
     $system_list = system_list('theme');
     $this->assertTrue(isset($system_list[$name]->info['regions']['test_region']));
 
-    $module_handler->uninstall(array('module_test'));
-    $this->assertFalse($module_handler->moduleExists('module_test'));
+    $this->moduleInstaller()->uninstall(array('module_test'));
+    $this->assertFalse($this->moduleHandler()->moduleExists('module_test'));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
@@ -387,6 +386,24 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
    */
   protected function configStorage() {
     return $this->container->get('config.storage');
+  }
+
+  /**
+   * Returns the ModuleHandler.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected function moduleHandler() {
+    return $this->container->get('module_handler');
+  }
+
+  /**
+   * Returns the ModuleInstaller.
+   *
+   * @return \Drupal\Core\Extension\ModuleInstallerInterface
+   */
+  protected function moduleInstaller() {
+    return $this->container->get('module_installer');
   }
 
 }

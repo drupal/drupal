@@ -36,7 +36,7 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
     // Uninstall the language module and its dependencies so we can test
     // enabling the language module and creating overrides at the same time
     // during a configuration synchronisation.
-    \Drupal::moduleHandler()->uninstall(array('language'));
+    \Drupal::service('module_installer')->uninstall(array('language'));
     // Ensure that the current site has no overrides registered to the
     // ConfigFactory.
     $this->rebuildContainer();
@@ -66,7 +66,7 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
    */
   public function testConfigOverrideImportEvents() {
     // Enable the config_events_test module so we can record events occurring.
-    \Drupal::moduleHandler()->install(array('config_events_test'));
+    \Drupal::service('module_installer')->install(array('config_events_test'));
     $this->rebuildContainer();
 
     ConfigurableLanguage::createFromLangcode('fr')->save();

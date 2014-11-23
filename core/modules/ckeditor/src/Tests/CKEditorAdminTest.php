@@ -160,7 +160,7 @@ class CKEditorAdminTest extends WebTestBase {
 
     // Now enable the ckeditor_test module, which provides one configurable
     // CKEditor plugin — this should not affect the Editor config entity.
-    \Drupal::moduleHandler()->install(array('ckeditor_test'));
+    \Drupal::service('module_installer')->install(array('ckeditor_test'));
     $this->resetAll();
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');

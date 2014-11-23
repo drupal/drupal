@@ -75,7 +75,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       // Alter LanguageInterface::TYPE_CONTENT to be configurable.
       'language_test.content_language_type' => TRUE,
     ));
-    $this->container->get('module_handler')->install(array('language_test'));
+    $this->container->get('module_installer')->install(array('language_test'));
     $this->resetAll();
 
     // Check that fixed language types are properly configured without the need
@@ -135,7 +135,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Uninstall language_test and check that everything is set back to the
     // original status.
-    $this->container->get('module_handler')->uninstall(array('language_test'));
+    $this->container->get('module_installer')->uninstall(array('language_test'));
     $this->rebuildContainer();
 
     // Check that only the core language types are available.

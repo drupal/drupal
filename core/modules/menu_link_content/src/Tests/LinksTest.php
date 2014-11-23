@@ -199,7 +199,7 @@ class LinksTest extends WebTestBase {
    * Tests uninstalling a module providing default links.
    */
   public function testModuleUninstalledMenuLinks() {
-    \Drupal::moduleHandler()->install(array('menu_test'));
+    \Drupal::service('module_installer')->install(array('menu_test'));
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
@@ -208,7 +208,7 @@ class LinksTest extends WebTestBase {
     $this->assertEqual($menu_link->getPluginId(), 'menu_test');
 
     // Uninstall the module and ensure the menu link got removed.
-    \Drupal::moduleHandler()->uninstall(array('menu_test'));
+    \Drupal::service('module_installer')->uninstall(array('menu_test'));
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertEqual(count($menu_links), 0);

@@ -283,7 +283,7 @@ class ThemeTest extends WebTestBase {
    * Tests that region attributes can be manipulated via preprocess functions.
    */
   function testRegionClass() {
-    \Drupal::moduleHandler()->install(array('block', 'theme_region_test'));
+    \Drupal::service('module_installer')->install(array('block', 'theme_region_test'));
 
     // Place a block.
     $this->drupalPlaceBlock('system_main_block');

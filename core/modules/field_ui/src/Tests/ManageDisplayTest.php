@@ -136,7 +136,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertFieldByName('field_test_settings_edit');
     // Uninstall the module providing third party settings and ensure the button
     // is no longer there.
-    \Drupal::moduleHandler()->uninstall(array('field_third_party_test'));
+    \Drupal::service('module_installer')->uninstall(array('field_third_party_test'));
     $this->drupalGet($manage_display);
     $this->assertNoFieldByName('field_test_settings_edit');
   }

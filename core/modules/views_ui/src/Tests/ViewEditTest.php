@@ -101,7 +101,7 @@ class ViewEditTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText(t("You don't have translatable entity types."));
     // A node view should have language options.
-    $this->container->get('module_handler')->install(array('node', 'language'));
+    $this->container->get('module_installer')->install(array('node', 'language'));
     $this->resetAll();
     $this->rebuildContainer();
 

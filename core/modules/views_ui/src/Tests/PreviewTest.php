@@ -27,7 +27,7 @@ class PreviewTest extends UITestBase {
    * Tests contextual links in the preview form.
    */
   protected function testPreviewContextual() {
-    \Drupal::moduleHandler()->install(array('contextual'));
+    \Drupal::service('module_installer')->install(array('contextual'));
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
@@ -201,7 +201,7 @@ class PreviewTest extends UITestBase {
    * Tests the additional information query info area.
    */
   public function testPreviewAdditionalInfo() {
-    \Drupal::moduleHandler()->install(array('views_ui_test'));
+    \Drupal::service('module_installer')->install(array('views_ui_test'));
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');

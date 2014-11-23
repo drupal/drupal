@@ -343,7 +343,7 @@ class TrackerTest extends WebTestBase {
    * Tests that publish/unpublish works at admin/content/node.
    */
   function testTrackerAdminUnpublish() {
-    \Drupal::moduleHandler()->install(array('views'));
+    \Drupal::service('module_installer')->install(array('views'));
     $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($admin_user);
 

@@ -115,7 +115,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // NOTE: the tests in CKEditorTest already ensure that changing the
     // configuration also results in modified CKEditor configuration, so we
     // don't test that here.
-    \Drupal::moduleHandler()->install(array('ckeditor_test'));
+    \Drupal::service('module_installer')->install(array('ckeditor_test'));
     $this->resetAll();
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor_settings = $editor->getSettings();

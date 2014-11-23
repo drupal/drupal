@@ -157,10 +157,10 @@ function module_load_include($type, $module, $name = NULL) {
  * @see \Drupal\Core\Extension\ModuleHandlerInterface::install()
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
- *   \Drupal::moduleHandler()->install($module_list, $enable_dependencies = TRUE).
+ *   \Drupal::service('module_installer')->install($module_list, $enable_dependencies = TRUE).
  */
 function module_install($module_list, $enable_dependencies = TRUE) {
-  return \Drupal::moduleHandler()->install($module_list, $enable_dependencies);
+  return \Drupal::service('module_installer')->install($module_list, $enable_dependencies);
 }
 
 /**
@@ -169,10 +169,10 @@ function module_install($module_list, $enable_dependencies = TRUE) {
  * @see \Drupal\Core\Extension\ModuleHandlerInterface::module_install()
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
- *   \Drupal::moduleHandler()->uninstall($module_list, $enable_dependencies = TRUE).
+ *   \Drupal::service('module_installer')->uninstall($module_list, $enable_dependencies = TRUE).
  */
 function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) {
-  return \Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents);
+  return \Drupal::service('module_installer')->uninstall($module_list, $uninstall_dependents);
 }
 
 /**

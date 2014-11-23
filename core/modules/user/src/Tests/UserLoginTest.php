@@ -127,7 +127,7 @@ class UserLoginTest extends WebTestBase {
     // containing the necessary container builder code and then verify that the
     // users password gets rehashed during the login.
     $overridden_count_log2 = 19;
-    \Drupal::moduleHandler()->install(array('user_custom_phpass_params_test'));
+    \Drupal::service('module_installer')->install(array('user_custom_phpass_params_test'));
     $this->resetAll();
 
     $account->pass_raw = $password;

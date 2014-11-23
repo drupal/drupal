@@ -49,7 +49,7 @@ class FieldHelpTest extends WebTestBase {
     $this->drupalGet('admin/help/field');
 
     // Enable the Options, Email and Field API Test modules.
-    \Drupal::moduleHandler()->install(array('options', 'field_test'));
+    \Drupal::service('module_installer')->install(array('options', 'field_test'));
     $this->resetAll();
     \Drupal::service('plugin.manager.field.widget')->clearCachedDefinitions();
     \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();

@@ -32,7 +32,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
       'Module handler instance is still the same.');
 
     // Install the module_test module.
-    \Drupal::moduleHandler()->install(array('module_test'));
+    \Drupal::service('module_installer')->install(array('module_test'));
 
     // Assert that the \Drupal::moduleHandler() instance has been replaced.
     $this->assertFalse($module_handler === \Drupal::moduleHandler(),
@@ -76,7 +76,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
   function testModuleImplementsAlterNonExistingImplementation() {
 
     // Install the module_test module.
-    \Drupal::moduleHandler()->install(array('module_test'));
+    \Drupal::service('module_installer')->install(array('module_test'));
 
     try {
       // Trigger hook discovery.

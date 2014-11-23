@@ -54,7 +54,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     $field->delete();
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertTrue(count($field_storage->getBundles()) == 0, 'Node body field storage exists after deleting the only instance of a field.');
-    \Drupal::moduleHandler()->uninstall(array('node'));
+    \Drupal::service('module_installer')->uninstall(array('node'));
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertFalse($field_storage, 'Node body field storage does not exist after uninstalling the Node module.');
   }

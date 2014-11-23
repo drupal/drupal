@@ -95,7 +95,7 @@ class ConfigImportUITest extends WebTestBase {
     // handled correctly. Options depends on Text so Text should be installed
     // first. Since they were enabled during the test setup the core.extension
     // file in staging will already contain them.
-    \Drupal::moduleHandler()->uninstall(array('text', 'options'));
+    \Drupal::service('module_installer')->uninstall(array('text', 'options'));
 
     // Set the state system to record installations and uninstallations.
     \Drupal::state()->set('ConfigImportUITest.core.extension.modules_installed', array());

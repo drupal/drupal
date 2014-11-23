@@ -233,7 +233,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
 
     // Reset the defaults for future tests.
-    \Drupal::moduleHandler()->install(array('forum'));
+    \Drupal::service('module_installer')->install(array('forum'));
   }
 
   /**

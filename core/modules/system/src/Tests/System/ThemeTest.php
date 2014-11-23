@@ -260,7 +260,7 @@ class ThemeTest extends WebTestBase {
    */
   function testInvalidTheme() {
     // theme_page_test_system_info_alter() un-hides all hidden themes.
-    $this->container->get('module_handler')->install(array('theme_page_test'));
+    $this->container->get('module_installer')->install(array('theme_page_test'));
     // Clear the system_list() and theme listing cache to pick up the change.
     $this->container->get('theme_handler')->reset();
     $this->drupalGet('admin/appearance');

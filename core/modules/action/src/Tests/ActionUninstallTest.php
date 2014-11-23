@@ -28,7 +28,7 @@ class ActionUninstallTest extends WebTestBase {
    * Tests Action uninstall.
    */
   public function testActionUninstall() {
-    \Drupal::moduleHandler()->uninstall(array('action'));
+    \Drupal::service('module_installer')->uninstall(array('action'));
 
     $this->assertTrue(entity_load('action', 'user_block_user_action', TRUE), 'Configuration entity \'user_block_user_action\' still exists after uninstalling action module.' );
 

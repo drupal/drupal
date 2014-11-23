@@ -379,7 +379,7 @@ class QuickEditLoadingTest extends WebTestBase {
    * editable.
    */
   public function testPseudoFields() {
-    \Drupal::moduleHandler()->install(array('quickedit_test'));
+    \Drupal::service('module_installer')->install(array('quickedit_test'));
 
     $this->drupalLogin($this->author_user);
     $this->drupalGet('node/1');
@@ -406,7 +406,7 @@ class QuickEditLoadingTest extends WebTestBase {
    * Tests that Quick Edit works with custom render pipelines.
    */
   public function testCustomPipeline() {
-    \Drupal::moduleHandler()->install(array('quickedit_test'));
+    \Drupal::service('module_installer')->install(array('quickedit_test'));
 
     $custom_render_url = 'quickedit/form/node/1/body/en/quickedit_test-custom-render-data';
     $this->drupalLogin($this->editor_user);

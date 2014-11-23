@@ -31,7 +31,7 @@ class InfoAlterTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($info['node']->info['required']), 'Before the module_test is installed the node module is not required.');
 
     // Enable the test module.
-    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
+    \Drupal::service('module_installer')->install(array('module_test'), FALSE);
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
 
     $info = system_rebuild_module_data();

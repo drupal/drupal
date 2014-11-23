@@ -67,7 +67,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     // Make sure updating items works even after uninstalling a module
     // that provides the selected plugins.
     $this->enableTestPlugins();
-    $this->container->get('module_handler')->uninstall(array('aggregator_test'));
+    $this->container->get('module_installer')->uninstall(array('aggregator_test'));
     $this->updateFeedItems($feed);
     $this->assertResponse(200);
   }

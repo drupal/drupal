@@ -28,9 +28,9 @@ class InstallUninstallTest extends ModuleTestBase {
 
     // Install and uninstall module_test to ensure hook_preinstall_module and
     // hook_preuninstall_module are fired as expected.
-    $this->container->get('module_handler')->install(array('module_test'));
+    $this->container->get('module_installer')->install(array('module_test'));
     $this->assertEqual($this->container->get('state')->get('system_test_preinstall_module'), 'module_test');
-    $this->container->get('module_handler')->uninstall(array('module_test'));
+    $this->container->get('module_installer')->uninstall(array('module_test'));
     $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
     $this->resetAll();
 

@@ -213,7 +213,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
    * Tests data type handling.
    */
   public function testDataTypes() {
-    \Drupal::moduleHandler()->install(array('config_test'));
+    \Drupal::service('module_installer')->install(array('config_test'));
     $storage = new DatabaseStorage($this->container->get('database'), 'config');
     $name = 'config_test.types';
     $config = $this->container->get('config.factory')->get($name);

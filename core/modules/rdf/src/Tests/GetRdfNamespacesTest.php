@@ -36,7 +36,7 @@ class GetRdfNamespacesTest extends WebTestBase {
 
     // Enable rdf_conflicting_namespaces to ensure that an exception is thrown
     // when RDF namespaces are conflicting.
-    \Drupal::moduleHandler()->install(array('rdf_conflicting_namespaces'), TRUE);
+    \Drupal::service('module_installer')->install(array('rdf_conflicting_namespaces'), TRUE);
     try {
       $ns = rdf_get_namespaces();
       $this->fail('Expected exception not thrown for conflicting namespace declaration.');

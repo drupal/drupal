@@ -84,7 +84,7 @@ class DependencyTest extends ModuleTestBase {
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   function testEnableRequirementsFailureDependency() {
-    \Drupal::moduleHandler()->install(array('comment'));
+    \Drupal::service('module_installer')->install(array('comment'));
 
     $this->assertModules(array('requirements1_test'), FALSE);
     $this->assertModules(array('requirements2_test'), FALSE);
@@ -111,7 +111,7 @@ class DependencyTest extends ModuleTestBase {
    * Dependencies should be enabled before their dependents.
    */
   function testModuleEnableOrder() {
-    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
+    \Drupal::service('module_installer')->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->assertModules(array('module_test'), TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');

@@ -87,7 +87,7 @@ class UserPermissionsTest extends WebTestBase {
 
     // Enable aggregator module and ensure the 'administer news feeds'
     // permission is assigned by default.
-    \Drupal::ModuleHandler()->install(array('aggregator'));
+    \Drupal::service('module_installer')->install(array('aggregator'));
 
     $this->assertTrue($this->admin_user->hasPermission('administer news feeds'), 'The permission was automatically assigned to the administrator role');
   }

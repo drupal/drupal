@@ -913,7 +913,7 @@ abstract class WebTestBase extends TestBase {
     }
     if ($modules) {
       $modules = array_unique($modules);
-      $success = $container->get('module_handler')->install($modules, TRUE);
+      $success = $container->get('module_installer')->install($modules, TRUE);
       $this->assertTrue($success, String::format('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       $this->rebuildContainer();
     }

@@ -52,7 +52,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertModuleList($module_list, 'Testing profile');
 
     // Try to install a new module.
-    $this->moduleHandler()->install(array('ban'));
+    $this->moduleInstaller()->install(array('ban'));
     $module_list[] = 'ban';
     sort($module_list);
     $this->assertModuleList($module_list, 'After adding a module');
@@ -116,7 +116,7 @@ class ModuleHandlerTest extends KernelTestBase {
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
     drupal_static_reset('system_rebuild_module_data');
 
-    $result = $this->moduleHandler()->install(array('color'));
+    $result = $this->moduleInstaller()->install(array('color'));
     $this->assertFalse($result, 'ModuleHandler::install() returns FALSE if dependencies are missing.');
     $this->assertFalse($this->moduleHandler()->moduleExists('color'), 'ModuleHandler::install() aborts if dependencies are missing.');
 
@@ -125,7 +125,7 @@ class ModuleHandlerTest extends KernelTestBase {
     \Drupal::state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
 
-    $result = $this->moduleHandler()->install(array('color'));
+    $result = $this->moduleInstaller()->install(array('color'));
     $this->assertTrue($result, 'ModuleHandler::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
@@ -141,7 +141,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that ModuleHandler::uninstall() uninstalled them in the
     // correct sequence.
-    $result = $this->moduleHandler()->uninstall(array('config', 'help', 'color'));
+    $result = $this->moduleInstaller()->uninstall(array('config', 'help', 'color'));
     $this->assertTrue($result, 'ModuleHandler::uninstall() returned TRUE.');
 
     foreach (array('color', 'config', 'help') as $module) {
@@ -157,7 +157,7 @@ class ModuleHandlerTest extends KernelTestBase {
     \Drupal::state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
 
-    $result = $this->moduleHandler()->install(array('color'));
+    $result = $this->moduleInstaller()->install(array('color'));
     $this->assertTrue($result, 'ModuleHandler::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
@@ -184,11 +184,11 @@ class ModuleHandlerTest extends KernelTestBase {
     $data = system_rebuild_module_data();
     $this->assertTrue(isset($data[$profile]->requires[$dependency]));
 
-    $this->moduleHandler()->install(array($dependency));
+    $this->moduleInstaller()->install(array($dependency));
     $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
 
     // Uninstall the profile module "dependency".
-    $result = $this->moduleHandler()->uninstall(array($dependency));
+    $result = $this->moduleInstaller()->uninstall(array($dependency));
     $this->assertTrue($result, 'ModuleHandler::uninstall() returns TRUE.');
     $this->assertFalse($this->moduleHandler()->moduleExists($dependency));
     $this->assertEqual(drupal_get_installed_schema_version($dependency), SCHEMA_UNINSTALLED, "$dependency module was uninstalled.");
@@ -221,7 +221,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Verify that it is not registered yet to prevent false positives.
     $stream_wrappers = file_get_stream_wrappers();
     $this->assertFalse(isset($stream_wrappers['dummy']));
-    $this->moduleHandler()->install(['file_test']);
+    $this->moduleInstaller()->install(['file_test']);
     // Verify that the stream wrapper is available even without calling
     // file_get_stream_wrappers() again. If the stream wrapper is not available
     // file_exists() will raise a notice.
@@ -251,6 +251,15 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   protected function moduleHandler() {
     return $this->container->get('module_handler');
+  }
+
+  /**
+   * Returns the ModuleInstaller.
+   *
+   * @return \Drupal\Core\Extension\ModuleInstallerInterface
+   */
+  protected function moduleInstaller() {
+    return $this->container->get('module_installer');
   }
 
 }

@@ -34,7 +34,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $default_configuration_entity = 'config_test.dynamic.config_integration_test';
 
     // Install the config_test module we're integrating with.
-    \Drupal::moduleHandler()->install(array('config_test'));
+    \Drupal::service('module_installer')->install(array('config_test'));
 
     // Verify the configuration does not exist prior to installation.
     $config_static = \Drupal::config($default_config);
@@ -43,7 +43,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->isNew(), TRUE);
 
     // Install the integration module.
-    \Drupal::moduleHandler()->install(array('config_integration_test'));
+    \Drupal::service('module_installer')->install(array('config_integration_test'));
 
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
@@ -66,7 +66,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->container->get('config.factory')->reset();
 
     // Disable and uninstall the integration module.
-    $this->container->get('module_handler')->uninstall(array('config_integration_test'));
+    $this->container->get('module_installer')->uninstall(array('config_integration_test'));
 
     // Verify the integration module's config was uninstalled.
     $config_static = \Drupal::config($default_config);
@@ -78,7 +78,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
 
     // Reinstall the integration module.
-    \Drupal::moduleHandler()->install(array('config_integration_test'));
+    \Drupal::service('module_installer')->install(array('config_integration_test'));
 
     // Verify the integration module's config was re-installed.
     \Drupal::configFactory()->reset($default_config);
@@ -132,14 +132,14 @@ class ConfigInstallWebTest extends WebTestBase {
     // Turn on the test module, which will attempt to replace the
     // configuration data. This attempt to replace the active configuration
     // should be ignored.
-    \Drupal::moduleHandler()->install(array('config_existing_default_config_test'));
+    \Drupal::service('module_installer')->install(array('config_existing_default_config_test'));
 
     // Verify that the test module has not been able to change the data.
     $config = \Drupal::config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
 
     // Disable and uninstall the test module.
-    \Drupal::moduleHandler()->uninstall(array('config_existing_default_config_test'));
+    \Drupal::service('module_installer')->uninstall(array('config_existing_default_config_test'));
 
     // Verify that the data hasn't been altered by removing the test module.
     $config = \Drupal::config($config_name);

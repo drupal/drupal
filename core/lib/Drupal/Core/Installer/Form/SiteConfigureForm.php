@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Installer\Form;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
@@ -35,11 +35,11 @@ class SiteConfigureForm extends FormBase {
   protected $state;
 
   /**
-   * The module handler.
+   * The module installer.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleInstallerInterface
    */
-  protected $moduleHandler;
+  protected $moduleInstaller;
 
   /**
    * The country manager.
@@ -64,16 +64,16 @@ class SiteConfigureForm extends FormBase {
    *   The user storage.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
    */
-  public function __construct($root, UserStorageInterface $user_storage, StateInterface $state, ModuleHandlerInterface $module_handler, CountryManagerInterface $country_manager) {
+  public function __construct($root, UserStorageInterface $user_storage, StateInterface $state, ModuleInstallerInterface $module_installer, CountryManagerInterface $country_manager) {
     $this->root = $root;
     $this->userStorage = $user_storage;
     $this->state = $state;
-    $this->moduleHandler = $module_handler;
+    $this->moduleInstaller = $module_installer;
     $this->countryManager = $country_manager;
   }
 
@@ -85,7 +85,7 @@ class SiteConfigureForm extends FormBase {
       $container->get('app.root'),
       $container->get('entity.manager')->getStorage('user'),
       $container->get('state'),
-      $container->get('module_handler'),
+      $container->get('module_installer'),
       $container->get('country_manager')
     );
   }
@@ -264,7 +264,7 @@ class SiteConfigureForm extends FormBase {
     // Enable update.module if this option was selected.
     $update_status_module = $form_state->getValue('update_status_module');
     if ($update_status_module[1]) {
-      $this->moduleHandler->install(array('file', 'update'), FALSE);
+      $this->moduleInstaller->install(array('file', 'update'), FALSE);
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.

@@ -615,7 +615,7 @@ function drupal_install_system($install_state) {
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');
 
   // Install System module and rebuild the newly available routes.
-  $kernel->getContainer()->get('module_handler')->install(array('system'), FALSE);
+  $kernel->getContainer()->get('module_installer')->install(array('system'), FALSE);
   \Drupal::service('router.builder')->rebuild();
 
   // Ensure default language is saved.

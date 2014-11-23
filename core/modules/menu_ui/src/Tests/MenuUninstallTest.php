@@ -28,7 +28,7 @@ class MenuUninstallTest extends WebTestBase {
    * Tests Menu uninstall.
    */
   public function testMenuUninstall() {
-    \Drupal::moduleHandler()->uninstall(array('menu_ui'));
+    \Drupal::service('module_installer')->uninstall(array('menu_ui'));
 
     \Drupal::entityManager()->getStorage('menu')->resetCache(array('admin'));
 

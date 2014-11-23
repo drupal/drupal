@@ -53,7 +53,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     });
 
     // Install every module possible.
-    \Drupal::moduleHandler()->install(array_keys($all_modules));
+    \Drupal::service('module_installer')->install(array_keys($all_modules));
 
     $this->assertModules(array_keys($all_modules), TRUE);
     foreach($all_modules as $module => $info) {
@@ -100,7 +100,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
 
     // Uninstall all modules that can be uninstalled.
-    \Drupal::moduleHandler()->uninstall(array_keys($modules_to_uninstall));
+    \Drupal::service('module_installer')->uninstall(array_keys($modules_to_uninstall));
 
     $this->assertModules(array_keys($modules_to_uninstall), FALSE);
     foreach($modules_to_uninstall as $module => $info) {

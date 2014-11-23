@@ -93,7 +93,7 @@ class ConfigOtherModuleTest extends WebTestBase {
    *   The module name.
    */
   protected function installModule($module) {
-    $this->container->get('module_handler')->install(array($module));
+    $this->container->get('module_installer')->install(array($module));
     $this->container = \Drupal::getContainer();
   }
 
@@ -104,7 +104,7 @@ class ConfigOtherModuleTest extends WebTestBase {
    *   The module name.
    */
   protected function uninstallModule($module) {
-    $this->container->get('module_handler')->uninstall(array($module));
+    $this->container->get('module_installer')->uninstall(array($module));
     $this->container = \Drupal::getContainer();
   }
 

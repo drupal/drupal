@@ -110,9 +110,9 @@ class StandardTest extends WebTestBase {
     // The installer does not have this limitation since it ensures that all of
     // the install profiles dependencies are installed before creating the
     // editor configuration.
-    \Drupal::moduleHandler()->uninstall(array('editor', 'ckeditor'));
+    \Drupal::service('module_installer')->uninstall(array('editor', 'ckeditor'));
     $this->rebuildContainer();
-    \Drupal::moduleHandler()->install(array('editor'));
+    \Drupal::service('module_installer')->install(array('editor'));
     /** @var \Drupal\contact\ContactFormInterface $contact_form */
     $contact_form = ContactForm::load('feedback');
     $recipients = $contact_form->getRecipients();

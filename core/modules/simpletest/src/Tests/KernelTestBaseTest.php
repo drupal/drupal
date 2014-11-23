@@ -93,7 +93,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Install the module.
-    \Drupal::moduleHandler()->install(array($module));
+    \Drupal::service('module_installer')->install(array($module));
 
     // Verify that the enabled module exists.
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists($module), "$module module found.");
@@ -215,7 +215,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   function testEnableModulesFixedList() {
     // Install system module.
-    $this->container->get('module_handler')->install(array('system', 'menu_link_content'));
+    $this->container->get('module_installer')->install(array('system', 'menu_link_content'));
     $entity_manager = \Drupal::entityManager();
 
     // entity_test is loaded via $modules; its entity type should exist.
@@ -228,12 +228,12 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Install some other modules; entity_test should still exist.
-    $this->container->get('module_handler')->install(array('user', 'field', 'field_test'), FALSE);
+    $this->container->get('module_installer')->install(array('user', 'field', 'field_test'), FALSE);
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Uninstall one of those modules; entity_test should still exist.
-    $this->container->get('module_handler')->uninstall(array('field_test'));
+    $this->container->get('module_installer')->uninstall(array('field_test'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 

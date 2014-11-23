@@ -9,13 +9,13 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Builds a confirmation form to uninstall selected modules.
@@ -23,11 +23,11 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class ModulesUninstallConfirmForm extends ConfirmFormBase {
 
   /**
-   * The module handler service.
+   * The module installer service.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleInstallerInterface
    */
-  protected $moduleHandler;
+  protected $moduleInstaller;
 
   /**
    * The expirable key value store.
@@ -60,8 +60,8 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   /**
    * Constructs a ModulesUninstallConfirmForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   *   The module installer.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
@@ -69,8 +69,8 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityManagerInterface $entity_manager) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityManagerInterface $entity_manager) {
+    $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     $this->configManager = $config_manager;
     $this->entityManager = $entity_manager;
@@ -81,7 +81,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
+      $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('modules_uninstall'),
       $container->get('config.manager'),
       $container->get('entity.manager')
@@ -198,7 +198,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     $this->keyValueExpirable->delete($account);
 
     // Uninstall the modules.
-    $this->moduleHandler->uninstall($this->modules);
+    $this->moduleInstaller->uninstall($this->modules);
 
     drupal_set_message($this->t('The selected modules have been uninstalled.'));
     $form_state->setRedirectUrl($this->getCancelUrl());

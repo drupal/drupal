@@ -98,7 +98,7 @@ class EditorAdminTest extends WebTestBase {
    * Enables the unicorn editor.
    */
   protected function enableUnicornEditor() {
-    \Drupal::moduleHandler()->install(array('editor_test'));
+    \Drupal::service('module_installer')->install(array('editor_test'));
     $this->rebuildContainer();
     $this->resetAll();
   }

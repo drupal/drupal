@@ -41,11 +41,11 @@ class ServiceProviderTest extends WebTestBase {
    */
   function testServiceProviderRegistrationDynamic() {
     // Uninstall the module and ensure the service provider's service is not registered.
-    \Drupal::moduleHandler()->uninstall(array('service_provider_test'));
+    \Drupal::service('module_installer')->uninstall(array('service_provider_test'));
     $this->assertFalse(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');
 
     // Install the module and ensure the service provider's service is registered.
-    \Drupal::moduleHandler()->install(array('service_provider_test'));
+    \Drupal::service('module_installer')->install(array('service_provider_test'));
     $this->assertTrue(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service exists in the DIC.');
   }
 

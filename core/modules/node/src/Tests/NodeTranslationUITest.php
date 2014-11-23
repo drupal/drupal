@@ -244,7 +244,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $node->save();
 
     // Test that the frontpage view displays the correct translations.
-    \Drupal::moduleHandler()->install(array('views'), TRUE);
+    \Drupal::service('module_installer')->install(array('views'), TRUE);
     $this->rebuildContainer();
     $this->doTestTranslations('node', $values);
 
