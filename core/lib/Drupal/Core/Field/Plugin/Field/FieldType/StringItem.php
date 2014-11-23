@@ -91,14 +91,21 @@ class StringItem extends FieldItemBase {
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $random = new Random();
     $max = $field_definition->getSetting('max_length');
-    $values['value'] = $random->word(mt_rand(1, $max));
+
+    if ($max) {
+      $values['value'] = $random->word(mt_rand(1, $max));
+    }
+    else {
+      $values['value'] = $random->paragraphs();
+    }
+
     return $values;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = array();
 
     $element['max_length'] = array(

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the 'string_long' field type.
@@ -25,6 +26,15 @@ class StringLongItem extends StringItem {
   /**
    * {@inheritdoc}
    */
+  public static function defaultStorageSettings() {
+    $settings = parent::defaultStorageSettings();
+    unset($settings['max_length']);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
@@ -34,6 +44,15 @@ class StringLongItem extends StringItem {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+    unset($element['max_length']);
+    return $element;
   }
 
 }
