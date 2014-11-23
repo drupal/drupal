@@ -247,7 +247,6 @@ class MenuRouterTest extends WebTestBase {
       ->set('default', $this->default_theme)
       ->set('admin', $this->admin_theme)
       ->save();
-    $theme_handler->uninstall(array('stark'));
 
     $this->doTestThemeCallbackMaintenanceMode();
 

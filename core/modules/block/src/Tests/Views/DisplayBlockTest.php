@@ -66,7 +66,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
-        'theme' => 'stark',
+        'theme' => 'classy',
       )),
       ':text' => $edit['label'],
     );
@@ -105,7 +105,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
-        'theme' => 'stark',
+        'theme' => 'classy',
       )),
       ':text' => $edit['label'],
     );
@@ -117,7 +117,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-3',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_3',
-        'theme' => 'stark',
+        'theme' => 'classy',
       )),
       ':text' => $edit['label'],
     );

@@ -48,7 +48,7 @@ class ThemeTest extends WebTestBase {
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $file_relative = strtr($file->uri, array('public:/' => PublicStream::basePath()));
-    $default_theme_path = 'core/themes/stark';
+    $default_theme_path = 'core/themes/classy';
 
     $supported_paths = array(
       // Raw stream wrapper URI.
@@ -192,7 +192,7 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
 
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertRaw('core/themes/stark', 'Site default theme used on node page.');
+    $this->assertRaw('core/themes/classy', 'Site default theme used on node page.');
 
     $this->drupalGet('node/add');
     $this->assertRaw('core/themes/seven', 'Administration theme used on the add content page.');
@@ -218,7 +218,7 @@ class ThemeTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
     $edit = array(
@@ -228,10 +228,10 @@ class ThemeTest extends WebTestBase {
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/stark', 'Site default theme used on administration page.');
+    $this->assertRaw('core/themes/classy', 'Site default theme used on administration page.');
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
   }
 
   /**
@@ -249,10 +249,10 @@ class ThemeTest extends WebTestBase {
     $this->assertText('Bartik(' . t('active tab') . ')', 'Default local task on blocks admin page is the default theme.');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
-    // Stark is the second 'Set as default' link.
-    $this->clickLink(t('Set as default'), 1);
+    // Classy is the first 'Set as default' link.
+    $this->clickLink(t('Set as default'), 0);
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Stark(' . t('active tab') . ')', 'Default local task on blocks admin page has changed.');
+    $this->assertText('Classy(' . t('active tab') . ')', 'Default local task on blocks admin page has changed.');
   }
 
   /**

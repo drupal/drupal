@@ -48,7 +48,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = array(
-      'theme:stark',
+      'theme:classy',
       'theme_global_settings',
       'rendered',
       'block_view',
@@ -106,7 +106,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:stark', 'theme_global_settings'));
+    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:classy', 'theme_global_settings'));
   }
 
 }

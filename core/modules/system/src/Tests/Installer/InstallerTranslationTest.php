@@ -65,7 +65,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $edit = array('preprocess_css' => FALSE);
     $this->drupalPostForm('admin/config/development/performance', $edit, t('Save configuration'));
     $this->drupalGet('<front>');
-    $this->assertRaw('stark/css/layout.css');
+    $this->assertRaw('classy/css/layout.css');
   }
 
 }

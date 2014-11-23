@@ -33,6 +33,6 @@ class ThemeEarlyInitializationTest extends WebTestBase {
     $this->assertRaw('Themed output generated in a KernelEvents::REQUEST listener');
     // Verify that the default theme's CSS still appears even though the theme
     // system was initialized early.
-    $this->assertRaw('stark/css/layout.css');
+    $this->assertRaw('classy/css/layout.css');
   }
 }

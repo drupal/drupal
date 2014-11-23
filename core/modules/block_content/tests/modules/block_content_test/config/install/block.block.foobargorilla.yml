@@ -6,7 +6,7 @@ dependencies:
   theme:
     - stark
 id: foobargorilla
-theme: stark
+theme: classy
 region: content
 weight: null
 provider: null

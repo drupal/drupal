@@ -65,7 +65,7 @@ class PageCacheTest extends WebTestBase {
       'pre_render',
       'rendered',
       'system_test_cache_tags_page',
-      'theme:stark',
+      'theme:classy',
       'theme_global_settings',
     );
     $this->assertIdentical($cache_entry->tags, $expected_tags);
