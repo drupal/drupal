@@ -1,0 +1,5 @@
+base:
+  version: VERSION
+  css:
+    theme:
+      css/layout.css: {}
