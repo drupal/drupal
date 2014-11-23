@@ -76,7 +76,7 @@ catch (HttpExceptionInterface $e) {
 // Initialize the maintenance theme for this administrative script.
 drupal_maintenance_theme();
 
-$output = '';
+$content = [];
 $show_messages = TRUE;
 
 $response = new Response();
@@ -107,11 +107,10 @@ if (authorize_access_allowed()) {
       drupal_set_message($results['page_message']['message'], $results['page_message']['type']);
     }
 
-    $authorize_report = array(
+    $content['authorize_report'] = array(
       '#theme' => 'authorize_report',
       '#messages' => $results['messages'],
     );
-    $output = drupal_render_root($authorize_report);
 
     $links = array();
     if (is_array($results['tasks'])) {
@@ -124,25 +123,23 @@ if (authorize_access_allowed()) {
       ));
     }
 
-    $item_list = array(
+    $content['next_steps'] = array(
       '#theme' => 'item_list',
       '#items' => $links,
       '#title' => t('Next steps'),
     );
-    $output .= drupal_render_root($item_list);
   }
   // If a batch is running, let it run.
   elseif ($request->query->has('batch')) {
-    $output = _batch_page($request);
+    $content = ['#markup' => _batch_page($request)];
   }
   else {
     if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_info'])) {
-      $output = t('It appears you have reached this page in error.');
+      $content = ['#markup' => t('It appears you have reached this page in error.')];
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
-      $elements = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
-      $output = drupal_render_root($elements);
+      $content = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
     }
   }
   // We defer the display of messages until all operations are done.
@@ -152,12 +149,12 @@ else {
   $response->setStatusCode(403);
   \Drupal::logger('access denied')->warning('authorize.php');
   $page_title = t('Access denied');
-  $output = t('You are not allowed to access this page.');
+  $content = ['#markup' => t('You are not allowed to access this page.')];
 }
 
-if (!empty($output)) {
+if (!empty($content)) {
   $response->headers->set('Content-Type', 'text/html; charset=utf-8');
-  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderBarePage(['#markup' => $output], $page_title, 'maintenance_page', array(
+  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderBarePage($content, $page_title, 'maintenance_page', array(
     '#show_messages' => $show_messages,
   )));
   $response->send();
