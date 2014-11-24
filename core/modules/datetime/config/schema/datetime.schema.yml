@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Datetime module.
 
-field.datetime.storage_settings:
+field.storage_settings.datetime:
   type: mapping
   label: 'Datetime settings'
   mapping:
@@ -8,23 +8,20 @@ field.datetime.storage_settings:
       type: string
       label: 'Date type'
 
-field.datetime.field_settings:
-  type: sequence
-  label: 'Settings'
-  sequence:
-    - type: string
+field.field_settings.datetime:
+  type: mapping
+  label: 'Datetime settings'
 
-field.datetime.value:
-  type: sequence
+field.value.datetime:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: sequence
-      label: 'Default value'
-      sequence:
-        - type: string
-          label: 'Type'
-        - type: string
-          label: 'Value'
+  mapping:
+    default_date_type:
+      type: string
+      label: 'Default date type'
+    default_date:
+      type: string
+      label: 'Default date value'
 
 field.formatter.settings.datetime_default:
   type: mapping

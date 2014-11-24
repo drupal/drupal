@@ -25,7 +25,7 @@ field.storage.*.*:
       type: string
       label: 'Type'
     settings:
-      type: field.[%parent.type].storage_settings
+      type: field.storage_settings.[%parent.type]
     module:
       type: string
       label: 'Module'

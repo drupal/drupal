@@ -52,40 +52,38 @@ comment.type.*:
       type: text
       label: 'Description'
 
-field.comment.storage_settings:
-  type: sequence
-  label: 'Settings'
-  sequence:
-    - type: string
-      label: 'Setting'
+field.storage_settings.comment:
+  type: mapping
+  label: 'Comment settings'
+  mapping:
+    comment_type:
+      label: 'Comment type'
+      type: string
 
-field.comment.value:
-  type: sequence
-  label: 'Settings'
-  sequence:
-    - type: mapping
-      label: 'Settings'
-      mapping:
-        status:
-          type: integer
-          label: 'Status'
-        cid:
-          type: integer
-          label: 'Status'
-        last_comment_timestamp:
-          type: integer
-          label: 'Last comment timestamp'
-        last_comment_name:
-          type: integer
-          label: 'Name'
-        last_comment_uid:
-          type: integer
-          label: 'UID'
-        comment_count:
-          type: integer
-          label: 'Count'
+field.value.comment:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    status:
+      type: integer
+      label: 'Comment status'
+    cid:
+      type: integer
+      label: 'Last comment ID'
+    last_comment_timestamp:
+      type: integer
+      label: 'Last comment timestamp'
+    last_comment_name:
+      type: integer
+      label: 'Last comment name'
+    last_comment_uid:
+      type: integer
+      label: 'Last comment user ID'
+    comment_count:
+      type: integer
+      label: 'Number of comments'
 
-field.comment.field_settings:
+field.field_settings.comment:
   type: mapping
   label: 'Comment settings'
   mapping:

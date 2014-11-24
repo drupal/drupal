@@ -83,15 +83,15 @@ image.settings:
       type: boolean
       label: 'Suppress the itok query string for image derivatives'
 
-field.image.storage_settings:
-  type: field.file.storage_settings
+field.storage_settings.image:
+  type: field.storage_settings.file
   label: 'Image settings'
   mapping:
     default_image:
       type: field_default_image
       label: 'Default value'
 
-field.image.field_settings:
+field.field_settings.image:
   type: base_file_field_field_settings
   label: 'Image settings'
   mapping:
@@ -117,28 +117,9 @@ field.image.field_settings:
       type: field_default_image
       label: 'Default value'
 
-field.image.value:
-  type: sequence
+field.value.image:
+  type: field_default_image
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default image'
-      mapping:
-        fid:
-          type: integer
-          label: 'File ID'
-        alt:
-          type: string
-          label: 'Alternative text'
-        title:
-          type: string
-          label: 'Title text'
-        width:
-          type: integer
-          label: 'Width'
-        height:
-          type: integer
-          label: 'Height'
 
 field.formatter.settings.image:
   type: mapping

@@ -70,8 +70,6 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     $field_storage = entity_load('field_storage_config', 'node.field_test_imagefield');
     $this->assertEqual($field_storage->type, "image",  t('Field type is @fieldtype. It should be image.', array('@fieldtype' => $field_storage->type)));
     $settings = $field_storage->getSettings();
-    $this->assertEqual($settings['column_groups']['alt']['label'], 'Test alt');
-    $this->assertEqual($settings['column_groups']['title']['label'], 'Test title');
     $this->assertEqual($settings['target_type'], 'file');
     $this->assertEqual($settings['uri_scheme'], 'public');
     $this->assertEqual($settings['default_image']['fid'], '');

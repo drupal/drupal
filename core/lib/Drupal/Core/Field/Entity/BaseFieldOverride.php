@@ -154,8 +154,12 @@ class BaseFieldOverride extends FieldConfigBase {
    *   BaseFieldOverride::allowBundleRename() has not been called.
    */
   public function preSave(EntityStorageInterface $storage) {
-    // Set the default instance settings.
-    $this->settings += \Drupal::service('plugin.manager.field.field_type')->getDefaultFieldSettings($this->getType());
+    // Filter out unknown settings and make sure all settings are present, so
+    // that a complete field definition is passed to the various hooks and
+    // written to config.
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $default_settings = $field_type_manager->getDefaultFieldSettings($this->getType());
+    $this->settings = array_intersect_key($this->settings, $default_settings) + $default_settings;
 
     // Call the parent's presave method to perform validate and calculate
     // dependencies.

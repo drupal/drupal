@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Options module.
 
-field.list_integer.storage_settings:
+field.storage_settings.list_integer:
   type: mapping
   label: 'List (integer) settings'
   mapping:
@@ -21,23 +21,19 @@ field.list_integer.storage_settings:
       type: string
       label: 'Allowed values function'
 
-field.list_integer.field_settings:
-  label: 'List (integer)'
+field.field_settings.list_integer:
+  label: 'List (integer) settings'
   type: mapping
-  mapping: {  }
 
-field.list_integer.value:
-  type: sequence
+field.value.list_integer:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: integer
-          label: 'Value'
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
 
-field.list_float.storage_settings:
+field.storage_settings.list_float:
   type: mapping
   label: 'List (float) settings'
   mapping:
@@ -58,23 +54,19 @@ field.list_float.storage_settings:
       type: string
       label: 'Allowed values function'
 
-field.list_float.field_settings:
-  label: 'List (float)'
+field.field_settings.list_float:
+  label: 'List (float) settings'
   type: mapping
-  mapping: {  }
 
-field.list_float.value:
-  type: sequence
+field.value.list_float:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: string
-          label: 'Value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
 
-field.list_string.storage_settings:
+field.storage_settings.list_string:
   type: mapping
   label: 'List (text) settings'
   mapping:
@@ -95,21 +87,17 @@ field.list_string.storage_settings:
       type: string
       label: 'Allowed values function'
 
-field.list_string.field_settings:
-  label: 'List (float)'
+field.field_settings.list_string:
+  label: 'List (text) settings'
   type: mapping
-  mapping: {  }
 
-field.list_string.value:
-  type: sequence
+field.value.list_string:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: string
-          label: 'Value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
 
 field.formatter.settings.list_default:
   type: mapping

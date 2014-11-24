@@ -8,7 +8,7 @@ text.settings:
       type: integer
       label: 'Default summary length'
 
-field.text.storage_settings:
+field.storage_settings.text:
   type: mapping
   label: 'Text (formatted) settings'
   mapping:
@@ -16,56 +16,45 @@ field.text.storage_settings:
       type: integer
       label: 'Maximum length'
 
-field.text.field_settings:
+field.field_settings.text:
   type: mapping
   label: 'Text (formatted) settings'
-  sequence:
-    - type: string
 
-field.text.value:
-  type: sequence
+field.value.text:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: label
-          label: 'Value'
-        format:
-          type: string
-          label: 'Text format'
+  mapping:
+    value:
+      type: label
+      label: 'Value'
+    format:
+      type: string
+      label: 'Text format'
 
-field.text_long.storage_settings:
+field.storage_settings.text_long:
   label: 'Text (formatted, long) settings'
   type: mapping
-  mapping: {  }
 
-field.text_long.field_settings:
+field.field_settings.text_long:
   label: 'Text (formatted, long) settings'
   type: mapping
-  mapping: {  }
 
-field.text_long.value:
-  type: sequence
+field.value.text_long:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: text
-          label: 'Value'
-        format:
-          type: string
-          label: 'Text format'
+  mapping:
+    value:
+      type: text
+      label: 'Value'
+    format:
+      type: string
+      label: 'Text format'
 
-field.text_with_summary.storage_settings:
+field.storage_settings.text_with_summary:
   label: 'Text (formatted, long, with summary) settings'
   type: mapping
-  mapping: {  }
 
-field.text_with_summary.field_settings:
+field.field_settings.text_with_summary:
   type: mapping
   label: 'Text (formatted, long, with summary) settings'
   mapping:
@@ -73,22 +62,19 @@ field.text_with_summary.field_settings:
       type: boolean
       label: 'Summary input'
 
-field.text_with_summary.value:
-  type: sequence
+field.value.text_with_summary:
+  type: mapping
   label: 'Default value'
-  sequence:
-    - type: mapping
-      label: 'Default'
-      mapping:
-        value:
-          type: text
-          label: 'Body'
-        summary:
-          type: string
-          label: 'Summary'
-        format:
-          type: string
-          label: 'Text format'
+  mapping:
+    value:
+      type: text
+      label: 'Body'
+    summary:
+      type: string
+      label: 'Summary'
+    format:
+      type: string
+      label: 'Text format'
 
 field.formatter.settings.text_default:
   type: mapping

@@ -39,7 +39,7 @@ taxonomy.vocabulary.*:
       sequence:
         - type: taxonomy.vocabulary.third_party.[%key]
 
-field.taxonomy_term_reference.storage_settings:
+field.storage_settings.taxonomy_term_reference:
   type: base_entity_reference_field_settings
   label: 'Taxonomy term reference settings'
   mapping:
@@ -60,7 +60,7 @@ field.taxonomy_term_reference.storage_settings:
               type: integer
               value: 'Parent'
 
-field.taxonomy_term_reference.field_settings:
+field.field_settings.taxonomy_term_reference:
   type: mapping
   label: 'Taxonomy term reference settings'
   mapping:
@@ -68,16 +68,13 @@ field.taxonomy_term_reference.field_settings:
       type: string
       label: 'Reference method'
 
-field.taxonomy_term_reference.value:
-  type: sequence
-  label: 'Default values'
-  sequence:
-    - type: mapping
-      label: 'Default value'
-      mapping:
-        target_id:
-          type: integer
-          label: 'Term ID'
+field.value.taxonomy_term_reference:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    target_id:
+      type: integer
+      label: 'Term ID'
 
 field.formatter.settings.entity_reference_rss_category:
   type: mapping
