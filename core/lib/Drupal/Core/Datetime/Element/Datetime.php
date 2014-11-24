@@ -241,7 +241,7 @@ class Datetime extends DateElementBase {
       // placeholders are invalid for HTML5 date and datetime, so an example
       // format is appended to the title to appear in tooltips.
       $extra_attributes = array(
-        'title' => t('Date (i.e. !format)', array('!format' => static::formatExample($date_format))),
+        'title' => t('Date (e.g. !format)', array('!format' => static::formatExample($date_format))),
         'type' => $element['#date_date_element'],
       );
 
@@ -286,7 +286,7 @@ class Datetime extends DateElementBase {
 
       // Adds the HTML5 attributes.
       $extra_attributes = array(
-        'title' => t('Time (i.e. !format)', array('!format' => static::formatExample($time_format))),
+        'title' => t('Time (e.g. !format)', array('!format' => static::formatExample($time_format))),
         'type' => $element['#date_time_element'],
         'step' => $element['#date_increment'],
       );
