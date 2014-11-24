@@ -243,9 +243,14 @@ class BookManager implements BookManagerInterface {
       return FALSE;
     }
 
-    if (!empty($node->book['bid']) && $node->book['bid'] == 'new') {
-      // New nodes that are their own book.
-      $node->book['bid'] = $node->id();
+    if (!empty($node->book['bid'])) {
+      if ($node->book['bid'] == 'new') {
+        // New nodes that are their own book.
+        $node->book['bid'] = $node->id();
+      }
+      elseif (!isset($node->book['original_bid'])) {
+        $node->book['original_bid'] = $node->book['bid'];
+      }
     }
 
     // Ensure we create a new book link if either the node itself is new, or the

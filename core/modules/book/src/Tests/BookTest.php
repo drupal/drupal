@@ -166,6 +166,11 @@ class BookTest extends WebTestBase {
     $this->book = $other_book;
     $this->checkBookNode($other_book, array($node), FALSE, FALSE, $node, array());
     $this->checkBookNode($node, NULL, $other_book, $other_book, FALSE, array($other_book));
+
+    // Test that we can save a book programatically.
+    $this->drupalLogin($this->book_author);
+    $book = $this->createBookNode('new');
+    $book->save();
   }
 
   /**
