@@ -10,6 +10,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\Core\Language\Language;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -27,6 +28,13 @@ class MigrateBlockContentTest extends MigrateDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $migration = entity_load('migration', 'd6_block_content_type');
+    $executable = new MigrateExecutable($migration, $this);
+    $executable->import();
+    $migration = entity_load('migration', 'd6_block_content_body_field');
+    $executable = new MigrateExecutable($migration, $this);
+    $executable->import();
+
     $this->prepareMigrations(array(
       'd6_filter_format' => array(
         array(array(2), array('full_html'))

@@ -56,6 +56,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $block_type = entity_load('block_content_type', 'foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
+    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'foo');
+    $this->assertTrue(isset($field_definitions['body']), 'Body field was created when using the UI to create block content types.');
+
     // Check that the block type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $this->assertEqual($block_type->language()->getId(), $default_langcode);
@@ -69,8 +72,8 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // We need two block types to prevent /block/add redirecting.
     $this->createBlockContentType('other');
 
-    $field_definition = \Drupal::entityManager()->getFieldDefinitions('block_content', 'other')['body'];
-    $this->assertEqual($field_definition->getLabel(), 'Body', 'Body field was found.');
+    $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'other');
+    $this->assertFalse(isset($field_definitions['body']), 'Body field was not created when using the API to create block content types.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');

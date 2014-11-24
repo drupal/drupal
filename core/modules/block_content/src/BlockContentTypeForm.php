@@ -10,6 +10,8 @@ namespace Drupal\block_content;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base form for category edit forms.
@@ -99,6 +101,7 @@ class BlockContentTypeForm extends EntityForm {
       $logger->notice('Custom block type %label has been updated.', array('%label' => $block_type->label(), 'link' => $edit_link));
     }
     else {
+      block_content_add_body_field($block_type->id());
       drupal_set_message(t('Custom block type %label has been added.', array('%label' => $block_type->label())));
       $logger->notice('Custom block type %label has been added.', array('%label' => $block_type->label(), 'link' => $edit_link));
     }

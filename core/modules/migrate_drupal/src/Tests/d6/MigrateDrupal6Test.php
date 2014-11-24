@@ -61,6 +61,8 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_aggregator_feed',
     'd6_aggregator_item',
     'd6_block',
+    'd6_block_content_body_field',
+    'd6_block_content_type',
     'd6_book',
     'd6_book_settings',
     'd6_cck_field_values:*',

@@ -8,6 +8,7 @@
 namespace Drupal\block_content\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
@@ -26,6 +27,14 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    * {@inheritdoc}
    */
   protected function createEntity() {
+    $block_content_type = entity_create('block_content_type', array(
+      'id' => 'basic',
+      'label' => 'basic',
+      'revision' => FALSE
+    ));
+    $block_content_type->save();
+    block_content_add_body_field($block_content_type->id());
+
     // Create a "Llama" custom block.
     $block_content = entity_create('block_content', array(
       'info' => 'Llama',

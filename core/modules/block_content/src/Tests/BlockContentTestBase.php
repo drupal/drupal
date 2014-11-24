@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content\Tests;
 
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -47,6 +48,10 @@ abstract class BlockContentTestBase extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    // Ensure the basic bundle exists. This is provided by the standard profile.
+    $block_content_type = $this->createBlockContentType('basic');
+    block_content_add_body_field($block_content_type->id());
+
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
 

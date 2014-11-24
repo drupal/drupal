@@ -12,21 +12,5 @@ migrate.source.empty:
       type: string
       label: 'Provider'
     constants:
-      type: mapping
+      type: ignore
       label: 'Constants'
-      mapping:
-        entity_type:
-          type: string
-          label: 'Entity type'
-        type:
-          type: string
-          label: 'Type'
-        name:
-          type: string
-          label: 'Name'
-        cardinality:
-          type: integer
-          label: 'Cardinality'
-        display_field:
-          type: boolean
-          label: 'Display field'

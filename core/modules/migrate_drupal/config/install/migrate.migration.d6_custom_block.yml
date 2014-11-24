@@ -20,3 +20,4 @@ destination:
 migration_dependencies:
   required:
     - d6_filter_format
+    - d6_block_content_body_field

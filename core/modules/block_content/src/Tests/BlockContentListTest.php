@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  * @group block_content
  * @see \Drupal\block\BlockContentListBuilder
  */
-class BlockContentListTest extends WebTestBase {
+class BlockContentListTest extends BlockContentTestBase {
 
   /**
    * Modules to enable.

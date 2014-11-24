@@ -59,7 +59,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('!block %name has been created.', array(
-      '!block' => 'Basic block',
+      '!block' => 'basic',
       '%name' => $edit['info[0][value]']
     )), 'Basic block created.');
 
@@ -105,7 +105,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the block has been created and that it is a basic block.
     $this->assertRaw(format_string('!block %name has been created.', array(
-      '!block' => 'Basic block',
+      '!block' => 'basic',
       '%name' => $edit['info[0][value]'],
     )), 'Basic block created.');
 

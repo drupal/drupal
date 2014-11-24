@@ -76,19 +76,10 @@ function block_content_entity_type_alter(array &$entity_types) {
  */
 function block_content_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.
-  $field_storage = FieldStorageConfig::loadByName('block_content', 'body');
   $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
-  if (empty($field_storage)) {
-    $field_storage = entity_create('field_storage_config', array(
-      'field_name' => 'body',
-      'entity_type' => 'block_content',
-      'type' => 'text_with_summary',
-    ));
-    $field_storage->save();
-  }
   if (empty($field)) {
     $field = entity_create('field_config', array(
-      'field_storage' => $field_storage,
+      'field_storage' =>  FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),

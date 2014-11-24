@@ -70,15 +70,4 @@ class BlockContentType extends ConfigEntityBundleBase implements BlockContentTyp
    */
   public $description;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    if (!$update && !$this->isSyncing()) {
-      block_content_add_body_field($this->id);
-    }
-  }
-
 }

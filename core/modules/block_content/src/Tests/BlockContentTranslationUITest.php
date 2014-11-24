@@ -41,6 +41,19 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setupBundle() {
+    // Create the basic bundle since it is provided by standard.
+    $bundle = entity_create('block_content_type', array(
+      'id' => $this->bundle,
+      'label' => $this->bundle,
+      'revision' => FALSE
+    ));
+    $bundle->save();
+  }
+
+  /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
    */
   public function getTranslatorPermissions() {
