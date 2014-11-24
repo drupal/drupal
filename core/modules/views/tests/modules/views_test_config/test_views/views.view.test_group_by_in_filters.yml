@@ -1,7 +1,14 @@
-base_table: entity_test
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_group_by_in_filters
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: entity_test
+base_field: ''
+core: '8'
 display:
   default:
     display_options:
@@ -14,16 +21,16 @@ display:
       fields:
         name:
           alter:
-            alter_text: '0'
-            ellipsis: '1'
-            html: '0'
-            make_link: '0'
-            strip_tags: '0'
-            trim: '0'
-            word_boundary: '1'
-          empty_zero: '0'
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
           field: name
-          hide_empty: '0'
+          hide_empty: false
           id: name
           table: entity_test
           plugin_id: standard
@@ -37,17 +44,16 @@ display:
           value:
             value: '3'
           plugin_id: numeric
-      group_by: '1'
+      group_by: true
       pager:
         type: some
       style:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: ''
-id: test_group_by_in_filters
-tag: ''

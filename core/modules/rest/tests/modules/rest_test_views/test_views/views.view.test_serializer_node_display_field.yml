@@ -1,8 +1,21 @@
-base_table: node
+langcode: und
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+  module:
+    - field
+    - node
+    - rest
+    - rest_test_views
+    - user
 id: test_serializer_node_display_field
+label: 'Test serializer display field rows for entity fields'
+module: rest_test_views
 description: ''
 tag: ''
-label: 'Test serializer display field rows for entity fields'
+base_table: node
+base_field: nid
 core: 8.x
 display:
   default:
@@ -86,7 +99,7 @@ display:
           group_columns: {  }
           group_rows: true
           delta_limit: all
-          delta_offset: 0
+          delta_offset: '0'
           delta_reversed: false
           delta_first_last: false
           multi_type: separator
@@ -95,6 +108,8 @@ display:
           plugin_id: field
       title: 'Test serialize'
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
@@ -112,10 +127,5 @@ display:
         type: serializer
       row:
         type: data_field
-base_field: nid
-status: true
-module: rest_test_views
-langcode: und
-dependencies:
-  module:
-    - rest
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

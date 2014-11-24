@@ -1,9 +1,9 @@
-uuid: 28125171-5b31-4943-9e00-ec0a9ceb0c1a
 langcode: en
 status: true
 dependencies:
   module:
     - node
+    - user
 id: test_language
 label: 'Test language'
 module: views

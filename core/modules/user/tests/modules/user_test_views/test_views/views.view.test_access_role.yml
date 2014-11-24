@@ -1,7 +1,16 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_access_role
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -23,6 +32,8 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -30,10 +41,9 @@ display:
   page_1:
     display_options:
       path: test-role
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 1
-label: ''
-id: test_access_role
-tag: ''

@@ -1,8 +1,17 @@
-base_field: uid
-base_table: users
-core: 8.x
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - content_translation
+    - user
+id: test_entity_translations_link
+label: People
+module: views
+description: ''
+tag: ''
+base_table: users
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -67,8 +76,8 @@ display:
           field: uid_raw
           operator: '!='
           value:
-            value: 0
-          group: true
+            value: '0'
+          group: 1
           exposed: false
           plugin_id: numeric
       sorts:
@@ -88,6 +97,8 @@ display:
           content: 'No people available.'
           format: plain_text
           plugin_id: text
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -95,7 +106,5 @@ display:
     position: null
     display_options:
       path: test-entity-translations-link
-label: People
-module: views
-id: test_entity_translations_link
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

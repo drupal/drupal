@@ -1,8 +1,16 @@
-base_table: node
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
 id: test_status_extra
+label: test_status_extra
+module: views
 description: ''
 tag: ''
-label: test_status_extra
+base_table: node
+base_field: nid
 core: 8.x
 display:
   default:
@@ -85,11 +93,11 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: ''
+          value: false
           group: 1
           exposed: false
           expose:
-            operator_id: 0
+            operator_id: '0'
             label: ''
             description: ''
             use_operator: false
@@ -124,14 +132,14 @@ display:
         operator: AND
         groups:
           1: AND
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_options:
       path: test_status_extra
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-base_field: nid
-status: true
-module: views
-langcode: und

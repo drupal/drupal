@@ -1,9 +1,17 @@
-api_version: '3.0'
-base_field: nid
-base_table: node
-core: 8.x
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_statistics_integration
+label: 'Test statistics integration'
+module: views
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -22,7 +30,7 @@ display:
       pager:
         type: none
         options:
-          offset: false
+          offset: 0
       style:
         type: default
       row:
@@ -217,14 +225,16 @@ display:
           field: status
           id: status
           expose:
-            operator: false
-          group: true
+            operator: ''
+          group: 1
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
           order: DESC
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -232,7 +242,5 @@ display:
     position: null
     display_options:
       path: test_statistics_integration
-label: 'Test statistics integration'
-module: views
-id: test_statistics_integration
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

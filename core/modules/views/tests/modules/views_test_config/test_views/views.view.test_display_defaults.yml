@@ -1,8 +1,14 @@
-base_field: id
-base_table: views_test_data
-core: 8.x
+langcode: en
+status: true
+dependencies: {  }
+id: test_display_defaults
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -42,8 +48,5 @@ display:
           table: views_test_data
           field: created
           order: DESC
-label: ''
-module: views
-id: test_display_defaults
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

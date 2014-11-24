@@ -1,16 +1,19 @@
-base_field: cid
-base_table: comment
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: test_comment_row
+label: test_comment_row
+module: views
+description: ''
+tag: ''
+base_table: comment
+base_field: cid
+core: 8.x
 display:
-  page_1:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: 1
-    display_options:
-      path: test-comment-row
   default:
     display_plugin: default
     id: default
@@ -135,8 +138,14 @@ display:
       footer: {  }
       empty: {  }
       arguments: {  }
-label: test_comment_row
-module: views
-id: test_comment_row
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: test-comment-row
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

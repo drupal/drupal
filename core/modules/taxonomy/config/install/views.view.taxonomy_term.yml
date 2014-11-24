@@ -236,18 +236,6 @@ display:
       fields: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
-  page_1:
-    id: page_1
-    display_title: Page
-    display_plugin: page
-    position: 1
-    display_options:
-      query:
-        type: views_query
-        options: {  }
-      path: taxonomy/term/%
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   feed_1:
     id: feed_1
     display_title: Feed
@@ -293,5 +281,17 @@ display:
         options:
           relationship: none
           view_mode: default
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      path: taxonomy/term/%
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

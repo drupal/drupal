@@ -1,15 +1,22 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_view_broken
+label: 'Test view'
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         id_broken:
           field: id_broken
@@ -69,13 +76,12 @@ display:
           plugin_id: numeric
       pager:
         options:
-          offset: '0'
+          offset: 0
         type: none
       pager_options: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: 'Test view'
-id: test_view_broken
-tag: ''

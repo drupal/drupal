@@ -1,18 +1,23 @@
-base_table: views_test_data
+langcode: und
+status: true
+dependencies: {  }
 id: test_tokens
+label: 'Test tokens'
+module: views
 description: 'Test view to token replacement tests.'
 tag: ''
-label: 'Test tokens'
+base_table: views_test_data
+base_field: id
 core: 8.x
 display:
   default:
     display_options:
       title: 'Test token default'
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         age:
           field: age
@@ -37,6 +42,8 @@ display:
         options:
           items_per_page: 10
       pager_options: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -48,12 +55,11 @@ display:
     position: 1
     display_options:
       defaults:
-        title: '0'
+        title: false
       title: 'Test token page'
       query:
         type: views_query
         options: {  }
       path: test_tokens
-base_field: id
-status: '1'
-module: views
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

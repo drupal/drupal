@@ -1,7 +1,14 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_example_area
+label: {  }
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -27,10 +34,9 @@ display:
           id: test_example
           table: views
           plugin_id: test_example
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: {  }
-id: test_example_area
-tag: ''

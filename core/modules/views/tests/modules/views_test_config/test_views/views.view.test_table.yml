@@ -1,15 +1,22 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_table
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         age:
           field: age
@@ -31,7 +38,7 @@ display:
           plugin_id: string
       pager:
         options:
-          offset: '0'
+          offset: 0
         type: none
       pager_options: {  }
       sorts:
@@ -47,9 +54,9 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          override: '1'
-          sticky: '0'
+          default_row_class: true
+          override: true
+          sticky: false
           summary: summary-text
           columns:
             age: age
@@ -57,28 +64,28 @@ display:
             name: name
           info:
             age:
-              sortable: '0'
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             id:
-              sortable: '1'
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             name:
-              sortable: '1'
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
           default: id
-          empty_table: '1'
+          empty_table: true
           caption: caption-text
           description: description-text
       row:
@@ -92,10 +99,12 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          empty: '1'
+          empty: true
           content: 'custom text'
-          tokenize: '0'
+          tokenize: false
           plugin_id: text_custom
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -103,10 +112,9 @@ display:
   page_1:
     display_options:
       path: test-table
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: 'Page display'
     id: page_1
     position: 1
-label: ''
-id: test_table
-tag: ''

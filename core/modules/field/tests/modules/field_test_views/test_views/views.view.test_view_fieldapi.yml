@@ -1,7 +1,17 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_view_fieldapi
+label: test_view_fieldapi
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -35,10 +45,9 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_view_fieldapi
-id: test_view_fieldapi
-tag: default

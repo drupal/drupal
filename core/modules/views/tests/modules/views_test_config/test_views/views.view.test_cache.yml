@@ -1,7 +1,14 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_cache
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_plugin: default
@@ -26,8 +33,8 @@ display:
           field: age
           relationship: none
       defaults:
-        fields: '0'
-        sorts: '0'
+        fields: false
+        sorts: false
       sorts:
         id:
           order: ASC
@@ -35,7 +42,5 @@ display:
           table: views_test_data
           field: id
           relationship: none
-label: ''
-id: test_cache
-tag: ''
-base_field: nid
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

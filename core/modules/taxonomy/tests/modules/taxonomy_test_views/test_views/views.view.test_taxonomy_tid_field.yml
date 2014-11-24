@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - taxonomy
+    - user
 id: test_taxonomy_tid_field
 label: test_taxonomy_tid_field
 module: views

@@ -1,7 +1,14 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_field_classes
+label: {  }
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -17,6 +24,8 @@ display:
           plugin_id: numeric
       style:
         type: html_list
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -24,10 +33,9 @@ display:
   page_1:
     display_options:
       path: test_field_classes
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-label: {  }
-id: test_field_classes
-tag: ''

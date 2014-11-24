@@ -1,7 +1,17 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_glossary
+label: test_glossary
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -11,14 +21,14 @@ display:
         title:
           default_argument_type: fixed
           field: title
-          glossary: '1'
+          glossary: true
           id: title
-          limit: '1'
+          limit: 1
           summary:
             format: default_summary
-            number_of_records: '0'
+            number_of_records: 0
           summary_options:
-            items_per_page: '25'
+            items_per_page: 25
           table: node_field_data
           plugin_id: string
       cache:
@@ -40,10 +50,9 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_glossary
-id: test_glossary
-tag: default

@@ -1,8 +1,14 @@
-base_field: nid
-base_table: forum_index
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies: {  }
+id: test_forum_index
+label: test_forum_index
+module: views
+description: ''
+tag: ''
+base_table: forum_index
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -80,7 +86,7 @@ display:
           type: yes-no
           type_custom_true: ''
           type_custom_false: ''
-          not: false
+          not: ''
           plugin_id: boolean
         comment_count:
           id: comment_count
@@ -131,7 +137,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           set_precision: false
-          precision: false
+          precision: 0
           decimal: .
           separator: ','
           format_plural: false
@@ -142,8 +148,5 @@ display:
           plugin_id: numeric
       filters: {  }
       sorts: {  }
-label: test_forum_index
-module: views
-id: test_forum_index
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

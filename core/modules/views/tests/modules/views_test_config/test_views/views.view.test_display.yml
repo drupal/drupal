@@ -1,37 +1,18 @@
-base_table: node
-core: '8'
+langcode: und
+status: false
+dependencies:
+  module:
+    - node
+    - user
+id: test_display
+label: ''
+module: views
 description: ''
-status: '0'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
-  block_1:
-    display_options:
-      defaults:
-        pager: '0'
-        pager_options: '0'
-        row_options: '0'
-        row_plugin: '0'
-        style_options: '0'
-        style_plugin: '0'
-      field:
-        title:
-          link_to_node: '1'
-          plugin_id: node
-      pager:
-        options:
-          items_per_page: '5'
-        type: some
-      pager_options: {  }
-      row_options:
-        build_mode: teaser
-        comments: '0'
-        links: '1'
-      row_plugin: fields
-      style_options: {  }
-      style_plugin: default
-    display_plugin: block
-    display_title: Block
-    id: block_1
-    position: 2
   default:
     display_options:
       access:
@@ -49,14 +30,14 @@ display:
       filters:
         status:
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
       pager:
         options:
-          items_per_page: '10'
+          items_per_page: 10
         type: full
       query:
         type: views_query
@@ -74,17 +55,49 @@ display:
           plugin_id: date
       style_plugin: default
       title: 'Test Display'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
+  block_1:
+    display_options:
+      defaults:
+        pager: false
+        pager_options: false
+        row_options: '0'
+        row_plugin: '0'
+        style_options: '0'
+        style_plugin: '0'
+      field:
+        title:
+          link_to_node: '1'
+          plugin_id: node
+      pager:
+        options:
+          items_per_page: 5
+        type: some
+      pager_options: {  }
+      row_options:
+        build_mode: teaser
+        comments: '0'
+        links: '1'
+      row_plugin: fields
+      style_options: {  }
+      style_plugin: default
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+    display_plugin: block
+    display_title: Block
+    id: block_1
+    position: 2
   page_1:
     display_options:
       path: test-display
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 1
-label: ''
-id: test_display
-tag: ''

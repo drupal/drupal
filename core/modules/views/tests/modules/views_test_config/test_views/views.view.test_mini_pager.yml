@@ -1,8 +1,16 @@
-base_table: node
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
 id: test_mini_pager
+label: test_mini_pager
+module: views
 description: ''
 tag: ''
-label: test_mini_pager
+base_table: node
+base_field: nid
 core: 8.x
 display:
   default:
@@ -22,20 +30,20 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: '3'
-          offset: '0'
-          id: '0'
-          total_pages: ''
+          items_per_page: 3
+          offset: 0
+          id: 0
+          total_pages: null
           tags:
             previous: '‹‹ test'
             next: '›› test'
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: '0'
+            offset: false
             offset_label: Offset
       style:
         type: default
@@ -44,7 +52,7 @@ display:
         options:
           build_mode: teaser
           links: '1'
-          comments: '0'
+          comments: false
       fields:
         title:
           id: title
@@ -52,17 +60,17 @@ display:
           field: title
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
-          link_to_node: '1'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: true
           plugin_id: node
       filters: {  }
       sorts:
@@ -76,6 +84,8 @@ display:
       filter_groups:
         operator: AND
         groups: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -83,6 +93,8 @@ display:
     position: null
     display_options:
       path: test_mini_pager
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -91,11 +103,13 @@ display:
     display_options:
       path: test_mini_pager_one
       defaults:
-        pager: '0'
+        pager: false
       pager:
         type: mini
         options:
-          items_per_page: '1'
+          items_per_page: 1
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_3:
     display_plugin: page
     id: page_3
@@ -104,12 +118,10 @@ display:
     display_options:
       path: test_mini_pager_all
       defaults:
-        pager: '0'
+        pager: false
       pager:
         type: mini
         options:
-          items_per_page: '0'
-base_field: nid
-status: '1'
-module: views
-langcode: und
+          items_per_page: 0
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

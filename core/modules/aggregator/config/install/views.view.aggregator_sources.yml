@@ -1,3 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - aggregator
+    - user
 id: aggregator_sources
 label: 'Aggregator sources'
 module: aggregator
@@ -6,11 +12,6 @@ tag: aggregator
 base_table: aggregator_feed
 base_field: fid
 core: 8.x
-langcode: en
-status: true
-dependencies:
-  module:
-    - aggregator
 display:
   default:
     display_plugin: default
@@ -140,22 +141,6 @@ display:
       arguments: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
-  page_1:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: 1
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
-      path: aggregator/sources
-      menu:
-        type: normal
-        title: Sources
-        description: ''
-        weight: 0
-        context: '0'
-        menu_name: tools
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -388,3 +373,19 @@ display:
         default: '0'
       title: 'OPML feed'
       sitename_title: true
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+      path: aggregator/sources
+      menu:
+        type: normal
+        title: Sources
+        description: ''
+        weight: 0
+        context: '0'
+        menu_name: tools

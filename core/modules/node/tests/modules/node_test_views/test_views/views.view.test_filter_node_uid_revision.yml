@@ -1,7 +1,17 @@
-base_table: node
-core: 8.0-dev
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_filter_node_uid_revision
+label: test_filter_node_uid_revision
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: 8.0-dev
 display:
   default:
     display_options:
@@ -26,7 +36,7 @@ display:
           admin_label: ''
           field: uid_revision
           id: uid_revision
-          is_grouped: '0'
+          is_grouped: false
           operator: in
           relationship: none
           table: node_field_data
@@ -49,10 +59,9 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_filter_node_uid_revision
-id: test_filter_node_uid_revision
-tag: default

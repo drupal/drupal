@@ -1,22 +1,30 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_page_display_arguments
+label: ''
+module: views
+description: ''
+tag: ''
 base_table: views_test_data
 base_field: id
 core: '8'
-description: ''
-status: '1'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         id:
           id: id
           field: id
           table: views_test_data
           plugin_id: numeric
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -24,6 +32,8 @@ display:
   page_1:
     display_options:
       path: test_route_without_arguments
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
@@ -31,7 +41,7 @@ display:
   page_2:
     display_options:
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         id:
           field: id
@@ -40,6 +50,8 @@ display:
           table: views_test_data
           plugin_id: numeric
       path: test_route_with_argument
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_2
@@ -47,7 +59,7 @@ display:
   page_3:
     display_options:
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         id:
           field: id
@@ -56,6 +68,8 @@ display:
           table: views_test_data
           plugin_id: numeric
       path: test_route_with_suffix/%/suffix
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_3
@@ -63,7 +77,7 @@ display:
   page_4:
     display_options:
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         id:
           field: id
@@ -78,6 +92,8 @@ display:
           table: views_test_data
           plugin_id: numeric
       path: test_route_with_suffix_and_argument/%/suffix
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_4
@@ -85,7 +101,7 @@ display:
   page_5:
     display_options:
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         id_that_is_really_really_really_long:
           field: id
@@ -94,10 +110,9 @@ display:
           table: views_test_data
           plugin_id: numeric
       path: test_route_with_long_argument/%
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_5
     position: 0
-label: ''
-id: test_page_display_arguments
-tag: ''

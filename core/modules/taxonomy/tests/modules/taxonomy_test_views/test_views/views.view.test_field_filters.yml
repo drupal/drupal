@@ -1,9 +1,9 @@
-uuid: 2a772a88-315e-4320-973d-61c59393d2c8
 langcode: en
 status: true
 dependencies:
   module:
     - taxonomy
+    - user
 id: test_field_filters
 label: 'Test field filters'
 module: views
@@ -244,6 +244,118 @@ display:
         groups:
           1: AND
       title: 'Description filter page'
+  page_fc:
+    display_plugin: page
+    id: page_fc
+    display_title: 'Field Comida'
+    position: 3
+    display_options:
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+      display_description: ''
+      path: test-field-filter
+      filters:
+        field_foo_value:
+          id: field_foo_value
+          table: taxonomy_term__field_foo
+          field: field_foo_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+      defaults:
+        filters: false
+        filter_groups: false
+        title: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Field filter page'
+  page_fp:
+    display_plugin: page
+    id: page_fp
+    display_title: 'Field Paris'
+    position: 3
+    display_options:
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+      display_description: ''
+      path: test-field-paris
+      filters:
+        field_foo_value:
+          id: field_foo_value
+          table: taxonomy_term__field_foo
+          field: field_foo_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+      defaults:
+        filters: false
+        filter_groups: false
+        title: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Field filter page'
   page_nc:
     display_plugin: page
     id: page_nc
@@ -308,115 +420,3 @@ display:
         operator: AND
         groups:
           1: AND
-  page_fp:
-    display_plugin: page
-    id: page_fp
-    display_title: 'Field Paris'
-    position: 3
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
-      display_description: ''
-      path: test-field-paris
-      filters:
-        field_foo_value:
-          id: field_foo_value
-          table: taxonomy_term__field_foo
-          field: field_foo_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: contains
-          value: Paris
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
-      defaults:
-        filters: false
-        filter_groups: false
-        title: false
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      title: 'Field filter page'
-  page_fc:
-    display_plugin: page
-    id: page_fc
-    display_title: 'Field Comida'
-    position: 3
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
-      display_description: ''
-      path: test-field-filter
-      filters:
-        field_foo_value:
-          id: field_foo_value
-          table: taxonomy_term__field_foo
-          field: field_foo_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: contains
-          value: Comida
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
-      defaults:
-        filters: false
-        filter_groups: false
-        title: false
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      title: 'Field filter page'

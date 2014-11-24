@@ -1,7 +1,18 @@
-base_table: comment
-core: 8.0-dev
+langcode: und
+status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: test_field_get_entity
+label: test_field_get_entity
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: comment
+base_field: nid
+core: 8.0-dev
 display:
   default:
     display_options:
@@ -41,7 +52,7 @@ display:
         node:
           field: node
           id: node
-          required: '1'
+          required: true
           table: comment_field_data
           plugin_id: standard
         uid:
@@ -51,7 +62,7 @@ display:
           id: uid
           label: author
           relationship: node
-          required: '0'
+          required: false
           table: node_field_data
           plugin_id: standard
       sorts: {  }
@@ -59,10 +70,9 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_field_get_entity
-id: test_field_get_entity
-tag: default

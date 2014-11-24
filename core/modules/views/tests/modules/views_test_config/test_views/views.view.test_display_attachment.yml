@@ -1,8 +1,14 @@
-base_field: id
-base_table: views_test_data
-core: 8.x
+langcode: und
+status: true
+dependencies: {  }
+id: test_display_attachment
+label: test_display_attachment
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -21,7 +27,7 @@ display:
       pager:
         type: full
         options:
-          items_per_page: '10'
+          items_per_page: 10
       style:
         type: default
       row:
@@ -33,25 +39,20 @@ display:
           field: name
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
           link_to_node: '1'
       title: test_display_attachment
-  page_1:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: 1
-    display_options:
-      path: test-display-attachment
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   attachment_1:
     display_plugin: attachment
     id: attachment_1
@@ -60,7 +61,14 @@ display:
     display_options:
       displays:
         page_1: page_1
-label: test_display_attachment
-module: views
-id: test_display_attachment
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: test-display-attachment
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

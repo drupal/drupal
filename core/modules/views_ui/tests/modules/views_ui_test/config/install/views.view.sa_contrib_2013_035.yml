@@ -1,9 +1,9 @@
-uuid: 93005672-5b8a-4a7a-9342-6651552bb753
 langcode: en
 status: true
 dependencies:
   module:
     - node
+    - user
 id: sa_contrib_2013_035
 label: SA_CONTRIB_2013_035
 module: views

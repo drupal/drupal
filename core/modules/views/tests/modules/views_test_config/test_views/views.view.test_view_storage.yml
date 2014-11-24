@@ -1,16 +1,22 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: false
+dependencies: {  }
+id: test_view_storage
+label: 'Storage Test View'
 module: views
 description: 'Storage Test View for testing.'
-status: '0'
+tag: test
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         id:
           field: id
@@ -26,10 +32,23 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: standard
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: 2
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     id: page_1
     display_title: Page
@@ -40,15 +59,5 @@ display:
         type: views_query
         options: {  }
       path: test_view_storage
-  block_1:
-    id: block_1
-    display_title: Block
-    display_plugin: block
-    position: 2
-    display_options:
-      query:
-        type: views_query
-        options: {  }
-label: 'Storage Test View'
-id: test_view_storage
-tag: test
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

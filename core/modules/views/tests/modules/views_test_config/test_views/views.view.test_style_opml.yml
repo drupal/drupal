@@ -1,8 +1,16 @@
-base_field: fid
-base_table: aggregator_feed
-core: 8
-description: ""
+langcode: und
 status: true
+dependencies:
+  module:
+    - aggregator
+id: test_style_opml
+label: test_style_opml
+module: views
+description: ''
+tag: default
+base_table: aggregator_feed
+base_field: fid
+core: '8'
 display:
   default:
     display_plugin: default
@@ -25,7 +33,7 @@ display:
       style:
         type: default
       row:
-        type: entity:aggregator_feed
+        type: 'entity:aggregator_feed'
       fields:
         title:
           id: title
@@ -33,45 +41,45 @@ display:
           field: title
           relationship: none
           group_type: group
-          admin_label: ""
+          admin_label: ''
           label: Title
           exclude: false
           alter:
             alter_text: false
-            text: ""
+            text: ''
             make_link: false
-            path: ""
+            path: ''
             absolute: false
             external: false
             replace_spaces: false
             path_case: none
             trim_whitespace: false
-            alt: ""
-            rel: ""
-            link_class: ""
-            prefix: ""
-            suffix: ""
-            target: ""
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
             nl2br: false
-            max_length: ""
+            max_length: ''
             word_boundary: true
             ellipsis: true
             more_link: false
-            more_link_text: ""
-            more_link_path: ""
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
-            preserve_tags: ""
+            preserve_tags: ''
             html: false
-          element_type: ""
-          element_class: ""
-          element_label_type: ""
-          element_label_class: ""
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
           element_label_colon: true
-          element_wrapper_type: ""
-          element_wrapper_class: ""
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
-          empty: ""
+          empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
@@ -83,45 +91,45 @@ display:
           field: url
           relationship: none
           group_type: group
-          admin_label: ""
+          admin_label: ''
           label: URL
           exclude: false
           alter:
             alter_text: false
-            text: ""
+            text: ''
             make_link: false
-            path: ""
+            path: ''
             absolute: false
             external: false
             replace_spaces: false
             path_case: none
             trim_whitespace: false
-            alt: ""
-            rel: ""
-            link_class: ""
-            prefix: ""
-            suffix: ""
-            target: ""
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
             nl2br: false
-            max_length: ""
+            max_length: ''
             word_boundary: true
             ellipsis: true
             more_link: false
-            more_link_text: ""
-            more_link_path: ""
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
-            preserve_tags: ""
+            preserve_tags: ''
             html: false
-          element_type: ""
-          element_class: ""
-          element_label_type: ""
-          element_label_class: ""
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
           element_label_colon: true
-          element_wrapper_type: ""
-          element_wrapper_class: ""
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
-          empty: ""
+          empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
@@ -133,45 +141,45 @@ display:
           field: description
           relationship: none
           group_type: group
-          admin_label: ""
+          admin_label: ''
           label: Description
           exclude: false
           alter:
             alter_text: false
-            text: ""
+            text: ''
             make_link: false
-            path: ""
+            path: ''
             absolute: false
             external: false
             replace_spaces: false
             path_case: none
             trim_whitespace: false
-            alt: ""
-            rel: ""
-            link_class: ""
-            prefix: ""
-            suffix: ""
-            target: ""
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
             nl2br: false
-            max_length: ""
+            max_length: ''
             word_boundary: true
             ellipsis: true
             more_link: false
-            more_link_text: ""
-            more_link_path: ""
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
-            preserve_tags: ""
+            preserve_tags: ''
             html: false
-          element_type: ""
-          element_class: ""
-          element_label_type: ""
-          element_label_class: ""
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
           element_label_colon: true
-          element_wrapper_type: ""
-          element_wrapper_class: ""
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
-          empty: ""
+          empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
@@ -182,67 +190,62 @@ display:
           field: modified
           relationship: none
           group_type: group
-          admin_label: ""
-          label: Last modified
+          admin_label: ''
+          label: 'Last modified'
           exclude: false
           alter:
             alter_text: false
-            text: ""
+            text: ''
             make_link: false
-            path: ""
+            path: ''
             absolute: false
             external: false
             replace_spaces: false
             path_case: none
             trim_whitespace: false
-            alt: ""
-            rel: ""
-            link_class: ""
-            prefix: ""
-            suffix: ""
-            target: ""
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
             nl2br: false
-            max_length: ""
+            max_length: ''
             word_boundary: true
             ellipsis: true
             more_link: false
-            more_link_text: ""
-            more_link_path: ""
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
-            preserve_tags: ""
+            preserve_tags: ''
             html: false
-          element_type: ""
-          element_class: ""
-          element_label_type: ""
-          element_label_class: ""
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
           element_label_colon: true
-          element_wrapper_type: ""
-          element_wrapper_class: ""
+          element_wrapper_type: ''
+          element_wrapper_class: ''
           element_default_classes: true
-          empty: ""
+          empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
           date_format: html_date
-          custom_date_format: ""
-          timezone: ""
+          custom_date_format: ''
+          timezone: ''
           plugin_id: date
-      filters: []
-      sorts: []
+      filters: {  }
+      sorts: {  }
       title: test_style_opml
-      header: []
-      footer: []
-      empty: []
-      relationships: []
-      arguments: []
-  page:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: 1
-    display_options:
-      path: test-opml-style
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -254,7 +257,7 @@ display:
       style:
         type: opml
         options:
-          grouping: []
+          grouping: {  }
       row:
         type: opml_fields
         options:
@@ -262,16 +265,20 @@ display:
           text_field: title
           created_field: modified
           description_field: description
-          html_url_field: ""
-          language_field: ""
+          html_url_field: ''
+          language_field: ''
           xml_url_field: url
-          url_field: ""
+          url_field: ''
       path: test-feed-opml-style
       displays: {  }
-label: test_style_opml
-module: views
-id: test_style_opml
-tag: default
-dependencies:
-  module:
-  - aggregator
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  page:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: test-opml-style
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

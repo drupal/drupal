@@ -1,8 +1,17 @@
-base_field: nid
-base_table: node
-core: 8.x
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_dropbutton
+label: test_dropbutton
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -21,7 +30,7 @@ display:
       pager:
         type: full
         options:
-          items_per_page: '10'
+          items_per_page: 10
       style:
         type: default
       row:
@@ -36,47 +45,47 @@ display:
           group_type: group
           admin_label: ''
           label: Nid
-          exclude: '1'
+          exclude: true
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
-          link_to_node: '0'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_node: false
         title:
           id: title
           table: node_field_data
@@ -84,17 +93,17 @@ display:
           plugin_id: node
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
-          link_to_node: '1'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: true
         nothing:
           id: nothing
           table: views
@@ -104,46 +113,46 @@ display:
           group_type: group
           admin_label: ''
           label: 'Custom text'
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '1'
+            alter_text: true
             text: 'Custom Text'
-            make_link: '1'
+            make_link: true
             path: 'node/[nid]'
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '0'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
         dropbutton:
           id: dropbutton
           table: views
@@ -153,61 +162,61 @@ display:
           group_type: group
           admin_label: ''
           label: Dropbutton
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           fields:
             title: title
             nothing: nothing
             nid: '0'
-          destination: '1'
+          destination: true
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           id: status
           plugin_id: boolean
           expose:
             operator: '0'
-          group: '1'
+          group: 1
       sorts:
         created:
           id: created
@@ -216,6 +225,8 @@ display:
           order: DESC
           plugin_id: date
       title: test_dropbutton
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -226,7 +237,5 @@ display:
       field:
         title:
           link_to_node: '0'
-label: test_dropbutton
-module: views
-id: test_dropbutton
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

@@ -1,7 +1,17 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_user_relationship
+label: test_user_relationship
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -14,78 +24,78 @@ display:
       fields:
         name:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '1'
-            external: '0'
-            html: '0'
-            make_link: '0'
-            nl2br: '0'
-            replace_spaces: '0'
-            strip_tags: '0'
-            trim: '0'
-            trim_whitespace: '0'
-            word_boundary: '1'
-          element_default_classes: '1'
-          element_label_colon: '1'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: true
+            external: false
+            html: false
+            make_link: false
+            nl2br: false
+            replace_spaces: false
+            strip_tags: false
+            trim: false
+            trim_whitespace: false
+            word_boundary: true
+          element_default_classes: true
+          element_label_colon: true
+          empty_zero: false
           field: name
-          hide_alter_empty: '0'
-          hide_empty: '0'
+          hide_alter_empty: false
+          hide_empty: false
           id: name
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           table: users_field_data
           plugin_id: user_name
         title:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '0'
-            html: '0'
-            make_link: '0'
-            strip_tags: '0'
-            trim: '0'
-            word_boundary: '0'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
           field: title
-          hide_empty: '0'
+          hide_empty: false
           id: title
           label: ''
-          link_to_node: '1'
+          link_to_node: true
           table: node_field_data
           plugin_id: node
         uid:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '1'
-            external: '0'
-            html: '0'
-            make_link: '0'
-            nl2br: '0'
-            replace_spaces: '0'
-            strip_tags: '0'
-            trim: '0'
-            trim_whitespace: '0'
-            word_boundary: '1'
-          element_default_classes: '1'
-          element_label_colon: '1'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: true
+            external: false
+            html: false
+            make_link: false
+            nl2br: false
+            replace_spaces: false
+            strip_tags: false
+            trim: false
+            trim_whitespace: false
+            word_boundary: true
+          element_default_classes: true
+          element_label_colon: true
+          empty_zero: false
           field: uid
-          hide_alter_empty: '0'
-          hide_empty: '0'
+          hide_alter_empty: false
+          hide_empty: false
           id: uid
-          link_to_user: '1'
+          link_to_user: true
           table: users
           plugin_id: user
       pager:
         options:
-          items_per_page: '10'
+          items_per_page: 10
         type: full
       query:
         options:
-          query_comment: '0'
+          query_comment: false
         type: views_query
       title: test_user_relationship
       style:
@@ -93,12 +103,11 @@ display:
       row:
         type: fields
         options:
-          default_field_elements: '1'
-          hide_empty: '0'
+          default_field_elements: true
+          hide_empty: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_user_relationship
-id: test_user_relationship
-tag: default

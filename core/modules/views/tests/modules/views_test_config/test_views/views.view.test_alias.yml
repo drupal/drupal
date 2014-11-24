@@ -1,7 +1,16 @@
-base_table: users
-core: 8.0-dev
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_alias
+label: test_alias
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: users
+base_field: nid
+core: 8.0-dev
 display:
   default:
     display_options:
@@ -15,21 +24,21 @@ display:
       fields:
         name:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '0'
-            html: '0'
-            make_link: '0'
-            strip_tags: '0'
-            trim: '0'
-            word_boundary: '0'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
           field: name
-          hide_empty: '0'
+          hide_empty: false
           id: name
           label: ''
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           table: users_field_data
           plugin_id: user_name
       filters:
@@ -39,17 +48,17 @@ display:
             description: ''
             identifier: ''
             label: ''
-            multiple: '0'
+            multiple: false
             operator: ''
             operator_id: '0'
-            remember: '0'
+            remember: false
             remember_roles:
               authenticated: authenticated
-            required: '0'
-            use_operator: '0'
-          exposed: '0'
+            required: false
+            use_operator: false
+          exposed: false
           field: uid_raw
-          group: '1'
+          group: 1
           group_info:
             default_group: All
             default_group_multiple: {  }
@@ -57,13 +66,13 @@ display:
             group_items: {  }
             identifier: ''
             label: ''
-            multiple: '0'
-            optional: '1'
-            remember: '0'
+            multiple: false
+            optional: true
+            remember: false
             widget: select
           group_type: group
           id: uid_raw
-          is_grouped: '0'
+          is_grouped: false
           operator: '>'
           relationship: none
           table: users
@@ -78,11 +87,9 @@ display:
         type: views_query
       row_plugin: fields
       style_plugin: default
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_alias
-module: views
-id: test_alias
-tag: default

@@ -1,7 +1,16 @@
-base_table: users
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_user_uid_argument
+label: null
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: users
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -19,9 +28,9 @@ display:
           title_enable: true
           title: '%1'
           plugin_id: user_uid
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: null
-id: test_user_uid_argument

@@ -1,7 +1,16 @@
-base_table: users
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_views_handler_field_user_name
+label: test_views_handler_field_user_name
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: users
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -14,37 +23,36 @@ display:
       fields:
         name:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '0'
-            html: '0'
-            make_link: '0'
-            strip_tags: '0'
-            trim: '0'
-            word_boundary: '0'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
           field: name
-          hide_empty: '0'
+          hide_empty: false
           id: name
           label: ''
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           table: users_field_data
           plugin_id: user_name
       pager:
         type: full
       query:
         options:
-          query_comment: '0'
+          query_comment: false
         type: views_query
       style:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_views_handler_field_user_name
-id: test_views_handler_field_user_name
-tag: default

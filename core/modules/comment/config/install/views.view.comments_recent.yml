@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - comment
+    - user
 id: comments_recent
 label: 'Recent comments'
 module: views

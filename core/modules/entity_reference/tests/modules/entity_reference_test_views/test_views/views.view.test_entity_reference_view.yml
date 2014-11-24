@@ -1,16 +1,23 @@
-base_table: entity_test
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_entity_reference_view
+label: null
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: entity_test
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        relationships: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        relationships: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         id:
           field: id
@@ -27,7 +34,7 @@ display:
           plugin_id: numeric
       pager:
         options:
-          offset: '0'
+          offset: 0
         type: none
       pager_options: {  }
       sorts:
@@ -45,14 +52,16 @@ display:
           field: field_test
           relationship: none
           plugin_id: standard
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   embed_1:
     display_options:
       defaults:
-        relationships: '0'
+        relationships: false
       relationships:
         test_relationship:
           id: reverse_field_test
@@ -60,9 +69,9 @@ display:
           field: reverse_field_test
           relationship: none
           plugin_id: standard
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: embed
     display_title: Embed
     id: embed_1
-human_name: ''
-id: test_entity_reference_view
-tag: ''
+    position: null

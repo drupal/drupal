@@ -1,7 +1,17 @@
-base_table: node
-core: 8
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_display_feed
+label: test_display_feed
+module: views
+description: ''
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -14,20 +24,20 @@ display:
       fields:
         title:
           alter:
-            absolute: '0'
-            alter_text: '0'
-            ellipsis: '0'
-            html: '0'
-            make_link: '0'
-            strip_tags: '0'
-            trim: '0'
-            word_boundary: '0'
-          empty_zero: '0'
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
           field: title
-          hide_empty: '0'
+          hide_empty: false
           id: title
           label: ''
-          link_to_node: '1'
+          link_to_node: true
           table: node_field_data
           plugin_id: node
       filters:
@@ -35,10 +45,10 @@ display:
           expose:
             operator: '0'
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
       pager:
         options:
@@ -49,7 +59,7 @@ display:
       row:
         options:
           build_mode: teaser
-          comments: '0'
+          comments: false
           links: '1'
         type: 'entity:node'
       sorts:
@@ -62,6 +72,8 @@ display:
       style:
         type: default
       title: test_display_feed
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -77,6 +89,8 @@ display:
       style:
         type: rss
       sitename_title: true
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: feed
     display_title: Feed
     id: feed_1
@@ -84,11 +98,9 @@ display:
   page:
     display_options:
       path: test-feed-display
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page
     position: 0
-label: test_display_feed
-module: views
-id: test_display_feed
-tag: default

@@ -1,8 +1,18 @@
-base_field: nid
-base_table: node
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - node
+    - tracker
+    - user
+id: test_tracker_user_uid
+label: 'tracker test'
+module: views
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -39,7 +49,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-          default: -1
+          default: '-1'
           empty_table: false
       row:
         type: fields
@@ -103,7 +113,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            - 0
+            - '0'
           group: 1
           exposed: false
           expose:
@@ -153,7 +163,7 @@ display:
           default_argument_skip_url: false
           summary_options:
             base_path: ''
-            count: 1
+            count: true
             items_per_page: 25
             override: false
           summary:
@@ -166,8 +176,5 @@ display:
             fail: 'not found'
           validate_options: {  }
           plugin_id: tracker_user_uid
-label: 'tracker test'
-module: views
-id: test_tracker_user_uid
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

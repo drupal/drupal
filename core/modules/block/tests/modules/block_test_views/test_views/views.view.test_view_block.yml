@@ -1,8 +1,14 @@
-base_field: id
-base_table: views_test_data
-core: 8.x
-description: ''
+langcode: und
 status: true
+dependencies: {  }
+id: test_view_block
+label: test_view_block
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -32,6 +38,8 @@ display:
           table: views_test_data
           field: name
       title: test_view_block
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   block_1:
     display_plugin: block
     id: block_1
@@ -41,7 +49,5 @@ display:
       field:
         title:
           link_to_node: true
-label: test_view_block
-module: views
-id: test_view_block
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

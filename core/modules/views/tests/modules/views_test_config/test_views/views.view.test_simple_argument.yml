@@ -1,16 +1,23 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_simple_argument
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
-        arguments: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
+        arguments: false
       fields:
         age:
           field: age
@@ -29,7 +36,7 @@ display:
           table: views_test_data
       pager:
         options:
-          offset: '0'
+          offset: 0
         type: none
       pager_options: {  }
       sorts:
@@ -52,7 +59,7 @@ display:
           validate:
             type: none
             fail: 'not found'
-          break_phrase: '0'
+          break_phrase: false
           not: '0'
           id: age
           table: views_test_data
@@ -75,10 +82,9 @@ display:
           validate_argument_transform: '0'
           validate_user_restrict_roles: '0'
           validate_argument_php: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: ''
-id: test_simple_argument
-tag: ''

@@ -1,8 +1,17 @@
-base_field: nid
-base_table: node
-core: 8.x
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_contextual_links
+label: 'Contextual links'
+module: node
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_options:
@@ -19,12 +28,12 @@ display:
           items_per_page: 10
           offset: 0
           id: 0
-          total_pages: ''
+          total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
@@ -40,7 +49,7 @@ display:
           disable_sql_rewrite: false
           distinct: false
           replica: false
-          query_comment: ''
+          query_comment: false
           query_tags: {  }
       row:
         type: 'entity:node'
@@ -61,6 +70,8 @@ display:
       relationships: {  }
       fields: {  }
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -69,7 +80,7 @@ display:
     display_options:
       path: node/%/contextual-links
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         nid:
           field: nid
@@ -83,13 +94,10 @@ display:
         description: ''
         name: tools
         weight: 0
-        context: true
+        context: '1'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 1
-label: Contextual links
-module: node
-id: test_contextual_links
-tag: default
-langcode: en

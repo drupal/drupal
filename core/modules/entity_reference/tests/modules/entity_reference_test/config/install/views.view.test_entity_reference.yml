@@ -1,25 +1,20 @@
-base_field: nid
-base_table: node
-core: '8'
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - entity_reference
+    - entity_reference_test
+    - node
+    - user
+id: test_entity_reference
+label: 'Entity reference'
+module: entity_reference_test
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
-  entity_reference_1:
-    display_plugin: entity_reference
-    id: entity_reference_1
-    display_title: EntityReference
-    position: null
-    display_options:
-      style:
-        type: entity_reference
-        options:
-          grouping: {  }
-          search_fields:
-            title: title
-      pager:
-        type: none
-        options:
-          offset: 0
   default:
     display_plugin: default
     id: default
@@ -108,11 +103,23 @@ display:
           field: created
           order: DESC
           plugin_id: date
-label: 'Entity reference'
-module: entity_reference_test
-id: test_entity_reference
-tag: ''
-langcode: en
-dependencies:
-  module:
-    - entity_reference
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  entity_reference_1:
+    display_plugin: entity_reference
+    id: entity_reference_1
+    display_title: EntityReference
+    position: null
+    display_options:
+      style:
+        type: entity_reference
+        options:
+          grouping: {  }
+          search_fields:
+            title: title
+      pager:
+        type: none
+        options:
+          offset: 0
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

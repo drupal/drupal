@@ -1,7 +1,14 @@
-base_table: views_test_data
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_views_groupby_save
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -23,10 +30,9 @@ display:
           table: views_test_data
           id: id
           plugin_id: id
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: ''
-id: test_views_groupby_save
-tag: ''

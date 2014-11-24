@@ -1,7 +1,14 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies: {  }
+id: test_view_argument_validate_numeric
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -12,7 +19,7 @@ display:
           default_argument_type: fixed
           field: 'null'
           id: 'null'
-          must_not_be: '0'
+          must_not_be: false
           style_plugin: default_summary
           table: views
           validate:
@@ -28,10 +35,9 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: ''
-id: test_view_argument_validate_numeric
-tag: ''

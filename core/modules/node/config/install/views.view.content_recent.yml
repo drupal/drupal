@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - history
     - node
     - user
 id: content_recent

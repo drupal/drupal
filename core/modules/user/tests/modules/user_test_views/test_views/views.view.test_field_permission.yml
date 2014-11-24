@@ -1,8 +1,16 @@
-base_field: uid
-base_table: users
-core: 8.x
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_field_permission
+label: null
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: users
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -33,47 +41,47 @@ display:
           group_type: group
           admin_label: ''
           label: Uid
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
-          link_to_user: '0'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_user: false
           plugin_id: user
         permission:
           id: permission
@@ -83,53 +91,50 @@ display:
           group_type: group
           admin_label: ''
           label: Permission
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           type: separator
           separator: ', '
           plugin_id: user_permissions
       filters: {  }
       sorts: {  }
-human_name: test_field_permission
-module: views
-id: test_field_permission
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

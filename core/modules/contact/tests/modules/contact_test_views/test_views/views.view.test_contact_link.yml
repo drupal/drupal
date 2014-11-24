@@ -1,8 +1,16 @@
-base_field: uid
-base_table: users
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - contact
+id: test_contact_link
+label: test_contact_link
+module: views
+description: ''
+tag: ''
+base_table: users
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -21,7 +29,7 @@ display:
           disable_sql_rewrite: false
           distinct: false
           replica: false
-          query_comment: ''
+          query_comment: false
           query_tags: {  }
       exposed_form:
         type: basic
@@ -39,11 +47,11 @@ display:
           items_per_page: 10
           offset: 0
           id: 0
-          total_pages: ''
+          total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
-            items_per_page_options: 5, 10, 20, 40, 60
+            items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
@@ -98,7 +106,7 @@ display:
           table: users
           field: contact
           plugin_id: contact_link
-          exclude: ''
+          exclude: false
       filters:
         status:
           value: true
@@ -106,7 +114,7 @@ display:
           field: status
           id: status
           expose:
-            operator: 0
+            operator: '0'
           group: 1
       sorts: {  }
       title: test_contact_link
@@ -115,6 +123,8 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -122,8 +132,5 @@ display:
     position: 1
     display_options:
       path: test-contact-link
-label: test_contact_link
-module: views
-id: test_contact_link
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

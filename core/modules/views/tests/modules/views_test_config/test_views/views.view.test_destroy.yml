@@ -1,30 +1,19 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: test_destroy
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
-  attachment_1:
-    display_options:
-      displays:
-        default: default
-        page_1: page_1
-      pager:
-        type: some
-    display_plugin: attachment
-    display_title: Attachment
-    id: attachment_1
-    position: 0
-  attachment_2:
-    display_options:
-      displays:
-        default: default
-        page_1: page_1
-      pager:
-        type: some
-    display_plugin: attachment
-    display_title: Attachment
-    id: attachment_2
-    position: 0
   default:
     display_options:
       access:
@@ -55,13 +44,13 @@ display:
         type: none
       empty:
         area:
-          empty: '0'
+          empty: false
           field: area
           id: area
           table: views
           plugin_id: text
         area_1:
-          empty: '0'
+          empty: false
           field: area
           id: area_1
           table: views
@@ -102,26 +91,26 @@ display:
           plugin_id: string
       footer:
         area:
-          empty: '0'
+          empty: false
           field: area
           id: area
           table: views
           plugin_id: text
         area_1:
-          empty: '0'
+          empty: false
           field: area
           id: area_1
           table: views
           plugin_id: text
       header:
         area:
-          empty: '0'
+          empty: false
           field: area
           id: area
           table: views
           plugin_id: text
         area_1:
-          empty: '0'
+          empty: false
           field: area
           id: area_1
           table: views
@@ -163,17 +152,44 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
+  attachment_1:
+    display_options:
+      displays:
+        default: default
+        page_1: page_1
+      pager:
+        type: some
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+    display_plugin: attachment
+    display_title: Attachment
+    id: attachment_1
+    position: 0
+  attachment_2:
+    display_options:
+      displays:
+        default: default
+        page_1: page_1
+      pager:
+        type: some
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+    display_plugin: attachment
+    display_title: Attachment
+    id: attachment_2
+    position: 0
   page_1:
     display_options:
       path: test_destroy
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-label: ''
-id: test_destroy
-tag: ''

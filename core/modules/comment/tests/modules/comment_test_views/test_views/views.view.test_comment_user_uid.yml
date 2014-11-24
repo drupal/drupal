@@ -1,7 +1,19 @@
-base_table: node
-core: '8'
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - comment
+    - comment_test_views
+    - node
+    - user
+id: test_comment_user_uid
+label: test_comment_user_uid
+module: comment_test_views
+description: ''
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -40,13 +52,9 @@ display:
         type: default
       row:
         type: 'entity:node'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_comment_user_uid
-id: test_comment_user_uid
-tag: default
-base_field: nid
-module: comment_test_views
-langcode: und

@@ -1,8 +1,16 @@
-base_field: iid
-base_table: aggregator_item
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - aggregator
+id: aggregator_rss_feed
+label: 'Aggregator RSS feed'
+module: aggregator
+description: ''
+tag: aggregator
+base_table: aggregator_item
+base_field: iid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -126,6 +134,8 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   feed_items:
     display_plugin: feed
     id: feed_items
@@ -136,11 +146,5 @@ display:
       display_description: ''
       defaults:
         arguments: true
-label: 'Aggregator RSS feed'
-module: aggregator
-id: aggregator_rss_feed
-tag: aggregator
-langcode: en
-dependencies:
-  module:
-    - aggregator
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

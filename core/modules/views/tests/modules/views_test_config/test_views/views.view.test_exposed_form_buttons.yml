@@ -1,7 +1,16 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+id: test_exposed_form_buttons
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -11,7 +20,7 @@ display:
         type: none
       exposed_form:
         options:
-          reset_button: '1'
+          reset_button: true
         type: basic
       filters:
         type:
@@ -20,7 +29,7 @@ display:
             label: 'Content: Type'
             operator_id: type_op
             reduce: '0'
-          exposed: '1'
+          exposed: true
           field: type
           id: type
           table: node_field_data
@@ -29,15 +38,17 @@ display:
         type: full
       query:
         options:
-          query_comment: '0'
+          query_comment: false
         type: views_query
       style:
         type: default
       row:
         type: 'entity:node'
         options:
-          comments: '0'
+          comments: false
           links: '1'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -45,10 +56,9 @@ display:
   page_1:
     display_options:
       path: test_exposed_form_buttons
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-label: ''
-id: test_exposed_form_buttons
-tag: ''

@@ -1,7 +1,17 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_filter_group_override
+label: test_filter_group_override
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -14,8 +24,8 @@ display:
       fields:
         title:
           alter:
-            ellipsis: '0'
-            word_boundary: '0'
+            ellipsis: false
+            word_boundary: false
           field: title
           id: title
           label: ''
@@ -26,10 +36,10 @@ display:
           expose:
             operator: '0'
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
       pager:
         type: full
@@ -39,6 +49,8 @@ display:
         type: default
       row:
         type: fields
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -46,10 +58,9 @@ display:
   page_1:
     display_options:
       path: test
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-label: test_filter_group_override
-id: test_filter_group_override
-tag: default

@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - taxonomy
+    - user
 id: taxonomy_default_argument_test
 label: taxonomy_default_argument_test
 module: views

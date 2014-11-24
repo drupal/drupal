@@ -1,8 +1,16 @@
-base_field: uid
-base_table: users
-core: 8.x
-description: 'Shows the user names of the most recently active users, and the total number of active users.'
+langcode: en
 status: true
+dependencies:
+  module:
+    - user
+id: who_s_online
+label: 'Who''s online block'
+module: user
+description: 'Shows the user names of the most recently active users, and the total number of active users.'
+tag: default
+base_table: users
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -180,6 +188,8 @@ display:
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   who_s_online_block:
     display_plugin: block
     id: who_s_online_block
@@ -188,11 +198,5 @@ display:
     display_options:
       block_description: 'Who''s online'
       display_description: 'A list of users that are currently logged in.'
-label: 'Who''s online block'
-module: user
-id: who_s_online
-tag: default
-langcode: en
-dependencies:
-  module:
-    - user
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

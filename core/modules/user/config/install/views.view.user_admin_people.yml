@@ -1,8 +1,16 @@
-base_field: uid
-base_table: users
-core: 8.x
-description: 'Find and manage people interacting with your site.'
+langcode: en
 status: true
+dependencies:
+  module:
+    - user
+id: user_admin_people
+label: People
+module: user
+description: 'Find and manage people interacting with your site.'
+tag: default
+base_table: users
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -848,6 +856,8 @@ display:
         operator: AND
         groups:
           1: AND
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -871,11 +881,5 @@ display:
         weight: 0
       defaults:
         show_admin_links: false
-label: People
-module: user
-id: user_admin_people
-tag: default
-langcode: en
-dependencies:
-  module:
-    - user
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

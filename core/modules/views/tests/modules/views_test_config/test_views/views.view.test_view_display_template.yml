@@ -1,8 +1,16 @@
-base_field: id
-base_table: views_test_data
-core: 8.x
+langcode: en
+status: true
+dependencies:
+  module:
+    - views_test_data
+id: test_view_display_template
+label: test_view_display_template
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -28,7 +36,7 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: '0'
+          exclude: false
           alter: {  }
       filters: {  }
       sorts: {  }
@@ -37,8 +45,5 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-label: test_view_display_template
-module: views
-id: test_view_display_template
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

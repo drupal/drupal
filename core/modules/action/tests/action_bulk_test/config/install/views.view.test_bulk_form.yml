@@ -1,8 +1,16 @@
-base_table: node
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
 id: test_bulk_form
+label: form
+module: views
 description: ''
 tag: ''
-label: form
+base_table: node
+base_field: nid
 core: 8.x
 display:
   default:
@@ -138,6 +146,8 @@ display:
           order: DESC
           plugin_id: date
       title: form
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -145,6 +155,8 @@ display:
     position: null
     display_options:
       path: test_bulk_form
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -165,7 +177,5 @@ display:
           empty: true
           content: 'This view is empty.'
           plugin_id: text_custom
-base_field: nid
-status: true
-module: views
-langcode: und
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

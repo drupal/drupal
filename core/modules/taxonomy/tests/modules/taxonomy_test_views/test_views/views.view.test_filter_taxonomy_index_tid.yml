@@ -1,8 +1,18 @@
-base_field: nid
-base_table: node
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+    - user
+id: test_filter_taxonomy_index_tid
+label: test_filter_taxonomy_index_tid
+module: views
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -23,7 +33,7 @@ display:
           disable_sql_rewrite: false
           distinct: false
           replica: false
-          query_comment: ''
+          query_comment: false
           query_tags: {  }
       exposed_form:
         type: basic
@@ -41,14 +51,14 @@ display:
           items_per_page: 10
           offset: 0
           id: 0
-          total_pages: ''
+          total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
           tags:
             previous: '‹ previous'
@@ -110,7 +120,7 @@ display:
           id: status
           expose:
             operator: '0'
-          group: '1'
+          group: 1
         tid:
           id: tid
           table: taxonomy_index
@@ -120,11 +130,11 @@ display:
           admin_label: ''
           operator: or
           value:
-            2: 2
+            2: '2'
           group: 1
           exposed: false
           expose:
-            operator_id: 0
+            operator_id: '0'
             label: ''
             description: ''
             use_operator: false
@@ -161,8 +171,5 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-label: test_filter_taxonomy_index_tid
-module: views
-id: test_filter_taxonomy_index_tid
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

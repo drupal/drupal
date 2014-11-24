@@ -1,7 +1,16 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+id: test_pager_some
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -13,17 +22,16 @@ display:
         type: basic
       pager:
         options:
-          items_per_page: '5'
-          offset: '0'
+          items_per_page: 5
+          offset: 0
         type: some
       style:
         type: default
       row:
         type: 'entity:node'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: ''
-id: test_pager_some
-tag: ''

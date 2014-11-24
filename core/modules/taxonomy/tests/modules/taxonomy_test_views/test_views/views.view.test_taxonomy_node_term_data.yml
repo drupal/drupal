@@ -1,7 +1,18 @@
-base_table: node
-core: '8'
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+    - user
+id: test_taxonomy_node_term_data
+label: test_taxonomy_node_term_data
+module: views
+description: ''
+tag: ''
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -47,7 +58,7 @@ display:
           label: 'Term #1'
           table: node
           vids:
-            tags: false
+            tags: ''
           plugin_id: node_term_data
         term_node_tid_1:
           field: term_node_tid
@@ -55,7 +66,7 @@ display:
           label: 'Term #2'
           table: node
           vids:
-            tags: false
+            tags: ''
           plugin_id: node_term_data
       sorts:
         nid:
@@ -68,10 +79,9 @@ display:
         type: default
       row:
         type: 'entity:node'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_taxonomy_node_term_data
-id: test_taxonomy_node_term_data
-tag: ''

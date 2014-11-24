@@ -1,16 +1,18 @@
-base_field: nid
-base_table: node
-core: 8.x
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_node_view
+label: test_node_view
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
-  page_1:
-    display_plugin: page
-    id: page_1
-    display_title: Page
-    position: null
-    display_options:
-      path: test-node-view
   default:
     display_plugin: default
     id: default
@@ -27,19 +29,19 @@ display:
       query:
         type: views_query
         options:
-          disable_sql_rewrite: '0'
-          distinct: '0'
-          replica: '0'
-          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: false
           query_tags: {  }
       exposed_form:
         type: basic
         options:
           submit_button: Apply
-          reset_button: '0'
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: '1'
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
@@ -48,12 +50,12 @@ display:
           items_per_page: 10
           offset: 0
           id: 0
-          total_pages: ''
+          total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
@@ -171,7 +173,7 @@ display:
             override: false
           summary:
             sort_order: asc
-            number_of_records: false
+            number_of_records: 0
             format: default_summary
           specify_validation: false
           validate:
@@ -179,14 +181,20 @@ display:
             fail: 'not found'
           validate_options: {  }
           glossary: false
-          limit: false
+          limit: 0
           case: none
           path_case: none
           transform_dash: false
           break_phrase: false
           plugin_id: node_type
-label: test_node_view
-module: views
-id: test_node_view
-tag: ''
-langcode: en
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test-node-view
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

@@ -1,8 +1,16 @@
-base_field: nid
-base_table: node
-core: 8.x
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_http_status_code
+label: test_http_status_code
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -31,16 +39,16 @@ display:
           field: title
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
           link_to_node: '1'
       filters:
         status:
@@ -50,7 +58,7 @@ display:
           id: status
           expose:
             operator: '0'
-          group: '1'
+          group: 1
       sorts:
         created:
           id: created
@@ -66,8 +74,10 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          empty: '1'
+          empty: true
           status_code: '200'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -75,7 +85,5 @@ display:
     position: null
     display_options:
       path: test-http-status-code
-label: test_http_status_code
-module: views
-id: test_http_status_code
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

@@ -1,8 +1,16 @@
-base_field: id
-base_table: views_test_data
-core: 8.x
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_preview
+label: test_preview
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -21,8 +29,8 @@ display:
       pager:
         type: some
         options:
-          items_per_page: '10'
-          offset: '0'
+          items_per_page: 10
+          offset: 0
       style:
         type: default
       row:
@@ -36,7 +44,7 @@ display:
           group_type: group
           admin_label: ''
           label: Name
-          exclude: '0'
+          exclude: false
           plugin_id: standard
       filters:
         id:
@@ -51,19 +59,19 @@ display:
             min: ''
             max: ''
             value: ''
-          group: '1'
-          exposed: '1'
+          group: 1
+          exposed: true
           expose:
             operator_id: id_op
             label: ID
             description: ''
-            use_operator: '0'
+            use_operator: false
             operator: id_op
             identifier: id
-            required: '0'
-            remember: '0'
-            multiple: '0'
-          is_grouped: '0'
+            required: false
+            remember: false
+            multiple: false
+          is_grouped: false
           plugin_id: numeric
       sorts: {  }
       filter_groups:
@@ -79,7 +87,7 @@ display:
           group_type: group
           admin_label: ''
           default_action: ignore
-          title_enable: '0'
+          title_enable: false
           title: ''
           plugin_id: numeric
       header:
@@ -90,9 +98,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          empty: '1'
+          empty: true
           content: 'Test header text'
-          tokenize: '0'
+          tokenize: false
           plugin_id: text_custom
       footer:
         area_text_custom:
@@ -102,9 +110,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          empty: '1'
+          empty: true
           content: 'Test footer text'
-          tokenize: '0'
+          tokenize: false
           plugin_id: text_custom
       empty:
         area_text_custom:
@@ -114,11 +122,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          empty: '1'
+          empty: true
           content: 'Test empty text'
-          tokenize: '0'
+          tokenize: false
           plugin_id: text_custom
-label: test_preview
-module: views
-id: test_preview
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

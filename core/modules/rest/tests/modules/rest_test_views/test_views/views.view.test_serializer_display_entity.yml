@@ -1,8 +1,16 @@
-base_table: entity_test
+langcode: und
+status: true
+dependencies:
+  module:
+    - rest
+    - user
 id: test_serializer_display_entity
+label: 'Test serialize display entity rows'
+module: rest
 description: ''
 tag: ''
-label: 'Test serialize display entity rows'
+base_table: entity_test
+base_field: id
 core: 8.x
 display:
   default:
@@ -34,6 +42,8 @@ display:
           plugin_id: date
       title: 'Test serialize'
       arguments: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
@@ -43,10 +53,5 @@ display:
       defaults:
         access: false
       path: test/serialize/entity
-base_field: id
-status: true
-module: rest
-langcode: und
-dependencies:
-  module:
-    - rest
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

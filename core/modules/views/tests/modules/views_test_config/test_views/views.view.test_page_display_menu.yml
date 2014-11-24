@@ -1,22 +1,30 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_page_display_menu
+label: 'Test page menu'
+module: views
+description: ''
+tag: ''
 base_table: views_test_data
 base_field: id
 core: '8'
-description: ''
-status: '1'
 display:
   default:
     display_options:
       defaults:
-        fields: '0'
-        pager: '0'
-        pager_options: '0'
-        sorts: '0'
+        fields: false
+        pager: false
+        pager_options: false
+        sorts: false
       fields:
         id:
           id: id
           table: views_test_data
           field: id
           plugin_id: numeric
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -30,16 +38,18 @@ display:
         title: 'Test default tab'
         description: ''
         menu_name: tools
-        weight: '-10'
+        weight: -10
         context: '0'
       tab_options:
         type: normal
         title: 'Test parent path'
         description: ''
         menu_name: tools
-        weight: '0'
+        weight: 0
       defaults:
-        title: '0'
+        title: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
@@ -53,10 +63,12 @@ display:
         title: 'Test local tab'
         description: ''
         menu_name: tools
-        weight: '0'
+        weight: 0
         context: '0'
       defaults:
-        title: '0'
+        title: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_2
@@ -70,10 +82,12 @@ display:
         title: 'Test menu link'
         description: ''
         menu_name: tools
-        weight: '0'
+        weight: 0
         context: '0'
       defaults:
-        title: '0'
+        title: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_3
@@ -85,13 +99,15 @@ display:
       menu:
         type: normal
         title: 'Test child'
-        parent: 'system.admin'
+        parent: system.admin
         description: ''
         name: tools
-        weight: '0'
+        weight: 0
         context: '0'
       defaults:
-        title: '0'
+        title: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_4
@@ -103,17 +119,16 @@ display:
       menu:
         type: normal
         title: 'Test child'
-        parent: 'system.admin'
+        parent: system.admin
         description: ''
         name: not-existing-menu-name
-        weight: '0'
+        weight: 0
         context: '0'
       defaults:
-        title: '0'
+        title: false
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_4
     position: 0
-label: 'Test page menu'
-id: test_page_display_menu
-tag: ''

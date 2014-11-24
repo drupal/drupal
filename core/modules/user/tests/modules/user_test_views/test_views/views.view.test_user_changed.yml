@@ -1,7 +1,16 @@
-base_table: users
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: test_user_changed
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: users
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -26,9 +35,11 @@ display:
           id: changed
           table: users_field_data
           field: changed
-          label: Updated date
+          label: 'Updated date'
           date_format: html_date
-      filters: { }
+      filters: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -36,10 +47,9 @@ display:
   page_1:
     display_options:
       path: test_user_changed
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
     position: 0
-label: ''
-id: test_user_changed
-tag: ''

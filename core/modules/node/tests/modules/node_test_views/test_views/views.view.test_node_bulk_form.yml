@@ -1,8 +1,16 @@
-base_field: nid
-base_table: node
-core: 8.x
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+id: test_node_bulk_form
+label: ''
+module: views
 description: ''
-status: '1'
+tag: ''
+base_table: node
+base_field: nid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -32,6 +40,8 @@ display:
           field: nid
           order: ASC
           plugin_id: standard
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -39,7 +49,5 @@ display:
     position: null
     display_options:
       path: test-node-bulk-form
-label: ''
-module: views
-id: test_node_bulk_form
-tag: ''
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null

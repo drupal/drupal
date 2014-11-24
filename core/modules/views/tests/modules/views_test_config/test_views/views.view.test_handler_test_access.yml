@@ -1,5 +1,14 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_handler_test_access
+label: null
+module: views
+description: ''
+tag: ''
 base_table: views_test_data
-core: 8
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -47,8 +56,9 @@ display:
           table: views_test_data
           field: access_callback_arguments
           plugin_id: standard
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-id: test_handler_test_access

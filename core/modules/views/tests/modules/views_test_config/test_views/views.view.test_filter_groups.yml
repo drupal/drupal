@@ -1,7 +1,17 @@
-base_table: node
-core: '8'
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_filter_groups
+label: test_filter_groups
+module: views
 description: ''
-status: '1'
+tag: default
+base_table: node
+base_field: nid
+core: '8'
 display:
   default:
     display_options:
@@ -14,8 +24,8 @@ display:
       fields:
         title:
           alter:
-            ellipsis: '0'
-            word_boundary: '0'
+            ellipsis: false
+            word_boundary: false
           field: title
           id: title
           label: ''
@@ -28,7 +38,7 @@ display:
       filters:
         nid:
           field: nid
-          group: '2'
+          group: 2
           id: nid
           table: node
           value:
@@ -36,7 +46,7 @@ display:
           plugin_id: numeric
         nid_1:
           field: nid
-          group: '2'
+          group: 2
           id: nid_1
           table: node
           value:
@@ -46,14 +56,14 @@ display:
           expose:
             operator: '0'
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
       pager:
         options:
-          items_per_page: '10'
+          items_per_page: 10
         type: full
       query:
         type: views_query
@@ -69,6 +79,8 @@ display:
         type: default
       row:
         type: 'entity:node'
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -76,7 +88,7 @@ display:
   page:
     display_options:
       defaults:
-        filters: '0'
+        filters: false
       filter_groups:
         groups:
           1: OR
@@ -85,7 +97,7 @@ display:
       filters:
         nid:
           field: nid
-          group: '2'
+          group: 2
           id: nid
           table: node
           value:
@@ -93,7 +105,7 @@ display:
           plugin_id: numeric
         nid_1:
           field: nid
-          group: '2'
+          group: 2
           id: nid_1
           table: node
           value:
@@ -103,16 +115,15 @@ display:
           expose:
             operator: '0'
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
       path: test-filter-groups
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page
     position: 0
-label: test_filter_groups
-id: test_filter_groups
-tag: default

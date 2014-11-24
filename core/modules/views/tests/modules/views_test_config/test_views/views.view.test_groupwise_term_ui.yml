@@ -1,8 +1,18 @@
-base_field: tid
-base_table: taxonomy_term_data
-core: 8.0-dev
-description: ''
+langcode: und
 status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+    - user
+id: test_groupwise_term_ui
+label: test_groupwise
+module: views
+description: ''
+tag: default
+base_table: taxonomy_term_data
+base_field: tid
+core: 8.0-dev
 display:
   default:
     display_options:
@@ -58,12 +68,9 @@ display:
       style:
         type: default
       title: test_groupwise
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
     position: 0
-label: test_groupwise
-langcode: und
-module: views
-id: test_groupwise_term_ui
-tag: default
