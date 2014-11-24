@@ -120,7 +120,7 @@
     /**
      * Variable storing the current dialog's save callback.
      */
-    saveCallack: null,
+    saveCallback: null,
 
     /**
      * Open a dialog for a Drupal-based plugin.
