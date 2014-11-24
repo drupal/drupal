@@ -13,13 +13,10 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Defines a subscriber to negotiate a _controller to use for a _content route.
+ * Sets the request format onto the request object.
  *
- * @todo Remove this event subscriber after both
- *   https://www.drupal.org/node/2092647 and https://www.drupal.org/node/2331919
- *   have landed.
- *
- * @see \Drupal\Core\EventSubscriber\MainContentViewSubscriber
+ * @todo Remove this event subscriber after
+ *   https://www.drupal.org/node/2092647 has landed.
  */
 class ContentControllerSubscriber implements EventSubscriberInterface {
 
@@ -57,24 +54,6 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sets _content (if it exists) as the _controller.
-   *
-   * @todo Remove when https://www.drupal.org/node/2092647 lands.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The event to process.
-   */
-  public function onRequestDeriveController(GetResponseEvent $event) {
-    $request = $event->getRequest();
-
-    $controller = $request->attributes->get('_controller');
-    $content = $request->attributes->get('_content');
-    if (empty($controller) && !empty($content)) {
-      $request->attributes->set('_controller',  $content);
-    }
-  }
-
-  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
@@ -82,7 +61,6 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormat', 31);
-    $events[KernelEvents::REQUEST][] = array('onRequestDeriveController', 30);
 
     return $events;
   }
