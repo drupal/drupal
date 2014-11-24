@@ -200,6 +200,91 @@ class Drupal6Node extends Drupal6DumpBase {
         'tnid' => 0,
         'translate' => 0,
       ))
+      ->values(array(
+        'nid' => 4,
+        'vid' => 6,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => '',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
+      ->values(array(
+        'nid' => 5,
+        'vid' => 7,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => '',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
+      ->values(array(
+        'nid' => 6,
+        'vid' => 8,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => '',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
+      ->values(array(
+        'nid' => 7,
+        'vid' => 9,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => '',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
+      ->values(array(
+        'nid' => 8,
+        'vid' => 10,
+        'type' => 'test_planet',
+        'language' => '',
+        'title' => '',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1388271527,
+        'changed' => 1390096401,
+        'comment' => 0,
+        'promote' => 0,
+        'moderate' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ))
       ->execute();
     $this->createTable('node_revisions', array(
       'description' => 'Stores information about each saved version of a {node}.',
@@ -313,6 +398,72 @@ class Drupal6Node extends Drupal6DumpBase {
         'timestamp' => 1390095701,
         'format' => 0,
       ))
+      ->values(array(
+        'nid' => 4,
+        'vid' => 6,
+        'uid' => 1,
+        'title' => 'Node 4',
+        'body' => 'Node 4 body',
+        'teaser' => 'test for node 4',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 5,
+        'vid' => 7,
+        'uid' => 1,
+        'title' => 'Node 5',
+        'body' => 'Node 5 body',
+        'teaser' => 'test for node 5',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 6,
+        'vid' => 8,
+        'uid' => 1,
+        'title' => 'Node 6',
+        'body' => 'Node 6 body',
+        'teaser' => 'test for node 6',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 7,
+        'vid' => 9,
+        'uid' => 1,
+        'title' => 'Node 7',
+        'body' => 'Node 7 body',
+        'teaser' => 'test for node 7',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 8,
+        'vid' => 10,
+        'uid' => 1,
+        'title' => 'Node 8',
+        'body' => 'Node 8 body',
+        'teaser' => 'test for node 8',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
+      ->values(array(
+        'nid' => 9,
+        'vid' => 11,
+        'uid' => 1,
+        'title' => 'Node 9',
+        'body' => 'Node 9 body',
+        'teaser' => 'test for node 9',
+        'log' => '',
+        'timestamp' => 1390095701,
+        'format' => 1,
+      ))
       ->execute();
 
     $this->createTable('content_type_story', array(
@@ -416,6 +567,30 @@ class Drupal6Node extends Drupal6DumpBase {
       ->values(array(
         'nid' => 3,
         'vid' => 4,
+      ))
+      ->values(array(
+        'nid' => 4,
+        'vid' => 6,
+      ))
+      ->values(array(
+        'nid' => 5,
+        'vid' => 7,
+      ))
+      ->values(array(
+        'nid' => 6,
+        'vid' => 8,
+      ))
+      ->values(array(
+        'nid' => 7,
+        'vid' => 9,
+      ))
+      ->values(array(
+        'nid' => 8,
+        'vid' => 10,
+      ))
+      ->values(array(
+        'nid' => 9,
+        'vid' => 11,
       ))
       ->execute();
   }

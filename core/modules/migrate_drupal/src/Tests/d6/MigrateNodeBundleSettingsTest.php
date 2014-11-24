@@ -37,6 +37,16 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupalTestBase {
     entity_create('node_type', array('type' => 'test_event'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
 
+    $id_mappings = array(
+      'd6_node_type' => array(
+        array(array('test_page'), array('test_page')),
+        array(array('test_planet'), array('test_planet')),
+        array(array('test_story'), array('test_story')),
+        array(array('test_event'), array('test_event')),
+        array(array('story'), array('story')),
+      ),
+    );
+    $this->prepareMigrations($id_mappings);
 
     // Setup the dumps.
     $migration = entity_load('migration', 'd6_node_setting_promote');

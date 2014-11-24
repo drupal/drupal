@@ -14,3 +14,6 @@ process:
   default_value: 'options/promote'
 destination:
   plugin: entity:base_field_override
+migration_dependencies:
+  required:
+    - d6_node_type

@@ -29,6 +29,7 @@ class MigrateBookTest extends MigrateDrupalTestBase {
     for ($i = 4; $i <= 8; $i++) {
       $entity = entity_create('node', array(
         'type' => 'story',
+        'title' => "Node $i",
         'nid' => $i,
         'status' => TRUE,
       ));
@@ -69,12 +70,12 @@ class MigrateBookTest extends MigrateDrupalTestBase {
     $this->assertEqual($nodes[8]->book['pid'], 0);
 
     $tree = \Drupal::service('book.manager')->bookTreeAllData(4);
-    $this->assertEqual($tree['49990  4']['link']['nid'], 4);
-    $this->assertEqual($tree['49990  4']['below']['50000  5']['link']['nid'], 5);
-    $this->assertEqual($tree['49990  4']['below']['50000  5']['below']['50000  6']['link']['nid'], 6);
-    $this->assertEqual($tree['49990  4']['below']['50000  5']['below']['50000  7']['link']['nid'], 7);
-    $this->assertIdentical($tree['49990  4']['below']['50000  5']['below']['50000  6']['below'], array());
-    $this->assertIdentical($tree['49990  4']['below']['50000  5']['below']['50000  7']['below'], array());
+    $this->assertEqual($tree['49990 Node 4 4']['link']['nid'], 4);
+    $this->assertEqual($tree['49990 Node 4 4']['below']['50000 Node 5 5']['link']['nid'], 5);
+    $this->assertEqual($tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 6 6']['link']['nid'], 6);
+    $this->assertEqual($tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['link']['nid'], 7);
+    $this->assertIdentical($tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 6 6']['below'], array());
+    $this->assertIdentical($tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['below'], array());
   }
 
 }
