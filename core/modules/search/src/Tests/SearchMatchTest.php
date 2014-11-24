@@ -36,10 +36,10 @@ class SearchMatchTest extends SearchTestBase {
     \Drupal::config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
-      search_index($i, SEARCH_TYPE, $this->getText($i), LanguageInterface::LANGCODE_NOT_SPECIFIED);
+      search_index(SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
     }
     for ($i = 1; $i <= 5; ++$i) {
-      search_index($i + 7, SEARCH_TYPE_2, $this->getText2($i), LanguageInterface::LANGCODE_NOT_SPECIFIED);
+      search_index(SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
     }
     // No getText builder function for Japanese text; just a simple array.
     foreach (array(
@@ -47,7 +47,7 @@ class SearchMatchTest extends SearchTestBase {
       14 => 'ドルーパルが大好きよ！',
       15 => 'コーヒーとケーキ',
     ) as $i => $jpn) {
-      search_index($i, SEARCH_TYPE_JPN, $jpn, LanguageInterface::LANGCODE_NOT_SPECIFIED);
+      search_index(SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
     }
     search_update_totals();
   }

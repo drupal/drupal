@@ -357,19 +357,27 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         $text .= $t;
       }
 
-      // Update index.
-      search_index($node->id(), $this->getPluginId(), $text, $language->getId());
+      // Update index, using search index "type" equal to the plugin ID.
+      search_index($this->getPluginId(), $node->id(), $language->getId(), $text);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function resetIndex() {
-    $this->database->update('search_dataset')
-      ->fields(array('reindex' => REQUEST_TIME))
-      ->condition('type', $this->getPluginId())
-      ->execute();
+  public function indexClear() {
+    // All NodeSearch pages share a common search index "type" equal to
+    // the plugin ID.
+    search_index_clear($this->getPluginId());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function markForReindex() {
+    // All NodeSearch pages share a common search index "type" equal to
+    // the plugin ID.
+    search_mark_for_reindex($this->getPluginId());
   }
 
   /**

@@ -29,7 +29,7 @@ interface SearchPageRepositoryInterface {
   public function isSearchActive();
 
   /**
-   * Returns all indexable search page entities.
+   * Returns all active, indexable search page entities.
    *
    * @return \Drupal\search\SearchPageInterface[]
    *   An array of indexable search page entities.

@@ -71,7 +71,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->drupalPostForm('admin/config/search/pages', array(), t('Re-index site'));
     $this->assertText(t('Are you sure you want to re-index the site'));
     $this->drupalPostForm('admin/config/search/pages/reindex', array(), t('Re-index site'));
-    $this->assertText(t('The index will be rebuilt'));
+    $this->assertText(t('All search indexes will be rebuilt'));
     $this->drupalGet('admin/config/search/pages');
     $this->assertText(t('There is 1 item left to index.'));
 

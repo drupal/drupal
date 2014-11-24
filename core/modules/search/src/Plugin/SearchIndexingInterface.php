@@ -8,12 +8,19 @@
 namespace Drupal\search\Plugin;
 
 /**
- * Defines an optional interface for SearchPlugin objects using the index.
+ * Defines an optional interface for SearchPlugin objects using an index.
  *
  * Plugins implementing this interface will have these methods invoked during
  * search_cron() and via the search module administration form. Plugins not
- * implementing this interface are assumed to use alternate mechanisms for
- * indexing the data used to provide search results.
+ * implementing this interface are assumed to be using their own methods for
+ * searching, not involving separate index tables.
+ *
+ * The user interface for managing search pages displays the indexing status for
+ * search pages implementing this interface. It also allows users to configure
+ * default settings for indexing, and refers to the "default search index". If
+ * your search page plugin uses its own indexing mechanism instead of the
+ * default search index, or overrides the default indexing settings, you should
+ * make this clear on the settings page or other documentation for your plugin.
  *
  * Multiple search pages can be created for each search plugin, so you will need
  * to choose whether these search pages should share an index (in which case
@@ -32,22 +39,40 @@ interface SearchIndexingInterface {
    * own indexing mechanism.
    *
    * When implementing this method, your module should index content items that
-   * were modified or added since the last run. PHP has a time limit
-   * for cron, though, so it is advisable to limit how many items you index
-   * per run using config('search.settings')->get('index.cron_limit'). Also,
-   * since the cron run could time out and abort in the middle of your run, you
-   * should update any needed internal bookkeeping on when items have last
-   * been indexed as you go rather than waiting to the end of indexing.
+   * were modified or added since the last run. There is a time limit for cron,
+   * so it is advisable to limit how many items you index per run using
+   * config('search.settings')->get('index.cron_limit') or with your own
+   * setting. And since the cron run could time out and abort in the middle of
+   * your run, you should update any needed internal bookkeeping on when items
+   * have last been indexed as you go rather than waiting to the end of
+   * indexing.
    */
   public function updateIndex();
 
   /**
-   * Takes action when the search index is going to be rebuilt.
+   * Clears the search index for this plugin.
    *
-   * Modules that use updateIndex() should update their indexing bookkeeping so
-   * that it starts from scratch the next time updateIndex() is called.
+   * When a request is made to clear all items from the search index related to
+   * this plugin, this method will be called. If this plugin uses the default
+   * search index, this method can call search_index_clear($type) to remove
+   * indexed items from the search database.
+   *
+   * @see search_index_clear()
    */
-  public function resetIndex();
+  public function indexClear();
+
+  /**
+   * Marks the search index for reindexing for this plugin.
+   *
+   * When a request is made to mark all items from the search index related to
+   * this plugin for reindexing, this method will be called. If this plugin uses
+   * the default search index, this method can call
+   * search_mark_for_reindex($type) to mark the items in the search database for
+   * reindexing.
+   *
+   * @see search_mark_for_reindex()
+   */
+  public function markForReindex();
 
   /**
    * Reports the status of indexing.

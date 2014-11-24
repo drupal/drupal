@@ -203,16 +203,16 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#title' => $this->t('Number of items to index per cron run'),
       '#default_value' => $search_settings->get('index.cron_limit'),
       '#options' => $items,
-      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => \Drupal::url('system.status'))),
+      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing. Some search page types may have their own setting for this.', array('@cron' => \Drupal::url('system.status'))),
     );
     // Indexing settings:
     $form['indexing_settings'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Indexing settings'),
+      '#title' => $this->t('Default indexing settings'),
       '#open' => TRUE,
     );
     $form['indexing_settings']['info'] = array(
-      '#markup' => $this->t('<p><em>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>')
+      '#markup' => $this->t("<p>Search pages that use an index may use the default index provided by the Search module, or they may use a different indexing mechanism. These settings are for the default index. <em>Changing these settings will cause the default search index to be rebuilt to reflect the new settings. Searching will continue to work, based on the existing index, but new content won't be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>")
     );
     $form['indexing_settings']['minimum_word_size'] = array(
       '#type' => 'number',
@@ -329,12 +329,14 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     parent::submitForm($form, $form_state);
 
     $search_settings = $this->configFactory->get('search.settings');
-    // If these settings change, the index needs to be rebuilt.
+    // If these settings change, the default index needs to be rebuilt.
     if (($search_settings->get('index.minimum_word_size') != $form_state->getValue('minimum_word_size')) || ($search_settings->get('index.overlap_cjk') != $form_state->getValue('overlap_cjk'))) {
       $search_settings->set('index.minimum_word_size', $form_state->getValue('minimum_word_size'));
       $search_settings->set('index.overlap_cjk', $form_state->getValue('overlap_cjk'));
-      drupal_set_message($this->t('The index will be rebuilt.'));
-      search_reindex();
+      // Specifically mark items in the default index for reindexing, since
+      // these settings are used in the search_index() function.
+      drupal_set_message($this->t('The default search index will be rebuilt.'));
+      search_mark_for_reindex();
     }
 
     $search_settings

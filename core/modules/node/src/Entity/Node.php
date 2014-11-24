@@ -120,10 +120,10 @@ class Node extends ContentEntityBase implements NodeInterface {
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
 
-    // Assure that all nodes deleted are removed from the search index.
+    // Ensure that all nodes deleted are removed from the search index.
     if (\Drupal::moduleHandler()->moduleExists('search')) {
       foreach ($entities as $entity) {
-        search_reindex($entity->nid->value, 'node_search');
+        search_index_clear('node_search', $entity->nid->value);
       }
     }
   }
