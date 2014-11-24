@@ -181,6 +181,7 @@ body.toolbar-fixed .toolbar .toolbar-tray-horizontal {
 /* When the configured standard breakpoint is active and the tray is in a
  * vertical position, the tray does not scroll with the page. The contents of
  * the tray scroll within the confines of the viewport. */
+.toolbar .toolbar-tray-vertical.active,
 body.toolbar-fixed .toolbar .toolbar-tray-vertical {
   height: 100%;
   overflow-x: hidden;
