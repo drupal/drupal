@@ -1,0 +1,7 @@
+# Add a default local task for the file system settings page, so that the local
+# task added by Configuration Translation becomes visible. This facilitates
+# manual testing.
+system.file_system_settings:
+  route_name: system.file_system_settings
+  title: Settings
+  base_route: system.file_system_settings

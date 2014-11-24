@@ -737,3 +737,26 @@ field.float.value:
         value:
           type: float
           label: 'Value'
+
+# Text with a text format.
+text_format:
+  type: mapping
+  label: 'Text with text format'
+  # We declare the entire mapping of text and text format as translatable. This
+  # causes the entire mapping to be saved to the language overrides of the
+  # configuration. Storing only the (to be formatted) text could result in
+  # security problems in case the text format of the source text is changed.
+  translatable: true
+  mapping:
+    value:
+      type: text
+      label: 'Text'
+      # Mark the actual text as translatable (in addition to the entire mapping
+      # being marked as translatable) so that shipped configuration with
+      # formatted text can participate in the string translation system.
+      translatable: true
+    format:
+      type: string
+      label: 'Text format'
+      # The text format should not be translated as part of the string
+      # translation system, so this is not marked as translatable.

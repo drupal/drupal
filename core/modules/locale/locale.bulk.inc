@@ -5,9 +5,10 @@
  * Mass import-export and batch import functionality for Gettext .po files.
  */
 
-use Drupal\locale\Gettext;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\FileInterface;
+use Drupal\locale\Gettext;
+use Drupal\locale\Locale;
 
 /**
  * Prepare a batch to import all translations.
@@ -639,18 +640,26 @@ function locale_config_batch_finished($success, array $results) {
  *   Number of configuration objects retranslated.
  */
 function locale_config_update_multiple(array $names, array $langcodes = array()) {
+  /** @var \Drupal\language\ConfigurableLanguageManagerInterface $language_manager */
+  $language_manager = \Drupal::languageManager();
+  $locale_config_manager = Locale::config();
+
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $count = 0;
   foreach ($names as $name) {
-    $wrapper = \Drupal\locale\Locale::config()->get($name);
+    $wrapper = $locale_config_manager->get($name);
     foreach ($langcodes as $langcode) {
       $translation = $wrapper->getValue() ? $wrapper->getTranslation($langcode)->getValue() : NULL;
       if ($translation) {
-        \Drupal\locale\Locale::config()->saveTranslationData($name, $langcode, $translation);
+        $locale_config_manager->saveTranslationData($name, $langcode, $translation);
         $count++;
       }
       else {
-        \Drupal\locale\Locale::config()->deleteTranslationData($name, $langcode);
+        // Do not bother deleting language overrides which do not exist in the
+        // first place.
+        if (!$language_manager->getLanguageConfigOverride($langcode, $name)->isNew()) {
+          $locale_config_manager->deleteTranslationData($name, $langcode);
+        }
       }
     }
   }

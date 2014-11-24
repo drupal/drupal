@@ -24,7 +24,7 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
    * @param string $name
    *   Configuration object name.
    *
-   * @return \Drupal\Core\Config\Schema\Element
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
    *   Typed configuration element.
    */
   public function get($name);

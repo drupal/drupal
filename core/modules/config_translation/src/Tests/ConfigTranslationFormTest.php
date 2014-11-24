@@ -22,7 +22,7 @@ class ConfigTranslationFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_translation', 'config_translation_test');
+  public static $modules = array('config_translation', 'config_translation_test', 'editor');
 
   /**
    * The plugin ID of the mapper to test.

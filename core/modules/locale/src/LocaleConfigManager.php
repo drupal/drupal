@@ -66,6 +66,13 @@ class LocaleConfigManager {
   protected $typedConfigManager;
 
   /**
+   * Whether or not configuration translations are currently being updated.
+   *
+   * @var bool
+   */
+  protected $isUpdating = FALSE;
+
+  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
@@ -156,7 +163,9 @@ class LocaleConfigManager {
    *   Configuration data to be saved, that will be only the translated values.
    */
   public function saveTranslationData($name, $langcode, array $data) {
+    $this->isUpdating = TRUE;
     $this->languageManager->getLanguageConfigOverride($langcode, $name)->setData($data)->save();
+    $this->isUpdating = FALSE;
   }
 
   /**
@@ -168,7 +177,9 @@ class LocaleConfigManager {
    *   Language code.
    */
   public function deleteTranslationData($name, $langcode) {
+    $this->isUpdating = TRUE;
     $this->languageManager->getLanguageConfigOverride($langcode, $name)->delete();
+    $this->isUpdating = FALSE;
   }
 
   /**
@@ -206,6 +217,7 @@ class LocaleConfigManager {
    *   Array of language codes.
    */
   public function deleteComponentTranslations(array $components, array $langcodes) {
+    $this->isUpdating = TRUE;
     $names = $this->getComponentNames($components);
     if ($names && $langcodes) {
       foreach ($names as $name) {
@@ -214,6 +226,7 @@ class LocaleConfigManager {
         }
       }
     }
+    $this->isUpdating = FALSE;
   }
 
   /**
@@ -241,10 +254,12 @@ class LocaleConfigManager {
    *   Language code to delete.
    */
   public function deleteLanguageTranslations($langcode) {
+    $this->isUpdating = TRUE;
     $storage = $this->languageManager->getLanguageConfigOverrideStorage($langcode);
     foreach ($storage->listAll() as $name) {
       $this->languageManager->getLanguageConfigOverride($langcode, $name)->delete();
     }
+    $this->isUpdating = FALSE;
   }
 
   /**
@@ -328,6 +343,16 @@ class LocaleConfigManager {
   public function hasTranslation($name, LanguageInterface $language) {
     $translation = $this->languageManager->getLanguageConfigOverride($language->getId(), $name);
     return !$translation->isNew();
+  }
+
+  /**
+   * Indicates whether configuration translations are currently being updated.
+   *
+   * @return bool
+   *   Whether or not configuration translations are currently being updated.
+   */
+  public function isUpdatingConfigTranslations() {
+    return $this->isUpdating;
   }
 
 }

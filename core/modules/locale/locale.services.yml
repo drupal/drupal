@@ -20,3 +20,8 @@ services:
     class: Drupal\locale\StreamWrapper\TranslationsStream
     tags:
       - { name: stream_wrapper, scheme: translations }
+  locale.config_subscriber:
+    class: Drupal\locale\LocaleConfigSubscriber
+    arguments: ['@locale.storage', '@config.factory', '@locale.config.typed']
+    tags:
+      - { name: event_subscriber }

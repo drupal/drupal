@@ -8,14 +8,14 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that the locale config manager operates correctly.
  *
  * @group locale
  */
-class LocaleConfigManagerTest extends DrupalUnitTestBase {
+class LocaleConfigManagerTest extends KernelTestBase {
 
   /**
    * A list of modules to install for this test.
@@ -28,6 +28,7 @@ class LocaleConfigManagerTest extends DrupalUnitTestBase {
    * Tests hasTranslation().
    */
   public function testHasTranslation() {
+    $this->installSchema('locale', array('locales_location'));
     $this->installConfig(array('locale_test'));
     $locale_config_manager = \Drupal::service('locale.config.typed');
 

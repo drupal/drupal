@@ -1,0 +1,18 @@
+# Schema for the configuration files of the Configuration translation test module.
+
+config_translation_test.content:
+  type: mapping
+  label: 'Content'
+  mapping:
+    id:
+      type: string
+      label: 'Category identifier'
+    label:
+      type: label
+      label: 'Label'
+    langcode:
+      type: string
+      label: 'Default language'
+    content:
+      type: text_format
+      label: 'Content'

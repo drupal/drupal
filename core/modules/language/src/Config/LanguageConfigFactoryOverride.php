@@ -7,7 +7,6 @@
 
 namespace Drupal\language\Config;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigFactoryOverrideBase;
@@ -23,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Provides language overrides for the configuration factory.
  */
 class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements LanguageConfigFactoryOverrideInterface, EventSubscriberInterface {
+
+  use LanguageConfigCollectionNameTrait;
 
   /**
    * The configuration storage.
@@ -95,7 +96,14 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   public function getOverride($langcode, $name) {
     $storage = $this->getStorage($langcode);
     $data = $storage->read($name);
-    $override = new LanguageConfigOverride($name, $storage, $this->typedConfigManager);
+
+    $override = new LanguageConfigOverride(
+      $name,
+      $storage,
+      $this->typedConfigManager,
+      $this->eventDispatcher
+    );
+
     if (!empty($data)) {
       $override->initWithData($data);
     }
@@ -157,42 +165,6 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $langcode = $this->getLangcodeFromCollectionName($collection);
     return $this->getOverride($langcode, $name);
-  }
-
-  /**
-   * Creates a configuration collection name based on a langcode.
-   *
-   * @param string $langcode
-   *   The langcode.
-   *
-   * @return string
-   *   The configuration collection name for a langcode.
-   */
-  protected function createConfigCollectionName($langcode) {
-    return 'language.' . $langcode;
-  }
-
-  /**
-   * Converts a configuration collection name to a langcode.
-   *
-   * @param string $collection
-   *   The configuration collection name.
-   *
-   * @return string
-   *   The langcode of the collection.
-   *
-   * @throws \InvalidArgumentException
-   *   Exception thrown if the provided collection name is not in the format
-   *   "language.LANGCODE".
-   *
-   * @see self::createConfigCollectionName()
-   */
-  protected function getLangcodeFromCollectionName($collection) {
-    preg_match('/^language\.(.*)$/', $collection, $matches);
-    if (!isset($matches[1])) {
-      throw new \InvalidArgumentException(String::format('!collection is not a valid language override collection', array('!collection' => $collection)));
-    }
-    return $matches[1];
   }
 
   /**

@@ -12,34 +12,29 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Defines the date format element for the configuration translation interface.
  */
-class DateFormat implements ElementInterface {
-  use StringTranslationTrait;
+class DateFormat extends FormElementBase {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormElement(DataDefinitionInterface $definition, LanguageInterface $language, $value) {
+  public function getTranslationElement(LanguageInterface $translation_language, $source_config, $translation_config) {
     $description = $this->t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php'));
-    $format = $this->t('Displayed as %date_format', array('%date_format' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', $value)));
+    $format = $this->t('Displayed as %date_format', array('%date_format' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', $translation_config)));
+
     return array(
       '#type' => 'textfield',
-      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->getName() . ')</span>',
       '#description' => $description,
-      '#default_value' => $value,
-      '#attributes' => array('lang' => $language->getId()),
       '#field_suffix' => ' <div class="edit-date-format-suffix"><small id="edit-date-format-suffix">' . $format . '</small></div>',
       '#ajax' => array(
         'callback' => 'Drupal\config_translation\FormElement\DateFormat::ajaxSample',
         'event' => 'keyup',
         'progress' => array('type' => 'throbber', 'message' => NULL),
       ),
-    );
+    ) + parent::getTranslationElement($translation_language, $source_config, $translation_config);
   }
 
   /**

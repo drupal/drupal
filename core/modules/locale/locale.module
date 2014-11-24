@@ -321,10 +321,10 @@ function locale_modules_installed($modules) {
 }
 
 /**
- * Implements hook_modules_uninstalled().
+ * Implements hook_module_preuninstall().
  */
-function locale_modules_uninstalled($modules) {
-  $components['module'] = $modules;
+function locale_module_preuninstall($module) {
+  $components['module'] = array($module);
   locale_system_remove($components);
 }
 

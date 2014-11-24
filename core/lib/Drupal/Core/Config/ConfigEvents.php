@@ -9,6 +9,8 @@ namespace Drupal\Core\Config;
 
 /**
  * Defines events for the configuration system.
+ *
+ * @see \Drupal\Core\Config\ConfigCrudEvent
  */
 final class ConfigEvents {
 

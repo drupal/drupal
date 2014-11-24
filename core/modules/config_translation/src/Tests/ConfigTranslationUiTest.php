@@ -8,6 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Language\Language;
@@ -27,7 +28,7 @@ class ConfigTranslationUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'contact', 'contact_test', 'config_translation', 'config_translation_test', 'views', 'views_ui', 'contextual');
+  public static $modules = array('node', 'contact', 'contact_test', 'config_translation', 'config_translation_test', 'views', 'views_ui', 'contextual', 'filter', 'filter_test');
 
   /**
    * Languages to enable.
@@ -62,6 +63,14 @@ class ConfigTranslationUiTest extends WebTestBase {
     $translator_permissions = array(
       'translate configuration',
     );
+
+    /** @var \Drupal\filter\FilterFormatInterface $filter_test_format */
+    $filter_test_format = entity_load('filter_format', 'filter_test');
+    /** @var \Drupal\filter\FilterFormatInterface $filtered_html_format */
+    $filtered_html_format = entity_load('filter_format', 'filtered_html');
+    /** @var \Drupal\filter\FilterFormatInterface $full_html_format */
+    $full_html_format = entity_load('filter_format', 'full_html');
+
     $admin_permissions = array_merge(
       $translator_permissions,
       array(
@@ -69,6 +78,10 @@ class ConfigTranslationUiTest extends WebTestBase {
         'administer site configuration',
         'link to any page',
         'administer contact forms',
+        'administer filters',
+        $filtered_html_format->getPermissionName(),
+        $full_html_format->getPermissionName(),
+        $filter_test_format->getPermissionName(),
         'access site-wide contact form',
         'access contextual links',
         'administer views',
@@ -124,8 +137,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Update site name and slogan for French.
     $edit = array(
-      'config_names[system.site][name][translation]' => $fr_site_name,
-      'config_names[system.site][slogan][translation]' => $fr_site_slogan,
+      'translation[config_names][system.site][name]' => $fr_site_name,
+      'translation[config_names][system.site][slogan]' => $fr_site_slogan,
     );
 
     $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
@@ -138,8 +151,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertFieldByName('config_names[system.site][name][translation]', $fr_site_name);
-    $this->assertFieldByName('config_names[system.site][slogan][translation]', $fr_site_slogan);
+    $this->assertFieldByName('translation[config_names][system.site][name]', $fr_site_name);
+    $this->assertFieldByName('translation[config_names][system.site][slogan]', $fr_site_slogan);
 
     // Check French translation of site name and slogan are in place.
     $this->drupalGet('fr');
@@ -167,8 +180,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Case 1: Update new value for site slogan and site name.
     $edit = array(
-      'config_names[system.site][name][translation]' => 'FR ' . $site_name,
-      'config_names[system.site][slogan][translation]' => 'FR ' . $site_slogan,
+      'translation[config_names][system.site][name]' => 'FR ' . $site_name,
+      'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     );
     // First time, no overrides, so just Add link.
     $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
@@ -190,8 +203,8 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertNoText('FR ' . $site_name);
     $this->assertNoText('FR ' . $site_slogan);
     $edit = array(
-      'config_names[system.site][name][translation]' => $site_name,
-      'config_names[system.site][slogan][translation]' => 'FR ' . $site_slogan,
+      'translation[config_names][system.site][name]' => $site_name,
+      'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     );
     $this->drupalPostForm(NULL, $edit, t('Save translation'));
     $this->assertRaw(t('Successfully updated @language translation.', array('@language' => 'French')));
@@ -205,8 +218,8 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalGet("$translation_base_url/fr/edit");
     $this->assertNoText('FR ' . $site_slogan);
     $edit = array(
-      'config_names[system.site][name][translation]' => $site_name,
-      'config_names[system.site][slogan][translation]' => $site_slogan,
+      'translation[config_names][system.site][name]' => $site_name,
+      'translation[config_names][system.site][slogan]' => $site_slogan,
     );
     $this->drupalPostForm(NULL, $edit, t('Save translation'));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
@@ -275,8 +288,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
       // Update translatable fields.
       $edit = array(
-        'config_names[contact.form.feedback][label][translation]' => 'Website feedback - ' . $langcode,
-        'config_names[contact.form.feedback][reply][translation]' => 'Thank you for your mail - ' . $langcode,
+        'translation[config_names][contact.form.feedback][label]' => 'Website feedback - ' . $langcode,
+        'translation[config_names][contact.form.feedback][reply]' => 'Thank you for your mail - ' . $langcode,
       );
 
       // Save language specific version of form.
@@ -314,7 +327,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       $langcode_prefixes = array_merge(array(''), $this->langcodes);
       foreach ($langcode_prefixes as $langcode_prefix) {
         $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit"));
-        $this->assertFieldByName('config_names[contact.form.feedback][label][translation]', 'Website feedback - ' . $langcode);
+        $this->assertFieldByName('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
         $this->assertText($label);
       }
     }
@@ -404,8 +417,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
       // Update translatable fields.
       $edit = array(
-        'config_names[core.date_format.' . $id . '][label][translation]' => $id . ' - FR',
-        'config_names[core.date_format.' . $id . '][pattern][translation]' => 'D',
+        'translation[config_names][core.date_format.' . $id . '][label]' => $id . ' - FR',
+        'translation[config_names][core.date_format.' . $id . '][pattern]' => 'D',
       );
 
       // Save language specific version of form.
@@ -445,9 +458,9 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Update account settings fields for French.
     $edit = array(
-      'config_names[user.settings][anonymous][translation]' => 'Anonyme',
-      'config_names[user.mail][status_blocked][status_blocked.subject][translation]' => 'Testing, your account is blocked.',
-      'config_names[user.mail][status_blocked][status_blocked.body][translation]' => 'Testing account blocked body.',
+      'translation[config_names][user.settings][anonymous]' => 'Anonyme',
+      'translation[config_names][user.mail][status_blocked][subject]' => 'Testing, your account is blocked.',
+      'translation[config_names][user.mail][status_blocked][body]' => 'Testing account blocked body.',
     );
 
     $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, t('Save translation'));
@@ -456,7 +469,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalGet('admin/config/people/accounts/translate/fr/edit');
     foreach ($edit as $key => $value) {
       // Check the translations appear in the right field type as well.
-      $xpath = '//' . (strpos($key, '.body') ? 'textarea' : 'input') . '[@name="'. $key . '"]';
+      $xpath = '//' . (strpos($key, '[body]') ? 'textarea' : 'input') . '[@name="'. $key . '"]';
       $this->assertFieldByXPath($xpath, $value);
     }
     // Check that labels for email settings appear.
@@ -543,10 +556,10 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Update Views Fields for French.
     $edit = array(
-      'config_names[views.view.frontpage][description][translation]' => $description . " FR",
-      'config_names[views.view.frontpage][label][translation]' => $human_readable_name . " FR",
-      'config_names[views.view.frontpage][display][default][display.default.display_title][translation]' => $display_settings_master . " FR",
-      'config_names[views.view.frontpage][display][default][display_options][display.default.display_options.title][translation]' => $display_options_master . " FR",
+      'translation[config_names][views.view.frontpage][description]' => $description . " FR",
+      'translation[config_names][views.view.frontpage][label]' => $human_readable_name . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_master . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_master . " FR",
     );
     $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
     $this->assertRaw(t('Successfully saved @language translation.', array('@language' => 'French')));
@@ -558,10 +571,10 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertFieldByName('config_names[views.view.frontpage][description][translation]', $description . " FR");
-    $this->assertFieldByName('config_names[views.view.frontpage][label][translation]', $human_readable_name . " FR");
-    $this->assertFieldByName('config_names[views.view.frontpage][display][default][display.default.display_title][translation]', $display_settings_master . " FR");
-    $this->assertFieldByName('config_names[views.view.frontpage][display][default][display_options][display.default.display_options.title][translation]', $display_options_master . " FR");
+    $this->assertFieldByName('translation[config_names][views.view.frontpage][description]', $description . " FR");
+    $this->assertFieldByName('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
+    $this->assertFieldByName('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_master . " FR");
+    $this->assertFieldByName('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_master . " FR");
   }
 
   /**
@@ -592,7 +605,7 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Add custom translation.
     $edit = array(
-      'config_names[user.settings][anonymous][translation]' => 'Anonyme',
+      'translation[config_names][user.settings][anonymous]' => 'Anonyme',
     );
     $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, t('Save translation'));
 
@@ -603,7 +616,7 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // revert custom translations to base translation.
     $edit = array(
-      'config_names[user.settings][anonymous][translation]' => 'Anonymous',
+      'translation[config_names][user.settings][anonymous]' => 'Anonymous',
     );
     $this->drupalPostForm('admin/config/people/accounts/translate/fr/edit', $edit, t('Save translation'));
 
@@ -658,6 +671,104 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertText(t('Name'));
     $this->assertNoText(t('Account cancellation confirmation'));
     $this->assertNoText(t('Password recovery'));
+  }
+
+  /**
+   * Test text_format translation.
+   */
+  public function testTextFormatTranslation() {
+    $this->drupalLogin($this->admin_user);
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+
+    $expected = array(
+      'value' => '<p><strong>Hello World</strong></p>',
+      'format' => 'plain_text',
+    );
+    $actual = $config_factory
+      ->setOverrideState(FALSE)
+      ->get('config_translation_test.content')
+      ->get('content');
+    $this->assertEqual($expected, $actual);
+
+    $translation_base_url = 'admin/config/media/file-system/translate';
+    $this->drupalGet($translation_base_url);
+
+    // 'Add' link should be present for French translation.
+    $translation_page_url = "$translation_base_url/fr/add";
+    $this->assertLinkByHref($translation_page_url);
+
+    $this->drupalGet($translation_page_url);
+
+    // Assert that changing the text format is not possible, even for an
+    // administrator.
+    $this->assertNoFieldByName('translation[config_names][config_translation_test.content][content][format]');
+
+    // Update translatable fields.
+    $edit = array(
+      'translation[config_names][config_translation_test.content][content][value]' => '<p><strong>Hello World</strong> - FR</p>',
+    );
+
+    // Save language specific version of form.
+    $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+
+    // Get translation and check we've got the right value.
+    $expected = array(
+      'value' => '<p><strong>Hello World</strong> - FR</p>',
+      'format' => 'plain_text',
+    );
+    $this->container->get('language.config_factory_override')
+      ->setLanguage(new Language(array('id' => 'fr')));
+    $actual = $config_factory
+      ->setOverrideState(TRUE)
+      ->get('config_translation_test.content')
+      ->get('content');
+    $this->assertEqual($expected, $actual);
+
+    // Change the text format of the source configuration and verify that the
+    // text format of the translation does not change because that could lead to
+    // security vulnerabilities.
+    $config_factory
+      ->setOverrideState(FALSE)
+      ->get('config_translation_test.content')
+      ->set('content.format', 'full_html')
+      ->save();
+
+    $actual = $config_factory
+      ->setOverrideState(TRUE)
+      ->get('config_translation_test.content')
+      ->get('content');
+    // The translation should not have changed, so re-use $expected.
+    $this->assertEqual($expected, $actual);
+
+    // Because the text is now in a text format that the translator does not
+    // have access to, the translator should not be able to translate it.
+    $translation_page_url = "$translation_base_url/fr/edit";
+    $this->drupalLogin($this->translator_user);
+    $this->drupalGet($translation_page_url);
+    $this->assertDisabledTextarea('edit-translation-config-names-config-translation-testcontent-content-value');
+    $this->drupalPostForm(NULL, array(), t('Save translation'));
+    // Check that submitting the form did not update the text format of the
+    // translation.
+    $actual = $config_factory
+      ->get('config_translation_test.content')
+      ->get('content');
+    $this->assertEqual($expected, $actual);
+
+    // The administrator must explicitly change the text format.
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'translation[config_names][config_translation_test.content][content][format]' => 'full_html',
+    );
+    $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+    $expected = array(
+      'value' => '<p><strong>Hello World</strong> - FR</p>',
+      'format' => 'full_html',
+    );
+    $actual = $config_factory
+      ->get('config_translation_test.content')
+      ->get('content');
+    $this->assertEqual($expected, $actual);
   }
 
   /**
@@ -726,6 +837,35 @@ class ConfigTranslationUiTest extends WebTestBase {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
     return $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => $current_path)));
+  }
+
+  /**
+   * Asserts that a textarea with a given ID has been disabled from editing.
+   *
+   * @param string $id
+   *   The HTML ID of the textarea.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
+   */
+  protected function assertDisabledTextarea($id) {
+    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', array(
+      ':id' => $id,
+    ));
+    $textarea = reset($textarea);
+    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Disabled field @id exists.', array(
+      '@id' => $id,
+    )));
+    $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
+    $passed = $passed && $this->assertEqual((string) $textarea, $expected, String::format('Disabled textarea @id hides text in an inaccessible text format.', array(
+      '@id' => $id,
+    )));
+    // Make sure the text format select is not shown.
+    $select_id = str_replace('value', 'format--2', $id);
+    $select = $this->xpath('//select[@id=:id]', array(':id' => $select_id));
+    return $passed && $this->assertFalse($select, String::format('Field @id does not exist.', array(
+      '@id' => $id,
+    )));
   }
 
 }
