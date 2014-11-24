@@ -70,7 +70,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     \Drupal::setContainer($container);
-
   }
 
   /**
@@ -101,7 +100,62 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     $dependencies = $this->entity->calculateDependencies();
     $this->assertContains('test_module', $dependencies['module']);
+  }
 
+  /**
+   * @covers ::setTargetType
+   */
+  public function testSetTargetType() {
+    // Generate mock.
+    $mock = $this->getMock(
+      'Drupal\Core\Entity\EntityDisplayModeBase',
+      NULL,
+      array(array('something' => 'nothing'), 'test_type')
+    );
+
+    // Some test values.
+    $bad_target = 'uninitialized';
+    $target = 'test_target_type';
+
+    // Gain access to the protected property.
+    $property = new \ReflectionProperty($mock, 'targetEntityType');
+    $property->setAccessible(TRUE);
+    // Set the property to a known state.
+    $property->setValue($mock, $bad_target);
+
+    // Set the target type.
+    $mock->setTargetType($target);
+
+    // Test the outcome.
+    $this->assertNotEquals($bad_target, $property->getValue($mock));
+    $this->assertEquals($target, $property->getValue($mock));
+  }
+
+  /**
+   * @covers ::getTargetType
+   */
+  public function testGetTargetType() {
+    // Generate mock.
+    $mock = $this->getMock(
+      'Drupal\Core\Entity\EntityDisplayModeBase',
+      NULL,
+      array(array('something' => 'nothing'), 'test_type')
+    );
+
+    // A test value.
+    $target = 'test_target_type';
+
+    // Gain access to the protected property.
+    $property = new \ReflectionProperty($mock, 'targetEntityType');
+    $property->setAccessible(TRUE);
+    // Set the property to a known state.
+    $property->setValue($mock, $target);
+
+    // Get the target type.
+    $value = $mock->getTargetType($target);
+
+    // Test the outcome.
+    $this->assertEquals($value, $property->getValue($mock));
   }
 
 }

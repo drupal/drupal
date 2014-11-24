@@ -53,7 +53,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
       throw new NotFoundHttpException();
     }
 
-    $this->entity->targetEntityType = $this->targetEntityTypeId;
+    $this->entity->setTargetType($this->targetEntityTypeId);
   }
 
 }

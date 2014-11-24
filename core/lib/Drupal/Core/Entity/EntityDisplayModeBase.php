@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Base class for config entity types that hold settings for form and view modes.
+ * Base class for config entity types with settings for form and view modes.
  */
 abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityDisplayModeInterface {
 
@@ -20,14 +20,14 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable name of the form or view mode.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The entity type this form or view mode is used for.
@@ -37,7 +37,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    *
    * @var string
    */
-  public $targetEntityType;
+  protected $targetEntityType;
 
   /**
    * Whether or not this form or view mode has custom settings by default.
@@ -56,7 +56,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    *
    * @var bool
    */
-  public $cache = TRUE;
+  protected $cache = TRUE;
 
   /**
    * {@inheritdoc}
@@ -76,6 +76,14 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    */
   public function getTargetType() {
     return $this->targetEntityType;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTargetType($target_entity_type) {
+    $this->targetEntityType = $target_entity_type;
+    return $this;
   }
 
   /**
