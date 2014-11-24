@@ -137,6 +137,46 @@ class PasswordHashingTest extends UnitTestCase {
     $this->assertTrue($this->passwordHasher->check($this->password, $this->user), 'Password check succeeds with re-hashed password.');
   }
 
+  /**
+   * Verifies that passwords longer than 512 bytes are not hashed.
+   *
+   * @covers ::crypt
+   *
+   * @dataProvider providerLongPasswords
+   */
+  public function testLongPassword($password, $allowed) {
+
+    $hashed_password = $this->passwordHasher->hash($password);
+
+    if ($allowed) {
+      $this->assertNotFalse($hashed_password);
+    }
+    else {
+      $this->assertFalse($hashed_password);
+    }
+  }
+
+  /**
+   * Provides the test matrix for testLongPassword().
+   */
+  public function providerLongPasswords() {
+    // '512 byte long password is allowed.'
+    $passwords['allowed'] = array(str_repeat('x', 512), TRUE);
+    // 513 byte long password is not allowed.
+    $passwords['too_long'] = array(str_repeat('x', 513), FALSE);
+
+    // Check a string of 3-byte UTF-8 characters, 510 byte long password is
+    // allowed.
+    $passwords['utf8'] = array(str_repeat('€', 170), TRUE);
+    // 512 byte long password is allowed.
+    $passwords['ut8_extended'] = array($passwords['utf8'][0] . 'xx', TRUE);
+
+    // Check a string of 3-byte UTF-8 characters, 513 byte long password is
+    // allowed.
+    $passwords['utf8_too_long'] = array(str_repeat('€', 171), FALSE);
+    return $passwords;
+  }
+
 }
 
 /**

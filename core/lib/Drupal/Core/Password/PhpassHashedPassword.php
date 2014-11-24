@@ -148,7 +148,8 @@ class PhpassHashedPassword implements PasswordInterface {
    * @param String $algo
    *   The string name of a hashing algorithm usable by hash(), like 'sha256'.
    * @param String $password
-   *   The plain-text password to hash.
+   *   Plain-text password up to 512 bytes (128 to 512 UTF-8 characters) to
+   *   hash.
    * @param String $setting
    *   An existing hash or the output of $this->generateSalt().  Must be
    *   at least 12 characters (the settings and salt).
@@ -158,6 +159,11 @@ class PhpassHashedPassword implements PasswordInterface {
    *   The return string will be truncated at HASH_LENGTH characters max.
    */
   protected function crypt($algo, $password, $setting) {
+    // Prevent DoS attacks by refusing to hash large passwords.
+    if (strlen($password) > 512) {
+      return FALSE;
+    }
+
     // The first 12 characters of an existing hash are its setting string.
     $setting = substr($setting, 0, 12);
 
