@@ -84,4 +84,12 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    */
   public function getHtmlRestrictions();
 
+  /**
+   * Removes a filter.
+   *
+   * @param string $instance_id
+   *   The ID of a filter plugin to be removed.
+   */
+  public function removeFilter($instance_id);
+
 }

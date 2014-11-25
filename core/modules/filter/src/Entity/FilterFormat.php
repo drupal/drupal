@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Entity;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -384,6 +385,46 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       }
 
       return $restrictions;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeFilter($instance_id) {
+    unset($this->filters[$instance_id]);
+    $this->filterCollection->removeInstanceId($instance_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = FALSE;
+    $filters = $this->filters();
+    foreach ($filters as $filter) {
+      // Remove disabled filters, so that this FilterFormat config entity can
+      // continue to exist.
+      if (!$filter->status && in_array($filter->provider, $dependencies['module'])) {
+        $this->removeFilter($filter->getPluginId());
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $this->save();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function calculatePluginDependencies(PluginInspectionInterface $instance) {
+    // Only add dependencies for plugins that are actually configured. This is
+    // necessary because the filter plugin collection will return all available
+    // filter plugins.
+    // @see \Drupal\filter\FilterPluginCollection::getConfiguration()
+    if (isset($this->filters[$instance->getPluginId()])) {
+      parent::calculatePluginDependencies($instance);
     }
   }
 
