@@ -37,7 +37,7 @@ class TipPluginImage extends TipPluginBase {
   protected $alt;
 
   /**
-   * Overrides \Drupal\tour\Plugin\tour\tour\TipPluginInterface::getOutput().
+   * {@inheritdoc}
    */
   public function getOutput() {
     $image = array(

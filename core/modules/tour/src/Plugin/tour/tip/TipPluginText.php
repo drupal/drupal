@@ -104,7 +104,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Overrides \Drupal\tour\TipPluginBase::getAttributes().
+   * {@inheritdoc}
    */
   public function getAttributes() {
     $attributes = parent::getAttributes();
@@ -117,7 +117,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::getOutput().
+   * {@inheritdoc}
    */
   public function getOutput() {
     $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . String::checkPlain($this->getLabel()) . '</h2>';

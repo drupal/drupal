@@ -18,6 +18,14 @@ namespace Drupal\tour;
 interface TipPluginInterface {
 
   /**
+   * Returns id of the tip.
+   *
+   * @return string
+   *   The id of the tip.
+   */
+  public function id();
+
+  /**
    * Returns label of the tip.
    *
    * @return string

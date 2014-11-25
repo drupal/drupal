@@ -55,6 +55,14 @@ interface TourInterface extends ConfigEntityInterface {
   public function getTips();
 
   /**
+   * Gets the module this tour belongs to.
+   *
+   * @return string
+   *   The module this tour belongs to.
+   */
+  public function getModule();
+
+  /**
    * Resets the statically cached keyed routes.
    */
   public function resetKeyedRoutes();

@@ -42,28 +42,35 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   protected $attributes;
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::getLabel().
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->get('id');
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getLabel() {
     return $this->get('label');
   }
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::getWeight().
+   * {@inheritdoc}
    */
   public function getWeight() {
     return $this->get('weight');
   }
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::getAttributes().
+   * {@inheritdoc}
    */
   public function getAttributes() {
     return $this->get('attributes');
   }
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::get().
+   * {@inheritdoc}
    */
   public function get($key) {
     if (!empty($this->configuration[$key])) {
@@ -72,7 +79,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   }
 
   /**
-   * Implements \Drupal\tour\TipPluginInterface::set().
+   * {@inheritdoc}
    */
   public function set($key, $value) {
     $this->configuration[$key] = $value;

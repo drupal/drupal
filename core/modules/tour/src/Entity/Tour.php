@@ -34,21 +34,21 @@ class Tour extends ConfigEntityBase implements TourInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The module which this tour is assigned to.
    *
    * @var string
    */
-  public $module;
+  protected $module;
 
   /**
    * The label of the tour.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The routes on which this tour should be displayed.
@@ -118,6 +118,13 @@ class Tour extends ConfigEntityBase implements TourInterface {
 
     \Drupal::moduleHandler()->alter('tour_tips', $tips, $this);
     return array_values($tips);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getModule() {
+    return $this->module;
   }
 
   /**
