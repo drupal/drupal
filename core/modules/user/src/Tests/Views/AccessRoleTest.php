@@ -46,13 +46,8 @@ class AccessRoleTest extends AccessTestBase {
     $this->assertTrue($access_plugin instanceof Role, 'Make sure the right class got instantiated.');
 
     // Test the access() method on the access plugin.
-    $this->assertTrue($executable->display_handler->access($this->adminUser), 'Admin-Account should be able to access the view everytime');
     $this->assertFalse($executable->display_handler->access($this->webUser));
     $this->assertTrue($executable->display_handler->access($this->normalUser));
-
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('test-role');
-    $this->assertResponse(200);
 
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');

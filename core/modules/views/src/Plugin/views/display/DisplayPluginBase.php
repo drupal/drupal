@@ -2251,11 +2251,6 @@ abstract class DisplayPluginBase extends PluginBase {
       $account = \Drupal::currentUser();
     }
 
-    // Full override.
-    if ($account->hasPermission('access all views')) {
-      return TRUE;
-    }
-
     $plugin = $this->getPlugin('access');
       /** @var \Drupal\views\Plugin\views\access\AccessPluginBase $plugin */
     if ($plugin) {

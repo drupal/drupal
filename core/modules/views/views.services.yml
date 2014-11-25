@@ -73,9 +73,5 @@ services:
     arguments: ['@entity.manager', '@state']
     tags:
       - { name: 'event_subscriber' }
-  views.route_access_check:
-    class: Drupal\views\ViewsAccessCheck
-    tags:
-      - { name: 'access_check' }
   views.exposed_form_cache:
     class: Drupal\views\ExposedFormCache

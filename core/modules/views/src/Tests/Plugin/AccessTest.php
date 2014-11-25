@@ -40,7 +40,6 @@ class AccessTest extends PluginTestBase {
 
     ViewTestData::createTestViews(get_class($this), array('views_test_data'));
 
-    $this->admin_user = $this->drupalCreateUser(array('access all views'));
     $this->web_user = $this->drupalCreateUser();
     $roles = $this->web_user->getRoles();
     $this->web_role = $roles[0];
@@ -59,7 +58,6 @@ class AccessTest extends PluginTestBase {
     $view = Views::getView('test_access_none');
     $view->setDisplay();
 
-    $this->assertTrue($view->display_handler->access($this->admin_user), 'Admin-Account should be able to access the view everytime');
     $this->assertTrue($view->display_handler->access($this->web_user));
     $this->assertTrue($view->display_handler->access($this->normal_user));
   }

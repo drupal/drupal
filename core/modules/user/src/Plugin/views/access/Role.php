@@ -35,7 +35,7 @@ class Role extends AccessPluginBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return $account->hasPermission('access all views') || array_intersect(array_filter($this->options['role']), $account->getRoles());
+    return array_intersect(array_filter($this->options['role']), $account->getRoles());
   }
 
   /**
@@ -77,7 +77,7 @@ class Role extends AccessPluginBase {
       '#title' => $this->t('Role'),
       '#default_value' => $this->options['role'],
       '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
-      '#description' => $this->t('Only the checked roles will be able to access this display. Note that users with "access all views" can see any view, regardless of role.'),
+      '#description' => $this->t('Only the checked roles will be able to access this display.'),
     );
   }
 

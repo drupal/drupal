@@ -1,4 +1,0 @@
-access all views:
-  title: 'Bypass views access control'
-  description: 'Bypass access control when accessing views.'
-  restrict access: true

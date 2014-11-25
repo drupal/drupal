@@ -73,7 +73,7 @@ class Permission extends AccessPluginBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return $account->hasPermission($this->options['perm']) || $account->hasPermission('access all views');
+    return $account->hasPermission($this->options['perm']);
   }
 
   /**
@@ -118,7 +118,7 @@ class Permission extends AccessPluginBase {
       '#options' => $perms,
       '#title' => $this->t('Permission'),
       '#default_value' => $this->options['perm'],
-      '#description' => $this->t('Only users with the selected permission flag will be able to access this display. Note that users with "access all views" can see any view, regardless of other permissions.'),
+      '#description' => $this->t('Only users with the selected permission flag will be able to access this display.'),
     );
   }
 

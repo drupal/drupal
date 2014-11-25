@@ -19,10 +19,10 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * To define permissions you can use a $module.permissions.yml file:
  *
  * @code
- * access all views:
- *   title: 'Bypass views access control'
- *   description: 'Bypass access control when accessing views.'
+ * administer permissions:
+ *   title: Administer permissions
  *   restrict access: true
+ *   description: some description
  * @endcode
  */
 class PermissionHandler implements PermissionHandlerInterface {
