@@ -199,9 +199,11 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
       // in the message. This does not happen for (false) security.
-      $root_length = strlen(\Drupal::root());
-      if (substr($error['%file'], 0, $root_length) == \Drupal::root()) {
-        $error['%file'] = substr($error['%file'], $root_length + 1);
+      if (\Drupal::hasService('app.root')) {
+        $root_length = strlen(\Drupal::root());
+        if (substr($error['%file'], 0, $root_length) == \Drupal::root()) {
+          $error['%file'] = substr($error['%file'], $root_length + 1);
+        }
       }
       // Should not translate the string to avoid errors producing more errors.
       $message = format_string('%type: !message in %function (line %line of %file).', $error);
@@ -218,7 +220,13 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // Generate a backtrace containing only scalar argument values.
         $message .= '<pre class="backtrace">' . Error::formatBacktrace($backtrace) . '</pre>';
       }
-      drupal_set_message(SafeMarkup::set($message), $class, TRUE);
+      if (\Drupal::hasService('session_manager')) {
+        // Message display is dependent on sessions being available.
+        drupal_set_message(SafeMarkup::set($message), $class, TRUE);
+      }
+      else {
+        print $message;
+      }
     }
 
     if ($fatal) {
