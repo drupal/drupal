@@ -213,6 +213,11 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $backend->set($cid, 'test');
     $this->assertEqual('test', $backend->get($cid)->data);
 
+    // Check that the cache key is case sensitive.
+    $backend->set('TEST8', 'value');
+    $this->assertEqual('value', $backend->get('TEST8')->data);
+    $this->assertFalse($backend->get('test8'));
+
     // Calling ::set() with invalid cache tags.
     try {
       $backend->set('exception_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);

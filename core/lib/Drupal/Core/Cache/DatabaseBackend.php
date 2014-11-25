@@ -564,6 +564,7 @@ class DatabaseBackend implements CacheBackendInterface {
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
+          'binary' => TRUE,
         ),
         'data' => array(
           'description' => 'A collection of data to cache.',
