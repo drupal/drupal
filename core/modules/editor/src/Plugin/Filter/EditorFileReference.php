@@ -70,12 +70,12 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
 
-    if (stristr($text, 'data-editor-file-uuid') !== FALSE) {
+    if (stristr($text, 'data-entity-type="file"') !== FALSE) {
       $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
       $processed_uuids = array();
-      foreach ($xpath->query('//*[@data-editor-file-uuid]') as $node) {
-        $uuid = $node->getAttribute('data-editor-file-uuid');
+      foreach ($xpath->query('//*[@data-entity-type="file" and @data-entity-uuid]') as $node) {
+        $uuid = $node->getAttribute('data-entity-uuid');
         // Only process the first occurrence of each file UUID.
         if (!isset($processed_uuids[$uuid])) {
           $processed_uuids[$uuid] = TRUE;

@@ -48,7 +48,7 @@
         }, true);
 
         // Override requiredContent & allowedContent.
-        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-editor-file-uuid,data-align,data-caption]';
+        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-entity-type,data-entity-uuid,data-align,data-caption]';
         widgetDefinition.allowedContent.img.attributes += ',data-align,data-caption';
 
         // Override allowedContent setting for the 'caption' nested editable.
@@ -58,8 +58,8 @@
         widgetDefinition.editables.caption.allowedContent = 'a[!href]; em strong cite code br';
 
         // Override downcast(): ensure we *only* output <img>, but also ensure
-        // we include the data-editor-file-uuid, data-align and data-caption
-        // attributes.
+        // we include the data-entity-type, data-entity-uuid, data-align and
+        // data-caption attributes.
         widgetDefinition.downcast = function (element) {
           // Find an image element in the one being downcasted (can be itself).
           var img = findElementByName(element, 'img');
@@ -79,7 +79,8 @@
               attrs['data-align'] = this.data.align;
             }
           }
-          attrs['data-editor-file-uuid'] = this.data['data-editor-file-uuid'];
+          attrs['data-entity-type'] = this.data['data-entity-type'];
+          attrs['data-entity-uuid'] = this.data['data-entity-uuid'];
 
           return img;
         };
@@ -91,7 +92,7 @@
         //   - <figure> tag (captioned image).
         // We take the same attributes into account as downcast() does.
         widgetDefinition.upcast = function (element, data) {
-          if (element.name !== 'img' || !element.attributes['data-editor-file-uuid']) {
+          if (element.name !== 'img' || !element.attributes['data-entity-type'] || !element.attributes['data-entity-uuid']) {
             return;
           }
           // Don't initialize on pasted fake objects.
@@ -112,8 +113,10 @@
             data.align = attrs['data-align'];
             delete attrs['data-align'];
           }
-          data['data-editor-file-uuid' ] = attrs['data-editor-file-uuid'];
-          delete attrs['data-editor-file-uuid'];
+          data['data-entity-type' ] = attrs['data-entity-type'];
+          delete attrs['data-entity-type'];
+          data['data-entity-uuid' ] = attrs['data-entity-uuid'];
+          delete attrs['data-entity-uuid'];
 
           if (captionFilterEnabled) {
             // Unwrap from <p> wrapper created by HTML parser for a captioned

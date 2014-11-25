@@ -68,45 +68,50 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     $uuid_2 = $image_2->uuid();
     $cache_tag_2 = ['file:' . $id_2];
 
-    $this->pass('No data-editor-file-uuid attribute.');
+    $this->pass('No data-entity-type and no data-entity-uuid attribute.');
     $input = '<img src="llama.jpg" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
 
-    $this->pass('One data-editor-file-uuid attribute.');
-    $input = '<img src="llama.jpg" data-editor-file-uuid="' . $uuid . '" />';
+    $this->pass('A non-file data-entity-type attribute value.');
+    $input = '<img src="llama.jpg" data-entity-type="invalid-entity-type-value" data-entity-uuid="' . $uuid . '" />';
+    $output = $test($input);
+    $this->assertIdentical($input, $output->getProcessedText());
+
+    $this->pass('One data-entity-uuid attribute.');
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual($cache_tag, $output->getCacheTags());
 
-    $this->pass('One data-editor-file-uuid attribute with odd capitalization.');
-    $input = '<img src="llama.jpg" DATA-editor-file-UUID =   "' . $uuid . '" />';
+    $this->pass('One data-entity-uuid attribute with odd capitalization.');
+    $input = '<img src="llama.jpg" data-entity-type="file" DATA-entity-UUID =   "' . $uuid . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual($cache_tag, $output->getCacheTags());
 
-    $this->pass('One data-editor-file-uuid attribute on a non-image tag.');
-    $input = '<video src="llama.jpg" data-editor-file-uuid="' . $uuid . '" />';
+    $this->pass('One data-entity-uuid attribute on a non-image tag.');
+    $input = '<video src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual($cache_tag, $output->getCacheTags());
 
-    $this->pass('One data-editor-file-uuid attribute with an invalid value.');
-    $input = '<img src="llama.jpg" data-editor-file-uuid="invalid-' . $uuid . '" />';
+    $this->pass('One data-entity-uuid attribute with an invalid value.');
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="invalid-' . $uuid . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual(array(), $output->getCacheTags());
 
-    $this->pass('Two different data-editor-file-uuid attributes.');
-    $input = '<img src="llama.jpg" data-editor-file-uuid="' . $uuid . '" />';
-    $input .= '<img src="alpaca.jpg" data-editor-file-uuid="' . $uuid_2 . '" />';
+    $this->pass('Two different data-entity-uuid attributes.');
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
+    $input .= '<img src="alpaca.jpg" data-entity-type="file" data-entity-uuid="' . $uuid_2 . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual(Cache::mergeTags($cache_tag, $cache_tag_2), $output->getCacheTags());
 
-    $this->pass('Two identical  data-editor-file-uuid attributes.');
-    $input = '<img src="llama.jpg" data-editor-file-uuid="' . $uuid . '" />';
-    $input .= '<img src="llama.jpg" data-editor-file-uuid="' . $uuid . '" />';
+    $this->pass('Two identical  data-entity-uuid attributes.');
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
+    $input .= '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
     $output = $test($input);
     $this->assertIdentical($input, $output->getProcessedText());
     $this->assertEqual($cache_tag, $output->getCacheTags());

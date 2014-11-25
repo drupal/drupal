@@ -3,8 +3,8 @@
  * Drupal Image plugin.
  *
  * This alters the existing CKEditor image2 widget plugin to:
- * - require a data-editor-file-uuid attribute (which Drupal uses to track where
- *   images are being used)
+ * - require a data-entity-type and a data-entity-uuid attribute (which Drupal
+ *   uses to track where images are being used)
  * - use a Drupal-native dialog (that is in fact just an alterable Drupal form
  *   like any other) instead of CKEditor's own dialogs.
  *   @see \Drupal\editor\Form\EditorImageDialog
@@ -18,7 +18,7 @@
 
     beforeInit: function (editor) {
       // Override the image2 widget definition to require and handle the
-      // additional data-editor-file-uuid attribute.
+      // additional data-entity-type and data-entity-uuid attributes.
       editor.on('widgetDefinition', function (event) {
         var widgetDefinition = event.data;
         if (widgetDefinition.name !== 'image') {
@@ -26,8 +26,8 @@
         }
 
         // Override requiredContent & allowedContent.
-        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-editor-file-uuid]';
-        widgetDefinition.allowedContent.img.attributes += ',!data-editor-file-uuid';
+        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-entity-type,data-entity-uuid]';
+        widgetDefinition.allowedContent.img.attributes += ',!data-entity-type,!data-entity-uuid';
         // We don't allow <figure>, <figcaption>, <div> or <p>  in our downcast.
         delete widgetDefinition.allowedContent.figure;
         delete widgetDefinition.allowedContent.figcaption;
@@ -40,14 +40,14 @@
 
         // Override downcast(): since we only accept <img> in our upcast method,
         // the element is already correct. We only need to update the element's
-        // data-editor-file-uuid attribute.
+        // data-entity-uuid attribute.
         widgetDefinition.downcast = function (element) {
-          element.attributes['data-editor-file-uuid'] = this.data['data-editor-file-uuid'];
+          element.attributes['data-entity-uuid'] = this.data['data-entity-uuid'];
         };
 
         // We want to upcast <img> elements to a DOM structure required by the
         // image2 widget; we only accept an <img> tag, and that <img> tag MAY
-        // have a data-editor-file-uuid attribute.
+        // have a data-entity-type and a data-entity-uuid attribute.
         widgetDefinition.upcast = function (element, data) {
           if (element.name !== 'img') {
             return;
@@ -57,8 +57,10 @@
             return;
           }
 
-          // Parse the data-editor-file-uuid attribute.
-          data['data-editor-file-uuid'] = element.attributes['data-editor-file-uuid'];
+          // Parse the data-entity-type attribute.
+          data['data-entity-type'] = element.attributes['data-entity-type'];
+          // Parse the data-entity-uuid attribute.
+          data['data-entity-uuid'] = element.attributes['data-entity-uuid'];
 
           return element;
         };
@@ -71,7 +73,8 @@
           'alt': 'alt',
           'width': 'width',
           'height': 'height',
-          'data-editor-file-uuid': 'data-editor-file-uuid'
+          'data-entity-type': 'data-entity-type',
+          'data-entity-uuid': 'data-entity-uuid'
         };
 
         // Protected; transforms widget's data object to the format used by the
@@ -175,8 +178,8 @@
       // Register the "editdrupalimage" command, which essentially just replaces
       // the "image" command's CKEditor dialog with a Drupal-native dialog.
       editor.addCommand('editdrupalimage', {
-        allowedContent: 'img[alt,!src,width,height,!data-editor-file-uuid]',
-        requiredContent: 'img[alt,src,width,height,data-editor-file-uuid]',
+        allowedContent: 'img[alt,!src,width,height,!data-entity-type,!data-entity-uuid]',
+        requiredContent: 'img[alt,src,width,height,data-entity-type,data-entity-uuid]',
         modes: { wysiwyg: 1 },
         canUndo: true,
         exec: function (editor, data) {

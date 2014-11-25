@@ -60,7 +60,7 @@ class EditorImageDialog extends FormBase {
     }
     $max_filesize = min(Bytes::toInt($image_upload['max_size']), file_upload_max_size());
 
-    $existing_file = isset($image_element['data-editor-file-uuid']) ? entity_load_by_uuid('file', $image_element['data-editor-file-uuid']) : NULL;
+    $existing_file = isset($image_element['data-entity-uuid']) ? entity_load_by_uuid('file', $image_element['data-entity-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
 
     $form['fid'] = array(
@@ -204,8 +204,8 @@ class EditorImageDialog extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
-    // Convert any uploaded files from the FID values to data-editor-file-uuid
-    // attributes.
+    // Convert any uploaded files from the FID values to data-entity-uuid
+    // attributes and set data-entity-type to 'file'.
     $fid = $form_state->getValue(array('fid', 0));
     if (!empty($fid)) {
       $file = file_load($fid);
@@ -214,7 +214,8 @@ class EditorImageDialog extends FormBase {
       // on multisite set-ups and prevent mixed content errors.
       $file_url = file_url_transform_relative($file_url);
       $form_state->setValue(array('attributes', 'src'), $file_url);
-      $form_state->setValue(array('attributes', 'data-editor-file-uuid'), $file->uuid());
+      $form_state->setValue(array('attributes', 'data-entity-uuid'), $file->uuid());
+      $form_state->setValue(array('attributes', 'data-entity-type'), 'file');
     }
 
     // When the alt attribute is set to two double quotes, transform it to the

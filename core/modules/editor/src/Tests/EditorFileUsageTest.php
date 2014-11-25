@@ -62,11 +62,13 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     $file_usage = $this->container->get('file.usage');
     $this->assertIdentical(array(), $file_usage->listUsage($image), 'The image has zero usages.');
 
-    $body_value = '<p>Hello, world!</p><img src="awesome-llama.jpg" data-editor-file-uuid="' . $image->uuid() . '" />';
-    // Test handling of an invalid data- attribute.
-    $body_value .= '<img src="awesome-llama.jpg" data-editor-file-uuid="invalid-editor-file-uuid-value" />';
+    $body_value = '<p>Hello, world!</p><img src="awesome-llama.jpg" data-entity-type="file" data-entity-uuid="' . $image->uuid() . '" />';
+    // Test handling of an invalid data-entity-uuid attribute.
+    $body_value .= '<img src="awesome-llama.jpg" data-entity-type="file" data-entity-uuid="invalid-entity-uuid-value" />';
+    // Test handling of an invalid data-entity-type attribute.
+    $body_value .= '<img src="awesome-llama.jpg" data-entity-type="invalid-entity-type-value" data-entity-uuid="' . $image->uuid() . '" />';
     // Test handling of a non-existing UUID.
-    $body_value .= '<img src="awesome-llama.jpg" data-editor-file-uuid="30aac704-ba2c-40fc-b609-9ed121aa90f4" />';
+    $body_value .= '<img src="awesome-llama.jpg" data-entity-type="file" data-entity-uuid="30aac704-ba2c-40fc-b609-9ed121aa90f4" />';
     // Test editor_entity_insert(): increment.
     $this->createUser();
     $node = entity_create('node', array(
@@ -90,16 +92,31 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image), 'The image has 3 usages.');
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
-    // remove the data- attribute from the body field.
+    // remove the data-entity-type attribute from the body field.
     $body = $node->get('body')->first()->get('value');
     $original_value = $body->getValue();
-    $new_value = str_replace('data-editor-file-uuid', 'data-editor-file-uuid-modified', $original_value);
+    $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
+    $body->setValue($new_value);
+    $node->save();
+    $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image), 'The image has 2 usages.');
+
+    // Test editor_entity_update(): increment again by creating a new revision:
+    // read the data- attributes to the body field.
+    $node->setNewRevision(TRUE);
+    $node->get('body')->first()->get('value')->setValue($original_value);
+    $node->save();
+    $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image), 'The image has 3 usages.');
+
+    // Test hook_entity_update(): decrement, by modifying the last revision:
+    // remove the data-entity-uuid attribute from the body field.
+    $body = $node->get('body')->first()->get('value');
+    $new_value = str_replace('data-entity-uuid', 'data-entity-uuid-modified', $original_value);
     $body->setValue($new_value);
     $node->save();
     $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image), 'The image has 2 usages.');
 
     // Test hook_entity_update(): increment, by modifying the last revision:
-    // readd the data- attribute to the body field.
+    // read the data- attributes to the body field.
     $node->get('body')->first()->get('value')->setValue($original_value);
     $node->save();
     $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image), 'The image has 3 usages.');
