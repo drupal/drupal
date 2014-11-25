@@ -110,15 +110,13 @@ use Drupal\Core\Template\Attribute;
  * only requirement is that the method specified in your *.routing.yml file
  * returns:
  * - A render array (see the
- *   @link theme_render Theme and render topic @endlink for more information),
- *   if _content is used in the routing file.
+ *   @link theme_render Theme and render topic @endlink for more information).
  *   This render array is then rendered in the requested format (HTML, dialog,
  *   modal, AJAX are supported by default). In the case of HTML, it will be
  *   surrounded by blocks by default: the Block module is enabled by default,
  *   and hence its Page Display Variant that surrounds the main content with
  *   blocks is also used by default.
- * - A \Symfony\Component\HttpFoundation\Response object, if _controller is
- *   used in the routing file.
+ * - A \Symfony\Component\HttpFoundation\Response object.
  * As a note, if your module registers multiple simple routes, it is usual
  * (and usually easiest) to put all of their methods on one controller class.
  *
