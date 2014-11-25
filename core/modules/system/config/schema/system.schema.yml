@@ -38,6 +38,9 @@ system.site:
     langcode:
       type: string
       label: 'Default language'
+    mail_notification:
+      type: string
+      label: 'Notification email address'
 
 system.maintenance:
   type: mapping

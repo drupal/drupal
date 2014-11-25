@@ -101,6 +101,7 @@ display:
           hide_alter_empty: true
           anonymous_text: ''
           format_username: true
+          plugin_id: user_name
         contact:
           id: contact
           table: users
@@ -116,6 +117,7 @@ display:
           expose:
             operator: '0'
           group: 1
+          plugin_id: boolean
       sorts: {  }
       title: test_contact_link
       header: {  }

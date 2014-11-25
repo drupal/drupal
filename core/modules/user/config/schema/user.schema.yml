@@ -29,7 +29,7 @@ user.settings:
         status_blocked:
           type: boolean
           label: 'Account blocked'
-        status_cancelled:
+        status_canceled:
           type: boolean
           label: 'Account canceled'
         register_admin_created:

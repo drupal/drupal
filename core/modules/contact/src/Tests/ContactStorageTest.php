@@ -8,15 +8,12 @@
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\Message;
 
 /**
  * Tests storing contact messages.
  */
 class ContactStorageTest extends ContactSitewideTest {
-
-  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -79,7 +76,6 @@ class ContactStorageTest extends ContactSitewideTest {
 
     $config = \Drupal::config("contact.form.$id");
     $this->assertEqual($config->get('id'), $id);
-    $this->assertConfigSchema(\Drupal::service('config.typed'), $config->getName(), $config->get());
   }
 
 }

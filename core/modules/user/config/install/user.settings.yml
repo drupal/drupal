@@ -6,7 +6,7 @@ notify:
   password_reset: true
   status_activated: true
   status_blocked: false
-  status_cancelled: false
+  status_canceled: false
   register_admin_created: true
   register_no_approval_required: true
   register_pending_approval: true
