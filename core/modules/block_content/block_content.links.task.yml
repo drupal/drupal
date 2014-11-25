@@ -10,6 +10,7 @@ block_content.type_list:
   title: Types
   route_name: block_content.type_list
   parent_id: block_content.list
+  weight: 1
 
 entity.block_content.canonical:
   title: Edit
