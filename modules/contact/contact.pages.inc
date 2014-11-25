@@ -134,7 +134,7 @@ function contact_site_form_submit($form, &$form_state) {
   global $user, $language;
 
   $values = $form_state['values'];
-  $values['sender'] = $user;
+  $values['sender'] = clone $user;
   $values['sender']->name = $values['name'];
   $values['sender']->mail = $values['mail'];
   $values['category'] = contact_load($values['cid']);
@@ -270,7 +270,7 @@ function contact_personal_form_submit($form, &$form_state) {
   global $user, $language;
 
   $values = $form_state['values'];
-  $values['sender'] = $user;
+  $values['sender'] = clone $user;
   $values['sender']->name = $values['name'];
   $values['sender']->mail = $values['mail'];
 
