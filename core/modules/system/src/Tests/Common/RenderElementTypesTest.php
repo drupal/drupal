@@ -184,4 +184,50 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
     }
   }
 
+  /**
+   * Tests system #type 'system_compact_link'.
+   */
+  function testSystemCompactLink() {
+    $elements = array(
+      array(
+        'name' => "#type 'system_compact_link' when admin compact mode is off",
+        'value' => array(
+          '#type' => 'system_compact_link',
+        ),
+        'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact/on?") and text()="Hide descriptions"]',
+      ),
+      array(
+        'name' => "#type 'system_compact_link' when adding extra attributes",
+        'value' => array(
+          '#type' => 'system_compact_link',
+          '#attributes' => array(
+            'class' => array('kittens-rule'),
+          ),
+        ),
+        'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact/on?") and @class="kittens-rule" and text()="Hide descriptions"]',
+      ),
+    );
+
+    foreach ($elements as $element) {
+      $xml = new \SimpleXMLElement(drupal_render($element['value']));
+      $result = $xml->xpath($element['expected']);
+      $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
+    }
+
+    // Set admin compact mode on for additional tests.
+    \Drupal::request()->cookies->set('Drupal_visitor_admin_compact_mode', TRUE);
+
+    $element = array(
+      'name' => "#type 'system_compact_link' when admin compact mode is on",
+      'value' => array(
+        '#type' => 'system_compact_link',
+      ),
+      'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact?") and text()="Show descriptions"]',
+    );
+
+    $xml = new \SimpleXMLElement(drupal_render($element['value']));
+    $result = $xml->xpath($element['expected']);
+    $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
+  }
+
 }

@@ -97,7 +97,8 @@ class UserPermissionsForm extends FormBase {
     $hide_descriptions = system_admin_compact_mode();
 
     $form['system_compact_link'] = array(
-      '#theme' => 'system_compact_link',
+      '#id' => FALSE,
+      '#type' => 'system_compact_link',
     );
 
     $form['permissions'] = array(

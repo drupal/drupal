@@ -81,7 +81,7 @@ function template_preprocess_admin_block_content(&$variables) {
  */
 function template_preprocess_admin_page(&$variables) {
   $variables['system_compact_link'] = array(
-    '#theme' => 'system_compact_link',
+    '#type' => 'system_compact_link',
   );
   $variables['containers'] = array();
   $stripe = 0;
@@ -110,7 +110,7 @@ function template_preprocess_admin_page(&$variables) {
  */
 function template_preprocess_system_admin_index(&$variables) {
   $variables['system_compact_link'] = array(
-    '#theme' => 'system_compact_link',
+    '#type' => 'system_compact_link',
   );
   $variables['containers'] = array();
   $stripe = 0;

@@ -210,10 +210,6 @@ function system_theme() {
       'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_compact_link' => array(
-      'variables' => array(),
-      'function' => 'theme_system_compact_link',
-    ),
   ));
 }
 
@@ -1211,24 +1207,6 @@ function system_time_zones($blank = NULL) {
   // Sort the translated time zones alphabetically.
   asort($zones);
   return $zones;
-}
-
-/**
- * Returns HTML for a link to show or hide inline help descriptions.
- *
- * @ingroup themeable
- */
-function theme_system_compact_link() {
-  $output = '<div class="compact-link">';
-  if (system_admin_compact_mode()) {
-    $output .= \Drupal::l(t('Show descriptions'), new Url('system.admin_compact_page', array('mode' => 'off'), array('attributes' => array('title' => t('Expand layout to include descriptions.')), 'query' => drupal_get_destination())));
-  }
-  else {
-    $output .= \Drupal::l(t('Hide descriptions'), new Url('system.admin_compact_page', array('mode' => 'on'), array('attributes' => array('title' => t('Compress layout by hiding descriptions.')), 'query' => drupal_get_destination())));
-  }
-  $output .= '</div>';
-
-  return $output;
 }
 
 /**
