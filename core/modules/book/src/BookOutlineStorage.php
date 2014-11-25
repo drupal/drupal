@@ -38,6 +38,15 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasBooks() {
+    return (bool) $this->connection
+      ->query('SELECT count(bid) FROM {book}')
+      ->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadMultiple($nids) {
     $query = $this->connection->select('book', 'b', array('fetch' => \PDO::FETCH_ASSOC));
     $query->fields('b');

@@ -123,35 +123,6 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Tests that node types correctly handles their locking.
-   */
-  function testNodeTypeStatus() {
-    // Enable all core node modules, and all types should be active.
-    $this->container->get('module_installer')->install(array('book'), FALSE);
-    $types = node_type_get_types();
-    foreach (array('book', 'article', 'page') as $type) {
-      $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
-      $this->assertFalse($types[$type]->isLocked(), format_string('%type type is not locked.', array('%type' => $type)));
-    }
-
-    // Disable book module and the respective type should still be active, since
-    // it is not provided by shipped configuration entity.
-    $this->container->get('module_installer')->uninstall(array('book'), FALSE);
-    $types = node_type_get_types();
-    $this->assertFalse($types['book']->isLocked(), "Book module's node type still active.");
-    $this->assertFalse($types['article']->isLocked(), 'Article node type still active.');
-    $this->assertFalse($types['page']->isLocked(), 'Basic page node type still active.');
-
-    // Re-install the modules and verify that the types are active again.
-    $this->container->get('module_installer')->install(array('book'), FALSE);
-    $types = node_type_get_types();
-    foreach (array('book', 'article', 'page') as $type) {
-      $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
-      $this->assertFalse($types[$type]->isLocked(), format_string('%type type is not locked.', array('%type' => $type)));
-    }
-  }
-
-  /**
    * Tests deleting a content type that still has content.
    */
   function testNodeTypeDeletion() {

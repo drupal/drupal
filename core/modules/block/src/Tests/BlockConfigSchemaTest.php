@@ -64,6 +64,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('node');
+    $this->installSchema('book', array('book'));
   }
 
   /**

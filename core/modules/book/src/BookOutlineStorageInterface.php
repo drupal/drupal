@@ -21,6 +21,14 @@ interface BookOutlineStorageInterface {
   public function getBooks();
 
   /**
+   * Checks if there are any books.
+   *
+   * @return bool
+   *   TRUE if there are books, FALSE if not.
+   */
+  public function hasBooks();
+
+  /**
    * Loads books.
    *
    * @param array $nids
