@@ -71,6 +71,8 @@ interface ConfigInstallerInterface {
    *
    * @param bool $status
    *   The status of the sync flag.
+   *
+   * @return $this
    */
   public function setSyncing($status);
 
