@@ -39,6 +39,29 @@ function text_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function text_theme() {
+  return [
+    // Normally theme suggestion templates are only picked up when they are in
+    // themes. We explicitly define theme suggestions here so that the text
+    // field templates in core/modules/text/templates are picked up.
+    'field__text' => [
+      'render element' => 'elements',
+      'base hook' => 'field',
+    ],
+    'field__text_long' => [
+      'render element' => 'elements',
+      'base hook' => 'field',
+    ],
+    'field__text_with_summary' => [
+      'render element' => 'elements',
+      'base hook' => 'field',
+    ],
+  ];
+}
+
+/**
  * Generates a trimmed, formatted version of a text field value.
  *
  * If the end of the summary is not indicated using the <!--break--> delimiter
