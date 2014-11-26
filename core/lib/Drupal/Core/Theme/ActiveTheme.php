@@ -60,13 +60,6 @@ class ActiveTheme {
   protected $extension;
 
   /**
-   * The provided stylesheet of the theme.
-   *
-   * @var array
-   */
-  protected $styleSheets;
-
-  /**
    * The stylesheets which are set to be removed by the theme.
    *
    * @var array
@@ -98,7 +91,6 @@ class ActiveTheme {
     $this->path = $values['path'];
     $this->engine = $values['engine'];
     $this->owner = $values['owner'];
-    $this->styleSheets = $values['stylesheets'];
     $this->styleSheetsRemove = $values['stylesheets_remove'];
     $this->styleSheetsOverride = $values['stylesheets_override'];
     $this->libraries = $values['libraries'];
@@ -160,15 +152,6 @@ class ActiveTheme {
    */
   public function getLibraries() {
     return $this->libraries;
-  }
-
-  /**
-   * Returns the stylesheets provided by the theme.
-   *
-   * @return mixed
-   */
-  public function getStyleSheets() {
-    return $this->styleSheets;
   }
 
   /**

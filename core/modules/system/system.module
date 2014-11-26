@@ -528,19 +528,10 @@ function system_page_attachments(array &$page) {
     $page['#attached']['library'][] = 'system/admin';
   }
 
-  // Attach libraries and CSS used by this theme.
+  // Attach libraries used by this theme.
   $active_theme = \Drupal::theme()->getActiveTheme();
   foreach ($active_theme->getLibraries() as $library) {
     $page['#attached']['library'][] = $library;
-  }
-  foreach ($active_theme->getStyleSheets() as $media => $stylesheets) {
-    foreach ($stylesheets as $stylesheet) {
-      $page['#attached']['css'][$stylesheet] = array(
-        'group' => CSS_AGGREGATE_THEME,
-        'every_page' => TRUE,
-        'media' => $media
-      );
-    }
   }
 
   // Attach favicon.

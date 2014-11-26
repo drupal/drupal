@@ -30,6 +30,12 @@ drupal.content_types:
     - core/drupal
     - core/drupal.form
 
+form:
+  version: VERSION
+  css:
+    layout:
+      css/node.module.css: {}
+
 drupal.node.admin:
   version: VERSION
   css:

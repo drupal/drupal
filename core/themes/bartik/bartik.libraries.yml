@@ -1,4 +1,4 @@
-base:
+global-styling:
   version: VERSION
   css:
     theme:
@@ -14,4 +14,4 @@ maintenance_page:
       css/maintenance-page.css: {}
   dependencies:
     - system/maintenance
-    - bartik/base
+    - bartik/global-styling

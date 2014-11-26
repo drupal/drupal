@@ -34,16 +34,10 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing custom stylesheets.
    */
   public function testInfoStylesheets() {
-    $path = drupal_get_path('module', 'theme_test');
     return array(
       '#attached' => array(
-        'css' => array(
-          "$path/css/base-override.css",
-          "$path/css/base-override.sub-remove.css",
-          "$path/css/base-remove.css",
-          "$path/css/base-remove.sub-override.css",
-          "$path/css/sub-override.css",
-          "$path/css/sub-remove.css",
+        'library' => array(
+          'theme_test/theme_stylesheets_override_and_remove_test',
         ),
       ),
     );

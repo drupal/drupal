@@ -154,22 +154,13 @@ class ThemeInitialization implements ThemeInitializationInterface {
     // Prepare stylesheets from this theme as well as all ancestor themes.
     // We work it this way so that we can have child themes override parent
     // theme stylesheets easily.
-    $values['stylesheets'] = array();
     // CSS file basenames to override, pointing to the final, overridden filepath.
     $values['stylesheets_override'] = array();
     // CSS file basenames to remove.
     $values['stylesheets_remove'] = array();
 
     // Grab stylesheets from base theme.
-    $final_stylesheets = array();
     foreach ($base_themes as $base) {
-      if (!empty($base->stylesheets)) {
-        foreach ($base->stylesheets as $media => $stylesheets) {
-          foreach ($stylesheets as $name => $stylesheet) {
-            $final_stylesheets[$media][$name] = $stylesheet;
-          }
-        }
-      }
       $base_theme_path = $base->getPath();
       if (!empty($base->info['stylesheets-remove'])) {
         foreach ($base->info['stylesheets-remove'] as $basename) {
@@ -185,13 +176,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
     }
 
     // Add stylesheets used by this theme.
-    if (!empty($theme->stylesheets)) {
-      foreach ($theme->stylesheets as $media => $stylesheets) {
-        foreach ($stylesheets as $name => $stylesheet) {
-          $final_stylesheets[$media][$name] = $stylesheet;
-        }
-      }
-    }
     if (!empty($theme->info['stylesheets-remove'])) {
       foreach ($theme->info['stylesheets-remove'] as $basename) {
         $values['stylesheets_remove'][$basename] = $theme_path . '/' . $basename;
@@ -211,9 +195,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
         }
       }
     }
-
-    // And now add the stylesheets properly.
-    $values['stylesheets'] = $final_stylesheets;
 
     // Do basically the same as the above for libraries
     $values['libraries'] = array();

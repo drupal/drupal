@@ -396,12 +396,6 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function addTheme(Extension $theme) {
-    // @todo Remove this 100% unnecessary duplication of properties.
-    foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
-      foreach ($stylesheets as $stylesheet => $path) {
-        $theme->stylesheets[$media][$stylesheet] = $path;
-      }
-    }
     foreach ($theme->info['libraries'] as $library => $name) {
       $theme->libraries[$library] = $name;
     }
@@ -471,7 +465,6 @@ class ThemeHandler implements ThemeHandlerInterface {
       'features' => $this->defaultFeatures,
       'screenshot' => 'screenshot.png',
       'php' => DRUPAL_MINIMUM_PHP,
-      'stylesheets' => array(),
       'libraries' => array(),
     );
 
@@ -507,11 +500,9 @@ class ThemeHandler implements ThemeHandlerInterface {
         $theme->prefix = $engines[$engine]->getName();
       }
 
-      // Prefix stylesheets and screenshot with theme path.
-      $path = $theme->getPath();
-      $theme->info['stylesheets'] = $this->themeInfoPrefixPath($theme->info['stylesheets'], $path);
+      // Prefix screenshot with theme path.
       if (!empty($theme->info['screenshot'])) {
-        $theme->info['screenshot'] = $path . '/' . $theme->info['screenshot'];
+        $theme->info['screenshot'] = $theme->getPath() . '/' . $theme->info['screenshot'];
       }
 
       $files[$key] = $theme->getPathname();
@@ -553,41 +544,6 @@ class ThemeHandler implements ThemeHandlerInterface {
     }
 
     return $themes;
-  }
-
-  /**
-   * Prefixes all values in an .info.yml file array with a given path.
-   *
-   * This helper function is mainly used to prefix all array values of an
-   * .info.yml file property with a single given path (to the module or theme);
-   * e.g., to prefix all values of the 'stylesheets' properties
-   * with the file path to the defining module/theme.
-   *
-   * @param array $info
-   *   A nested array of data of an .info.yml file to be processed.
-   * @param string $path
-   *   A file path to prepend to each value in $info.
-   *
-   * @return array
-   *   The $info array with prefixed values.
-   *
-   * @see _system_rebuild_module_data()
-   * @see self::rebuildThemeData()
-   */
-  protected function themeInfoPrefixPath(array $info, $path) {
-    foreach ($info as $key => $value) {
-      // Recurse into nested values until we reach the deepest level.
-      if (is_array($value)) {
-        $info[$key] = $this->themeInfoPrefixPath($info[$key], $path);
-      }
-      // Unset the original value's key and set the new value with prefix, using
-      // the original value as key, so original values can still be looked up.
-      else {
-        unset($info[$key]);
-        $info[$value] = $path . '/' . $value;
-      }
-    }
-    return $info;
   }
 
   /**

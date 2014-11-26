@@ -4,8 +4,7 @@ description: 'An intentionally plain theme with almost no styling to demonstrate
 package: Core
 version: VERSION
 core: 8.x
-stylesheets:
-  all:
-    - css/layout.css
+libraries:
+  - stark/global-styling
 stylesheets-remove:
   - normalize.css

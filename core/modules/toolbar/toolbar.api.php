@@ -60,8 +60,8 @@ function hook_toolbar() {
     '#weight' => 200,
     // Custom CSS, JS or a library can be associated with the toolbar item.
     '#attached' => array(
-      'css' => array(
-        drupal_get_path('module', 'search') . '/css/search.base.css',
+      'library' => array(
+        'search/global',
       ),
     ),
   );

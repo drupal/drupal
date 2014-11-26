@@ -170,45 +170,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals('twig', $info->prefix);
 
     $this->assertEquals('twig', $info->info['engine']);
-    $this->assertEquals(array(), $info->info['libraries']);
-
-    // Ensure that the css paths are set with the proper prefix.
-    $this->assertEquals(array(
-      'screen' => array(
-        'css/base/elements.css' => $this->root . '/core/themes/seven/css/base/elements.css',
-        'css/base/typography.css' => $this->root . '/core/themes/seven/css/base/typography.css',
-        'css/components/admin-list.css' => $this->root . '/core/themes/seven/css/components/admin-list.css',
-        'css/components/admin-options.css' => $this->root . '/core/themes/seven/css/components/admin-options.css',
-        'css/components/admin-panel.css' => $this->root . '/core/themes/seven/css/components/admin-panel.css',
-        'css/components/block-recent-content.css' => $this->root . '/core/themes/seven/css/components/block-recent-content.css',
-        'css/components/content-header.css' => $this->root . '/core/themes/seven/css/components/content-header.css',
-        'css/components/breadcrumb.css' => $this->root . '/core/themes/seven/css/components/breadcrumb.css',
-        'css/components/buttons.css' => $this->root . '/core/themes/seven/css/components/buttons.css',
-        'css/components/buttons.theme.css' => $this->root . '/core/themes/seven/css/components/buttons.theme.css',
-        'css/components/comments.css' => $this->root . '/core/themes/seven/css/components/comments.css',
-        'css/components/messages.css' => $this->root . '/core/themes/seven/css/components/messages.css',
-        'css/components/dropbutton.component.css' => $this->root . '/core/themes/seven/css/components/dropbutton.component.css',
-        'css/components/entity-meta.css' => $this->root . '/core/themes/seven/css/components/entity-meta.css',
-        'css/components/field-ui.css' => $this->root . '/core/themes/seven/css/components/field-ui.css',
-        'css/components/form.css' => $this->root . '/core/themes/seven/css/components/form.css',
-        'css/components/help.css' => $this->root . '/core/themes/seven/css/components/help.css',
-        'css/components/menus-and-lists.css' => $this->root . '/core/themes/seven/css/components/menus-and-lists.css',
-        'css/components/modules-page.css' => $this->root . '/core/themes/seven/css/components/modules-page.css',
-        'css/components/node.css' => $this->root . '/core/themes/seven/css/components/node.css',
-        'css/components/page-title.css' => $this->root . '/core/themes/seven/css/components/page-title.css',
-        'css/components/pager.css' => $this->root . '/core/themes/seven/css/components/pager.css',
-        'css/components/skip-link.css' => $this->root . '/core/themes/seven/css/components/skip-link.css',
-        'css/components/tables.css' => $this->root . '/core/themes/seven/css/components/tables.css',
-        'css/components/tabs.css' => $this->root . '/core/themes/seven/css/components/tabs.css',
-        'css/components/tour.theme.css' => $this->root . '/core/themes/seven/css/components/tour.theme.css',
-        'css/components/update-status.css' => $this->root . '/core/themes/seven/css/components/update-status.css',
-        'css/components/views-ui.css' => $this->root . '/core/themes/seven/css/components/views-ui.css',
-        'css/layout/layout.css' => $this->root . '/core/themes/seven/css/layout/layout.css',
-        'css/layout/node-add.css' => $this->root . '/core/themes/seven/css/layout/node-add.css',
-        'css/theme/appearance-page.css' => $this->root . '/core/themes/seven/css/theme/appearance-page.css',
-      ),
-    ), $info->info['stylesheets']);
-    $this->assertEquals($this->root . '/core/themes/seven/screenshot.png', $info->info['screenshot']);
+    $this->assertEquals(array('seven/global-styling'), $info->info['libraries']);
   }
 
   /**

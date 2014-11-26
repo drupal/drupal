@@ -205,6 +205,8 @@ class NodeForm extends ContentEntityForm {
       $form['sticky']['#group'] = 'options';
     }
 
+    $form['#attached']['library'][] = 'node/form';
+
     return $form;
   }
 
