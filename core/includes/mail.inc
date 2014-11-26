@@ -122,28 +122,3 @@ use Drupal\Core\Mail\MailFormatHelper;
 function drupal_mail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
   return \Drupal::service('plugin.manager.mail')->mail($module, $key, $to, $langcode, $params, $reply, $send);
 }
-
-/**
- * Returns an instance of the mail plugin to use for a given message ID.
- *
- * @param string $module
- *   The module name which was used by drupal_mail() to invoke hook_mail().
- * @param string $key
- *   A key to identify the email sent. The final message ID for the email
- *   alter hook in drupal_mail() would have been {$module}_{$key}.
- *
- * @return \Drupal\Core\Mail\MailInterface
- *   A mail plugin instance.
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- *
- * @see \Drupal\Core\Mail\MailManager::getInstance()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('plugin.manager.mail')->getInstance() in procedural
- *   code. In Object-Oriented code inject the 'plugin.manager.mail' service and
- *   use the ::getInstance() method.
- */
-function drupal_mail_system($module, $key) {
-  return \Drupal::service('plugin.manager.mail')->getInstance(array('module' => $module, 'key' => $key));
-}
