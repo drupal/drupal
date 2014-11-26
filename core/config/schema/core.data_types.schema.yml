@@ -465,11 +465,11 @@ field.value.string:
 # Schema for the configuration of the  String (long) field type.
 
 field.storage_settings.string_long:
-  type: field.storage_settings.string
+  type: mapping
   label: 'String (long) settings'
 
 field.field_settings.string_long:
-  type: field.field_settings.string
+  type: mapping
   label: 'String (long) settings'
 
 field.value.string_long:
