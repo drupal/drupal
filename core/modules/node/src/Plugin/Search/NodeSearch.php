@@ -13,6 +13,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -166,10 +167,28 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    * {@inheritdoc}
    */
   public function execute() {
-    $results = array();
-    if (!$this->isSearchExecutable()) {
-      return $results;
+    if ($this->isSearchExecutable()) {
+      $results = $this->findResults();
+
+      if ($results) {
+        return $this->prepareResults($results);
+      }
     }
+
+    return array();
+  }
+
+  /**
+   * Queries to find search results, and sets status messages.
+   *
+   * This method can assume that $this->isSearchExecutable() has already been
+   * checked and returned TRUE.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|null
+   *   Results from search query execute() method, or NULL if the search
+   *   failed.
+   */
+  protected function findResults() {
     $keys = $this->keywords;
 
     // Build matching conditions.
@@ -222,7 +241,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // Add the ranking expressions.
     $this->addNodeRankings($query);
 
-    // Run the query and load results.
+    // Run the query.
     $find = $query
       // Add the language code of the indexed item to the result of the query,
       // since the node will be rendered using the respective language.
@@ -249,10 +268,26 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       drupal_set_message(\Drupal::translation()->formatPlural($this->searchSettings->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'), 'warning');
     }
 
+    return $find;
+  }
+
+  /**
+   * Prepares search results for rendering.
+   *
+   * @param \Drupal\Core\Database\StatementInterface $found
+   *   Results found from a successful search query execute() method.
+   *
+   * @return array
+   *   Array of search result item render arrays (empty array if no results).
+   */
+  protected function prepareResults(StatementInterface $found) {
+    $results = array();
+
     $node_storage = $this->entityManager->getStorage('node');
     $node_render = $this->entityManager->getViewBuilder('node');
+    $keys = $this->keywords;
 
-    foreach ($find as $item) {
+    foreach ($found as $item) {
       // Render the node.
       /** @var \Drupal\node\NodeInterface $node */
       $node = $node_storage->load($item->sid)->getTranslation($item->langcode);
