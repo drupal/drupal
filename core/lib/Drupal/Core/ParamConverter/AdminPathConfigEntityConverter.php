@@ -18,7 +18,9 @@ use Drupal\Core\Entity\EntityManagerInterface;
  * Converts entity route arguments to unmodified entities as opposed to
  * converting to entities with overrides, such as the negotiated language.
  *
- * This converter applies only if the path is an admin path.
+ * This converter applies only if the path is an admin path, the entity is
+ * a config entity, and the "use_current_language" element is not set to TRUE
+ * on the parameter definition.
  *
  * Due to this converter having a higher weight than the default
  * EntityConverter, every time this applies, it takes over the conversion duty
@@ -88,6 +90,10 @@ class AdminPathConfigEntityConverter extends EntityConverter {
    * {@inheritdoc}
    */
   public function applies($definition, $name, Route $route) {
+    if (isset($definition['use_current_language']) && $definition['use_current_language']) {
+      return FALSE;
+    }
+
     if (parent::applies($definition, $name, $route)) {
       $entity_type_id = substr($definition['type'], strlen('entity:'));
       // If the entity type is dynamic, defer checking to self::convert().

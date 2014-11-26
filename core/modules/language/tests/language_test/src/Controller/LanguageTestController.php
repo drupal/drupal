@@ -9,7 +9,9 @@ namespace Drupal\language_test\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\language\ConfigurableLanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -18,6 +20,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Controller routines for language_test routes.
  */
 class LanguageTestController implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The HTTP kernel service.
@@ -49,6 +53,19 @@ class LanguageTestController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static($container->get('http_kernel'), $container->get('language_manager'));
+  }
+
+  /**
+   * Route entity upcasting test helper.
+   *
+   * @param \Drupal\language\ConfigurableLanguageInterface $language
+   *   The ConfigurableLanguage object from the route.
+   *
+   * @return string
+   *   Testing feedback based on (translated) entity title.
+   */
+  public function testEntity(ConfigurableLanguageInterface $configurable_language) {
+    return array('#markup' => $this->t('Loaded %label.', array('%label' => $configurable_language->label())));
   }
 
   /**

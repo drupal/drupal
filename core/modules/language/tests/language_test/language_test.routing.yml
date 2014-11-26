@@ -11,3 +11,23 @@ language_test.subrequest:
     _controller: '\Drupal\language_test\Controller\LanguageTestController::testSubRequest'
   requirements:
     _access: 'TRUE'
+
+language_test.entity_using_original_language:
+  path: '/admin/language_test/entity_using_original_language/{configurable_language}'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testEntity'
+  requirements:
+    _access: 'TRUE'
+
+language_test.entity_using_current_language:
+  path: '/admin/language_test/entity_using_current_language/{configurable_language}'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testEntity'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      configurable_language:
+        type: entity:configurable_language
+        # Force load in current interface language.
+        use_current_language: 'TRUE'
