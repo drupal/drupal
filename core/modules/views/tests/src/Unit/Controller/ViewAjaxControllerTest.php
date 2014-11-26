@@ -167,6 +167,27 @@ class ViewAjaxControllerTest extends UnitTestCase {
   }
 
   /**
+   * Tests a valid view with arguments.
+   */
+  public function testAjaxViewWithEmptyArguments() {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view');
+    $request->request->set('view_display_id', 'page_1');
+    // Simulate a request that has a second, empty argument.
+    $request->request->set('view_args', 'arg1/');
+
+    list($view, $executable) = $this->setupValidMocks();
+    $executable->expects($this->once())
+      ->method('preview')
+      ->with('page_1', $this->identicalTo(array('arg1', NULL)));
+
+    $response = $this->viewAjaxController->ajaxView($request);
+    $this->assertTrue($response instanceof ViewAjaxResponse);
+
+    $this->assertViewResultCommand($response);
+  }
+
+  /**
    * Tests a valid view with a pager.
    */
   public function testAjaxViewWithPager() {

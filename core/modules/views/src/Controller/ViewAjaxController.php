@@ -79,6 +79,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
     if (isset($name) && isset($display_id)) {
       $args = $request->request->get('view_args');
       $args = isset($args) && $args !== '' ? explode('/', $args) : array();
+
+      // Arguments can be empty, make sure they are passed on as NULL so that
+      // argument validation is not triggered.
+      $args = array_map(function ($arg) {
+        return ($arg == '' ? NULL : $arg);
+      }, $args);
+
       $path = $request->request->get('view_path');
       $dom_id = $request->request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
@@ -130,8 +137,9 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
-        $preview = $view->preview($display_id, $args);
-        $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", $this->drupalRender($preview)));
+        if ($preview = $view->preview($display_id, $args)) {
+          $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", $this->drupalRender($preview)));
+        }
         return $response;
       }
       else {
