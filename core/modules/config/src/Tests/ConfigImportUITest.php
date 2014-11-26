@@ -84,7 +84,6 @@ class ConfigImportUITest extends WebTestBase {
     $system_theme = \Drupal::config('system.theme')->get();
     $system_theme['default'] = 'bartik';
     $staging->write('system.theme', $system_theme);
-    $staging->write('bartik.settings', $install_storage->read('bartik.settings'));
 
     // Read the action config from module default config folder.
     $action_settings = $install_storage->read('action.settings');
@@ -108,7 +107,6 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText('core.extension');
     $this->assertText('system.theme');
     $this->assertText('action.settings');
-    $this->assertText('bartik.settings');
     $this->assertFieldById('edit-submit', t('Import all'));
 
     // Import and verify that both do not appear anymore.
@@ -118,7 +116,6 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertNoText('core.extension');
     $this->assertNoText('system.theme');
     $this->assertNoText('action.settings');
-    $this->assertNoText('bartik.settings');
 
     $this->assertNoFieldById('edit-submit', t('Import all'));
 

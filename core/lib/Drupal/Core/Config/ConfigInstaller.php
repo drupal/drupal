@@ -90,10 +90,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   public function installDefaultConfig($type, $name) {
     $extension_path = drupal_get_path($type, $name);
-    // If the extension provides configuration schema clear the definitions.
-    if (is_dir($extension_path . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY)) {
-      // Refresh the schema cache if installing default configuration and the
-      // extension has a configuration schema directory.
+    // Refresh the schema cache if the extension provides configuration schema
+    // or is a theme.
+    if (is_dir($extension_path . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY) || $type == 'theme') {
       $this->typedConfig->clearCachedDefinitions();
     }
 

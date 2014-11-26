@@ -10,7 +10,9 @@ namespace Drupal\config\Tests;
 use Drupal\config_test\TestInstallStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\TypedConfigManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\KernelTestBase;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests that default configuration provided by all modules matches schema.
@@ -24,23 +26,46 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * Modules to enable.
    *
+   * Enable the system module so that system_config_schema_info_alter() fires.
+   *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = array('system', 'config_test');
+
+  /**
+   * Themes which provide default configuration and need enabling.
+   *
+   * If a theme provides default configuration but does not have a schema
+   * because it can rely on schemas added by system_config_schema_info_alter()
+   * then this test needs to enable it.
+   *
+   * @var array
+   */
+  protected $themes = ['seven'];
+
+  protected function setUp() {
+    parent::setUp();
+    \Drupal::service('theme_handler')->install($this->themes);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function containerBuild(ContainerBuilder $container) {
+    parent::containerBuild($container);
+    $container->register('DefaultConfigTest.schema_storage')
+      ->setClass('\Drupal\config_test\TestInstallStorage')
+      ->addArgument(InstallStorage::CONFIG_SCHEMA_DIRECTORY);
+
+    $definition = $container->getDefinition('config.typed');
+    $definition->replaceArgument(1, new Reference('DefaultConfigTest.schema_storage'));
+  }
 
   /**
    * Tests default configuration data type.
    */
   public function testDefaultConfig() {
-    // Create a typed config manager with access to configuration schema in
-    // every module, profile and theme.
-    $typed_config = new TypedConfigManager(
-      \Drupal::service('config.storage'),
-      new TestInstallStorage(InstallStorage::CONFIG_SCHEMA_DIRECTORY),
-      \Drupal::service('cache.discovery'),
-      \Drupal::service('module_handler')
-    );
-
+    $typed_config = \Drupal::service('config.typed');
     // Create a configuration storage with access to default configuration in
     // every module, profile and theme.
     $default_config_storage = new TestInstallStorage();

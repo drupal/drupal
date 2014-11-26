@@ -219,17 +219,6 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Test the theme_get_setting() function.
-   */
-  function testThemeGetSetting() {
-    $this->container->get('theme_handler')->install(array('test_subtheme'));
-    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('test_theme'));
-    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
-    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
-    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', 'Base theme\'s default settings values are inherited by subtheme.');
-  }
-
-  /**
    * Tests child element rendering for 'render element' theme hooks.
    */
   function testDrupalRenderChildren() {

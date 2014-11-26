@@ -3,7 +3,3 @@
 seven.settings:
   type: theme_settings
   label: 'Seven settings'
-
-seven.breakpoints:
-  type: theme_breakpoints_default
-  label: 'Seven breakpoints'

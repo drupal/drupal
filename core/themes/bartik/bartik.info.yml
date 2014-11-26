@@ -29,6 +29,3 @@ regions:
   footer_thirdcolumn: 'Footer third column'
   footer_fourthcolumn: 'Footer fourth column'
   footer: Footer
-
-settings:
-  shortcut_module_link: false

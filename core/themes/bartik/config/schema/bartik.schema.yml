@@ -3,9 +3,3 @@
 bartik.settings:
   type: theme_settings
   label: 'Bartik settings'
-  mapping:
-    # @todo Module-specific settings should be defined by the module:
-    #   https://drupal.org/node/2235901.
-    shortcut_module_link:
-      type: boolean
-      label: 'Shortcut module link'

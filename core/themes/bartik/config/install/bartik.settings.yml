@@ -1,4 +1,0 @@
-# @todo There is no UI yet for configuring this, but the setting is included
-#   here, because ConfigImportUITest requires a non-empty bartik.settings.yml
-#   file: https://drupal.org/node/2235901.
-shortcut_module_link: false

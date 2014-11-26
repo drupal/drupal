@@ -11,6 +11,3 @@ stylesheets-override:
 stylesheets-remove:
   - base-remove.css
   - base-remove.sub-override.css
-settings:
-  basetheme_only: 'base theme value'
-  subtheme_override: 'base theme value'

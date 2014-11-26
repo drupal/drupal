@@ -323,9 +323,6 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  *
  * The final setting is obtained from the last value found in the following
  * sources:
- * - the default theme-specific settings defined in any base theme's .info.yml
- *   file
- * - the default theme-specific settings defined in the theme's .info.yml file
  * - the saved values from the global theme settings form
  * - the saved values from the theme's settings form
  * To only retrieve the default global theme setting, an empty string should be
@@ -340,6 +337,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  *   The value of the requested setting, NULL if the setting does not exist.
  */
 function theme_get_setting($setting_name, $theme = NULL) {
+  /** @var \Drupal\Core\Theme\ThemeSettings[] $cache */
   $cache = &drupal_static(__FUNCTION__, array());
 
   // If no key is given, use the current theme if we can determine it.
@@ -350,33 +348,13 @@ function theme_get_setting($setting_name, $theme = NULL) {
   if (empty($cache[$theme])) {
     // Create a theme settings object.
     $cache[$theme] = new ThemeSettings($theme);
+    // Get the global settings from configuration.
+    $cache[$theme]->setData(\Drupal::config('system.theme.global')->get());
 
-    // Get the values for the theme-specific settings from the .info.yml files
-    // of the theme and all its base themes.
-    $themes = list_themes();
-    if ($theme && isset($themes[$theme])) {
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    if (isset($themes[$theme])) {
       $theme_object = $themes[$theme];
 
-      // Create a list which includes the current theme and all its base themes.
-      if (isset($theme_object->base_themes)) {
-        $theme_keys = array_keys($theme_object->base_themes);
-        $theme_keys[] = $theme;
-      }
-      else {
-        $theme_keys = array($theme);
-      }
-      // Read hard-coded default settings from the theme info files.
-      foreach ($theme_keys as $theme_key) {
-        if (!empty($themes[$theme_key]->info['settings'])) {
-          $cache[$theme]->merge($themes[$theme_key]->info['settings']);
-        }
-      }
-    }
-
-    // Get the global settings from configuration.
-    $cache[$theme]->merge(\Drupal::config('system.theme.global')->get());
-
-    if ($theme && isset($themes[$theme])) {
       // Retrieve configured theme-specific settings, if any.
       try {
         if ($theme_settings = \Drupal::config($theme . '.settings')->get()) {

@@ -177,6 +177,11 @@ theme_settings:
         use_default:
           type: boolean
           label: 'Use default'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: theme_settings.third_party.[%key]
 
 theme_breakpoints_default:
   type: sequence

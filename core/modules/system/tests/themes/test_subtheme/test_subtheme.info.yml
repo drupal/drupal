@@ -14,5 +14,3 @@ stylesheets-remove:
   - sub-remove.css
   - base-add.sub-remove.css
   - base-override.sub-remove.css
-settings:
-  subtheme_override: 'subtheme value'
