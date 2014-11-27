@@ -196,7 +196,6 @@ function hook_module_preuninstall($module) {
  *   An array of the modules that were uninstalled.
  *
  * @see hook_uninstall()
- * @see hook_modules_disabled()
  */
 function hook_modules_uninstalled($modules) {
   if (in_array('lousy_module', $modules)) {
@@ -222,7 +221,6 @@ function hook_modules_uninstalled($modules) {
  *
  * @see hook_install()
  * @see hook_schema()
- * @see hook_disable()
  * @see hook_modules_uninstalled()
  */
 function hook_uninstall() {
