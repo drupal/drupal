@@ -12,6 +12,8 @@ use Drupal\contact\Entity\Message;
 
 /**
  * Tests storing contact messages.
+ *
+ * @group contact
  */
 class ContactStorageTest extends ContactSitewideTest {
 
@@ -27,14 +29,6 @@ class ContactStorageTest extends ContactSitewideTest {
     'contact_storage_test',
     'contact_test',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact Storage',
-      'description' => 'Tests that contact messages can be stored.',
-      'group' => 'Contact',
-    );
-  }
 
   /**
    * Tests configuration options and the site-wide contact form.

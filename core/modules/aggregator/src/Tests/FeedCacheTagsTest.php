@@ -13,6 +13,8 @@ use Drupal\user\Entity\Role;
 
 /**
  * Tests the Feed entity's cache tags.
+ *
+ * @group aggregator
  */
 class FeedCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
@@ -20,13 +22,6 @@ class FeedCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Aggregator feed', 'Aggregator');
-  }
 
   /**
    * {@inheritdoc}

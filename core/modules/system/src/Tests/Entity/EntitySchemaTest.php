@@ -11,6 +11,8 @@ use Drupal\Component\Utility\String;
 
 /**
  * Tests adding a custom bundle field.
+ *
+ * @group system
  */
 class EntitySchemaTest extends EntityUnitTestBase  {
 
@@ -27,17 +29,6 @@ class EntitySchemaTest extends EntityUnitTestBase  {
    * @var array
    */
   public static $modules = array('menu_link');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Schema',
-      'description' => 'Tests entity field schema API for base and bundle fields.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * {@inheritdoc}

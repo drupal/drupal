@@ -13,17 +13,10 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests marking strings as safe.
  *
+ * @group Utility
  * @coversDefaultClass \Drupal\Component\Utility\SafeMarkup
  */
 class SafeMarkupTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'SafeMarkup tests',
-      'description' => 'Confirm that SafeMarkup methods work correctly.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests SafeMarkup::set() and SafeMarkup::isSafe().

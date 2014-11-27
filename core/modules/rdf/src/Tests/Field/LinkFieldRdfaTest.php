@@ -10,6 +10,8 @@ use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 
 /**
  * Tests the placement of RDFa in link field formatters.
+ *
+ * @group rdf
  */
 class LinkFieldRdfaTest extends FieldRdfaTestBase {
 
@@ -22,17 +24,6 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('link', 'text');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field formatter: link',
-      'description'  => 'Tests RDFa output by link field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   /**
    * {@inheritdoc}

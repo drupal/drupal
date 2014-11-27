@@ -14,6 +14,8 @@ use Drupal\user\Entity\Role;
 
 /**
  * Tests the Item entity's cache tags.
+ *
+ * @group aggregator
  */
 class ItemCacheTagsTest extends EntityCacheTagsTestBase {
 
@@ -21,13 +23,6 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Aggregator feed item', 'Aggregator');
-  }
 
   /**
    * {@inheritdoc}

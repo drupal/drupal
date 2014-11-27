@@ -60,17 +60,6 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'User access controller',
-      'description' => 'Tests the user access controller.',
-      'group' => 'User',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp() {
     parent::setUp();
     $this->viewer = $this->getMock('\Drupal\Core\Session\AccountInterface');
