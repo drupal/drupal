@@ -1,7 +1,8 @@
 /**
  * Attaches behaviors for the Comment module's "X new comments" link.
  *
- * May only be loaded for authenticated users, with the History module enabled.
+ * May only be loaded for authenticated users, with the History module
+ * installed.
  */
 (function ($, Drupal) {
 

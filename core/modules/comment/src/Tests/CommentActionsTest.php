@@ -17,7 +17,7 @@ use Drupal\comment\Entity\Comment;
 class CommentActionsTest extends CommentTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

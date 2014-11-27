@@ -20,7 +20,7 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

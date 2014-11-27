@@ -18,7 +18,7 @@ use Drupal\simpletest\KernelTestBase;
 class CommentStringIdEntitiesTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

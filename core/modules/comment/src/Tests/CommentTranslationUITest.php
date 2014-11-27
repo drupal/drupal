@@ -24,7 +24,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   protected $subject;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

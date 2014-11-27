@@ -16,7 +16,7 @@ use Drupal\Component\Utility\String;
 class CommentBlockTest extends CommentTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

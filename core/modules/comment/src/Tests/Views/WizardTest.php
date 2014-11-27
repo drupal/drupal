@@ -19,7 +19,7 @@ use Drupal\views\Tests\Wizard\WizardTestBase;
 class WizardTest extends WizardTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

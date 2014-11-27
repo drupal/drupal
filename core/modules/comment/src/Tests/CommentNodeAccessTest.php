@@ -20,7 +20,7 @@ use Drupal\comment\CommentManagerInterface;
 class CommentNodeAccessTest extends CommentTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

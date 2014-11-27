@@ -25,7 +25,7 @@ use Drupal\user\Entity\Role;
 class CommentFieldAccessTest extends EntityUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

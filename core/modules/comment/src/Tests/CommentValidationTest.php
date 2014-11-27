@@ -18,7 +18,7 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 class CommentValidationTest extends EntityUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

@@ -19,7 +19,7 @@ use Drupal\views\Tests\ViewTestBase;
 class DefaultViewRecentCommentsTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

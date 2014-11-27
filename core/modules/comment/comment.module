@@ -4,7 +4,7 @@
  * @file
  * Enables users to comment on published content.
  *
- * When enabled, the Comment module creates a field that facilitates a
+ * When installed, the Comment module creates a field that facilitates a
  * discussion board for each Drupal entity to which a comment field is attached.
  * Users can post comments to discuss a forum topic, story, collaborative
  * book page, user etc.

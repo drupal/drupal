@@ -16,7 +16,7 @@ use Drupal\views\Tests\ViewTestData;
 abstract class CommentTestBase extends ViewTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

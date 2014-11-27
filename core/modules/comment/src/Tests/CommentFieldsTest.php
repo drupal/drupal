@@ -19,7 +19,7 @@ use Drupal\field\Entity\FieldConfig;
 class CommentFieldsTest extends CommentTestBase {
 
   /**
-   * Enable the field UI.
+   * Install the field UI.
    *
    * @var array
    */
@@ -111,7 +111,7 @@ class CommentFieldsTest extends CommentTestBase {
     // field has been deleted.
     field_purge_batch(10);
 
-    // Disable the comment module.
+    // Uninstall the comment module.
     $edit = array();
     $edit['uninstall[comment]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
@@ -119,7 +119,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->rebuildContainer();
     $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module uninstalled.');
 
-    // Enable core content type module (book).
+    // Install core content type module (book).
     $edit = array();
     $edit['modules[Core][book][enable]'] = 'book';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));

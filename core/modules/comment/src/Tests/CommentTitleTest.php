@@ -18,7 +18,7 @@ class CommentTitleTest extends CommentTestBase {
    * Tests markup for comments with empty titles.
    */
   public function testCommentEmptyTitles() {
-    // Enables module that sets comments to an empty string.
+    // Installs module that sets comments to an empty string.
     \Drupal::service('module_installer')->install(array('comment_empty_title_test'));
 
     // Set comments to have a subject with preview disabled.

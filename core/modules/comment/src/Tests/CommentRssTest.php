@@ -17,7 +17,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 class CommentRssTest extends CommentTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

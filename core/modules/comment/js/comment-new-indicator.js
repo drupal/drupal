@@ -1,7 +1,8 @@
 /**
  * Attaches behaviors for the Comment module's "new" indicator.
  *
- * May only be loaded for authenticated users, with the History module enabled.
+ * May only be loaded for authenticated users, with the History module
+ * installed.
  */
 (function ($, Drupal, window) {
 
