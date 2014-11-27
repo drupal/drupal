@@ -112,10 +112,6 @@ function bartik_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'system_branding_block') {
     $variables['attributes']['class'][] = 'clearfix';
   }
-  // Add a container-inline class to keep consistent visual styles
-  if ($variables['plugin_id'] == 'search_form_block') {
-    $variables['content_attributes']['class'][] = 'container-inline';
-  }
 }
 
 /**
