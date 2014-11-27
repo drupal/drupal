@@ -20,6 +20,13 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   protected $dumpHeaders = TRUE;
 
   /**
+   * Responsive image mapping entity instance we test with.
+   *
+   * @var \Drupal\responsive_image\Entity\ResponsiveImageMapping
+   */
+  protected $responsiveImgMapping;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -48,38 +55,74 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     ));
     $this->drupalLogin($this->admin_user);
     // Add responsive image mapping.
-    $responsive_image_mapping = entity_create('responsive_image_mapping', array(
+    $this->responsiveImgMapping = entity_create('responsive_image_mapping', array(
       'id' => 'mapping_one',
       'label' => 'Mapping One',
       'breakpointGroup' => 'responsive_image_test_module',
     ));
-    $responsive_image_mapping
-      ->addMapping('responsive_image_test_module.mobile', '1x', 'thumbnail')
-      ->addMapping('responsive_image_test_module.narrow', '1x', 'medium')
-      ->addMapping('responsive_image_test_module.wide', '1x', 'large')
-      ->save();
   }
 
   /**
    * Test responsive image formatters on node display for public files.
    */
   public function testResponsiveImageFieldFormattersPublic() {
-    $this->_testResponsiveImageFieldFormatters('public');
+    $this->addTestMappings();
+    $this->doTestResponsiveImageFieldFormatters('public');
   }
 
   /**
    * Test responsive image formatters on node display for private files.
    */
   public function testResponsiveImageFieldFormattersPrivate() {
+    $this->addTestMappings();
     // Remove access content permission from anonymous users.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
-    $this->_testResponsiveImageFieldFormatters('private');
+    $this->doTestResponsiveImageFieldFormatters('private');
   }
 
   /**
-   * Test responsive image formatters on node display.
+   * Test responsive image formatters when image style is empty.
    */
-  public function _testResponsiveImageFieldFormatters($scheme) {
+  public function testResponsiveImageFieldFormattersEmptyStyle() {
+    $this->addTestMappings(TRUE);
+    $this->doTestResponsiveImageFieldFormatters('public', TRUE);
+  }
+
+  /**
+   * Add mappings to the responsive image mapping entity.
+   *
+   * @param bool $empty_styles
+   *   If true, the mappings will get empty image styles.
+   */
+  protected function addTestMappings($empty_styles = FALSE) {
+    if ($empty_styles) {
+      $this->responsiveImgMapping
+        ->addMapping('responsive_image_test_module.mobile', '1x', '')
+        ->addMapping('responsive_image_test_module.narrow', '1x', '')
+        ->addMapping('responsive_image_test_module.wide', '1x', '')
+        ->save();
+    }
+    else {
+      $this->responsiveImgMapping
+        ->addMapping('responsive_image_test_module.mobile', '1x', 'thumbnail')
+        ->addMapping('responsive_image_test_module.narrow', '1x', 'medium')
+        ->addMapping('responsive_image_test_module.wide', '1x', 'large')
+        ->save();
+    }
+  }
+  /**
+   * Test responsive image formatters on node display.
+   *
+   * If the empty styles param is set, then the function only tests for the
+   * fallback image style (large).
+   *
+   * @param string $scheme
+   *   File scheme to use.
+   * @param bool $empty_styles
+   *   If true, use an empty string for image style names.
+   * Defaults to false.
+   */
+  protected function doTestResponsiveImageFieldFormatters($scheme, $empty_styles = FALSE) {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = Unicode::strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
@@ -150,16 +193,20 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw('/styles/thumbnail/');
-    $this->assertRaw('/styles/medium/');
+    if (!$empty_styles) {
+      $this->assertRaw('/styles/thumbnail/');
+      $this->assertRaw('/styles/medium/');
+    }
     $this->assertRaw('/styles/large/');
     $this->assertRaw('media="(min-width: 0px)"');
     $this->assertRaw('media="(min-width: 560px)"');
     $this->assertRaw('media="(min-width: 851px)"');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
     $this->assertTrue(in_array('responsive_image_mapping:mapping_one', $cache_tags));
-    $this->assertTrue(in_array('image_style:thumbnail', $cache_tags));
-    $this->assertTrue(in_array('image_style:medium', $cache_tags));
+    if (!$empty_styles) {
+      $this->assertTrue(in_array('image_style:thumbnail', $cache_tags));
+      $this->assertTrue(in_array('image_style:medium', $cache_tags));
+    }
     $this->assertTrue(in_array('image_style:large', $cache_tags));
 
     // Test the fallback image style.
