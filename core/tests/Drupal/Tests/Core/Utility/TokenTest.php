@@ -39,6 +39,13 @@ class TokenTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The language interface used for testing.
+   *
+   * @var \Drupal\Core\Language\LanguageInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $language;
+
+  /**
    * The token service under test.
    *
    * @var \Drupal\Core\Utility\Token|\PHPUnit_Framework_MockObject_MockObject
@@ -55,6 +62,8 @@ class TokenTest extends UnitTestCase {
 
     $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
 
+    $this->language = $this->getMock('\Drupal\Core\Language\LanguageInterface');
+
     $this->token = new Token($this->moduleHandler, $this->cache, $this->languageManager);
   }
 
@@ -70,15 +79,14 @@ class TokenTest extends UnitTestCase {
       ),
     );
 
-    $values = array('id' => $this->randomMachineName());
-    $language = $this->getMockBuilder('\Drupal\Core\Language\Language')
-      ->setConstructorArgs(array($values))
-      ->getMock();
+    $this->language->expects($this->atLeastOnce())
+      ->method('getId')
+      ->will($this->returnValue($this->randomMachineName()));
 
     $this->languageManager->expects($this->once())
       ->method('getCurrentLanguage')
       ->with(LanguageInterface::TYPE_CONTENT)
-      ->will($this->returnValue($language));
+      ->will($this->returnValue($this->language));
 
     // The persistent cache must only be hit once, after which the info is
     // cached statically.
@@ -86,7 +94,7 @@ class TokenTest extends UnitTestCase {
       ->method('get');
     $this->cache->expects($this->once())
       ->method('set')
-      ->with('token_info:' . $language->getId(), $token_info);
+      ->with('token_info:' . $this->language->getId(), $token_info);
 
     $this->moduleHandler->expects($this->once())
       ->method('invokeAll')
