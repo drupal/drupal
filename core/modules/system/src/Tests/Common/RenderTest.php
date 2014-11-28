@@ -1197,4 +1197,106 @@ class RenderTest extends DrupalUnitTestBase {
     }
   }
 
+  /**
+   * Tests \Drupal\Core\Render\Renderer::renderPlain().
+   */
+  public function testRenderPlain() {
+    $renderer = \Drupal::service('renderer');
+
+    $complex_child_markup = '<p>Imagine this is a render array for an entity.</p>';
+    $parent_markup = '<p>Rendered!</p>';
+
+    $complex_child_template = [
+      '#markup' => $complex_child_markup,
+      '#attached' => [
+        'library' => [
+          'core/drupal',
+        ],
+      ],
+      '#cache' => [
+        'tags' => [
+          'test:complex_child',
+        ],
+      ],
+      '#post_render_cache' => [
+        'common_test_post_render_cache' => [
+          ['foo' => $this->randomString()],
+        ],
+      ],
+    ];
+
+    // Case 1: ::renderRoot() with nested ::renderRoot().
+    $this->pass('Renderer::renderRoot() may not be called inside of another Renderer::renderRoot() call, this must trigger an exception.');
+    try {
+      $complex_child = $complex_child_template;
+      $page = [
+        'content' => [
+          '#pre_render' => [
+            function () use ($renderer, $complex_child) {
+              $renderer->renderRoot($complex_child);
+            }
+          ],
+          '#suffix' => $parent_markup,
+        ]
+      ];
+      $renderer->renderRoot($page);
+      $this->fail('No exception triggered.');
+    }
+    catch (\LogicException $e) {
+      $this->pass('Exception triggered.');
+    }
+
+    // Case 2: ::renderRoot() with nested ::render().
+    $this->pass('Renderer::render() may be called from anywhere, including from inside of another Renderer::renderRoot() call. Bubbling must be performed.');
+    try {
+      $complex_child = $complex_child_template;
+      $page = [
+        'content' => [
+          '#pre_render' => [
+            function ($elements) use ($renderer, $complex_child, $complex_child_markup, $parent_markup) {
+              $elements['#markup'] = $renderer->render($complex_child);
+              $this->assertEqual($complex_child_markup, $elements['#markup'], 'Rendered complex child output as expected, without the #post_render_cache callback executed.');
+              return $elements;
+            }
+          ],
+          '#suffix' => $parent_markup,
+        ]
+      ];
+      $output = $renderer->renderRoot($page);
+      $this->pass('No exception triggered.');
+      $this->assertEqual('<p>overridden</p>', $output, 'Rendered output as expected, with the #post_render_cache callback executed.');
+      $this->assertTrue(in_array('test:complex_child', $page['#cache']['tags']), 'Cache tag bubbling performed.');
+      $this->assertTrue(in_array('core/drupal', $page['#attached']['library']), 'Asset bubbling performed.');
+    }
+    catch (\LogicException $e) {
+      $this->fail('Exception triggered.');
+    }
+
+    // Case 3: ::renderRoot() with nested ::renderPlain().
+    $this->pass('Renderer::renderPlain() may be called from anywhere, including from inside of another Renderer::renderRoot() call.');
+    try {
+      $complex_child = $complex_child_template;
+      $page = [
+        'content' => [
+          '#pre_render' => [
+            function ($elements) use ($renderer, $complex_child, $parent_markup) {
+              $elements['#markup'] = $renderer->renderPlain($complex_child);
+              $this->assertEqual('<p>overridden</p>', $elements['#markup'], 'Rendered complex child output as expected, with the #post_render_cache callback executed.');
+              return $elements;
+            }
+          ],
+          '#suffix' => $parent_markup,
+        ]
+      ];
+      $output = $renderer->renderRoot($page);
+      $this->pass('No exception triggered.');
+      $this->assertEqual('<p>overridden</p>' . $parent_markup, $output, 'Rendered output as expected, with the #post_render_cache callback executed.');
+      $this->assertFalse(in_array('test:complex_child', $page['#cache']['tags']), 'Cache tag bubbling not performed.');
+      $this->assertTrue(empty($page['#attached']), 'Asset bubbling not performed.');
+    }
+    catch (\LogicException $e) {
+      $this->fail('Exception triggered.');
+    }
+  }
+
 }

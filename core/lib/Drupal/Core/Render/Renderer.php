@@ -40,6 +40,13 @@ class Renderer implements RendererInterface {
   protected $elementInfo;
 
   /**
+   * The stack containing bubbleable rendering metadata.
+   *
+   * @var \SplStack|null
+   */
+  protected static $stack;
+
+  /**
    * Constructs a new Renderer.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
@@ -65,36 +72,18 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
+  public function renderPlain(&$elements) {
+    $current_stack = self::$stack;
+    $this->resetStack();
+    $output = $this->renderRoot($elements);
+    self::$stack = $current_stack;
+    return $output;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render(&$elements, $is_root_call = FALSE) {
-    static $stack;
-
-    $update_stack = function(&$element) use (&$stack) {
-      // The latest frame represents the bubbleable data for the subtree.
-      $frame = $stack->top();
-      // Update the frame, but also update the current element, to ensure it
-      // contains up-to-date information in case it gets render cached.
-      $frame->tags = $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $frame->tags);
-      $frame->attached = $element['#attached'] = drupal_merge_attached($element['#attached'], $frame->attached);
-      $frame->postRenderCache = $element['#post_render_cache'] = NestedArray::mergeDeep($element['#post_render_cache'], $frame->postRenderCache);
-    };
-
-    $bubble_stack = function() use (&$stack) {
-      // If there's only one frame on the stack, then this is the root call, and
-      // we can't bubble up further. Reset the stack for the next root call.
-      if ($stack->count() === 1) {
-        $stack = NULL;
-        return;
-      }
-
-      // Merge the current and the parent stack frame.
-      $current = $stack->pop();
-      $parent = $stack->pop();
-      $current->tags = Cache::mergeTags($current->tags, $parent->tags);
-      $current->attached = drupal_merge_attached($current->attached, $parent->attached);
-      $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
-      $stack->push($current);
-    };
-
     if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
       if (is_string($elements['#access_callback']) && strpos($elements['#access_callback'], '::') === FALSE) {
         $elements['#access_callback'] = $this->controllerResolver->getControllerFromDefinition($elements['#access_callback']);
@@ -112,10 +101,10 @@ class Renderer implements RendererInterface {
       return '';
     }
 
-    if (!isset($stack)) {
-      $stack = new \SplStack();
+    if (!isset(self::$stack)) {
+      self::$stack = new \SplStack();
     }
-    $stack->push(new RenderStackFrame());
+    self::$stack->push(new RenderStackFrame());
 
     // Try to fetch the prerendered element from cache, run any
     // #post_render_cache callbacks and return the final markup.
@@ -132,10 +121,10 @@ class Renderer implements RendererInterface {
         $elements['#markup'] = SafeMarkup::set($elements['#markup']);
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
-        $update_stack($elements);
+        $this->updateStack($elements);
         // Render cache hit, so rendering is finished, all necessary info
         // collected!
-        $bubble_stack();
+        $this->bubbleStack();
         return $elements['#markup'];
       }
     }
@@ -168,7 +157,7 @@ class Renderer implements RendererInterface {
         }
         catch (\Exception $e) {
           // Reset stack and re-throw exception.
-          $stack = NULL;
+          $this->resetStack();
           throw $e;
         }
       }
@@ -183,9 +172,9 @@ class Renderer implements RendererInterface {
     if (!empty($elements['#printed'])) {
       // The #printed element contains all the bubbleable rendering metadata for
       // the subtree.
-      $update_stack($elements);
+      $this->updateStack($elements);
       // #printed, so rendering is finished, all necessary info collected!
-      $bubble_stack();
+      $this->bubbleStack();
       return '';
     }
 
@@ -311,7 +300,7 @@ class Renderer implements RendererInterface {
     $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
     // We've rendered this element (and its subtree!), now update the stack.
-    $update_stack($elements);
+    $this->updateStack($elements);
 
     // Cache the processed element if #cache is set.
     if (isset($elements['#cache'])) {
@@ -328,29 +317,81 @@ class Renderer implements RendererInterface {
     // Only the case of a cache hit when #cache is enabled, is not handled here,
     // that is handled earlier in Renderer::render().
     if ($is_root_call) {
-      // We've already called $update_stack() earlier, which updated both the
+      // We've already called ::updateStack() earlier, which updated both the
       // element and current stack frame. However,
       // Renderer::processPostRenderCache() can both change the element
       // further and create and render new child elements, so provide a fresh
       // stack frame to collect those additions, merge them back to the element,
       // and then update the current frame to match the modified element state.
-      $stack->push(new RenderStackFrame());
+      self::$stack->push(new RenderStackFrame());
       $this->processPostRenderCache($elements);
-      $post_render_additions = $stack->pop();
+      $post_render_additions = self::$stack->pop();
       $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
       $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
       $elements['#post_render_cache'] = NestedArray::mergeDeep($elements['#post_render_cache'], $post_render_additions->postRenderCache);
-      if ($stack->count() !== 1) {
+      if (self::$stack->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
     }
 
     // Rendering is finished, all necessary info collected!
-    $bubble_stack();
+    $this->bubbleStack();
 
     $elements['#printed'] = TRUE;
     $elements['#markup'] = SafeMarkup::set($elements['#markup']);
     return $elements['#markup'];
+  }
+
+  /**
+   * Resets the renderer service's internal stack (used for bubbling metadata).
+   *
+   * Only necessary in very rare/advanced situations, such as when rendering an
+   * error page if an exception occurred *during* rendering.
+   */
+  protected function resetStack() {
+    self::$stack = NULL;
+  }
+
+  /**
+   * Updates the stack.
+   *
+   * @param array &$element
+   *   The element of the render array that has just been rendered. The stack
+   *   frame for this element will be updated with the bubbleable rendering
+   *   metadata of this element.
+   */
+  protected function updateStack(&$element) {
+    // The latest frame represents the bubbleable metadata for the subtree.
+    $frame = self::$stack->top();
+    // Update the frame, but also update the current element, to ensure it
+    // contains up-to-date information in case it gets render cached.
+    $frame->tags = $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $frame->tags);
+    $frame->attached = $element['#attached'] = drupal_merge_attached($element['#attached'], $frame->attached);
+    $frame->postRenderCache = $element['#post_render_cache'] = NestedArray::mergeDeep($element['#post_render_cache'], $frame->postRenderCache);
+  }
+
+  /**
+   * Bubbles the stack.
+   *
+   * Whenever another level in the render array has been rendered, the stack
+   * must be bubbled, to merge its rendering metadata with that of the parent
+   * element.
+   */
+  protected function bubbleStack() {
+    // If there's only one frame on the stack, then this is the root call, and
+    // we can't bubble up further. Reset the stack for the next root call.
+    if (self::$stack->count() === 1) {
+      $this->resetStack();
+      return;
+    }
+
+    // Merge the current and the parent stack frame.
+    $current = self::$stack->pop();
+    $parent = self::$stack->pop();
+    $current->tags = Cache::mergeTags($current->tags, $parent->tags);
+    $current->attached = drupal_merge_attached($current->attached, $parent->attached);
+    $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
+    self::$stack->push($current);
   }
 
   /**

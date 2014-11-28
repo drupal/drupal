@@ -34,6 +34,34 @@ interface RendererInterface {
   public function renderRoot(&$elements);
 
   /**
+   * Renders final HTML in situations where no assets are needed.
+   *
+   * Calls ::render() in such a way that #post_render_cache callbacks are
+   * applied.
+   *
+   * Useful for e.g. rendering the values of tokens or e-mails, which need a
+   * render array being turned into a string, but don't need any of the
+   * bubbleable metadata (the attached assets the cache tags).
+   *
+   * Some of these are a relatively common use case and happen *within* a
+   * ::renderRoot() call, but that is generally highly problematic (and hence an
+   * exception is thrown when a ::renderRoot() call happens within another
+   * ::renderRoot() call). However, in this case, we only care about the output,
+   * not about the bubbling. Hence this uses a separate render stack, to not
+   * affect the parent ::renderRoot() call.
+   *
+   * @param array $elements
+   *   The structured array describing the data to be rendered.
+   *
+   * @return string
+   *   The rendered HTML.
+   *
+   * @see ::renderRoot()
+   * @see ::render()
+   */
+  public function renderPlain(&$elements);
+
+  /**
    * Renders HTML given a structured array tree.
    *
    * Renderable arrays have two kinds of key/value pairs: properties and
