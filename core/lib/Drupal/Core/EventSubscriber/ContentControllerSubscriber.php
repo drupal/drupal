@@ -54,6 +54,20 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Sets the _controller on a request when a _form is defined.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The event to process.
+   */
+  public function onRequestDeriveFormWrapper(GetResponseEvent $event) {
+    $request = $event->getRequest();
+
+    if ($request->attributes->has('_form')) {
+      $request->attributes->set('_controller', 'controller.form:getContentResult');
+    }
+  }
+
+  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
@@ -61,6 +75,7 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormat', 31);
+    $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormWrapper', 29);
 
     return $events;
   }

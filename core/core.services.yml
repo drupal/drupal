@@ -639,18 +639,11 @@ services:
     arguments: ['@authentication', '@current_user']
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
-    arguments: ['@controller_resolver', '@entity.manager', '@form_builder']
     tags:
       - { name: route_enhancer, priority: 20 }
   route_content_controller_subscriber:
     class: Drupal\Core\EventSubscriber\ContentControllerSubscriber
     arguments: ['@content_negotiation']
-    tags:
-      - { name: event_subscriber }
-  route_content_form_controller_subscriber:
-    class: Drupal\Core\EventSubscriber\ContentFormControllerSubscriber
-    arguments: ['@class_resolver', '@controller_resolver', '@form_builder']
-    parent: container.trait
     tags:
       - { name: event_subscriber }
   route_special_attributes_subscriber:
@@ -688,7 +681,12 @@ services:
     arguments: ['@title_resolver']
     tags:
       - { name: render.main_content_renderer, format: drupal_modal }
-
+  controller.form:
+    class: Drupal\Core\Controller\HtmlFormController
+    arguments: ['@controller_resolver', '@form_builder', '@class_resolver']
+  controller.entity_form:
+    class: Drupal\Core\Entity\HtmlEntityFormController
+    arguments: ['@controller_resolver', '@form_builder', '@entity.manager']
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:

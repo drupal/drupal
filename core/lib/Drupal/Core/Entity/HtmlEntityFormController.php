@@ -29,17 +29,21 @@ class HtmlEntityFormController extends FormController {
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
    *   The controller resolver.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
-   *   The entity manager.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
-   * @param string $form_definition
-   *   The definition of this form, usually found in $defaults['_entity_form'].
+   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
+   *   The entity manager.
    */
-  public function __construct(ControllerResolverInterface $resolver, EntityManagerInterface $manager, FormBuilderInterface $form_builder, $form_definition) {
+  public function __construct(ControllerResolverInterface $resolver, FormBuilderInterface $form_builder, EntityManagerInterface $manager) {
     parent::__construct($resolver, $form_builder);
     $this->manager = $manager;
-    $this->formDefinition = $form_definition;
+  }
+
+  /**
+   * @{inheritDoc}
+   */
+  protected function getFormArgument(Request $request) {
+    return $request->attributes->get('_entity_form');
   }
 
   /**
@@ -71,7 +75,7 @@ class HtmlEntityFormController extends FormController {
       $entity = $request->attributes->get($entity_type);
     }
     else {
-      $entity = $this->manager->getStorage($entity_type)->create(array());
+      $entity = $this->manager->getStorage($entity_type)->create([]);
     }
 
     return $this->manager->getFormObject($entity_type, $operation)->setEntity($entity);

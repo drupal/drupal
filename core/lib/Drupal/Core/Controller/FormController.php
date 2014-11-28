@@ -19,12 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class FormController {
   use DependencySerializationTrait;
-  /**
-   * The form definition. The format may vary depending on the child class.
-   *
-   * @var string
-   */
-  protected $formDefinition;
 
   /**
    * The controller resolver.
@@ -63,14 +57,15 @@ abstract class FormController {
    *   The render array that results from invoking the controller.
    */
   public function getContentResult(Request $request) {
-    $form_object = $this->getFormObject($request, $this->formDefinition);
+    $form_arg = $this->getFormArgument($request);
+    $form_object = $this->getFormObject($request, $form_arg);
 
     // Add the form and form_state to trick the getArguments method of the
     // controller resolver.
     $form_state = new FormState();
-    $request->attributes->set('form', array());
+    $request->attributes->set('form', []);
     $request->attributes->set('form_state', $form_state);
-    $args = $this->controllerResolver->getArguments($request, array($form_object, 'buildForm'));
+    $args = $this->controllerResolver->getArguments($request, [$form_object, 'buildForm']);
     $request->attributes->remove('form');
     $request->attributes->remove('form_state');
 
@@ -80,6 +75,26 @@ abstract class FormController {
 
     return $this->formBuilder->buildForm($form_object, $form_state);
   }
+
+  /**
+   * Extracts the form argument string from a request.
+   *
+   * Depending on the type of form the argument string may be stored in a
+   * different request attribute.
+   *
+   * One example of a route definition is given below.
+   * @code
+   *   defaults:
+   *     _form: Drupal\example\Form\ExampleForm
+   * @endcode
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object from which to extract a form definition string.
+   *
+   * @return string
+   *   The form definition string.
+   */
+  abstract protected function getFormArgument(Request $request);
 
   /**
    * Returns the object used to build the form.

@@ -24,11 +24,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
    * @see \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer::enhancer()
    */
   public function testEnhancer() {
-    $controller_resolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $form_builder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
-
-    $route_enhancer = new EntityRouteEnhancer($controller_resolver, $entity_manager, $form_builder);
+    $route_enhancer = new EntityRouteEnhancer();
 
     // Set a controller to ensure it is not overridden.
     $request = new Request();
@@ -43,9 +39,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $defaults = array();
     $defaults['_entity_form'] = 'entity_test.default';
     $new_defaults = $route_enhancer->enhance($defaults, $request);
-    $this->assertTrue(is_callable($new_defaults['_controller']));
-    $this->assertInstanceOf('\Drupal\Core\Entity\HtmlEntityFormController', $new_defaults['_controller'][0]);
-    $this->assertEquals($new_defaults['_controller'][1], 'getContentResult');
+    $this->assertEquals('controller.entity_form:getContentResult', $new_defaults['_controller']);
 
     // Set _entity_list and ensure that the entity list controller is set.
     $defaults = array();

@@ -7,10 +7,6 @@
 
 namespace Drupal\Core\Entity\Enhancer;
 
-use Drupal\Core\Controller\ControllerResolverInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\HtmlEntityFormController;
-use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -21,50 +17,12 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 class EntityRouteEnhancer implements RouteEnhancerInterface {
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $resolver;
-
-  /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * Constructs a new EntityRouteEnhancer object.
-   *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
-   *   The controller resolver.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
-   *   The entity manager.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   The form builder.
-   */
-  public function __construct(ControllerResolverInterface $resolver, EntityManagerInterface $manager, FormBuilderInterface $form_builder) {
-    $this->resolver = $resolver;
-    $this->manager = $manager;
-    $this->formBuilder = $form_builder;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
     if (empty($defaults['_controller'])) {
       if (!empty($defaults['_entity_form'])) {
-        $wrapper = new HtmlEntityFormController($this->resolver, $this->manager, $this->formBuilder, $defaults['_entity_form']);
-        $defaults['_controller'] = array($wrapper, 'getContentResult');
+        $defaults['_controller'] = 'controller.entity_form:getContentResult';
       }
       elseif (!empty($defaults['_entity_list'])) {
         $defaults['_controller'] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
