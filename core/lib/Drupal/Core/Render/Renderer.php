@@ -323,12 +323,14 @@ class Renderer implements RendererInterface {
       // further and create and render new child elements, so provide a fresh
       // stack frame to collect those additions, merge them back to the element,
       // and then update the current frame to match the modified element state.
-      self::$stack->push(new RenderStackFrame());
-      $this->processPostRenderCache($elements);
-      $post_render_additions = self::$stack->pop();
-      $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
-      $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
-      $elements['#post_render_cache'] = NestedArray::mergeDeep($elements['#post_render_cache'], $post_render_additions->postRenderCache);
+      do {
+        self::$stack->push(new RenderStackFrame());
+        $this->processPostRenderCache($elements);
+        $post_render_additions = self::$stack->pop();
+        $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
+        $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
+        $elements['#post_render_cache'] = $post_render_additions->postRenderCache;
+      } while (!empty($elements['#post_render_cache']));
       if (self::$stack->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
@@ -400,6 +402,7 @@ class Renderer implements RendererInterface {
    * #post_render_cache callbacks may modify:
    * - #markup: to replace placeholders
    * - #attached: to add libraries or JavaScript settings
+   * - #post_render_cache: to execute additional #post_render_cache callbacks
    *
    * Note that in either of these cases, #post_render_cache callbacks are
    * implicitly idempotent: a placeholder that has been replaced can't be
@@ -407,8 +410,6 @@ class Renderer implements RendererInterface {
    *
    * @param array &$elements
    *   The structured array describing the data being rendered.
-   *
-   * @see drupal_render_collect_post_render_cache
    */
   protected function processPostRenderCache(array &$elements) {
     if (isset($elements['#post_render_cache'])) {

@@ -255,6 +255,34 @@ function common_test_post_render_cache_placeholder(array $element, array $contex
 }
 
 /**
+ * #post_render_cache callback; bubbles another #post_render_cache callback.
+ *
+ * @param array $element
+ *  A render array with the following keys:
+ *    - #markup
+ *    - #attached
+ * @param array $context
+ *  An array with the following keys:
+ *    - foo: contains a random string.
+ *
+ * @return array $element
+ *   The updated $element.
+ */
+function common_test_post_render_cache_recursion(array $element, array $context) {
+  // Render a child which itself also has a #post_render_cache callback that
+  // must be bubbled.
+  $child = [];
+  $child['#markup'] = 'foo';
+  $child['#post_render_cache']['common_test_post_render_cache'][] = $context;
+
+  // Render the child.
+  $element['#markup'] = drupal_render($child);
+
+  return $element;
+}
+
+
+/**
  * Implements hook_page_attachments().
  *
  * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
