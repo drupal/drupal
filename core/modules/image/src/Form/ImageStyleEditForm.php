@@ -57,7 +57,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $user_input = $form_state->getUserInput();
     $form['#title'] = $this->t('Edit style %name', array('%name' => $this->entity->label()));
     $form['#tree'] = TRUE;
-    $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
+    $form['#attached']['library'][] = 'image/admin';
 
     // Show the thumbnail preview.
     $preview_arguments = array('#theme' => 'image_style_preview', '#style' => $this->entity);

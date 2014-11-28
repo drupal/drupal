@@ -1,0 +1,11 @@
+form:
+  version: VERSION
+  css:
+    theme:
+      css/image.theme.css: {}
+
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/image.admin.css: {}

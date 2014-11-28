@@ -1,5 +1,8 @@
 drupal.node:
   version: VERSION
+  css:
+    layout:
+      css/node.module.css: {}
   js:
     node.js: {}
   dependencies:

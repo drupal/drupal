@@ -79,27 +79,6 @@ abstract class ViewFormBase extends EntityForm {
   }
 
   /**
-   * Creates an array of Views admin CSS for adding or attaching.
-   *
-   * This returns an array of arrays. Each array represents a single
-   * file. The array format is:
-   * - file: The fully qualified name of the file to send to _drupal_add_css
-   * - options: An array of options to pass to _drupal_add_css.
-   */
-  public static function getAdminCSS() {
-    $module_path = drupal_get_path('module', 'views_ui');
-    $list = array();
-    $list[$module_path . '/css/views_ui.admin.css'] = array();
-    $list[$module_path . '/css/views_ui.admin.theme.css'] = array();
-
-    if (\Drupal::moduleHandler()->moduleExists('contextual')) {
-      $list[$module_path . '/css/views_ui.contextual.css'] = array();
-    }
-
-    return $list;
-  }
-
-  /**
    * Adds tabs for navigating across Displays when editing a View.
    *
    * This function can be called from hook_menu_local_tasks_alter() to implement

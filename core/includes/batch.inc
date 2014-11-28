@@ -58,11 +58,11 @@ function _batch_page(Request $request) {
 
   $build = array();
 
-  // Add batch-specific CSS.
+  // Add batch-specific libraries.
   foreach ($batch['sets'] as $batch_set) {
-    if (isset($batch_set['css'])) {
-      foreach ($batch_set['css'] as $css) {
-        $build['#attached']['css'][$css] = array();
+    if (isset($batch_set['library'])) {
+      foreach ($batch_set['library'] as $library) {
+        $build['#attached']['library'][] = $library;
       }
     }
   }

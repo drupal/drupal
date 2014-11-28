@@ -69,7 +69,7 @@ abstract class ImageEffectFormBase extends FormBase {
       throw new NotFoundHttpException();
     }
 
-    $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
+    $form['#attached']['library'][] = 'image/admin';
     $form['uuid'] = array(
       '#type' => 'value',
       '#value' => $this->imageEffect->getUuid(),

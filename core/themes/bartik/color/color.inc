@@ -120,7 +120,6 @@ $info = array(
   ),
 
   // Preview files.
-  'preview_css' => 'color/preview.css',
-  'preview_js' => 'color/preview.js',
+  'preview_library' => 'bartik/color.preview',
   'preview_html' => 'color/preview.html',
 );

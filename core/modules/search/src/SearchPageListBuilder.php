@@ -253,11 +253,11 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#attributes' => array(
         'class' => array('container-inline'),
       ),
-      '#attached' => array(
-        'css' => array(
-          drupal_get_path('module', 'search') . '/css/search.admin.css',
-        ),
-      ),
+      '#attached' => [
+        'library' => [
+          'search/admin',
+        ],
+      ],
     );
     // In order to prevent validation errors for the parent form, this cannot be
     // required, see self::validateAddSearchPage().

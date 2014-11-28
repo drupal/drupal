@@ -118,7 +118,7 @@ class SimpletestResultsForm extends FormBase {
     }
 
     // Load all classes and include CSS.
-    $form['#attached']['css'][] = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
+    $form['#attached']['library'][] = 'simpletest/drupal.simpletest';
 
     // Keep track of which test cases passed or failed.
     $filter = array(

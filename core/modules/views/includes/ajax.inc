@@ -34,9 +34,6 @@ function views_ajax_form_wrapper($form_class, FormStateInterface &$form_state) {
 
   // These forms have the title built in, so set the title here:
   $title = $form_state->get('title') ?: '';
-  if (!$ajax && $title) {
-    $form['#attached']['css'][] = drupal_get_path('module', 'views_ui') . '/css/views_ui.admin.css';
-  }
 
   if ($ajax && (!$form_state->isExecuted() || $form_state->get('rerender'))) {
     // If the form didn't execute and we're using ajax, build up a

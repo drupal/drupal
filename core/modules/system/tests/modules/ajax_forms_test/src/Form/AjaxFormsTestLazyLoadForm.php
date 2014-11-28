@@ -57,21 +57,20 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('add_files')) {
-      $path = drupal_get_path('module', 'system');
-      $attached = array(
-        '#attached' => array(
-          'css' => array(
-            $path . '/css/system.admin.css' => array(),
-          ),
-          'js' => array(
-            0 => array(
+      $attached = [
+        '#attached' => [
+          'library' => [
+            'system/admin',
+            'system/drupal.system',
+          ],
+          'js' => [
+            0 => [
               'type' => 'setting',
-              'data' => array('ajax_forms_test_lazy_load_form_submit' => 'executed'),
-            ),
-            $path . '/system.js' => array(),
-          ),
-        ),
-      );
+              'data' => ['ajax_forms_test_lazy_load_form_submit' => 'executed'],
+            ],
+          ],
+        ],
+      ];
       drupal_render($attached);
       drupal_process_attached($attached);
     }

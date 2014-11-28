@@ -65,36 +65,6 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
 }
 
 /**
- * Implements hook_css_alter().
- *
- * Replaces style sheets with color-altered style sheets.
- */
-function color_css_alter(&$css) {
-  $theme_key = \Drupal::theme()->getActiveTheme()->getName();
-  $themes = list_themes();
-
-  // Override stylesheets.
-  $color_paths = \Drupal::config('color.theme.' . $theme_key)->get('stylesheets');
-
-  if (!empty($color_paths) && !empty($themes[$theme_key]->stylesheets['all'])) {
-
-    foreach ($themes[$theme_key]->stylesheets['all'] as $old_path) {
-      // Loop over the path array with recolored CSS files to find matching
-      // paths which could replace the non-recolored paths.
-      foreach ($color_paths as $color_path) {
-        // Color module currently requires unique file names to be used,
-        // which allows us to compare different file paths.
-        if (drupal_basename($old_path) == drupal_basename($color_path)) {
-          // Replace the path to the new css file.
-          // This keeps the order of the stylesheets intact.
-          $css[drupal_basename($old_path)]['data'] = $color_path;
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_library_alter().
  *
  * Replaces style sheets declared in libraries with color-altered style sheets.
@@ -240,10 +210,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
     '#attached' => array(
       'library' => array(
         'color/drupal.color',
-      ),
-      // Add custom CSS.
-      'css' => array(
-        $base . '/css/color.admin.css' => array(),
+        'color/admin',
       ),
       // Add custom JavaScript.
       'js' => array(
@@ -297,15 +264,10 @@ function template_preprocess_color_scheme_form(&$variables) {
 
   $theme = $form['theme']['#value'];
   $info = $form['info']['#value'];
-  $path = drupal_get_path('theme', $theme) . '/';
 
-  if (isset($info['preview_css'])) {
-    $preview_css_path = $path . $info['preview_css'];
-    $form['scheme']['#attached']['css'][$preview_css_path] = array();
+  if (isset($info['preview_library'])) {
+    $form['scheme']['#attached']['library'][] = $info['preview_library'];
   }
-  $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
-  // Add the JS at a weight below color.js.
-  $form['scheme']['#attached']['js'][$preview_js_path] = array('weight' => -1);
 
   // Attempt to load preview HTML if the theme provides it.
   $preview_html_path = \Drupal::root() . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');

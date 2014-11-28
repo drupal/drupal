@@ -79,7 +79,6 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   $form['entity_types']['#default_value'] = $default;
 
   $form['#attached']['library'][] = 'content_translation/drupal.content_translation.admin';
-  $form['#attached']['js'][] = array('data' => drupal_get_path('module', 'content_translation') . '/content_translation.admin.js', 'type' => 'file');
 
   $dependent_options_settings = array();
   $entity_manager = Drupal::entityManager();

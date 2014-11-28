@@ -18,3 +18,10 @@ drupal.color.preview:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/color.admin.css: {}
+

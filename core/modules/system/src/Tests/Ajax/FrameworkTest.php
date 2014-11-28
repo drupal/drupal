@@ -134,7 +134,7 @@ class FrameworkTest extends AjaxTestBase {
       'data' => $expected['css'],
       'browsers' => array('IE' => TRUE, '!IE' => TRUE),
     )), TRUE);
-    $expected_js_html = drupal_get_js('header', array($expected['js'] => drupal_js_defaults($expected['js'])), TRUE);
+    $expected_js_html = drupal_get_js('header', array($expected['js'] => ['version' => \Drupal::VERSION] + drupal_js_defaults($expected['js'])), TRUE);
 
     // Get the base page.
     $this->drupalGet('ajax_forms_test_lazy_load_form');

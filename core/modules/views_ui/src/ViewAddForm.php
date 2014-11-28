@@ -55,8 +55,7 @@ class ViewAddForm extends ViewFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form['#attached']['css'] = static::getAdminCSS();
-    $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
+    $form['#attached']['library'][] = 'views_ui/admin.styling';
     $form['#attributes']['class'] = array('views-admin');
 
     $form['name'] = array(

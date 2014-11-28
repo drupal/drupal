@@ -1,0 +1,4 @@
+unicorn:
+  version: VERSION
+  js:
+    unicorn.js: {}

@@ -7,6 +7,12 @@ drupal.comment:
     - core/drupal
     - core/drupal.form
 
+drupal.comment.threaded:
+  version: VERSION
+  css:
+    theme:
+      css/comment.theme.css: {}
+
 drupal.comment-by-viewer:
   version: VERSION
   js:

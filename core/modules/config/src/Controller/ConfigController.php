@@ -138,7 +138,7 @@ class ConfigController implements ContainerInjectionInterface {
 
     $build['#title'] = t('View changes of @config_file', array('@config_file' => $source_name));
     // Add the CSS for the inline diff.
-    $build['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
+    $build['#attached']['library'][] = 'system/diff';
 
     $build['diff'] = array(
       '#type' => 'table',

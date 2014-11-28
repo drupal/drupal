@@ -163,9 +163,11 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
       '#value' => t('Change book (update list of parents)'),
       '#submit' => array('book_pick_book_nojs_submit'),
       '#weight' => 20,
-      '#attached' => array(
-        'css' => array(drupal_get_path('module', 'book') . '/css/book.admin.css'),
-      ),
+      '#attached' => [
+        'library' => [
+          'book/admin',
+        ],
+      ],
     );
     $form['#entity_builders'][] = 'book_node_builder';
   }
@@ -240,11 +242,11 @@ function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayI
       $build['book_navigation'] = array(
         '#markup' => drupal_render($book_navigation),
         '#weight' => 100,
-        '#attached' => array(
-          'css' => array(
-            drupal_get_path('module', 'book') . '/css/book.theme.css',
-          ),
-        ),
+        '#attached' => [
+          'library' => [
+            'book/navigation',
+          ],
+        ],
         // The book navigation is a listing of Node entities, so associate its
         // list cache tag for correct invalidation.
         '#cache' => [

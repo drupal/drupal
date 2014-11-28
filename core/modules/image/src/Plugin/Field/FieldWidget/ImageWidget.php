@@ -158,7 +158,7 @@ class ImageWidget extends FileWidget {
     $item['fids'] = $element['fids']['#value'];
 
     $element['#theme'] = 'image_widget';
-    $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/css/image.theme.css';
+    $element['#attached']['library'][] = 'image/form';
 
     // Add the image preview.
     if (!empty($element['#files']) && $element['#preview_image_style']) {

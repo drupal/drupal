@@ -54,7 +54,7 @@ class HelpController extends ControllerBase {
   public function helpMain() {
     $output = array(
       '#attached' => array(
-        'css' => array(drupal_get_path('module', 'help') . '/css/help.module.css'),
+        'library' => ['help/help'],
       ),
       '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
     );

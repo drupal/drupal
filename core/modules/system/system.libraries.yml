@@ -44,3 +44,9 @@ drupal.system.modules:
     - core/jquery
     - core/drupal
     - core/jquery.once
+
+diff:
+  version: VERSION
+  css:
+    component:
+      css/system.diff.css: {}

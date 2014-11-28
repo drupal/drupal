@@ -88,7 +88,7 @@ class EditorManagerTest extends KernelTestBase {
     $this->assertIdentical(array(), $this->editorManager->getAttachments(array()), 'No attachments when one text editor is enabled and retrieving attachments for zero text formats.');
     $expected = array(
       'library' => array(
-        0 => 'edit_test/unicorn',
+        0 => 'editor_test/unicorn',
       ),
       'js' => array(
         0 => array(

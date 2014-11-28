@@ -13,6 +13,7 @@ views_ui.admin:
     - core/drupal.ajax
     - core/drupal.dropbutton
     - views/views.ajax
+    - views_ui/admin.styling
 
 views_ui.listing:
   version: VERSION
@@ -22,3 +23,13 @@ views_ui.listing:
     - core/jquery
     - core/drupal
     - core/jquery.once
+    - views_ui/admin.styling
+
+admin.styling:
+  version: VERSION
+  css:
+    component:
+      css/views_ui.admin.css: {}
+    theme:
+      css/views_ui.admin.theme.css: {}
+      css/views_ui.contextual.css: {}

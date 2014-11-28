@@ -1,0 +1,5 @@
+help:
+  version: VERSION
+  css:
+    component:
+      css/help.module.css: {}

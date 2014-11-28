@@ -107,8 +107,7 @@ class ViewEditForm extends ViewFormBase {
     $form['#attached']['library'][] = 'core/drupal.states';
     $form['#attached']['library'][] = 'core/drupal.tabledrag';
     $form['#attached']['library'][] = 'views_ui/views_ui.admin';
-
-    $form['#attached']['css'] = static::getAdminCSS();
+    $form['#attached']['library'][] = 'views_ui/admin.styling';
 
     $form['#attached']['js'][] = array(
       'data' => array('views' => array('ajax' => array(

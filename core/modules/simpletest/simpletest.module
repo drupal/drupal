@@ -152,7 +152,7 @@ function simpletest_run_tests($test_list) {
     ),
     'finished' => '_simpletest_batch_finished',
     'progress_message' => '',
-    'css' => array(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css'),
+    'library' => array('simpletest/drupal.simpletest'),
     'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
   );
   batch_set($batch);

@@ -162,9 +162,7 @@ class BlockForm extends EntityForm {
       '#prefix' => '<div id="edit-block-region-wrapper">',
       '#suffix' => '</div>',
     );
-    $form['#attached']['css'] = array(
-      drupal_get_path('module', 'block') . '/css/block.admin.css',
-    );
+    $form['#attached']['library'][] = 'block/drupal.block.admin';
     return $form;
   }
 
