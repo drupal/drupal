@@ -222,21 +222,6 @@ small .admin-link:after {
 }
 
 /**
- * Theme settings.
- */
-.theme-settings-left {
-  float: left;
-  width: 49%;
-}
-.theme-settings-right {
-  float: right;
-  width: 49%;
-}
-.theme-settings-bottom {
-  clear: both;
-}
-
-/**
  * Appearance page.
  */
 .theme-info__header {

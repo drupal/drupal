@@ -147,7 +147,6 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#type' => 'details',
         '#title' => t('Logo image settings'),
         '#open' => TRUE,
-        '#attributes' => array('class' => array('theme-settings-bottom')),
         '#states' => array(
           // Hide the logo image settings fieldset when logo display is disabled.
           'invisible' => array(
