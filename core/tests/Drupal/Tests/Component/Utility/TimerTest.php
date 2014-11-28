@@ -11,15 +11,20 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Timer;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Timer
+ * Tests the Timer system.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Timer
  */
 class TimerTest extends UnitTestCase {
 
   /**
    * Tests Timer::read() time accumulation accuracy across multiple restarts.
    *
-   * @see \Drupal\Component\Utility\Timer::read()
+   * @covers ::start
+   * @covers ::stop
+   * @covers ::read
    */
   public function testTimer() {
     Timer::start('test');

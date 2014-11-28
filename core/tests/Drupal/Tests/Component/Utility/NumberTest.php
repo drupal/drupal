@@ -13,14 +13,19 @@ use Drupal\Component\Utility\Number;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests number step validation by Number::validStep().
+ * Tests number manipulation utilities.
  *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Number
  */
 class NumberTest extends UnitTestCase {
 
   /**
    * Tests Number::validStep() without offset.
+   *
+   * @dataProvider providerTestValidStep
+   * @covers ::validStep
    *
    * @param numeric $value
    *   The value argument for Number::validStep().
@@ -28,8 +33,6 @@ class NumberTest extends UnitTestCase {
    *   The step argument for Number::validStep().
    * @param boolean $expected
    *   Expected return value from Number::validStep().
-   *
-   * @dataProvider providerTestValidStep
    */
   public function testValidStep($value, $step, $expected) {
     $return = Number::validStep($value, $step);
@@ -39,6 +42,9 @@ class NumberTest extends UnitTestCase {
   /**
    * Tests Number::validStep() with offset.
    *
+   * @dataProvider providerTestValidStepOffset
+   * @covers ::validStep
+   *
    * @param numeric $value
    *   The value argument for Number::validStep().
    * @param numeric $step
@@ -47,8 +53,6 @@ class NumberTest extends UnitTestCase {
    *   The offset argument for Number::validStep().
    * @param boolean $expected
    *   Expected return value from Number::validStep().
-   *
-   * @dataProvider providerTestValidStepOffset
    */
   public function testValidStepOffset($value, $step, $offset, $expected) {
     $return = Number::validStep($value, $step, $offset);
@@ -114,6 +118,45 @@ class NumberTest extends UnitTestCase {
       array(1000, 10, -5, FALSE),
       array(-10, 4, 0, FALSE),
       array(-10, 4, -4, FALSE),
+    );
+  }
+
+  /**
+   * Tests the alphadecimal conversion functions.
+   *
+   * @dataProvider providerTestConversions
+   * @covers ::intToAlphadecimal
+   * @covers ::alphadecimalToInt
+   *
+   * @param int $value
+   *   The integer value.
+   * @param string $expected
+   *   The expected alphadecimal value.
+   */
+  public function testConversions($value, $expected) {
+    $this->assertSame(Number::intToAlphadecimal($value), $expected);
+    $this->assertSame($value, Number::alphadecimalToInt($expected));
+  }
+
+  /**
+   * Data provider for testConversions().
+   *
+   * @see testConversions()
+   *
+   * @return array
+   *   An array containing:
+   *     - The integer value.
+   *     - The alphadecimal value.
+   */
+  public function providerTestConversions() {
+    return array(
+      array(0, '00'),
+      array(1, '01'),
+      array(10, '0a'),
+      array(20, '0k'),
+      array(35, '0z'),
+      array(36, '110'),
+      array(100, '12s'),
     );
   }
 

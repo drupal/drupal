@@ -11,8 +11,11 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\SortArray;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\SortArray
+ * Tests the SortArray component.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\SortArray
  */
 class SortArrayTest extends UnitTestCase {
 
@@ -20,6 +23,8 @@ class SortArrayTest extends UnitTestCase {
    * Tests SortArray::sortByWeightElement() input against expected output.
    *
    * @dataProvider providerSortByWeightElement
+   * @covers ::sortByWeightElement
+   * @covers ::sortByKeyInt
    *
    * @param array $a
    *   The first input array for the SortArray::sortByWeightElement() method.
@@ -27,9 +32,6 @@ class SortArrayTest extends UnitTestCase {
    *   The second input array for the SortArray::sortByWeightElement().
    * @param integer $expected
    *   The expected output from calling the method.
-   *
-   * @see \Drupal\Component\Utility\SortArray::sortByWeightElement()
-   * @see \Drupal\Tests\Component\Utility\SortArrayTest::providersortByWeightElement()
    */
   public function testSortByWeightElement($a, $b, $expected) {
     $result = SortArray::sortByWeightElement($a, $b);
@@ -43,7 +45,6 @@ class SortArrayTest extends UnitTestCase {
    *   An array of tests, matching the parameter inputs for
    *   testSortByWeightElement.
    *
-   * @see \Drupal\Component\Utility\SortArray::sortByWeightElement()
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightElement()
    */
   public function providerSortByWeightElement() {
@@ -98,6 +99,8 @@ class SortArrayTest extends UnitTestCase {
    * Tests SortArray::sortByWeightProperty() input against expected output.
    *
    * @dataProvider providerSortByWeightProperty
+   * @covers ::sortByWeightProperty
+   * @covers ::sortByKeyInt
    *
    * @param array $a
    *   The first input array for the SortArray::sortByWeightProperty() method.
@@ -105,9 +108,6 @@ class SortArrayTest extends UnitTestCase {
    *   The second input array for the SortArray::sortByWeightProperty().
    * @param integer $expected
    *   The expected output from calling the method.
-   *
-   * @see \Drupal\Component\Utility\SortArray::sortByWeightProperty()
-   * @see \Drupal\Tests\Component\Utility\SortArrayTest::SortByWeightProperty()
    */
   public function testSortByWeightProperty($a, $b, $expected) {
     $result = SortArray::sortByWeightProperty($a, $b);
@@ -121,7 +121,6 @@ class SortArrayTest extends UnitTestCase {
    *   An array of tests, matching the parameter inputs for
    *   testSortByWeightProperty.
    *
-   * @see \Drupal\Component\Utility\SortArray::sortByWeightProperty()
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightProperty()
    */
   public function providerSortByWeightProperty() {
@@ -176,6 +175,8 @@ class SortArrayTest extends UnitTestCase {
    * Tests SortArray::sortByTitleElement() input against expected output.
    *
    * @dataProvider providerSortByTitleElement
+   * @covers ::sortByTitleElement
+   * @covers ::sortByKeyString
    *
    * @param array $a
    *   The first input item for comparison.
@@ -183,9 +184,6 @@ class SortArrayTest extends UnitTestCase {
    *   The second item for comparison.
    * @param integer $expected
    *   The expected output from calling the method.
-   *
-   * @see \Drupal\Component\Utility\SortArray::sortByTitleElement()
-   * @see \Drupal\Tests\Component\Utility\SortArrayTest::providerSortByTitleElement()
    */
   public function testSortByTitleElement($a, $b, $expected) {
     $result = SortArray::sortByTitleElement($a, $b);
@@ -199,7 +197,6 @@ class SortArrayTest extends UnitTestCase {
    *   An array of tests, matching the parameter inputs for
    *   testSortByTitleElement.
    *
-   * @see \Drupal\Component\Utility\SortArray::sortByTitleElement()
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleElement()
    */
   public function providerSortByTitleElement() {
@@ -247,6 +244,8 @@ class SortArrayTest extends UnitTestCase {
    * Tests SortArray::sortByTitleProperty() input against expected output.
    *
    * @dataProvider providerSortByTitleProperty
+   * @covers ::sortByTitleProperty
+   * @covers ::sortByKeyString
    *
    * @param array $a
    *   The first input item for comparison.
@@ -254,9 +253,6 @@ class SortArrayTest extends UnitTestCase {
    *   The second item for comparison.
    * @param integer $expected
    *   The expected output from calling the method.
-   *
-   * @see \Drupal\Component\Utility\SortArray::sortByTitleProperty()
-   * @see \Drupal\Tests\Component\Utility\SortArrayTest::SortByTitleProperty()
    */
   public function testSortByTitleProperty($a, $b, $expected) {
     $result = SortArray::sortByTitleProperty($a, $b);
@@ -270,7 +266,6 @@ class SortArrayTest extends UnitTestCase {
    *   An array of tests, matching the parameter inputs for
    *   testSortByTitleProperty.
    *
-   * @see \Drupal\Component\Utility\SortArray::sortByTitleProperty()
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleProperty()
    */
   public function providerSortByTitleProperty() {

@@ -11,20 +11,30 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Unicode
+ * Test unicode handling features implemented in Unicode component.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Unicode
  */
 class UnicodeTest extends UnitTestCase {
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   *
+   * @covers ::check
+   */
+  public function setUp() {
     // Initialize unicode component.
     Unicode::check();
   }
 
   /**
-   * Tests Unicode::getStatus() and Unicode::setStatus().
+   * Getting and settings the multibyte environment status.
    *
    * @dataProvider providerTestStatus
+   * @covers ::getStatus
+   * @covers ::setStatus
    */
   public function testStatus($value, $expected, $invalid = FALSE) {
     if ($invalid) {
@@ -58,9 +68,11 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::mimeHeaderEncode() and Unicode::mimeHeaderDecode().
+   * Tests multibyte encoding and decoding.
    *
    * @dataProvider providerTestMimeHeader
+   * @covers ::mimeHeaderEncode
+   * @covers ::mimeHeaderDecode
    */
   public function testMimeHeader($value, $encoded) {
     $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value));
@@ -84,9 +96,11 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::strtolower().
+   * Tests multibyte strtolower.
    *
    * @dataProvider providerStrtolower
+   * @covers ::strtolower
+   * @covers ::caseFlip
    */
   public function testStrtolower($text, $expected, $multibyte = FALSE) {
     $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
@@ -119,9 +133,11 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::strtoupper().
+   * Tests multibyte strtoupper.
    *
    * @dataProvider providerStrtoupper
+   * @covers ::strtoupper
+   * @covers ::caseFlip
    */
   public function testStrtoupper($text, $expected, $multibyte = FALSE) {
     $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
@@ -154,9 +170,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::ucfirst().
+   * Tests multibyte ucfirst.
    *
    * @dataProvider providerUcfirst
+   * @covers ::ucfirst
    */
   public function testUcfirst($text, $expected) {
     $this->assertEquals($expected, Unicode::ucfirst($text));
@@ -182,9 +199,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::lcfirst().
+   * Tests multibyte lcfirst.
    *
    * @dataProvider providerLcfirst
+   * @covers ::lcfirst
    */
   public function testLcfirst($text, $expected, $multibyte = FALSE) {
     $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
@@ -213,9 +231,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::ucwords().
+   * Tests multibyte ucwords.
    *
    * @dataProvider providerUcwords
+   * @covers ::ucwords
    */
   public function testUcwords($text, $expected, $multibyte = FALSE) {
     $status = $multibyte ? Unicode::STATUS_MULTIBYTE : Unicode::STATUS_SINGLEBYTE;
@@ -246,9 +265,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::strlen().
+   * Tests multibyte strlen.
    *
    * @dataProvider providerStrlen
+   * @covers ::strlen
    */
   public function testStrlen($text, $expected) {
     // Run through multibyte code path.
@@ -275,9 +295,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::substr().
+   * Tests multibyte substr.
    *
    * @dataProvider providerSubstr
+   * @covers ::substr
    */
   public function testSubstr($text, $start, $length, $expected) {
     // Run through multibyte code path.
@@ -302,6 +323,7 @@ class UnicodeTest extends UnitTestCase {
    */
   public function providerSubstr() {
     return array(
+      array('frànçAIS is über-åwesome', 0, NULL, 'frànçAIS is über-åwesome'),
       array('frànçAIS is über-åwesome', 0, 0, ''),
       array('frànçAIS is über-åwesome', 0, 1, 'f'),
       array('frànçAIS is über-åwesome', 0, 8, 'frànçAIS'),
@@ -330,12 +352,12 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::truncate().
+   * Tests multibyte truncate.
    *
    * @dataProvider providerTruncate
+   * @covers ::truncate
    */
   public function testTruncate($text, $max_length, $expected, $wordsafe = FALSE, $add_ellipsis = FALSE) {
-    Unicode::check();
     $this->assertEquals($expected, Unicode::truncate($text, $max_length, $wordsafe, $add_ellipsis));
   }
 
@@ -402,7 +424,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::truncateBytes().
+   * Tests multibyte truncate bytes.
+   *
+   * @dataProvider providerTestTruncateBytes
+   * @covers ::truncateBytes
    *
    * @param string $text
    *   The string to truncate.
@@ -410,8 +435,6 @@ class UnicodeTest extends UnitTestCase {
    *   The upper limit on the returned string length.
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
-   *
-   * @dataProvider providerTestTruncateBytes
    */
   public function testTruncateBytes($text, $max_length, $expected) {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
@@ -436,7 +459,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::validateUtf8().
+   * Tests UTF-8 validation.
+   *
+   * @dataProvider providerTestValidateUtf8
+   * @covers ::validateUtf8
    *
    * @param string $text
    *   The text to validate.
@@ -444,8 +470,6 @@ class UnicodeTest extends UnitTestCase {
    *   The expected return value from Unicode::validateUtf8().
    * @param string $message
    *   The message to display on failure.
-   *
-   * @dataProvider providerTestValidateUtf8
    */
   public function testValidateUtf8($text, $expected, $message) {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
@@ -474,7 +498,10 @@ class UnicodeTest extends UnitTestCase {
   }
 
   /**
-   * Tests Unicode::convertToUtf8().
+   * Tests UTF-8 conversion.
+   *
+   * @dataProvider providerTestConvertToUtf8
+   * @covers ::convertToUtf8
    *
    * @param string $data
    *   The data to be converted.
@@ -482,8 +509,6 @@ class UnicodeTest extends UnitTestCase {
    *   The encoding the data is in.
    * @param string|bool $expected
    *   The expected result.
-   *
-   * @dataProvider providerTestConvertToUtf8
    */
   public function testConvertToUtf8($data, $encoding, $expected) {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));

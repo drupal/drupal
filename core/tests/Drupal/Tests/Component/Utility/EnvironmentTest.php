@@ -11,13 +11,19 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Environment
+ * Test PHP Environment helper methods.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Environment
  */
 class EnvironmentTest extends UnitTestCase {
 
   /**
    * Tests \Drupal\Component\Utility\Environment::checkMemoryLimit().
+   *
+   * @dataProvider providerTestCheckMemoryLimit
+   * @covers ::checkMemoryLimit
    *
    * @param string $required
    *   The required memory argument for
@@ -28,9 +34,6 @@ class EnvironmentTest extends UnitTestCase {
    * @param bool $expected
    *   The expected return value from
    *   \Drupal\Component\Utility\Environment::checkMemoryLimit().
-   *
-   * @dataProvider providerTestCheckMemoryLimit
-   * @covers ::checkMemoryLimit
    */
   public function testCheckMemoryLimit($required, $custom_memory_limit, $expected) {
     $actual = Environment::checkMemoryLimit($required, $custom_memory_limit);

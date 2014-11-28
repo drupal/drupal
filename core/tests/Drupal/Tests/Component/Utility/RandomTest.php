@@ -12,8 +12,11 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Random
+ * Tests random data generation.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Random
  */
 class RandomTest extends UnitTestCase {
 
@@ -29,7 +32,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests unique random string generation.
    *
-   * @see \Drupal\Component\Utility\Random::string()
+   * @covers ::string
    */
   public function testRandomStringUniqueness() {
     $strings = array();
@@ -44,7 +47,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests unique random name generation.
    *
-   * @see \Drupal\Component\Utility\Random::name()
+   * @covers ::name
    */
   public function testRandomNamesUniqueness() {
     $names = array();
@@ -59,9 +62,8 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests infinite loop prevention whilst generating random names.
    *
-   * @see \Drupal\Component\Utility\Random::name()
-   *
-   * @expectedException RuntimeException
+   * @covers ::name
+   * @expectedException \RuntimeException
    */
   public function testRandomNameException() {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -76,9 +78,8 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests infinite loop prevention whilst generating random strings.
    *
-   * @see \Drupal\Component\Utility\Random::string()
-   *
-   * @expectedException RuntimeException
+   * @covers ::string
+   * @expectedException \RuntimeException
    */
   public function testRandomStringException() {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -93,7 +94,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests random name generation if uniqueness is not enforced.
    *
-   * @see \Drupal\Component\Utility\Random::name()
+   * @covers ::name
    */
   public function testRandomNameNonUnique() {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -108,7 +109,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests random string if uniqueness is not enforced.
    *
-   * @see \Drupal\Component\Utility\Random::string()
+   * @covers ::string
    */
   public function testRandomStringNonUnique() {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -123,7 +124,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests random object generation to ensure the expected number of properties.
    *
-   * @see \Drupal\Component\Utility\Random::object()
+   * @covers ::object
    */
   public function testRandomObject() {
     // For values of 0 and 1 \Drupal\Component\Utility\Random::object() will
@@ -138,7 +139,7 @@ class RandomTest extends UnitTestCase {
   /**
    * Tests random string validation callbacks.
    *
-   * @see \Drupal\Component\Utility\Random::name()
+   * @covers ::string
    */
   public function testRandomStringValidator() {
     $random = new Random();

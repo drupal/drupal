@@ -11,13 +11,18 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Crypt
+ * Tests random byte generation.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Crypt
  */
 class CryptTest extends UnitTestCase {
 
   /**
-   * Tests \Drupal\Component\Utility\Crypt::randomBytes().
+   * Tests random byte generation.
+   *
+   * @covers ::randomBytes
    */
   public function testRandomBytes() {
     for ($i = 1; $i < 10; $i++) {
@@ -30,14 +35,15 @@ class CryptTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Component\Utility\Crypt::hashBase64().
+   * Tests hash generation.
+   *
+   * @dataProvider providerTestHashBase64
+   * @covers ::hashBase64
    *
    * @param string $data
    *   Data to hash.
    * @param string $expected_hash
    *   Expected result from hashing $data.
-   *
-   * @dataProvider providerTestHashBase64
    */
   public function testHashBase64($data, $expected_hash) {
     $hash = Crypt::hashBase64($data);
@@ -45,7 +51,10 @@ class CryptTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Component\Utility\Crypt::hmacBase64().
+   * Tests HMAC generation.
+   *
+   * @dataProvider providerTestHmacBase64
+   * @covers ::hmacBase64
    *
    * @param string $data
    *   Data to hash.
@@ -53,8 +62,6 @@ class CryptTest extends UnitTestCase {
    *   Key to use in hashing process.
    * @param string $expected_hmac
    *   Expected result from hashing $data using $key.
-   *
-   * @dataProvider providerTestHmacBase64
    */
   public function testHmacBase64($data, $key, $expected_hmac) {
     $hmac = Crypt::hmacBase64($data, $key);
@@ -64,13 +71,14 @@ class CryptTest extends UnitTestCase {
   /**
    * Tests the hmacBase64 method with invalid parameters.
    *
+   * @dataProvider providerTestHmacBase64Invalid
+   * @expectedException InvalidArgumentException
+   * @covers ::hmacBase64
+   *
    * @param string $data
    *   Data to hash.
    * @param string $key
    *   Key to use in hashing process.
-   *
-   * @dataProvider providerTestHmacBase64Invalid
-   * @expectedException InvalidArgumentException
    */
   public function testHmacBase64Invalid($data, $key) {
     Crypt::hmacBase64($data, $key);

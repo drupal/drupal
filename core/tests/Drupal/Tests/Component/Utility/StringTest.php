@@ -11,8 +11,11 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\String;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\String
+ * Tests string filtering.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\String
  */
 class StringTest extends UnitTestCase {
 
@@ -20,6 +23,7 @@ class StringTest extends UnitTestCase {
    * Tests String::checkPlain().
    *
    * @dataProvider providerCheckPlain
+   * @covers ::checkPlain
    *
    * @param string $text
    *   The text to provide to String::checkPlain().
@@ -57,6 +61,7 @@ class StringTest extends UnitTestCase {
    * Tests string formatting with String::format().
    *
    * @dataProvider providerFormat
+   * @covers ::format
    *
    * @param string $string
    *   The string to run through String::format().
@@ -66,8 +71,6 @@ class StringTest extends UnitTestCase {
    *   The expected result from calling the function.
    * @param string $message
    *   The message to display as output to the test.
-   *
-   * @see String::format()
    */
   function testFormat($string, $args, $expected, $message) {
     $result = String::format($string, $args);
@@ -91,7 +94,7 @@ class StringTest extends UnitTestCase {
   /**
    * Tests String::placeholder().
    *
-   * @see String::placeholder()
+   * @covers ::placeholder
    */
   function testPlaceholder() {
     $this->assertEquals('<em class="placeholder">Some text</em>', String::placeholder('Some text'));
@@ -101,6 +104,7 @@ class StringTest extends UnitTestCase {
    * Tests String::decodeEntities().
    *
    * @dataProvider providerDecodeEntities
+   * @covers ::decodeEntities
    */
   public function testDecodeEntities($text, $expected) {
     $this->assertEquals($expected, String::decodeEntities($text));

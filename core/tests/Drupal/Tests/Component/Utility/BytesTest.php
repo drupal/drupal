@@ -11,8 +11,11 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Bytes
+ * Tests bytes size parsing helper methods.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Bytes
  */
 class BytesTest extends UnitTestCase {
 
@@ -43,6 +46,7 @@ class BytesTest extends UnitTestCase {
    */
   public function providerTestToInt() {
     return array(
+      array('1', 1),
       array('1 byte', 1),
       array('1 KB'  , Bytes::KILOBYTE),
       array('1 MB'  , pow(Bytes::KILOBYTE, 2)),

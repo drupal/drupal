@@ -13,8 +13,11 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Xss
+ * XSS Filtering tests.
+ *
  * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Xss
  *
  * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
  *
