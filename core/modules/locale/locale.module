@@ -180,11 +180,6 @@ function locale_help($route_name, RouteMatchInterface $route_match) {
  */
 function locale_theme() {
   return array(
-    'locale_translate_edit_form_strings' => array(
-      'render element' => 'form',
-      'file' => 'locale.pages.inc',
-      'function' => 'theme_locale_translate_edit_form_strings',
-    ),
     'locale_translation_last_check' => array(
       'variables' => array('last' => NULL),
       'file' => 'locale.pages.inc',

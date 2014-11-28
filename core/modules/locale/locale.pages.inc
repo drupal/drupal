@@ -38,54 +38,6 @@ function locale_translation_manual_status() {
 }
 
 /**
- * Returns HTML for translation edit form.
- *
- * @param array $variables
- *   An associative array containing:
- *   - form: The form that contains the language information.
- *
- * @return string
- *   The themed output.
- *
- * @see locale_translate_edit_form()
- * @ingroup themeable
- */
-function theme_locale_translate_edit_form_strings(array $variables) {
-  $output = '';
-  $form = $variables['form'];
-  $header = array(
-    t('Source string'),
-    t('Translation for @language', array('@language' => $form['#language'])),
-  );
-  $rows = array();
-  foreach (Element::children($form) as $lid) {
-    $string = $form[$lid];
-    if ($string['plural']['#value']) {
-      $source = drupal_render($string['original_singular']) . '<br />' . drupal_render($string['original_plural']);
-    }
-    else {
-      $source = drupal_render($string['original']);
-    }
-    $source .= empty($string['context']) ? '' : '<br /><small>' . t('In Context') . ':&nbsp;' . $string['context']['#value'] . '</small>';
-    $rows[] = array(
-      array('data' => SafeMarkup::set($source)),
-      array('data' => $string['translations']),
-    );
-  }
-  $table = array(
-    '#type' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => t('No strings available.'),
-    '#attributes' => array('class' => array('locale-translate-edit-table')),
-  );
-  $output .= drupal_render($table);
-  $pager = array('#theme' => 'pager');
-  $output .= drupal_render($pager);
-  return $output;
-}
-
-/**
  * Prepares variables for translation status information templates.
  *
  * Translation status information is displayed per language.
