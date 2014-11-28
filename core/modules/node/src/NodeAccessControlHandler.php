@@ -145,7 +145,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     }
 
     // No user can change read only fields.
-    $read_only_fields = array('changed', 'revision_timestamp', 'revision_uid');
+    $read_only_fields = array('revision_timestamp', 'revision_uid');
     if ($operation == 'edit' && in_array($field_definition->getName(), $read_only_fields, TRUE)) {
       return AccessResult::forbidden();
     }

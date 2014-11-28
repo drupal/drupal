@@ -74,7 +74,6 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
       // No user can change read-only fields.
       $read_only_fields = array(
-        'changed',
         'hostname',
         'uuid',
         'cid',
