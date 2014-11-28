@@ -35,15 +35,15 @@ class Request
     const HEADER_CLIENT_PROTO = 'client_proto';
     const HEADER_CLIENT_PORT = 'client_port';
 
-    const METHOD_HEAD    = 'HEAD';
-    const METHOD_GET     = 'GET';
-    const METHOD_POST    = 'POST';
-    const METHOD_PUT     = 'PUT';
-    const METHOD_PATCH   = 'PATCH';
-    const METHOD_DELETE  = 'DELETE';
-    const METHOD_PURGE   = 'PURGE';
+    const METHOD_HEAD = 'HEAD';
+    const METHOD_GET = 'GET';
+    const METHOD_POST = 'POST';
+    const METHOD_PUT = 'PUT';
+    const METHOD_PATCH = 'PATCH';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PURGE = 'PURGE';
     const METHOD_OPTIONS = 'OPTIONS';
-    const METHOD_TRACE   = 'TRACE';
+    const METHOD_TRACE = 'TRACE';
     const METHOD_CONNECT = 'CONNECT';
 
     protected static $trustedProxies = array();
@@ -726,7 +726,19 @@ class Request
      */
     public function get($key, $default = null, $deep = false)
     {
-        return $this->query->get($key, $this->attributes->get($key, $this->request->get($key, $default, $deep), $deep), $deep);
+        if ($this !== $result = $this->query->get($key, $this, $deep)) {
+            return $result;
+        }
+
+        if ($this !== $result = $this->attributes->get($key, $this, $deep)) {
+            return $result;
+        }
+
+        if ($this !== $result = $this->request->get($key, $this, $deep)) {
+            return $result;
+        }
+
+        return $default;
     }
 
     /**

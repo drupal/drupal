@@ -137,7 +137,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $options = array(
             'cookie_lifetime' => 123456,
             'cookie_path' => '/my/cookie/path',
-            'cookie_domain' => 'symfony2.example.com',
+            'cookie_domain' => 'symfony.example.com',
             'cookie_secure' => true,
             'cookie_httponly' => false,
         );
@@ -164,7 +164,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSaveHandler53()
     {
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
+        if (PHP_VERSION_ID >= 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
         }
 
@@ -186,7 +186,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSaveHandler54()
     {
-        if (version_compare(phpversion(), '5.4.0', '<')) {
+        if (PHP_VERSION_ID < 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.4 only.');
         }
 
@@ -211,7 +211,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartedOutside53()
     {
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
+        if (PHP_VERSION_ID >= 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
         }
 
@@ -234,7 +234,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanStartOutside54()
     {
-        if (version_compare(phpversion(), '5.4.0', '<')) {
+        if (PHP_VERSION_ID < 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.4 only.');
         }
 
