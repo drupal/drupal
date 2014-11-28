@@ -9,6 +9,7 @@ namespace Drupal\Core;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
@@ -87,6 +88,13 @@ class Url {
   protected $uri;
 
   /**
+   * Stores the internal path, if already requested by getInternalPath
+   *
+   * @var string
+   */
+  protected $internalPath;
+
+  /**
    * Constructs a new Url object.
    *
    * In most cases, use Url::fromRoute() or Url::fromUri() rather than
@@ -163,6 +171,23 @@ class Url {
    */
   public static function fromRoute($route_name, $route_parameters = array(), $options = array()) {
     return new static($route_name, $route_parameters, $options);
+  }
+
+  /**
+   * Creates a new URL object from a route match.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   *
+   * @return $this
+   */
+  public static function fromRouteMatch(RouteMatchInterface $route_match) {
+    if ($route_match->getRouteObject()) {
+      return new static($route_match->getRouteName(), $route_match->getRawParameters()->all());
+    }
+    else {
+      throw new \InvalidArgumentException('Route required');
+    }
   }
 
   /**
@@ -510,7 +535,11 @@ class Url {
     if ($this->unrouted) {
       throw new \UnexpectedValueException('Unrouted URIs do not have internal representations.');
     }
-    return $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
+
+    if (!isset($this->internalPath)) {
+      $this->internalPath = $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
+    }
+    return $this->internalPath;
   }
 
   /**
@@ -582,12 +611,13 @@ class Url {
    * Sets the URL generator.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The URL generator.
+   *   (optional) The URL generator, specify NULL to reset it.
    *
    * @return $this
    */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
+  public function setUrlGenerator(UrlGeneratorInterface $url_generator = NULL) {
     $this->urlGenerator = $url_generator;
+    $this->internalPath = NULL;
     return $this;
   }
 

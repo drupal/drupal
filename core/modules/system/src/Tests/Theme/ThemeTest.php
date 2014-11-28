@@ -10,6 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\test_theme\ThemeClass;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Tests low-level theme functions.
@@ -137,14 +140,16 @@ class ThemeTest extends WebTestBase {
    * Ensure page-front template suggestion is added when on front page.
    */
   function testFrontPageThemeSuggestion() {
-    $original_path = _current_path();
-    // Set the current path to node because theme_get_suggestions() will query
-    // it to see if we are on the front page.
-    \Drupal::config('system.site')->set('page.front', 'node')->save();
-    _current_path('node');
-    $suggestions = theme_get_suggestions(array('node'), 'page');
+    // Set the current route to user.login because theme_get_suggestions() will
+    // query it to see if we are on the front page.
+    $request = Request::create('/user/login');
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'user.login');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/user/login'));
+    \Drupal::requestStack()->push($request);
+    \Drupal::config('system.site')->set('page.front', 'user/login')->save();
+    $suggestions = theme_get_suggestions(array('user', 'login'), 'page');
     // Set it back to not annoy the batch runner.
-    _current_path($original_path);
+    \Drupal::requestStack()->pop();
     $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
   }
 

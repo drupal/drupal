@@ -75,15 +75,6 @@ class UrlAlterFunctionalTest extends WebTestBase {
   }
 
   /**
-   * Test current_path() and request_path().
-   */
-  function testCurrentUrlRequestedPath() {
-    $this->drupalGet('url-alter-test/bar');
-    $this->assertRaw('request_path=url-alter-test/bar', 'request_path() returns the requested path.');
-    $this->assertRaw('current_path=url-alter-test/foo', 'current_path() returns the internal path.');
-  }
-
-  /**
    * Assert that an outbound path is altered to an expected value.
    *
    * @param $original

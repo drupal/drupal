@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\Block;
 
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
@@ -22,6 +23,8 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  * )
  */
 class UserLoginBlock extends BlockBase {
+
+  use UrlGeneratorTrait;
 
   /**
    * {@inheritdoc}
@@ -41,7 +44,7 @@ class UserLoginBlock extends BlockBase {
     unset($form['pass']['#description']);
     $form['name']['#size'] = 15;
     $form['pass']['#size'] = 15;
-    $form['#action'] = _url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
+    $form['#action'] = $this->url('<current>', [], ['query' => drupal_get_destination(), 'external' => FALSE]);
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

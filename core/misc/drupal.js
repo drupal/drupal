@@ -326,7 +326,7 @@ if (window.jQuery) {
    * Returns the URL to a Drupal page.
    */
   Drupal.url = function (path) {
-    return drupalSettings.path.basePath + drupalSettings.path.scriptPath + drupalSettings.path.pathPrefix + path;
+    return drupalSettings.path.baseUrl + drupalSettings.path.pathPrefix + path;
   };
 
   /**

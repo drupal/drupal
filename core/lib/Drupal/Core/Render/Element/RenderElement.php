@@ -10,6 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Provides a base class for render element plugins.
@@ -136,7 +137,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
   /**
    * Adds Ajax information about an element to communicate with JavaScript.
    *
-   * If #ajax['path'] is set on an element, this additional JavaScript is added
+   * If #ajax['url'] is set on an element, this additional JavaScript is added
    * to the page header to attach the Ajax behaviors. See ajax.js for more
    * information.
    *
@@ -145,7 +146,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    *   Properties used:
    *   - #ajax['event']
    *   - #ajax['prevent']
-   *   - #ajax['path']
+   *   - #ajax['url']
    *   - #ajax['options']
    *   - #ajax['wrapper']
    *   - #ajax['parameters']
@@ -248,8 +249,13 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       }
 
       // Change path to URL.
-      $settings['url'] = isset($settings['path']) ? _url($settings['path'], $settings['options']) : NULL;
-      unset($settings['path'], $settings['options']);
+      if (isset($settings['url']) && $settings['url'] instanceof Url) {
+        $settings['url'] = $settings['url']->setOptions($settings['options'])->toString();
+      }
+      else {
+        $settings['url'] = NULL;
+      }
+      unset($settings['options']);
 
       // Add special data to $settings['submit'] so that when this element
       // triggers an Ajax submission, Drupal's form processing can determine which

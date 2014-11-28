@@ -469,7 +469,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
       '#options' => $formatters,
       '#default_value' => $this->options['type'],
       '#ajax' => array(
-        'path' => views_ui_build_form_path($form_state),
+        'url' => views_ui_build_form_url($form_state),
       ),
       '#submit' => array(array($this, 'submitTemporaryForm')),
       '#executes_submit_callback' => TRUE,

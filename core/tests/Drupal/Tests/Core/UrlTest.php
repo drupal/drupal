@@ -9,12 +9,14 @@ namespace Drupal\Tests\Core;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Route;
 
 /**
  * @coversDefaultClass \Drupal\Core\Url
@@ -218,6 +220,37 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getInternalPath method().
+   *
+   * @param \Drupal\Core\Url[] $urls
+   *   Array of URL objects.
+   *
+   * @covers ::getInternalPath
+   *
+   * @depends testUrlFromRequest
+   */
+  public function testGetInternalPath($urls) {
+    $map = [];
+    $map[] = ['view.frontpage.page_1', [], '/node'];
+    $map[] = ['node_view', ['node' => '1'], '/node/1'];
+    $map[] = ['node_edit', ['node' => '2'], '/node/2/edit'];
+
+    foreach ($urls as $index => $url) {
+      // Clone the url so that there is no leak of internal state into the
+      // other ones.
+      $url = clone $url;
+      $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+      $url_generator->expects($this->once())
+        ->method('getPathFromRoute')
+        ->will($this->returnValueMap($map, $index));
+      $url->setUrlGenerator($url_generator);
+
+      $url->getInternalPath();
+      $url->getInternalPath();
+    }
+  }
+
+  /**
    * Tests the toString() method.
    *
    * @param \Drupal\Core\Url[] $urls
@@ -371,6 +404,17 @@ class UrlTest extends UnitTestCase {
     $this->container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
     $this->container->set('access_manager', $this->getMockAccessManager($access));
     $this->assertEquals($access, TestUrl::renderAccess($element));
+  }
+
+  /**
+   * Tests the fromRouteMatch() method.
+   */
+  public function testFromRouteMatch() {
+    $route = new Route('/test-route/{foo}');
+    $route_match = new RouteMatch('test_route', $route, ['foo' => (object) [1]], ['foo' => 1]);
+    $url = Url::fromRouteMatch($route_match);
+    $this->assertSame('test_route', $url->getRouteName());
+    $this->assertEquals(['foo' => '1'] , $url->getRouteParameters());
   }
 
   /**

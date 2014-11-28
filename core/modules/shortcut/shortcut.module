@@ -297,7 +297,7 @@ function shortcut_preprocess_page(&$variables) {
   // we do not want to display it on "access denied" or "page not found"
   // pages).
   if (shortcut_set_edit_access()->isAllowed() && !\Drupal::request()->attributes->has('exception')) {
-    $link = current_path();
+    $link = Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath();
     $route_match = \Drupal::routeMatch();
 
     $query = array(

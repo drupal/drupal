@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Form controller for the Views preview form.
@@ -87,7 +88,7 @@ class ViewPreviewForm extends ViewFormBase {
         '#submit' => array('::submitPreview'),
         '#id' => 'preview-submit',
         '#ajax' => array(
-          'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $this->displayID,
+          'url' => Url::fromRoute('entity.view.preview_form', ['view' => $view->id(), 'display_id' => $this->displayID]),
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
           'progress' => array('type' => 'fullscreen'),

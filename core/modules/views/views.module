@@ -15,6 +15,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\Core\Template\AttributeArray;
 use Drupal\views\ViewExecutable;
@@ -61,7 +62,7 @@ function views_views_pre_render($view) {
             'view_name' => $view->storage->id(),
             'view_display_id' => $view->current_display,
             'view_args' => String::checkPlain(implode('/', $view->args)),
-            'view_path' => String::checkPlain(current_path()),
+            'view_path' => String::checkPlain(Url::fromRoute('<current>')->toString()),
             'view_base_path' => $view->getPath(),
             'view_dom_id' => $view->dom_id,
             // To fit multiple views on a page, the programmer may have

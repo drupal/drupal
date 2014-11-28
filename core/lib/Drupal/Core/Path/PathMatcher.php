@@ -8,6 +8,8 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a path matcher.
@@ -43,13 +45,23 @@ class PathMatcher implements PathMatcherInterface {
   protected $configFactory;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Creates a new PathMatcher.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, RouteMatchInterface $route_match) {
     $this->configFactory = $config_factory;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -84,7 +96,13 @@ class PathMatcher implements PathMatcherInterface {
   public function isFrontPage() {
     // Cache the result as this is called often.
     if (!isset($this->isCurrentFrontPage)) {
-      $this->isCurrentFrontPage = (current_path() == $this->getFrontPagePath());
+      $this->isCurrentFrontPage = FALSE;
+      // Ensure that the code can also be executed when there is no active
+      // route match, like on exception responses.
+      if ($this->routeMatch->getRouteName()) {
+        $url = Url::fromRouteMatch($this->routeMatch);
+        $this->isCurrentFrontPage = ($url->getRouteName() && $url->getInternalPath() === $this->getFrontPagePath());
+      }
     }
     return $this->isCurrentFrontPage;
   }
@@ -98,6 +116,8 @@ class PathMatcher implements PathMatcherInterface {
   protected function getFrontPagePath() {
     // Lazy-load front page config.
     if (!isset($this->frontPage)) {
+      // @todo page.front should store the route name, see
+      //   https://www.drupal.org/node/2371823
       $this->frontPage = $this->configFactory->get('system.site')
         ->get('page.front');
     }

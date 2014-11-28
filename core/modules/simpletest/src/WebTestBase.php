@@ -932,12 +932,6 @@ abstract class WebTestBase extends TestBase {
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
     //   appears to be calling a different container.
     $this->container->get('stream_wrapper_manager')->register();
-    // Temporary fix so that when running from run-tests.sh we don't get an
-    // empty current path which would indicate we're on the home page.
-    $path = current_path();
-    if (empty($path)) {
-      _current_path('run-tests');
-    }
   }
 
   /**

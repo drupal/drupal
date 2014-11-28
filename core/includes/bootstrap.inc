@@ -1132,8 +1132,6 @@ function language_default() {
  *
  * @return
  *   The requested Drupal URL path.
- *
- * @see current_path()
  */
 function request_path() {
   static $path;
@@ -1166,18 +1164,6 @@ function request_path() {
   $path = trim($path, '/');
 
   return $path;
-}
-
-/**
- * @todo This is a temporary function pending refactoring Drupal to use
- *   Symfony's Request object exclusively.
- */
-function _current_path($path = NULL) {
-  static $current_path = '';
-  if (isset($path)) {
-    $current_path = $path;
-  }
-  return $current_path;
 }
 
 /**

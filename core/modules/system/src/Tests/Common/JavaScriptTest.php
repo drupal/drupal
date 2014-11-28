@@ -42,6 +42,9 @@ class JavaScriptTest extends DrupalUnitTestBase {
 
     // Reset _drupal_add_js() statics before each test.
     drupal_static_reset('_drupal_add_js');
+
+    $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
   }
 
   protected function tearDown() {
@@ -156,7 +159,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $this->render($attached);
 
     $javascript = drupal_get_js('header');
-    $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
+    $this->assertTrue(strpos($javascript, 'baseUrl') > 0, 'Rendered JavaScript header returns baseUrl setting.');
     $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
     $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
     $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');

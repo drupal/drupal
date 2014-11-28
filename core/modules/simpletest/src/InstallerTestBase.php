@@ -164,13 +164,6 @@ abstract class InstallerTestBase extends WebTestBase {
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
-    // When running from run-tests.sh we don't get an empty current path which
-    // would indicate we're on the home page.
-    $path = current_path();
-    if (empty($path)) {
-      _current_path('run-tests');
-    }
-
     $this->isInstalled = TRUE;
   }
 

@@ -8,9 +8,11 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for configuring an item in the Views UI.
@@ -51,7 +53,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');
     $type = $form_state->get('type');
@@ -173,7 +175,7 @@ class ConfigHandler extends ViewsFormBase {
         '#submit' => array(array($this, 'remove')),
         '#limit_validation_errors' => array(array('override')),
         '#ajax' => array(
-          'path' => current_path(),
+          'url' => Url::fromRoute('<current>'),
         ),
       );
     }

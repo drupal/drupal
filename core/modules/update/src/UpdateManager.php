@@ -148,18 +148,22 @@ class UpdateManager implements UpdateManagerInterface {
 
     // On certain paths, we should clear the data and recompute the projects for
     // update status of the site to avoid presenting stale information.
-    $paths = array(
-      'admin/modules',
-      'admin/modules/update',
-      'admin/appearance',
-      'admin/appearance/update',
-      'admin/reports',
-      'admin/reports/updates',
-      'admin/reports/updates/update',
-      'admin/reports/status',
-      'admin/reports/updates/check',
+    $route_names = array(
+      'update.theme_update',
+      'system.modules_list',
+      'system.theme_install',
+      'update.module_update',
+      'update.module_install',
+      'update.status',
+      'update.report_update',
+      'update.report_install',
+      'update.settings',
+      'system.status',
+      'update.manual_status',
+      'update.confirmation_page',
+      'system.themes_page',
     );
-    if (in_array(current_path(), $paths)) {
+    if (in_array(\Drupal::routeMatch()->getRouteName(), $route_names)) {
       $this->keyValueStore->delete($key);
     }
     else {

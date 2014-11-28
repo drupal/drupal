@@ -37,7 +37,8 @@ class PathMatcherTest extends UnitTestCase {
         ),
       )
     );
-    $this->pathMatcher = new PathMatcher($config_factory_stub);
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $this->pathMatcher = new PathMatcher($config_factory_stub, $route_match);
   }
 
   /**

@@ -24,6 +24,16 @@ class TableTest extends DrupalUnitTestBase {
   public static $modules = array('system');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
+  }
+
+  /**
    * Tableheader.js provides 'sticky' table headers, and is included by default.
    */
   function testThemeTableStickyHeaders() {

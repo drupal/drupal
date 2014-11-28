@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -827,7 +828,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
       'progressive' => TRUE,
       'url' => $url,
       'url_options' => array(),
-      'source_url' => current_path(),
+      'source_url' => Url::fromRouteMatch(\Drupal::routeMatch()),
       'batch_redirect' => $redirect,
       'theme' => \Drupal::theme()->getActiveTheme()->getName(),
       'redirect_callback' => $redirect_callback,

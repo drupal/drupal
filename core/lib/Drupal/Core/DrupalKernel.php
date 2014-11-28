@@ -22,6 +22,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Site\Settings;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Composer\Autoload\ClassLoader;
+use Symfony\Component\Routing\Route;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
@@ -585,6 +587,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->preHandle($request);
     // Enter the request scope so that current_user service is available for
     // locale/translation sake.
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
     $this->container->get('request_stack')->push($request);
     $this->container->get('router.request_context')->fromRequest($request);
     return $this;
@@ -809,8 +813,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     global $base_secure_url, $base_insecure_url;
 
     // @todo Refactor with the Symfony Request object.
-    _current_path(request_path());
-
     if (isset($base_url)) {
       // Parse fixed base URL from settings.php.
       $parts = parse_url($base_url);

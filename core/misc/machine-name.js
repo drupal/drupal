@@ -173,7 +173,7 @@
      *   The transliterated source string.
      */
     transliterate: function (source, settings) {
-      return $.get(drupalSettings.path.basePath + 'machine_name/transliterate', {
+      return $.get(Drupal.url('machine_name/transliterate'), {
         text: source,
         langcode: drupalSettings.langcode,
         replace_pattern: settings.replace_pattern,

@@ -22,6 +22,9 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewStorageInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Stores UI related temporary settings.
@@ -324,7 +327,7 @@ class ViewUI implements ViewStorageInterface {
     // Views provides its own custom handling of AJAX form submissions. Usually
     // this happens at the same path, but custom paths may be specified in
     // $form_state.
-    $form_path = $form_state->get('path') ?: current_path();
+    $form_url = $form_state->get('url') ?: Url::fromRouteMatch(\Drupal::routeMatch());
 
     // Forms that are purely informational set an ok_button flag, so we know not
     // to create an "Apply" button for them.
@@ -341,7 +344,7 @@ class ViewUI implements ViewStorageInterface {
         '#submit' => array(array($this, 'standardSubmit')),
         '#button_type' => 'primary',
         '#ajax' => array(
-          'path' => $form_path,
+          'url' => $form_url,
         ),
       );
       // Form API button click detection requires the button's #value to be the
@@ -369,7 +372,7 @@ class ViewUI implements ViewStorageInterface {
       '#submit' => array($cancel_submit),
       '#validate' => array(),
       '#ajax' => array(
-        'path' => $form_path,
+        'path' => $form_url,
       ),
       '#limit_validation_errors' => array(),
     );
@@ -557,7 +560,8 @@ class ViewUI implements ViewStorageInterface {
 
   public function renderPreview($display_id, $args = array()) {
     // Save the current path so it can be restored before returning from this function.
-    $old_q = current_path();
+    $request_stack = \Drupal::requestStack();
+    $current_request = $request_stack->getCurrentRequest();
 
     // Determine where the query and performance statistics should be output.
     $config = \Drupal::config('views.settings');
@@ -606,15 +610,22 @@ class ViewUI implements ViewStorageInterface {
       }
 
       // Make view links come back to preview.
-      $this->override_path = 'admin/structure/views/view/' . $this->id() . '/preview/' . $display_id;
 
       // Also override the current path so we get the pager.
-      $original_path = current_path();
-      $q = _current_path($this->override_path);
-      if ($args) {
-        $q .= '/' . implode('/', $args);
-        _current_path($q);
+      $request = new Request();
+      $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'entity.view.preview_form');
+      $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, \Drupal::service('router.route_provider')->getRouteByName('entity.view.preview_form'));
+      $request->attributes->set('view', $this->storage);
+      $request->attributes->set('display_id', $display_id);
+      $raw_parameters = new ParameterBag();
+      $raw_parameters->set('view', $this->id());
+      $raw_parameters->set('display_id', $display_id);
+      $request->attributes->set('_raw_variables', $raw_parameters);
+
+      foreach ($args as $key => $arg) {
+        $request->attributes->set('arg_' . $key, $arg);
       }
+      $request_stack->push($request);
 
       // Suppress contextual links of entities within the result set during a
       // Preview.
@@ -641,10 +652,6 @@ class ViewUI implements ViewStorageInterface {
       $this->render_time = Timer::stop('entity.view.preview_form');
 
       views_ui_contextual_links_suppress_pop();
-
-      // Reset variables.
-      unset($this->override_path);
-      _current_path($original_path);
 
       // Prepare the query information and statistics to show either above or
       // below the view preview.
@@ -757,7 +764,11 @@ class ViewUI implements ViewStorageInterface {
       $output .= $preview . drupal_render($table);
     }
 
-    _current_path($old_q);
+    // Ensure that we just remove an additional request we pushed earlier.
+    // This could happen if $errors was not empty.
+    if ($request_stack->getCurrentRequest() != $current_request) {
+      $request_stack->pop();
+    }
     return $output;
   }
 

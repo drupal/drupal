@@ -566,7 +566,7 @@ services:
       - { name: backend_overridable }
   path.matcher:
     class: Drupal\Core\Path\PathMatcher
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@current_route_match']
   path.validator:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']

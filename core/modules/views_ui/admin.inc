@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
@@ -322,20 +323,31 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 /**
  * Create the menu path for one of our standard AJAX forms based upon known
  * information about the form.
+ *
+ * @return \Drupal\Core\Url
+ *   The URL object pointing to the form URL.
  */
-function views_ui_build_form_path(FormStateInterface $form_state) {
+function views_ui_build_form_url(FormStateInterface $form_state) {
   $ajax = !$form_state->get('ajax') ? 'nojs' : 'ajax';
   $name = $form_state->get('view')->id();
   $form_key = $form_state->get('form_key');
   $display_id = $form_state->get('display_id');
-  $path = "admin/structure/views/$ajax/$form_key/$name/$display_id";
+
+  $form_key = str_replace('-', '_', $form_key);
+  $route_name = "views_ui.form_{$form_key}";
+  $route_parameters = [
+    'js' => $ajax,
+    'view' => $name,
+    'display_id' => $display_id
+  ];
+  $url = Url::fromRoute($route_name, $route_parameters);
   if ($type = $form_state->get('type')) {
-    $path .= '/' . $type;
+    $url->setRouteParameter('type', $type);
   }
   if ($id = $form_state->get('id')) {
-    $path .= '/' . $id;
+    $url->setRouteParameter('id', $id);
   }
-  return $path;
+  return $url;
 }
 
 /**

@@ -237,7 +237,12 @@ function system_hook_info() {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_html(array $variables) {
-  $path_args = explode('/', current_path());
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $path_args = [''];
+  }
+  else {
+    $path_args = explode('/', Url::fromRoute('<current>')->getInternalPath());
+  }
   return theme_get_suggestions($path_args, 'html');
 }
 
@@ -245,7 +250,12 @@ function system_theme_suggestions_html(array $variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_page(array $variables) {
-  $path_args = explode('/', current_path());
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $path_args = [''];
+  }
+  else {
+    $path_args = explode('/', Url::fromRoute('<current>')->getInternalPath());
+  }
   return theme_get_suggestions($path_args, 'page');
 }
 
@@ -612,7 +622,7 @@ function system_page_attachments(array &$page) {
     $page['#post_render_cache']['\Drupal\system\Controller\SystemController::setLinkActiveClass'] = array(
       // Collect the current state that determines whether a link is active.
       array(
-        'path' => current_path(),
+        'path' => \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '',
         'front' => drupal_is_front_page(),
         'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
         'query' => \Drupal::request()->query->all(),

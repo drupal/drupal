@@ -9,6 +9,7 @@ namespace Drupal\file\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 
 /**
@@ -144,7 +145,7 @@ class ManagedFile extends FormElement {
     $element['#tree'] = TRUE;
 
     $ajax_settings = [
-      'path' => 'file/ajax',
+      'url' => Url::fromRoute('file.ajax_upload'),
       'options' => [
         'query' => [
           'element_parents' => implode('/', $element['#array_parents']),
@@ -219,7 +220,7 @@ class ManagedFile extends FormElement {
       }
 
       // Add the upload progress callback.
-      $element['upload_button']['#ajax']['progress']['path'] = 'file/progress/' . $upload_progress_key;
+      $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress');
     }
 
     // The file upload field itself.

@@ -40,36 +40,6 @@ function drupal_match_path($path, $patterns) {
 }
 
 /**
- * Return the current URL path of the page being viewed.
- *
- * Examples:
- * - http://example.com/node/306 returns "node/306".
- * - http://example.com/drupalfolder/node/306 returns "node/306" while
- *   base_path() returns "/drupalfolder/".
- * - http://example.com/path/alias (which is a path alias for node/306) returns
- *   "node/306" as opposed to the path alias.
- *
- * @return string
- *   The current Drupal URL path.
- *
- * @see request_path()
- */
-function current_path() {
-  // @todo Remove the check for whether the request service exists and the
-  // fallback code below, once the path alias logic has been figured out in
-  // http://drupal.org/node/1269742.
-  if ($request = \Drupal::request()) {
-    $path = $request->attributes->get('_system_path');
-    if ($path !== NULL) {
-      return $path;
-    }
-  }
-  // If we are outside the request scope, fall back to using the path stored in
-  // _current_path().
-  return _current_path();
-}
-
-/**
  * Determines whether a path is in the administrative section of the site.
  *
  * By default, paths are considered to be non-administrative. If a path does

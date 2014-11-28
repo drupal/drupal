@@ -9,7 +9,7 @@
    * page. The request returns an array of commands encoded in JSON, which is
    * then executed to make any changes that are necessary to the page.
    *
-   * Drupal uses this file to enhance form elements with #ajax['path'] and
+   * Drupal uses this file to enhance form elements with #ajax['url'] and
    * #ajax['wrapper'] properties. If set, this file will automatically be included
    * to provide Ajax capabilities.
    */

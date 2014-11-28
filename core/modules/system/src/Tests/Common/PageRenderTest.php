@@ -21,7 +21,10 @@ class PageRenderTest extends KernelTestBase {
    * Tests hook_page_attachments() exceptions.
    */
   function testHookPageAttachmentsExceptions() {
-    $this->enableModules(['common_test']);
+    $this->enableModules(['common_test', 'system']);
+    $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
+
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments');
   }
 
@@ -29,7 +32,10 @@ class PageRenderTest extends KernelTestBase {
    * Tests hook_page_attachments_alter() exceptions.
    */
   function testHookPageAlter() {
-    $this->enableModules(['common_test']);
+    $this->enableModules(['common_test', 'system']);
+    $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
+
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments_alter');
   }
 

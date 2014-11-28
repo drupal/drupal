@@ -1,6 +1,0 @@
-url_alter_test.foo:
-  path: '/url-alter-test/foo'
-  defaults:
-    _controller: '\Drupal\url_alter_test\Controller\URLAlterTestController::foo'
-  requirements:
-    _access: 'TRUE'

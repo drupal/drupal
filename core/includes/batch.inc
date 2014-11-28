@@ -450,18 +450,20 @@ function _batch_finished() {
     }
     if ($_batch['form_state']->getRedirect() === NULL) {
       $redirect = $_batch['batch_redirect'] ?: $_batch['source_url'];
-      $options = UrlHelper::parse($redirect);
       // Any path with a scheme does not correspond to a route.
-      if (parse_url($options['path'], PHP_URL_SCHEME)) {
-        $redirect = Url::fromUri($options['path'], $options);
-      }
-      else {
-        $redirect = \Drupal::pathValidator()->getUrlIfValid($options['path']);
-        if (!$redirect) {
-          // Stay on the same page if the redirect was invalid.
-          $redirect = Url::fromRoute('<current>');
+      if (!$redirect instanceof Url) {
+        $options = UrlHelper::parse($redirect);
+        if (parse_url($options['path'], PHP_URL_SCHEME)) {
+          $redirect = Url::fromUri($options['path'], $options);
         }
-        $redirect->setOptions($options);
+        else {
+          $redirect = \Drupal::pathValidator()->getUrlIfValid($options['path']);
+          if (!$redirect) {
+            // Stay on the same page if the redirect was invalid.
+            $redirect = Url::fromRoute('<current>');
+          }
+          $redirect->setOptions($options);
+        }
       }
       $_batch['form_state']->setRedirectUrl($redirect);
     }
@@ -480,16 +482,17 @@ function _batch_finished() {
       $_SESSION['batch_form_state'] = $_batch['form_state'];
     }
     $callback = $_batch['redirect_callback'];
+    /** @var \Drupal\Core\Url $source_url */
+    $source_url = $_batch['source_url'];
     if (is_callable($callback)) {
       $callback($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
     }
     elseif ($callback === NULL) {
       // Default to RedirectResponse objects when nothing specified.
-      $url = _url($_batch['source_url'], array(
-        'absolute' => TRUE,
-        'query' => array('op' => 'finish', 'id' => $_batch['id']),
-      ));
-      return new RedirectResponse($url);
+      $url = $source_url
+        ->setAbsolute()
+        ->setOption('query', ['op' => 'finish', 'id' => $_batch['id']]);
+      return new RedirectResponse($url->toString());
     }
   }
 }

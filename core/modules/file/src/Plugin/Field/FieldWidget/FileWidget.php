@@ -15,6 +15,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\file\Element\ManagedFile;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -381,7 +382,7 @@ class FileWidget extends WidgetBase {
     // file, the entire group of file fields is updated together.
     if ($element['#cardinality'] != 1) {
       $parents = array_slice($element['#array_parents'], 0, -1);
-      $new_path = 'file/ajax';
+      $new_url = Url::fromRoute('file.ajax_upload');
       $new_options = array(
         'query' => array(
           'element_parents' => implode('/', $parents),
@@ -392,7 +393,7 @@ class FileWidget extends WidgetBase {
       $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
       foreach (Element::children($element) as $key) {
         if (isset($element[$key]['#ajax'])) {
-          $element[$key]['#ajax']['path'] = $new_path;
+          $element[$key]['#ajax']['url'] = $new_url->setOptions($new_options);
           $element[$key]['#ajax']['options'] = $new_options;
           $element[$key]['#ajax']['wrapper'] = $new_wrapper;
         }

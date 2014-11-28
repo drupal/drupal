@@ -62,7 +62,7 @@
    */
   Drupal.Views.getPath = function (href) {
     href = Drupal.Views.pathPortion(href);
-    href = href.substring(drupalSettings.path.basePath.length, href.length);
+    href = href.substring(drupalSettings.path.baseUrl.length, href.length);
     // 3 is the length of the '?q=' added to the url without clean urls.
     if (href.substring(0, 3) === '?q=') {
       href = href.substring(3, href.length);

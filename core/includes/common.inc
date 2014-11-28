@@ -23,6 +23,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -245,7 +246,6 @@ function drupal_get_html_head($render = TRUE) {
  *   - destination: The path provided via the destination query string or, if
  *     not available, the current path.
  *
- * @see current_path()
  * @ingroup form_api
  */
 function drupal_get_destination() {
@@ -260,7 +260,7 @@ function drupal_get_destination() {
     $destination = array('destination' => $query->get('destination'));
   }
   else {
-    $path = current_path();
+    $path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
     $query = UrlHelper::buildQuery(UrlHelper::filterQueryParameters($query->all()));
     if ($query != '') {
       $path .= '?' . $query;
@@ -1469,18 +1469,20 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           // Instead of running the hook_url_outbound_alter() again here, extract
           // them from url().
           // @todo Make this less hacky: http://drupal.org/node/1547376.
-          $scriptPath = $GLOBALS['script_path'];
+          $request = \Drupal::request();
+          $scriptPath = $request->getScriptName();
+
           $pathPrefix = '';
-          $current_query = \Drupal::service('request_stack')->getCurrentRequest()->query->all();
+          $current_query = $request->query->all();
           _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
-          $current_path = current_path();
+          $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
           $current_path_is_admin = FALSE;
           // The function path_is_admin() is not available on update.php pages.
           if (!(defined('MAINTENANCE_MODE'))) {
             $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
           }
           $path = array(
-            'basePath' => base_path(),
+            'baseUrl' => $request->getBaseUrl() . '/',
             'scriptPath' => $scriptPath,
             'pathPrefix' => $pathPrefix,
             'currentPath' => $current_path,

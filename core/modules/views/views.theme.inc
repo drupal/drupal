@@ -301,10 +301,12 @@ function template_preprocess_views_view_summary(&$variables) {
   $active_urls = array(
     // Force system path.
     \Drupal::url('<current>', [], ['alias' => TRUE]),
-    _url(current_path(), array('alias' => TRUE)), // force system path
+    // Force system path.
+    Url::fromRouteMatch(\Drupal::routeMatch())->setOption('alias', TRUE)->toString(),
     // Could be an alias.
     \Drupal::url('<current>'),
-    _url(current_path()), // could be an alias
+    // Could be an alias.
+    Url::fromRouteMatch(\Drupal::routeMatch())->toString(),
   );
   $active_urls = array_combine($active_urls, $active_urls);
 
