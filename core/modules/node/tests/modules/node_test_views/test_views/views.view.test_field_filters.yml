@@ -54,8 +54,6 @@ display:
       row:
         type: 'entity:node'
         options:
-          build_mode: teaser
-          links: false
           view_mode: teaser
           rendering_language: translation_language_renderer
       fields:

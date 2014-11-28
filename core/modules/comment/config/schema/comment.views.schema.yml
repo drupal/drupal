@@ -98,20 +98,6 @@ views.filter.comment_user_uid:
   type: views_filter
   label: 'Node user posted comment'
 
-"views.row.entity:comment":
-  type: mapping
-  label: 'Entity options'
-  mapping:
-    view_mode:
-      type: string
-      label: 'View mode'
-    relationship:
-      type: string
-      label: 'Relationship'
-    links:
-      type: boolean
-      label: 'Display links'
-
 views.row.comment_rss:
   type: views_row
   label: 'Comment'
@@ -119,9 +105,6 @@ views.row.comment_rss:
     view_mode:
       type: string
       label: 'Display type'
-    links:
-      type: boolean
-      label: 'Display links'
 
 views.sort.comment_ces_last_comment_name:
   type: views_sort

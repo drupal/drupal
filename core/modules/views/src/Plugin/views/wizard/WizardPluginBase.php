@@ -848,9 +848,16 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,
     // choose the first field with a field handler.
-    $data = Views::viewsData()->get($this->base_table);
+    $default_table = $this->base_table;
+    $data = Views::viewsData()->get($default_table);
     if (isset($data['table']['base']['defaults']['field'])) {
       $default_field = $data['table']['base']['defaults']['field'];
+      // If the table for the default field is different to the base table,
+      // load the view table data for this table.
+      if (isset($data['table']['base']['defaults']['table']) && $data['table']['base']['defaults']['table'] != $default_table) {
+        $default_table = $data['table']['base']['defaults']['table'];
+        $data = Views::viewsData()->get($default_table);
+      }
     }
     else {
       foreach ($data as $default_field => $field_data) {
@@ -860,14 +867,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       }
     }
     $display_options['fields'][$default_field] = array(
-      'table' => $this->base_table,
+      'table' => $default_table,
       'field' => $default_field,
       'id' => $default_field,
+      'plugin_id' => $data[$default_field]['field']['id'],
     );
-
-    // Load the plugin ID and module.
-    $base_field = $data['table']['base']['field'];
-    $display_options['fields'][$base_field]['plugin_id'] = $data[$base_field]['field']['id'];
 
     return $display_options;
   }
@@ -951,6 +955,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         'table' => $table,
         'field' => $bundle_key,
         'value' => $value,
+        'plugin_id' => $handler,
       );
     }
 
@@ -1027,6 +1032,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'table' => $table,
           'field' => $column,
           'order' => $sort,
+          'plugin_id' => $data[$column]['sort']['id'],
        );
       }
     }

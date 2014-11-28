@@ -823,7 +823,7 @@ views_query:
 
 views_row:
   type: mapping
-  label: 'Row'
+  label: 'Row options'
   mapping:
     relationship:
       type: string
@@ -835,6 +835,9 @@ views_entity_row:
     view_mode:
       type: string
       label: 'View mode'
+    rendering_language:
+      type: string
+      label: 'Rendering language'
 
 views_cache:
   type: mapping

@@ -332,6 +332,7 @@ class Block extends DisplayPluginBase {
     if ($items_per_page = $form_state->getValue(array('override', 'items_per_page'))) {
       $block->setConfigurationValue('items_per_page', $items_per_page);
     }
+    $form_state->unsetValue(array('override', 'items_per_page'));
   }
 
   /**

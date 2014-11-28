@@ -24,7 +24,7 @@ views.filter.search:
       label: 'On empty input'
 
 views.row.search_view:
-  type: views.field.numeric
+  type: views_row
   label: 'Source link'
   mapping:
     score:

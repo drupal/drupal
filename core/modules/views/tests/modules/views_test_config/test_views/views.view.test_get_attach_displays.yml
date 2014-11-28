@@ -36,9 +36,7 @@ display:
       row:
         type: 'entity:node'
         options:
-          build_mode: teaser
-          links: '1'
-          comments: false
+          view_mode: teaser
       fields:
         title:
           id: title

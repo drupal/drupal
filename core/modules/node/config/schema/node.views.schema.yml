@@ -1,16 +1,5 @@
 # Schema for the views plugins of the Node module.
 
-"views.row.entity:node":
-  type: views_entity_row
-  label: 'Entity options'
-  mapping:
-    comments:
-      type: boolean
-      label: 'Show comments'
-    build_mode:
-      type: string
-      label: 'Build mode'
-
 views.area.node_listing_empty:
   type: views_area
   label: 'Node link'
@@ -157,7 +146,7 @@ views.field.node_path:
       label: 'Use absolute link (begins with "http://")'
 
 views.field.node_revision:
-  type: views_field
+  type: views.field.node
   label: 'Node revision'
   mapping:
     link_to_node_revision:
@@ -234,8 +223,8 @@ views.filter_value.node_status:
   label: 'Status'
 
 views.row.node_rss:
-  type: "views.row.entity:node"
-  label: 'Content'
+  type: views_row
+  label: 'Content options'
   mapping:
     view_mode:
       type: string

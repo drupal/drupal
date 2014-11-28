@@ -39,8 +39,7 @@ display:
         type: views_query
       row:
         options:
-          build_mode: teaser
-          comments: false
+          view_mode: teaser
         type: 'entity:node'
       sorts: {  }
       style:

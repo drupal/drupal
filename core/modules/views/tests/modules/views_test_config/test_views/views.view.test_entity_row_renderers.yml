@@ -34,7 +34,6 @@ display:
           relationship: none
           view_mode: teaser
           rendering_language: translation_language_renderer
-          links: 0
       sorts:
         title:
           id: title

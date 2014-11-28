@@ -43,6 +43,7 @@ class Comment extends WizardPluginBase {
       'alter_text' => TRUE,
       'text' => 'comment/[cid]#comment-[cid]'
     ),
+    'plugin_id' => 'comment',
   );
 
   /**
@@ -53,15 +54,15 @@ class Comment extends WizardPluginBase {
       'value' => TRUE,
       'table' => 'comment_field_data',
       'field' => 'status',
-      'provider' => 'comment'
+      'plugin_id' => 'boolean',
     ),
     'status_node' => array(
       'value' => TRUE,
       'table' => 'node_field_data',
       'field' => 'status',
-      'provider' => 'node',
+      'plugin_id' => 'boolean',
       'relationship' => 'node',
-    )
+    ),
   );
 
   /**
@@ -72,31 +73,6 @@ class Comment extends WizardPluginBase {
     $options['comment'] = $this->t('comments');
     $options['fields'] = $this->t('fields');
     return $options;
-  }
-
-  protected function buildFormStyle(array &$form, FormStateInterface $form_state, $type) {
-    parent::buildFormStyle($form, $form_state, $type);
-    $style_form =& $form['displays'][$type]['options']['style'];
-    // Some style plugins don't support row plugins so stop here if that's the
-    // case.
-    if (!isset($style_form['row_plugin']['#default_value'])) {
-      return;
-    }
-    $row_plugin = $style_form['row_plugin']['#default_value'];
-    switch ($row_plugin) {
-      case 'comment':
-        $style_form['row_options']['links'] = array(
-          '#type' => 'select',
-          '#title' => $this->t('Should links be displayed below each comment'),
-          '#title_display' => 'invisible',
-          '#options' => array(
-            1 => $this->t('with links (allow users to reply to the comment, etc.)'),
-            0 => $this->t('without links'),
-          ),
-          '#default_value' => 1,
-        );
-        break;
-    }
   }
 
   /**
@@ -128,7 +104,6 @@ class Comment extends WizardPluginBase {
     switch ($row_plugin) {
       case 'comment':
         $display_options['row']['type'] = 'entity:comment';
-        $display_options['row']['options']['links'] = !empty($row_options['links']);
         break;
     }
   }
@@ -168,6 +143,7 @@ class Comment extends WizardPluginBase {
     $display_options['fields']['subject']['hide_empty'] = 0;
     $display_options['fields']['subject']['empty_zero'] = 0;
     $display_options['fields']['subject']['link_to_comment'] = 1;
+    $display_options['fields']['subject']['plugin_id'] = 'comment';
 
     return $display_options;
   }

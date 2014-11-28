@@ -1,5 +1,12 @@
 # Schema for the views row.
 
+views.row.*:
+  type: views_row
+
+"views.row.entity:*":
+  type: views_entity_row
+  label: 'Entity options'
+
 views.row.fields:
   type: views_row
   label: 'Field options'
@@ -21,7 +28,7 @@ views.row.fields:
       label: 'Hide empty'
 
 views.row.rss_fields:
-  type: mapping
+  type: views_row
   label: 'RSS field options'
   mapping:
     title_field:

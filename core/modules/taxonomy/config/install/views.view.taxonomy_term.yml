@@ -215,7 +215,6 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          comments: false
       header:
         entity_taxonomy_term:
           id: entity_taxonomy_term

@@ -33,7 +33,8 @@ class File extends WizardPluginBase {
     'table' => 'file_managed',
     'field' => 'uri',
     'exclude' => TRUE,
-    'file_download_path' => TRUE
+    'file_download_path' => TRUE,
+    'plugin_id' => 'file_uri',
   );
 
   /**
@@ -64,6 +65,7 @@ class File extends WizardPluginBase {
     $display_options['fields']['filename']['hide_empty'] = 0;
     $display_options['fields']['filename']['empty_zero'] = 0;
     $display_options['fields']['filename']['link_to_file'] = 1;
+    $display_options['fields']['filename']['plugin_id'] = 'file';
 
     return $display_options;
   }

@@ -171,6 +171,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     else {
       $this->configuration['views_label'] = '';
     }
+    $form_state->unsetValue('views_label_checkbox');
   }
 
   /**

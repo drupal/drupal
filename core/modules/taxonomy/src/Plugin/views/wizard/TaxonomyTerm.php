@@ -31,7 +31,8 @@ class TaxonomyTerm extends WizardPluginBase {
     'alter' => array(
       'alter_text' => TRUE,
       'text' => 'taxonomy/term/[tid]'
-    )
+    ),
+    'plugin_id' => 'taxonomy',
   );
 
   /**
@@ -62,6 +63,7 @@ class TaxonomyTerm extends WizardPluginBase {
     $display_options['fields']['name']['hide_empty'] = 0;
     $display_options['fields']['name']['empty_zero'] = 0;
     $display_options['fields']['name']['link_to_taxonomy'] = 1;
+    $display_options['fields']['name']['plugin_id'] = 'taxonomy';
 
     return $display_options;
   }

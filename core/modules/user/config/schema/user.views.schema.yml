@@ -60,10 +60,6 @@ views.argument_default.node:
   type: boolean
   label: 'Content ID from URL'
 
-"views.row.entity:user":
-  type: views_entity_row
-  label: 'Entity options'
-
 views_field_user:
   type: views_field
   mapping:

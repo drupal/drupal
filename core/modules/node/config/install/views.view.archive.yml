@@ -153,7 +153,6 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          comments: false
       header: {  }
       footer: {  }
       empty: {  }

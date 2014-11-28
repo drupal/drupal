@@ -41,11 +41,10 @@ display:
         type: full
       query:
         type: views_query
-      row_options:
-        build_mode: teaser
-        comments: '0'
-        links: '1'
-      row_plugin: node
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
       sorts:
         created:
           field: created
@@ -66,11 +65,9 @@ display:
       defaults:
         pager: false
         pager_options: false
-        row_options: '0'
-        row_plugin: '0'
         style_options: '0'
         style_plugin: '0'
-      field:
+      fields:
         title:
           link_to_node: '1'
           plugin_id: node
@@ -79,11 +76,8 @@ display:
           items_per_page: 5
         type: some
       pager_options: {  }
-      row_options:
-        build_mode: teaser
-        comments: '0'
-        links: '1'
-      row_plugin: fields
+      row:
+        type: fields
       style_options: {  }
       style_plugin: default
       field_langcode: '***LANGUAGE_language_content***'

@@ -85,7 +85,8 @@ display:
         type: full
       query:
         type: views_query
-      row_plugin: fields
+      row:
+        type: fields
       style_plugin: default
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
